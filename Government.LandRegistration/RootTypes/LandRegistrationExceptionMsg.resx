@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AnnotationNotBelongsToRecording" xml:space="preserve">
+    <value>La anotaciĂ³n con identificador {0} no pertenece a la inscripciĂ³n {1}.</value>
+  </data>
+  <data name="AskIfAppendPropertyToExistingAnnotation" xml:space="preserve">
+    <value>IMPORTANTE:\n\nYa estĂ¡ registrada una anotaciĂ³n o limitaciĂ³n con el nĂºmero de inscripciĂ³n {1} en el libro {0}.\n\nNo obstante, la informaciĂ³n proporcionada coincide en su totalidad con la de la anotaciĂ³n ya registrada.\n\nEsto puede significar que la anotaciĂ³n existente tambiĂ©n se debe aplicar al predio con folio {2}. Si este es el caso:\n\nÂ¿Anexo el predio con folio {2} a la anotaciĂ³n o limitaciĂ³n ya registrada en el libro {0} con el nĂºmero de inscripciĂ³n {1}?</value>
+  </data>
+  <data name="AttachmentFolderNotFound" xml:space="preserve">
+    <value>No encontrĂ© el directorio con nombre '{0}' con las imĂ¡genes del libro de apĂ©ndices.</value>
+  </data>
+  <data name="CantAlterAnnotationOnClosedRecording" xml:space="preserve">
+    <value>No puedo modificar o eliminar la anotaciĂ³n con identificador {0} ya que la inscripciĂ³n a la que pertenece estĂ¡ cerrada y ya no pueden hacĂ©rsele cambios. La Ăºnica forma de hacerlo es mediante la creaciĂ³n de un acto jurĂ­dico que la modifique o cancele .</value>
+  </data>
+  <data name="CantAlterClosedAnnotation" xml:space="preserve">
+    <value>No puedo modificar o cancelar la anotaciĂ³n con identificador {0} ya que dicha anotaciĂ³n ya estĂ¡ cerrada o ya ha sido cancelada previamente. La Ăºnica forma de hacerlo es mediante la creaciĂ³n de un acto jurĂ­dico que la modifique o cancele  en forma indirecta.</value>
+  </data>
+  <data name="CantAlterClosedRecordingAct" xml:space="preserve">
+    <value>No puedo modificar o cancelar el acto jurĂ­dico con identificador {0}, debido a que ya estĂ¡ cerrado.  La Ăºnica forma de hacerlo es mediante la creaciĂ³n de otro acto jurĂ­dico que lo modifique o cancele en forma indirecta.</value>
+  </data>
+  <data name="CantAlterRecordingActOnClosedRecording" xml:space="preserve">
+    <value>No puedo modificar o cancelar el acto jurĂ­dico con identificador {0}, debido a que la inscripciĂ³n a la que pertenece ya estĂ¡ cerrada.  La Ăºnica forma de hacerlo es mediante la creaciĂ³n de otro acto jurĂ­dico que lo modifique o cancele en forma indirecta.</value>
+  </data>
+  <data name="CantReEntryTransaction" xml:space="preserve">
+    <value>No puedo reingresar el trĂ¡mite {0}. Es posible que no estĂ© en un estado permitido para reingreso o que no se cumplan las condiciones para efectuar el mismo.</value>
+  </data>
+  <data name="EmptyAppraisalAmount" xml:space="preserve">
+    <value>No se ha registrado el importe del avalĂºo.</value>
+  </data>
+  <data name="EmptyFirstKnownOwner" xml:space="preserve">
+    <value>No se ha registrado el nombre del primer propietario del predio o predios.</value>
+  </data>
+  <data name="EmptyOperationAmount" xml:space="preserve">
+    <value>No se ha registrado el importe de la operaciĂ³n.</value>
+  </data>
+  <data name="InvalidPaymentOrderStatus" xml:space="preserve">
+    <value>No reconozco el estado '{0}' asignado a la orden de pago {1}.</value>
+  </data>
+  <data name="InvalidRecordingAuthorizationDate" xml:space="preserve">
+    <value>Fecha de autorizaciĂ³n fuera de rango.\n\nLa fecha de autorizaciĂ³n de la inscripciĂ³n deberĂ­a estar entre el dĂ­a {0} y el dĂ­a {1}, de acuerdo a la informaciĂ³n de control del libro {2}.\n\nSi la fecha de autorizaciĂ³n es correcta, se deberĂ¡ modificar primero la fecha de control del libro y luego volver a intentar la operaciĂ³n.</value>
+  </data>
+  <data name="InvalidRecordingImageRange" xml:space="preserve">
+    <value>No reconozco el rango de imĂ¡genes proporcionado.\n\nEl libro {0} contiene {3} imĂ¡genes.\n\nSin embargo el rango de imĂ¡genes que abarca la inscripciĂ³n que se desea guardar indica que va de la {1} a la {2}.</value>
+  </data>
+  <data name="InvalidRecordingPresentationTime" xml:space="preserve">
+    <value>Fecha de presentaciĂ³n fuera de rango.\n\nLa fecha de presentaciĂ³n de la inscripciĂ³n deberĂ­a estar entre el dĂ­a {0} y el dĂ­a {1}, de acuerdo a la informaciĂ³n de control del libro {2}.\n\nSi la fecha de presentaciĂ³n es correcta, se deberĂ¡ modificar primero la fecha de control del libro y luego volver a intentar la operaciĂ³n.</value>
+  </data>
+  <data name="InvalidTransactionTrack" xml:space="preserve">
+    <value>La transacciĂ³n a la que pertenece el evento que se estĂ¡ enviando, no coincide con la transacciĂ³n base.</value>
+  </data>
+  <data name="NextStatusCantBeEndPoint" xml:space="preserve">
+    <value>El Ăºltimo track {0} del trĂ¡mite tiene marcado como siguiente paso un estado final o end point. Es probable que el trĂ¡mite tenga algĂºn dato incorrecto en la historia de pasos.</value>
+  </data>
+  <data name="NotSavedRecording" xml:space="preserve">
+    <value>No puedo ejecutar la operaciĂ³n {0} debido a que la inscripciĂ³n no ha sido guardada en la base de datos.</value>
+  </data>
+  <data name="NotSavedRecordingAct" xml:space="preserve">
+    <value>No puedo ejecutar la operaciĂ³n {0} debido a que el acto jurĂ­dico no ha sido guardado en la base de datos.</value>
+  </data>
+  <data name="OrphanRecordingActIfPropertyDeleted" xml:space="preserve">
+    <value>Si la propiedad con folio {0} es eliminada del sistema, el acto jurĂ­dico que hace referencia a ella quedarĂ­a sin propiedad asociada. Para evitarlo, se debe eliminar el acto jurĂ­dico completo. Es posible que este error sea consecuencia de un problema de programaciĂ³n del sistema.</value>
+  </data>
+  <data name="OtherAnnotationWithEqualNumberExistsInBook" xml:space="preserve">
+    <value>El libro {0} ya contiene una anotaciĂ³n o limitaciĂ³n registrada con el nĂºmero de inscripciĂ³n {1}.\n\nSin embargo, la informaciĂ³n proporcionada no coincide exactamente con la de la anotaciĂ³n ya registrada, o bien, el predio con folio {2} ya fue agregado a esta Ăºltima.</value>
+  </data>
+  <data name="PropertyAlreadyExistsOnRecordingAct" xml:space="preserve">
+    <value>La propiedad con folio electrĂ³nico '{0}' ya estĂ¡ referenciada dentro de la lista de propiedades del acto jurĂ­dico con identificador {1}.</value>
+  </data>
+  <data name="PropertyHasAnnotations" xml:space="preserve">
+    <value>La propiedad con folio {0} tiene registrada cuando menos una anotaciĂ³n o limitaciĂ³n.\n\nPara eliminar la propiedad primero deben cancelarse todas las anotaciones, gravĂ¡menes y demĂ¡s limitaciones que hagan referencia a dicho predio.</value>
+  </data>
+  <data name="PropertyIsReferencedInOtherDomainActs" xml:space="preserve">
+    <value>La propiedad con folio {0} tiene registrados uno o mĂ¡s actos jurĂ­dicos distintos al seleccionado.\n\nPara poder eliminar la propiedad, primero deben cancelarse todos los actos jurĂ­dicos en los que se haga referencia a la misma, siguiendo el orden inverso de la secuencia jurĂ­dica.</value>
+  </data>
+  <data name="PropertyNotBelongsToRecordingAct" xml:space="preserve">
+    <value>El acto jurĂ­dico con identificador {1} no aplica a la propiedad con id = {0}. Puede ser que este problema sea ocasionado por un error de programaciĂ³n.</value>
+  </data>
+  <data name="RecorderOfficeRootRecordingBookAlreadyExists" xml:space="preserve">
+    <value>Se intentĂ³ crear la secciĂ³n '{1}' dentro del Distrito Judicial '{0}', pero ya existe una secciĂ³n con ese nombre en la misma.</value>
+  </data>
+  <data name="RecorderOfficialOutOfPeriod" xml:space="preserve">
+    <value>El Oficial Registrador Lic. {0}, no estaba suscrito al Distrito Judicial {1} el dĂ­a {2}</value>
+  </data>
+  <data name="RecordingActHasTwoOrMoreProperties" xml:space="preserve">
+    <value>El acto jurĂ­dico seleccionado hace referencia a mĂ¡s de una propiedad.\n\nPara cancelar el acto jurĂ­dico, es necesario que primero se eliminen todas las referencias a propiedades que tenga registradas.</value>
+  </data>
+  <data name="RecordingActNotBelongsToRecording" xml:space="preserve">
+    <value>El acto jurĂ­dico con identificador {0} no pertenece a la inscripciĂ³n {1}.</value>
+  </data>
+  <data name="RecordingActWithOnlyOneOwnerParty" xml:space="preserve">
+    <value>Requiero se registre cuando menos a dos copropietarios del predio o predios a los que hace referencia el acto jurĂ­dico.</value>
+  </data>
+  <data name="RecordingActWithoutOwnerParties" xml:space="preserve">
+    <value>Requiero se registre cuando menos a un propietario actual del predio o predios a los que hace referencia el acto jurĂ­dico.</value>
+  </data>
+  <data name="RecordingNotBelongsToRecordingBook" xml:space="preserve">
+    <value>La inscripciĂ³n con id = {0} no pertenece al libro registral {1}. Puede ser que este problema sea ocasionado por un error de programaciĂ³n.</value>
+  </data>
+  <data name="RecordingNotBisNumberNotFound" xml:space="preserve">
+    <value>En este libro no ha sido registrada una inscripciĂ³n con el nĂºmero {0}, por lo que no es posible agregar una inscripciĂ³n con el nĂºmero {0}-BIS.</value>
+  </data>
+  <data name="RecordingNumberAlreadyExists" xml:space="preserve">
+    <value>En este libro ya ha sido registrada otra inscripciĂ³n con el nĂºmero {0}.</value>
+  </data>
+  <data name="UnrecognizedRecordingBookType" xml:space="preserve">
+    <value>El programa que se ejecutĂ³ no estĂ¡ preparado para manejar libros registrales de tipo '{0}'.</value>
+  </data>
+  <data name="VolumeRecordingBooksCantHaveChilds" xml:space="preserve">
+    <value>Los volĂºmenes o tomos registrales '{0}' no puede tener subdivisiones.</value>
+  </data>
+</root>
