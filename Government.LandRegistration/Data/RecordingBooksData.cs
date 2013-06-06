@@ -20,38 +20,67 @@ namespace Empiria.Government.LandRegistration.Data {
 
     #region Public methods
 
-    internal static string GetNextRecordingNumber(RecordingBook book) {
-      string sql = "SELECT RecordingNumber FROM LRSRecordings WHERE RecordingId >= 900000 AND RecordingBookId = " + book.Id.ToString() + " AND RecordingStatus <> 'X' ORDER BY RecordingNumber";
 
-      DataTable table = DataReader.GetDataTable(DataOperation.Parse(sql));
+    static internal DataTable GetBookRecordingNumbers(RecordingBook book) {
+      string sql = "SELECT RecordingNumber FROM LRSRecordings" +
+                   " WHERE RecordingBookId = " + book.Id.ToString() +
+                   " AND RecordingStatus <> 'X' ORDER BY RecordingNumber";
 
-      for (int i = 0; i < table.Rows.Count; i++) {
+      return DataReader.GetDataTable(DataOperation.Parse(sql));
+    }
+
+    static internal int GetLastBookRecordingNumber(RecordingBook book) {
+      string sql = "SELECT MAX(RecordingNumber) FROM LRSRecordings" +
+                   " WHERE RecordingBookId = " + book.Id.ToString() +
+                   " AND RecordingStatus <> 'X'";
+      object data = DataReader.GetScalar(DataOperation.Parse(sql));
+      if (data != null && data != DBNull.Value) {
+        return int.Parse((string) data);
+      } else {
+        return 0;
+      }
+    }
+
+    internal static string GetNextRecordingNumberWithReuse(RecordingBook book) {
+      DataTable table = GetBookRecordingNumbers(book);
+
+      if (table.Rows.Count == 0 && book.UsePerpetualNumbering) {
+        return book.StartRecordingIndex.ToString("000");
+      } else if (table.Rows.Count == 0 && !book.UsePerpetualNumbering) {
+        return "001";
+      }
+      int indexValue = book.UsePerpetualNumbering ? book.StartRecordingIndex : 1;
+      for (int i = 0; i < table.Rows.Count; i++, indexValue++) {
         int currentRecordNumber = int.Parse((string) table.Rows[i]["RecordingNumber"]);
-        if ((i + 1) == currentRecordNumber) {
+        if (indexValue == currentRecordNumber) {
           continue;
-        } else if ((i + 1) < currentRecordNumber) {
-          return (i + 1).ToString("000");
-        } else if ((i + 1) > currentRecordNumber) {
-          throw new LandRegistrationException(LandRegistrationException.Msg.RecordingNumberAlreadyExists, currentRecordNumber);
+        } else if ((indexValue) < currentRecordNumber) {
+          return (indexValue).ToString("000");
+        } else if ((indexValue) > currentRecordNumber) {
+          throw new LandRegistrationException(LandRegistrationException.Msg.RecordingNumberAlreadyExists,
+                                              currentRecordNumber);
         }
       }
-      return (table.Rows.Count + 1).ToString("000");
+      return (indexValue).ToString("000");
     }
 
-    internal static string GetNextRecordingNumber2(RecordingBook book) {
-      string sql = "SELECT RecordingNumber FROM LRSRecordings WHERE RecordingId >= 900000 AND RecordingBookId = " + book.Id.ToString() + " AND RecordingStatus <> 'X' ORDER BY RecordingNumber";
-
-      DataTable table = DataReader.GetDataTable(DataOperation.Parse(sql));
-
-      int currentRecordNumber = 0;
-      for (int i = 0; i < table.Rows.Count; i++) {
-        currentRecordNumber = int.Parse((string) table.Rows[i]["RecordingNumber"]);
+    internal static string GetNextRecordingNumberWithNoReuse(RecordingBook book) {
+      int currentRecordNumber = GetLastBookRecordingNumber(book);
+      if (currentRecordNumber > 0) {
+        return (currentRecordNumber + 1).ToString("000");
+      } else if (currentRecordNumber == 0 && book.UsePerpetualNumbering) {
+        return book.StartRecordingIndex.ToString("000");
+      } else if (currentRecordNumber == 0 && !book.UsePerpetualNumbering) {
+        return "001";
+      } else {
+        throw new NotImplementedException();
       }
-      return (currentRecordNumber + 1).ToString("000");
     }
+
 
     internal static RecordingBook GetOpenedBook(RecorderOffice office, RecordingActTypeCategory category) {
-      string sql = "SELECT * FROM LRSRecordingBooks WHERE RecordingBookType = 'V' AND (RecordingsClassId = {C}) and RecorderOfficeId = {O} AND (RecordingBookStatus = 'O')";
+      string sql = "SELECT * FROM LRSRecordingBooks WHERE RecordingBookType = 'V'" +
+                   " AND (RecordingsClassId = {C}) and RecorderOfficeId = {O} AND (RecordingBookStatus = 'O')";
       sql = sql.Replace("{C}", category.Id.ToString());
       sql = sql.Replace("{O}", office.Id.ToString());
 
@@ -61,7 +90,8 @@ namespace Empiria.Government.LandRegistration.Data {
     }
 
     internal static int GetBookTotalSheets(RecordingBook book) {
-      object result = DataReader.GetFieldValue(DataOperation.Parse("getLRSRecordingBooksStats", book.Id), "DocumentSheets");
+      object result = DataReader.GetFieldValue(DataOperation.Parse("getLRSRecordingBooksStats", book.Id),
+                                               "DocumentSheets");
       if (result == null || result == DBNull.Value) {
         return 0;
       } else {
@@ -69,8 +99,10 @@ namespace Empiria.Government.LandRegistration.Data {
       }
     }
 
-    static internal ObjectList<Recording> GetRecordings(RecordingDocument document, Transactions.LRSTransaction transaction) {
-      string sql = "SELECT * FROM LRSRecordings WHERE TransactionId = {T} AND DocumentId = {D} AND RecordingStatus <> 'X' ORDER BY RecordingId";
+    static internal ObjectList<Recording> GetRecordings(RecordingDocument document,
+                                                        Transactions.LRSTransaction transaction) {
+      string sql = "SELECT * FROM LRSRecordings WHERE TransactionId = {T}" +
+                  " AND DocumentId = {D} AND RecordingStatus <> 'X' ORDER BY RecordingId";
       sql = sql.Replace("{T}", transaction.Id.ToString());
       sql = sql.Replace("{D}", document.Id.ToString());
 
@@ -194,8 +226,9 @@ namespace Empiria.Government.LandRegistration.Data {
     }
 
     static internal int WriteRecording(Recording o) {
-      DataOperation dataOperation = DataOperation.Parse("writeLRSRecording", o.Id, o.RecordingBook.Id, o.Transaction.Id, o.Document.Id,
-                                                        o.Number, o.StartImageIndex, o.EndImageIndex,
+      Assertion.Require(o.Id != 0, "Recording.Id can't be zero");
+      DataOperation dataOperation = DataOperation.Parse("writeLRSRecording", o.Id, o.RecordingBook.Id, o.Transaction.Id,
+                                                        o.Document.Id, o.Number, o.StartImageIndex, o.EndImageIndex,
                                                         o.Notes, o.Keywords, o.PresentationTime, o.CapturedBy.Id,
                                                         o.CapturedTime, o.QualifiedBy.Id, o.QualifiedTime,
                                                         o.AuthorizedBy.Id, o.AuthorizedTime, o.CanceledBy.Id,
@@ -209,6 +242,7 @@ namespace Empiria.Government.LandRegistration.Data {
     }
 
     static internal int WriteRecordingAct(RecordingAct o) {
+      Assertion.Require(o.Id != 0, "RecordingAct.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSRecordingAct", o.Id, o.RecordingActType.Id,
                                                         o.Recording.Id, o.Index, o.Notes,
                                                         o.AppraisalAmount.Currency.Id, o.AppraisalAmount.Amount,
@@ -221,9 +255,10 @@ namespace Empiria.Government.LandRegistration.Data {
     }
 
     static internal int WriteRecordingBook(RecordingBook o) {
+      Assertion.Require(o.Id != 0, "RecordingBook.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSRecordingBook", o.Id, o.RecorderOffice.Id,
-                                                        (char) o.Type, o.RecordingsClass.Id, o.Tag, o.Name,
-                                                        o.FullName, o.Description, o.Keywords, o.RecordingsControlCount,
+                                                        (char) o.BookType, o.RecordingsClass.Id, o.BookNumber, o.Name,
+                                                        o.FullName, o.Description, o.Keywords, o.StartRecordingIndex, o.EndRecordingIndex,
                                                         o.RecordingsControlTimePeriod.FromDate, o.RecordingsControlTimePeriod.ToDate,
                                                         o.ImagingFilesFolder.Id, o.CreationDate, o.ClosingDate,
                                                         o.CreatedBy.Id, o.AssignedTo.Id, o.ReviewedBy.Id, o.ApprovedBy.Id,
@@ -232,19 +267,24 @@ namespace Empiria.Government.LandRegistration.Data {
     }
 
     static internal int WriteRecordingDocument(RecordingDocument o) {
-      DataOperation dataOperation = DataOperation.Parse("writeLRSDocument", o.Id, o.RecordingDocumentType.Id, o.Subtype.Id,
-                                                        o.DocumentKey, -1, (char) o.DocumentRecordingRole, o.IssuePlace.Id, o.IssueOffice.Id,
-                                                        o.IssuedBy.Id, o.IssuedByPosition.Id, o.IssueDate, o.MainWitness.Id,
-                                                        o.MainWitnessPosition.Id, o.SecondaryWitness.Id, o.SecondaryWitnessPosition.Id,
-                                                        o.Name, o.FileName, o.BookNumber, o.ExpedientNumber, o.Number,
-                                                        o.SheetsCount, o.SealUpperPosition, o.StartSheet, o.EndSheet,
-                                                        o.Notes, o.Keywords, o.ReviewedBy.Id, o.AuthorizationKey,
-                                                        o.DigitalString, o.DigitalSign, o.PostedBy.Id, o.PostingTime,
-                                                        (char) o.Status, o.RecordIntegrityHashCode);
-      return DataWriter.Execute(dataOperation);
+      return DataWriter.Execute(WriteRecordingDocumentOp(o));
+    }
+
+    static internal DataOperation WriteRecordingDocumentOp(RecordingDocument o) {
+      Assertion.Require(o.Id != 0, "Document.Id can't be zero");
+      return DataOperation.Parse("writeLRSDocument", o.Id, o.RecordingDocumentType.Id, o.Subtype.Id,
+                                 o.DocumentKey, -1, (char) o.DocumentRecordingRole, o.IssuePlace.Id, o.IssueOffice.Id,
+                                 o.IssuedBy.Id, o.IssuedByPosition.Id, o.IssueDate, o.MainWitness.Id,
+                                 o.MainWitnessPosition.Id, o.SecondaryWitness.Id, o.SecondaryWitnessPosition.Id,
+                                 o.Name, o.FileName, o.BookNumber, o.ExpedientNumber, o.Number,
+                                 o.SheetsCount, o.SealUpperPosition, o.StartSheet, o.EndSheet,
+                                 o.Notes, o.Keywords, o.ReviewedBy.Id, o.AuthorizationKey,
+                                 o.DigitalString, o.DigitalSign, o.PostedBy.Id, o.PostingTime,
+                                 (char) o.Status, o.RecordIntegrityHashCode);
     }
 
     static internal int WriteRecordingPayment(RecordingPayment o) {
+      Assertion.Require(o.Id != 0, "RecordingPayment.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSRecordingPayment", o.Id, o.Recording.Id, o.PaymentOffice.Id,
                                                         o.ReferenceId, o.ReceiptNumber, o.OtherReceipts, o.Notes, o.FeeTypeId,
                                                         o.CalculatedBy.Id, o.AuthorizedBy.Id, o.DiscountTypeId,

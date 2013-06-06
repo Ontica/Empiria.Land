@@ -237,6 +237,7 @@ namespace Empiria.Government.LandRegistration.Data {
     }
 
     static internal int WriteHumanParty(HumanParty o) {
+      Assertion.Require(o.Id != 0, "HumanParty.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.ObjectTypeInfo.Id, o.FullName,
                                                         o.FirstName, o.FirstFamilyName, o.SecondFamilyName,
                                                         o.MaritalFamilyName, o.ShortName, o.Nicknames, o.Tags,
@@ -251,6 +252,7 @@ namespace Empiria.Government.LandRegistration.Data {
     }
 
     static internal int WriteOrganizationParty(OrganizationParty o) {
+      Assertion.Require(o.Id != 0, "OrganizationParty.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.ObjectTypeInfo.Id, o.FullName,
                                                         String.Empty, String.Empty, String.Empty,
                                                         String.Empty, o.ShortName, o.Nicknames, o.Tags,
@@ -266,6 +268,7 @@ namespace Empiria.Government.LandRegistration.Data {
     }
 
     static internal int WriteProperty(Property o) {
+      Assertion.Require(o.Id != 0, "Property.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSProperty", o.Id, o.PropertyType.Id, o.TractKey,
                                                         o.CadastralOffice.Id, o.CadastralObjectId, o.CadastralKey,
                                                         o.LandUse.Id, o.CommonName, o.Antecedent,
@@ -280,6 +283,7 @@ namespace Empiria.Government.LandRegistration.Data {
     }
 
     static internal int WritePropertyEvent(PropertyEvent o) {
+      Assertion.Require(o.Id != 0, "PropertyEvent.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSPropertyEvent", o.Id, o.Property.Id, o.RecordingAct.Id,
                                                         o.MetesAndBounds, o.Notes, o.TotalArea.Amount, o.TotalArea.Unit.Id,
                                                         o.FloorArea.Amount, o.FloorArea.Unit.Id,
@@ -288,6 +292,7 @@ namespace Empiria.Government.LandRegistration.Data {
     }
 
     static internal int WriteRecordingActParty(RecordingActParty o) {
+      Assertion.Require(o.Id != 0, "RecordingActParty.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSRecordingActParty", o.Id, o.RecordingAct.Id,
                                                         o.Party.Id, o.PartyRole.Id, o.SecondaryParty.Id,
                                                         o.SecondaryPartyRole.Id, o.Notes, (char) o.OwnershipMode,

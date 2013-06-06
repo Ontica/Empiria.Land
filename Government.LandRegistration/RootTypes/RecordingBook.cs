@@ -46,17 +46,18 @@ namespace Empiria.Government.LandRegistration {
     private RecorderOffice recorderOffice = RecorderOffice.Empty;
     private RecordingBookType type = RecordingBookType.Volume;
     private RecordingActTypeCategory recordingsClass = RecordingActTypeCategory.Empty;
-    private string tag = String.Empty;
+    private string bookNumber = String.Empty;
     private string name = String.Empty;
     private string fullName = String.Empty;
     private string description = String.Empty;
     private string keywords = String.Empty;
-    private int recordingsControlCount = 0;
+    private int startRecordingIndex = 0;
+    private int endRecordingIndex = 0;
     private TimePeriod recordingsControlTimePeriod = new TimePeriod(ExecutionServer.DateMinValue, ExecutionServer.DateMaxValue);
     private RecordBookDirectory imagingFilesFolder = RecordBookDirectory.Empty;
     private DateTime creationDate = DateTime.Now;
     private DateTime closingDate = ExecutionServer.DateMaxValue;
-    private Contact createdBy = Contact.Parse(ExecutionServer.CurrentUser.Id);
+    private Contact createdBy = Person.Empty;
     private Contact assignedTo = RecorderOffice.Empty;
     private Contact reviewedBy = RecorderOffice.Empty;
     private Contact approvedBy = RecorderOffice.Empty;
@@ -87,8 +88,8 @@ namespace Empiria.Government.LandRegistration {
       : base(thisTypeName) {
       this.RecorderOffice = recorderOffice;
       this.Parent = RecordingBook.Empty;
-      this.Type = RecordingBookType.Section;
-      this.Tag = recordingBookTag;
+      this.BookType = RecordingBookType.Section;
+      this.BookNumber = recordingBookTag;
       this.Name = this.parentRecordingBook.BuildChildName(recordingBookTag);
       this.FullName = recorderOffice.Alias + " " + this.parentRecordingBook.BuildChildFullName(recordingBookTag);
       this.ImagingFilesFolder = RecordBookDirectory.Empty;
@@ -98,8 +99,8 @@ namespace Empiria.Government.LandRegistration {
       : base(thisTypeName) {
       this.RecorderOffice = parent.RecorderOffice;
       this.Parent = parent;
-      this.Type = parent.ChildsRecordingBookType;
-      this.Tag = recordingBookTag;
+      this.BookType = parent.ChildsRecordingBookType;
+      this.BookNumber = recordingBookTag;
       this.Name = parent.BuildChildName(recordingBookTag);
       this.FullName = parent.BuildChildFullName(recordingBookTag);
       this.ImagingFilesFolder = RecordBookDirectory.Empty;
@@ -110,8 +111,8 @@ namespace Empiria.Government.LandRegistration {
       : base(thisTypeName) {
       this.RecorderOffice = parent.RecorderOffice;
       this.Parent = parent;
-      this.Type = parent.ChildsRecordingBookType;
-      this.Tag = recordingBookTag;
+      this.BookType = parent.ChildsRecordingBookType;
+      this.BookNumber = recordingBookTag;
       this.Name = parent.BuildChildName(recordingBookTag);
       this.FullName = parent.BuildChildFullName(recordingBookTag);
       this.ImagingFilesFolder = imagingDirectory;
@@ -131,30 +132,57 @@ namespace Empiria.Government.LandRegistration {
 
     static public RecordingBook GetAssignedBookForRecording(RecorderOffice office, RecordingActTypeCategory section,
                                                             RecordingDocument document) {
-
+      Assertion.RequireObject(document, "document");
+      Assertion.Require(!document.IsEmptyInstance && !document.IsNew,
+                        "Document can't be neither an empty or unsaved document.");
       RecordingBook openedBook = RecordingBooksData.GetOpenedBook(office, section);
-      int currentBookSheets = openedBook.CalculateTotalSheets();
+      if (openedBook.HasSpaceForRecording(document)) {
+        return openedBook;
+      } else {
+        return openedBook.CloseAndCreateNew();
+      }
+    }
+
+    private bool HasSpaceForRecording(RecordingDocument document) {
+      if (this.UsePerpetualNumbering) {
+        return (RecordingBooksData.GetLastBookRecordingNumber(this) < this.EndRecordingIndex);
+      }
+      // !UsePerpetualNumbering  
+      int currentBookSheets = this.CalculateTotalSheets();
       int newTotalSheets = currentBookSheets + document.SheetsCount;
 
       int lowerBound = ExecutionServer.LicenseName == "Tlaxcala" ? 275 : 250;
       int upperBound = ExecutionServer.LicenseName == "Tlaxcala" ? 286 : 260;
 
       if (newTotalSheets <= lowerBound) {
-        return openedBook;
+        return true;
       } else if (currentBookSheets < lowerBound && newTotalSheets <= upperBound) {
-        return openedBook;
+        return true;
+      } else {
+        return false;
       }
-      return openedBook.CloseAndCreateNew();
     }
 
     private RecordingBook CloseAndCreateNew() {
       this.Status = RecordingBookStatus.Closed;
+      this.ClosingDate = DateTime.Now;
+      if (!this.UsePerpetualNumbering) {
+        this.EndRecordingIndex = this.Recordings.Count;
+      }
       this.Save();
       RecordingBook newBook = this.Clone();
       newBook.Status = RecordingBookStatus.Opened;
-      newBook.Tag = (int.Parse(this.Tag) + 1).ToString("0000");
-      newBook.Name = "Volumen " + newBook.Tag;
-      newBook.FullName = newBook.Parent.Name + " Volumen " + newBook.Tag;
+      if (newBook.UsePerpetualNumbering) {
+        newBook.StartRecordingIndex = this.StartRecordingIndex + 50;
+        newBook.EndRecordingIndex = this.EndRecordingIndex + 50;
+        newBook.BookNumber = newBook.StartRecordingIndex.ToString("0000") + "-" + newBook.EndRecordingIndex.ToString("0000");
+      } else {
+        newBook.StartRecordingIndex = 1;
+        newBook.EndRecordingIndex = 250;
+        newBook.BookNumber = (int.Parse(this.BookNumber) + 1).ToString("0000");
+      }
+      newBook.Name = "Volumen " + newBook.BookNumber;
+      newBook.FullName = newBook.Parent.FullName + " " + newBook.Name;
       newBook.Save();
 
       return newBook;
@@ -164,19 +192,9 @@ namespace Empiria.Government.LandRegistration {
       RecordingBook newBook = new RecordingBook();
 
       newBook.RecorderOffice = this.RecorderOffice;
-      newBook.Type = this.Type;
+      newBook.BookType = this.BookType;
       newBook.RecordingsClass = this.RecordingsClass;
-      newBook.Tag = String.Empty;
-      newBook.Name = String.Empty;
-      newBook.FullName = String.Empty;
-      newBook.keywords = String.Empty;
-      newBook.Description = String.Empty;
-      newBook.RecordingsControlCount = this.RecordingsControlCount;
       newBook.RecordingsControlTimePeriod = this.RecordingsControlTimePeriod;
-      newBook.ImagingFilesFolder = this.ImagingFilesFolder;
-      newBook.CreationDate = this.CreationDate;
-      newBook.ClosingDate = this.ClosingDate;
-      newBook.CreatedBy = this.CreatedBy;
       newBook.AssignedTo = this.AssignedTo;
       newBook.ReviewedBy = this.ReviewedBy;
       newBook.ApprovedBy = this.ApprovedBy;
@@ -190,11 +208,16 @@ namespace Empiria.Government.LandRegistration {
       return RecordingBooksData.GetBookTotalSheets(this);
     }
 
-    public Recording CreateRecording(LRSTransaction transaction, RecordingDocument document) {
+    public Recording CreateRecording(LRSTransaction transaction) {
+      Assertion.RequireObject(transaction, "transaction");
+      Assertion.RequireObject(transaction.Document, "document");
+      Assertion.Require(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
+                        "Transaction document can't be neither an empty or a new document instance");
+
       Recording recording = new Recording();
       recording.RecordingBook = this;
       recording.Transaction = transaction;
-      recording.Document = document;
+      recording.Document = transaction.Document;
       recording.UseBisNumberTag = false;
       recording.Number = GetNextRecordingNumber();
       recording.Status = RecordingStatus.Incomplete;
@@ -209,10 +232,16 @@ namespace Empiria.Government.LandRegistration {
     }
 
     public string GetNextRecordingNumber() {
-      if (ExecutionServer.LicenseName == "Tlaxcala") {
-        return RecordingBooksData.GetNextRecordingNumber(this);
+      if (this.ReuseUnusedRecordingNumbers) {
+        return RecordingBooksData.GetNextRecordingNumberWithReuse(this);
       } else {
-        return RecordingBooksData.GetNextRecordingNumber2(this);
+        return RecordingBooksData.GetNextRecordingNumberWithNoReuse(this);
+      }
+    }
+
+    public bool ReuseUnusedRecordingNumbers {
+      get {
+        return (ExecutionServer.LicenseName == "Tlaxcala");
       }
     }
 
@@ -232,7 +261,7 @@ namespace Empiria.Government.LandRegistration {
 
     public RecordingBookType ChildsRecordingBookType {
       get {
-        switch (this.Type) {
+        switch (this.BookType) {
           case RecordingBookType.Root:
             return RecordingBookType.Section;
           case RecordingBookType.Section:
@@ -251,7 +280,7 @@ namespace Empiria.Government.LandRegistration {
           case RecordingBookType.Volume:
             throw new LandRegistrationException(LandRegistrationException.Msg.VolumeRecordingBooksCantHaveChilds, this.FullName);
           default:
-            throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType, this.Type.ToString());
+            throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType, this.BookType.ToString());
         }
       }
     }
@@ -261,9 +290,14 @@ namespace Empiria.Government.LandRegistration {
       set { closingDate = value; }
     }
 
-    public int RecordingsControlCount {
-      get { return recordingsControlCount; }
-      set { recordingsControlCount = value; }
+    public int StartRecordingIndex {
+      get { return startRecordingIndex; }
+      set { startRecordingIndex = value; }
+    }
+
+    public int EndRecordingIndex {
+      get { return endRecordingIndex; }
+      set { endRecordingIndex = value; }
     }
 
     public TimePeriod RecordingsControlTimePeriod {
@@ -348,14 +382,20 @@ namespace Empiria.Government.LandRegistration {
       set { status = value; }
     }
 
-    public string Tag {
-      get { return tag; }
-      set { tag = (value == String.Empty || value == "00" || value == "0") ? "N/A" : value; }
+    public string BookNumber {
+      get { return bookNumber; }
+      set { bookNumber = (value == String.Empty || value == "00" || value == "0") ? "N/A" : value; }
     }
 
-    public RecordingBookType Type {
+    public RecordingBookType BookType {
       get { return type; }
       set { type = value; }
+    }
+
+    public bool UsePerpetualNumbering {
+      get {
+        return RecordingsClass.UsePerpetualNumbering;
+      }
     }
 
     #endregion Public properties
@@ -369,18 +409,18 @@ namespace Empiria.Government.LandRegistration {
     }
 
     internal string BuildChildFullName(string recordingBookTag) {
-      switch (this.Type) {
+      switch (this.BookType) {
         case RecordingBookType.Root:
           return "Sección " + recordingBookTag;
         case RecordingBookType.Section:
           if (RecordingBook.UseBookLevel) {
-            return recorderOffice.Alias + " Sección " + this.Tag + " Libro " + recordingBookTag;
+            return recorderOffice.Alias + " Sección " + this.BookNumber + " Libro " + recordingBookTag;
           } else {
-            return recorderOffice.Alias + " Sección " + this.Tag + " Volumen " + recordingBookTag;
+            return recorderOffice.Alias + " Sección " + this.BookNumber + " Volumen " + recordingBookTag;
           }
         case RecordingBookType.Book:
           if (RecordingBook.UseBookLevel) {
-            return recorderOffice.Alias + " Sección " + this.Parent.Tag + " Libro " + this.Tag + " Volumen " + recordingBookTag;
+            return recorderOffice.Alias + " Sección " + this.Parent.BookNumber + " Libro " + this.BookNumber + " Volumen " + recordingBookTag;
           } else {
             throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType,
                                                 RecordingBookType.Book.ToString());
@@ -388,12 +428,12 @@ namespace Empiria.Government.LandRegistration {
         case RecordingBookType.Volume:
           throw new LandRegistrationException(LandRegistrationException.Msg.VolumeRecordingBooksCantHaveChilds, this.FullName);
         default:
-          throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType, this.Type.ToString());
+          throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType, this.BookType.ToString());
       }
     }
 
     internal string BuildChildName(string recordingBookTag) {
-      switch (this.Type) {
+      switch (this.BookType) {
         case RecordingBookType.Root:
           return "Sección " + recordingBookTag;
         case RecordingBookType.Section:
@@ -412,7 +452,7 @@ namespace Empiria.Government.LandRegistration {
         case RecordingBookType.Volume:
           throw new LandRegistrationException(LandRegistrationException.Msg.VolumeRecordingBooksCantHaveChilds, this.FullName);
         default:
-          throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType, this.Type.ToString());
+          throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType, this.BookType.ToString());
       }
     }
 
@@ -516,14 +556,14 @@ namespace Empiria.Government.LandRegistration {
 
       ObjectList<RecordingBook> recordingBookList = directory.RecorderOffice.GetRootRecordingBooks();
       string tag = directory.GetRecordingBookTag(RecordingBookType.Section);
-      RecordingBook currentParent = recordingBookList.Find((x) => x.Tag.Equals(tag));
+      RecordingBook currentParent = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
       if (currentParent == null) {
         currentParent = directory.RecorderOffice.AddRootRecordingBook(tag);
       }
       if (RecordingBook.UseBookLevel) {
         recordingBookList = currentParent.GetChildBooks();
         tag = directory.GetRecordingBookTag(RecordingBookType.Book);
-        recordingBook = recordingBookList.Find((x) => x.Tag.Equals(tag));
+        recordingBook = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
         if (recordingBook == null) {
           recordingBook = new RecordingBook(currentParent, tag);
           recordingBook.Save();
@@ -532,11 +572,12 @@ namespace Empiria.Government.LandRegistration {
       }
       recordingBookList = currentParent.GetChildBooks();
       tag = directory.GetRecordingBookTag(RecordingBookType.Volume);
-      recordingBook = recordingBookList.Find((x) => x.Tag.Equals(tag));
+      recordingBook = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
       if (recordingBook == null) {
         recordingBook = new RecordingBook(currentParent, directory, tag);
         recordingBook.RecordingsClass = recordingsClass;
-        recordingBook.recordingsControlCount = recordingsControlCount;
+        recordingBook.StartRecordingIndex = 1;
+        recordingBook.EndRecordingIndex = recordingsControlCount;
         recordingBook.recordingsControlTimePeriod = recordingsControlTimePeriod;
 
         recordingBook.Save();
@@ -546,14 +587,15 @@ namespace Empiria.Government.LandRegistration {
 
     protected override void ImplementsLoadObjectData(DataRow row) {
       this.RecorderOffice = RecorderOffice.Parse((int) row["RecorderOfficeId"]);
-      this.Type = (RecordingBookType) Convert.ToChar(row["RecordingBookType"]);
+      this.BookType = (RecordingBookType) Convert.ToChar(row["RecordingBookType"]);
       this.RecordingsClass = RecordingActTypeCategory.Parse((int) row["RecordingsClassId"]);
-      this.Tag = (string) row["RecordingBookNumber"];
+      this.BookNumber = (string) row["RecordingBookNumber"];
       this.Name = (string) row["RecordingBookName"];
       this.FullName = (string) row["RecordingBookFullName"];
       this.keywords = (string) row["RecordingBookKeywords"];
       this.Description = (string) row["RecordingBookDescription"];
-      this.RecordingsControlCount = (int) row["RecordingsControlCount"];
+      this.StartRecordingIndex = (int) row["StartRecordingIndex"];
+      this.EndRecordingIndex = (int) row["EndRecordingIndex"];
       this.RecordingsControlTimePeriod = new TimePeriod((DateTime) row["RecordingsControlFirstDate"], (DateTime) row["RecordingsControlLastDate"]);
       this.ImagingFilesFolder = RecordBookDirectory.Parse((int) row["RecordingBookFilesFolderId"]);
       this.CreationDate = (DateTime) row["CreationDate"];
@@ -568,7 +610,12 @@ namespace Empiria.Government.LandRegistration {
     }
 
     protected override void ImplementsSave() {
-      this.keywords = this.name + " " + EmpiriaString.BuildKeywords(this.Tag);
+      if (createdBy.IsEmptyInstance) {
+        this.creationDate = DateTime.Now;
+        this.createdBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      }
+
+      this.keywords = EmpiriaString.BuildKeywords(this.FullName);
 
       RecordingBooksData.WriteRecordingBook(this);
     }

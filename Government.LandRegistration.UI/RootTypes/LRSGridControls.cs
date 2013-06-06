@@ -444,14 +444,14 @@ namespace Empiria.Government.LandRegistration.UI {
     static public string GetRecordingsSummaryTable(ObjectList<Recording> recordings, int pageSize, int pageIndex) {
       PagedDataSource pageView = GetPagedDataSource(recordings, pageSize, pageIndex);
 
-      const string header = @"<table id='tblRecordingsViewer' class='details' style='width:558px'>" +
-                              "<tr class='detailsHeader'><td>Inscripción</td><td>Imágenes</td>" +
-                              "<td>Presentación</td><td>Autorización</td><td width='40%'>Observaciones</td>" +
-                              "<td>Estado</td><td>Registró</td></tr>";
+      const string header = @"<table id='tblRecordingsViewer' class='details' style='width:658px'>" +
+                              "<tr class='detailsHeader'><td>Partida</td><td>Imágenes</td>" +
+                              "<td>Presentación</td><td>Autorización</td><td>Observaciones</td>" +
+                              "<td>Estado</td><td width='200px'>Registró</td></tr>";
 
       const string row = @"<tr class='{CLASS}'><td><a href=""javascript:doOperation('moveToRecording', {RECORDING.ID})"">{RECORDING.NUMBER}</a></td>" +
                            "<td>{RECORDING.IMAGES}</td><td>{RECORDING.PRESENTATION.TIME}</td><td>{RECORDING.AUTHORIZATION.TIME}</td>" +
-                           "<td style='white-space:normal;'>{RECORDING.NOTES}</td><td>{RECORDING.STATUS}</td><td style='white-space:normal;'>{CAPTURED.BY}</td></tr>";
+                           "<td style='white-space:normal;'>{RECORDING.NOTES}</td><td>{RECORDING.STATUS}</td><td style='white-space:normal;width:200px'>{CAPTURED.BY}</td></tr>";
       string html = String.Empty;
       string temp = String.Empty;
       for (int i = pageView.FirstIndexInPage; i < Math.Min(pageView.FirstIndexInPage + pageSize, recordings.Count); i++) {
@@ -461,7 +461,11 @@ namespace Empiria.Government.LandRegistration.UI {
           temp = row.Replace("{CLASS}", "detailsItem");
         }
         temp = temp.Replace("{RECORDING.NUMBER}", recordings[i].Number);
-        temp = temp.Replace("{RECORDING.IMAGES}", "De la " + recordings[i].StartImageIndex.ToString() + " a la " + recordings[i].EndImageIndex);
+        if (recordings[i].StartImageIndex <= 0 && recordings[i].EndImageIndex <= 0) {
+          temp = temp.Replace("{RECORDING.IMAGES}", "Sin imagen");
+        } else {
+          temp = temp.Replace("{RECORDING.IMAGES}", "De la " + recordings[i].StartImageIndex.ToString() + " a la " + recordings[i].EndImageIndex);
+        }
         if (recordings[i].PresentationTime == Empiria.ExecutionServer.DateMaxValue) {
           temp = temp.Replace("{RECORDING.PRESENTATION.TIME}", "No consta");
         } else {

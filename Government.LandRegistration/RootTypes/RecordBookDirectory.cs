@@ -24,6 +24,7 @@ namespace Empiria.Government.LandRegistration {
 
     private const string thisTypeName = "ObjectType.FilesFolder.RecordBookDirectory";
 
+    static private readonly string emptyBookUrl = ConfigurationData.GetString("RecordingBook.Empty.Book.Image.Url");
     static private readonly string emptyImageFullPath = ConfigurationData.GetString("RecordingBook.Empty.Image.Path");
     static private readonly string emptyImageFileName = ConfigurationData.GetString("RecordingBook.Empty.Image.FileName");
     static private readonly bool processOnlyNewDirectories = ConfigurationData.GetBoolean("RecordBookDirectory.ProcessOnlyNewDirectories");
@@ -74,9 +75,19 @@ namespace Empiria.Government.LandRegistration {
     }
 
     public string GetImageURL(int position) {
+      if (this.IsEmptyInstance) {
+        return emptyBookUrl;
+      }
       System.IO.FileInfo[] fileInfo = base.GetFiles();
-
-      return base.MapPath(fileInfo[position]);
+      if (position < 0) {
+        position = 0;
+      }
+      if (0 <= position && position < fileInfo.Length) {
+        return base.MapPath(fileInfo[position]);
+      } else {
+        throw new LandRegistrationException(LandRegistrationException.Msg.InvalidImagePosition, 
+                                            this.Id, this.DisplayName, position, fileInfo.Length);
+      }
     }
 
     public RecorderOffice RecorderOffice {

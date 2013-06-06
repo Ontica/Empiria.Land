@@ -56,6 +56,8 @@ namespace Empiria.Government.LandRegistration {
       RecorderOfficeRootRecordingBookAlreadyExists,
       UnrecognizedRecordingBookType,
       VolumeRecordingBooksCantHaveChilds,
+      InvalidRecordingNumber,
+      InvalidImagePosition,
     }
 
     static private string resourceBaseName =

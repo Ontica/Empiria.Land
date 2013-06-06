@@ -71,7 +71,7 @@ namespace Empiria.Government.LandRegistration {
 
     private string digitalString = String.Empty;
     private string digitalSign = String.Empty;
-    private Contact postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+    private Contact postedBy = Person.Empty;
     private DateTime postingTime = DateTime.Now;
     private RecordingDocumentStatus status = RecordingDocumentStatus.Incomplete;
     private string recordIntegrityHashCode = String.Empty;
@@ -375,18 +375,21 @@ namespace Empiria.Government.LandRegistration {
     }
 
     protected override void ImplementsSave() {
-      if (base.IsNew) {
+      PrepareForSave();
+      RecordingBooksData.WriteRecordingDocument(this);
+    }
+
+    internal void PrepareForSave() {
+      if (this.PostedBy.IsEmptyInstance) {      // IsNew
         this.postingTime = DateTime.Now;
         this.postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
       if (String.IsNullOrWhiteSpace(this.documentKey)) {
         this.documentKey = TransactionData.GenerateDocumentKey();
       }
-      this.keywords = EmpiriaString.BuildKeywords(this.Subtype.Name, this.DocumentKey, this.Name, this.FileName, this.bookNumber,
-                                                  this.expedientNumber, this.number);
-      RecordingBooksData.WriteRecordingDocument(this);
+      this.keywords = EmpiriaString.BuildKeywords(this.DocumentKey, !this.Subtype.IsEmptyInstance ? Name : this.RecordingDocumentType.DisplayName, 
+                                                  this.Name, this.FileName, this.bookNumber, this.expedientNumber, this.number);
     }
-
 
     #endregion Public methods
 

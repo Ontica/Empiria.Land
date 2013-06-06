@@ -73,7 +73,7 @@ namespace Empiria.Government.LandRegistration {
 
     public RecordingBook AddRootRecordingBook(string rootTag) {
       ObjectList<RecordingBook> roots = this.GetRootRecordingBooks();
-      if (!roots.Contains((x) => x.Tag.Equals(rootTag))) {
+      if (!roots.Contains((x) => x.BookNumber.Equals(rootTag))) {
         RecordingBook recordingBook = new RecordingBook(this, rootTag);
         recordingBook.Save();
         return recordingBook;

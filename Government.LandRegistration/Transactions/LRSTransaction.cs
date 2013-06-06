@@ -234,7 +234,6 @@ namespace Empiria.Government.LandRegistration.Transactions {
 
     public RecordingDocument Document {
       get { return document; }
-      set { document = value; }
     }
 
     public decimal ComplexityIndex {
@@ -639,6 +638,14 @@ namespace Empiria.Government.LandRegistration.Transactions {
 
     #region Public methods
 
+    public void AttachDocument(RecordingDocument document) {
+      Assertion.AssertObject(document, "document");
+
+      document.Save();
+      this.document = document;
+      this.Save();
+    }
+
     public string GetDigitalSign() {
       return Empiria.Security.Cryptographer.CreateDigitalSign(GetDigitalString());
     }
@@ -779,7 +786,6 @@ namespace Empiria.Government.LandRegistration.Transactions {
       if (lastTrack.NextStatus == TransactionStatus.EndPoint) {
         throw new LandRegistrationException(LandRegistrationException.Msg.NextStatusCantBeEndPoint, lastTrack.Id);
       }
-
       this.status = lastTrack.NextStatus;
       lastTrack.CreateNext(notes);
       ResetTrack();
@@ -869,6 +875,16 @@ namespace Empiria.Government.LandRegistration.Transactions {
 
     protected override void ImplementsSave() {
       bool isnew = this.postedBy.IsEmptyInstance;
+      PrepareForSave();
+      TransactionData.WriteTransaction(this);
+      if (isnew) {
+        LRSTransactionTrack track = LRSTransactionTrack.CreateFirst(this);
+        ResetTrack();
+      }
+    }
+
+    internal void PrepareForSave() {
+      bool isnew = this.postedBy.IsEmptyInstance;
       if (isnew) {
         this.key = TransactionData.GenerateTransactionKey();
         this.postingTime = DateTime.Now;
@@ -887,12 +903,6 @@ namespace Empiria.Government.LandRegistration.Transactions {
                                                                 this.ClosedBy.Id, this.ClosingTime, this.ClosingNotes, this.LastDeliveryTime, this.DeliveryNotes,
                                                                 this.NonWorkingTime, this.PostingTime, this.PostedBy.Id, this.Status);
 
-      TransactionData.WriteTransaction(this);
-
-      if (isnew) {
-        LRSTransactionTrack track = LRSTransactionTrack.CreateFirst(this);
-        ResetTrack();
-      }
     }
 
     public string ValidateStatusChange(TransactionStatus newStatus) {

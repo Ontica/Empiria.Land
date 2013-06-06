@@ -384,25 +384,10 @@ namespace Empiria.Government.LandRegistration {
       this.integrityHashCode = (string) row["PropertyRIHC"];
     }
 
-    private string GenerateTractKey() {
-      const string literals = "ABCDEFHJKMNPQRTUWYZ" +
-                              "012345678901234567890123456789";
-
-      Random random = new Random();
-      string temp = String.Empty;
-      int hashCode = 0;
-      for (int i = 0; i < 8; i++) {
-        int position = random.Next(literals.Length);
-        temp += literals[position];
-        hashCode += (Math.Abs(temp.GetHashCode()) % (i + 1) ^ 2);
-      }
-      return temp + "-" + (hashCode % 10);
-    }
-
     protected override void ImplementsSave() {
       if (this.tractKey.Length == 0) {
         while (true) {
-          string temp = GenerateTractKey();
+          string temp = TransactionData.GeneratePropertyKey();
           if (!PropertyData.ExistsPropertyTractKey(temp)) {
             this.tractKey = temp;
             break;

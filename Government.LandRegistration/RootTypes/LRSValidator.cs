@@ -205,7 +205,7 @@ namespace Empiria.Government.LandRegistration {
       }
       int imageCount = recordingBook.ImagingFilesFolder.FilesCount;
 
-      if ((imageStartIndex <= 0) || (imageEndIndex) <= 0 ||
+      if ((imageStartIndex == 0) || (imageEndIndex == 0) ||
           (imageStartIndex > imageEndIndex) || (imageEndIndex > imageCount)) {
         return new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingImageRange,
                                              recordingBook.FullName, imageStartIndex, imageEndIndex, imageCount);

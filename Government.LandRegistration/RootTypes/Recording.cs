@@ -1,13 +1,13 @@
-ï»¿/* EmpiriaÂ® Land 2013 ****************************************************************************************
+/* Empiria® Land 2013 ****************************************************************************************
 *                                                                                                            *
-*  Solution  : EmpiriaÂ® Land                                  System   : Land Registration System            *
+*  Solution  : Empiria® Land                                  System   : Land Registration System            *
 *  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
 *  Type      : Recording                                      Pattern  : Empiria Object Type                 *
 *  Date      : 25/Jun/2013                                    Version  : 5.1     License: CC BY-NC-SA 3.0    *
 *                                                                                                            *
 *  Summary   : Represents a general recording in Land Registration System.                                   *
 *                                                                                                            *
-**************************************************** Copyright Â© La VÃ­a Ã“ntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
 using System;
 using System.Data;
 using Empiria.Contacts;
@@ -45,7 +45,7 @@ namespace Empiria.Government.LandRegistration {
     private string notes = String.Empty;
     private string keywords = String.Empty;
     private DateTime presentationTime = ExecutionServer.DateMaxValue;
-    private Contact capturedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+    private Contact capturedBy = Person.Empty;
     private DateTime capturedTime = DateTime.Now;
     private Contact qualifiedBy = RecorderOffice.Empty;
     private DateTime qualifiedTime = ExecutionServer.DateMaxValue;
@@ -71,7 +71,7 @@ namespace Empiria.Government.LandRegistration {
 
     public Recording()
       : base(thisTypeName) {
-
+      document = RecordingDocument.Empty;
     }
 
     protected Recording(string typeName)
@@ -182,17 +182,20 @@ namespace Empiria.Government.LandRegistration {
     public string Number {
       get { return number; }
       set {
-        if (!this.UseBisNumberTag) {
-          number = FormatNumber(int.Parse(value), false);
-        } else {  // Use Bis Number
-          number = FormatNumber(int.Parse(value.Replace(Recording.BisNumberTag, String.Empty)), true);
+        int integerNumber = 0;
+        if (this.UseBisNumberTag) {
+          value = value.Replace(Recording.BisNumberTag, String.Empty);
         }
-      }
+        if (!int.TryParse(value, out integerNumber)) {
+          throw new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingNumber, value);
+        }
+        number = FormatNumber(integerNumber, this.UseBisNumberTag);
+      }   // set
     }
 
     public string FullNumber {
       get {
-        return "InscripciÃ³n " + this.Number + " en " + this.RecordingBook.FullName;
+        return "Inscripción " + this.Number + " en " + this.RecordingBook.FullName;
       }
     }
 
@@ -374,7 +377,7 @@ namespace Empiria.Government.LandRegistration {
       }
       attachmentFolderList = new RecordingAttachmentFolderList();
 
-      attachmentFolderList.Append(this, "RaÃ­z");
+      attachmentFolderList.Append(this, "Raíz");
 
       ObjectList<PropertyEvent> annotations = this.GetPropertiesAnnotationsList();
       for (int i = 0; i < annotations.Count; i++) {
@@ -458,7 +461,7 @@ namespace Empiria.Government.LandRegistration {
     }
 
     protected override void ImplementsSave() {
-      if (base.IsNew) {
+      if (capturedBy.IsEmptyInstance) {
         this.capturedTime = DateTime.Now;
         this.capturedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
