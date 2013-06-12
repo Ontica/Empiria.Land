@@ -124,7 +124,6 @@ namespace Empiria.Government.LandRegistration {
                                                   (x, y) => x.FullName.CompareTo(y.FullName));
     }
 
-
     public ObjectList<RecordingBook> GetTraslativeRecordingBooks() {
       RecordingActTypeCategory category = RecordingActTypeCategory.Parse(1051);
 

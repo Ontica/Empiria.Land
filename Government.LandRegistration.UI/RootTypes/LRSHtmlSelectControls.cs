@@ -69,8 +69,7 @@ namespace Empiria.Government.LandRegistration.UI {
 
     static public string GetTransactionNewStatusComboItems(int typeId, int docTypeId, TransactionStatus status) {
       List<TransactionStatus> list = LRSTransaction.NextStatusList(LRSTransactionType.Parse(typeId),
-                                                                      LRSDocumentType.Parse(docTypeId), status);
-
+                                                                   LRSDocumentType.Parse(docTypeId), status);
       string html = String.Empty;
       for (int i = 0; i < list.Count; i++) {
         html += HtmlSelectContent.GetComboHtmlItem(Convert.ToString((char) list[i]), LRSTransaction.StatusName(list[i]));
@@ -156,6 +155,18 @@ namespace Empiria.Government.LandRegistration.UI {
       HtmlSelectContent.LoadCombo(comboControl, officeList, "Id", "Alias", header);
       if (defaultOffice != null && !defaultOffice.IsEmptyInstance) {
         comboControl.Value = defaultOffice.Id.ToString();
+      }
+    }
+
+    static public void LoadDomainRecordingSections(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
+                                                   string defaultValue = "") {
+      ObjectList<KeyValuePair> list = KeyValuePair.GetList("LRSDomainTraslativeSectionList");
+
+      string header = (comboControlUseMode == ComboControlUseMode.ObjectCreation)
+                              ? "( Distrito / Sección )" : "( Todas los Distritos )";
+      HtmlSelectContent.LoadCombo(comboControl, list, "Value", "Name", header);
+      if (defaultValue != null) {
+        comboControl.Value = defaultValue;
       }
     }
 

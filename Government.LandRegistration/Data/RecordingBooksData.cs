@@ -139,8 +139,9 @@ namespace Empiria.Government.LandRegistration.Data {
       return new ObjectList<RecordingPayment>((x) => RecordingPayment.Parse(x), view);
     }
 
-    static public ObjectList<RecordingBook> GetRecordingBooks(string filter) {
-      DataTable table = GeneralDataOperations.GetEntities("LRSRecordingBooks", filter, "RecordingBookFullName");
+    static public ObjectList<RecordingBook> GetRecordingBooks(string filter, string sort = "RecordingBookFullName") {
+      filter = GeneralDataOperations.BuildSqlAndFilter(filter, "RecordingBookType = 'V'");
+      DataTable table = GeneralDataOperations.GetEntities("LRSRecordingBooks", filter, sort);
 
       return new ObjectList<RecordingBook>((x) => RecordingBook.Parse(x), table);
     }

@@ -41,7 +41,6 @@ namespace Empiria.Government.LandRegistration {
 
     private LRSDocumentType documentSubtype = LRSDocumentType.Empty;
     private string documentKey = String.Empty;
-    //private Recording recording = Recording.Empty;
     private DocumentRecordingRole documentRecordingRole = DocumentRecordingRole.Main;
     private GeographicRegionItem issuePlace = GeographicRegionItem.Empty;
     private Organization issueOffice = Organization.Empty;
@@ -111,12 +110,11 @@ namespace Empiria.Government.LandRegistration {
       }
     }
 
-    static public RecordingDocument Create(RecordingDocumentType recordingDocumentType, Recording recording) {
+    static public RecordingDocument Create(RecordingDocumentType recordingDocumentType) {
       RecordingDocument newDocument = recordingDocumentType.CreateInstance();
 
       newDocument.recordingDocumentType = recordingDocumentType;
       newDocument.documentRecordingRole = DocumentRecordingRole.Main;
-      //newDocument.recording = recording;
 
       return newDocument;
     }
@@ -233,10 +231,6 @@ namespace Empiria.Government.LandRegistration {
       get { return postingTime; }
     }
 
-    //public Recording Recording {
-    //  get { return recording; }
-    //}
-
     public RecordingDocumentType RecordingDocumentType {
       get {
         if (this.recordingDocumentType == null) {
@@ -337,7 +331,6 @@ namespace Empiria.Government.LandRegistration {
     }
 
     protected override void ImplementsLoadObjectData(DataRow row) {
-      //this.recording = Recording.Parse((int) row["RecordingId"]);
       this.documentSubtype = LRSDocumentType.Parse((int) row["DocumentSubtypeId"]);
       this.documentKey = (string) row["DocumentKey"];
       this.documentRecordingRole = (DocumentRecordingRole) Convert.ToChar(row["DocumentRecordingRole"]);

@@ -143,106 +143,8 @@ namespace Empiria.Government.LandRegistration {
       }
     }
 
-    private bool HasSpaceForRecording(RecordingDocument document) {
-      if (this.UsePerpetualNumbering) {
-        return (RecordingBooksData.GetLastBookRecordingNumber(this) < this.EndRecordingIndex);
-      }
-      // !UsePerpetualNumbering  
-      int currentBookSheets = this.CalculateTotalSheets();
-      int newTotalSheets = currentBookSheets + document.SheetsCount;
-
-      int lowerBound = ExecutionServer.LicenseName == "Tlaxcala" ? 275 : 250;
-      int upperBound = ExecutionServer.LicenseName == "Tlaxcala" ? 286 : 260;
-
-      if (newTotalSheets <= lowerBound) {
-        return true;
-      } else if (currentBookSheets < lowerBound && newTotalSheets <= upperBound) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    private RecordingBook CloseAndCreateNew() {
-      this.Status = RecordingBookStatus.Closed;
-      this.ClosingDate = DateTime.Now;
-      if (!this.UsePerpetualNumbering) {
-        this.EndRecordingIndex = this.Recordings.Count;
-      }
-      this.Save();
-      RecordingBook newBook = this.Clone();
-      newBook.Status = RecordingBookStatus.Opened;
-      if (newBook.UsePerpetualNumbering) {
-        newBook.StartRecordingIndex = this.StartRecordingIndex + 50;
-        newBook.EndRecordingIndex = this.EndRecordingIndex + 50;
-        newBook.BookNumber = newBook.StartRecordingIndex.ToString("0000") + "-" + newBook.EndRecordingIndex.ToString("0000");
-      } else {
-        newBook.StartRecordingIndex = 1;
-        newBook.EndRecordingIndex = 250;
-        newBook.BookNumber = (int.Parse(this.BookNumber) + 1).ToString("0000");
-      }
-      newBook.Name = "Volumen " + newBook.BookNumber;
-      newBook.FullName = newBook.Parent.FullName + " " + newBook.Name;
-      newBook.Save();
-
-      return newBook;
-    }
-
-    private RecordingBook Clone() {
-      RecordingBook newBook = new RecordingBook();
-
-      newBook.RecorderOffice = this.RecorderOffice;
-      newBook.BookType = this.BookType;
-      newBook.RecordingsClass = this.RecordingsClass;
-      newBook.RecordingsControlTimePeriod = this.RecordingsControlTimePeriod;
-      newBook.AssignedTo = this.AssignedTo;
-      newBook.ReviewedBy = this.ReviewedBy;
-      newBook.ApprovedBy = this.ApprovedBy;
-      newBook.parentRecordingBookId = this.parentRecordingBookId;
-      newBook.Status = this.Status;
-
-      return newBook;
-    }
-
-    private int CalculateTotalSheets() {
-      return RecordingBooksData.GetBookTotalSheets(this);
-    }
-
-    public Recording CreateRecording(LRSTransaction transaction) {
-      Assertion.RequireObject(transaction, "transaction");
-      Assertion.RequireObject(transaction.Document, "document");
-      Assertion.Require(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
-                        "Transaction document can't be neither an empty or a new document instance");
-
-      Recording recording = new Recording();
-      recording.RecordingBook = this;
-      recording.Transaction = transaction;
-      recording.Document = transaction.Document;
-      recording.UseBisNumberTag = false;
-      recording.Number = GetNextRecordingNumber();
-      recording.Status = RecordingStatus.Incomplete;
-      recording.StartImageIndex = -1;
-      recording.EndImageIndex = -1;
-      recording.PresentationTime = transaction.PresentationTime;
-      recording.AuthorizedTime = DateTime.Now;
-      recording.AuthorizedBy = Contact.Parse(36);
-      recording.Save();
-
-      return recording;
-    }
-
-    public string GetNextRecordingNumber() {
-      if (this.ReuseUnusedRecordingNumbers) {
-        return RecordingBooksData.GetNextRecordingNumberWithReuse(this);
-      } else {
-        return RecordingBooksData.GetNextRecordingNumberWithNoReuse(this);
-      }
-    }
-
-    public bool ReuseUnusedRecordingNumbers {
-      get {
-        return (ExecutionServer.LicenseName == "Tlaxcala");
-      }
+    static public ObjectList<RecordingBook> GetList(string filter, string sort = "RecordingBookFullName") {
+      return RecordingBooksData.GetRecordingBooks(filter, sort);
     }
 
     #endregion Constructors and parsers
@@ -330,6 +232,14 @@ namespace Empiria.Government.LandRegistration {
       set { imagingFilesFolder = value; }
     }
 
+    public bool IsAvailableForManualEditing {
+      get {
+        return (this.status == RecordingBookStatus.Assigned ||
+                this.status == RecordingBookStatus.Pending ||
+                this.status == RecordingBookStatus.Revision);
+      }
+    }
+
     public bool IsRoot {
       get { return (parentRecordingBookId == this.Id); }
     }
@@ -370,6 +280,12 @@ namespace Empiria.Government.LandRegistration {
     public string RecordIntegrityHashCode {
       get { return recordIntegrityHashCode; }
       private set { recordIntegrityHashCode = value; }
+    }
+
+    public bool ReuseUnusedRecordingNumbers {
+      get {
+        return (ExecutionServer.LicenseName == "Tlaxcala");
+      }
     }
 
     public Contact ReviewedBy {
@@ -466,6 +382,37 @@ namespace Empiria.Government.LandRegistration {
       this.Status = RecordingBookStatus.Closed;
       Save();
       return true;
+    }
+
+    public Recording CreateRecording(LRSTransaction transaction) {
+      Assertion.RequireObject(transaction, "transaction");
+      Assertion.RequireObject(transaction.Document, "document");
+      Assertion.Require(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
+                        "Transaction document can't be neither an empty or a new document instance");
+
+      Recording recording = new Recording();
+      recording.RecordingBook = this;
+      recording.Transaction = transaction;
+      recording.Document = transaction.Document;
+      recording.UseBisNumberTag = false;
+      recording.Number = GetNextRecordingNumber();
+      recording.Status = RecordingStatus.Incomplete;
+      recording.StartImageIndex = -1;
+      recording.EndImageIndex = -1;
+      recording.PresentationTime = transaction.PresentationTime;
+      recording.AuthorizedTime = DateTime.Now;
+      recording.AuthorizedBy = Contact.Parse(36);
+      recording.Save();
+
+      return recording;
+    }
+
+    public string GetNextRecordingNumber() {
+      if (this.ReuseUnusedRecordingNumbers) {
+        return RecordingBooksData.GetNextRecordingNumberWithReuse(this);
+      } else {
+        return RecordingBooksData.GetNextRecordingNumberWithNoReuse(this);
+      }
     }
 
     public void DeleteImageAtIndex(int imageIndex) {
@@ -633,6 +580,74 @@ namespace Empiria.Government.LandRegistration {
 
     #endregion Public methods
 
+    #region Private methods
+
+    private int CalculateTotalSheets() {
+      return RecordingBooksData.GetBookTotalSheets(this);
+    }
+
+    private RecordingBook Clone() {
+      RecordingBook newBook = new RecordingBook();
+
+      newBook.RecorderOffice = this.RecorderOffice;
+      newBook.BookType = this.BookType;
+      newBook.RecordingsClass = this.RecordingsClass;
+      newBook.RecordingsControlTimePeriod = this.RecordingsControlTimePeriod;
+      newBook.AssignedTo = this.AssignedTo;
+      newBook.ReviewedBy = this.ReviewedBy;
+      newBook.ApprovedBy = this.ApprovedBy;
+      newBook.parentRecordingBookId = this.parentRecordingBookId;
+      newBook.Status = this.Status;
+
+      return newBook;
+    }
+
+    private RecordingBook CloseAndCreateNew() {
+      this.Status = RecordingBookStatus.Closed;
+      this.ClosingDate = DateTime.Now;
+      if (!this.UsePerpetualNumbering) {
+        this.EndRecordingIndex = this.Recordings.Count;
+      }
+      this.Save();
+      RecordingBook newBook = this.Clone();
+      newBook.Status = RecordingBookStatus.Opened;
+      if (newBook.UsePerpetualNumbering) {
+        newBook.StartRecordingIndex = this.StartRecordingIndex + 50;
+        newBook.EndRecordingIndex = this.EndRecordingIndex + 50;
+        newBook.BookNumber = newBook.StartRecordingIndex.ToString("0000") + "-" + newBook.EndRecordingIndex.ToString("0000");
+      } else {
+        newBook.StartRecordingIndex = 1;
+        newBook.EndRecordingIndex = 250;
+        newBook.BookNumber = (int.Parse(this.BookNumber) + 1).ToString("0000");
+      }
+      newBook.Name = "Volumen " + newBook.BookNumber;
+      newBook.FullName = newBook.Parent.FullName + " " + newBook.Name;
+      newBook.Save();
+
+      return newBook;
+    }
+
+    private bool HasSpaceForRecording(RecordingDocument document) {
+      if (this.UsePerpetualNumbering) {
+        return (RecordingBooksData.GetLastBookRecordingNumber(this) < this.EndRecordingIndex);
+      }
+      // !UsePerpetualNumbering  
+      int currentBookSheets = this.CalculateTotalSheets();
+      int newTotalSheets = currentBookSheets + document.SheetsCount;
+
+      int lowerBound = ExecutionServer.LicenseName == "Tlaxcala" ? 275 : 250;
+      int upperBound = ExecutionServer.LicenseName == "Tlaxcala" ? 286 : 260;
+
+      if (newTotalSheets <= lowerBound) {
+        return true;
+      } else if (currentBookSheets < lowerBound && newTotalSheets <= upperBound) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    #endregion Private methods
   } // class RecordingBook
 
 } // namespace Empiria.Government.LandRegistration

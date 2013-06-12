@@ -18,7 +18,7 @@ namespace Empiria.Government.LandRegistration.UI {
 
     static private string virtualPath = ConfigurationData.GetString("RecordingDocument.EditorControl");
 
-    protected abstract void ImplementsFillRecordingDocument(RecordingDocumentType documentType);
+    protected abstract RecordingDocument ImplementsFillRecordingDocument(RecordingDocumentType documentType);
     protected abstract void ImplementsLoadRecordingDocument();
 
     #endregion Abstract members
@@ -26,7 +26,6 @@ namespace Empiria.Government.LandRegistration.UI {
     #region Fields
 
     private RecordingDocument document = RecordingDocument.Empty;
-    private Recording recording = Recording.Empty;
 
     #endregion Fields
 
@@ -38,24 +37,24 @@ namespace Empiria.Government.LandRegistration.UI {
 
     public RecordingDocument Document {
       get { return document; }
-      set { document = value; }
-    }
-
-    public Recording Recording {
-      get { return recording; }
-      set { recording = value; }
     }
 
     #endregion Public properties
 
     #region Public methods
 
-    public void FillRecordingDocument(RecordingDocumentType documentType) {
-      ImplementsFillRecordingDocument(documentType);
+    public RecordingDocument FillRecordingDocument(RecordingDocumentType documentType) {
+      if (this.Document == RecordingDocument.Empty) {
+        this.document = RecordingDocument.Create(documentType);
+      }
+      return ImplementsFillRecordingDocument(documentType);
     }
 
-    public void LoadRecordingDocument() {
-      ImplementsLoadRecordingDocument();
+    public void LoadRecordingDocument(RecordingDocument document) {
+      this.document = document;
+      if (!IsPostBack) {
+        ImplementsLoadRecordingDocument();
+      }
     }
 
     #endregion Public methods
