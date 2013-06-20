@@ -124,29 +124,8 @@ namespace Empiria.Government.LandRegistration {
                                                   (x, y) => x.FullName.CompareTo(y.FullName));
     }
 
-    public ObjectList<RecordingBook> GetTraslativeRecordingBooks() {
-      RecordingActTypeCategory category = RecordingActTypeCategory.Parse(1051);
-
-      if (ExecutionServer.LicenseName == "Tlaxcala") {
-        RecordingActTypeCategory[] categories = new RecordingActTypeCategory[2] { category, RecordingActTypeCategory.Parse(1057) };
-        return RecordingBooksData.GetRecordingBooksInCategories(this, categories);
-      } else {
-        return RecordingBooksData.GetRecordingBooksInCategory(this, category);
-      }
-    }
-
-    public ObjectList<RecordingBook> GetRecordingBooks(RecordingActTypeCategory recordingActTypeCategory) {
-      //// oojoo hardcoded values
-      //if (ExecutionServer.LicenseName == "Zacatecas") {
-      //  if (recordingActTypeCategory.Id == 1053 || recordingActTypeCategory.Id == 1054) {
-      //    recordingActTypeCategory = RecordingActTypeCategory.Parse(1051);
-      //  }
-      //} else if (ExecutionServer.LicenseName == "Tlaxcala") {
-      //  if (recordingActTypeCategory.Id == 1055 || recordingActTypeCategory.Id == 1057) {
-      //    recordingActTypeCategory = RecordingActTypeCategory.Parse(1051);
-      //  }
-      //}
-      return RecordingBooksData.GetRecordingBooksInCategory(this, recordingActTypeCategory);
+    public ObjectList<RecordingBook> GetRecordingBooks(RecordingActTypeCategory recordingsClassId) {
+      return RecordingBooksData.GetRecordingBooksInCategory(this, recordingsClassId);
     }
 
     public ObjectList<RecordingBook> GetRootRecordingBooks() {

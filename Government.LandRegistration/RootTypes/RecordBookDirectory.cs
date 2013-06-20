@@ -103,7 +103,7 @@ namespace Empiria.Government.LandRegistration {
 
     #region Public methods
 
-    public RecordingBook CreateRecordingBook(RecordingActTypeCategory recordingsClass,
+    public RecordingBook CreateRecordingBook(RecordingSectionType recordingSectionType,
                                              Contact imagesCapturedBy, Contact imagesReviewedBy,
                                              int recordingsControlCount,
                                              TimePeriod recordingsControlTimePeriod) {
@@ -112,7 +112,7 @@ namespace Empiria.Government.LandRegistration {
       this.ReviewedById = imagesReviewedBy.Id;
       this.Status = FilesFolderStatus.Opened;
 
-      RecordingBook recordingBook = RecordingBook.Create(this, recordingsClass, recordingsControlCount,
+      RecordingBook recordingBook = RecordingBook.Create(this, recordingSectionType, recordingsControlCount,
                                                          recordingsControlTimePeriod);
       this.ReferenceId = recordingBook.Id;
       this.Save();

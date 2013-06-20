@@ -219,9 +219,6 @@
   <data name="RecordingNotBelongsToRecordingBook" xml:space="preserve">
     <value>La inscripción con id = {0} no pertenece al libro registral {1}. Puede ser que este problema sea ocasionado por un error de programación.</value>
   </data>
-  <data name="RecordingNotBisNumberNotFound" xml:space="preserve">
-    <value>En este libro no ha sido registrada una inscripción con el número {0}, por lo que no es posible agregar una inscripción con el número {0}-BIS.</value>
-  </data>
   <data name="RecordingNumberAlreadyExists" xml:space="preserve">
     <value>En este libro ya ha sido registrada otra inscripción con el número {0}.</value>
   </data>

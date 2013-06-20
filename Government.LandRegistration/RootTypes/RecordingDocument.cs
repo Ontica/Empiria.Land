@@ -104,7 +104,7 @@ namespace Empiria.Government.LandRegistration {
       if (dataRow != null) {
         return RecordingDocument.Parse(dataRow);
       } else {
-        RecordingDocument recordingDocument = BaseObject.ParseEmpty<RecordingDocument>(thisTypeName);
+        RecordingDocument recordingDocument = RecordingDocument.Empty;
         // recordingDocument.recording = recording;
         return recordingDocument;
       }

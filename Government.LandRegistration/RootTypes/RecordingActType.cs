@@ -67,7 +67,7 @@ namespace Empiria.Government.LandRegistration {
       }
     }
 
-    public bool AllowEmptyParties {
+    public bool AllowsEmptyParties {
       get {
         string[] array = allowEmptyPartiesVector.Split('~');
         for (int i = 0; i < array.Length; i++) {
@@ -76,6 +76,50 @@ namespace Empiria.Government.LandRegistration {
           }
         }
         return false;
+      }
+    }
+
+    public bool AllowsRegisteredProperties {
+      get {
+        string vector = ConfigurationData.GetString("AllowsRegisteredProperties.Vector");
+        string[] array = vector.Split('~');
+        for (int i = 0; i < array.Length; i++) {
+          if (int.Parse(array[i]) == base.Id) {
+            return true;
+          }
+        }
+        return true;
+      }
+    }
+
+    public bool AllowsUnregisteredProperties {
+      get {
+        string vector = ConfigurationData.GetString("AllowsUnregisteredProperties.Vector");
+        string[] array = vector.Split('~');
+        for (int i = 0; i < array.Length; i++) {
+          if (int.Parse(array[i]) == base.Id) {
+            return true;
+          }
+        }
+        return true;
+      }
+    }
+
+    public bool IsPropertyLinked {
+      get {
+        return this.AllowsRegisteredProperties || this.AllowsUnregisteredProperties;
+      }
+    }
+
+    public bool IsRecordingActLinked {
+      get {
+        return false;
+      }
+    }
+
+    public RecordingSectionType MainRecordingSectionType {
+      get {
+        return RecordingSectionType.Parse(1060);
       }
     }
 
@@ -146,6 +190,15 @@ namespace Empiria.Government.LandRegistration {
 
     #region Public methods
 
+    public ObjectList<RecordingActType> GetAppliesToRecordingActTypesList() {
+      ObjectList<RecordingActType> list = base.GetTypeLinks<RecordingActType>("RecordingActType_AppliesToRecordingAct");
+
+      list.Sort((x, y) => x.Name.CompareTo(y.Name));
+
+      return list;
+    }
+
+
     public ObjectList<DomainActPartyRole> GetRoles() {
       ObjectList<DomainActPartyRole> list = base.GetLinks<DomainActPartyRole>("RecordingActType_Roles");
 
@@ -161,7 +214,6 @@ namespace Empiria.Government.LandRegistration {
 
       return list;
     }
-
 
     #endregion Public methods
 

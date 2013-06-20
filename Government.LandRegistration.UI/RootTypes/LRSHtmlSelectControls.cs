@@ -28,32 +28,32 @@ namespace Empiria.Government.LandRegistration.UI {
 
     #region Public methods
 
+    static public void LoadLegacyAnnotationActTypesCategoriesCombo(HtmlSelect comboControl) {
+      GeneralList listType = GeneralList.Parse("LegacyAnnotationActTypesCategories.List");
+      ObjectList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
+
+      HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de acto jurídico )");
+    }
+
+    static public void LoadLegacyTraslativeActTypesCategoriesCombo(HtmlSelect comboControl) {
+      GeneralList listType = GeneralList.Parse("LegacyTraslativeActTypesCategories.List");
+      ObjectList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
+
+      HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de anotación )");
+    }
+
     static public void LoadRecordingActTypesCategoriesCombo(HtmlSelect comboControl) {
       GeneralList listType = GeneralList.Parse("RecordingActTypesCategories.List");
       ObjectList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
 
-      HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Seleccionar el tipo de acto jurídico )");
-
-      listType = GeneralList.Parse("AnnotationActTypesCategories.List");
-      list = listType.GetItems<RecordingActTypeCategory>();
-
-      comboControl.Items.Add(new ListItem(String.Empty, String.Empty));
-
-      HtmlSelectContent.AppendToCombo(comboControl, list, "Id", "Name");
+      HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de acto jurídico )");
     }
 
-    static public void LoadRecordingActTypesCategoriesCombo(HtmlSelect comboControl, RecordingBook recordingBook) {
-      GeneralList listType = GeneralList.Parse("RecordingActTypesCategories.List");
+    static public void LoadTransactionActTypesCategoriesCombo(HtmlSelect comboControl) {
+      GeneralList listType = GeneralList.Parse("TransactionActTypesCategories.List");
       ObjectList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
 
-      HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Seleccionar la categoría de inscripción )");
-    }
-
-    static public void LoadAnnotationActTypesCategoriesCombo(HtmlSelect comboControl, RecordingBook recordingBook) {
-      GeneralList listType = GeneralList.Parse("AnnotationActTypesCategories.List");
-      ObjectList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
-
-      HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de anotación )");
+      HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name");
     }
 
     static public void LoadRecordingBookClassesCombo(HtmlSelect comboControl, string headerItemText,
@@ -160,7 +160,7 @@ namespace Empiria.Government.LandRegistration.UI {
 
     static public void LoadDomainRecordingSections(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
                                                    string defaultValue = "") {
-      ObjectList<KeyValuePair> list = KeyValuePair.GetList("LRSDomainTraslativeSectionList");
+      ObjectList<KeyValuePair> list = KeyValuePair.GetList("LRSDomainTraslativeSection.Combo.List");
 
       string header = (comboControlUseMode == ComboControlUseMode.ObjectCreation)
                               ? "( Distrito / Sección )" : "( Todas los Distritos )";

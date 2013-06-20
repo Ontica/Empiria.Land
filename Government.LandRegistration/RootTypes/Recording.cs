@@ -33,13 +33,10 @@ namespace Empiria.Government.LandRegistration {
 
     private const string thisTypeName = "ObjectType.Recording";
 
-    private static readonly string BisNumberTag = ConfigurationData.GetString("Recording.BisNumberTag");
-
     private RecordingBook recordingBook = RecordingBook.Empty;
     private LRSTransaction transaction = LRSTransaction.Empty;
     private RecordingDocument document = null;
     private string number = String.Empty;
-    private bool useBisNumberTag = false;
     private int startImageIndex = 0;
     private int endImageIndex = 0;
     private string notes = String.Empty;
@@ -77,6 +74,7 @@ namespace Empiria.Government.LandRegistration {
     protected Recording(string typeName)
       : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+      document = RecordingDocument.Empty;
     }
 
     //static internal Recording Create(Transactions.RecorderOfficeTransaction transaction) {
@@ -102,13 +100,28 @@ namespace Empiria.Government.LandRegistration {
       get { return BaseObject.ParseEmpty<Recording>(thisTypeName); }
     }
 
-    static public string FormatNumber(int recordingNumber, bool useBisNumber) {
+    static public string RecordingNumber(int recordingNumber, string bisSuffixTag) {
       string temp = recordingNumber.ToString("0000");
 
-      if (useBisNumber) {
-        temp += Recording.BisNumberTag;
+      if (bisSuffixTag != null && bisSuffixTag.Length != 0) {
+        temp += bisSuffixTag;
       }
       return temp;
+    }
+
+    static public int SplitRecordingNumber(string fullRecordingNumber, out string bisSuffixTag) {
+      if (EmpiriaString.IsInteger(fullRecordingNumber)) {
+        bisSuffixTag = String.Empty;
+        return int.Parse(fullRecordingNumber);
+      }
+      if (fullRecordingNumber.Contains("-")) {
+        int index = fullRecordingNumber.IndexOf("-");
+        bisSuffixTag = fullRecordingNumber.Substring(index);
+        return int.Parse(fullRecordingNumber.Substring(0, index));
+      } else {
+        throw new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingNumber,
+                                            fullRecordingNumber);
+      }
     }
 
     #endregion Constructors and parsers
@@ -181,26 +194,12 @@ namespace Empiria.Government.LandRegistration {
 
     public string Number {
       get { return number; }
-      set {
-        int integerNumber = 0;
-        if (this.UseBisNumberTag) {
-          value = value.Replace(Recording.BisNumberTag, String.Empty);
-        }
-        if (!int.TryParse(value, out integerNumber)) {
-          throw new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingNumber, value);
-        }
-        number = FormatNumber(integerNumber, this.UseBisNumberTag);
-      }   // set
     }
 
     public string FullNumber {
       get {
         return "Inscripción " + this.Number + " en " + this.RecordingBook.FullName;
       }
-    }
-
-    public string NumberPrefix {
-      get { return this.number.Replace(Recording.BisNumberTag, String.Empty); }
     }
 
     public DateTime PresentationTime {
@@ -289,20 +288,6 @@ namespace Empiria.Government.LandRegistration {
     public LRSTransaction Transaction {
       get { return transaction; }
       set { transaction = value; }
-    }
-
-    public bool UseBisNumberTag {
-      get { return useBisNumberTag || this.number.EndsWith(Recording.BisNumberTag); }
-      set {
-        useBisNumberTag = value;
-        if (this.number.Length != 0) {
-          if (useBisNumberTag) {
-            number = FormatNumber(int.Parse(this.NumberPrefix), true);
-          } else {
-            number = FormatNumber(int.Parse(this.NumberPrefix), false);
-          }
-        }
-      } // set
     }
 
     #endregion Public properties
@@ -461,20 +446,24 @@ namespace Empiria.Government.LandRegistration {
     }
 
     protected override void ImplementsSave() {
+      if (!this.RecordingDocument.IsEmptyInstance) {
+        this.RecordingDocument.Save();
+      }
       if (capturedBy.IsEmptyInstance) {
         this.capturedTime = DateTime.Now;
         this.capturedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
-      this.keywords = EmpiriaString.BuildKeywords(this.number, this.recordingBook.FullName);
+      this.keywords = EmpiriaString.BuildKeywords(this.number, this.recordingBook.FullName, this.RecordingDocument.DocumentKey);
 
       RecordingBooksData.WriteRecording(this);
-      if (!this.RecordingDocument.IsEmptyInstance) {
-        this.RecordingDocument.Save();
-      }
     }
 
     public void Refresh() {
       this.recordingActList = null;
+    }
+
+    public void SetNumber(int recordingNumber, string bisSuffixTag = "") {
+      this.number = RecordingNumber(recordingNumber, bisSuffixTag);
     }
 
     public void UpwardRecordingAct(RecordingAct recordingAct) {

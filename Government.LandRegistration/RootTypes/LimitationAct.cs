@@ -10,15 +10,14 @@
 **************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
 using System.Data;
 
-
 namespace Empiria.Government.LandRegistration {
 
   /// <summary>Represents a property limitation or property assessment or mortgage act.</summary>
-  public class LimitationAct : AnnotationAct {
+  public class LimitationAct : RecordingAct {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.RecordingAct.AnnotationAct.LimitationAct";
+    private const string thisTypeName = "ObjectType.RecordingAct.LimitationAct";
 
     #endregion Fields
 
@@ -39,10 +38,6 @@ namespace Empiria.Government.LandRegistration {
     }
 
     #endregion Constructors and parsers
-
-    #region Public properties
-
-    #endregion Public properties
 
     #region Public methods
 

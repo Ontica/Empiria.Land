@@ -39,10 +39,6 @@ namespace Empiria.Government.LandRegistration {
 
     #endregion Constructors and parsers
 
-    #region Public properties
-
-    #endregion Public properties
-
     #region Public methods
 
     protected override void ImplementsLoadObjectData(DataRow row) {

@@ -10,7 +10,6 @@
 **************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
 using System.Data;
 
-
 namespace Empiria.Government.LandRegistration {
 
   /// <summary>Recording act that serves for modify information relative to other recording act.</summary>
@@ -39,10 +38,6 @@ namespace Empiria.Government.LandRegistration {
     }
 
     #endregion Constructors and parsers
-
-    #region Public properties
-
-    #endregion Public properties
 
     #region Public methods
 

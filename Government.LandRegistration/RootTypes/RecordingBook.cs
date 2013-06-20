@@ -45,7 +45,7 @@ namespace Empiria.Government.LandRegistration {
 
     private RecorderOffice recorderOffice = RecorderOffice.Empty;
     private RecordingBookType type = RecordingBookType.Volume;
-    private RecordingActTypeCategory recordingsClass = RecordingActTypeCategory.Empty;
+    private RecordingSectionType sectionType = RecordingSectionType.Empty;
     private string bookNumber = String.Empty;
     private string name = String.Empty;
     private string fullName = String.Empty;
@@ -130,7 +130,7 @@ namespace Empiria.Government.LandRegistration {
       get { return BaseObject.ParseEmpty<RecordingBook>(thisTypeName); }
     }
 
-    static public RecordingBook GetAssignedBookForRecording(RecorderOffice office, RecordingActTypeCategory section,
+    static public RecordingBook GetAssignedBookForRecording(RecorderOffice office, RecordingSectionType section,
                                                             RecordingDocument document) {
       Assertion.RequireObject(document, "document");
       Assertion.Require(!document.IsEmptyInstance && !document.IsNew,
@@ -267,9 +267,9 @@ namespace Empiria.Government.LandRegistration {
       }
     }
 
-    public RecordingActTypeCategory RecordingsClass {
-      get { return recordingsClass; }
-      set { recordingsClass = value; }
+    public RecordingSectionType RecordingSectionType {
+      get { return sectionType; }
+      set { sectionType = value; }
     }
 
     public RecorderOffice RecorderOffice {
@@ -310,7 +310,7 @@ namespace Empiria.Government.LandRegistration {
 
     public bool UsePerpetualNumbering {
       get {
-        return RecordingsClass.UsePerpetualNumbering;
+        return sectionType.UsePerpetualNumbering;
       }
     }
 
@@ -394,8 +394,7 @@ namespace Empiria.Government.LandRegistration {
       recording.RecordingBook = this;
       recording.Transaction = transaction;
       recording.Document = transaction.Document;
-      recording.UseBisNumberTag = false;
-      recording.Number = GetNextRecordingNumber();
+      recording.SetNumber (this.GetNextRecordingNumber());
       recording.Status = RecordingStatus.Incomplete;
       recording.StartImageIndex = -1;
       recording.EndImageIndex = -1;
@@ -407,7 +406,7 @@ namespace Empiria.Government.LandRegistration {
       return recording;
     }
 
-    public string GetNextRecordingNumber() {
+    public int GetNextRecordingNumber() {
       if (this.ReuseUnusedRecordingNumbers) {
         return RecordingBooksData.GetNextRecordingNumberWithReuse(this);
       } else {
@@ -497,7 +496,7 @@ namespace Empiria.Government.LandRegistration {
       this.recordings = null;
     }
 
-    static internal RecordingBook Create(RecordBookDirectory directory, RecordingActTypeCategory recordingsClass,
+    static internal RecordingBook Create(RecordBookDirectory directory, RecordingSectionType recordingSectionType,
                                          int recordingsControlCount, TimePeriod recordingsControlTimePeriod) {
       RecordingBook recordingBook = new RecordingBook();
 
@@ -522,7 +521,7 @@ namespace Empiria.Government.LandRegistration {
       recordingBook = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
       if (recordingBook == null) {
         recordingBook = new RecordingBook(currentParent, directory, tag);
-        recordingBook.RecordingsClass = recordingsClass;
+        recordingBook.sectionType = recordingSectionType;
         recordingBook.StartRecordingIndex = 1;
         recordingBook.EndRecordingIndex = recordingsControlCount;
         recordingBook.recordingsControlTimePeriod = recordingsControlTimePeriod;
@@ -535,7 +534,7 @@ namespace Empiria.Government.LandRegistration {
     protected override void ImplementsLoadObjectData(DataRow row) {
       this.RecorderOffice = RecorderOffice.Parse((int) row["RecorderOfficeId"]);
       this.BookType = (RecordingBookType) Convert.ToChar(row["RecordingBookType"]);
-      this.RecordingsClass = RecordingActTypeCategory.Parse((int) row["RecordingsClassId"]);
+      this.sectionType = RecordingSectionType.Parse((int) row["RecordingsClassId"]);
       this.BookNumber = (string) row["RecordingBookNumber"];
       this.Name = (string) row["RecordingBookName"];
       this.FullName = (string) row["RecordingBookFullName"];
@@ -591,7 +590,7 @@ namespace Empiria.Government.LandRegistration {
 
       newBook.RecorderOffice = this.RecorderOffice;
       newBook.BookType = this.BookType;
-      newBook.RecordingsClass = this.RecordingsClass;
+      newBook.sectionType = this.sectionType;
       newBook.RecordingsControlTimePeriod = this.RecordingsControlTimePeriod;
       newBook.AssignedTo = this.AssignedTo;
       newBook.ReviewedBy = this.ReviewedBy;

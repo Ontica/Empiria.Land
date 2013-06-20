@@ -140,6 +140,10 @@
     <Compile Include="Data\PropertyData.cs" />
     <Compile Include="Data\RecordingBooksData.cs" />
     <Compile Include="Empiria.Government.LandRegistration.AssemblyInfo.cs" />
+    <Compile Include="RootTypes\Certificate.cs" />
+    <Compile Include="RootTypes\RecordingSectionType.cs" />
+    <Compile Include="RootTypes\RecordingTask.cs" />
+    <Compile Include="RootTypes\TransactionAct.cs" />
     <Compile Include="Transactions\LRSFee.cs" />
     <Compile Include="Transactions\LRSTransactionTrack.cs" />
     <Compile Include="Transactions\CalculationRule.cs" />

@@ -147,7 +147,7 @@ namespace Empiria.Government.LandRegistration {
         return new LandRegistrationException(LandRegistrationException.Msg.EmptyOperationAmount);
       }
       // Parties Validation
-      if (recordingAct.RecordingActType.AllowEmptyParties) {
+      if (recordingAct.RecordingActType.AllowsEmptyParties) {
         return null;
       }
       if (!recordingAct.IsAnnotation) {
@@ -183,25 +183,14 @@ namespace Empiria.Government.LandRegistration {
     }
 
     static public LandRegistrationException ValidateRecordingNumber(RecordingBook recordingBook, Recording recording,
-                                                                    int recordingNumber, bool useBisRecordingNumber,
+                                                                    int recordingNumber, string bisSuffixRecordingNumber, 
                                                                     int imageStartIndex, int imageEndIndex) {
-      if (!useBisRecordingNumber) {
-        DataRow row = RecordingBooksData.GetRecordingWithRecordingNumber(recordingBook, Recording.FormatNumber(recordingNumber, false));
-        if (row != null && (recording.Id != (int) row["RecordingId"])) {
-          return new LandRegistrationException(LandRegistrationException.Msg.RecordingNumberAlreadyExists,
-                                               Recording.FormatNumber(recordingNumber, false));
-        }
-      } else {
-        DataRow row = RecordingBooksData.GetRecordingWithRecordingNumber(recordingBook, Recording.FormatNumber(recordingNumber, false));
-        if (row == null) {
-          return new LandRegistrationException(LandRegistrationException.Msg.RecordingNotBisNumberNotFound,
-                                               Recording.FormatNumber(recordingNumber, false));
-        }
-        row = RecordingBooksData.GetRecordingWithRecordingNumber(recordingBook, Recording.FormatNumber(recordingNumber, true));
-        if (row != null && (recording.Id != (int) row["RecordingId"])) {
-          return new LandRegistrationException(LandRegistrationException.Msg.RecordingNumberAlreadyExists,
-                                               Recording.FormatNumber(recordingNumber, true));
-        }
+      string filter = "RecordingId <> " + recording.Id + " AND RecordingNumber = '" +
+                      Recording.RecordingNumber(recordingNumber, bisSuffixRecordingNumber) + "'";
+      Recording findResult = RecordingBooksData.FindRecording(recordingBook, filter);
+      if (!findResult.IsEmptyInstance) {
+        return new LandRegistrationException(LandRegistrationException.Msg.RecordingNumberAlreadyExists,
+                                             Recording.RecordingNumber(recordingNumber, bisSuffixRecordingNumber));
       }
       int imageCount = recordingBook.ImagingFilesFolder.FilesCount;
 

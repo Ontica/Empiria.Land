@@ -2,67 +2,57 @@
 *                                                                                                            *
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
 *  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
-*  Type      : RecordingActTypeCategory                       Pattern  : Storage Item                        *
+*  Type      : TransactionAct                                 Pattern  : Empiria Object Type                 *
 *  Date      : 25/Jun/2013                                    Version  : 5.1     License: CC BY-NC-SA 3.0    *
 *                                                                                                            *
-*  Summary   : Describes a recording type category or classificator.                                         *
+*  Summary   : Transaction act that serves only for payment and control functions.                           *
+*              Transaction are not recordable.                                                               *
 *                                                                                                            *
 **************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
-using System;
+using System.Data;
 
 namespace Empiria.Government.LandRegistration {
 
-  /// <summary>Describes a recording type category or classificator.</summary>
-  public class RecordingActTypeCategory : GeneralObject {
+  /// <summary>Transaction act that serves only for payment and control functions. Transaction acts 
+  /// are not recordable</summary>
+  public class TransactionAct : RecordingAct {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.GeneralObject.RecordingActTypeCategory";
+    private const string thisTypeName = "ObjectType.RecordingAct.TransactionAct";
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    public RecordingActTypeCategory()
+    private TransactionAct()
       : base(thisTypeName) {
-
+      // For create instances use Create static method instead    
     }
 
-    private RecordingActTypeCategory(string typeName)
+    protected TransactionAct(string typeName)
       : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
-    static public RecordingActTypeCategory Parse(int id) {
-      return BaseObject.Parse<RecordingActTypeCategory>(thisTypeName, id);
-    }
-
-    static public RecordingActTypeCategory Empty {
-      get { return BaseObject.ParseEmpty<RecordingActTypeCategory>(thisTypeName); }
+    static public new TransactionAct Parse(int id) {
+      return BaseObject.Parse<TransactionAct>(thisTypeName, id);
     }
 
     #endregion Constructors and parsers
 
-    #region Public properties
-
-    public new string NamedKey {
-      get { return base.NamedKey; }
-    }
-
-    #endregion Public properties
-
     #region Public methods
 
-    public ObjectList<RecordingActType> GetItems() {
-      ObjectList<RecordingActType> list = base.GetTypeLinks<RecordingActType>("RecordingActTypeCategory_Items");
+    protected override void ImplementsLoadObjectData(DataRow row) {
+      base.ImplementsLoadObjectData(row);
+    }
 
-      list.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
-
-      return list;
+    protected override void ImplementsSave() {
+      base.ImplementsSave();
     }
 
     #endregion Public methods
 
-  } // class RecordingActTypeCategory
+  } // class TransactionAct
 
 } // namespace Empiria.Government.LandRegistration
