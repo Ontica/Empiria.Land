@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Abstract class that represents a transaction or process on a land registration office.        *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -77,16 +77,6 @@ namespace Empiria.Government.LandRegistration.Transactions {
 
     static internal LRSTransactionItem Parse(DataRow dataRow) {
       return BaseObject.Parse<LRSTransactionItem>(thisTypeName, dataRow);
-    }
-
-    static public List<RecordingActType> RecordingActTypesList() {
-      string[] array = ConfigurationData.GetString("LRSTransactionAct.RecordingActTypesList").Split('|');
-
-      List<RecordingActType> list = new List<RecordingActType>(array.Length);
-      for (int i = 0; i < array.Length; i++) {
-        list.Add(RecordingActType.Parse(int.Parse(array[i].Trim())));
-      }
-      return list;
     }
 
     #endregion Constructors and parsers

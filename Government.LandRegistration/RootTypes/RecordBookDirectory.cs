@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Describes a record book imaging directory.                                                    *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System.IO;
 
 using Empiria.Contacts;
@@ -103,7 +103,7 @@ namespace Empiria.Government.LandRegistration {
 
     #region Public methods
 
-    public RecordingBook CreateRecordingBook(RecordingSectionType recordingSectionType,
+    public RecordingBook CreateRecordingBook(RecordingSection recordingSectionType,
                                              Contact imagesCapturedBy, Contact imagesReviewedBy,
                                              int recordingsControlCount,
                                              TimePeriod recordingsControlTimePeriod) {

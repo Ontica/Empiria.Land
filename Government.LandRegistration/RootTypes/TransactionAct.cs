@@ -8,13 +8,13 @@
 *  Summary   : Transaction act that serves only for payment and control functions.                           *
 *              Transaction are not recordable.                                                               *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System.Data;
 
 namespace Empiria.Government.LandRegistration {
 
-  /// <summary>Transaction act that serves only for payment and control functions. Transaction acts 
-  /// are not recordable</summary>
+  /// <summary>Transaction acts serves only for payment and control functions.
+  ///  Transaction acts are not recordable.</summary>
   public class TransactionAct : RecordingAct {
 
     #region Fields

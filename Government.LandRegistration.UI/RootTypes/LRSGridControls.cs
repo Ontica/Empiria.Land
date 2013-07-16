@@ -7,7 +7,7 @@
 *                                                                                                             *
 *  Summary   : Static class that generates predefined grid content for Land Registration System data.         *
 *                                                                                                             *
-***************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+***************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Web.UI.WebControls;
 

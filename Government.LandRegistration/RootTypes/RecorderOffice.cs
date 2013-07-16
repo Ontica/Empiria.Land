@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : A recorder of deeds office.                                                                   *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 
@@ -124,8 +124,8 @@ namespace Empiria.Government.LandRegistration {
                                                   (x, y) => x.FullName.CompareTo(y.FullName));
     }
 
-    public ObjectList<RecordingBook> GetRecordingBooks(RecordingActTypeCategory recordingsClassId) {
-      return RecordingBooksData.GetRecordingBooksInCategory(this, recordingsClassId);
+    public ObjectList<RecordingBook> GetRecordingBooks(RecordingSection sectionType) {
+      return RecordingBooksData.GetRecordingBooksInSection(this, sectionType);
     }
 
     public ObjectList<RecordingBook> GetRootRecordingBooks() {

@@ -5,17 +5,17 @@
 *  Type      : StructureAct                                   Pattern  : Empiria Object Type                 *
 *  Date      : 25/Jun/2013                                    Version  : 5.1     License: CC BY-NC-SA 3.0    *
 *                                                                                                            *
-*  Summary   : Represents multiple property join or property split onto multiple properties recoding act.    *
+*  Summary   : Recording act that represents the changes on measures and limits of real estates,             *
+*              as well as the creation of new properties through fusions and divisons.                       *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+using System;
 using System.Data;
-
-
 
 namespace Empiria.Government.LandRegistration {
 
-  /// <summary>Represents multiple property join or property split onto multiple 
-  /// properties recoding act.</summary>
+  /// <summary>Recording act that represents the changes on measures and limits of real estates, 
+  ///as well as the creation of new properties through fusions and divisons.</summary>
   public class StructureAct : RecordingAct {
 
     #region Fields

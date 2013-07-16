@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Power type that describes recording document types.                                           *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 
 using Empiria.Ontology;
 

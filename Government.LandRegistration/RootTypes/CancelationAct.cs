@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Recording act that serves for cancel other recording act.                                     *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System.Data;
 
 namespace Empiria.Government.LandRegistration {

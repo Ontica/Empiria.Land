@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Describes the role that plays a party with respect to another party.                          *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 
 namespace Empiria.Government.LandRegistration {

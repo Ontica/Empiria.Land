@@ -2,39 +2,37 @@
 *                                                                                                            *
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
 *  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
-*  Type      : Certificate                                    Pattern  : Empiria Object Type                 *
+*  Type      : RecordingCertificate                           Pattern  : Empiria Object Type                 *
 *  Date      : 25/Jun/2013                                    Version  : 5.1     License: CC BY-NC-SA 3.0    *
 *                                                                                                            *
-*  Summary   : Certificate emission acts.                                                                    *
+*  Summary   : Certificate emission and information search acts.                                             *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System.Data;
 
 namespace Empiria.Government.LandRegistration {
 
-  /// <summary>Certificate emission acts.</summary>
-  public class Certificate : RecordingAct {
+  /// <summary>Certificate emission and information search acts.</summary>
+  public class RecordingCertificate : TransactionAct {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.RecordingAct.Certificate";
+    private const string thisTypeName = "ObjectType.RecordingAct.TransactionAct.Certificate";
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    private Certificate()
-      : base(thisTypeName) {
+    private RecordingCertificate() : base(thisTypeName) {
       // For create instances use Create static method instead    
     }
 
-    protected Certificate(string typeName)
-      : base(typeName) {
+    protected RecordingCertificate(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
-    static public new Certificate Parse(int id) {
-      return BaseObject.Parse<Certificate>(thisTypeName, id);
+    static public new RecordingCertificate Parse(int id) {
+      return BaseObject.Parse<RecordingCertificate>(thisTypeName, id);
     }
 
     #endregion Constructors and parsers
@@ -51,6 +49,6 @@ namespace Empiria.Government.LandRegistration {
 
     #endregion Public methods
 
-  } // class Certificate
+  } // class RecordingCertificate
 
 } // namespace Empiria.Government.LandRegistration

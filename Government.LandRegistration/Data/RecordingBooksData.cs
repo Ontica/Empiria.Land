@@ -7,7 +7,7 @@
 *                                                                                                            *
 *    Summary   : Provides database read and write methods for recording books.                               *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 
@@ -34,7 +34,7 @@ namespace Empiria.Government.LandRegistration.Data {
                    " WHERE RecordingBookId = " + book.Id.ToString() +
                    " AND RecordingStatus <> 'X'";
       object data = DataReader.GetScalar(DataOperation.Parse(sql));
-      if (data != null && data != DBNull.Value) {
+      if (data != null) {
         return int.Parse((string) data);
       } else {
         return 0;
@@ -78,7 +78,7 @@ namespace Empiria.Government.LandRegistration.Data {
     }
 
 
-    internal static RecordingBook GetOpenedBook(RecorderOffice office, RecordingSectionType recordingSection) {
+    internal static RecordingBook GetOpenedBook(RecorderOffice office, RecordingSection recordingSection) {
       string sql = "SELECT * FROM LRSRecordingBooks WHERE RecordingBookType = 'V'" +
                    " AND (RecordingsClassId = {C}) and RecorderOfficeId = {O} AND (RecordingBookStatus = 'O')";
       sql = sql.Replace("{C}", recordingSection.Id.ToString());
@@ -154,33 +154,33 @@ namespace Empiria.Government.LandRegistration.Data {
       return new ObjectList<RecordingBook>((x) => RecordingBook.Parse(x), table);
     }
 
-    static public ObjectList<RecordingBook> GetRecordingBooksInCategory(RecorderOffice recorderOffice,
-                                                                        RecordingActTypeCategory recordingActTypeCategory) {
+    static public ObjectList<RecordingBook> GetRecordingBooksInSection(RecorderOffice recorderOffice,
+                                                                       RecordingSection sectionType) {
       string filter = "RecorderOfficeId = " + recorderOffice.Id.ToString() + " AND " +
-                      "RecordingsClassId = " + recordingActTypeCategory.Id.ToString();
+                      "RecordingsClassId = " + sectionType.Id.ToString();
 
       DataTable table = GeneralDataOperations.GetEntities("LRSRecordingBooks", filter, "RecordingBookFullName");
 
       return new ObjectList<RecordingBook>((x) => RecordingBook.Parse(x), table);
     }
 
-    static public ObjectList<RecordingBook> GetRecordingBooksInCategories(RecorderOffice recorderOffice,
-                                                                          RecordingActTypeCategory[] categories) {
-      string cats = String.Empty;
+    //static public ObjectList<RecordingBook> GetRecordingBooksInCategories(RecorderOffice recorderOffice,
+    //                                                                      RecordingActTypeCategory[] categories) {
+    //  string cats = String.Empty;
 
-      for (int i = 0; i < categories.Length; i++) {
-        if (i != 0) {
-          cats += ", ";
-        }
-        cats += categories[i].Id.ToString();
-      }
-      string filter = "RecorderOfficeId = " + recorderOffice.Id.ToString() + " AND " +
-                      "RecordingsClassId IN (" + cats + ")";
+    //  for (int i = 0; i < categories.Length; i++) {
+    //    if (i != 0) {
+    //      cats += ", ";
+    //    }
+    //    cats += categories[i].Id.ToString();
+    //  }
+    //  string filter = "RecorderOfficeId = " + recorderOffice.Id.ToString() + " AND " +
+    //                  "RecordingsClassId IN (" + cats + ")";
 
-      DataTable table = GeneralDataOperations.GetEntities("LRSRecordingBooks", filter, "RecordingBookFullName");
+    //  DataTable table = GeneralDataOperations.GetEntities("LRSRecordingBooks", filter, "RecordingBookFullName");
 
-      return new ObjectList<RecordingBook>((x) => RecordingBook.Parse(x), table);
-    }
+    //  return new ObjectList<RecordingBook>((x) => RecordingBook.Parse(x), table);
+    //}
 
     static public DataRow GetRecordingMainDocument(Recording recording) {
       return DataReader.GetDataRow(DataOperation.Parse("getLRSRecordingMainDocument", recording.Id));

@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Describes a recorder office document type.                                                    *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 
 namespace Empiria.Government.LandRegistration.Transactions {
 

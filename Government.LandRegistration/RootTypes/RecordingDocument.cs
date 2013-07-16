@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Represents a Land Registration System document that is attached to a Recording.               *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 using Empiria.Contacts;

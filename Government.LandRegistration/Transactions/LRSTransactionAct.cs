@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Represents a transaction concept in the context of a land registration transaction.           *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -143,16 +143,6 @@ namespace Empiria.Government.LandRegistration.Transactions {
     #endregion Public properties
 
     #region Public methods
-
-    static public List<RecordingActType> RecordingActTypesList() {
-      string[] array = ConfigurationData.GetString("LRSTransactionAct.RecordingActTypesList").Split('|');
-
-      List<RecordingActType> list = new List<RecordingActType>(array.Length);
-      for (int i = 0; i < array.Length; i++) {
-        list.Add(RecordingActType.Parse(int.Parse(array[i].Trim())));
-      }
-      return list;
-    }
 
     public void Delete() {
       this.status = 'X';

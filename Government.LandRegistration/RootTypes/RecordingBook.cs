@@ -8,7 +8,7 @@
 *  Summary   : Represents a recording book. A recording book can have a parent recording book and always     *
 *              belongs to a recorder of deeds office. Instances of this type have a recording book type.     *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 using Empiria.Contacts;
@@ -45,7 +45,7 @@ namespace Empiria.Government.LandRegistration {
 
     private RecorderOffice recorderOffice = RecorderOffice.Empty;
     private RecordingBookType type = RecordingBookType.Volume;
-    private RecordingSectionType sectionType = RecordingSectionType.Empty;
+    private RecordingSection sectionType = RecordingSection.Empty;
     private string bookNumber = String.Empty;
     private string name = String.Empty;
     private string fullName = String.Empty;
@@ -130,7 +130,7 @@ namespace Empiria.Government.LandRegistration {
       get { return BaseObject.ParseEmpty<RecordingBook>(thisTypeName); }
     }
 
-    static public RecordingBook GetAssignedBookForRecording(RecorderOffice office, RecordingSectionType section,
+    static public RecordingBook GetAssignedBookForRecording(RecorderOffice office, RecordingSection section,
                                                             RecordingDocument document) {
       Assertion.RequireObject(document, "document");
       Assertion.Require(!document.IsEmptyInstance && !document.IsNew,
@@ -267,7 +267,7 @@ namespace Empiria.Government.LandRegistration {
       }
     }
 
-    public RecordingSectionType RecordingSectionType {
+    public RecordingSection RecordingSectionType {
       get { return sectionType; }
       set { sectionType = value; }
     }
@@ -496,7 +496,7 @@ namespace Empiria.Government.LandRegistration {
       this.recordings = null;
     }
 
-    static internal RecordingBook Create(RecordBookDirectory directory, RecordingSectionType recordingSectionType,
+    static internal RecordingBook Create(RecordBookDirectory directory, RecordingSection recordingSectionType,
                                          int recordingsControlCount, TimePeriod recordingsControlTimePeriod) {
       RecordingBook recordingBook = new RecordingBook();
 
@@ -534,7 +534,7 @@ namespace Empiria.Government.LandRegistration {
     protected override void ImplementsLoadObjectData(DataRow row) {
       this.RecorderOffice = RecorderOffice.Parse((int) row["RecorderOfficeId"]);
       this.BookType = (RecordingBookType) Convert.ToChar(row["RecordingBookType"]);
-      this.sectionType = RecordingSectionType.Parse((int) row["RecordingsClassId"]);
+      this.sectionType = RecordingSection.Parse((int) row["RecordingsClassId"]);
       this.BookNumber = (string) row["RecordingBookNumber"];
       this.Name = (string) row["RecordingBookName"];
       this.FullName = (string) row["RecordingBookFullName"];

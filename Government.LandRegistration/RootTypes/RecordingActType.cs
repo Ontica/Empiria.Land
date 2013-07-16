@@ -7,7 +7,8 @@
 *                                                                                                            *
 *  Summary   : Power type that defines a recording act type.                                                 *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+using System;
 
 using Empiria.Government.LandRegistration.Transactions;
 using Empiria.Ontology;
@@ -21,12 +22,14 @@ namespace Empiria.Government.LandRegistration {
 
     private const string thisTypeName = "PowerType.RecordingActType";
 
-    private static readonly string allowEmptyPartiesVector = ConfigurationData.GetString("AllowEmptyParties.Vector");
-    private static readonly string autoRegisterVector = ConfigurationData.GetString("AutoRegister.RecordingActType");
-    private static readonly string blockAllFieldsVector = ConfigurationData.GetString("BlockAllFields.Vector");
-    private static readonly string blockFirstPropertyOwnerVector = ConfigurationData.GetString("BlockFirstPropertyOwner.Vector");
-    private static readonly string blockOperationAmountVector = ConfigurationData.GetString("BlockOperationAmount.Vector");
-    private static readonly string useCreditFieldsVector = ConfigurationData.GetString("UseCreditFields.Vector");
+    static readonly string allowEmptyPartiesVector = ConfigurationData.GetString("AllowEmptyParties.Vector");
+    static readonly string autoRegisterVector = ConfigurationData.GetString("AutoRegister.RecordingActType");
+    static readonly string blockAllFieldsVector = ConfigurationData.GetString("BlockAllFields.Vector");
+    static readonly string blockFirstPropertyOwnerVector = ConfigurationData.GetString("BlockFirstPropertyOwner.Vector");
+    static readonly string blockOperationAmountVector = ConfigurationData.GetString("BlockOperationAmount.Vector");
+    static readonly string useCreditFieldsVector = ConfigurationData.GetString("UseCreditFields.Vector");
+
+    private RecordingSection registerSectionType = RecordingSection.Empty;
 
     #endregion Fields
 
@@ -55,18 +58,6 @@ namespace Empiria.Government.LandRegistration {
 
     #region Public properties
 
-    public bool Autoregister {
-      get {
-        string[] array = autoRegisterVector.Split('~');
-        for (int i = 0; i < array.Length; i++) {
-          if (int.Parse(array[i]) == base.Id) {
-            return true;
-          }
-        }
-        return false;
-      }
-    }
-
     public bool AllowsEmptyParties {
       get {
         string[] array = allowEmptyPartiesVector.Split('~');
@@ -79,47 +70,15 @@ namespace Empiria.Government.LandRegistration {
       }
     }
 
-    public bool AllowsRegisteredProperties {
+    public bool Autoregister {
       get {
-        string vector = ConfigurationData.GetString("AllowsRegisteredProperties.Vector");
-        string[] array = vector.Split('~');
+        string[] array = autoRegisterVector.Split('~');
         for (int i = 0; i < array.Length; i++) {
           if (int.Parse(array[i]) == base.Id) {
             return true;
           }
         }
-        return true;
-      }
-    }
-
-    public bool AllowsUnregisteredProperties {
-      get {
-        string vector = ConfigurationData.GetString("AllowsUnregisteredProperties.Vector");
-        string[] array = vector.Split('~');
-        for (int i = 0; i < array.Length; i++) {
-          if (int.Parse(array[i]) == base.Id) {
-            return true;
-          }
-        }
-        return true;
-      }
-    }
-
-    public bool IsPropertyLinked {
-      get {
-        return this.AllowsRegisteredProperties || this.AllowsUnregisteredProperties;
-      }
-    }
-
-    public bool IsRecordingActLinked {
-      get {
         return false;
-      }
-    }
-
-    public RecordingSectionType MainRecordingSectionType {
-      get {
-        return RecordingSectionType.Parse(1060);
       }
     }
 
@@ -138,6 +97,13 @@ namespace Empiria.Government.LandRegistration {
     public bool IsAnnotation {
       get {
         return base.Name.StartsWith("ObjectType.RecordingAct.AnnotationAct");
+      }
+    }
+
+    public RecordingRule RecordingRule {
+      get {
+        string s = base.GetAttribute<string>("RecordingActType_RecordingRule");
+        return RecordingRule.Parse(s);
       }
     }
 
@@ -190,25 +156,24 @@ namespace Empiria.Government.LandRegistration {
 
     #region Public methods
 
-    public ObjectList<RecordingActType> GetAppliesToRecordingActTypesList() {
-      ObjectList<RecordingActType> list = base.GetTypeLinks<RecordingActType>("RecordingActType_AppliesToRecordingAct");
+    //public ObjectList<RecordingActType> GetAppliesToRecordingActTypesList() {
+    //  ObjectList<RecordingActType> list = base.GetTypeLinks<RecordingActType>("RecordingActType_AppliesToRecordingAct");
 
-      list.Sort((x, y) => x.Name.CompareTo(y.Name));
+    //  list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
-      return list;
-    }
-
-
-    public ObjectList<DomainActPartyRole> GetRoles() {
-      ObjectList<DomainActPartyRole> list = base.GetLinks<DomainActPartyRole>("RecordingActType_Roles");
-
-      list.Sort((x, y) => x.Name.CompareTo(y.Name));
-
-      return list;
-    }
+    //  return list;
+    //}
 
     public ObjectList<LRSLawArticle> GetFinancialLawArticles() {
       ObjectList<LRSLawArticle> list = base.GetLinks<LRSLawArticle>("RecordingActType_FinancialLawArticle");
+
+      list.Sort((x, y) => x.Name.CompareTo(y.Name));
+
+      return list;
+    }
+
+    public ObjectList<DomainActPartyRole> GetRoles() {
+      ObjectList<DomainActPartyRole> list = base.GetLinks<DomainActPartyRole>("RecordingActType_Roles");
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 

@@ -8,7 +8,7 @@
 *  Summary   : Static class that generates predefined HtmlSelect controls content for Empiria Government      *
 *              Land Registration System.                                                                      *
 *                                                                                                             *
-***************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+***************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Collections.Generic;
 using System.Web.UI.HtmlControls;
@@ -32,14 +32,14 @@ namespace Empiria.Government.LandRegistration.UI {
       GeneralList listType = GeneralList.Parse("LegacyAnnotationActTypesCategories.List");
       ObjectList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
 
-      HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de acto jurídico )");
+      HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de limitación )");
     }
 
     static public void LoadLegacyTraslativeActTypesCategoriesCombo(HtmlSelect comboControl) {
       GeneralList listType = GeneralList.Parse("LegacyTraslativeActTypesCategories.List");
       ObjectList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
 
-      HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de anotación )");
+      HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de acto jurídico )");
     }
 
     static public void LoadRecordingActTypesCategoriesCombo(HtmlSelect comboControl) {

@@ -97,6 +97,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -141,7 +142,9 @@
     <Compile Include="Data\RecordingBooksData.cs" />
     <Compile Include="Empiria.Government.LandRegistration.AssemblyInfo.cs" />
     <Compile Include="RootTypes\Certificate.cs" />
-    <Compile Include="RootTypes\RecordingSectionType.cs" />
+    <Compile Include="RootTypes\PropertyRule.cs" />
+    <Compile Include="RootTypes\RecordingRule.cs" />
+    <Compile Include="RootTypes\RecordingSection.cs" />
     <Compile Include="RootTypes\RecordingTask.cs" />
     <Compile Include="RootTypes\TransactionAct.cs" />
     <Compile Include="Transactions\LRSFee.cs" />
@@ -164,7 +167,6 @@
     <Compile Include="RootTypes\HumanParty.cs" />
     <Compile Include="RootTypes\Party.cs" />
     <Compile Include="RootTypes\RecordBookDirectory.cs" />
-    <Compile Include="RootTypes\AnnotationAct.cs" />
     <Compile Include="RootTypes\CancelationAct.cs" />
     <Compile Include="RootTypes\JudicialOffice.cs" />
     <Compile Include="RootTypes\NotaryOffice.cs" />
@@ -173,7 +175,6 @@
     <Compile Include="RootTypes\RecordingDocument.cs" />
     <Compile Include="RootTypes\RecordingDocumentType.cs" />
     <Compile Include="RootTypes\PropertyEvent.cs" />
-    <Compile Include="RootTypes\ModificationAct.cs" />
     <Compile Include="RootTypes\InformationAct.cs" />
     <Compile Include="RootTypes\RecordingActType.cs" />
     <Compile Include="RootTypes\StructureAct.cs" />

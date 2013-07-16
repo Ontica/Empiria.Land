@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Provides database read and write methods for recording office process or transactions.        *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 
