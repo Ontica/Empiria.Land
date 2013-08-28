@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
 *  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
 *  Type      : RecordingAct                                   Pattern  : Empiria Object Type                 *
-*  Date      : 25/Jun/2013                                    Version  : 5.1     License: CC BY-NC-SA 3.0    *
+*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
 *                                                                                                            *
 *  Summary   : Abstract class that represents a recording act. All recording acts must be descendents        *
 *              of this type.                                                                                 *
@@ -37,6 +37,7 @@ namespace Empiria.Government.LandRegistration {
 
     private const string thisTypeName = "ObjectType.RecordingAct";
 
+    private RecordingActType recordingActType = null;
     private Recording recording = Recording.Empty;
     private int index = 0;
     private string notes = String.Empty;
@@ -54,7 +55,7 @@ namespace Empiria.Government.LandRegistration {
     private RecordingActStatus status = RecordingActStatus.Incomplete;
 
     private ObjectList<PropertyEvent> propertiesEvents = null;
-    private RecordingActType recordingActType = null;
+
 
     #endregion Fields
 

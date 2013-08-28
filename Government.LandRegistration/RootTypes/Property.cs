@@ -3,9 +3,9 @@
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
 *  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
 *  Type      : Recording                                      Pattern  : Empiria Object Type                 *
-*  Date      : 25/Jun/2013                                    Version  : 5.1     License: CC BY-NC-SA 3.0    *
+*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
 *                                                                                                            *
-*  Summary   : Represents a property.                                                                         *
+*  Summary   : Represents a property.                                                                        *
 *                                                                                                            *
 **************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
@@ -13,7 +13,6 @@ using System.Data;
 
 using Empiria.Contacts;
 using Empiria.Geography;
-
 using Empiria.Government.LandRegistration.Data;
 
 namespace Empiria.Government.LandRegistration {

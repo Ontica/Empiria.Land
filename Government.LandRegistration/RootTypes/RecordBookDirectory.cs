@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
 *  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
 *  Type      : RecordBookDirectory                            Pattern  : Storage Item                        *
-*  Date      : 25/Jun/2013                                    Version  : 5.1     License: CC BY-NC-SA 3.0    *
+*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
 *                                                                                                            *
 *  Summary   : Describes a record book imaging directory.                                                    *
 *                                                                                                            *
@@ -51,6 +51,7 @@ namespace Empiria.Government.LandRegistration {
 
     static public new RecordBookDirectory Empty {
       get { return BaseObject.ParseEmpty<RecordBookDirectory>(thisTypeName); }
+    
     }
 
     static public int ProcessDirectories(RecorderOffice office) {
@@ -103,11 +104,28 @@ namespace Empiria.Government.LandRegistration {
 
     #region Public methods
 
+    static public RecordBookDirectory AppendChild(FilesFolder parent, RecordingBook targetRecordingBook,
+                                                  DirectoryInfo physicalFolder) {
+      RecordBookDirectory child = new RecordBookDirectory();
+      parent.CloneInto(child);
+      child.ParentFilesFolderId = parent.Id;
+      child.CopyFrom(physicalFolder);
+      child.ReferenceId = targetRecordingBook.Id;
+      child.Tags = parent.Tags;
+      child.Status = FilesFolderStatus.Closed;
+      child.Save();
+
+      targetRecordingBook.ImagingFilesFolder = child;
+      targetRecordingBook.Save();
+
+      return child;
+    }
+
     public RecordingBook CreateRecordingBook(RecordingSection recordingSectionType,
                                              Contact imagesCapturedBy, Contact imagesReviewedBy,
                                              int recordingsControlCount,
                                              TimePeriod recordingsControlTimePeriod) {
-
+      
       this.CapturedById = imagesCapturedBy.Id;
       this.ReviewedById = imagesReviewedBy.Id;
       this.Status = FilesFolderStatus.Opened;
@@ -280,13 +298,13 @@ namespace Empiria.Government.LandRegistration {
       }
     }
 
-    static public void UpdateFilesCount(RecorderOffice office) {
+    static public void UpdateStatistics(RecorderOffice office) {
       FilesFolder rootFolder = office.GetRootImagesFolder();
 
       FilesFolderList childs = rootFolder.GetChilds();
       foreach (FilesFolder childFolder in childs) {
         if (childFolder.Status == FilesFolderStatus.Opened || childFolder.Status == FilesFolderStatus.Pending) {
-          childFolder.UpdateFilesCount();
+          childFolder.UpdateStatistics();
           childFolder.Save();
         }
       }

@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
 *  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
 *  Type      : RecordingBook                                  Pattern  : Empiria Object Type                 *
-*  Date      : 25/Jun/2013                                    Version  : 5.1     License: CC BY-NC-SA 3.0    *
+*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
 *                                                                                                            *
 *  Summary   : Represents a recording book. A recording book can have a parent recording book and always     *
 *              belongs to a recorder of deeds office. Instances of this type have a recording book type.     *

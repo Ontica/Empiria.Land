@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Land                                System   : Land Registration System              *
 *  Namespace : Empiria.Government.LandRegistration.Data     Assembly : Empiria.Government.LandRegistration   *
 *  Type      : RecordingBooksData                           Pattern  : Data Services Static Class            *
-*  Date      : 25/Jun/2013                                  Version  : 5.1     License: CC BY-NC-SA 3.0      *
+*  Date      : 23/Oct/2013                                  Version  : 5.2     License: CC BY-NC-SA 3.0      *
 *                                                                                                            *
 *    Summary   : Provides database read and write methods for recording books.                               *
 *                                                                                                            *
@@ -101,8 +101,8 @@ namespace Empiria.Government.LandRegistration.Data {
 
     static internal ObjectList<Recording> GetRecordings(RecordingDocument document,
                                                         Transactions.LRSTransaction transaction) {
-      string sql = "SELECT * FROM LRSRecordings WHERE TransactionId = {T}" +
-                  " AND DocumentId = {D} AND RecordingStatus <> 'X' ORDER BY RecordingId";
+      string sql = "SELECT * FROM LRSRecordings WHERE TransactionId = {T} " +
+                   "AND DocumentId = {D} AND RecordingStatus <> 'X' ORDER BY RecordingId";
       sql = sql.Replace("{T}", transaction.Id.ToString());
       sql = sql.Replace("{D}", document.Id.ToString());
 

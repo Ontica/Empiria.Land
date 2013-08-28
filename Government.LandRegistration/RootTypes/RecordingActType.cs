@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
 *  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
 *  Type      : RecordingActType                               Pattern  : Power type                          *
-*  Date      : 25/Jun/2013                                    Version  : 5.1     License: CC BY-NC-SA 3.0    *
+*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
 *                                                                                                            *
 *  Summary   : Power type that defines a recording act type.                                                 *
 *                                                                                                            *
@@ -156,16 +156,16 @@ namespace Empiria.Government.LandRegistration {
 
     #region Public methods
 
-    //public ObjectList<RecordingActType> GetAppliesToRecordingActTypesList() {
-    //  ObjectList<RecordingActType> list = base.GetTypeLinks<RecordingActType>("RecordingActType_AppliesToRecordingAct");
+    public ObjectList<RecordingActType> GetAppliesToRecordingActTypesList() {
+      var list = base.GetTypeLinks<RecordingActType>("RecordingActType_AppliesToRecordingAct");
 
-    //  list.Sort((x, y) => x.Name.CompareTo(y.Name));
+      list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
-    //  return list;
-    //}
+      return list;
+    }
 
     public ObjectList<LRSLawArticle> GetFinancialLawArticles() {
-      ObjectList<LRSLawArticle> list = base.GetLinks<LRSLawArticle>("RecordingActType_FinancialLawArticle");
+      var list = base.GetLinks<LRSLawArticle>("RecordingActType_FinancialLawArticle");
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
@@ -173,7 +173,7 @@ namespace Empiria.Government.LandRegistration {
     }
 
     public ObjectList<DomainActPartyRole> GetRoles() {
-      ObjectList<DomainActPartyRole> list = base.GetLinks<DomainActPartyRole>("RecordingActType_Roles");
+      var list = base.GetLinks<DomainActPartyRole>("RecordingActType_Roles");
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 

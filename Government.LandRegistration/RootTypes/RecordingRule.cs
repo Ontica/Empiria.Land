@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
 *  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
 *  Type      : RecordingRule                                  Pattern  : Empiria Structure Type              *
-*  Date      : 25/Jun/2013                                    Version  : 5.1     License: CC BY-NC-SA 3.0    *
+*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
 *                                                                                                            *
 *  Summary   : Describes the conditions and business rules that have to be fulfilled when a                  *
 *              RecordingAct is registered.                                                                   *  
@@ -38,22 +38,23 @@ namespace Empiria.Government.LandRegistration {
 
   /// <summary>Describes the conditions and business rules that have to be fulfilled when a
   /// RecordingAct is registered.</summary>
-  public class RecordingRule {   /// : Structure
+  public class RecordingRule : Structure {
 
     #region Fields
 
-    //private const string thisTypeName = "StructureType.RecordingRule";
+    private const string thisTypeName = "StructureType.RecordingRule";
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    public RecordingRule() {   //: base(thisTypeName)
+    public RecordingRule()
+      : base(thisTypeName) {
 
     }
 
-    internal static RecordingRule Parse(string json) {      
-      RecordingRule rule = Empiria.Data.DataConverter.ToObject<RecordingRule>(json);
+    internal static RecordingRule Parse(string json) {
+      RecordingRule rule = Empiria.Data.JsonConverter.ToObject<RecordingRule>(json);
       rule.Text = json;
       //= new RecordingRule();
 

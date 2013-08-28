@@ -1,13 +1,13 @@
-/* Empiria® Land 2013 ****************************************************************************************
+ï»¿/* EmpiriaÂ® Land 2013 ****************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Land                                  System   : Land Registration System            *
+*  Solution  : EmpiriaÂ® Land                                  System   : Land Registration System            *
 *  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
 *  Type      : Recording                                      Pattern  : Empiria Object Type                 *
-*  Date      : 25/Jun/2013                                    Version  : 5.1     License: CC BY-NC-SA 3.0    *
+*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
 *                                                                                                            *
 *  Summary   : Represents a general recording in Land Registration System.                                   *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright Â© La VÃ­a Ã“ntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 using Empiria.Contacts;
@@ -198,7 +198,7 @@ namespace Empiria.Government.LandRegistration {
 
     public string FullNumber {
       get {
-        return "Inscripción " + this.Number + " en " + this.RecordingBook.FullName;
+        return "InscripciÃ³n " + this.Number + " en " + this.RecordingBook.FullName;
       }
     }
 
@@ -362,7 +362,7 @@ namespace Empiria.Government.LandRegistration {
       }
       attachmentFolderList = new RecordingAttachmentFolderList();
 
-      attachmentFolderList.Append(this, "Raíz");
+      attachmentFolderList.Append(this, "RaÃ­z");
 
       ObjectList<PropertyEvent> annotations = this.GetPropertiesAnnotationsList();
       for (int i = 0; i < annotations.Count; i++) {
