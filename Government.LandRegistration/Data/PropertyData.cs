@@ -268,16 +268,14 @@ namespace Empiria.Government.LandRegistration.Data {
     }
 
     static internal int WriteProperty(Property o) {
-      Assertion.Require(o.Id != 0, "Property.Id can't be zero");
-      DataOperation dataOperation = DataOperation.Parse("writeLRSProperty", o.Id, o.PropertyType.Id, o.TractKey,
-                                                        o.CadastralOffice.Id, o.CadastralObjectId, o.CadastralKey,
-                                                        o.LandUse.Id, o.CommonName, o.Antecedent,
-                                                        o.Municipality.Id, o.Settlement.Id,
-                                                        o.Street.Id, o.PostalCode.Id, o.ExternalNumber, o.InternalNumber,
-                                                        o.BuildingTag, o.FloorTag, o.FractionTag, o.BatchTag,
-                                                        o.BlockTag, o.SectionTag,
-                                                        o.SuperSectionTag, o.FromStreet.Id, o.ToStreet.Id, o.Ubication,
-                                                        o.FirstKnownOwner, o.Notes, o.Keywords, o.PostedBy.Id,
+      Assertion.Require(o.Id != 0, "Property.Id can not be zero");
+      DataOperation dataOperation = DataOperation.Parse("writeLRSProperty", o.Id, o.RecordingAct.Id, o.UniqueCode, o.PropertyType.Id, o.LandUse.Id,
+                                                        o.CommonName, o.RecordingNotes, o.Antecedent, o.CadastralOffice.Id, o.CadastralObjectId, 
+                                                        o.CadastralCode, o.Municipality.Id, o.Locality.Id, o.Settlement.Id, o.PostalCode.Id,
+                                                        o.Street.Id, o.StreetSegment, o.FromStreet.Id, o.ToStreet.Id, o.BackStreet.Id,
+                                                        o.ExternalNo, o.InternalNo, o.FractionTag, o.UbicationReference, o.Keywords,
+                                                        o.MetesAndBounds, o.GeoPolygon, o.TotalArea.Amount, o.TotalArea.Unit.Id,
+                                                        o.FloorArea.Amount, o.FloorArea.Unit.Id, o.CommonArea.Amount, o.CommonArea.Unit.Id,                                                        
                                                         (char) o.Status, o.IntegrityHashCode);
       return DataWriter.Execute(dataOperation);
     }

@@ -115,15 +115,6 @@ namespace Empiria.Government.LandRegistration {
       set { contractPlace = value; }
     }
 
-    public bool HasFirstKnownOwner {
-      get {
-        if (this.PropertiesEvents.Count == 0) {
-          return false;
-        }
-        return (this.PropertiesEvents[0].Property.FirstKnownOwner.Length != 0);
-      }
-    }
-
     public int Index {
       get { return index; }
       internal set { index = value; }
@@ -236,7 +227,7 @@ namespace Empiria.Government.LandRegistration {
         property.Save();
       } else if (PropertiesEvents.Contains((x) => x.Property.Equals(property))) {
         throw new LandRegistrationException(LandRegistrationException.Msg.PropertyAlreadyExistsOnRecordingAct,
-                                            property.TractKey, this.Id);
+                                            property.UniqueCode, this.Id);
       }
 
       PropertyEvent propertyEvent = new PropertyEvent(property, this);
@@ -283,7 +274,7 @@ namespace Empiria.Government.LandRegistration {
         return propertyEvent;
       } else {
         throw new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
-                                            property.TractKey, this.Id);
+                                            property.UniqueCode, this.Id);
       }
     }
 
@@ -341,15 +332,6 @@ namespace Empiria.Government.LandRegistration {
 
       Assertion.Ensure(property.Status == PropertyStatus.Deleted &&
                        this.Status == RecordingActStatus.Deleted, "fail");
-    }
-
-    public void SetFirstPropertyOwner(string firstPropertyOwner) {
-      for (int i = 0; i < PropertiesEvents.Count; i++) {
-        Property property = PropertiesEvents[i].Property;
-
-        property.FirstKnownOwner = firstPropertyOwner;
-        property.Save();
-      }
     }
 
     #endregion Public methods

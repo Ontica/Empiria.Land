@@ -29,7 +29,6 @@ namespace Empiria.Government.LandRegistration {
       CantAlterRecordingActOnClosedRecording,
       CantReEntryTransaction,
       EmptyAppraisalAmount,
-      EmptyFirstKnownOwner,
       EmptyOperationAmount,
       InvalidImagePosition,
       InvalidPaymentOrderStatus,

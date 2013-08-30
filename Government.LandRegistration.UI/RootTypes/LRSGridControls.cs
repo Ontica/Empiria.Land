@@ -157,7 +157,7 @@ namespace Empiria.Government.LandRegistration.UI {
         }
 
         temp = temp.Replace("{NUMBERING}", Char.ConvertFromUtf32(65 + i));
-        temp = temp.Replace("{PROPERTY.TRACT.NUMBER}", association.Property.TractKey);
+        temp = temp.Replace("{PROPERTY.TRACT.NUMBER}", association.Property.UniqueCode);
         temp = temp.Replace("{RECORDING.ACT.TYPE}", association.RecordingAct.RecordingActType.DisplayName);
         if (!association.RecordingAct.Recording.Equals(recording)) {
           temp = temp.Replace("{IMAGING.FILES.FOLDER}", association.RecordingAct.Recording.RecordingBook.ImagingFilesFolder.DisplayName);
@@ -238,7 +238,7 @@ namespace Empiria.Government.LandRegistration.UI {
             temp = temp.Replace("{RECORDING.ACT.URL}", idemURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
                                                                        "<i>ídem</i>"));
           }
-          temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", propertyEvent.Property.TractKey));
+          temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", propertyEvent.Property.UniqueCode));
           if (propertyEvent.Property.Status == PropertyStatus.Registered && propertyEvent.Status != PropertyEventStatus.Registered) {
             temp = temp.Replace("{PROPERTY.STATUS}", "Parcial");
           } else {
@@ -317,7 +317,7 @@ namespace Empiria.Government.LandRegistration.UI {
             temp = temp.Replace("{RECORDING.ACT.URL}", idemURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
                                                                        "<i>ídem</i>"));
           }
-          temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", propertyEvent.Property.TractKey));
+          temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", propertyEvent.Property.UniqueCode));
           if (propertyEvent.Property.Status == PropertyStatus.Registered && propertyEvent.Status != PropertyEventStatus.Registered) {
             temp = temp.Replace("{PROPERTY.STATUS}", "Parcial");
           } else {
@@ -412,7 +412,7 @@ namespace Empiria.Government.LandRegistration.UI {
           temp = temp.Replace("{APPRAISAL.AMOUNT}", recordingAct.AppraisalAmount.ToString());
           temp = temp.Replace("{OPERATION.AMOUNT}", recordingAct.OperationAmount.ToString());
           temp = temp.Replace("{ANTECEDENT.TAG}", propertyEvent.Property.GetAntecedent(recordingAct).Recording.FullNumber);
-          temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", propertyEvent.Property.TractKey));
+          temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", propertyEvent.Property.UniqueCode));
           if (j == 0) {
             temp = temp.Replace("{OPTIONS.COMBO}", optionsCombo);
             if (recordingActs.Count > 1) {

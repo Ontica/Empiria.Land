@@ -93,7 +93,7 @@ namespace Empiria.Government.LandRegistration {
                                           presentationTime, authorizationDate, authorizedBy, toAppendProperty);
       if (annotationId == -1) {
         return new LandRegistrationException(LandRegistrationException.Msg.OtherAnnotationWithEqualNumberExistsInBook,
-                                             recordingBook.FullName, annotationNumber, toAppendProperty.TractKey);
+                                             recordingBook.FullName, annotationNumber, toAppendProperty.UniqueCode);
       }
 
       return null;
@@ -107,10 +107,10 @@ namespace Empiria.Government.LandRegistration {
       ObjectList<RecordingAct> domainActs = property.GetRecordingActsTract();
       if ((domainActs.Count > 1) && (property.FirstRecordingAct.Equals(recordingAct))) {
         return new LandRegistrationException(LandRegistrationException.Msg.PropertyIsReferencedInOtherDomainActs,
-                                             property.TractKey);
+                                             property.UniqueCode);
       }
       if (domainActs.Count == 1 && property.Annotations.Count > 0) {
-        return new LandRegistrationException(LandRegistrationException.Msg.PropertyHasAnnotations, property.TractKey);
+        return new LandRegistrationException(LandRegistrationException.Msg.PropertyHasAnnotations, property.UniqueCode);
       }
       return null;
     }
@@ -119,14 +119,14 @@ namespace Empiria.Government.LandRegistration {
       ObjectList<RecordingAct> domainActs = property.GetRecordingActsTract();
       if ((domainActs.Count > 1) && (property.FirstRecordingAct.Equals(recordingAct))) {
         return new LandRegistrationException(LandRegistrationException.Msg.PropertyIsReferencedInOtherDomainActs,
-                                             property.TractKey);
+                                             property.UniqueCode);
       }
       if ((domainActs.Count == 1) && (!property.FirstRecordingAct.Equals(recordingAct))) {
         return new LandRegistrationException(LandRegistrationException.Msg.OrphanRecordingActIfPropertyDeleted,
-                                             property.TractKey);
+                                             property.UniqueCode);
       }
       if ((domainActs.Count == 1) && (property.Annotations.Count > 0)) {
-        return new LandRegistrationException(LandRegistrationException.Msg.PropertyHasAnnotations, property.TractKey);
+        return new LandRegistrationException(LandRegistrationException.Msg.PropertyHasAnnotations, property.UniqueCode);
       }
       return null;
     }
@@ -137,9 +137,6 @@ namespace Empiria.Government.LandRegistration {
     //}
 
     static public LandRegistrationException ValidateRecordingActAsComplete(RecordingAct recordingAct) {
-      if (recordingAct.RecordingActType.UseFirstPropertyOwner && recordingAct.IsFirstRecordingAct() && !recordingAct.HasFirstKnownOwner) {
-        return new LandRegistrationException(LandRegistrationException.Msg.EmptyFirstKnownOwner);
-      }
       if (!recordingAct.RecordingActType.BlockAllFields && recordingAct.AppraisalAmount.Equals(Money.Empty)) {
         return new LandRegistrationException(LandRegistrationException.Msg.EmptyAppraisalAmount);
       }
@@ -183,7 +180,7 @@ namespace Empiria.Government.LandRegistration {
     }
 
     static public LandRegistrationException ValidateRecordingNumber(RecordingBook recordingBook, Recording recording,
-                                                                    int recordingNumber, string bisSuffixRecordingNumber, 
+                                                                    int recordingNumber, string bisSuffixRecordingNumber,
                                                                     int imageStartIndex, int imageEndIndex) {
       string filter = "RecordingId <> " + recording.Id + " AND RecordingNumber = '" +
                       Recording.RecordingNumber(recordingNumber, bisSuffixRecordingNumber) + "'";

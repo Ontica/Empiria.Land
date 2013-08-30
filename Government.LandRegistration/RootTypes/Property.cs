@@ -12,6 +12,7 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
+using Empiria.DataTypes;
 using Empiria.Geography;
 using Empiria.Government.LandRegistration.Data;
 
@@ -34,34 +35,42 @@ namespace Empiria.Government.LandRegistration {
 
     private const string thisTypeName = "ObjectType.Property";
 
+    private RecordingAct recordingAct = InformationAct.Empty;
+    private string uniqueCode = String.Empty;
     private PropertyType propertyType = PropertyType.Empty;
-    private string tractKey = String.Empty;
-    private RecorderOffice cadastralOffice = RecorderOffice.Empty;
-    private int cadastralObjectId = -1;
-    private string cadastralKey = String.Empty;
     private PropertyLandUse landUse = PropertyLandUse.Empty;
     private string commonName = String.Empty;
+
+    private string recordingNotes = String.Empty;
     private string antecedent = String.Empty;
+
+    private RecorderOffice cadastralOffice = RecorderOffice.Empty;
+    private int cadastralObjectId = -1;
+    private string cadastralCode = String.Empty;
+
     private GeographicRegionItem municipality = GeographicRegionItem.Empty;
+    private GeographicRegionItem locality = GeographicRegionItem.Empty;
     private GeographicRegionItem settlement = GeographicRegionItem.Empty;
-    private GeographicPathItem street = GeographicPathItem.Empty;
     private GeographicRegionItem postalCode = GeographicRegionItem.Empty;
-    private string externalNumber = String.Empty;
-    private string internalNumber = String.Empty;
-    private string buildingTag = String.Empty;
-    private string floorTag = String.Empty;
-    private string fractionTag = String.Empty;
-    private string batchTag = String.Empty;
-    private string blockTag = String.Empty;
-    private string sectionTag = String.Empty;
-    private string superSectionTag = String.Empty;
+    private GeographicPathItem street = GeographicPathItem.Empty;
+    private string streetSegment = String.Empty;
     private GeographicPathItem fromStreet = GeographicPathItem.Empty;
     private GeographicPathItem toStreet = GeographicPathItem.Empty;
-    private string ubication = String.Empty;
-    private string firstKnownOwner = String.Empty;
-    private string notes = String.Empty;
+    private GeographicPathItem backStreet = GeographicPathItem.Empty;
+
+    private string externalNo = String.Empty;
+    private string internalNo = String.Empty;
+    private string fractionTag = String.Empty;
+    private string ubicationReference = String.Empty;
     private string keywords = String.Empty;
-    private Contact postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+
+    private string metesAndBounds = String.Empty;
+    private string geoPolygon = String.Empty;
+
+    private Quantity totalArea = Quantity.Parse(Unit.Empty, 0m);
+    private Quantity floorArea = Quantity.Parse(Unit.Empty, 0m);
+    private Quantity commonArea = Quantity.Parse(Unit.Empty, 0m);
+
     private PropertyStatus status = PropertyStatus.Incomplete;
     private string integrityHashCode = String.Empty;
 
@@ -116,24 +125,14 @@ namespace Empiria.Government.LandRegistration {
       set { antecedent = value; }
     }
 
-    public string BatchTag {
-      get { return batchTag; }
-      set { batchTag = EmpiriaString.TrimAll(value); }
+    public GeographicPathItem BackStreet {
+      get { return backStreet; }
+      set { backStreet = value; }
     }
 
-    public string BlockTag {
-      get { return blockTag; }
-      set { blockTag = EmpiriaString.TrimAll(value); }
-    }
-
-    public string BuildingTag {
-      get { return buildingTag; }
-      set { buildingTag = EmpiriaString.TrimAll(value); }
-    }
-
-    public string CadastralKey {
-      get { return cadastralKey; }
-      set { cadastralKey = EmpiriaString.TrimAll(value); }
+    public string CadastralCode {
+      get { return cadastralCode; }
+      set { cadastralCode = EmpiriaString.TrimAll(value); }
     }
 
     public int CadastralObjectId {
@@ -146,9 +145,19 @@ namespace Empiria.Government.LandRegistration {
       set { cadastralOffice = value; }
     }
 
+    public Quantity CommonArea {
+      get { return commonArea; }
+      set { commonArea = value; }
+    }
+
     public string CommonName {
       get { return commonName; }
       set { commonName = EmpiriaString.TrimAll(value); }
+    }
+
+    public string ExternalNo {
+      get { return externalNo; }
+      set { externalNo = EmpiriaString.TrimAll(value); }
     }
 
     public RecordingAct FirstRecordingAct {
@@ -162,6 +171,35 @@ namespace Empiria.Government.LandRegistration {
       }
     }
 
+    public Quantity FloorArea {
+      get { return floorArea; }
+      set { floorArea = value; }
+    }
+
+    public string FractionTag {
+      get { return fractionTag; }
+      set { fractionTag = value; }
+    }
+
+    public GeographicPathItem FromStreet {
+      get { return fromStreet; }
+      set { fromStreet = value; }
+    }
+
+    public string GeoPolygon {
+      get { return geoPolygon; }
+      set { geoPolygon = value; }
+    }
+
+    public string IntegrityHashCode {
+      get { return integrityHashCode; }
+    }
+
+    public string InternalNo {
+      get { return internalNo; }
+      set { internalNo = EmpiriaString.TrimAll(value); }
+    }
+
     public RecordingAct LastRecordingAct {
       get {
         ObjectList<RecordingAct> domainActs = this.GetRecordingActsTract();
@@ -172,6 +210,115 @@ namespace Empiria.Government.LandRegistration {
         }
       }
     }
+
+    public string Keywords {
+      get { return keywords; }
+    }
+
+    public PropertyLandUse LandUse {
+      get { return landUse; }
+      set { landUse = value; }
+    }
+
+    public GeographicRegionItem Municipality {
+      get { return municipality; }
+      set { municipality = value; }
+    }
+
+    public GeographicRegionItem Locality {
+      get { return locality; }
+      set { locality = value; }
+    }
+
+    public GeographicRegionItem PostalCode {
+      get { return postalCode; }
+      set { postalCode = value; }
+    }
+
+    public PropertyType PropertyType {
+      get { return propertyType; }
+      set { propertyType = value; }
+    }
+
+    public RecordingAct RecordingAct {
+      get { return recordingAct; }
+    }
+
+    public GeographicRegionItem Settlement {
+      get { return settlement; }
+      set { settlement = value; }
+    }
+
+    public PropertyStatus Status {
+      get { return status; }
+      set { status = value; }
+    }
+
+    public string StatusName {
+      get {
+        switch (status) {
+          case PropertyStatus.Obsolete:
+            return "No vigente";
+          case PropertyStatus.NoLegible:
+            return "No legible";
+          case PropertyStatus.Incomplete:
+            return "Incompleto";
+          case PropertyStatus.Pending:
+            return "Pendiente";
+          case PropertyStatus.Registered:
+            return "Registrado";
+          case PropertyStatus.Closed:
+            return "Cerrado";
+          case PropertyStatus.Deleted:
+            return "Eliminado";
+          default:
+            return "No determinado";
+        }
+      } // get
+    }
+
+    public GeographicPathItem Street {
+      get { return street; }
+      set { street = value; }
+    }
+
+    public string StreetSegment {
+      get { return streetSegment; }
+      set { streetSegment = value; }
+    }
+
+    public string MetesAndBounds {
+      get { return metesAndBounds; }
+      set { metesAndBounds = value; }
+    }
+
+    public string RecordingNotes {
+      get { return recordingNotes; }
+      set { recordingNotes = value; }
+    }
+
+    public GeographicPathItem ToStreet {
+      get { return toStreet; }
+      set { toStreet = value; }
+    }
+
+    public Quantity TotalArea {
+      get { return totalArea; }
+      set { totalArea = value; }
+    }
+
+    public string UbicationReference {
+      get { return ubicationReference; }
+      set { ubicationReference = EmpiriaString.TrimAll(value); }
+    }
+
+    public string UniqueCode {
+      get { return uniqueCode; }
+    }
+
+    #endregion Public properties
+
+    #region Public methods
 
     public bool IsFirstRecordingAct(RecordingAct recordingAct) {
       if (recordingAct.IsAnnotation) {
@@ -217,190 +364,58 @@ namespace Empiria.Government.LandRegistration {
       }
     }
 
-    public string ExternalNumber {
-      get { return externalNumber; }
-      set { externalNumber = EmpiriaString.TrimAll(value); }
-    }
-
-    public string FirstKnownOwner {
-      get { return firstKnownOwner; }
-      set { firstKnownOwner = EmpiriaString.TrimAll(value); }
-    }
-
-    public string FloorTag {
-      get { return floorTag; }
-      set { floorTag = EmpiriaString.TrimAll(value); }
-    }
-
-    public string FractionTag {
-      get { return fractionTag; }
-      set { fractionTag = value; }
-    }
-
-    public GeographicPathItem FromStreet {
-      get { return fromStreet; }
-      set { fromStreet = value; }
-    }
-
-    public string IntegrityHashCode {
-      get { return integrityHashCode; }
-    }
-
-    public string InternalNumber {
-      get { return internalNumber; }
-      set { internalNumber = EmpiriaString.TrimAll(value); }
-    }
-
-    public string Keywords {
-      get { return keywords; }
-    }
-
-    public PropertyLandUse LandUse {
-      get { return landUse; }
-      set { landUse = value; }
-    }
-
-    public GeographicRegionItem Municipality {
-      get { return municipality; }
-      set { municipality = value; }
-    }
-
-    public string Notes {
-      get { return notes; }
-      set { notes = EmpiriaString.TrimAll(value); }
-    }
-
-    public GeographicRegionItem PostalCode {
-      get { return postalCode; }
-      set { postalCode = value; }
-    }
-
-    public Contact PostedBy {
-      get { return postedBy; }
-    }
-
-    public PropertyType PropertyType {
-      get { return propertyType; }
-      set { propertyType = value; }
-    }
-
-    public string SectionTag {
-      get { return sectionTag; }
-      set { sectionTag = EmpiriaString.TrimAll(value); }
-    }
-
-    public GeographicRegionItem Settlement {
-      get { return settlement; }
-      set { settlement = value; }
-    }
-
-    public PropertyStatus Status {
-      get { return status; }
-      set { status = value; }
-    }
-
-    public string StatusName {
-      get {
-        switch (status) {
-          case PropertyStatus.Obsolete:
-            return "No vigente";
-          case PropertyStatus.NoLegible:
-            return "No legible";
-          case PropertyStatus.Incomplete:
-            return "Incompleto";
-          case PropertyStatus.Pending:
-            return "Pendiente";
-          case PropertyStatus.Registered:
-            return "Registrado";
-          case PropertyStatus.Closed:
-            return "Cerrado";
-          case PropertyStatus.Deleted:
-            return "Eliminado";
-          default:
-            return "No determinado";
-        }
-      } // get
-    }
-
-    public GeographicPathItem Street {
-      get { return street; }
-      set { street = value; }
-    }
-
-    public string SuperSectionTag {
-      get { return superSectionTag; }
-      set { superSectionTag = EmpiriaString.TrimAll(value); }
-    }
-
-    public string TractKey {
-      get { return tractKey; }
-    }
-
-    public GeographicPathItem ToStreet {
-      get { return toStreet; }
-      set { toStreet = value; }
-    }
-
-    public string Ubication {
-      get { return ubication; }
-      set { ubication = EmpiriaString.TrimAll(value); }
-    }
-
-    #endregion Public properties
-
-    #region Public methods
-
     protected override void ImplementsLoadObjectData(DataRow row) {
+      this.recordingAct = RecordingAct.Parse((int) row["RecordingActId"]);
+      this.uniqueCode = (string) row["PropertyUniqueCode"];
       this.propertyType = PropertyType.Parse((int) row["PropertyTypeId"]);
-      this.tractKey = (string) row["PropertyTractKey"];
-      this.cadastralOffice = RecorderOffice.Parse((int) row["CadastralOfficeId"]);
-      this.cadastralObjectId = (int) row["CadastralObjectId"];
-      this.cadastralKey = (string) row["CadastralKey"];
       this.landUse = PropertyLandUse.Parse((int) row["PropertyLandUseId"]);
       this.commonName = (string) row["PropertyCommonName"];
+      this.recordingNotes = (string) row["PropertyRecordingNotes"];
       this.antecedent = (string) row["Antecedent"];
+
+      this.cadastralOffice = RecorderOffice.Parse((int) row["CadastralOfficeId"]);
+      this.cadastralObjectId = (int) row["CadastralObjectId"];
+      this.cadastralCode = (string) row["CadastralCode"];
+
       this.municipality = GeographicRegionItem.Parse((int) row["MunicipalityId"]);
+      this.locality = GeographicRegionItem.Parse((int) row["LocalityId"]);
       this.settlement = GeographicRegionItem.Parse((int) row["SettlementId"]);
-      this.street = GeographicPathItem.Parse((int) row["StreetId"]);
       this.postalCode = GeographicRegionItem.Parse((int) row["PostalCodeId"]);
-      this.externalNumber = (string) row["ExternalNumber"];
-      this.internalNumber = (string) row["InternalNumber"];
-      this.buildingTag = (string) row["BuildingTag"];
-      this.floorTag = (string) row["FloorTag"];
-      this.fractionTag = (string) row["FractionTag"];
-      this.batchTag = (string) row["BatchTag"];
-      this.blockTag = (string) row["BlockTag"];
-      this.sectionTag = (string) row["SectionTag"];
-      this.superSectionTag = (string) row["SuperSectionTag"];
+      this.street = GeographicPathItem.Parse((int) row["StreetId"]);
+      this.streetSegment = (string) row["StreetSegment"];
       this.fromStreet = GeographicPathItem.Parse((int) row["FromStreetId"]);
       this.toStreet = GeographicPathItem.Parse((int) row["ToStreetId"]);
-      this.ubication = (string) row["Ubication"];
-      this.firstKnownOwner = (string) row["FirstKnownOwner"];
-      this.notes = (string) row["PropertyNotes"];
+      this.backStreet = GeographicPathItem.Parse((int) row["BackStreetId"]);
+      this.externalNo = (string) row["ExternalNo"];
+      this.internalNo = (string) row["InternalNo"];
+      this.fractionTag = (string) row["FractionTag"];
+      this.ubicationReference = (string) row["UbicationReference"];
       this.keywords = (string) row["PropertyKeywords"];
-      this.postedBy = Contact.Parse((int) row["PostedById"]);
+
+      this.metesAndBounds = (string) row["MetesAndBounds"];
+      this.geoPolygon = (string) row["GeoPolygon"];
+      this.totalArea = Quantity.Parse(Unit.Parse((int) row["TotalAreaUnitId"]), (decimal) row["TotalArea"]);
+      this.floorArea = Quantity.Parse(Unit.Parse((int) row["FloorAreaUnitId"]), (decimal) row["FloorArea"]);
+      this.commonArea = Quantity.Parse(Unit.Parse((int) row["CommonAreaUnitId"]), (decimal) row["CommonArea"]);
+
       this.status = (PropertyStatus) Convert.ToChar(row["PropertyStatus"]);
       this.integrityHashCode = (string) row["PropertyRIHC"];
     }
 
     protected override void ImplementsSave() {
-      if (this.tractKey.Length == 0) {
+      if (this.uniqueCode.Length == 0) {
         while (true) {
           string temp = TransactionData.GeneratePropertyKey();
           if (!PropertyData.ExistsPropertyTractKey(temp)) {
-            this.tractKey = temp;
+            this.uniqueCode = temp;
             break;
           }
         } // while
       }
-      if (base.IsNew) {
-        this.postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-      }
-      this.keywords = EmpiriaString.BuildKeywords(this.cadastralKey, this.tractKey, this.commonName, this.ubication, this.firstKnownOwner,
-                                                  this.street.Name, this.externalNumber, this.internalNumber, this.batchTag,
-                                                  this.blockTag, this.sectionTag, this.superSectionTag, this.buildingTag,
-                                                  this.fractionTag, this.floorTag, this.settlement.Keywords, this.cadastralOffice.Alias,
-                                                  this.municipality.Name, this.postalCode.Name, this.propertyType.Name);
+      this.keywords = EmpiriaString.BuildKeywords(this.UniqueCode, this.CadastralCode, this.CommonName, this.UbicationReference,
+                                                  this.Street.Name, this.ExternalNo, this.InternalNo, this.StreetSegment, this.FractionTag,
+                                                  this.Settlement.Keywords, this.Municipality.Name, this.Locality.Name, this.PostalCode.Name, 
+                                                  this.CadastralOffice.Alias, this.PropertyType.Name);
       PropertyData.WriteProperty(this);
     }
 

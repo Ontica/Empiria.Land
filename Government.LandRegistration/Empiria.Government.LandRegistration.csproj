@@ -174,7 +174,7 @@
     <Compile Include="RootTypes\RecordingPayment.cs" />
     <Compile Include="RootTypes\RecordingDocument.cs" />
     <Compile Include="RootTypes\RecordingDocumentType.cs" />
-    <Compile Include="RootTypes\PropertyEvent.cs" />
+    <Compile Include="RootTypes\ZZZPropertyEvent.cs" />
     <Compile Include="RootTypes\InformationAct.cs" />
     <Compile Include="RootTypes\RecordingActType.cs" />
     <Compile Include="RootTypes\StructureAct.cs" />

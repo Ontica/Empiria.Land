@@ -33,12 +33,7 @@ namespace Empiria.Government.LandRegistration.Data {
       string sql = "SELECT MAX(RecordingNumber) FROM LRSRecordings" +
                    " WHERE RecordingBookId = " + book.Id.ToString() +
                    " AND RecordingStatus <> 'X'";
-      object data = DataReader.GetScalar(DataOperation.Parse(sql));
-      if (data != null) {
-        return int.Parse((string) data);
-      } else {
-        return 0;
-      }
+      return int.Parse(DataReader.GetScalar<string>(DataOperation.Parse(sql), "0"));
     }
 
     internal static int GetNextRecordingNumberWithReuse(RecordingBook book) {

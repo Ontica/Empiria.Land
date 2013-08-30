@@ -288,7 +288,7 @@ namespace Empiria.Government.LandRegistration.Data {
     static internal int GetLastControlNumber(RecorderOffice recorderOffice) {
       string sql = "SELECT MAX(ControlNumber) FROM vwLRSTransactions WHERE RecorderOfficeId = " + recorderOffice.Id.ToString();
 
-      string max = DataReader.GetScalar(DataOperation.Parse(sql)) as string;
+      string max = DataReader.GetScalar<String>(DataOperation.Parse(sql), String.Empty);
 
       if (max != null && max.Length != 0) {
         return int.Parse(max);

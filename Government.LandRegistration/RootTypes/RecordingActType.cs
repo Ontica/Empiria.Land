@@ -101,10 +101,7 @@ namespace Empiria.Government.LandRegistration {
     }
 
     public RecordingRule RecordingRule {
-      get {
-        string s = base.GetAttribute<string>("RecordingActType_RecordingRule");
-        return RecordingRule.Parse(s);
-      }
+      get { return RecordingRule.Parse(base.ExtensionData); }
     }
 
     public bool UseCreditFields {
@@ -119,21 +116,6 @@ namespace Empiria.Government.LandRegistration {
           }
         }
         return false;
-      }
-    }
-
-    public bool UseFirstPropertyOwner {
-      get {
-        if (this.BlockAllFields) {
-          return false;
-        }
-        string[] array = blockFirstPropertyOwnerVector.Split('~');
-        for (int i = 0; i < array.Length; i++) {
-          if (int.Parse(array[i]) == this.Id) {
-            return false;
-          }
-        }
-        return true;
       }
     }
 
