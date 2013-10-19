@@ -186,8 +186,14 @@
   <data name="OtherAnnotationWithEqualNumberExistsInBook" xml:space="preserve">
     <value>El libro {0} ya contiene una anotación o limitación registrada con el número de inscripción {1}.\n\nSin embargo, la información proporcionada no coincide exactamente con la de la anotación ya registrada, o bien, el predio con folio {2} ya fue agregado a esta última.</value>
   </data>
+  <data name="PrecendentPresentationTimeIsAfterThisTransactionDate" xml:space="preserve">
+    <value>La fecha de presentación del antecedente seleccionado ({0}) fue el día {1}.\n\nSin embargo, dicha fecha es posterior al día {3}, fecha de presentación de este trámite ({2}). \n\nEl antecedente seleccionado no puede estar correcto.</value>
+  </data>
   <data name="PropertyAlreadyExistsOnRecordingAct" xml:space="preserve">
     <value>La propiedad con folio electrónico '{0}' ya está referenciada dentro de la lista de propiedades del acto jurídico con identificador {1}.</value>
+  </data>
+  <data name="PropertyDoesNotHaveAnyRecordingActs" xml:space="preserve">
+    <value>El predio con folio electrónico '{0}' no tiene ningún acto jurídico registrado.\n\nEsto es un error grave, ya que no es posible que un predio esté registrado en el sistema y no exista el acto jurídico que originó su inscripción.</value>
   </data>
   <data name="PropertyHasAnnotations" xml:space="preserve">
     <value>La propiedad con folio {0} tiene registrada cuando menos una anotación o limitación.\n\nPara eliminar la propiedad primero deben cancelarse todas las anotaciones, gravámenes y demás limitaciones que hagan referencia a dicho predio.</value>

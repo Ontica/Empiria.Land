@@ -384,17 +384,67 @@ namespace Empiria.Government.LandRegistration {
       return true;
     }
 
+    public Recording CreateQuickRecording(int recordingNumber, string bisSuffixTag = "") {
+      Recording recording = new Recording();
+      recording.RecordingBook = this;
+      recording.Transaction = LRSTransaction.Empty;
+      recording.Document = RecordingDocument.Empty;
+      recording.SetNumber(recordingNumber, bisSuffixTag);
+      recording.Status = RecordingStatus.Incomplete;
+      recording.PresentationTime = ExecutionServer.DateMinValue;
+      recording.StartImageIndex = -1;
+      recording.EndImageIndex = -1;
+      recording.Save();
+
+      var property = new Property();
+      var recordingActType = RecordingActType.Empty;
+      recording.CreateRecordingAct(recordingActType, property);
+      
+      recordings = null;
+
+      return recording;
+    }
+
     public Recording CreateRecording(LRSTransaction transaction) {
       Assertion.RequireObject(transaction, "transaction");
       Assertion.RequireObject(transaction.Document, "document");
       Assertion.Require(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
-                        "Transaction document can't be neither an empty or a new document instance");
+                        "Transaction document can not be neither an empty or a new document instance.");
 
       Recording recording = new Recording();
       recording.RecordingBook = this;
       recording.Transaction = transaction;
       recording.Document = transaction.Document;
       recording.SetNumber (this.GetNextRecordingNumber());
+      recording.Status = RecordingStatus.Incomplete;
+      recording.StartImageIndex = -1;
+      recording.EndImageIndex = -1;
+      recording.PresentationTime = transaction.PresentationTime;
+      recording.AuthorizedTime = DateTime.Now;
+      recording.AuthorizedBy = Contact.Parse(36);
+      recording.Save();
+
+      return recording;
+    }
+
+    public Recording CreateRecordingForAnnotation(LRSTransaction transaction, Recording antecedent) {
+      Assertion.RequireObject(transaction, "transaction");
+      Assertion.RequireObject(transaction.Document, "document");
+      Assertion.Require(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
+                        "Transaction document can not be neither an empty or a new document instance.");
+      Assertion.Require(!antecedent.IsEmptyInstance && !antecedent.IsNew,
+                        "Annotation precedent can not be empty or a new instance.");
+
+      Recording recording = new Recording();
+      recording.BaseRecordingId = antecedent.Id;
+      recording.RecordingBook = antecedent.RecordingBook;
+      recording.Transaction = transaction;
+      recording.Document = transaction.Document;
+      string bisSuffixTag = String.Empty;
+
+      int recordingNumber = Recording.SplitRecordingNumber(antecedent.Number, out bisSuffixTag);
+      recording.SetNumber(recordingNumber, bisSuffixTag);
+
       recording.Status = RecordingStatus.Incomplete;
       recording.StartImageIndex = -1;
       recording.EndImageIndex = -1;
@@ -542,7 +592,8 @@ namespace Empiria.Government.LandRegistration {
       this.Description = (string) row["RecordingBookDescription"];
       this.StartRecordingIndex = (int) row["StartRecordingIndex"];
       this.EndRecordingIndex = (int) row["EndRecordingIndex"];
-      this.RecordingsControlTimePeriod = new TimePeriod((DateTime) row["RecordingsControlFirstDate"], (DateTime) row["RecordingsControlLastDate"]);
+      this.RecordingsControlTimePeriod = new TimePeriod((DateTime) row["RecordingsControlFirstDate"], 
+                                                        (DateTime) row["RecordingsControlLastDate"]);
       this.ImagingFilesFolder = RecordBookDirectory.Parse((int) row["RecordingBookFilesFolderId"]);
       this.CreationDate = (DateTime) row["CreationDate"];
       this.ClosingDate = (DateTime) row["ClosingDate"];
@@ -647,6 +698,7 @@ namespace Empiria.Government.LandRegistration {
     }
 
     #endregion Private methods
+
   } // class RecordingBook
 
 } // namespace Empiria.Government.LandRegistration

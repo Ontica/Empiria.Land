@@ -61,6 +61,7 @@ namespace Empiria.Government.LandRegistration {
       this.PropertyStatus = PropertyRecordingStatus.Undefined;
       this.RecordingActTypes = new RecordingActType[0];
       this.RecordingSection = RecordingSection.Empty;
+      this.FixedRecorderOffice = RecorderOffice.Empty;
       this.SpecialCase = "None";
     }
 
@@ -101,6 +102,9 @@ namespace Empiria.Government.LandRegistration {
       }
       if (json.ContainsKey("RecordingSectionId")) {
         rule.RecordingSection = RecordingSection.Parse(Convert.ToInt32(json["RecordingSectionId"]));
+      }
+      if (json.ContainsKey("FixedRecorderOffice")) {
+        rule.FixedRecorderOffice = RecorderOffice.Parse(Convert.ToInt32(json["FixedRecorderOffice"]));
       }
       if (json.ContainsKey("SpecialCase")) {
         rule.SpecialCase = (string) json["SpecialCase"];
@@ -171,6 +175,11 @@ namespace Empiria.Government.LandRegistration {
 
     public PropertyRecordingStatus PropertyStatus {
       get;
+      private set;
+    }
+
+    public RecorderOffice FixedRecorderOffice { 
+      get; 
       private set;
     }
 

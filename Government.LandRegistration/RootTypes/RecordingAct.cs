@@ -66,7 +66,8 @@ namespace Empiria.Government.LandRegistration {
       // Empiria Object Type pattern classes always has this constructor. Don't delete
     }
 
-    static internal RecordingAct Create(RecordingActType recordingActType, Recording recording, Property property) {
+    static internal RecordingAct Create(RecordingActType recordingActType, 
+                                        Recording recording, Property property) {
       RecordingAct recordingAct = recordingActType.CreateInstance();
       recordingAct.recordingActType = recordingActType;
       recordingAct.recording = recording;
@@ -131,7 +132,7 @@ namespace Empiria.Government.LandRegistration {
     }
 
     public bool IsAnnotation {
-      get { return this.RecordingActType.IsAnnotation; }
+      get { return this.RecordingActType.IsAnnotationType; }
     }
 
     public string Notes {

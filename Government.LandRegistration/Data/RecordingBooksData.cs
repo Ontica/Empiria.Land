@@ -9,6 +9,7 @@
 *                                                                                                            *
 **************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Data;
@@ -24,7 +25,7 @@ namespace Empiria.Government.LandRegistration.Data {
     static internal DataTable GetBookRecordingNumbers(RecordingBook book) {
       string sql = "SELECT RecordingNumber FROM LRSRecordings" +
                    " WHERE RecordingBookId = " + book.Id.ToString() +
-                   " AND RecordingStatus <> 'X' ORDER BY RecordingNumber";
+                   " AND RecordingStatus <> 'X' AND (BaseRecordingId = -1) ORDER BY RecordingNumber";
 
       return DataReader.GetDataTable(DataOperation.Parse(sql));
     }
@@ -32,7 +33,7 @@ namespace Empiria.Government.LandRegistration.Data {
     static internal int GetLastBookRecordingNumber(RecordingBook book) {
       string sql = "SELECT MAX(RecordingNumber) FROM LRSRecordings" +
                    " WHERE RecordingBookId = " + book.Id.ToString() +
-                   " AND RecordingStatus <> 'X'";
+                   " AND RecordingStatus <> 'X' AND (BaseRecordingId = -1)";
       return int.Parse(DataReader.GetScalar<string>(DataOperation.Parse(sql), "0"));
     }
 
@@ -128,11 +129,25 @@ namespace Empiria.Government.LandRegistration.Data {
       return new ObjectList<RecordingAct>((x) => RecordingAct.Parse(x), view);
     }
 
-    static public ObjectList<RecordingPayment> GetRecordingPaymentList(Recording recording) {
-      DataView view = DataReader.GetDataView(DataOperation.Parse("qryLRSRecordingPayments", recording.Id));
-
-      return new ObjectList<RecordingPayment>((x) => RecordingPayment.Parse(x), view);
+    static public ObjectList<RecordingAct> GetPropertyRecordingActListUntil(Property property, RecordingAct breakAct, 
+                                                                            bool includeBreakAct) {
+      DataOperation op = DataOperation.Parse("qryLRSPropertyRecordingActs", property.Id);
+      DataView view = DataReader.GetDataView(op);
+      List<RecordingAct> list = new List<RecordingAct>();
+      foreach (DataRowView row in view) {
+        var recordingAct = RecordingAct.Parse(row.Row);
+        if (recordingAct.Equals(breakAct)) {
+          if (includeBreakAct) {
+            list.Add(RecordingAct.Parse(row.Row));
+          }
+          break;
+        } else {
+          list.Add(RecordingAct.Parse(row.Row));
+        }
+      }
+      return new ObjectList<RecordingAct>(list);
     }
+
 
     static public ObjectList<RecordingBook> GetRecordingBooks(string filter, string sort = "RecordingBookFullName") {
       filter = GeneralDataOperations.BuildSqlAndFilter(filter, "RecordingBookType = 'V'");
@@ -238,8 +253,9 @@ namespace Empiria.Government.LandRegistration.Data {
     static internal int WriteRecording(Recording o) {
       Assertion.Require(o.Id != 0, "Recording.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSRecording", o.Id, o.RecordingBook.Id, o.Transaction.Id,
-                                                        o.Document.Id, o.Number, o.StartImageIndex, o.EndImageIndex,
-                                                        o.Notes, o.Keywords, o.PresentationTime, o.CapturedBy.Id,
+                                                        o.Document.Id, o.BaseRecordingId, o.Number, o.StartImageIndex, o.EndImageIndex, 
+                                                        o.Notes, o.Keywords, o.PresentationTime, o.ReceiptNumber, 
+                                                        o.ReceiptTotal, o.ReceiptIssueDate, o.CapturedBy.Id,
                                                         o.CapturedTime, o.QualifiedBy.Id, o.QualifiedTime,
                                                         o.AuthorizedBy.Id, o.AuthorizedTime, o.CanceledBy.Id,
                                                         o.CanceledTime, o.CancelationReasonId, o.CancelationNotes,
@@ -291,17 +307,6 @@ namespace Empiria.Government.LandRegistration.Data {
                                  o.Notes, o.Keywords, o.ReviewedBy.Id, o.AuthorizationKey,
                                  o.DigitalString, o.DigitalSign, o.PostedBy.Id, o.PostingTime,
                                  (char) o.Status, o.RecordIntegrityHashCode);
-    }
-
-    static internal int WriteRecordingPayment(RecordingPayment o) {
-      Assertion.Require(o.Id != 0, "RecordingPayment.Id can't be zero");
-      DataOperation dataOperation = DataOperation.Parse("writeLRSRecordingPayment", o.Id, o.Recording.Id, o.PaymentOffice.Id,
-                                                        o.ReferenceId, o.ReceiptNumber, o.OtherReceipts, o.Notes, o.FeeTypeId,
-                                                        o.CalculatedBy.Id, o.AuthorizedBy.Id, o.DiscountTypeId,
-                                                        o.DiscountAuthorizationKey, o.FeeAmount.Currency.Id, o.FeeAmount.Amount,
-                                                        o.FeeDiscount, o.PaymentTime, o.CanceledBy.Id, o.PostedBy.Id,
-                                                        o.PostingTime, (char) o.Status, o.RecordIntegrityHashCode);
-      return DataWriter.Execute(dataOperation);
     }
 
     #endregion Public methods

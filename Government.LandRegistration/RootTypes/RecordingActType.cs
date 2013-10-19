@@ -94,9 +94,15 @@ namespace Empiria.Government.LandRegistration {
       }
     }
 
-    public bool IsAnnotation {
+    public bool IsAnnotationType {
       get {
         return base.Name.StartsWith("ObjectType.RecordingAct.AnnotationAct");
+      }
+    }
+
+    public bool IsDomainActType {
+      get {
+        return base.Name.StartsWith("ObjectType.RecordingAct.DomainAct");
       }
     }
 

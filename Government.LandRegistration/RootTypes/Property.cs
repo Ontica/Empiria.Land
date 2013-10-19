@@ -164,9 +164,10 @@ namespace Empiria.Government.LandRegistration {
       get {
         ObjectList<RecordingAct> domainActs = this.GetRecordingActsTract();
         if (domainActs.Count != 0) {
-          return domainActs[domainActs.Count - 1];
+          return domainActs[0];
         } else {
-          return InformationAct.Empty;
+          throw new LandRegistrationException(LandRegistrationException.Msg.PropertyDoesNotHaveAnyRecordingActs,
+                                              this.UniqueCode);
         }
       }
     }
@@ -204,7 +205,7 @@ namespace Empiria.Government.LandRegistration {
       get {
         ObjectList<RecordingAct> domainActs = this.GetRecordingActsTract();
         if (domainActs.Count != 0) {
-          return domainActs[0];
+          return domainActs[domainActs.Count - 1];
         } else {
           return InformationAct.Empty;
         }
@@ -350,6 +351,10 @@ namespace Empiria.Government.LandRegistration {
       return RecordingBooksData.GetPropertyRecordingActList(this);
     }
 
+    public ObjectList<RecordingAct> GetRecordingActsTractUntil(RecordingAct breakAct, bool includeBreakAct) {
+      return RecordingBooksData.GetPropertyRecordingActListUntil(this, breakAct, includeBreakAct);
+    }
+
     public RecordingAct GetAntecedent(RecordingAct baseRecordingAct) {
       ObjectList<RecordingAct> tract = this.GetRecordingActsTract();
 
@@ -360,7 +365,23 @@ namespace Empiria.Government.LandRegistration {
       } else if ((index + 1) < tract.Count) {
         return tract[index + 1];
       } else {
-        return tract[index];
+        return InformationAct.Empty; // No Antecedent
+      }
+    }
+
+    public RecordingAct GetDomainAntecedent(RecordingAct baseRecordingAct) {
+      ObjectList<RecordingAct> tract = this.GetRecordingActsTractUntil(baseRecordingAct, false);
+
+      if (tract.Count == 0) {         // No registered antecedent
+        return InformationAct.Empty;
+      }
+      RecordingAct antecedent = tract.FindLast((x) => x is DomainAct);
+      if (antecedent != null) {
+        return antecedent;
+      } else if (tract[0].RecordingActType.Equals(RecordingActType.Empty)) {
+        return tract[0];
+      } else {
+        return InformationAct.Empty;      
       }
     }
 

@@ -312,7 +312,7 @@ namespace Empiria.Government.LandRegistration.Transactions {
 
     public bool ReadyForReentry {
       get {
-        User user = (User) ExecutionServer.CurrentUser;
+        EmpiriaUser user = (EmpiriaUser) ExecutionServer.CurrentUser;
         return ((this.Status == TransactionStatus.Returned) ||
         (this.Status == TransactionStatus.Delivered && user.CanExecute("LRSTransaction.ReentryByFails")));
       }

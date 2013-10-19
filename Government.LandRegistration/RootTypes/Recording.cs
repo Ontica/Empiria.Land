@@ -36,12 +36,16 @@ namespace Empiria.Government.LandRegistration {
     private RecordingBook recordingBook = RecordingBook.Empty;
     private LRSTransaction transaction = LRSTransaction.Empty;
     private RecordingDocument document = null;
+    private int baseRecordingId = -1;
     private string number = String.Empty;
     private int startImageIndex = 0;
     private int endImageIndex = 0;
     private string notes = String.Empty;
     private string keywords = String.Empty;
     private DateTime presentationTime = ExecutionServer.DateMaxValue;
+    private string receiptNumber = String.Empty;
+    private decimal receiptTotal = Decimal.Zero;
+    private DateTime receiptIssueDate = ExecutionServer.DateMaxValue;
     private Contact capturedBy = Person.Empty;
     private DateTime capturedTime = DateTime.Now;
     private Contact qualifiedBy = RecorderOffice.Empty;
@@ -59,8 +63,8 @@ namespace Empiria.Government.LandRegistration {
 
     private RecordingDocument recordingDocument = null;
     private ObjectList<RecordingAct> recordingActList = null;
-    private ObjectList<RecordingPayment> recordingPaymentList = null;
     private RecordingAttachmentFolderList attachmentFolderList = null;
+
 
     #endregion Fields
 
@@ -77,23 +81,12 @@ namespace Empiria.Government.LandRegistration {
       document = RecordingDocument.Empty;
     }
 
-    //static internal Recording Create(Transactions.RecorderOfficeTransaction transaction) {
-    //  Recording recording = new Recording();
-
-    //  recording.recordingBook = RecordingBook.Empty;
-    //  recording.number = transaction.Key;
-    //  recording.presentationTime = transaction.PresentationTime;
-    //  recording.capturedBy = transaction.CapturedBy;
-
-    //  return recording;
-    //}
-
     static public Recording Parse(int id) {
       return BaseObject.Parse<Recording>(thisTypeName, id);
     }
 
-    static internal Recording Parse(DataRow dataRow) {
-      return BaseObject.Parse<Recording>(thisTypeName, dataRow);
+    static internal Recording Parse(DataRow dataRow) {      
+      return BaseObject.ParseFromBelow<Recording>(thisTypeName, dataRow);
     }
 
     static public Recording Empty {
@@ -136,6 +129,11 @@ namespace Empiria.Government.LandRegistration {
     public DateTime AuthorizedTime {
       get { return authorizedTime; }
       set { authorizedTime = value; }
+    }
+
+    public int BaseRecordingId {
+      get { return baseRecordingId; }
+      set { baseRecordingId = value; }
     }
 
     public Contact CanceledBy {
@@ -198,7 +196,11 @@ namespace Empiria.Government.LandRegistration {
 
     public string FullNumber {
       get {
-        return "Inscripción " + this.Number + " en " + this.RecordingBook.FullName;
+        if (ExecutionServer.LicenseName == "Tlaxcala") {
+          return "Partida " + this.Number + " en " + this.RecordingBook.FullName;
+        } else {
+          return "Inscripción " + this.Number + " en " + this.RecordingBook.FullName;
+        }
       }
     }
 
@@ -215,21 +217,27 @@ namespace Empiria.Government.LandRegistration {
       get { return qualifiedTime; }
     }
 
+    public string ReceiptNumber {
+      get { return receiptNumber; }
+      set { receiptNumber = value; }
+    }
+
+    public decimal ReceiptTotal {
+      get { return receiptTotal; }
+      set { receiptTotal = value; }
+    }
+
+    public DateTime ReceiptIssueDate {
+      get { return receiptIssueDate; }
+      set { receiptIssueDate = value; }
+    }
+
     public ObjectList<RecordingAct> RecordingActs {
       get {
         if (recordingActList == null) {
           this.recordingActList = RecordingBooksData.GetRecordingActs(this);
         }
         return recordingActList;
-      }
-    }
-
-    public ObjectList<RecordingPayment> RecordingPaymentList {
-      get {
-        if (recordingPaymentList == null) {
-          this.recordingPaymentList = RecordingBooksData.GetRecordingPaymentList(this);
-        }
-        return recordingPaymentList;
       }
     }
 
@@ -294,23 +302,32 @@ namespace Empiria.Government.LandRegistration {
 
     #region Public methods
 
-    public void AppendRecordingPayment(RecordingPayment payment) {
-      if (this.IsNew) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.NotSavedRecording, "CreateRecordingPayment");
-      }
-      if (this.Status == RecordingStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
-      }
-      payment.Recording = this;
-      payment.Save();
-      this.recordingPaymentList = null;
-    }
-
     public void Cancel() {
       this.Status = RecordingStatus.Deleted;
       this.canceledBy = Contact.Parse(ExecutionServer.CurrentUserId);
       this.canceledTime = DateTime.Now;
       this.Save();
+    }
+
+    public RecordingAct CreateAnnotation(LRSTransaction transaction,
+                                         RecordingActType recordingActType, Property property) {
+      Assertion.RequireObject(transaction, "transaction");
+      Assertion.RequireObject(transaction.Document, "document");
+      Assertion.Require(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
+                        "Transaction document can not be neither an empty or a new document instance");
+      Assertion.Require(!property.IsNew && !property.IsEmptyInstance,
+                        "Property can not be empty or a new instance");
+      Assertion.Require(!this.IsEmptyInstance && !this.IsNew,
+                        "Can not create an annotation using an empty or new recording");
+
+      var recording = this.RecordingBook.CreateRecordingForAnnotation(transaction, this);
+
+      RecordingAct recordingAct = RecordingAct.Create(recordingActType, recording, property);
+
+      this.Refresh();
+      this.RecordingBook.Refresh();
+
+      return recordingAct;
     }
 
     public RecordingAct CreateRecordingAct(RecordingActType recordingActType, Property property) {
@@ -326,10 +343,12 @@ namespace Empiria.Government.LandRegistration {
       }
 
       RecordingAct recordingAct = RecordingAct.Create(recordingActType, this, property);
-      this.recordingActList = null;
+
+      this.Refresh();
+      this.RecordingBook.Refresh();
+
       return recordingAct;
     }
-
 
     public void DeleteRecordingAct(RecordingAct recordingAct) {
       if (this.Status == RecordingStatus.Closed) {
@@ -343,6 +362,9 @@ namespace Empiria.Government.LandRegistration {
       }
       recordingAct.Delete();
       SortRecordingActs();
+
+      this.Refresh();
+      this.RecordingBook.Refresh();
     }
 
     public RecordingAttachmentFolder GetAttachementFolder(string folderName) {
@@ -353,7 +375,8 @@ namespace Empiria.Government.LandRegistration {
           return folder;
         }
       }
-      throw new LandRegistrationException(LandRegistrationException.Msg.AttachmentFolderNotFound, folderName);
+      throw new LandRegistrationException(LandRegistrationException.Msg.AttachmentFolderNotFound, 
+                                          folderName);
     }
 
     public RecordingAttachmentFolderList GetAttachmentFolderList() {
@@ -423,12 +446,16 @@ namespace Empiria.Government.LandRegistration {
       this.recordingBook = RecordingBook.Parse((int) row["RecordingBookId"]);
       this.transaction = LRSTransaction.Parse((int) row["TransactionId"]);
       this.document = RecordingDocument.Parse((int) row["DocumentId"]);
+      this.baseRecordingId = (int) row["BaseRecordingId"];
       this.number = (string) row["RecordingNumber"];
       this.startImageIndex = (int) row["RecordingBookFirstImage"];
       this.endImageIndex = (int) row["RecordingBookLastImage"];
       this.notes = (string) row["RecordingNotes"];
       this.keywords = (string) row["RecordingKeywords"];
       this.presentationTime = (DateTime) row["RecordingPresentationTime"];
+      this.receiptNumber = (string) row["ReceiptNumber"];
+      this.receiptTotal = (decimal) row["ReceiptTotal"];
+      this.receiptIssueDate = (DateTime) row["ReceiptIssueDate"];
       this.capturedBy = Contact.Parse((int) row["RecordingCapturedById"]);
       this.capturedTime = (DateTime) row["RecordingCapturedTime"];
       this.qualifiedBy = Contact.Parse((int) row["RecordingQualifiedById"]);

@@ -196,69 +196,69 @@ namespace Empiria.Government.LandRegistration.UI {
       return GetRecordingsSummaryTable(recordings, pageSize, pageIndex);
     }
 
-    static public string GetCalificationRecordingActsGrid(Recording recording) {
-      const string row = "<tr class='{CLASS}'><td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b></td>" +
-                         "<td style='white-space:normal'>{RECORDING.ACT.URL}</td>" +
-                         "<td>{RECORDING.ACT.STATUS}</td>" +
-                         "<td>{PROPERTY.URL}</td>" +
-                         "<td>{PROPERTY.STATUS}</td>" +
-                         "<td style='white-space:normal'>" +
-                         "<a href=\"javascript:createNewWindow('recording.book.analyzer.aspx" +
-                            "?bookId={ANTECEDENT.BOOK.ID}&id={ANTECEDENT.ID}')\">{ANTECEDENT}</a></td></tr>";
-      const string editURL = "<a href='javascript:doOperation(\"editRecordingAct\", {ID})'>" +
-                             "<b id='ancRecordingAct_{ID}'>{RECORDING.ACT.DISPLAY.NAME}</b></a>";
-      const string idemURL = "<b id='ancRecordingAct_{ID}'>{RECORDING.ACT.DISPLAY.NAME}</b>";
+    //static public string GetCalificationRecordingActsGrid(Recording recording) {
+    //  const string row = "<tr class='{CLASS}'><td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b></td>" +
+    //                     "<td style='white-space:normal'>{RECORDING.ACT.URL}</td>" +
+    //                     "<td>{RECORDING.ACT.STATUS}</td>" +
+    //                     "<td>{PROPERTY.URL}</td>" +
+    //                     "<td>{PROPERTY.STATUS}</td>" +
+    //                     "<td style='white-space:normal'>" +
+    //                     "<a href=\"javascript:createNewWindow('recording.book.analyzer.aspx" +
+    //                        "?bookId={ANTECEDENT.BOOK.ID}&id={ANTECEDENT.ID}')\">{ANTECEDENT}</a></td></tr>";
+    //  const string editURL = "<a href='javascript:doOperation(\"editRecordingAct\", {ID})'>" +
+    //                         "<b id='ancRecordingAct_{ID}'>{RECORDING.ACT.DISPLAY.NAME}</b></a>";
+    //  const string idemURL = "<b id='ancRecordingAct_{ID}'>{RECORDING.ACT.DISPLAY.NAME}</b>";
 
-      const string propertyURL = "<a href='javascript:doOperation(\"editProperty\", {PROPERTY.ID}, {ID})'>" +
-                                 "<b id='ancRecordingActProperty_{ID}_{PROPERTY.ID}'>{PROPERTY.TRACT}</b></a>";
-      string html = String.Empty;
-      string temp = String.Empty;
-      ObjectList<RecordingAct> recordingActs = recording.GetNoAnnotationActs();
-      for (int i = 0; i < recordingActs.Count; i++) {
-        RecordingAct recordingAct = recordingActs[i];
-        for (int j = 0; j < recordingActs[i].PropertiesEvents.Count; j++) {
-          PropertyEvent propertyEvent = recordingAct.PropertiesEvents[j];
-          if (i % 2 == 0) {
-            temp = row.Replace("{CLASS}", "detailsItem");
-          } else {
-            temp = row.Replace("{CLASS}", "detailsOddItem");
-          }
-          if (j == 0) {
-            temp = temp.Replace("{RECORDING.ACT.INDEX}", recordingAct.Index.ToString("00"));
-            if (recordingAct.RecordingActType.Autoregister) {
-              temp = temp.Replace("{RECORDING.ACT.URL}", idemURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
-                                                                         recordingAct.RecordingActType.DisplayName));
-            } else {
-              temp = temp.Replace("{RECORDING.ACT.URL}", editURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
-                                                                         recordingAct.RecordingActType.DisplayName));
-            }
-            temp = temp.Replace("{RECORDING.ACT.DISPLAY.NAME}", recordingAct.RecordingActType.DisplayName);
-          } else {
-            temp = temp.Replace("{RECORDING.ACT.INDEX}", "<i>" + recordingAct.Index.ToString("00") + "</i>");
-            temp = temp.Replace("{RECORDING.ACT.URL}", idemURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
-                                                                       "<i>ídem</i>"));
-          }
-          temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", propertyEvent.Property.UniqueCode));
-          if (propertyEvent.Property.Status == PropertyStatus.Registered && propertyEvent.Status != PropertyEventStatus.Registered) {
-            temp = temp.Replace("{PROPERTY.STATUS}", "Parcial");
-          } else {
-            temp = temp.Replace("{PROPERTY.STATUS}", propertyEvent.StatusName);
-          }
-          RecordingAct antecedent = propertyEvent.Property.GetAntecedent(recordingAct);
-          temp = temp.Replace("{ANTECEDENT}", antecedent.Recording.FullNumber);
-          temp = temp.Replace("{ANTECEDENT.ID}", antecedent.Recording.Id.ToString());
-          temp = temp.Replace("{ANTECEDENT.BOOK.ID}", antecedent.Recording.RecordingBook.Id.ToString());
-          temp = temp.Replace("{PROPERTY.STATUS}", propertyEvent.Property.StatusName);
-          temp = temp.Replace("{RECORDING.ACT.STATUS}", recordingAct.StatusName);
-          temp = temp.Replace("{ID}", recordingAct.Id.ToString());
-          temp = temp.Replace("{PROPERTY.ID}", propertyEvent.Property.Id.ToString());
+    //  const string propertyURL = "<a href='javascript:doOperation(\"editProperty\", {PROPERTY.ID}, {ID})'>" +
+    //                             "<b id='ancRecordingActProperty_{ID}_{PROPERTY.ID}'>{PROPERTY.TRACT}</b></a>";
+    //  string html = String.Empty;
+    //  string temp = String.Empty;
+    //  ObjectList<RecordingAct> recordingActs = recording.GetNoAnnotationActs();
+    //  for (int i = 0; i < recordingActs.Count; i++) {
+    //    RecordingAct recordingAct = recordingActs[i];
+    //    for (int j = 0; j < recordingActs[i].PropertiesEvents.Count; j++) {
+    //      PropertyEvent propertyEvent = recordingAct.PropertiesEvents[j];
+    //      if (i % 2 == 0) {
+    //        temp = row.Replace("{CLASS}", "detailsItem");
+    //      } else {
+    //        temp = row.Replace("{CLASS}", "detailsOddItem");
+    //      }
+    //      if (j == 0) {
+    //        temp = temp.Replace("{RECORDING.ACT.INDEX}", recordingAct.Index.ToString("00"));
+    //        if (recordingAct.RecordingActType.Autoregister) {
+    //          temp = temp.Replace("{RECORDING.ACT.URL}", idemURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
+    //                                                                     recordingAct.RecordingActType.DisplayName));
+    //        } else {
+    //          temp = temp.Replace("{RECORDING.ACT.URL}", editURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
+    //                                                                     recordingAct.RecordingActType.DisplayName));
+    //        }
+    //        temp = temp.Replace("{RECORDING.ACT.DISPLAY.NAME}", recordingAct.RecordingActType.DisplayName);
+    //      } else {
+    //        temp = temp.Replace("{RECORDING.ACT.INDEX}", "<i>" + recordingAct.Index.ToString("00") + "</i>");
+    //        temp = temp.Replace("{RECORDING.ACT.URL}", idemURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
+    //                                                                   "<i>ídem</i>"));
+    //      }
+    //      temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", propertyEvent.Property.UniqueCode));
+    //      if (propertyEvent.Property.Status == PropertyStatus.Registered && propertyEvent.Status != PropertyEventStatus.Registered) {
+    //        temp = temp.Replace("{PROPERTY.STATUS}", "Parcial");
+    //      } else {
+    //        temp = temp.Replace("{PROPERTY.STATUS}", propertyEvent.StatusName);
+    //      }
+    //      RecordingAct antecedent = propertyEvent.Property.GetAntecedent(recordingAct);
+    //      temp = temp.Replace("{ANTECEDENT}", antecedent.Recording.FullNumber);
+    //      temp = temp.Replace("{ANTECEDENT.ID}", antecedent.Recording.Id.ToString());
+    //      temp = temp.Replace("{ANTECEDENT.BOOK.ID}", antecedent.Recording.RecordingBook.Id.ToString());
+    //      temp = temp.Replace("{PROPERTY.STATUS}", propertyEvent.Property.StatusName);
+    //      temp = temp.Replace("{RECORDING.ACT.STATUS}", recordingAct.StatusName);
+    //      temp = temp.Replace("{ID}", recordingAct.Id.ToString());
+    //      temp = temp.Replace("{PROPERTY.ID}", propertyEvent.Property.Id.ToString());
 
-          html += temp;
+    //      html += temp;
 
-        }  // for j
-      } // for i
-      return html;
-    }
+    //    }  // for j
+    //  } // for i
+    //  return html;
+    //}
 
     static public string GetBatchCaptureRecordingActsGrid(Recording recording) {
       const string row = "<tr class='{CLASS}'><td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b></td>" +
@@ -270,6 +270,7 @@ namespace Empiria.Government.LandRegistration.UI {
                          "alt='' title='Ejecuta la operación seleccionada' " +
                          "onclick='doOperation(getElement(\"cboRecordingOptions_{ID}_{PROPERTY.ID}\").value, {ID}, {PROPERTY.ID});'/>" +
                          "</td></tr>";
+
       const string editURL = "<a href='javascript:doOperation(\"editRecordingAct\", {ID})'>" +
                              "<b id='ancRecordingAct_{ID}'>{RECORDING.ACT.DISPLAY.NAME}</b></a>";
       const string idemURL = "<b id='ancRecordingAct_{ID}'>{RECORDING.ACT.DISPLAY.NAME}</b>";
@@ -286,6 +287,7 @@ namespace Empiria.Government.LandRegistration.UI {
                                   "<option value='modifyRecordingActType'>Modificar este acto</option>" +
                                   "<option value='deleteRecordingAct'>Eliminar este acto</option>" +
                                   "</select>";
+
       const string propertyOptionsCombo = "<select id='cboRecordingOptions_{ID}_{PROPERTY.ID}' class='selectBox' style='width:148px'>" +
                                           "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
                                           "<option value='deleteRecordingActProperty'>Eliminar este predio</option>" +
@@ -353,20 +355,27 @@ namespace Empiria.Government.LandRegistration.UI {
       return html;
     }
 
-    static public string GetRecordingActsGrid(Recording recording) {
-      const string row = "<tr class='{CLASS}'><td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b></td>" +
+    static public string GetRecordingActsGrid(ObjectList<Recording> recordingList) {
+      const string row = "<tr class='{CLASS}'>" +
+                         "<td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b><br/>" +
+                         "<img src='../themes/default/buttons/document.sm.gif' alt=''" +
+                         " title='Imprime el sello específico para esta partida'" +
+                         " onclick='return doOperation(\"viewRecordingSeal\", {RECORDING.ID})' /></td>" +
+                         "<td style='white-space:normal'>{RECORDING.BOOK}</td>" +
+                         "<td>{RECORDING.NUMBER}</td>" +
                          "<td style='white-space:normal'>{RECORDING.ACT.URL}</td>" +
-                         "<td>{PROPERTY.URL}</td><td align='right'>{APPRAISAL.AMOUNT}</td><td align='right'>{OPERATION.AMOUNT}</td>" +
-                         "<td style='white-space:normal'>{ANTECEDENT.TAG}</td>" +
+                         "<td>{RECORDING.ACT.STATUS}</td>" +
+                         "<td style='white-space:normal'>{PROPERTY.URL}<br/>{ANTECEDENT.TAG} {ANTECEDENT.STATUS}</td>" +
+                         "<td>{PROPERTY.STATUS}</td>" +
                          "<td>{OPTIONS.COMBO}<img class='comboExecuteImage' src='../themes/default/buttons/next.gif' " +
                          "alt='' title='Ejecuta la operación seleccionada' " +
                          "onclick='doOperation(getElement(\"cboRecordingOptions_{ID}_{PROPERTY.ID}\").value, {ID}, {PROPERTY.ID});'/>" +
                          "</td></tr>";
-      const string editURL = "<a href='javascript:doOperation(\"editRecordingAct\", {ID})'>" +
+      const string editURL = "<a href='javascript:doOperation(\"editRecordingAct\", {RECORDING.BOOK.ID}, {RECORDING.ID})'>" +
                              "<b id='ancRecordingAct_{ID}'>{RECORDING.ACT.DISPLAY.NAME}</b></a>";
       const string idemURL = "<b id='ancRecordingAct_{ID}'>{RECORDING.ACT.DISPLAY.NAME}</b>";
 
-      const string propertyURL = "<a href='javascript:doOperation(\"editProperty\", {PROPERTY.ID}, {ID})'>" +
+      const string propertyURL = "<a href='javascript:doOperation(\"editProperty\", {RECORDING.BOOK.ID}, {RECORDING.ID}, {PROPERTY.ID})'>" +
                                  "<b id='ancRecordingActProperty_{ID}_{PROPERTY.ID}'>{PROPERTY.TRACT}</b></a>";
 
       const string optionsCombo = "<select id='cboRecordingOptions_{ID}_{PROPERTY.ID}' class='selectBox' style='width:148px'>" +
@@ -375,69 +384,95 @@ namespace Empiria.Government.LandRegistration.UI {
                                   "{DECREMENT_INDEX}" +
                                   "<option value='selectRecordingActOperation'></option>" +
                                   "<option value='addPropertyToRecordingAct'>Agregar otro predio</option>" +
+                                  "<option value='addAnotherRecordingActToRecording'>Agregar otro acto</option>" +
                                   "<option value='modifyRecordingActType'>Modificar este acto</option>" +
                                   "<option value='deleteRecordingAct'>Eliminar este acto</option>" +
                                   "</select>";
       const string propertyOptionsCombo = "<select id='cboRecordingOptions_{ID}_{PROPERTY.ID}' class='selectBox' style='width:148px'>" +
                                           "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
                                           "<option value='deleteRecordingActProperty'>Eliminar este predio</option>" +
+                                          "<option value='viewPropertyTract'>Ver la historia de este predio</option>" +
                                           "</select>";
       string html = String.Empty;
       string temp = String.Empty;
-      ObjectList<RecordingAct> recordingActs = recording.GetNoAnnotationActs();
-      for (int i = 0; i < recordingActs.Count; i++) {
-        RecordingAct recordingAct = recordingActs[i];
-        for (int j = 0; j < recordingActs[i].PropertiesEvents.Count; j++) {
-          PropertyEvent propertyEvent = recordingAct.PropertiesEvents[j];
-          if (i % 2 == 0) {
-            temp = row.Replace("{CLASS}", "detailsItem");
-          } else {
-            temp = row.Replace("{CLASS}", "detailsOddItem");
-          }
-          if (j == 0) {
-            temp = temp.Replace("{RECORDING.ACT.INDEX}", recordingAct.Index.ToString("00"));
-            if (recordingAct.RecordingActType.Autoregister) {
-              temp = temp.Replace("{RECORDING.ACT.URL}", idemURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
-                                                                         recordingAct.RecordingActType.DisplayName));
-            } else {
-              temp = temp.Replace("{RECORDING.ACT.URL}", editURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
-                                                                         recordingAct.RecordingActType.DisplayName));
+      int counter = 0;
+      foreach (var recording in recordingList) {
+        ObjectList<RecordingAct> recordingActs = recording.RecordingActs;
+        for (int i = 0; i < recordingActs.Count; i++) {
+          RecordingAct recordingAct = recordingActs[i];
+          for (int j = 0; j < recordingActs[i].PropertiesEvents.Count; j++) {
+            PropertyEvent propertyEvent = recordingAct.PropertiesEvents[j];
+            if (i == 0 && j == 0) {
+              counter++;
             }
-            temp = temp.Replace("{RECORDING.ACT.DISPLAY.NAME}", recordingAct.RecordingActType.DisplayName);
-          } else {
-            temp = temp.Replace("{RECORDING.ACT.INDEX}", "<i>" + recordingAct.Index.ToString("00") + "</i>");
-            temp = temp.Replace("{RECORDING.ACT.URL}", idemURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
-                                                                       "<i>ídem</i>"));
-          }
-          temp = temp.Replace("{APPRAISAL.AMOUNT}", recordingAct.AppraisalAmount.ToString());
-          temp = temp.Replace("{OPERATION.AMOUNT}", recordingAct.OperationAmount.ToString());
-          temp = temp.Replace("{ANTECEDENT.TAG}", propertyEvent.Property.GetAntecedent(recordingAct).Recording.FullNumber);
-          temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", propertyEvent.Property.UniqueCode));
-          if (j == 0) {
-            temp = temp.Replace("{OPTIONS.COMBO}", optionsCombo);
-            if (recordingActs.Count > 1) {
-              if (i != 0) {
-                temp = temp.Replace("{INCREMENT_INDEX}", "<option value='upwardRecordingAct'>Subir en la secuencia</option>");
+            temp = row.Replace("{CLASS}", (counter % 2 == 0) ? "detailsItem" : "detailsOddItem");
+            if (j == 0) {
+              temp = temp.Replace("{RECORDING.ACT.INDEX}", counter.ToString("00"));
+              if (recordingAct.RecordingActType.Autoregister) {
+                temp = temp.Replace("{RECORDING.ACT.URL}", idemURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
+                                                                           recordingAct.RecordingActType.DisplayName));
               } else {
-                temp = temp.Replace("{INCREMENT_INDEX}", String.Empty);
+                temp = temp.Replace("{RECORDING.ACT.URL}", editURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
+                                                                           recordingAct.RecordingActType.DisplayName));
               }
-              if (i != recordingActs.Count - 1) {
-                temp = temp.Replace("{DECREMENT_INDEX}", "<option value='downwardRecordingAct'>Bajar en la secuencia</option>");
-              } else {
+              temp = temp.Replace("{RECORDING.ACT.DISPLAY.NAME}", recordingAct.RecordingActType.DisplayName);
+              temp = temp.Replace("{RECORDING.ACT.STATUS}", recordingAct.StatusName);
+            } else {
+              temp = temp.Replace("{RECORDING.ACT.INDEX}", "<i>" + counter.ToString("00") + "</i>");
+              temp = temp.Replace("{RECORDING.ACT.URL}", idemURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
+                                                                         "<i>ídem</i>"));
+              temp = temp.Replace("{RECORDING.ACT.STATUS}", @"&nbsp;");
+            }
+
+            temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", propertyEvent.Property.UniqueCode));
+            temp = temp.Replace("{PROPERTY.STATUS}", propertyEvent.StatusName);
+
+            RecordingAct antecedent = propertyEvent.Property.GetDomainAntecedent(recordingAct);
+            if (propertyEvent.Property.IsEmptyInstance) {
+              temp = temp.Replace("{ANTECEDENT.TAG}", String.Empty);
+              temp = temp.Replace("{ANTECEDENT.STATUS}", String.Empty);
+            } else if (antecedent.Equals(InformationAct.Empty)) {
+              temp = temp.Replace("{ANTECEDENT.TAG}", "Sin antecedente");
+              temp = temp.Replace("{ANTECEDENT.STATUS}", String.Empty);
+            } else if (recordingAct.RecordingActType.RecordingRule.IsAnnotation) {
+              temp = temp.Replace("{ANTECEDENT.TAG}", "*Anotación*");
+              temp = temp.Replace("{ANTECEDENT.STATUS}", String.Empty);
+            } else {
+              temp = temp.Replace("{ANTECEDENT.TAG}", "Antecedente: " + antecedent.Recording.FullNumber);
+              temp = temp.Replace("{ANTECEDENT.STATUS}", "(" + antecedent.StatusName + ")");
+            }
+
+            if (j == 0) {
+              temp = temp.Replace("{OPTIONS.COMBO}", optionsCombo);
+              if (recordingActs.Count > 1) {
+                if (i != 0) {
+                  temp = temp.Replace("{INCREMENT_INDEX}", "<option value='upwardRecordingAct'>Subir en la secuencia</option>");
+                } else {
+                  temp = temp.Replace("{INCREMENT_INDEX}", String.Empty);
+                }
+                if (i != recordingActs.Count - 1) {
+                  temp = temp.Replace("{DECREMENT_INDEX}", "<option value='downwardRecordingAct'>Bajar en la secuencia</option>");
+                } else {
+                  temp = temp.Replace("{DECREMENT_INDEX}", String.Empty);
+                }
+              } else { // recording.RecordingActs.Count <= 1
+                temp = temp.Replace("{INCREMENT_INDEX}", String.Empty);
                 temp = temp.Replace("{DECREMENT_INDEX}", String.Empty);
               }
-            } else { // recording.RecordingActs.Count <= 1
-              temp = temp.Replace("{INCREMENT_INDEX}", String.Empty);
-              temp = temp.Replace("{DECREMENT_INDEX}", String.Empty);
+            } else { // j != 0
+              temp = temp.Replace("{OPTIONS.COMBO}", propertyOptionsCombo);
             }
-          } else { // j != 0
-            temp = temp.Replace("{OPTIONS.COMBO}", propertyOptionsCombo);
-          }
-          temp = temp.Replace("{ID}", recordingAct.Id.ToString());
-          temp = temp.Replace("{PROPERTY.ID}", propertyEvent.Property.Id.ToString());
-          html += temp;
-        }  // for j
-      } // for i
+            temp = temp.Replace("{ID}", recordingAct.Id.ToString());
+            temp = temp.Replace("{PROPERTY.ID}", propertyEvent.Property.Id.ToString());
+            temp = temp.Replace("{RECORDING.ID}", recordingAct.Recording.Id.ToString());
+            temp = temp.Replace("{RECORDING.BOOK}", recordingAct.Recording.RecordingBook.FullName);
+            temp = temp.Replace("{RECORDING.BOOK.ID}", recordingAct.Recording.RecordingBook.Id.ToString());
+            temp = temp.Replace("{RECORDING.NUMBER}", recordingAct.Recording.Number);
+
+            html += temp;
+          }  // for j
+        } // for i
+      } // for each
       return html;
     }
 
@@ -461,7 +496,10 @@ namespace Empiria.Government.LandRegistration.UI {
           temp = row.Replace("{CLASS}", "detailsItem");
         }
         temp = temp.Replace("{RECORDING.NUMBER}", recordings[i].Number);
-        if (recordings[i].StartImageIndex <= 0 && recordings[i].EndImageIndex <= 0) {
+
+        if (recordings[i].BaseRecordingId != -1) {
+          temp = temp.Replace("{RECORDING.IMAGES}", "*Anotación*");
+        } else if (recordings[i].StartImageIndex <= 0 && recordings[i].EndImageIndex <= 0) {
           temp = temp.Replace("{RECORDING.IMAGES}", "Sin imagen");
         } else {
           temp = temp.Replace("{RECORDING.IMAGES}", "De la " + recordings[i].StartImageIndex.ToString() + " a la " + recordings[i].EndImageIndex);
