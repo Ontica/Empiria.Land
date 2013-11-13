@@ -48,7 +48,7 @@ namespace Empiria.Government.LandRegistration {
       return PowerType<RecordingAct>.Parse<RecordingActType>(typeInfo);
     }
 
-    static public RecordingActType Empty {
+    static public new RecordingActType Empty {
       get {
         return RecordingActType.Parse(ObjectTypeInfo.Parse("ObjectType.RecordingAct.InformationAct.Empty"));
       }
