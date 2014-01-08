@@ -1,13 +1,13 @@
-﻿/* Empiria® Land 2013 ****************************************************************************************
+﻿/* Empiria® Land 2014 ****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
-*  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
+*  Namespace : Empiria.Land                                   Assembly : Empiria.Land                        *
 *  Type      : RecordingAttachmentFolderList                  Pattern  : Standard Class                      *
-*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
+*  Date      : 28/Mar/2014                                    Version  : 5.5     License: CC BY-NC-SA 4.0    *
 *                                                                                                            *
 *  Summary   : Stores directory information about recording attachments.                                     *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +15,7 @@ using System.IO;
 using Empiria.Collections;
 using Empiria.Security;
 
-namespace Empiria.Government.LandRegistration {
+namespace Empiria.Land.Registration {
 
   /// <summary>Stores directory information about recording attachments.</summary>
   public class RecordingAttachmentFolderList : EmpiriaList<RecordingAttachmentFolder> {
@@ -93,4 +93,4 @@ namespace Empiria.Government.LandRegistration {
 
   } // class RecordingAttachmentFolderList
 
-} // namespace Empiria.Government.LandRegistration
+} // namespace Empiria.Land.Registration

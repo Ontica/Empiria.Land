@@ -1,22 +1,22 @@
-﻿/* Empiria® Land 2013 ****************************************************************************************
+﻿/* Empiria® Land 2014 ****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
-*  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
+*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land                        *
 *  Type      : RecorderOfficeTransaction                      Pattern  : Association Class                   *
-*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
+*  Date      : 28/Mar/2014                                    Version  : 5.5     License: CC BY-NC-SA 4.0    *
 *                                                                                                            *
 *  Summary   : Represents a transaction or process in a land registration office.                            *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 using System.Collections.Generic;
 using System.Data;
 using Empiria.Contacts;
 using Empiria.Documents.Printing;
-using Empiria.Government.LandRegistration.Data;
+using Empiria.Land.Registration.Data;
 using Empiria.Security;
 
-namespace Empiria.Government.LandRegistration.Transactions {
+namespace Empiria.Land.Registration.Transactions {
 
   public enum TransactionStatus {
     Payment = 'Y',
@@ -1007,4 +1007,4 @@ namespace Empiria.Government.LandRegistration.Transactions {
 
   } // class LRSTransaction
 
-} // namespace Empiria.Government.LandRegistration.Transactions
+} // namespace Empiria.Land.Registration.Transactions

@@ -1,18 +1,18 @@
-﻿/* Empiria® Land 2013 ****************************************************************************************
+﻿/* Empiria® Land 2014 ****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
-*  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
+*  Namespace : Empiria.Land                                   Assembly : Empiria.Land                        *
 *  Type      : LandRegistrationException                      Pattern  : Empiria Exception Class             *
-*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
+*  Date      : 28/Mar/2014                                    Version  : 5.5     License: CC BY-NC-SA 4.0    *
 *                                                                                                            *
 *  Summary   : The exception that is thrown when a problem occurs in Empiria® Government Land Registration   *
 *              System.                                                                                       *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 using System.Reflection;
 
-namespace Empiria.Government.LandRegistration {
+namespace Empiria.Land.Registration {
 
   /// <summary>The exception that is thrown when a problem occurs in Empiria® Government Land 
   /// Registration System.</summary>
@@ -96,4 +96,4 @@ namespace Empiria.Government.LandRegistration {
 
   } // class LandRegistrationException
 
-} // namespace Empiria.Government.LandRegistration
+} // namespace Empiria.Land.Registration

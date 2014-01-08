@@ -1,13 +1,13 @@
-﻿/* Empiria® Land 2013 ****************************************************************************************
+﻿/* Empiria® Land 2014 ****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
-*  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
+*  Namespace : Empiria.Land                                   Assembly : Empiria.Land                        *
 *  Type      : RecordBookDirectory                            Pattern  : Storage Item                        *
-*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
+*  Date      : 28/Mar/2014                                    Version  : 5.5     License: CC BY-NC-SA 4.0    *
 *                                                                                                            *
 *  Summary   : Describes a record book imaging directory.                                                    *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System.IO;
 
 using Empiria.Contacts;
@@ -15,7 +15,7 @@ using Empiria.Documents.IO;
 using Empiria.Ontology;
 using Empiria.Security;
 
-namespace Empiria.Government.LandRegistration {
+namespace Empiria.Land.Registration {
 
   /// <summary>Describes a record book imaging directory.</summary>
   public class RecordBookDirectory : FilesFolder {
@@ -314,4 +314,4 @@ namespace Empiria.Government.LandRegistration {
 
   } // class RecordBookDirectory
 
-} // namespace Empiria.Government.LandRegistration
+} // namespace Empiria.Land.Registration

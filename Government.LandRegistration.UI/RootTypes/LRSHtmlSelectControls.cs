@@ -1,26 +1,27 @@
-﻿/* Empiria® Land 2013 *****************************************************************************************
+﻿/* Empiria® Land 2014 *****************************************************************************************
 *                                                                                                             *
 *  Solution  : Empiria® Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Government.LandRegistration.UI          Assembly : Empiria.Government.LandRegistration *
+*  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land                        *
 *  Type      : LRSHtmlSelectControls                           Pattern  : Presentation Services Static Class  *
-*  Date      : 23/Oct/2013                                     Version  : 5.2     License: CC BY-NC-SA 3.0    *
+*  Date      : 28/Mar/2014                                     Version  : 5.5     License: CC BY-NC-SA 4.0    *
 *                                                                                                             *
 *  Summary   : Static class that generates predefined HtmlSelect controls content for Empiria Government      *
 *              Land Registration System.                                                                      *
 *                                                                                                             *
-***************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+***************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 using System.Collections.Generic;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using Empiria.Contacts;
 using Empiria.Geography;
-using Empiria.Government.LandRegistration.Transactions;
+using Empiria.Land.Registration;
+using Empiria.Land.Registration.Transactions;
 using Empiria.Presentation;
 using Empiria.Presentation.Web;
 using Empiria.Presentation.Web.Content;
 
-namespace Empiria.Government.LandRegistration.UI {
+namespace Empiria.Land.UI {
 
   /// <summary>Static class that generates predefined HtmlSelect controls content for Empiria Government Land
   /// Registration System.</summary>
@@ -72,7 +73,8 @@ namespace Empiria.Government.LandRegistration.UI {
                                                                    LRSDocumentType.Parse(docTypeId), status);
       string html = String.Empty;
       for (int i = 0; i < list.Count; i++) {
-        html += HtmlSelectContent.GetComboHtmlItem(Convert.ToString((char) list[i]), LRSTransaction.StatusName(list[i]));
+        html += HtmlSelectContent.GetComboHtmlItem(Convert.ToString((char) list[i]), 
+                                                   LRSTransaction.StatusName(list[i]));
       }
       return html;
     }
@@ -250,4 +252,4 @@ namespace Empiria.Government.LandRegistration.UI {
 
   } // class LRSHtmlSelectControls
 
-} // namespace Empiria.Government.LandRegistration.UI
+} // namespace Empiria.Land.UI

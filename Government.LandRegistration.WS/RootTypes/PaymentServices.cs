@@ -1,9 +1,9 @@
 ﻿using System.Data;
 using System.Web.Services;
-using Empiria.Government.LandRegistration.Data;
+using Empiria.Land.Registration.Data;
 using Empiria.Services;
 
-namespace Empiria.Government.LandRegistration.WebServices {
+namespace Empiria.Land.WebServices {
 
   [WebService(Namespace = "http://empiria.ontica.org/web.services/")]
   [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]

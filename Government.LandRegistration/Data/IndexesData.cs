@@ -1,19 +1,19 @@
-﻿/* Empiria® Land 2013 ****************************************************************************************
+﻿/* Empiria® Land 2014 ****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Land                                System   : Land Registration System              *
-*  Namespace : Empiria.Government.LandRegistration.Data     Assembly : Empiria.Government.LandRegistration   *
+*  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
 *  Type      : PartyIndexData                               Pattern  : Data Services Static Class            *
-*  Date      : 23/Oct/2013                                  Version  : 5.2     License: CC BY-NC-SA 3.0      *
+*  Date      : 28/Mar/2014                                  Version  : 5.5     License: CC BY-NC-SA 4.0      *
 *                                                                                                            *
 *    Summary   : Provides database read and write methods for recording books.                               *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 using System.Collections.Generic;
 using System.Data;
 using Empiria.Data;
 
-namespace Empiria.Government.LandRegistration.Data {
+namespace Empiria.Land.Registration.Data {
 
   public class PartyIndexData {
 
@@ -91,4 +91,4 @@ namespace Empiria.Government.LandRegistration.Data {
 
   } // class IndexesData
 
-} // namespace Empiria.Government.LandRegistration.Data
+} // namespace Empiria.Land.Registration.Registration.Data

@@ -1,16 +1,16 @@
-﻿/* Empiria® Land 2013 ****************************************************************************************
+﻿/* Empiria® Land 2014 ****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
-*  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
+*  Namespace : Empiria.Land                                   Assembly : Empiria.Land                        *
 *  Type      : LimitationAct                                  Pattern  : Empiria Object Type                 *
-*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
+*  Date      : 28/Mar/2014                                    Version  : 5.5     License: CC BY-NC-SA 4.0    *
 *                                                                                                            *
 *  Summary   : Represents a property limitation or property assessment or mortgage act.                       *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System.Data;
 
-namespace Empiria.Government.LandRegistration {
+namespace Empiria.Land.Registration {
 
   /// <summary>Represents a property limitation or property assessment or mortgage act.</summary>
   public class LimitationAct : RecordingAct {
@@ -53,4 +53,4 @@ namespace Empiria.Government.LandRegistration {
 
   } // class LimitationAct
 
-} // namespace Empiria.Government.LandRegistration
+} // namespace Empiria.Land.Registration

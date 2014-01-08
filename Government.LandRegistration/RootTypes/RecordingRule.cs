@@ -1,18 +1,18 @@
-﻿/* Empiria® Land 2013 ****************************************************************************************
+﻿/* Empiria® Land 2014 ****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
-*  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
+*  Namespace : Empiria.Land                                   Assembly : Empiria.Land                        *
 *  Type      : RecordingRule                                  Pattern  : Empiria Structure Type              *
-*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
+*  Date      : 28/Mar/2014                                    Version  : 5.5     License: CC BY-NC-SA 4.0    *
 *                                                                                                            *
 *  Summary   : Describes the conditions and business rules that have to be fulfilled when a                  *
 *              RecordingAct is registered.                                                                   *  
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 using System.Collections.Generic;
 
-namespace Empiria.Government.LandRegistration {
+namespace Empiria.Land.Registration {
 
   public enum PropertyCount {
     Undefined,
@@ -57,7 +57,7 @@ namespace Empiria.Government.LandRegistration {
       this.IsAnnotation = false;
       this.IsCancelation = false;
       this.NewProperty = new PropertyRule();
-      this.PropertyCount = LandRegistration.PropertyCount.Undefined;
+      this.PropertyCount = Land.Registration.PropertyCount.Undefined;
       this.PropertyStatus = PropertyRecordingStatus.Undefined;
       this.RecordingActTypes = new RecordingActType[0];
       this.RecordingSection = RecordingSection.Empty;
@@ -202,4 +202,4 @@ namespace Empiria.Government.LandRegistration {
 
   }  // class RecordingRule
 
-}  // namespace Empiria.Government.LandRegistration
+}  // namespace Empiria.Land.Registration

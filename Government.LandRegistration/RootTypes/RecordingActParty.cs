@@ -1,13 +1,13 @@
-﻿/* Empiria® Land 2013 ****************************************************************************************
+﻿/* Empiria® Land 2014 ****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
-*  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
+*  Namespace : Empiria.Land                                   Assembly : Empiria.Land                        *
 *  Type      : RecordingActParty                              Pattern  : Association Class                   *
-*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
+*  Date      : 28/Mar/2014                                    Version  : 5.5     License: CC BY-NC-SA 4.0    *
 *                                                                                                            *
 *  Summary   : Represents a roled association between a recording act and a party.                           *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 using System.Data;
 
@@ -15,9 +15,9 @@ using Empiria.Contacts;
 using Empiria.DataTypes;
 using Empiria.Geography;
 
-using Empiria.Government.LandRegistration.Data;
+using Empiria.Land.Registration.Data;
 
-namespace Empiria.Government.LandRegistration {
+namespace Empiria.Land.Registration {
 
   public enum OwnershipMode {
     None = 'N',
@@ -149,23 +149,23 @@ namespace Empiria.Government.LandRegistration {
 
     static private string GetDomainName(RecordingActParty party) {
       switch (party.ownershipMode) {
-        case LandRegistration.OwnershipMode.Bare:
+        case Land.Registration.OwnershipMode.Bare:
           return "Nuda propiedad";
-        case LandRegistration.OwnershipMode.Coowner:
+        case Land.Registration.OwnershipMode.Coowner:
           return "Copropietario";
-        case LandRegistration.OwnershipMode.Owner:
+        case Land.Registration.OwnershipMode.Owner:
           return "Propietario único";
       }
       switch (party.UsufructMode) {
-        case LandRegistration.UsufructMode.LifeTime:
+        case Land.Registration.UsufructMode.LifeTime:
           return "Vitalicio";
-        case LandRegistration.UsufructMode.Payment:
+        case Land.Registration.UsufructMode.Payment:
           return "Hasta recibir pago";
-        case LandRegistration.UsufructMode.Time:
+        case Land.Registration.UsufructMode.Time:
           return party.usufructTerm;
-        case LandRegistration.UsufructMode.Condition:
+        case Land.Registration.UsufructMode.Condition:
           return party.usufructTerm;
-        case LandRegistration.UsufructMode.Date:
+        case Land.Registration.UsufructMode.Date:
           return "Hasta el " + Convert.ToDateTime(party.usufructTerm).ToString("dd/MMM/yyyy");
       }
       return "Ninguno";
@@ -187,7 +187,7 @@ namespace Empiria.Government.LandRegistration {
     }
 
     static private string GetDomainPartName(RecordingActParty party) {
-      if (party.OwnershipMode == LandRegistration.OwnershipMode.Owner) {
+      if (party.OwnershipMode == Land.Registration.OwnershipMode.Owner) {
         return String.Empty;
       }
       if (party.OwnershipPart.Unit == Unit.FullUnit || party.OwnershipPart.Unit == Unit.UndividedUnit) {
@@ -360,4 +360,4 @@ namespace Empiria.Government.LandRegistration {
 
   } // class RecordingActParty
 
-} // namespace Empiria.Government.LandRegistration
+} // namespace Empiria.Land.Registration

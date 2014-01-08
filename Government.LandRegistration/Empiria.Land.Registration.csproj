@@ -4,21 +4,21 @@
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{90D29B34-A9C5-47EE-8279-7473FA37D194}</ProjectGuid>
+    <ProjectGuid>{EA85313C-BBBB-4F31-B6B9-05BB79ADDFF1}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>Empiria.Government.LandRegistration.UI</AssemblyName>
+    <AssemblyName>Empiria.Land.Registration</AssemblyName>
     <AssemblyOriginatorKeyFile>empiria.strong.name.public.key.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>true</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>Empiria.Government.LandRegistration.UI</RootNamespace>
+    <RootNamespace>Empiria.Land.Registration</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -94,9 +94,12 @@
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -106,7 +109,6 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -133,26 +135,63 @@
       <Project>{96267945-DBE1-4B2C-88E2-0ECDC5CA7669}</Project>
       <Name>Empiria.Geography</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Government.LandRegistration\Empiria.Government.LandRegistration.csproj">
-      <Project>{EA85313C-BBBB-4F31-B6B9-05BB79ADDFF1}</Project>
-      <Name>Empiria.Government.LandRegistration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Presentation.Web\Empiria.Presentation.Web.csproj">
-      <Project>{0AEEA12E-B4F7-4E12-A768-99BB82BD3FC9}</Project>
-      <Name>Empiria.Presentation.Web</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Presentation\Empiria.Presentation.csproj">
-      <Project>{2790AD3E-0AE4-4C94-83BA-96BC53185B19}</Project>
-      <Name>Empiria.Presentation</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Empiria.Government.LandRegistration.UI.AssemblyInfo.cs" />
-    <Compile Include="RootTypes\LRSDocumentEditorControl.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="RootTypes\LRSGridControls.cs" />
-    <Compile Include="RootTypes\LRSHtmlSelectControls.cs" />
+    <Compile Include="Data\AnalyticsData.cs" />
+    <Compile Include="Data\IndexesData.cs" />
+    <Compile Include="Data\TransactionData.cs" />
+    <Compile Include="Data\PropertyData.cs" />
+    <Compile Include="Data\RecordingBooksData.cs" />
+    <Compile Include="Empiria.Land.Registration.AssemblyInfo.cs" />
+    <Compile Include="RootTypes\Certificate.cs" />
+    <Compile Include="RootTypes\PropertyRule.cs" />
+    <Compile Include="RootTypes\RecordingRule.cs" />
+    <Compile Include="RootTypes\RecordingSection.cs" />
+    <Compile Include="RootTypes\RecordingTask.cs" />
+    <Compile Include="RootTypes\TransactionAct.cs" />
+    <Compile Include="Transactions\LRSFee.cs" />
+    <Compile Include="Transactions\LRSTransactionTrack.cs" />
+    <Compile Include="Transactions\CalculationRule.cs" />
+    <Compile Include="Transactions\LRSTransactionItem.cs" />
+    <Compile Include="Transactions\LRSPaymentOrder.cs" />
+    <Compile Include="Transactions\LRSLawArticle.cs" />
+    <Compile Include="Transactions\LRSTransactionAct.cs" />
+    <Compile Include="Transactions\LRSDocumentType.cs" />
+    <Compile Include="Transactions\LRSTransaction.cs" />
+    <Compile Include="RootTypes\RecordingAttachmentFolder.cs" />
+    <Compile Include="Transactions\LRSTransactionType.cs" />
+    <Compile Include="RootTypes\PartiesRole.cs" />
+    <Compile Include="RootTypes\DomainActPartyRole.cs" />
+    <Compile Include="RootTypes\MarriageStatus.cs" />
+    <Compile Include="RootTypes\Occupation.cs" />
+    <Compile Include="RootTypes\RecordingActParty.cs" />
+    <Compile Include="RootTypes\OrganizationParty.cs" />
+    <Compile Include="RootTypes\HumanParty.cs" />
+    <Compile Include="RootTypes\Party.cs" />
+    <Compile Include="RootTypes\RecordBookDirectory.cs" />
+    <Compile Include="RootTypes\CancelationAct.cs" />
+    <Compile Include="RootTypes\JudicialOffice.cs" />
+    <Compile Include="RootTypes\NotaryOffice.cs" />
+    <Compile Include="RootTypes\RecordingAttachmentFolderList.cs" />
+    <Compile Include="RootTypes\RecordingDocument.cs" />
+    <Compile Include="RootTypes\RecordingDocumentType.cs" />
+    <Compile Include="RootTypes\PropertyEvent.cs" />
+    <Compile Include="RootTypes\InformationAct.cs" />
+    <Compile Include="RootTypes\RecordingActType.cs" />
+    <Compile Include="RootTypes\StructureAct.cs" />
+    <Compile Include="RootTypes\LimitationAct.cs" />
+    <Compile Include="RootTypes\DomainAct.cs" />
+    <Compile Include="RootTypes\PropertyLandUse.cs" />
+    <Compile Include="RootTypes\PropertyType.cs" />
+    <Compile Include="RootTypes\Property.cs" />
+    <Compile Include="RootTypes\RecordingAct.cs" />
+    <Compile Include="RootTypes\RecordingActTypeCategory.cs" />
+    <Compile Include="RootTypes\LRSValidator.cs" />
+    <Compile Include="RootTypes\Recording.cs" />
+    <Compile Include="RootTypes\RecordingBook.cs" />
+    <Compile Include="RootTypes\LandRegistrationException.cs" />
+    <Compile Include="RootTypes\RecorderOffice.cs" />
+    <Compile Include="Transactions\LRSTransactionActList.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -183,6 +222,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="empiria.strong.name.public.key.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RootTypes\LandRegistrationExceptionMsg.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Analytics\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

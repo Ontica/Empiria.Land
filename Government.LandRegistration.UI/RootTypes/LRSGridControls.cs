@@ -1,19 +1,20 @@
-﻿/* Empiria® Land 2013 *****************************************************************************************
+﻿/* Empiria® Land 2014 *****************************************************************************************
 *                                                                                                             *
 *  Solution  : Empiria® Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Government.LandRegistration.UI          Assembly : Empiria.Government.LandRegistration *
+*  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land                        *
 *  Type      : LRSGridControls                                 Pattern  : Presentation Services Static Class  *
-*  Date      : 23/Oct/2013                                     Version  : 5.2     License: CC BY-NC-SA 3.0    *
+*  Date      : 28/Mar/2014                                     Version  : 5.5     License: CC BY-NC-SA 4.0    *
 *                                                                                                             *
 *  Summary   : Static class that generates predefined grid content for Land Registration System data.         *
 *                                                                                                             *
-***************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+***************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 using System.Web.UI.WebControls;
 
-using Empiria.Government.LandRegistration.Data;
+using Empiria.Land.Registration;
+using Empiria.Land.Registration.Data;
 
-namespace Empiria.Government.LandRegistration.UI {
+namespace Empiria.Land.UI {
 
   /// <summary>Static class that generates predefined grid content for Land Registration System data.</summary>
   static public class LRSGridControls {
@@ -551,4 +552,4 @@ namespace Empiria.Government.LandRegistration.UI {
 
   } // class LRSGridControls
 
-} // namespace Empiria.Government.LandRegistration.UI
+} // namespace Empiria.Land.UI

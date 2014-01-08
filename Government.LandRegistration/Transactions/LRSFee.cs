@@ -1,16 +1,16 @@
-﻿/* Empiria® Land 2013 ****************************************************************************************
+﻿/* Empiria® Land 2014 ****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
-*  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
+*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land                        *
 *  Type      : LRSFee                                         Pattern  : Standard Class                      *
-*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
+*  Date      : 28/Mar/2014                                    Version  : 5.5     License: CC BY-NC-SA 4.0    *
 *                                                                                                            *
 *  Summary   : Fee payed in order to obtain a service in a Recorder Office.                                  *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System.Data;
 
-namespace Empiria.Government.LandRegistration.Transactions {
+namespace Empiria.Land.Registration.Transactions {
 
   /// <summary>Fee payed in order to obtain a service in a Recorder Office.</summary>
   public class LRSFee {
@@ -140,4 +140,4 @@ namespace Empiria.Government.LandRegistration.Transactions {
 
   } // class LRSFee
 
-} // namespace Empiria.Government.LandRegistration.Transactions
+} // namespace Empiria.Land.Registration.Transactions

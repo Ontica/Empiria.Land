@@ -1,24 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{81492947-B902-4EE9-B506-F9DDAD9CF06A}</ProjectGuid>
+    <ProjectGuid>{90D29B34-A9C5-47EE-8279-7473FA37D194}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>Empiria.Government.LandRegistration.WS</AssemblyName>
+    <AssemblyName>Empiria.Land.UI</AssemblyName>
     <AssemblyOriginatorKeyFile>empiria.strong.name.public.key.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>true</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>Empiria.Government.LandRegistration.WS</RootNamespace>
+    <RootNamespace>Empiria.Land.UI</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -97,10 +97,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WebServices\Empiria.WebServices.csproj">
-      <Project>{29B783CB-DC89-4156-B61C-A889365BC93E}</Project>
-      <Name>Empiria.WebServices</Name>
-    </ProjectReference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -111,7 +107,6 @@
       <Name>System.Data</Name>
     </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -138,10 +133,26 @@
       <Project>{96267945-DBE1-4B2C-88E2-0ECDC5CA7669}</Project>
       <Name>Empiria.Geography</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Government.LandRegistration\Empiria.Government.LandRegistration.csproj">
+    <ProjectReference Include="..\Government.LandRegistration\Empiria.Land.Registration.csproj">
       <Project>{EA85313C-BBBB-4F31-B6B9-05BB79ADDFF1}</Project>
-      <Name>Empiria.Government.LandRegistration</Name>
+      <Name>Empiria.Land.Registration</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Presentation.Web\Empiria.Presentation.Web.csproj">
+      <Project>{0AEEA12E-B4F7-4E12-A768-99BB82BD3FC9}</Project>
+      <Name>Empiria.Presentation.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Presentation\Empiria.Presentation.csproj">
+      <Project>{2790AD3E-0AE4-4C94-83BA-96BC53185B19}</Project>
+      <Name>Empiria.Presentation</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Empiria.Land.UI.AssemblyInfo.cs" />
+    <Compile Include="RootTypes\LRSDocumentEditorControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RootTypes\LRSGridControls.cs" />
+    <Compile Include="RootTypes\LRSHtmlSelectControls.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -173,13 +184,6 @@
   <ItemGroup>
     <None Include="empiria.strong.name.public.key.snk" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Empiria.Government.LandRegistration.WS.AssemblyInfo.cs" />
-    <Compile Include="RootTypes\PaymentServices.cs">
-      <SubType>Component</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

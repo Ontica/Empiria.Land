@@ -1,22 +1,22 @@
-﻿/* Empiria® Land 2013 ****************************************************************************************
+﻿/* Empiria® Land 2014 ****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Land                                System   : Land Registration System              *
-*  Namespace : Empiria.Government.LandRegistration.Data     Assembly : Empiria.Government.LandRegistration   *
+*  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
 *  Type      : TransactionData                              Pattern  : Data Services Static Class            *
-*  Date      : 23/Oct/2013                                  Version  : 5.2     License: CC BY-NC-SA 3.0      *
+*  Date      : 28/Mar/2014                                  Version  : 5.5     License: CC BY-NC-SA 4.0      *
 *                                                                                                            *
 *  Summary   : Provides database read and write methods for recording office process or transactions.        *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 using System.Data;
 
 using Empiria.Contacts;
 using Empiria.Data;
 
-using Empiria.Government.LandRegistration.Transactions;
+using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Government.LandRegistration.Data {
+namespace Empiria.Land.Registration.Data {
 
   /// <summary>Provides database read and write methods for recording office process or transactions.</summary>
   static public class TransactionData {
@@ -395,4 +395,4 @@ namespace Empiria.Government.LandRegistration.Data {
 
   } // class TransactionData
 
-} // namespace Empiria.Government.LandRegistration.Data
+} // namespace Empiria.Land.Registration.Registration.Data

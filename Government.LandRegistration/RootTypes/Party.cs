@@ -1,22 +1,22 @@
-﻿/* Empiria® Land 2013 ****************************************************************************************
+﻿/* Empiria® Land 2014 ****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Land                                  System   : Land Registration System            *
-*  Namespace : Empiria.Government.LandRegistration            Assembly : Empiria.Government.LandRegistration *
+*  Namespace : Empiria.Land                                   Assembly : Empiria.Land                        *
 *  Type      : Party                                          Pattern  : Empiria Object Type                 *
-*  Date      : 23/Oct/2013                                    Version  : 5.2     License: CC BY-NC-SA 3.0    *
+*  Date      : 28/Mar/2014                                    Version  : 5.5     License: CC BY-NC-SA 4.0    *
 *                                                                                                            *
 *  Summary   : Abstract class that represents a recording act party.                                         *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 using System.Data;
 
 using Empiria.Contacts;
 using Empiria.Geography;
-using Empiria.Government.LandRegistration.Data;
+using Empiria.Land.Registration.Data;
 using Empiria.Ontology;
 
-namespace Empiria.Government.LandRegistration {
+namespace Empiria.Land.Registration {
 
   public enum PartyStatus {
     Pending = 'P',
@@ -236,4 +236,4 @@ namespace Empiria.Government.LandRegistration {
 
   } // class Party
 
-} // namespace Empiria.Government.LandRegistration
+} // namespace Empiria.Land.Registration

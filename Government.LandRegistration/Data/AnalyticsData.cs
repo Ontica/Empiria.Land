@@ -1,19 +1,19 @@
-﻿/* Empiria® Land 2013 ****************************************************************************************
+﻿/* Empiria® Land 2014 ****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Land                                System   : Land Registration System              *
-*  Namespace : Empiria.Government.LandRegistration.Data     Assembly : Empiria.Government.LandRegistration   *
+*  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
 *  Type      : PropertyData                                 Pattern  : Data Services Static Class            *
-*  Date      : 23/Oct/2013                                  Version  : 5.2     License: CC BY-NC-SA 3.0      *
+*  Date      : 28/Mar/2014                                  Version  : 5.5     License: CC BY-NC-SA 4.0      *
 *                                                                                                            *
 *    Summary   : Provides database read and write methods for recording books.                               *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 using System.Data;
 
 using Empiria.Data;
 
-namespace Empiria.Government.LandRegistration.Data {
+namespace Empiria.Land.Registration.Data {
 
   /// <summary>Provides database read and write methods for recording books.</summary>
   static public class AnalyticsData {
@@ -47,4 +47,4 @@ namespace Empiria.Government.LandRegistration.Data {
 
   } // class AnalyticsData
 
-} // namespace Empiria.Government.LandRegistration.Data
+} // namespace Empiria.Land.Registration.Registration.Data
