@@ -1,13 +1,13 @@
-﻿/* Empiria® Land 2014 ****************************************************************************************
+﻿/* Empiria Land 2014 *****************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Land                                  System   : Land Registration System            *
+*  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land                                   Assembly : Empiria.Land                        *
 *  Type      : Recording                                      Pattern  : Empiria Object Type                 *
-*  Date      : 28/Mar/2014                                    Version  : 5.5     License: CC BY-NC-SA 4.0    *
+*  Version   : 5.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Represents a general recording in Land Registration System.                                   *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 using Empiria.Contacts;

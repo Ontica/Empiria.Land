@@ -1,20 +1,20 @@
-﻿/* Empiria® Land 2014 ****************************************************************************************
+﻿/* Empiria Land 2014 *****************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Land                                  System   : Land Registration System            *
+*  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land                                   Assembly : Empiria.Land                        *
 *  Type      : LandRegistrationException                      Pattern  : Empiria Exception Class             *
-*  Date      : 28/Mar/2014                                    Version  : 5.5     License: CC BY-NC-SA 4.0    *
+*  Version   : 5.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
-*  Summary   : The exception that is thrown when a problem occurs in Empiria® Government Land Registration   *
+*  Summary   : The exception that is thrown when a problem occurs in Empiria Government Land Registration    *
 *              System.                                                                                       *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Reflection;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>The exception that is thrown when a problem occurs in Empiria® Government Land 
+  /// <summary>The exception that is thrown when a problem occurs in Empiria Government Land 
   /// Registration System.</summary>
   [Serializable]
   public sealed class LandRegistrationException : EmpiriaException {
@@ -61,7 +61,7 @@ namespace Empiria.Land.Registration {
     }
 
     static private string resourceBaseName =
-                    "Empiria.Government.LandRegistration.RootTypes.LandRegistrationExceptionMsg";
+                    "Empiria.Land.Registration.RootTypes.LandRegistrationExceptionMsg";
 
     #region Constructors and parsers
 

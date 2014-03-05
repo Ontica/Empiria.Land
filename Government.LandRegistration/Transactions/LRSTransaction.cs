@@ -1,13 +1,13 @@
-﻿/* Empiria® Land 2014 ****************************************************************************************
+﻿/* Empiria Land 2014 *****************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Land                                  System   : Land Registration System            *
+*  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land                        *
 *  Type      : RecorderOfficeTransaction                      Pattern  : Association Class                   *
-*  Date      : 28/Mar/2014                                    Version  : 5.5     License: CC BY-NC-SA 4.0    *
+*  Version   : 5.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Represents a transaction or process in a land registration office.                            *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -312,7 +312,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public bool ReadyForReentry {
       get {
-        EmpiriaUser user = (EmpiriaUser) ExecutionServer.CurrentUser;
+        var user = EmpiriaUser.Current;
         return ((this.Status == TransactionStatus.Returned) ||
         (this.Status == TransactionStatus.Delivered && user.CanExecute("LRSTransaction.ReentryByFails")));
       }

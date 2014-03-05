@@ -1,17 +1,18 @@
-﻿/* Empiria® Land 2014 ****************************************************************************************
+﻿/* Empiria Land 2014 *****************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Land                                  System   : Land Registration System            *
+*  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land                                   Assembly : Empiria.Land                        *
 *  Type      : RecordingBook                                  Pattern  : Empiria Object Type                 *
-*  Date      : 28/Mar/2014                                    Version  : 5.5     License: CC BY-NC-SA 4.0    *
+*  Version   : 5.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Represents a recording book. A recording book can have a parent recording book and always     *
 *              belongs to a recorder of deeds office. Instances of this type have a recording book type.     *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 using Empiria.Contacts;
+using Empiria.Security;
 using Empiria.Land.Registration.Data;
 using Empiria.Land.Registration.Transactions;
 
@@ -373,12 +374,12 @@ namespace Empiria.Land.Registration {
     }
 
     public bool Close(string esign, string notes) {
-      if (!ExecutionServer.CurrentUser.VerifyElectronicSign(esign)) {
+      if (!EmpiriaUser.Current.VerifyElectronicSign(esign)) {
         return false;
       }
       this.assignedTo = RecorderOffice.Empty;
       this.closingDate = DateTime.Now;
-      this.approvedBy = Contact.Parse(ExecutionServer.CurrentUser.Id);
+      this.approvedBy = EmpiriaUser.Current.Contact;
       this.Status = RecordingBookStatus.Closed;
       Save();
       return true;
