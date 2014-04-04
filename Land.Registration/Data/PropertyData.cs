@@ -136,55 +136,6 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetDataTable(operation);
     }
 
-    static public ObjectList<PropertyEvent> GetPropertiesEventsList(RecordingAct recordingAct) {
-      DataOperation operation = DataOperation.Parse("qryLRSRecordingActPropertiesEvents", recordingAct.Id);
-
-      DataView view = DataReader.GetDataView(operation);
-
-      return new ObjectList<PropertyEvent>((x) => PropertyEvent.Parse(x), view);
-    }
-
-    static internal ObjectList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
-      string sql = String.Empty;
-      if (!recordingAct.IsAnnotation) {
-        sql = "SELECT * FROM LRSRecordingActParties " +
-              "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
-              "AND PartyRoleId <> -1 AND LinkStatus <> 'X'";
-
-      } else {
-        string ids = String.Empty;
-        ObjectList<PropertyEvent> events = recordingAct.PropertiesEvents;
-        for (int i = 0; i < events.Count; i++) {
-          ObjectList<RecordingAct> acts = events[i].Property.GetRecordingActsTract();
-
-          for (int j = 0; j < acts.Count; j++) {
-            if (ids.Length != 0) {
-              ids += ",";
-            }
-            ids += acts[j].Id.ToString();
-          }
-        }
-        sql = "SELECT DISTINCT * " +
-              "FROM LRSRecordingActParties " +
-              "WHERE (RecordingActId IN (" + ids + ") AND PartyRoleId <> -1) " +
-              "AND (LinkStatus <> 'X')";
-      }
-      DataOperation operation = DataOperation.Parse(sql);
-
-      return new ObjectList<RecordingActParty>((x) => RecordingActParty.Parse(x), DataReader.GetDataView(operation));
-    }
-
-    static internal ObjectList<RecordingActParty> GetRecordingActPartiesList(RecordingAct recordingAct) {
-      string sql = String.Empty;
-
-      sql = "SELECT * FROM LRSRecordingActParties " +
-            "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
-            "AND LinkStatus <> 'X'";
-      DataOperation operation = DataOperation.Parse(sql);
-
-      return new ObjectList<RecordingActParty>((x) => RecordingActParty.Parse(x), DataReader.GetDataView(operation));
-    }
-
     static internal ObjectList<RecordingActParty> GetRecordingPartiesList(Recording recording, Party party) {
       string sql = String.Empty;
 
@@ -195,34 +146,6 @@ namespace Empiria.Land.Registration.Data {
             "AND (LRSRecordingActParties.LinkStatus <> 'X') " +
             "AND (LRSRecordingActParties.PartyId = " + party.Id.ToString() +
                 " OR LRSRecordingActParties.SecondaryPartyId = " + party.Id.ToString() + ")";
-      DataOperation operation = DataOperation.Parse(sql);
-
-      return new ObjectList<RecordingActParty>((x) => RecordingActParty.Parse(x), DataReader.GetDataView(operation));
-    }
-
-    static internal ObjectList<RecordingActParty> GetDomainPartyList(RecordingAct recordingAct) {
-      string sql = String.Empty;
-
-      sql = "SELECT * FROM LRSRecordingActParties " +
-            "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
-            "AND PartyRoleId <> -1 AND LinkStatus <> 'X'";
-
-      DataOperation operation = DataOperation.Parse(sql);
-
-      return new ObjectList<RecordingActParty>((x) => RecordingActParty.Parse(x), DataReader.GetDataView(operation));
-    }
-
-    static internal ObjectList<Property> GetRecordingActPropertiesList(RecordingAct recordingAct) {
-      DataOperation operation = DataOperation.Parse("qryLRSRecordingActProperties", recordingAct.Id);
-
-      return new ObjectList<Property>((x) => Property.Parse(x), DataReader.GetDataView(operation));
-    }
-
-    static internal ObjectList<RecordingActParty> GetSecondaryPartiesList(RecordingAct recordingAct) {
-      string sql = "SELECT * FROM LRSRecordingActParties " +
-                   "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
-                   "AND SecondaryPartyRoleId <> -1 AND LinkStatus <> 'X'";
-
       DataOperation operation = DataOperation.Parse(sql);
 
       return new ObjectList<RecordingActParty>((x) => RecordingActParty.Parse(x), DataReader.GetDataView(operation));

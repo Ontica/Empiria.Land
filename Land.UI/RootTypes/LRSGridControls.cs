@@ -293,33 +293,29 @@ namespace Empiria.Land.UI {
       return html;
     }
 
-    static public string GetRecordingActsGrid(ObjectList<Recording> recordingList) {
+    static public string GetRecordingActsGrid(ObjectList<RecordingAct> recordingActs) {
       string html = String.Empty;
       int counter = 0;
 
-      foreach (var recording in recordingList) {
-        ObjectList<RecordingAct> recordingActs = recording.RecordingActs;
-        int recordingActIndex = 0;
-        foreach (var recordingAct in recordingActs) {
-          var propertyEvents = recordingAct.PropertiesEvents;
-          if (propertyEvents.Count != 0) {
-            int propertyEventIndex = 0;
-            foreach (var propertyEvent in propertyEvents) {
-              if (recordingActIndex == 0 && propertyEventIndex == 0) {
-                counter++;
-              }
-              html += GetRecordingActGridRow(recordingAct, propertyEvent, counter, 
-                                             recordingActIndex, propertyEventIndex);
-              propertyEventIndex++;
+      int index = 0;
+      foreach (var recordingAct in recordingActs) {
+        var propertyEvents = recordingAct.PropertiesEvents;
+        if (propertyEvents.Count != 0) {
+          int propertyEventIndex = 0;
+          foreach (var propertyEvent in propertyEvents) {
+            if (index == 0 && propertyEventIndex == 0) {
+              counter++;
             }
-          } else {
-            counter++;
-            html += GetRecordingActGridRow(recordingAct, PropertyEvent.Empty, counter, 
-                                           recordingActIndex, 0);
+            html += GetRecordingActGridRow(recordingAct, propertyEvent, counter,
+                                           index, propertyEventIndex);
+            propertyEventIndex++;
           }
-          recordingActIndex++;
-        } // foreach RecordingAct
-      } // foreach Recording
+        } else {
+          counter++;
+          html += GetRecordingActGridRow(recordingAct, PropertyEvent.Empty, counter, index, 0);
+        }
+        index++;
+      }  // foreach RecordingAct
       return html;
     }
 

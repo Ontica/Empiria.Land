@@ -288,14 +288,6 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public ObjectList<Recording> GetRecordings(LRSTransaction transaction) {
-      if (!transaction.IsEmptyInstance && !this.IsEmptyInstance) {
-        return RecordingBooksData.GetRecordings(this, transaction);
-      } else {
-        return new ObjectList<Recording>();
-      }
-    }
-
     public void ChangeDocumentType(RecordingDocumentType newRecordingDocumentType) {
       if (this.recordingDocumentType.Equals(newRecordingDocumentType)) {
         return;

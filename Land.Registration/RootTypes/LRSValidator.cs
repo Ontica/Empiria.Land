@@ -137,10 +137,12 @@ namespace Empiria.Land.Registration {
     //}
 
     static public LandRegistrationException ValidateRecordingActAsComplete(RecordingAct recordingAct) {
-      if (!recordingAct.RecordingActType.BlockAllFields && recordingAct.AppraisalAmount.Equals(Money.Empty)) {
+      if (!recordingAct.RecordingActType.BlockAllFields && 
+           recordingAct.ExtensionData.AppraisalAmount.Equals(Money.Empty)) {
         return new LandRegistrationException(LandRegistrationException.Msg.EmptyAppraisalAmount);
       }
-      if (recordingAct.RecordingActType.UseOperationAmount && recordingAct.OperationAmount.Equals(Money.Empty)) {
+      if (recordingAct.RecordingActType.UseOperationAmount && 
+          recordingAct.ExtensionData.OperationAmount.Equals(Money.Empty)) {
         return new LandRegistrationException(LandRegistrationException.Msg.EmptyOperationAmount);
       }
       // Parties Validation

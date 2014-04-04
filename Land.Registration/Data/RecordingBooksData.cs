@@ -121,32 +121,6 @@ namespace Empiria.Land.Registration.Data {
       return new ObjectList<RecordingAct>((x) => RecordingAct.Parse(x), view);
     }
 
-    static public ObjectList<RecordingAct> GetPropertyRecordingActList(Property property) {
-      var view = DataReader.GetDataView(DataOperation.Parse("qryLRSPropertyRecordingActs", property.Id));
-
-      return new ObjectList<RecordingAct>((x) => RecordingAct.Parse(x), view);
-    }
-
-    static public ObjectList<RecordingAct> GetPropertyRecordingActListUntil(Property property, RecordingAct breakAct, 
-                                                                            bool includeBreakAct) {
-      DataOperation op = DataOperation.Parse("qryLRSPropertyRecordingActs", property.Id);
-      DataView view = DataReader.GetDataView(op);
-      List<RecordingAct> list = new List<RecordingAct>();
-      foreach (DataRowView row in view) {
-        var recordingAct = RecordingAct.Parse(row.Row);
-        if (recordingAct.Equals(breakAct)) {
-          if (includeBreakAct) {
-            list.Add(RecordingAct.Parse(row.Row));
-          }
-          break;
-        } else {
-          list.Add(RecordingAct.Parse(row.Row));
-        }
-      }
-      return new ObjectList<RecordingAct>(list);
-    }
-
-
     static public ObjectList<RecordingBook> GetRecordingBooks(string filter, string sort = "RecordingBookFullName") {
       filter = GeneralDataOperations.BuildSqlAndFilter(filter, "RecordingBookType = 'V'");
       DataTable table = GeneralDataOperations.GetEntities("LRSRecordingBooks", filter, sort);
@@ -198,12 +172,6 @@ namespace Empiria.Land.Registration.Data {
       DataView view = DataReader.GetDataView(DataOperation.Parse("qryLRSRecordingBookRecordings", recordingBook.Id));
 
       return new ObjectList<Recording>((x) => Recording.Parse(x), view);
-    }
-
-    static public ObjectList<RecordingAct> GetRecordingActs(Recording recording) {
-      DataView view = DataReader.GetDataView(DataOperation.Parse("qryLRSRecordingRecordedActs", recording.Id));
-
-      return new ObjectList<RecordingAct>((x) => RecordingAct.Parse(x), view);
     }
 
     static public ObjectList<Recording> GetRecordingsOnImageRangeList(RecordingBook recordingBook,
@@ -259,22 +227,9 @@ namespace Empiria.Land.Registration.Data {
                                                         o.CanceledTime, o.CancelationReasonId, o.CancelationNotes,
                                                         o.DigitalString, o.DigitalSign,
                                                         (char) o.Status, o.RecordIntegrityHashCode);
-      if ((o.Id % 500) == 0) {
+      if ((o.Id % 300) == 0) {
         Empiria.Data.DataReader.Optimize();
       }
-      return DataWriter.Execute(dataOperation);
-    }
-
-    static internal int WriteRecordingAct(RecordingAct o) {
-      Assertion.Require(o.Id != 0, "RecordingAct.Id can't be zero");
-      DataOperation dataOperation = DataOperation.Parse("writeLRSRecordingAct", o.Id, o.RecordingActType.Id,
-                                                        o.Recording.Id, o.Index, o.Notes,
-                                                        o.AppraisalAmount.Currency.Id, o.AppraisalAmount.Amount,
-                                                        o.OperationAmount.Currency.Id, o.OperationAmount.Amount,
-                                                        o.TermPeriods, o.TermUnit.Id, o.InterestRate, o.InterestRateType.Id,
-                                                        o.ContractDate, o.ContractPlace.Id, o.ContractNumber,
-                                                        o.PostedBy.Id, o.PostingTime,
-                                                        (char) o.Status);
       return DataWriter.Execute(dataOperation);
     }
 

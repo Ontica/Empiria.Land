@@ -89,7 +89,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public ObjectList<RecordingActParty> GetList(RecordingAct recordingAct) {
-      return PropertyData.GetRecordingActPartiesList(recordingAct);
+      return RecordingActsData.GetRecordingActPartiesList(recordingAct);
     }
 
     static public ObjectList<RecordingActParty> GetList(Recording recording, Party party) {
@@ -103,15 +103,15 @@ namespace Empiria.Land.Registration {
     }
 
     static public ObjectList<RecordingActParty> GetDomainPartyList(RecordingAct recordingAct) {
-      return PropertyData.GetDomainPartyList(recordingAct);
+      return RecordingActsData.GetDomainPartyList(recordingAct);
     }
 
     static public ObjectList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
-      return PropertyData.GetInvolvedDomainParties(recordingAct);
+      return RecordingActsData.GetInvolvedDomainParties(recordingAct);
     }
 
     static public ObjectList<RecordingActParty> GetSecondaryPartiesList(RecordingAct recordingAct) {
-      return PropertyData.GetSecondaryPartiesList(recordingAct);
+      return RecordingActsData.GetSecondaryPartiesList(recordingAct);
     }
 
     public static RecordingActParty GetSecondaryParty(RecordingAct recordingAct, Party party) {

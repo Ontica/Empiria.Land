@@ -14,9 +14,9 @@ using System.Data;
 
 using Empiria.Contacts;
 using Empiria.DataTypes;
-using Empiria.Geography;
-
 using Empiria.Land.Registration.Data;
+using Empiria.Land.Registration.Transactions;
+using Empiria.Security;
 
 namespace Empiria.Land.Registration {
 
@@ -31,52 +31,64 @@ namespace Empiria.Land.Registration {
 
   /// <summary>Abstract class that represents a recording act. All recording acts types must be 
   /// descendents of this type.</summary>
-  public abstract class RecordingAct : BaseObject {
+  public abstract class RecordingAct : BaseObject, IExtensible<RecordingActExtData>, IProtected {
 
     #region Fields
 
     private const string thisTypeName = "ObjectType.RecordingAct";
 
-    private RecordingActType recordingActType = null;
-    private Recording recording = Recording.Empty;
-    private int index = 0;
-    private string notes = String.Empty;
-    private Money appraisalAmount = Money.Empty;
-    private Money operationAmount = Money.Empty;
-    private int termPeriods = 0;
-    private Unit termUnit = Unit.Unknown;
-    private decimal interestRate = decimal.Zero;
-    private InterestRateType interestRateType = InterestRateType.Empty;
-    private DateTime contractDate = ExecutionServer.DateMaxValue;
-    private GeographicRegionItem contractPlace = GeographicRegionItem.Empty;
-    private string contractNumber = String.Empty;
-    private Contact postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-    private DateTime postingTime = DateTime.Now;
-    private RecordingActStatus status = RecordingActStatus.Incomplete;
-
+    private RecordingActType recordingActType = null;  
     private ObjectList<PropertyEvent> propertiesEvents = null;
-
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    protected RecordingAct(string typeName)
-      : base(typeName) {
+    protected RecordingAct(string typeName) : base(typeName) {
       // Empiria Object Type pattern classes always has this constructor. Don't delete
+      Initialize();
+    }
+
+    static public RecordingAct Create(RecordingTask task) {
+      Assertion.AssertObject(task, "task");     
+      task.AssertValid();
+
+      var recordingAct = RecordingAct.CreateInstance(task.RecordingActType, 
+                                                     task.Transaction, 
+                                                     task.Document, 
+                                                     task.TargetRecordingAct, 
+                                                     task.TargetResource);
+
+      var expert = new RecorderExpert(task, recordingAct);
+
+      return expert.DoRecording();
+    }
+
+    private static RecordingAct CreateInstance(RecordingActType recordingActType, LRSTransaction transaction,
+                                               RecordingDocument document, RecordingAct targetRecordingAct,
+                                               Property targetResource) {
+      RecordingAct recordingAct = recordingActType.CreateInstance();
+
+      recordingAct.recordingActType = recordingActType;
+      recordingAct.Transaction = transaction;
+      recordingAct.Document = document;
+      recordingAct.TargetRecordingAct = targetRecordingAct;
+      recordingAct.TargetResource = targetResource;
+      
+      return recordingAct;
     }
 
     static internal RecordingAct Create(RecordingActType recordingActType, 
                                         Recording recording, Property property) {
       RecordingAct recordingAct = recordingActType.CreateInstance();
       recordingAct.recordingActType = recordingActType;
-      recordingAct.recording = recording;
+      recordingAct.Recording = recording; 
       recordingAct.propertiesEvents = new ObjectList<PropertyEvent>();
-      recordingAct.index = recording.RecordingActs.Count + 1;
+      recordingAct.Index = recording.RecordingActs.Count + 1;
       if (recordingActType.Autoregister) {
-        recordingAct.status = RecordingActStatus.Registered;
+        recordingAct.Status = RecordingActStatus.Registered;
       } else {
-        recordingAct.status = RecordingActStatus.Pending;
+        recordingAct.Status = RecordingActStatus.Pending;
       }
       recordingAct.Save();
       recordingAct.AppendPropertyEvent(property);
@@ -92,78 +104,163 @@ namespace Empiria.Land.Registration {
       return BaseObject.Parse<RecordingAct>(thisTypeName, dataRow);
     }
 
+    static public ObjectList<RecordingAct> GetList(LRSTransaction transaction) {
+      if (transaction.IsEmptyInstance) {
+        return new ObjectList<RecordingAct>();
+      }
+      return RecordingActsData.GetRecordingActs(transaction);
+    }
+
+    private void Initialize() {
+      this.Transaction = LRSTransaction.Empty;
+      this.Document = RecordingDocument.Empty;
+      this.Recording = Recording.Empty;
+      this.ExtensionData = RecordingActExtData.Empty;
+      this.Keywords = String.Empty;
+      this.Index = 0;
+      this.Notes = String.Empty;
+      this.CanceledBy = Person.Empty;
+      this.CancelationTime = ExecutionServer.DateMaxValue;
+      this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      this.PostingTime = DateTime.Now;
+      this.Status = RecordingActStatus.Incomplete;
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
 
-    public Money AppraisalAmount {
-      get { return appraisalAmount; }
-      set { appraisalAmount = value; }
+
+    public LRSTransaction Transaction {
+      get; 
+      private set;
     }
 
-    public string ContractNumber {
-      get { return contractNumber; }
-      set { contractNumber = value; }
+    public RecordingDocument Document {
+      get; 
+      private set;
     }
 
-    public DateTime ContractDate {
-      get { return contractDate; }
-      set { contractDate = value; }
+    
+    private RecordingAct _targetRecordingAct = null;
+    public RecordingAct TargetRecordingAct {
+      get {
+        if (_targetRecordingAct == null) {
+          _targetRecordingAct = InformationAct.Empty;
+        }
+        return _targetRecordingAct;
+      }
+      private set {
+        _targetRecordingAct = value;
+      }
     }
 
-    public GeographicRegionItem ContractPlace {
-      get { return contractPlace; }
-      set { contractPlace = value; }
+    private Property _targetResource = null;
+    public Property TargetResource {
+      get {
+        if (_targetResource == null) {
+          _targetResource = Property.Empty;
+        }
+        return _targetResource;
+      }
+      private set {
+        _targetResource = value;
+      }
     }
 
+    public Recording Recording {
+      get;
+      private set;
+    }
+    
     public int Index {
-      get { return index; }
-      internal set { index = value; }
+      get;
+      internal set;
     }
 
-    public decimal InterestRate {
-      get { return interestRate; }
-      set { interestRate = value; }
+    private string _notes = String.Empty;
+    public string Notes {
+      get { return _notes; }
+      set { 
+        _notes = EmpiriaString.TrimAll(value);
+      }
     }
 
-    public InterestRateType InterestRateType {
-      get { return interestRateType; }
-      set { interestRateType = value; }
+    public RecordingActExtData ExtensionData {
+      get;
+      private set;
+    }
+
+    internal string Keywords {
+      get;
+      private set;
+    }
+
+    public Contact CanceledBy {
+      get;
+      private set;
+    }
+
+    public DateTime CancelationTime {
+      get;
+      private set;
+    }
+
+    public Contact PostedBy {
+      get;
+      private set;
+    }
+
+    public DateTime PostingTime {
+      get;
+      private set;
+    }
+
+    public RecordingActStatus Status {
+      get;
+      set;
+    }
+
+    int IProtected.CurrentDataIntegrityVersion {
+      get { return 1; }
+    }
+
+    object[] IProtected.GetDataIntegrityFieldValues(int version) {
+      if (version == 1) {
+        return new object[] {
+          1, "Id", this.Id, "RecordingActType", this.RecordingActType.Id, 
+          "Transaction", this.Transaction.Id, "Document", this.Document.Id, 
+          "TargetRecordingAct", this.TargetRecordingAct.Id, "TargetResource", this.TargetResource.Id, 
+          "Recording", this.Recording.Id, "Index", this.Index, "Notes", this.Notes, 
+          "ExtensionData", this.ExtensionData.ToJson(), 
+          "CanceledBy", this.CanceledBy.Id, "CancelationTime", this.CancelationTime,
+          "PostedBy", this.PostedBy.Id, "PostingTime", this.PostingTime, "Status", (char) this.Status, 
+        };
+      }
+      throw new SecurityException(SecurityException.Msg.WrongRequestedVersionForDIF, version);
+    }
+
+    private IntegrityValidator _validator = null;
+    public IntegrityValidator Integrity {
+      get { 
+        if (_validator == null) {
+          _validator = new IntegrityValidator(this);
+        }
+        return _validator;
+      }
     }
 
     public bool IsAnnotation {
       get { return this.RecordingActType.IsAnnotationType; }
     }
 
-    public string Notes {
-      get { return notes; }
-      set { notes = EmpiriaString.TrimAll(value); }
-    }
-
-    public Money OperationAmount {
-      get { return operationAmount; }
-      set { operationAmount = value; }
-    }
-
-    public Contact PostedBy {
-      get { return postedBy; }
-    }
-
-    public DateTime PostingTime {
-      get { return postingTime; }
-    }
-
     public ObjectList<PropertyEvent> PropertiesEvents {
       get {
         if (propertiesEvents == null) {
-          propertiesEvents = PropertyData.GetPropertiesEventsList(this);
+          propertiesEvents = RecordingActsData.GetPropertiesEventsList(this);
         }
         return propertiesEvents;
       }
-    }
-
-    public Recording Recording {
-      get { return recording; }
     }
 
     public RecordingActType RecordingActType {
@@ -176,14 +273,9 @@ namespace Empiria.Land.Registration {
       set { recordingActType = value; }
     }
 
-    public RecordingActStatus Status {
-      get { return status; }
-      set { status = value; }
-    }
-
     public string StatusName {
       get {
-        switch (status) {
+        switch (this.Status) {
           case RecordingActStatus.Obsolete:
             return "No vigente";
           case RecordingActStatus.Incomplete:
@@ -202,16 +294,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public int TermPeriods {
-      get { return termPeriods; }
-      set { termPeriods = value; }
-    }
-
-    public Unit TermUnit {
-      get { return termUnit; }
-      set { termUnit = value; }
-    }
-
     #endregion Public properties
 
     #region Public methods
@@ -220,7 +302,7 @@ namespace Empiria.Land.Registration {
       if (this.IsNew) {
         throw new LandRegistrationException(LandRegistrationException.Msg.NotSavedRecordingAct, "AppendProperty");
       }
-      if (this.recording.IsNew) {
+      if (this.Recording.IsNew) {
         throw new LandRegistrationException(LandRegistrationException.Msg.NotSavedRecording, "AppendProperty");
       }
 
@@ -231,7 +313,7 @@ namespace Empiria.Land.Registration {
                                             property.UniqueCode, this.Id);
       }
 
-      PropertyEvent propertyEvent = new PropertyEvent(property, this);
+      var propertyEvent = new PropertyEvent(property, this);
       propertyEvent.Save();
 
       RecordingAct antecedent = property.GetAntecedent(this);
@@ -280,7 +362,7 @@ namespace Empiria.Land.Registration {
                                             property.UniqueCode, this.Id);
       }
     }
-
+    
     public bool IsFirstRecordingAct() {
       if (this.PropertiesEvents.Count == 0) {
         return false;
@@ -292,35 +374,45 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void ImplementsLoadObjectData(DataRow row) {
-      this.recording = Recording.Parse((int) row["RecordingId"]);
-      this.index = (int) row["RecordingActIndex"];
-      this.notes = (string) row["RecordingActNotes"];
-      this.appraisalAmount = Money.Parse(Currency.Parse((int) row["AppraisalCurrencyId"]), (decimal) row["AppraisalAmount"]);
-      this.operationAmount = Money.Parse(Currency.Parse((int) row["OperationCurrencyId"]), (decimal) row["OperationAmount"]);
-      this.termPeriods = (int) row["TermPeriods"];
-      this.termUnit = Unit.Parse((int) row["TermUnitId"]);
-      this.interestRate = (decimal) row["InterestRate"];
-      this.interestRateType = InterestRateType.Parse((int) row["InterestRateTypeId"]);
-      this.contractDate = (DateTime) row["ContractDate"];
-      this.contractPlace = GeographicRegionItem.Parse((int) row["ContractPlaceId"]);
-      this.contractNumber = (string) row["ContractNumber"];
-      this.postedBy = Contact.Parse((int) row["PostedById"]);
-      this.postingTime = (DateTime) row["PostingTime"];
-      this.status = (RecordingActStatus) Convert.ToChar(row["RecordingActStatus"]);
+      this.Recording = Recording.Parse((int) row["RecordingId"]);
+      this.Index = (int) row["RecordingActIndex"];
+      this.Notes = (string) row["RecordingActNotes"];
+      this.PostedBy = Contact.Parse((int) row["PostedById"]);
+      this.PostingTime = (DateTime) row["PostingTime"];
+      this.Status = (RecordingActStatus) Convert.ToChar(row["RecordingActStatus"]);
+
+      ///OOJJOO  Delete ASAP and use JSON read/write only
+      
+      this.ExtensionData.AppraisalAmount = Money.Parse(Currency.Parse((int) row["AppraisalCurrencyId"]), 
+                                                                      (decimal) row["AppraisalAmount"]);
+      this.ExtensionData.OperationAmount = Money.Parse(Currency.Parse((int) row["OperationCurrencyId"]), 
+                                                                      (decimal) row["OperationAmount"]);
+      this.ExtensionData.Contract.Interest.TermPeriods = (int) row["TermPeriods"];
+      this.ExtensionData.Contract.Interest.TermUnit = Unit.Parse((int) row["TermUnitId"]);
+      this.ExtensionData.Contract.Interest.Rate = (decimal) row["InterestRate"];
+      this.ExtensionData.Contract.Interest.RateType = InterestRateType.Parse((int) row["InterestRateTypeId"]);
+      this.ExtensionData.Contract.Date = (DateTime) row["ContractDate"];
+      this.ExtensionData.Contract.Place = Empiria.Geography.GeographicRegionItem.Parse((int) row["ContractPlaceId"]);
+      this.ExtensionData.Contract.Number = (string) row["ContractNumber"];
+
+      //if (((string) row["RecordingActDIF"]).Length != 0) {
+      //  Integrity.Assert((string) row["RecordingActDIF"]);
+      //}
     }
 
     protected override void ImplementsSave() {
       if (base.IsNew) {
-        this.postingTime = DateTime.Now;
-        this.postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.PostingTime = DateTime.Now;
+        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
-      RecordingBooksData.WriteRecordingAct(this);
+      RecordingActsData.WriteRecordingAct(this);
     }
 
     public void RemoveProperty(Property property) {
       PropertyEvent propertyEvent = this.PropertiesEvents.Find((x) => x.Property.Equals(property));
 
-      Assertion.RequireObject(propertyEvent, new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
+      Assertion.RequireObject(propertyEvent, 
+                new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
                                               property.Id, this.Id));
       propertyEvent.Delete();
       if (property.GetRecordingActsTract().Count == 0) {
@@ -337,7 +429,45 @@ namespace Empiria.Land.Registration {
                        this.Status == RecordingActStatus.Deleted, "fail");
     }
 
+    internal RecordingAct WriteOn(RecordingBook book) {
+      if (base.IsNew) {
+        this.PostingTime = DateTime.Now;
+        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      }
+
+      this.Recording = book.CreateRecording(this.Transaction);
+      RecordingActsData.WriteRecordingAct(this);
+      
+      return this;
+    }
+
+    //internal RecordingAct WriteOn(RecorderOffice recorderOffice, RecordingSection recordingSection) {
+    //  if (base.IsNew) {
+    //    this.PostingTime = DateTime.Now;
+    //    this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+    //  }
+    //  //RecordingBook book = this.GetRecordingBook(); 
+    //  //Recording recording = book.CreateRecording();
+
+    //  //return recording.CreateRecordingAct(Task.RecordingActType, Property.Empty);
+    //  RecordingBook book = this.GetRecordingBook(RecorderOffice recorderOffice, RecordingSection recordingSection);
+    //  Recording recording = book.CreateRecording();
+
+    //  return recording.CreateRecordingAct(Task.RecordingActType, Property.Empty);
+
+    //  RecordingBook 
+    //  this.Recording = 
+    //  RecordingActsData.WriteRecordingAct(this);
+
+    //  return this;
+
+    //}
+
     #endregion Public methods
+
+
+
+
 
   } // class RecordingAct
 

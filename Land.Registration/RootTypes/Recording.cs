@@ -235,7 +235,7 @@ namespace Empiria.Land.Registration {
     public ObjectList<RecordingAct> RecordingActs {
       get {
         if (recordingActList == null) {
-          this.recordingActList = RecordingBooksData.GetRecordingActs(this);
+          this.recordingActList = RecordingActsData.GetRecordingActs(this);
         }
         return recordingActList;
       }

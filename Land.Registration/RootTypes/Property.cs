@@ -348,11 +348,11 @@ namespace Empiria.Land.Registration {
     }
 
     public ObjectList<RecordingAct> GetRecordingActsTract() {
-      return RecordingBooksData.GetPropertyRecordingActList(this);
+      return RecordingActsData.GetPropertyRecordingActList(this);
     }
 
     public ObjectList<RecordingAct> GetRecordingActsTractUntil(RecordingAct breakAct, bool includeBreakAct) {
-      return RecordingBooksData.GetPropertyRecordingActListUntil(this, breakAct, includeBreakAct);
+      return RecordingActsData.GetPropertyRecordingActListUntil(this, breakAct, includeBreakAct);
     }
 
     public RecordingAct GetAntecedent(RecordingAct baseRecordingAct) {

@@ -72,7 +72,8 @@ namespace Empiria.Land.Registration {
       RecordingRule rule = new RecordingRule();
 
       if (json.ContainsKey("AppliesTo")) {
-        rule.AppliesTo = (RecordingRuleApplication) Enum.Parse(typeof(RecordingRuleApplication), (string) json["AppliesTo"]);
+        rule.AppliesTo = (RecordingRuleApplication) Enum.Parse(typeof(RecordingRuleApplication), 
+                                                               (string) json["AppliesTo"]);
       }
       if (json.ContainsKey("AutoCancel")) {
         rule.AutoCancel = Convert.ToInt32(json["AutoCancel"]);
@@ -163,6 +164,13 @@ namespace Empiria.Land.Registration {
     public bool IsCancelation {
       get;
       private set;
+    }
+
+    public bool IsMainRecording {
+      get {
+        return (this.RecordingSection.IsEmptyInstance == false && 
+                !this.IsAnnotation && !IsCancelation);
+      }
     }
 
     public PropertyRule NewProperty {

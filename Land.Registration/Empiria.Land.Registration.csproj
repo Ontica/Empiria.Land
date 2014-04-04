@@ -139,14 +139,19 @@
   <ItemGroup>
     <Compile Include="Data\AnalyticsData.cs" />
     <Compile Include="Data\IndexesData.cs" />
+    <Compile Include="Data\RecordingActsData.cs" />
     <Compile Include="Data\TransactionData.cs" />
     <Compile Include="Data\PropertyData.cs" />
     <Compile Include="Data\RecordingBooksData.cs" />
     <Compile Include="Empiria.Land.Registration.AssemblyInfo.cs" />
     <Compile Include="RootTypes\Certificate.cs" />
+    <Compile Include="RootTypes\RecordingActExtData.cs" />
+    <Compile Include="RootTypes\InterestData.cs" />
+    <Compile Include="RootTypes\ContractData.cs" />
     <Compile Include="RootTypes\PropertyRule.cs" />
     <Compile Include="RootTypes\RecordingRule.cs" />
     <Compile Include="RootTypes\RecordingSection.cs" />
+    <Compile Include="RootTypes\RecorderExpert.cs" />
     <Compile Include="RootTypes\RecordingTask.cs" />
     <Compile Include="RootTypes\TransactionAct.cs" />
     <Compile Include="Transactions\LRSFee.cs" />
@@ -221,7 +226,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="empiria.strong.name.public.key.snk" />
   </ItemGroup>
   <ItemGroup>
