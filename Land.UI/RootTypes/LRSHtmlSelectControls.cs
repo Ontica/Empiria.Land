@@ -1,8 +1,8 @@
 ﻿/* Empiria Land 2014 ******************************************************************************************
 *                                                                                                             *
 *  Solution  : Empiria Land                                    System   : Land Registration System            *
-*  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land                        *
-*  Type      : LRSHtmlSelectControls                           Pattern  : Presentation Services Static Class  *
+*  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land.UI                     *
+*  Type      : LRSHtmlSelectControls                           Pattern  : Static Class                        *
 *  Version   : 1.5        Date: 28/Mar/2014                    License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                             *
 *  Summary   : Static class that generates predefined HtmlSelect controls content for Empiria Government      *

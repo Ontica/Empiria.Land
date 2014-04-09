@@ -1,8 +1,8 @@
 ﻿/* Empiria Land 2014 ******************************************************************************************
 *                                                                                                             *
 *  Solution  : Empiria Land                                    System   : Land Registration System            *
-*  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land                        *
-*  Type      : LRSGridControls                                 Pattern  : Presentation Services Static Class  *
+*  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land.UI                     *
+*  Type      : LRSGridControls                                 Pattern  : User Control                        *
 *  Version   : 1.5        Date: 28/Mar/2014                    License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                             *
 *  Summary   : Static class that generates predefined grid content for Land Registration System data.         *
