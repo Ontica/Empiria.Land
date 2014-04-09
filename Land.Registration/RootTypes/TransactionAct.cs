@@ -1,7 +1,7 @@
 ﻿/* Empiria Land 2014 *****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land                                   Assembly : Empiria.Land                        *
+*  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : TransactionAct                                 Pattern  : Empiria Object Type                 *
 *  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *

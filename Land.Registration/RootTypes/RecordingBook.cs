@@ -1,7 +1,7 @@
 ﻿/* Empiria Land 2014 *****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land                                   Assembly : Empiria.Land                        *
+*  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingBook                                  Pattern  : Empiria Object Type                 *
 *  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
@@ -410,7 +410,7 @@ namespace Empiria.Land.Registration {
       Assertion.RequireObject(transaction, "transaction");
       Assertion.RequireObject(transaction.Document, "document");
       Assertion.Require(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
-                        "Transaction document can not be neither an empty or a new document instance.");
+                        "Transaction document cannot be neither empty nor a new document instance.");
 
       Recording recording = new Recording();
       recording.RecordingBook = this;

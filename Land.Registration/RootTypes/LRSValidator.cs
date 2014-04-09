@@ -1,9 +1,9 @@
 ﻿/* Empiria Land 2014 *****************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                 System   : Land Registration System              *
-*  Namespace : Empiria.Land                                 Assembly : Empiria.Land.Registration             *
-*  Type      : LRSValidator                                 Pattern  : Validation Services Static Class      *
-*  Version   : 1.5        Date: 28/Mar/2014                 License  : GNU AGPLv3  (See license.txt)         *
+*  Solution  : Empiria Land                                   System   : Land Registration System            *
+*  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
+*  Type      : LRSValidator                                   Pattern  : Validation Services Static Class    *
+*  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Static class that provides Land Registration System validation methods.                       *
 *                                                                                                            *

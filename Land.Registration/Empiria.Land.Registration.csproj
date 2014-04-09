@@ -145,6 +145,7 @@
     <Compile Include="Data\RecordingBooksData.cs" />
     <Compile Include="Empiria.Land.Registration.AssemblyInfo.cs" />
     <Compile Include="RootTypes\Certificate.cs" />
+    <Compile Include="RootTypes\IRecordable.cs" />
     <Compile Include="RootTypes\RecordingActExtData.cs" />
     <Compile Include="RootTypes\InterestData.cs" />
     <Compile Include="RootTypes\ContractData.cs" />

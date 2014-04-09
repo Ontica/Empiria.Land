@@ -1,7 +1,7 @@
 ﻿/* Empiria Land 2014 *****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land                                   Assembly : Empiria.Land                        *
+*  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingRule                                  Pattern  : Empiria Structure Type              *
 *  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
@@ -168,7 +168,7 @@ namespace Empiria.Land.Registration {
 
     public bool IsMainRecording {
       get {
-        return (this.RecordingSection.IsEmptyInstance == false && 
+        return (!this.RecordingSection.IsEmptyInstance && 
                 !this.IsAnnotation && !IsCancelation);
       }
     }

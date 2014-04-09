@@ -1,7 +1,7 @@
 ﻿/* Empiria Land 2014 *****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land                                   Assembly : Empiria.Land                        *
+*  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingAct                                   Pattern  : Empiria Object Type                 *
 *  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
@@ -49,37 +49,22 @@ namespace Empiria.Land.Registration {
       Initialize();
     }
 
-    static public RecordingAct Create(RecordingTask task) {
-      Assertion.AssertObject(task, "task");     
-      task.AssertValid();
+    static internal RecordingAct Parse(RecordingTask task) {
+      Assertion.AssertObject(task, "task");
 
-      var recordingAct = RecordingAct.CreateInstance(task.RecordingActType, 
-                                                     task.Transaction, 
-                                                     task.Document, 
-                                                     task.TargetRecordingAct, 
-                                                     task.TargetResource);
+      RecordingAct recordingAct = task.RecordingActType.CreateInstance();
 
-      var expert = new RecorderExpert(task, recordingAct);
+      recordingAct.recordingActType = task.RecordingActType; // OOJJOO: Avoid type assignment outside CreateInstance above
+      recordingAct.Transaction = task.Transaction;
+      recordingAct.Document = task.Document;
+      recordingAct.TargetRecordingAct = task.TargetRecordingAct;
+      recordingAct.TargetResource = task.TargetResource;
 
-      return expert.DoRecording();
-    }
-
-    private static RecordingAct CreateInstance(RecordingActType recordingActType, LRSTransaction transaction,
-                                               RecordingDocument document, RecordingAct targetRecordingAct,
-                                               Property targetResource) {
-      RecordingAct recordingAct = recordingActType.CreateInstance();
-
-      recordingAct.recordingActType = recordingActType;
-      recordingAct.Transaction = transaction;
-      recordingAct.Document = document;
-      recordingAct.TargetRecordingAct = targetRecordingAct;
-      recordingAct.TargetResource = targetResource;
-      
       return recordingAct;
     }
 
     static internal RecordingAct Create(RecordingActType recordingActType, 
-                                        Recording recording, Property property) {
+                                        Recording recording, Property resource) {
       RecordingAct recordingAct = recordingActType.CreateInstance();
       recordingAct.recordingActType = recordingActType;
       recordingAct.Recording = recording; 
@@ -91,7 +76,7 @@ namespace Empiria.Land.Registration {
         recordingAct.Status = RecordingActStatus.Pending;
       }
       recordingAct.Save();
-      recordingAct.AppendPropertyEvent(property);
+      recordingAct.AppendPropertyEvent(resource);
 
       return recordingAct;
     }
@@ -298,6 +283,10 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
+    public void AttachResource(IRecordable resource) {
+
+    }
+
     public void AppendPropertyEvent(Property property) {
       if (this.IsNew) {
         throw new LandRegistrationException(LandRegistrationException.Msg.NotSavedRecordingAct, "AppendProperty");
@@ -429,15 +418,16 @@ namespace Empiria.Land.Registration {
                        this.Status == RecordingActStatus.Deleted, "fail");
     }
 
-    internal RecordingAct WriteOn(RecordingBook book) {
-      if (base.IsNew) {
-        this.PostingTime = DateTime.Now;
-        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-      }
 
+    internal RecordingAct WriteOn(RecorderOffice recorderOffice, RecordingSection recordingSection) {
+      Assertion.AssertObject(recorderOffice, "recorderOffice");
+      Assertion.AssertObject(recordingSection, "recordingSection");
+
+      RecordingBook book = this.GetOpenedRecordingBook(recorderOffice, recordingSection);
       this.Recording = book.CreateRecording(this.Transaction);
-      RecordingActsData.WriteRecordingAct(this);
-      
+
+      this.Save();
+
       return this;
     }
 
@@ -465,9 +455,14 @@ namespace Empiria.Land.Registration {
 
     #endregion Public methods
 
+    #region Private methods
 
+    private RecordingBook GetOpenedRecordingBook(RecorderOffice recorderOffice, 
+                                                 RecordingSection recordingSection) {
+      return RecordingBook.GetAssignedBookForRecording(recorderOffice, recordingSection, this.Document);
+    }
 
-
+    #endregion Private methods
 
   } // class RecordingAct
 
