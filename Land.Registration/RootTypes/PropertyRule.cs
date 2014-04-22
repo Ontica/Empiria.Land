@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : PropertyRule                                   Pattern  : Standard  Class                     *
-*  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
+*  Version   : 1.5        Date: 25/Jun/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Describes a property recording condition that serves as a rule for recording registration.    *
 *                                                                                                            *
@@ -24,7 +24,7 @@ namespace Empiria.Land.Registration {
       this.IsInternalDivision = false;
       this.Name = String.Empty;
       this.PropertyCount = Land.Registration.PropertyCount.Undefined;
-      this.PropertyStatus = PropertyRecordingStatus.Undefined;
+      this.RecordableObjectStatus = PropertyRecordingStatus.Undefined;
       this.UseNumbering = false;
     }
 
@@ -43,9 +43,9 @@ namespace Empiria.Land.Registration {
       if (json.ContainsKey("PropertyCount")) {
         rule.PropertyCount = RecordingRule.ParsePropertyCount(Convert.ToString(json["PropertyCount"]));
       }
-      if (json.ContainsKey("PropertyStatus")) {
-        rule.PropertyStatus = (PropertyRecordingStatus) Enum.Parse(typeof(PropertyRecordingStatus),
-                                                                  (string) json["PropertyStatus"]);
+      if (json.ContainsKey("RecordableObjectStatus")) {
+        rule.RecordableObjectStatus = (PropertyRecordingStatus) Enum.Parse(typeof(PropertyRecordingStatus),
+                                                                  (string) json["RecordableObjectStatus"]);
       }
       if (json.ContainsKey("UseNumbering")) {
         rule.IsInternalDivision = (bool) json["UseNumbering"];
@@ -78,7 +78,7 @@ namespace Empiria.Land.Registration {
       internal set;
     }
 
-    public PropertyRecordingStatus PropertyStatus {
+    public PropertyRecordingStatus RecordableObjectStatus {
       get;
       internal set;
     }

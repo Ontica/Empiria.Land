@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingActParty                              Pattern  : Association Class                   *
-*  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
+*  Version   : 1.5        Date: 25/Jun/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Represents a roled association between a recording act and a party.                           *
 *                                                                                                            *
@@ -61,7 +61,7 @@ namespace Empiria.Land.Registration {
     private GeographicRegionItem partyAddressPlace = GeographicRegionItem.Empty;
     private Contact postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
     private DateTime postingTime = DateTime.Now;
-    private PropertyEventStatus status = PropertyEventStatus.Pending;
+    private RecordableObjectStatus status = RecordableObjectStatus.Pending;
     private string integrityHashCode = String.Empty;
 
     #endregion Fields
@@ -269,7 +269,7 @@ namespace Empiria.Land.Registration {
       set { secondaryPartyRole = value; }
     }
 
-    public PropertyEventStatus Status {
+    public RecordableObjectStatus Status {
       get { return status; }
       set { status = value; }
     }
@@ -277,19 +277,19 @@ namespace Empiria.Land.Registration {
     public string StatusName {
       get {
         switch (status) {
-          case PropertyEventStatus.Obsolete:
+          case RecordableObjectStatus.Obsolete:
             return "No vigente";
-          case PropertyEventStatus.NoLegible:
+          case RecordableObjectStatus.NoLegible:
             return "No legible";
-          case PropertyEventStatus.Incomplete:
+          case RecordableObjectStatus.Incomplete:
             return "Incompleto";
-          case PropertyEventStatus.Pending:
+          case RecordableObjectStatus.Pending:
             return "Pendiente";
-          case PropertyEventStatus.Registered:
+          case RecordableObjectStatus.Registered:
             return "Registrado";
-          case PropertyEventStatus.Closed:
+          case RecordableObjectStatus.Closed:
             return "Cerrado";
-          case PropertyEventStatus.Deleted:
+          case RecordableObjectStatus.Deleted:
             return "Eliminado";
           default:
             return "No determinado";
@@ -314,13 +314,13 @@ namespace Empiria.Land.Registration {
     public void Delete() {
       ObjectList<RecordingActParty> secondaries = GetSecondaryPartiesList(this.RecordingAct);
       for (int i = 0; i < secondaries.Count; i++) {
-        secondaries[i].Status = PropertyEventStatus.Deleted;
+        secondaries[i].Status = RecordableObjectStatus.Deleted;
         secondaries[i].Save();
         if (secondaries[i].SecondaryParty.GetLastRecordingActParty(ExecutionServer.DateMinValue) == null) {
           secondaries[i].SecondaryParty.Delete();
         }
       }
-      this.Status = PropertyEventStatus.Deleted;
+      this.Status = RecordableObjectStatus.Deleted;
       base.Save();
       if (this.Party.GetLastRecordingActParty(ExecutionServer.DateMinValue) == null) {
         this.Party.Delete();
@@ -344,7 +344,7 @@ namespace Empiria.Land.Registration {
       this.partyAddressPlace = GeographicRegionItem.Parse((int) row["PartyAddressPlaceId"]);
       this.postedBy = Contact.Parse((int) row["PostedById"]);
       this.postingTime = (DateTime) row["PostingTime"];
-      this.status = (PropertyEventStatus) Convert.ToChar(row["LinkStatus"]);
+      this.status = (RecordableObjectStatus) Convert.ToChar(row["LinkStatus"]);
       this.integrityHashCode = (string) row["LinkRIHC"];
     }
 

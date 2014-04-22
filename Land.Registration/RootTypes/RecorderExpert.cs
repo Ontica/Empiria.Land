@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecorderExpert                                 Pattern  : Standard Class                      *
-*  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
+*  Version   : 1.5        Date: 25/Jun/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Performs the registry of recording acts based on a supplied recording task                    *
 *              and a set of rules defined for each recording act type.                                       *
@@ -43,7 +43,7 @@ namespace Empiria.Land.Registration {
       get {
         return (Task.RecordingRule.AppliesTo == RecordingRuleApplication.Property &&
                 Task.PropertyRecordingType == PropertyRecordingType.createProperty &&
-                Task.TargetResource.IsEmptyInstance);
+                Task.TargetProperty.IsEmptyInstance);
       }
     }
 
@@ -61,7 +61,7 @@ namespace Empiria.Land.Registration {
         return (Task.PropertyRecordingType == PropertyRecordingType.selectProperty &&
                 !Task.PrecedentRecordingBook.IsEmptyInstance &&
                 !Task.PrecedentRecording.IsEmptyInstance &&
-                Task.TargetResource.IsNew);
+                Task.TargetProperty.IsNew);
       }
     }
 
@@ -69,11 +69,6 @@ namespace Empiria.Land.Registration {
       get;
       private set;
     }
-
-    //public RecordingAct RecordingAct {
-    //  get;
-    //  private set;
-    //}
 
     #endregion Properties
 
@@ -98,14 +93,15 @@ namespace Empiria.Land.Registration {
     private RecordingAct DoNoneResourceRecording() {
       Assertion.Assert(this.Task.TargetRecordingAct.IsEmptyInstance,
                        "TargetRecordingAct should be the empty instance.");
-      Assertion.Assert(this.Task.TargetResource.IsEmptyInstance,
+      Assertion.Assert(this.Task.TargetProperty.IsEmptyInstance,
                        "TargetResource should be the empty instance.");
 
       var recordingAct = RecordingAct.Parse(this.Task);
 
       return recordingAct.WriteOn(this.Task.RecorderOffice,
                                   this.Task.RecordingRule.RecordingSection);
-      /// ORIGINAL CODE
+      
+      /// Original Code
       //RecordingBook book = this.GetRecordingBook(); 
       //Recording recording = book.CreateRecording();
       //return recording.CreateRecordingAct(Task.RecordingActType, Property.Empty);
@@ -143,10 +139,10 @@ namespace Empiria.Land.Registration {
       } else if (this.NeedCreatePrecedentRecordingAct) {
         this.CreatePrecedentRecordingAct();
       }
-      var lastRecording = Task.TargetResource.LastRecordingAct.Recording;
+      var lastRecording = Task.TargetProperty.LastRecordingAct.Recording;
 
       return lastRecording.CreateAnnotation(Task.Transaction, Task.RecordingActType,
-                                            Task.TargetResource);
+                                            Task.TargetProperty);
     }
 
     private RecordingAct DoPropertyRecording() {
@@ -155,13 +151,13 @@ namespace Empiria.Land.Registration {
       } else if (this.NeedCreatePrecedentRecordingAct) {
         this.CreatePrecedentRecordingAct();
       } else if (this.AppliesOverNewProperty) {
-        Task.TargetResource = new Property();
+        Task.TargetProperty = new Property();
       }
-      Assertion.Assert(this.Task.TargetResource.IsEmptyInstance == false, 
+      Assertion.Assert(this.Task.TargetProperty.IsEmptyInstance == false, 
                        "Target resource cannot be the empty instance.");
 
       var recordingAct = RecordingAct.Parse(this.Task);
-      recordingAct.AttachResource(this.Task.TargetResource);
+      recordingAct.AttachProperty(this.Task.TargetProperty);
       return recordingAct.WriteOn(this.Task.RecorderOffice,
                                   this.Task.RecordingRule.RecordingSection);
 
@@ -194,7 +190,7 @@ namespace Empiria.Land.Registration {
       }
       Task.PrecedentRecording = Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
                                                                                  Task.QuickAddBisRecordingSuffixTag);
-      Task.TargetResource = Task.PrecedentRecording.RecordingActs[0].PropertiesEvents[0].Property;
+      Task.TargetProperty = Task.PrecedentRecording.RecordingActs[0].PropertiesEvents[0].Property;
       if (Task.RecordingRule.AppliesTo == RecordingRuleApplication.RecordingAct) {
         Task.TargetRecordingAct = Task.PrecedentRecording.RecordingActs[0];
       }
@@ -206,7 +202,7 @@ namespace Empiria.Land.Registration {
       }
 
       var recordingAct = Task.PrecedentRecording.CreateRecordingAct(RecordingActType.Empty, new Property());
-      Task.TargetResource = recordingAct.PropertiesEvents[0].Property;
+      Task.TargetProperty = recordingAct.PropertiesEvents[0].Property;
       if (Task.RecordingRule.AppliesTo == RecordingRuleApplication.RecordingAct) {
         Task.TargetRecordingAct = Task.PrecedentRecording.RecordingActs[0];
       }

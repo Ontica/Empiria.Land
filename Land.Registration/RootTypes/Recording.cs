@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : Recording                                      Pattern  : Empiria Object Type                 *
-*  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
+*  Version   : 1.5        Date: 25/Jun/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Represents a general recording in Land Registration System.                                   *
 *                                                                                                            *
@@ -15,16 +15,6 @@ using Empiria.Land.Registration.Data;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {
-
-  public enum RecordingStatus {
-    Obsolete = 'S',
-    NoLegible = 'L',
-    Incomplete = 'I',
-    Pending = 'P',
-    Registered = 'R',
-    Closed = 'C',
-    Deleted = 'X'
-  }
 
   /// <summary>Represents a general recording in Land Registration System.</summary>
   public class Recording : BaseObject {
@@ -58,7 +48,7 @@ namespace Empiria.Land.Registration {
     private string cancelationNotes = String.Empty;
     private string digitalString = String.Empty;
     private string digitalSign = String.Empty;
-    private RecordingStatus status = RecordingStatus.Incomplete;
+    private RecordableObjectStatus status = RecordableObjectStatus.Incomplete;
     private string recordIntegrityHashCode = String.Empty;
 
     private RecordingDocument recordingDocument = null;
@@ -265,7 +255,7 @@ namespace Empiria.Land.Registration {
       set { startImageIndex = value; }
     }
 
-    public RecordingStatus Status {
+    public RecordableObjectStatus Status {
       get { return status; }
       set { status = value; }
     }
@@ -273,19 +263,19 @@ namespace Empiria.Land.Registration {
     public string StatusName {
       get {
         switch (status) {
-          case RecordingStatus.Obsolete:
+          case RecordableObjectStatus.Obsolete:
             return "No vigente";
-          case RecordingStatus.NoLegible:
+          case RecordableObjectStatus.NoLegible:
             return "No legible";
-          case RecordingStatus.Incomplete:
+          case RecordableObjectStatus.Incomplete:
             return "Incompleta";
-          case RecordingStatus.Pending:
+          case RecordableObjectStatus.Pending:
             return "Pendiente";
-          case RecordingStatus.Registered:
+          case RecordableObjectStatus.Registered:
             return "Registrada";
-          case RecordingStatus.Closed:
+          case RecordableObjectStatus.Closed:
             return "Cerrada";
-          case RecordingStatus.Deleted:
+          case RecordableObjectStatus.Deleted:
             return "Eliminada";
           default:
             return "No determinado";
@@ -311,7 +301,7 @@ namespace Empiria.Land.Registration {
                        "This recording can't be deleted because it has recording acts.");
       Assertion.Assert(!publicCall || this.RecordingBook.IsAvailableForManualEditing,
                        "This recording can't be deleted because its recording book is not available for manual editing.");
-      this.Status = RecordingStatus.Deleted;
+      this.Status = RecordableObjectStatus.Deleted;
       this.canceledBy = Contact.Parse(ExecutionServer.CurrentUserId);
       this.canceledTime = DateTime.Now;
       this.Save();
@@ -342,11 +332,11 @@ namespace Empiria.Land.Registration {
       if (this.IsNew) {
         throw new LandRegistrationException(LandRegistrationException.Msg.NotSavedRecording, "CreateRecordingAct");
       }
-      if (this.Status == RecordingStatus.Closed) {
+      if (this.Status == RecordableObjectStatus.Closed) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
       }
-      if (this.Status == RecordingStatus.Obsolete) {
-        this.Status = RecordingStatus.Incomplete;
+      if (this.Status == RecordableObjectStatus.Obsolete) {
+        this.Status = RecordableObjectStatus.Incomplete;
         this.Save();
       }
 
@@ -359,14 +349,14 @@ namespace Empiria.Land.Registration {
     }
 
     public void DeleteRecordingAct(RecordingAct recordingAct) {
-      if (this.Status == RecordingStatus.Closed) {
+      if (this.Status == RecordableObjectStatus.Closed) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
       }
       if (!this.RecordingActs.Contains(recordingAct)) {
         throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording, 
                                             recordingAct.Id, this.Id);
       }
-      if (recordingAct.Status == RecordingActStatus.Closed) {
+      if (recordingAct.Status == RecordableObjectStatus.Closed) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
       }
       recordingAct.Delete();
@@ -407,7 +397,7 @@ namespace Empiria.Land.Registration {
 
       attachmentFolderList.Append(this, "Raíz");
 
-      ObjectList<PropertyEvent> annotations = this.GetPropertiesAnnotationsList();
+      ObjectList<TractIndexItem> annotations = this.GetPropertiesAnnotationsList();
       for (int i = 0; i < annotations.Count; i++) {
         string alias = Char.ConvertFromUtf32(65 + i);
         attachmentFolderList.Append(annotations[i].RecordingAct.Recording, alias);
@@ -425,13 +415,13 @@ namespace Empiria.Land.Registration {
     }
 
     public void DownwardRecordingAct(RecordingAct recordingAct) {
-      if (this.Status == RecordingStatus.Closed) {
+      if (this.Status == RecordableObjectStatus.Closed) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
       }
       if (!this.RecordingActs.Contains(recordingAct)) {
         throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording, recordingAct.Id, this.Id);
       }
-      if (recordingAct.Status == RecordingActStatus.Closed) {
+      if (recordingAct.Status == RecordableObjectStatus.Closed) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
       }
       int currentIndex = recordingAct.Index - 1;
@@ -458,7 +448,7 @@ namespace Empiria.Land.Registration {
       return new ObjectList<RecordingAct>(recordingActs.FindAll((x) => !x.IsAnnotation));
     }
 
-    public ObjectList<PropertyEvent> GetPropertiesAnnotationsList() {
+    public ObjectList<TractIndexItem> GetPropertiesAnnotationsList() {
       return PropertyData.GetRecordingPropertiesAnnotationsList(this);
     }
 
@@ -488,7 +478,7 @@ namespace Empiria.Land.Registration {
       this.cancelationNotes = (string) row["RecordingCancelationNotes"];
       this.digitalString = (string) row["RecordingDigitalString"];
       this.digitalSign = (string) row["RecordingDigitalSign"];
-      this.status = (RecordingStatus) Convert.ToChar(row["RecordingStatus"]);
+      this.status = (RecordableObjectStatus) Convert.ToChar(row["RecordingStatus"]);
       this.recordIntegrityHashCode = (string) row["RecordingRIHC"];
     }
 
@@ -514,13 +504,13 @@ namespace Empiria.Land.Registration {
     }
 
     public void UpwardRecordingAct(RecordingAct recordingAct) {
-      if (this.Status == RecordingStatus.Closed) {
+      if (this.Status == RecordableObjectStatus.Closed) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
       }
       if (!this.RecordingActs.Contains(recordingAct)) {
         throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording, recordingAct.Id, this.Id);
       }
-      if (recordingAct.Status == RecordingActStatus.Closed) {
+      if (recordingAct.Status == RecordableObjectStatus.Closed) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
       }
       int currentIndex = recordingAct.Index - 1;

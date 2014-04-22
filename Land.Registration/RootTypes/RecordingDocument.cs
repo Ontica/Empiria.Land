@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingDocument                              Pattern  : Empiria Object Type                 *
-*  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
+*  Version   : 1.5        Date: 25/Jun/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Represents a Land Registration System document that is attached to a Recording.               *
 *                                                                                                            *
@@ -17,16 +17,6 @@ using Empiria.Land.Registration.Transactions;
 using Empiria.Ontology;
 
 namespace Empiria.Land.Registration {
-
-  public enum RecordingDocumentStatus {
-    NoActive = 'N',
-    NoLegible = 'L',
-    Incomplete = 'I',
-    InProcess = 'P',
-    Captured = 'R',
-    Closed = 'C',
-    Deleted = 'X'
-  }
 
   public enum DocumentRecordingRole {
     Appendix = 'A',
@@ -72,7 +62,7 @@ namespace Empiria.Land.Registration {
     private string digitalSign = String.Empty;
     private Contact postedBy = Person.Empty;
     private DateTime postingTime = DateTime.Now;
-    private RecordingDocumentStatus status = RecordingDocumentStatus.Incomplete;
+    private RecordableObjectStatus status = RecordableObjectStatus.Incomplete;
     private string recordIntegrityHashCode = String.Empty;
 
     private RecordingDocumentType recordingDocumentType = null;
@@ -110,10 +100,9 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    static public RecordingDocument Create(RecordingDocumentType recordingDocumentType) {
-      RecordingDocument newDocument = recordingDocumentType.CreateInstance();
+    static public RecordingDocument Create(RecordingDocumentType documentType) {
+      RecordingDocument newDocument = documentType.CreateInstance();
 
-      newDocument.recordingDocumentType = recordingDocumentType;
       newDocument.documentRecordingRole = DocumentRecordingRole.Main;
 
       return newDocument;
@@ -238,6 +227,9 @@ namespace Empiria.Land.Registration {
         }
         return recordingDocumentType;
       }
+      internal set {
+        recordingDocumentType = value;        
+      }
     }
 
     public string RecordIntegrityHashCode {
@@ -275,7 +267,7 @@ namespace Empiria.Land.Registration {
       set { startSheet = value; }
     }
 
-    public RecordingDocumentStatus Status {
+    public RecordableObjectStatus Status {
       get { return status; }
     }
 
@@ -289,10 +281,10 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public void ChangeDocumentType(RecordingDocumentType newRecordingDocumentType) {
-      if (this.recordingDocumentType.Equals(newRecordingDocumentType)) {
+      if (this.RecordingDocumentType.Equals(newRecordingDocumentType)) {
         return;
       }
-      this.recordingDocumentType = newRecordingDocumentType;
+      this.RecordingDocumentType = newRecordingDocumentType;
       this.documentSubtype = LRSDocumentType.Empty;
       this.issuePlace = GeographicRegionItem.Empty;
       this.issueOffice = Organization.Empty;
@@ -318,7 +310,7 @@ namespace Empiria.Land.Registration {
       this.postingTime = DateTime.Now;
       this.digitalString = String.Empty;
       this.digitalSign = String.Empty;
-      this.status = RecordingDocumentStatus.Incomplete;
+      this.status = RecordableObjectStatus.Incomplete;
       this.recordIntegrityHashCode = String.Empty;
     }
 
@@ -355,7 +347,7 @@ namespace Empiria.Land.Registration {
       this.digitalSign = (string) row["DocumentDigitalSign"];
       this.postedBy = Contact.Parse((int) row["PostedById"]);
       this.postingTime = (DateTime) row["PostingTime"];
-      this.status = (RecordingDocumentStatus) Convert.ToChar(row["DocumentStatus"]);
+      this.status = (RecordableObjectStatus) Convert.ToChar(row["DocumentStatus"]);
       this.recordIntegrityHashCode = (string) row["DocumentRIHC"];
     }
 

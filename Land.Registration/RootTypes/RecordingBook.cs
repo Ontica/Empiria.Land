@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingBook                                  Pattern  : Empiria Object Type                 *
-*  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
+*  Version   : 1.5        Date: 25/Jun/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Represents a recording book. A recording book can have a parent recording book and always     *
 *              belongs to a recorder of deeds office. Instances of this type have a recording book type.     *
@@ -391,7 +391,7 @@ namespace Empiria.Land.Registration {
       recording.Transaction = LRSTransaction.Empty;
       recording.Document = RecordingDocument.Empty;
       recording.SetNumber(recordingNumber, bisSuffixTag);
-      recording.Status = RecordingStatus.Incomplete;
+      recording.Status = RecordableObjectStatus.Incomplete;
       recording.PresentationTime = ExecutionServer.DateMinValue;
       recording.StartImageIndex = -1;
       recording.EndImageIndex = -1;
@@ -417,7 +417,7 @@ namespace Empiria.Land.Registration {
       recording.Transaction = transaction;
       recording.Document = transaction.Document;
       recording.SetNumber (this.GetNextRecordingNumber());
-      recording.Status = RecordingStatus.Incomplete;
+      recording.Status = RecordableObjectStatus.Incomplete;
       recording.StartImageIndex = -1;
       recording.EndImageIndex = -1;
       recording.PresentationTime = transaction.PresentationTime;
@@ -446,7 +446,7 @@ namespace Empiria.Land.Registration {
       int recordingNumber = Recording.SplitRecordingNumber(antecedent.Number, out bisSuffixTag);
       recording.SetNumber(recordingNumber, bisSuffixTag);
 
-      recording.Status = RecordingStatus.Incomplete;
+      recording.Status = RecordableObjectStatus.Incomplete;
       recording.StartImageIndex = -1;
       recording.EndImageIndex = -1;
       recording.PresentationTime = transaction.PresentationTime;

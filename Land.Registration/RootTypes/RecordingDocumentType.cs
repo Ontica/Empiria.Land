@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingDocumentType                          Pattern  : PowerType Item                      *
-*  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
+*  Version   : 1.5        Date: 25/Jun/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Power type that describes recording document types.                                           *
 *                                                                                                            *
@@ -45,6 +45,18 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Constructors and parsers
+
+    #region Public methods
+
+    internal new RecordingDocument CreateInstance() {
+      RecordingDocument instance = base.CreateInstance();
+      
+      instance.RecordingDocumentType = this;
+      
+      return instance;
+    }
+
+    #endregion Public methods
 
   } // class RecordingDocumentType
 

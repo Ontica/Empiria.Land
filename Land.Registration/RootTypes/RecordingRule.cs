@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingRule                                  Pattern  : Empiria Structure Type              *
-*  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
+*  Version   : 1.5        Date: 25/Jun/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Describes the conditions and business rules that have to be fulfilled when a                  *
 *              RecordingAct is registered.                                                                   *  
@@ -60,7 +60,7 @@ namespace Empiria.Land.Registration {
       this.IsCancelation = false;
       this.NewProperty = new PropertyRule();
       this.PropertyCount = Land.Registration.PropertyCount.Undefined;
-      this.PropertyStatus = PropertyRecordingStatus.Undefined;
+      this.PropertyRecordingStatus = PropertyRecordingStatus.Undefined;
       this.RecordingActTypes = new RecordingActType[0];
       this.RecordingSection = RecordingSection.Empty;
       this.FixedRecorderOffice = RecorderOffice.Empty;
@@ -100,7 +100,7 @@ namespace Empiria.Land.Registration {
         rule.PropertyCount = ParsePropertyCount(Convert.ToString(json["PropertyCount"]));
       }
       if (json.ContainsKey("PropertyStatus")) {
-        rule.PropertyStatus = (PropertyRecordingStatus) Enum.Parse(typeof(PropertyRecordingStatus),
+        rule.PropertyRecordingStatus = (PropertyRecordingStatus) Enum.Parse(typeof(PropertyRecordingStatus),
                                                                   (string) json["PropertyStatus"]);
       }
       if (json.ContainsKey("RecordingSectionId")) {
@@ -183,7 +183,7 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    public PropertyRecordingStatus PropertyStatus {
+    public PropertyRecordingStatus PropertyRecordingStatus {
       get;
       private set;
     }

@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
 *  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
 *  Type      : RecordingActsData                            Pattern  : Data Services Static Class            *
-*  Version   : 1.5        Date: 28/Mar/2014                 License  : GNU AGPLv3  (See license.txt)         *
+*  Version   : 1.5        Date: 25/Jun/2014                 License  : GNU AGPLv3  (See license.txt)         *
 *                                                                                                            *
 *  Summary   : Provides database read and write methods for recording acts.                                  *
 *                                                                                                            *
@@ -64,12 +64,12 @@ namespace Empiria.Land.Registration.Data {
       return new ObjectList<RecordingAct>((x) => RecordingAct.Parse(x), view);
     }
 
-    static public ObjectList<PropertyEvent> GetPropertiesEventsList(RecordingAct recordingAct) {
+    static public ObjectList<TractIndexItem> GetPropertiesEventsList(RecordingAct recordingAct) {
       DataOperation operation = DataOperation.Parse("qryLRSRecordingActPropertiesEvents", recordingAct.Id);
 
       DataView view = DataReader.GetDataView(operation);
 
-      return new ObjectList<PropertyEvent>((x) => PropertyEvent.Parse(x), view);
+      return new ObjectList<TractIndexItem>((x) => TractIndexItem.Parse(x), view);
     }
 
     static internal ObjectList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
@@ -81,7 +81,7 @@ namespace Empiria.Land.Registration.Data {
 
       } else {
         string ids = String.Empty;
-        ObjectList<PropertyEvent> events = recordingAct.PropertiesEvents;
+        ObjectList<TractIndexItem> events = recordingAct.PropertiesEvents;
         for (int i = 0; i < events.Count; i++) {
           ObjectList<RecordingAct> acts = events[i].Property.GetRecordingActsTract();
 
@@ -146,8 +146,8 @@ namespace Empiria.Land.Registration.Data {
       Assertion.Require(o.Id != 0, "RecordingAct.Id can't be zero");
       var dataOperation = DataOperation.Parse("writeLRSRecordingAct", o.Id, o.RecordingActType.Id,
                                                o.Transaction.Id, o.Document.Id, o.TargetRecordingAct.Id, 
-                                               o.TargetResource.Id, o.Recording.Id, o.Index, o.Notes,
-                                               o.ExtensionData.ToJson(), o.Keywords, o.CanceledBy.Id, o.CancelationTime, 
+                                               o.Recording.Id, o.Index, o.Notes, o.ExtensionData.ToJson(), 
+                                               o.Keywords, o.CanceledBy.Id, o.CancelationTime, 
                                                o.PostedBy.Id, o.PostingTime, (char) o.Status,
                                                o.Integrity.GetUpdatedHashCode(),
                                                o.ExtensionData.AppraisalAmount.Amount,
@@ -165,6 +165,11 @@ namespace Empiria.Land.Registration.Data {
     }
 
     #endregion Public methods
+
+
+    internal static List<TractIndexItem> GetTractIndex(RecordingAct recordingAct) {
+      return new List<TractIndexItem>();
+    }
 
   } // class RecordingActsData
 

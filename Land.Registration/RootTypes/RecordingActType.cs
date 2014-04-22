@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingActType                               Pattern  : Power type                          *
-*  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
+*  Version   : 1.5        Date: 25/Jun/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Power type that defines a recording act type.                                                 *
 *                                                                                                            *
@@ -143,6 +143,14 @@ namespace Empiria.Land.Registration {
     #endregion Public properties
 
     #region Public methods
+
+    internal new RecordingAct CreateInstance() {
+      RecordingAct instance = base.CreateInstance();
+
+      instance.RecordingActType = this;
+
+      return instance;
+    }
 
     public ObjectList<RecordingActType> GetAppliesToRecordingActTypesList() {
       var list = base.GetTypeLinks<RecordingActType>("RecordingActType_AppliesToRecordingAct");

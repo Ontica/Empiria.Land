@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingTask                                  Pattern  : Standard Class                      *
-*  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
+*  Version   : 1.5        Date: 25/Jun/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Contains data about a recording instruction. A recording task it's needed to create           *
 *              recording acts. RecordingTasks generally are filled by the user services.                     *
@@ -39,22 +39,20 @@ namespace Empiria.Land.Registration {
                          int precedentRecordingId = -1, int targetResourceId = -1,
                          int targetRecordingActId = -1, int quickAddRecordingNumber = -1,
                          string quickAddBisRecordingSuffixTag = "") {
-
       this.Transaction = LRSTransaction.Parse(transactionId);
       this.Document = RecordingDocument.Parse(documentId);
       this.RecorderOffice = RecorderOffice.Parse(recorderOfficeId);
       this.RecordingActTypeCategory = RecordingActTypeCategory.Parse(recordingActTypeCategoryId);
       this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
-
       this.PropertyRecordingType = propertyType;
       this.PrecedentRecordingBook = RecordingBook.Parse(precedentRecordingBookId);
       this.PrecedentRecording = Recording.Parse(precedentRecordingId);
       if (targetResourceId == 0) {
-        this.TargetResource = new Property();
+        this.TargetProperty = new Property();
       } else if (targetResourceId == -1) {
-        this.TargetResource = Property.Empty;
+        this.TargetProperty = Property.Empty;
       } else {
-        this.TargetResource = Property.Parse(targetResourceId);
+        this.TargetProperty = Property.Parse(targetResourceId);
       }
       if (targetRecordingActId != -1) {
         this.TargetRecordingAct = RecordingAct.Parse(targetRecordingActId);
@@ -118,7 +116,7 @@ namespace Empiria.Land.Registration {
       internal set;
     }
 
-    public Property TargetResource { 
+    public Property TargetProperty { 
       get;
       internal set;
     }

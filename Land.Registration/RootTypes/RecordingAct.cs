@@ -3,13 +3,14 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingAct                                   Pattern  : Empiria Object Type                 *
-*  Version   : 1.5        Date: 28/Mar/2014                   License  : GNU AGPLv3  (See license.txt)       *
+*  Version   : 1.5        Date: 25/Jun/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Abstract class that represents a recording act. All recording acts must be descendents        *
 *              of this type.                                                                                 *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Contacts;
@@ -20,25 +21,13 @@ using Empiria.Security;
 
 namespace Empiria.Land.Registration {
 
-  public enum RecordingActStatus {
-    Obsolete = 'S',
-    Incomplete = 'I',
-    Pending = 'P',
-    Registered = 'R',
-    Closed = 'C',
-    Deleted = 'X'
-  }
-
   /// <summary>Abstract class that represents a recording act. All recording acts types must be 
   /// descendents of this type.</summary>
   public abstract class RecordingAct : BaseObject, IExtensible<RecordingActExtData>, IProtected {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.RecordingAct";
-
-    private RecordingActType recordingActType = null;  
-    private ObjectList<PropertyEvent> propertiesEvents = null;
+    private const string thisTypeName = "ObjectType.RecordingAct";   
 
     #endregion Fields
 
@@ -53,12 +42,9 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(task, "task");
 
       RecordingAct recordingAct = task.RecordingActType.CreateInstance();
-
-      recordingAct.recordingActType = task.RecordingActType; // OOJJOO: Avoid type assignment outside CreateInstance above
       recordingAct.Transaction = task.Transaction;
       recordingAct.Document = task.Document;
       recordingAct.TargetRecordingAct = task.TargetRecordingAct;
-      recordingAct.TargetResource = task.TargetResource;
 
       return recordingAct;
     }
@@ -66,14 +52,13 @@ namespace Empiria.Land.Registration {
     static internal RecordingAct Create(RecordingActType recordingActType, 
                                         Recording recording, Property resource) {
       RecordingAct recordingAct = recordingActType.CreateInstance();
-      recordingAct.recordingActType = recordingActType;
-      recordingAct.Recording = recording; 
-      recordingAct.propertiesEvents = new ObjectList<PropertyEvent>();
+      recordingAct.Recording = recording;
+      recordingAct._propertiesEvents = new ObjectList<TractIndexItem>();
       recordingAct.Index = recording.RecordingActs.Count + 1;
       if (recordingActType.Autoregister) {
-        recordingAct.Status = RecordingActStatus.Registered;
+        recordingAct.Status = RecordableObjectStatus.Registered;
       } else {
-        recordingAct.Status = RecordingActStatus.Pending;
+        recordingAct.Status = RecordableObjectStatus.Pending;
       }
       recordingAct.Save();
       recordingAct.AppendPropertyEvent(resource);
@@ -108,67 +93,32 @@ namespace Empiria.Land.Registration {
       this.CancelationTime = ExecutionServer.DateMaxValue;
       this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       this.PostingTime = DateTime.Now;
-      this.Status = RecordingActStatus.Incomplete;
+      this.Status = RecordableObjectStatus.Incomplete;
+      _resourcesList = new Lazy<List<TractIndexItem>>(() => RecordingActsData.GetTractIndex(this));
     }
 
     #endregion Constructors and parsers
 
     #region Public properties
 
-
     public LRSTransaction Transaction {
-      get; 
+      get;
       private set;
     }
 
     public RecordingDocument Document {
-      get; 
+      get;
       private set;
-    }
-
-    
-    private RecordingAct _targetRecordingAct = null;
-    public RecordingAct TargetRecordingAct {
-      get {
-        if (_targetRecordingAct == null) {
-          _targetRecordingAct = InformationAct.Empty;
-        }
-        return _targetRecordingAct;
-      }
-      private set {
-        _targetRecordingAct = value;
-      }
-    }
-
-    private Property _targetResource = null;
-    public Property TargetResource {
-      get {
-        if (_targetResource == null) {
-          _targetResource = Property.Empty;
-        }
-        return _targetResource;
-      }
-      private set {
-        _targetResource = value;
-      }
     }
 
     public Recording Recording {
       get;
       private set;
     }
-    
+
     public int Index {
       get;
       internal set;
-    }
-
-    private string _notes = String.Empty;
-    public string Notes {
-      get { return _notes; }
-      set { 
-        _notes = EmpiriaString.TrimAll(value);
-      }
     }
 
     public RecordingActExtData ExtensionData {
@@ -201,13 +151,35 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    public RecordingActStatus Status {
+    public RecordableObjectStatus Status {
       get;
       set;
     }
+    
+    private LazyObject<RecordingAct> _targetRecordingAct = LazyObject<RecordingAct>.Empty;
+    public RecordingAct TargetRecordingAct {
+      get { 
+        return _targetRecordingAct;
+      }
+      private set {
+        _targetRecordingAct = value;
+      }
+    }
+
+    private string _notes = String.Empty;
+    public string Notes {
+      get {
+        return _notes;
+      }
+      set { 
+        _notes = EmpiriaString.TrimAll(value);
+     }
+    }
 
     int IProtected.CurrentDataIntegrityVersion {
-      get { return 1; }
+      get {
+        return 1;
+      }
     }
 
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
@@ -215,11 +187,10 @@ namespace Empiria.Land.Registration {
         return new object[] {
           1, "Id", this.Id, "RecordingActType", this.RecordingActType.Id, 
           "Transaction", this.Transaction.Id, "Document", this.Document.Id, 
-          "TargetRecordingAct", this.TargetRecordingAct.Id, "TargetResource", this.TargetResource.Id, 
-          "Recording", this.Recording.Id, "Index", this.Index, "Notes", this.Notes, 
-          "ExtensionData", this.ExtensionData.ToJson(), 
+          "TargetRecordingAct", this.TargetRecordingAct.Id, "Recording", this.Recording.Id, 
+          "Index", this.Index, "Notes", this.Notes, "ExtensionData", this.ExtensionData.ToJson(), 
           "CanceledBy", this.CanceledBy.Id, "CancelationTime", this.CancelationTime,
-          "PostedBy", this.PostedBy.Id, "PostingTime", this.PostingTime, "Status", (char) this.Status, 
+          "PostedBy", this.PostedBy.Id, "PostingTime", this.PostingTime, "Status", (char) this.Status,
         };
       }
       throw new SecurityException(SecurityException.Msg.WrongRequestedVersionForDIF, version);
@@ -239,39 +210,48 @@ namespace Empiria.Land.Registration {
       get { return this.RecordingActType.IsAnnotationType; }
     }
 
-    public ObjectList<PropertyEvent> PropertiesEvents {
+    private ObjectList<TractIndexItem> _propertiesEvents = null;
+    public ObjectList<TractIndexItem> PropertiesEvents {
       get {
-        if (propertiesEvents == null) {
-          propertiesEvents = RecordingActsData.GetPropertiesEventsList(this);
+        if (_propertiesEvents == null) {
+          _propertiesEvents = RecordingActsData.GetPropertiesEventsList(this);
         }
-        return propertiesEvents;
+        return _propertiesEvents;
       }
     }
 
+    private RecordingActType _recordingActType = null;
     public RecordingActType RecordingActType {
       get {
-        if (recordingActType == null) {
-          recordingActType = RecordingActType.Parse(base.ObjectTypeInfo);
+        if (_recordingActType == null) {
+          _recordingActType = RecordingActType.Parse(base.ObjectTypeInfo);
         }
-        return recordingActType;
+        return _recordingActType;
       }
-      set { recordingActType = value; }
+      set { _recordingActType = value; }
+    }
+
+    private Lazy<List<TractIndexItem>> _resourcesList = null;
+    public List<TractIndexItem> Resources {
+      get {
+        return _resourcesList.Value;
+      }
     }
 
     public string StatusName {
       get {
         switch (this.Status) {
-          case RecordingActStatus.Obsolete:
+          case RecordableObjectStatus.Obsolete:
             return "No vigente";
-          case RecordingActStatus.Incomplete:
+          case RecordableObjectStatus.Incomplete:
             return "Incompleto";
-          case RecordingActStatus.Pending:
+          case RecordableObjectStatus.Pending:
             return "Pendiente";
-          case RecordingActStatus.Registered:
+          case RecordableObjectStatus.Registered:
             return "Registrado";
-          case RecordingActStatus.Closed:
+          case RecordableObjectStatus.Closed:
             return "Cerrado";
-          case RecordingActStatus.Deleted:
+          case RecordableObjectStatus.Deleted:
             return "Eliminado";
           default:
             return "No determinado";
@@ -283,8 +263,12 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public void AttachResource(IRecordable resource) {
+    public TractIndexItem AttachProperty(Property property) {
+      var item = new TractIndexItem(this, property);
 
+      this.Resources.Add(item);
+
+      return item;
     }
 
     public void AppendPropertyEvent(Property property) {
@@ -302,28 +286,28 @@ namespace Empiria.Land.Registration {
                                             property.UniqueCode, this.Id);
       }
 
-      var propertyEvent = new PropertyEvent(property, this);
+      var propertyEvent = new TractIndexItem(this, property);
       propertyEvent.Save();
 
-      RecordingAct antecedent = property.GetAntecedent(this);
-      if (antecedent != InformationAct.Empty) {
-        PropertyEvent e = antecedent.PropertiesEvents.Find((x) => x.Property.Equals(property));
-        if (e != null) {
-          propertyEvent.MetesAndBounds = e.MetesAndBounds;
-          propertyEvent.FloorArea = e.FloorArea;
-          propertyEvent.CommonArea = e.CommonArea;
-          propertyEvent.TotalArea = e.TotalArea;
-          propertyEvent.Save();
-        }
-      }
-      this.propertiesEvents = null;
+      //RecordingAct antecedent = property.GetAntecedent(this);
+      //if (antecedent != InformationAct.Empty) {
+      //  TractIndexItem e = antecedent.PropertiesEvents.Find((x) => x.Property.Equals(property));
+      //  //if (e != null) {
+      //  //  propertyEvent.MetesAndBounds = e.MetesAndBounds;
+      //  //  propertyEvent.FloorArea = e.FloorArea;
+      //  //  propertyEvent.CommonArea = e.CommonArea;
+      //  //  propertyEvent.TotalArea = e.TotalArea;
+      //  //  propertyEvent.Save();
+      //  //}
+      //}
+      _propertiesEvents = null;
     }
 
     internal void Delete() {
-      if (this.Recording.Status == RecordingStatus.Closed) {
+      if (this.Recording.Status == RecordableObjectStatus.Closed) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
       }
-      if (this.Status == RecordingActStatus.Closed) {
+      if (this.Status == RecordableObjectStatus.Closed) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, this.Id);
       }
       for (int i = 0; i < this.PropertiesEvents.Count; i++) {
@@ -333,16 +317,16 @@ namespace Empiria.Land.Registration {
 
         var tract = property.GetRecordingActsTract();
         if (tract.Count == 0) {
-          property.Status = PropertyStatus.Deleted;
+          property.Status = RecordableObjectStatus.Deleted;
           property.Save();
         }
       }
-      this.Status = RecordingActStatus.Deleted;
+      this.Status = RecordableObjectStatus.Deleted;
       this.Save();
-      this.propertiesEvents = null;
+      _propertiesEvents = null;
     }
 
-    public PropertyEvent GetPropertyEvent(Property property) {
+    public TractIndexItem GetPropertyEvent(Property property) {
       var propertyEvent = this.PropertiesEvents.Find((x) => x.Property.Equals(property));
       if (propertyEvent != null) {
         return propertyEvent;
@@ -368,7 +352,7 @@ namespace Empiria.Land.Registration {
       this.Notes = (string) row["RecordingActNotes"];
       this.PostedBy = Contact.Parse((int) row["PostedById"]);
       this.PostingTime = (DateTime) row["PostingTime"];
-      this.Status = (RecordingActStatus) Convert.ToChar(row["RecordingActStatus"]);
+      this.Status = (RecordableObjectStatus) Convert.ToChar(row["RecordingActStatus"]);
 
       ///OOJJOO  Delete ASAP and use JSON read/write only
       
@@ -384,9 +368,7 @@ namespace Empiria.Land.Registration {
       this.ExtensionData.Contract.Place = Empiria.Geography.GeographicRegionItem.Parse((int) row["ContractPlaceId"]);
       this.ExtensionData.Contract.Number = (string) row["ContractNumber"];
 
-      //if (((string) row["RecordingActDIF"]).Length != 0) {
-      //  Integrity.Assert((string) row["RecordingActDIF"]);
-      //}
+      Integrity.Assert((string) row["RecordingActDIF"]);
     }
 
     protected override void ImplementsSave() {
@@ -398,24 +380,26 @@ namespace Empiria.Land.Registration {
     }
 
     public void RemoveProperty(Property property) {
-      PropertyEvent propertyEvent = this.PropertiesEvents.Find((x) => x.Property.Equals(property));
+      TractIndexItem propertyEvent = this.PropertiesEvents.Find((x) => x.Property.Equals(property));
 
       Assertion.RequireObject(propertyEvent, 
                 new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
                                               property.Id, this.Id));
+
       propertyEvent.Delete();
       if (property.GetRecordingActsTract().Count == 0) {
-        property.Status = PropertyStatus.Deleted;
+        property.Status = RecordableObjectStatus.Deleted;
         property.Save();
       }
-      this.propertiesEvents = null;
+
+      _propertiesEvents = null;
       if (this.PropertiesEvents.Count == 0) {
-        this.Status = RecordingActStatus.Deleted;
+        this.Status = RecordableObjectStatus.Deleted;
         this.Save();
       }
 
-      Assertion.Ensure(property.Status == PropertyStatus.Deleted &&
-                       this.Status == RecordingActStatus.Deleted, "fail");
+      Assertion.Ensure(property.Status == RecordableObjectStatus.Deleted &&
+                       this.Status == RecordableObjectStatus.Deleted, "fail");
     }
 
 

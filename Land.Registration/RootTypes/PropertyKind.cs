@@ -2,55 +2,57 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : LimitationAct                                  Pattern  : Empiria Object Type                 *
+*  Type      : PropertyKind                                   Pattern  : Storage Item                        *
 *  Version   : 1.5        Date: 25/Jun/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
-*  Summary   : Represents a property limitation or property assessment or mortgage act.                      *
+*  Summary   : Describes the kind of a property type.                                                        *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
-using System.Data;
+using System;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Represents a property limitation or property assessment or mortgage act.</summary>
-  public class LimitationAct : RecordingAct {
+  /// <summary>Describes the kind of a property type.</summary>
+  public class PropertyKind : GeneralObject {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.RecordingAct.LimitationAct";
+    private const string thisTypeName = "ObjectType.GeneralObject.PropertyKind";
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    private LimitationAct()
-      : base(thisTypeName) {
-      // For create instances use Create static method instead
+    public PropertyKind() : base(thisTypeName) {
+
     }
 
-    protected LimitationAct(string typeName)
-      : base(typeName) {
+    private PropertyKind(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
-    static public new LimitationAct Parse(int id) {
-      return BaseObject.Parse<LimitationAct>(thisTypeName, id);
+    static public PropertyKind Parse(int id) {
+      return BaseObject.Parse<PropertyKind>(thisTypeName, id);
+    }
+
+    static public PropertyKind Empty {
+      get {
+        return BaseObject.ParseEmpty<PropertyKind>(thisTypeName);
+      }
+    }
+
+    static public PropertyKind Unknown {
+      get {
+        return BaseObject.ParseUnknown<PropertyKind>(thisTypeName);
+      }
+    }
+
+    static public ObjectList<PropertyKind> GetList() {
+      return GeneralObject.ParseList<PropertyKind>(thisTypeName);
     }
 
     #endregion Constructors and parsers
 
-    #region Public methods
-
-    protected override void ImplementsLoadObjectData(DataRow row) {
-      base.ImplementsLoadObjectData(row);
-    }
-
-    protected override void ImplementsSave() {
-      base.ImplementsSave();
-    }
-
-    #endregion Public methods
-
-  } // class LimitationAct
+  } // class PropertyKind
 
 } // namespace Empiria.Land.Registration

@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
 *  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
 *  Type      : PropertyData                                 Pattern  : Data Services Static Class            *
-*  Version   : 1.5        Date: 28/Mar/2014                 License  : GNU AGPLv3  (See license.txt)         *
+*  Version   : 1.5        Date: 25/Jun/2014                 License  : GNU AGPLv3  (See license.txt)         *
 *                                                                                                            *
 *    Summary   : Provides database read and write methods for recording books.                               *
 *                                                                                                            *
@@ -21,14 +21,14 @@ namespace Empiria.Land.Registration.Data {
 
     #region Internal methods
 
-    static internal DataRow GetPropertyWithTractKey(string propertyTractKey) {
-      DataOperation operation = DataOperation.Parse("getLRSPropertyWithTractKey", propertyTractKey);
+    static internal DataRow GetPropertyWithUniqueCode(string uniqueCode) {
+      DataOperation operation = DataOperation.Parse("getLRSPropertyWithTractKey", uniqueCode);
 
       return DataReader.GetDataRow(operation);
     }
 
-    static internal bool ExistsPropertyTractKey(string propertyTractKey) {
-      DataOperation operation = DataOperation.Parse("getLRSPropertyWithTractKey", propertyTractKey);
+    static internal bool ExistsPropertyUniqueCode(string uniqueCode) {
+      DataOperation operation = DataOperation.Parse("getLRSPropertyWithTractKey", uniqueCode);
 
       return (DataReader.Count(operation) != 0);
     }
@@ -151,12 +151,12 @@ namespace Empiria.Land.Registration.Data {
       return new ObjectList<RecordingActParty>((x) => RecordingActParty.Parse(x), DataReader.GetDataView(operation));
     }
 
-    static public ObjectList<PropertyEvent> GetRecordingPropertiesAnnotationsList(Recording recording) {
+    static public ObjectList<TractIndexItem> GetRecordingPropertiesAnnotationsList(Recording recording) {
       DataOperation operation = DataOperation.Parse("qryLRSRecordingPropertiesAnnotations", recording.Id);
 
       DataView view = DataReader.GetDataView(operation);
 
-      return new ObjectList<PropertyEvent>((x) => PropertyEvent.Parse(x), view);
+      return new ObjectList<TractIndexItem>((x) => TractIndexItem.Parse(x), view);
     }
 
     static internal int WriteHumanParty(HumanParty o) {
@@ -192,23 +192,12 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteProperty(Property o) {
       Assertion.Require(o.Id != 0, "Property.Id can not be zero");
-      DataOperation dataOperation = DataOperation.Parse("writeLRSProperty", o.Id, o.RecordingAct.Id, o.UniqueCode, o.PropertyType.Id, o.LandUse.Id,
-                                                        o.CommonName, o.RecordingNotes, o.Antecedent, o.CadastralOffice.Id, o.CadastralObjectId, 
-                                                        o.CadastralCode, o.Municipality.Id, o.Locality.Id, o.Settlement.Id, o.PostalCode.Id,
-                                                        o.Street.Id, o.StreetSegment, o.FromStreet.Id, o.ToStreet.Id, o.BackStreet.Id,
-                                                        o.ExternalNo, o.InternalNo, o.FractionTag, o.UbicationReference, o.Keywords,
-                                                        o.MetesAndBounds, o.GeoPolygon, o.TotalArea.Amount, o.TotalArea.Unit.Id,
-                                                        o.FloorArea.Amount, o.FloorArea.Unit.Id, o.CommonArea.Amount, o.CommonArea.Unit.Id,                                                        
-                                                        (char) o.Status, o.IntegrityHashCode);
-      return DataWriter.Execute(dataOperation);
-    }
-
-    static internal int WritePropertyEvent(PropertyEvent o) {
-      Assertion.Require(o.Id != 0, "PropertyEvent.Id can't be zero");
-      DataOperation dataOperation = DataOperation.Parse("writeLRSPropertyEvent", o.Id, o.Property.Id, o.RecordingAct.Id,
-                                                        o.MetesAndBounds, o.Notes, o.TotalArea.Amount, o.TotalArea.Unit.Id,
-                                                        o.FloorArea.Amount, o.FloorArea.Unit.Id,
-                                                        o.CommonArea.Amount, o.CommonArea.Unit.Id, (char) o.Status);
+      DataOperation dataOperation = DataOperation.Parse("writeLRSProperty", o.Id, o.ObjectTypeInfo.Id, o.UniqueCode, 
+                                                        o.Name, o.PropertyKind.Id, o.RecordingNotes, o.AntecedentNotes,
+                                                        o.Location.ToJson(), o.Location.ToString(), o.Location.ToSearchVector(), 
+                                                        o.CadastralData.ToJson(), o.Keywords, 
+                                                        o.PartitionOf.Id, o.PartitionNo, o.MergedInto.Id, o.PostedBy.Id,
+                                                        o.PostingTime, (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(dataOperation);
     }
 
@@ -222,6 +211,14 @@ namespace Empiria.Land.Registration.Data {
                                                         o.PartyOccupation.Id, o.PartyMarriageStatus.Id,
                                                         o.PartyAddress, o.PartyAddressPlace.Id, o.PostedBy.Id,
                                                         o.PostingTime, (char) o.Status, o.IntegrityHashCode);
+      return DataWriter.Execute(dataOperation);
+    }
+
+    static internal int WriteTractIndexItem(TractIndexItem o) {
+      Assertion.Require(o.Id != 0, "TractIndexItem.Id can't be zero");
+      DataOperation dataOperation = DataOperation.Parse("writeLRSPropertyTractIndexItem", o.Id, 
+                                                        o.Property.Id, o.RecordingAct.Id, String.Empty, 
+                                                        o.PostedBy.Id, o.PostingTime, (char) o.Status);
       return DataWriter.Execute(dataOperation);
     }
 

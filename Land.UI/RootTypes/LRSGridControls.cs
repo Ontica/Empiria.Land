@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                    System   : Land Registration System            *
 *  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land.UI                     *
 *  Type      : LRSGridControls                                 Pattern  : Static Class                        *
-*  Version   : 1.5        Date: 28/Mar/2014                    License  : GNU AGPLv3  (See license.txt)       *
+*  Version   : 1.5        Date: 25/Jun/2014                    License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                             *
 *  Summary   : Static class that generates predefined grid content for Land Registration System data.         *
 *                                                                                                             *
@@ -148,9 +148,9 @@ namespace Empiria.Land.UI {
 
       string html = String.Empty;
       string temp = String.Empty;
-      ObjectList<PropertyEvent> annotations = recording.GetPropertiesAnnotationsList();
+      ObjectList<TractIndexItem> annotations = recording.GetPropertiesAnnotationsList();
       for (int i = 0; i < annotations.Count; i++) {
-        PropertyEvent association = annotations[i];
+        TractIndexItem association = annotations[i];
         if (i % 2 == 0) {
           temp = row.Replace("{CLASS}", "detailsItem");
         } else {
@@ -236,7 +236,7 @@ namespace Empiria.Land.UI {
       for (int i = 0; i < recordingActs.Count; i++) {
         RecordingAct recordingAct = recordingActs[i];
         for (int j = 0; j < recordingActs[i].PropertiesEvents.Count; j++) {
-          PropertyEvent propertyEvent = recordingAct.PropertiesEvents[j];
+          TractIndexItem propertyEvent = recordingAct.PropertiesEvents[j];
           if (i % 2 == 0) {
             temp = row.Replace("{CLASS}", "detailsItem");
           } else {
@@ -258,7 +258,7 @@ namespace Empiria.Land.UI {
                                                                        "<i>ídem</i>"));
           }
           temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", propertyEvent.Property.UniqueCode));
-          if (propertyEvent.Property.Status == PropertyStatus.Registered && propertyEvent.Status != PropertyEventStatus.Registered) {
+          if (propertyEvent.Property.Status == RecordableObjectStatus.Registered && propertyEvent.Status != RecordableObjectStatus.Registered) {
             temp = temp.Replace("{PROPERTY.STATUS}", "Parcial");
           } else {
             temp = temp.Replace("{PROPERTY.STATUS}", propertyEvent.StatusName);
@@ -312,14 +312,14 @@ namespace Empiria.Land.UI {
           }
         } else {
           counter++;
-          html += GetRecordingActGridRow(recordingAct, PropertyEvent.Empty, counter, index, 0);
+          html += GetRecordingActGridRow(recordingAct, TractIndexItem.Empty, counter, index, 0);
         }
         index++;
       }  // foreach RecordingAct
       return html;
     }
 
-    private static string GetRecordingActGridRow(RecordingAct recordingAct, PropertyEvent propertyEvent, int counter, 
+    private static string GetRecordingActGridRow(RecordingAct recordingAct, TractIndexItem propertyEvent, int counter, 
                                                  int recordingActIndex, int propertyEventIndex) {
       const string row = "<tr class='{CLASS}'>" +
                            "<td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b><br/>" +

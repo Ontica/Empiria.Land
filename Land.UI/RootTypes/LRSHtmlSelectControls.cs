@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                    System   : Land Registration System            *
 *  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land.UI                     *
 *  Type      : LRSHtmlSelectControls                           Pattern  : Static Class                        *
-*  Version   : 1.5        Date: 28/Mar/2014                    License  : GNU AGPLv3  (See license.txt)       *
+*  Version   : 1.5        Date: 25/Jun/2014                    License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                             *
 *  Summary   : Static class that generates predefined HtmlSelect controls content for Empiria Government      *
 *              Land Registration System.                                                                      *
@@ -121,12 +121,12 @@ namespace Empiria.Land.UI {
     }
 
     static public void LoadPropertyTypesCombo(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
-                                              PropertyType defaultItem) {
-      ObjectList<PropertyType> list = PropertyType.GetList();
+                                              PropertyKind defaultItem) {
+      ObjectList<PropertyKind> list = PropertyKind.GetList();
 
       string header = comboControlUseMode == ComboControlUseMode.ObjectCreation
                                 ? "( Seleccionar tipo de predio )" : "( Todos los tipos )";
-      HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", header, String.Empty, PropertyType.Unknown.Name);
+      HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", header, String.Empty, PropertyKind.Unknown.Name);
 
       if (defaultItem != null && !defaultItem.IsEmptyInstance) {
         comboControl.Value = defaultItem.Id.ToString();
