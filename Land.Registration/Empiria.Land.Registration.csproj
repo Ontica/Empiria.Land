@@ -146,7 +146,6 @@
     <Compile Include="Empiria.Land.Registration.AssemblyInfo.cs" />
     <Compile Include="RootTypes\CadastralInfo.cs" />
     <Compile Include="RootTypes\Certificate.cs" />
-    <Compile Include="RootTypes\Z_IRecordable.cs" />
     <Compile Include="RootTypes\RecordableObjectStatus.cs" />
     <Compile Include="RootTypes\TractIndexItemExtData.cs" />
     <Compile Include="RootTypes\TractIndexItem.cs" />
@@ -199,7 +198,7 @@
     <Compile Include="RootTypes\RecordingBook.cs" />
     <Compile Include="RootTypes\LandRegistrationException.cs" />
     <Compile Include="RootTypes\RecorderOffice.cs" />
-    <Compile Include="Transactions\LRSTransactionActList.cs" />
+    <Compile Include="Transactions\ZLRSTransactionActList.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

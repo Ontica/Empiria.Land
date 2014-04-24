@@ -385,8 +385,8 @@ namespace Empiria.Land.Registration {
       return true;
     }
 
-    public Recording CreateQuickRecording(int recordingNumber, string bisSuffixTag = "") {
-      Recording recording = new Recording();
+    public Recording CreateQuickRecording(int recordingNumber, string bisSuffixTag) {
+      var recording = new Recording();
       recording.RecordingBook = this;
       recording.Transaction = LRSTransaction.Empty;
       recording.Document = RecordingDocument.Empty;
@@ -397,12 +397,6 @@ namespace Empiria.Land.Registration {
       recording.EndImageIndex = -1;
       recording.Save();
 
-      var property = new Property();
-      var recordingActType = RecordingActType.Empty;
-      recording.CreateRecordingAct(recordingActType, property);
-      
-      recordings = null;
-
       return recording;
     }
 
@@ -412,7 +406,7 @@ namespace Empiria.Land.Registration {
       Assertion.Require(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
                         "Transaction document cannot be neither empty nor a new document instance.");
 
-      Recording recording = new Recording();
+      var recording = new Recording();
       recording.RecordingBook = this;
       recording.Transaction = transaction;
       recording.Document = transaction.Document;

@@ -188,11 +188,16 @@ namespace Empiria.Land.Registration {
       if (!this.NeedCreatePrecedentRecording) {
         return;
       }
-      Task.PrecedentRecording = Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
-                                                                                 Task.QuickAddBisRecordingSuffixTag);
-      Task.TargetProperty = Task.PrecedentRecording.RecordingActs[0].PropertiesEvents[0].Property;
+
+      Recording recording = Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
+                                                                             Task.QuickAddBisRecordingSuffixTag);
+      Property property = new Property();
+      RecordingAct recordingAct = recording.CreateRecordingAct(RecordingActType.Empty, property);
+
+      Task.TargetProperty = property;
+      Task.PrecedentRecording = recording;
       if (Task.RecordingRule.AppliesTo == RecordingRuleApplication.RecordingAct) {
-        Task.TargetRecordingAct = Task.PrecedentRecording.RecordingActs[0];
+        Task.TargetRecordingAct = recordingAct;
       }
     }
 
@@ -201,10 +206,11 @@ namespace Empiria.Land.Registration {
         return;
       }
 
-      var recordingAct = Task.PrecedentRecording.CreateRecordingAct(RecordingActType.Empty, new Property());
-      Task.TargetProperty = recordingAct.PropertiesEvents[0].Property;
+      var property = new Property();
+      var recordingAct = Task.PrecedentRecording.CreateRecordingAct(RecordingActType.Empty, property);
+      Task.TargetProperty = property;
       if (Task.RecordingRule.AppliesTo == RecordingRuleApplication.RecordingAct) {
-        Task.TargetRecordingAct = Task.PrecedentRecording.RecordingActs[0];
+        Task.TargetRecordingAct = recordingAct;
       }
     }
 

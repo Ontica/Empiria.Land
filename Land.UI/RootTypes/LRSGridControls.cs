@@ -235,8 +235,9 @@ namespace Empiria.Land.UI {
       ObjectList<RecordingAct> recordingActs = recording.GetNoAnnotationActs();
       for (int i = 0; i < recordingActs.Count; i++) {
         RecordingAct recordingAct = recordingActs[i];
-        for (int j = 0; j < recordingActs[i].PropertiesEvents.Count; j++) {
-          TractIndexItem propertyEvent = recordingAct.PropertiesEvents[j];
+        ObjectList<TractIndexItem> properties = recordingActs[i].TractIndex;
+        for (int j = 0; j < properties.Count; j++) {
+          TractIndexItem tractItem = properties[j];
           if (i % 2 == 0) {
             temp = row.Replace("{CLASS}", "detailsItem");
           } else {
@@ -257,13 +258,13 @@ namespace Empiria.Land.UI {
             temp = temp.Replace("{RECORDING.ACT.URL}", idemURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
                                                                        "<i>ídem</i>"));
           }
-          temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", propertyEvent.Property.UniqueCode));
-          if (propertyEvent.Property.Status == RecordableObjectStatus.Registered && propertyEvent.Status != RecordableObjectStatus.Registered) {
+          temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", tractItem.Property.UniqueCode));
+          if (tractItem.Property.Status == RecordableObjectStatus.Registered && tractItem.Status != RecordableObjectStatus.Registered) {
             temp = temp.Replace("{PROPERTY.STATUS}", "Parcial");
           } else {
-            temp = temp.Replace("{PROPERTY.STATUS}", propertyEvent.StatusName);
+            temp = temp.Replace("{PROPERTY.STATUS}", tractItem.StatusName);
           }
-          temp = temp.Replace("{PROPERTY.STATUS}", propertyEvent.Property.StatusName);
+          temp = temp.Replace("{PROPERTY.STATUS}", tractItem.Property.StatusName);
           temp = temp.Replace("{RECORDING.ACT.STATUS}", recordingAct.StatusName);
           if (j == 0) {
             temp = temp.Replace("{OPTIONS.COMBO}", optionsCombo);
@@ -286,7 +287,7 @@ namespace Empiria.Land.UI {
             temp = temp.Replace("{OPTIONS.COMBO}", propertyOptionsCombo);
           }
           temp = temp.Replace("{ID}", recordingAct.Id.ToString());
-          temp = temp.Replace("{PROPERTY.ID}", propertyEvent.Property.Id.ToString());
+          temp = temp.Replace("{PROPERTY.ID}", tractItem.Property.Id.ToString());
           html += temp;
         }  // for j
       } // for i
@@ -299,7 +300,7 @@ namespace Empiria.Land.UI {
 
       int index = 0;
       foreach (var recordingAct in recordingActs) {
-        var propertyEvents = recordingAct.PropertiesEvents;
+        var propertyEvents = recordingAct.TractIndex;
         if (propertyEvents.Count != 0) {
           int propertyEventIndex = 0;
           foreach (var propertyEvent in propertyEvents) {

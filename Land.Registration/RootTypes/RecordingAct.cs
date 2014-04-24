@@ -34,7 +34,7 @@ namespace Empiria.Land.Registration {
     #region Constructors and parsers
 
     protected RecordingAct(string typeName) : base(typeName) {
-      // Empiria Object Type pattern classes always has this constructor. Don't delete
+      // Empiria Object Type pattern classes always has this constructor. Don't delete.
       Initialize();
     }
 
@@ -53,15 +53,15 @@ namespace Empiria.Land.Registration {
                                         Recording recording, Property resource) {
       RecordingAct recordingAct = recordingActType.CreateInstance();
       recordingAct.Recording = recording;
-      recordingAct._propertiesEvents = new ObjectList<TractIndexItem>();
       recordingAct.Index = recording.RecordingActs.Count + 1;
+
       if (recordingActType.Autoregister) {
         recordingAct.Status = RecordableObjectStatus.Registered;
       } else {
         recordingAct.Status = RecordableObjectStatus.Pending;
       }
+      recordingAct.AttachProperty(resource);
       recordingAct.Save();
-      recordingAct.AppendPropertyEvent(resource);
 
       return recordingAct;
     }
@@ -94,7 +94,12 @@ namespace Empiria.Land.Registration {
       this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       this.PostingTime = DateTime.Now;
       this.Status = RecordableObjectStatus.Incomplete;
-      _resourcesList = new Lazy<List<TractIndexItem>>(() => RecordingActsData.GetTractIndex(this));
+
+      if (!this.IsNew) {
+        _tractIndex = new Lazy<List<TractIndexItem>>(() => RecordingActsData.GetTractIndex(this));
+      } else {
+        _tractIndex = new Lazy<List<TractIndexItem>>(() => new List<TractIndexItem>());
+      }
     }
 
     #endregion Constructors and parsers
@@ -210,16 +215,6 @@ namespace Empiria.Land.Registration {
       get { return this.RecordingActType.IsAnnotationType; }
     }
 
-    private ObjectList<TractIndexItem> _propertiesEvents = null;
-    public ObjectList<TractIndexItem> PropertiesEvents {
-      get {
-        if (_propertiesEvents == null) {
-          _propertiesEvents = RecordingActsData.GetPropertiesEventsList(this);
-        }
-        return _propertiesEvents;
-      }
-    }
-
     private RecordingActType _recordingActType = null;
     public RecordingActType RecordingActType {
       get {
@@ -231,10 +226,10 @@ namespace Empiria.Land.Registration {
       set { _recordingActType = value; }
     }
 
-    private Lazy<List<TractIndexItem>> _resourcesList = null;
-    public List<TractIndexItem> Resources {
+    private Lazy<List<TractIndexItem>> _tractIndex = null;
+    public ObjectList<TractIndexItem> TractIndex {
       get {
-        return _resourcesList.Value;
+        return new ObjectList<TractIndexItem>(_tractIndex.Value);
       }
     }
 
@@ -264,9 +259,10 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public TractIndexItem AttachProperty(Property property) {
-      var item = new TractIndexItem(this, property);
+      Assertion.AssertObject(property, "property");
 
-      this.Resources.Add(item);
+      var item = new TractIndexItem(this, property);
+      _tractIndex.Value.Add(item);
 
       return item;
     }
@@ -281,26 +277,14 @@ namespace Empiria.Land.Registration {
 
       if (property.IsNew) {
         property.Save();
-      } else if (PropertiesEvents.Contains((x) => x.Property.Equals(property))) {
+      } else if (this.TractIndex.Contains((x) => x.Property.Equals(property))) {
         throw new LandRegistrationException(LandRegistrationException.Msg.PropertyAlreadyExistsOnRecordingAct,
                                             property.UniqueCode, this.Id);
       }
 
       var propertyEvent = new TractIndexItem(this, property);
       propertyEvent.Save();
-
-      //RecordingAct antecedent = property.GetAntecedent(this);
-      //if (antecedent != InformationAct.Empty) {
-      //  TractIndexItem e = antecedent.PropertiesEvents.Find((x) => x.Property.Equals(property));
-      //  //if (e != null) {
-      //  //  propertyEvent.MetesAndBounds = e.MetesAndBounds;
-      //  //  propertyEvent.FloorArea = e.FloorArea;
-      //  //  propertyEvent.CommonArea = e.CommonArea;
-      //  //  propertyEvent.TotalArea = e.TotalArea;
-      //  //  propertyEvent.Save();
-      //  //}
-      //}
-      _propertiesEvents = null;
+      //_propertyList.Reset();
     }
 
     internal void Delete() {
@@ -310,9 +294,10 @@ namespace Empiria.Land.Registration {
       if (this.Status == RecordableObjectStatus.Closed) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, this.Id);
       }
-      for (int i = 0; i < this.PropertiesEvents.Count; i++) {
-        var propertyEvent = PropertiesEvents[i];
-        var property = PropertiesEvents[i].Property;
+      var properties = this.TractIndex;
+      for (int i = 0; i < properties.Count; i++) {
+        var propertyEvent = properties[i];
+        var property = TractIndex[i].Property;
         propertyEvent.Delete();
 
         var tract = property.GetRecordingActsTract();
@@ -323,11 +308,22 @@ namespace Empiria.Land.Registration {
       }
       this.Status = RecordableObjectStatus.Deleted;
       this.Save();
-      _propertiesEvents = null;
+      //_propertyList.Reset();
+    }
+
+    public IList<Property> GetProperties() {
+      var tract = _tractIndex.Value;
+      var list = new List<Property>(tract.Count);
+      foreach (var item in tract) {
+        if (!list.Contains(item.Property)) {
+          list.Add(item.Property);
+        }
+      }
+      return list;
     }
 
     public TractIndexItem GetPropertyEvent(Property property) {
-      var propertyEvent = this.PropertiesEvents.Find((x) => x.Property.Equals(property));
+      var propertyEvent = this.TractIndex.Find((x) => x.Property.Equals(property));
       if (propertyEvent != null) {
         return propertyEvent;
       } else {
@@ -337,11 +333,11 @@ namespace Empiria.Land.Registration {
     }
     
     public bool IsFirstRecordingAct() {
-      if (this.PropertiesEvents.Count == 0) {
+      if (this.TractIndex.Count == 0) {
         return false;
       }
 
-      Property property = this.PropertiesEvents[0].Property;
+      Property property = this.TractIndex[0].Property;
 
       return property.IsFirstRecordingAct(this);
     }
@@ -376,11 +372,15 @@ namespace Empiria.Land.Registration {
         this.PostingTime = DateTime.Now;
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
+
+      foreach (TractIndexItem tractItem in this.TractIndex) {
+        tractItem.Save();
+      }
       RecordingActsData.WriteRecordingAct(this);
     }
 
     public void RemoveProperty(Property property) {
-      TractIndexItem propertyEvent = this.PropertiesEvents.Find((x) => x.Property.Equals(property));
+      TractIndexItem propertyEvent = this.TractIndex.Find((x) => x.Property.Equals(property));
 
       Assertion.RequireObject(propertyEvent, 
                 new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
@@ -392,8 +392,8 @@ namespace Empiria.Land.Registration {
         property.Save();
       }
 
-      _propertiesEvents = null;
-      if (this.PropertiesEvents.Count == 0) {
+      //_propertyList.Reset();
+      if (this.TractIndex.Count == 0) {
         this.Status = RecordableObjectStatus.Deleted;
         this.Save();
       }
@@ -434,7 +434,6 @@ namespace Empiria.Land.Registration {
     //  RecordingActsData.WriteRecordingAct(this);
 
     //  return this;
-
     //}
 
     #endregion Public methods

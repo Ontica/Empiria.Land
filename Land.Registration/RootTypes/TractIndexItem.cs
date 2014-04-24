@@ -30,8 +30,14 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private TractIndexItem() : base(thisTypeName) {
+    internal TractIndexItem(RecordingAct recordingAct, Property property) : base(thisTypeName) {
+      Assertion.AssertObject(recordingAct, "recordingAct");
+      Assertion.AssertObject(property, "property");
+
       Initialize();
+
+      this.RecordingAct = recordingAct;
+      this.Property = property;
     }
 
     protected TractIndexItem(string typeName) : base(typeName) {
@@ -43,12 +49,9 @@ namespace Empiria.Land.Registration {
       this.RecordingAct = InformationAct.Empty;
       this.Property = Property.Empty;
       this.ExtensionData = TractIndexItemExtData.Empty;
+      this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      this.PostingTime = DateTime.Now;
       this.Status = RecordableObjectStatus.Pending;
-    }
-
-    internal TractIndexItem(RecordingAct recordingAct, Property property) : base(thisTypeName) {
-      this.RecordingAct = recordingAct;
-      this.Property = property;
     }
 
     static public TractIndexItem Parse(int id) {
@@ -95,7 +98,7 @@ namespace Empiria.Land.Registration {
 
     public RecordableObjectStatus Status {
       get;
-      set;    // OOJJOO Set the status using a special method and replace this public set accesor by a private one.
+      set;  // OOJJOO Set the status using a special method and replace this public set accesor by a private one.
     }
 
     public string StatusName {
@@ -167,6 +170,9 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void ImplementsSave() {
+      if (this.Property.IsNew) {
+        this.Property.Save();
+      }
       PropertyData.WriteTractIndexItem(this);
     }
 

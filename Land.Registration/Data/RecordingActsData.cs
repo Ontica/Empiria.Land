@@ -31,8 +31,8 @@ namespace Empiria.Land.Registration.Data {
 
     static public ObjectList<RecordingAct> GetPropertyRecordingActListUntil(Property property, RecordingAct breakAct, 
                                                                             bool includeBreakAct) {
-      DataOperation op = DataOperation.Parse("qryLRSPropertyRecordingActs", property.Id);
-      DataView view = DataReader.GetDataView(op);
+      var operation = DataOperation.Parse("qryLRSPropertyRecordingActs", property.Id);
+      DataView view = DataReader.GetDataView(operation);
       List<RecordingAct> list = new List<RecordingAct>();
       foreach (DataRowView row in view) {
         var recordingAct = RecordingAct.Parse(row.Row);
@@ -55,33 +55,29 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static public ObjectList<RecordingAct> GetRecordingActs(LRSTransaction transaction) {
-      string sql = "SELECT * FROM vwLRSRecordingActs" + 
-                   " WHERE TransactionId = "+ transaction.Id + 
+      string sql = "SELECT * FROM vwLRSRecordingActs" +
+                   " WHERE TransactionId = " + transaction.Id +
                    " ORDER BY RecordingActIndex, PostingTime";
+      var operation = DataOperation.Parse(sql);
 
-      var view = DataReader.GetDataView(DataOperation.Parse(sql));
-
-      return new ObjectList<RecordingAct>((x) => RecordingAct.Parse(x), view);
+      return DataReader.GetList<RecordingAct>(operation, (x) => RecordingAct.Parse(x)).ToObjectList();
     }
 
-    static public ObjectList<TractIndexItem> GetPropertiesEventsList(RecordingAct recordingAct) {
-      DataOperation operation = DataOperation.Parse("qryLRSRecordingActPropertiesEvents", recordingAct.Id);
+    internal static List<TractIndexItem> GetTractIndex(RecordingAct recordingAct) {
+      var operation = DataOperation.Parse("qryLRSRecordingActPropertiesEvents", recordingAct.Id);
 
-      DataView view = DataReader.GetDataView(operation);
-
-      return new ObjectList<TractIndexItem>((x) => TractIndexItem.Parse(x), view);
+      return DataReader.GetList<TractIndexItem>(operation, (x) => TractIndexItem.Parse(x));
     }
 
     static internal ObjectList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
       string sql = String.Empty;
       if (!recordingAct.IsAnnotation) {
         sql = "SELECT * FROM LRSRecordingActParties " +
-              "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
+              "WHERE RecordingActId = " + recordingAct.Id + " " +
               "AND PartyRoleId <> -1 AND LinkStatus <> 'X'";
-
       } else {
         string ids = String.Empty;
-        ObjectList<TractIndexItem> events = recordingAct.PropertiesEvents;
+        ObjectList<TractIndexItem> events = recordingAct.TractIndex;
         for (int i = 0; i < events.Count; i++) {
           ObjectList<RecordingAct> acts = events[i].Property.GetRecordingActsTract();
 
@@ -97,7 +93,7 @@ namespace Empiria.Land.Registration.Data {
               "WHERE (RecordingActId IN (" + ids + ") AND PartyRoleId <> -1) " +
               "AND (LinkStatus <> 'X')";
       }
-      DataOperation operation = DataOperation.Parse(sql);
+      var operation = DataOperation.Parse(sql);
 
       return new ObjectList<RecordingActParty>((x) => RecordingActParty.Parse(x), DataReader.GetDataView(operation));
     }
@@ -120,13 +116,13 @@ namespace Empiria.Land.Registration.Data {
             "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
             "AND PartyRoleId <> -1 AND LinkStatus <> 'X'";
 
-      DataOperation operation = DataOperation.Parse(sql);
+      var operation = DataOperation.Parse(sql);
 
       return new ObjectList<RecordingActParty>((x) => RecordingActParty.Parse(x), DataReader.GetDataView(operation));
     }
 
     static internal ObjectList<Property> GetRecordingActPropertiesList(RecordingAct recordingAct) {
-      DataOperation operation = DataOperation.Parse("qryLRSRecordingActProperties", recordingAct.Id);
+      var operation = DataOperation.Parse("qryLRSRecordingActProperties", recordingAct.Id);
 
       return new ObjectList<Property>((x) => Property.Parse(x), DataReader.GetDataView(operation));
     }
@@ -136,7 +132,7 @@ namespace Empiria.Land.Registration.Data {
                    "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
                    "AND SecondaryPartyRoleId <> -1 AND LinkStatus <> 'X'";
 
-      DataOperation operation = DataOperation.Parse(sql);
+      var operation = DataOperation.Parse(sql);
 
       return new ObjectList<RecordingActParty>((x) => RecordingActParty.Parse(x), DataReader.GetDataView(operation));
     }
@@ -144,32 +140,27 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteRecordingAct(RecordingAct o) {
       Assertion.Require(o.Id != 0, "RecordingAct.Id can't be zero");
-      var dataOperation = DataOperation.Parse("writeLRSRecordingAct", o.Id, o.RecordingActType.Id,
-                                               o.Transaction.Id, o.Document.Id, o.TargetRecordingAct.Id, 
-                                               o.Recording.Id, o.Index, o.Notes, o.ExtensionData.ToJson(), 
-                                               o.Keywords, o.CanceledBy.Id, o.CancelationTime, 
-                                               o.PostedBy.Id, o.PostingTime, (char) o.Status,
-                                               o.Integrity.GetUpdatedHashCode(),
-                                               o.ExtensionData.AppraisalAmount.Amount,
-                                               o.ExtensionData.AppraisalAmount.Currency.Id,
-                                               o.ExtensionData.OperationAmount.Amount,
-                                               o.ExtensionData.OperationAmount.Currency.Id,
-                                               o.ExtensionData.Contract.Interest.TermPeriods,
-                                               o.ExtensionData.Contract.Interest.TermUnit.Id,
-                                               o.ExtensionData.Contract.Interest.Rate,
-                                               o.ExtensionData.Contract.Interest.RateType.Id,
-                                               o.ExtensionData.Contract.Date,
-                                               o.ExtensionData.Contract.Place.Id,
-                                               o.ExtensionData.Contract.Number);
-      return DataWriter.Execute(dataOperation);
+      var operation = DataOperation.Parse("writeLRSRecordingAct", o.Id, o.RecordingActType.Id,
+                                          o.Transaction.Id, o.Document.Id, o.TargetRecordingAct.Id, 
+                                          o.Recording.Id, o.Index, o.Notes, o.ExtensionData.ToJson(), 
+                                          o.Keywords, o.CanceledBy.Id, o.CancelationTime, 
+                                          o.PostedBy.Id, o.PostingTime, (char) o.Status,
+                                          o.Integrity.GetUpdatedHashCode(),
+                                          o.ExtensionData.AppraisalAmount.Amount,
+                                          o.ExtensionData.AppraisalAmount.Currency.Id,
+                                          o.ExtensionData.OperationAmount.Amount,
+                                          o.ExtensionData.OperationAmount.Currency.Id,
+                                          o.ExtensionData.Contract.Interest.TermPeriods,
+                                          o.ExtensionData.Contract.Interest.TermUnit.Id,
+                                          o.ExtensionData.Contract.Interest.Rate,
+                                          o.ExtensionData.Contract.Interest.RateType.Id,
+                                          o.ExtensionData.Contract.Date,
+                                          o.ExtensionData.Contract.Place.Id,
+                                          o.ExtensionData.Contract.Number);
+      return DataWriter.Execute(operation);
     }
 
     #endregion Public methods
-
-
-    internal static List<TractIndexItem> GetTractIndex(RecordingAct recordingAct) {
-      return new List<TractIndexItem>();
-    }
 
   } // class RecordingActsData
 

@@ -45,7 +45,7 @@ namespace Empiria.Land.Registration {
       if (!annotation.AuthorizedBy.Equals(authorizedBy)) {
         return -1;
       }
-      if (annotation.RecordingActs[0].PropertiesEvents.Contains((x) => x.Property.Equals(toAppendProperty))) {
+      if (annotation.RecordingActs[0].TractIndex.Contains((x) => x.Property.Equals(toAppendProperty))) {
         return -1;
       }
       return annotation.RecordingActs[0].Id;
@@ -100,10 +100,10 @@ namespace Empiria.Land.Registration {
     }
 
     static public LandRegistrationException ValidateDeleteRecordingAct(RecordingAct recordingAct) {
-      if (recordingAct.PropertiesEvents.Count > 1) {
+      if (recordingAct.TractIndex.Count > 1) {
         return new LandRegistrationException(LandRegistrationException.Msg.RecordingActHasTwoOrMoreProperties);
       }
-      Property property = recordingAct.PropertiesEvents[0].Property;
+      Property property = recordingAct.TractIndex[0].Property;
       ObjectList<RecordingAct> domainActs = property.GetRecordingActsTract();
       if ((domainActs.Count > 1) && (property.FirstRecordingAct.Equals(recordingAct))) {
         return new LandRegistrationException(LandRegistrationException.Msg.PropertyIsReferencedInOtherDomainActs,

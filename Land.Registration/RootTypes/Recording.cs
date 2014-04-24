@@ -9,7 +9,9 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Collections.Generic;
 using System.Data;
+
 using Empiria.Contacts;
 using Empiria.Land.Registration.Data;
 using Empiria.Land.Registration.Transactions;
@@ -403,6 +405,18 @@ namespace Empiria.Land.Registration {
         attachmentFolderList.Append(annotations[i].RecordingAct.Recording, alias);
       }
       return attachmentFolderList;
+    }
+
+    public IList<Property> GetProperties() {
+      var list = new List<Property>(this.RecordingActs.Count);
+      foreach (RecordingAct recordingAct in this.RecordingActs) {
+        foreach (var property in recordingAct.GetProperties()) {
+          if (!list.Contains(property)) {
+            list.Add(property);
+          }
+        } // foreach
+      } // foreach
+      return list;
     }
 
     public void SortRecordingActs() {

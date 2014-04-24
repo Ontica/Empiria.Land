@@ -217,8 +217,8 @@ namespace Empiria.Land.Registration.Data {
     static internal int WriteTractIndexItem(TractIndexItem o) {
       Assertion.Require(o.Id != 0, "TractIndexItem.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSPropertyTractIndexItem", o.Id, 
-                                                        o.Property.Id, o.RecordingAct.Id, String.Empty, 
-                                                        o.PostedBy.Id, o.PostingTime, (char) o.Status);
+                                                        o.Property.Id, o.RecordingAct.Id, o.ExtensionData.ToJson(),
+                                                        o.PostedBy.Id, o.PostingTime, (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(dataOperation);
     }
 
