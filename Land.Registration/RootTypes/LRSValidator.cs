@@ -53,7 +53,7 @@ namespace Empiria.Land.Registration {
 
     static public int GetOverlappingRecordingsCount(RecordingBook recordingBook, Recording recording,
                                                     int imageStartIndex, int imageEndIndex) {
-      ObjectList<Recording> list = RecordingBooksData.GetRecordingsOnImageRangeList(recordingBook,
+      FixedList<Recording> list = RecordingBooksData.GetRecordingsOnImageRangeList(recordingBook,
                                                                                     imageStartIndex, imageEndIndex);
       if (list.Count == 0) {
         return 0;
@@ -104,7 +104,7 @@ namespace Empiria.Land.Registration {
         return new LandRegistrationException(LandRegistrationException.Msg.RecordingActHasTwoOrMoreProperties);
       }
       Property property = recordingAct.TractIndex[0].Property;
-      ObjectList<RecordingAct> domainActs = property.GetRecordingActsTract();
+      FixedList<RecordingAct> domainActs = property.GetRecordingActsTract();
       if ((domainActs.Count > 1) && (property.FirstRecordingAct.Equals(recordingAct))) {
         return new LandRegistrationException(LandRegistrationException.Msg.PropertyIsReferencedInOtherDomainActs,
                                              property.UniqueCode);
@@ -116,7 +116,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public LandRegistrationException ValidateDeleteRecordingActProperty(RecordingAct recordingAct, Property property) {
-      ObjectList<RecordingAct> domainActs = property.GetRecordingActsTract();
+      FixedList<RecordingAct> domainActs = property.GetRecordingActsTract();
       if ((domainActs.Count > 1) && (property.FirstRecordingAct.Equals(recordingAct))) {
         return new LandRegistrationException(LandRegistrationException.Msg.PropertyIsReferencedInOtherDomainActs,
                                              property.UniqueCode);
@@ -150,7 +150,7 @@ namespace Empiria.Land.Registration {
         return null;
       }
       if (!recordingAct.IsAnnotation) {
-        ObjectList<RecordingActParty> parties = RecordingActParty.GetDomainPartyList(recordingAct);
+        FixedList<RecordingActParty> parties = RecordingActParty.GetDomainPartyList(recordingAct);
         if (parties.Count == 0) {
           return new LandRegistrationException(LandRegistrationException.Msg.RecordingActWithoutOwnerParties);
         }
@@ -158,7 +158,7 @@ namespace Empiria.Land.Registration {
           return new LandRegistrationException(LandRegistrationException.Msg.RecordingActWithOnlyOneOwnerParty);
         }
       } else {
-        ObjectList<RecordingActParty> parties = RecordingActParty.GetList(recordingAct);
+        FixedList<RecordingActParty> parties = RecordingActParty.GetList(recordingAct);
         if (parties.Count == 0) {
           return new LandRegistrationException(LandRegistrationException.Msg.RecordingActWithoutOwnerParties);
         }
@@ -172,7 +172,7 @@ namespace Empiria.Land.Registration {
         return null;
       }
       RecorderOffice office = recordingBook.RecorderOffice;
-      ObjectList<Person> officers = office.GetRecorderOfficials(new TimePeriod(autorizationDate, autorizationDate));
+      FixedList<Person> officers = office.GetRecorderOfficials(new TimePeriod(autorizationDate, autorizationDate));
 
       if (!officers.Contains(authorizedBy)) {
         return new LandRegistrationException(LandRegistrationException.Msg.RecorderOfficialOutOfPeriod,

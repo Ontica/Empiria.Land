@@ -69,7 +69,7 @@ namespace Empiria.Land.Registration {
     private RecordingBookStatus status = RecordingBookStatus.Pending;
     private string recordIntegrityHashCode = String.Empty;
 
-    private ObjectList<Recording> recordings = null;
+    private FixedList<Recording> recordings = null;
 
     #endregion Fields
 
@@ -144,7 +144,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    static public ObjectList<RecordingBook> GetList(string filter, string sort = "RecordingBookFullName") {
+    static public FixedList<RecordingBook> GetList(string filter, string sort = "RecordingBookFullName") {
       return RecordingBooksData.GetRecordingBooks(filter, sort);
     }
 
@@ -477,7 +477,7 @@ namespace Empiria.Land.Registration {
       return Recordings.Find((x) => x.Number.Equals(recordingNumber));
     }
 
-    public ObjectList<RecordingBook> GetChildBooks() {
+    public FixedList<RecordingBook> GetChildBooks() {
       return RecordingBooksData.GetChildsRecordingBooks(this);
     }
 
@@ -490,7 +490,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public ObjectList<Recording> Recordings {
+    public FixedList<Recording> Recordings {
       get {
         if (recordings == null) {
           recordings = RecordingBooksData.GetRecordings(this);
@@ -547,7 +547,7 @@ namespace Empiria.Land.Registration {
                                          int recordingsControlCount, TimePeriod recordingsControlTimePeriod) {
       RecordingBook recordingBook = new RecordingBook();
 
-      ObjectList<RecordingBook> recordingBookList = directory.RecorderOffice.GetRootRecordingBooks();
+      FixedList<RecordingBook> recordingBookList = directory.RecorderOffice.GetRootRecordingBooks();
       string tag = directory.GetRecordingBookTag(RecordingBookType.Section);
       RecordingBook currentParent = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
       if (currentParent == null) {

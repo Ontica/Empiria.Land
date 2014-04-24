@@ -136,27 +136,26 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetDataTable(operation);
     }
 
-    static internal ObjectList<RecordingActParty> GetRecordingPartiesList(Recording recording, Party party) {
-      string sql = String.Empty;
-
-      sql = "SELECT LRSRecordingActParties.* " +
+    static internal FixedList<RecordingActParty> GetRecordingPartiesList(Recording recording, Party party) {
+      string sql = "SELECT LRSRecordingActParties.* " +
             "FROM LRSRecordingActParties INNER JOIN LRSRecordingActs " +
             "ON LRSRecordingActParties.RecordingActId = LRSRecordingActs.RecordingActId " +
             "WHERE (LRSRecordingActs.RecordingId = " + recording.Id.ToString() + ") " +
             "AND (LRSRecordingActParties.LinkStatus <> 'X') " +
             "AND (LRSRecordingActParties.PartyId = " + party.Id.ToString() +
-                " OR LRSRecordingActParties.SecondaryPartyId = " + party.Id.ToString() + ")";
-      DataOperation operation = DataOperation.Parse(sql);
+            " OR LRSRecordingActParties.SecondaryPartyId = " + party.Id.ToString() + ")";
 
-      return new ObjectList<RecordingActParty>((x) => RecordingActParty.Parse(x), DataReader.GetDataView(operation));
+      var operation = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<RecordingActParty>(operation, (x) => RecordingActParty.Parse(x));
     }
 
-    static public ObjectList<TractIndexItem> GetRecordingPropertiesAnnotationsList(Recording recording) {
+    static public FixedList<TractIndexItem> GetRecordingPropertiesAnnotationsList(Recording recording) {
       DataOperation operation = DataOperation.Parse("qryLRSRecordingPropertiesAnnotations", recording.Id);
 
       DataView view = DataReader.GetDataView(operation);
 
-      return new ObjectList<TractIndexItem>((x) => TractIndexItem.Parse(x), view);
+      return new FixedList<TractIndexItem>((x) => TractIndexItem.Parse(x), view);
     }
 
     static internal int WriteHumanParty(HumanParty o) {

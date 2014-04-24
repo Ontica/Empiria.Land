@@ -50,7 +50,7 @@ namespace Empiria.Land.Registration {
       return BaseObject.Parse<RecorderOffice>(thisTypeName, id);
     }
 
-    static public ObjectList<RecorderOffice> GetList() {
+    static public FixedList<RecorderOffice> GetList() {
       return MainRecorderOffice.GetLinks<RecorderOffice>("MainRecorderOffice_RecorderOffices",
                                                          (x, y) => x.Tag.CompareTo(y.Tag));
     }
@@ -72,7 +72,7 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public RecordingBook AddRootRecordingBook(string rootTag) {
-      ObjectList<RecordingBook> roots = this.GetRootRecordingBooks();
+      FixedList<RecordingBook> roots = this.GetRootRecordingBooks();
       if (!roots.Contains((x) => x.BookNumber.Equals(rootTag))) {
         RecordingBook recordingBook = new RecordingBook(this, rootTag);
         recordingBook.Save();
@@ -83,52 +83,52 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public ObjectList<GeographicRegionItem> GetNotaryOfficePlaces() {
+    public FixedList<GeographicRegionItem> GetNotaryOfficePlaces() {
       return MainRecorderOffice.GetLinks<GeographicRegionItem>("MainRecorderOffice_NotaryOfficePlaces",
                                                                (x, y) => x.Name.CompareTo(y.Name));
     }
 
-    public ObjectList<GeographicRegionItem> GetPrivateDocumentIssuePlaces() {
+    public FixedList<GeographicRegionItem> GetPrivateDocumentIssuePlaces() {
       return MainRecorderOffice.GetLinks<GeographicRegionItem>("MainRecorderOffice_PrivateDocumentIssuePlace",
                                                                (x, y) => x.Name.CompareTo(y.Name));
     }
 
-    public ObjectList<GeographicRegionItem> GetJudicialDocumentIssuePlaces() {
+    public FixedList<GeographicRegionItem> GetJudicialDocumentIssuePlaces() {
       return MainRecorderOffice.GetLinks<GeographicRegionItem>("MainRecorderOffice_JudicialDocumentIssuePlace",
                                                                (x, y) => x.Name.CompareTo(y.Name));
     }
 
-    public ObjectList<GeographicRegionItem> GetMunicipalities() {
+    public FixedList<GeographicRegionItem> GetMunicipalities() {
       return this.GetLinks<GeographicRegionItem>("RecorderOffice_Municipalities",
                                                  (x, y) => x.Name.CompareTo(y.Name));
     }
 
-    public ObjectList<Person> GetRecorderOfficials() {
+    public FixedList<Person> GetRecorderOfficials() {
       return this.GetLinks<Person>("RecorderOffice_RecorderOfficials",
                                    (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
     }
 
-    public ObjectList<Person> GetRecorderOfficials(TimePeriod period) {
+    public FixedList<Person> GetRecorderOfficials(TimePeriod period) {
       return this.GetLinks<Person>("RecorderOffice_RecorderOfficials", period,
                                    (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
     }
 
-    public ObjectList<Organization> GetPropertyTitleOffices() {
+    public FixedList<Organization> GetPropertyTitleOffices() {
       return MainRecorderOffice.GetLinks<Organization>("MainRecorderOffice_PropertyTitleOffices",
                                                        (x, y) => x.FullName.CompareTo(y.FullName));
 
     }
 
-    public ObjectList<Contact> GetPropertyTitleSigners(TimePeriod period) {
+    public FixedList<Contact> GetPropertyTitleSigners(TimePeriod period) {
       return MainRecorderOffice.GetLinks<Contact>("MainRecorderOffice_PropertyTitleSigners", period,
                                                   (x, y) => x.FullName.CompareTo(y.FullName));
     }
 
-    public ObjectList<RecordingBook> GetRecordingBooks(RecordingSection sectionType) {
+    public FixedList<RecordingBook> GetRecordingBooks(RecordingSection sectionType) {
       return RecordingBooksData.GetRecordingBooksInSection(this, sectionType);
     }
 
-    public ObjectList<RecordingBook> GetRootRecordingBooks() {
+    public FixedList<RecordingBook> GetRootRecordingBooks() {
       return RecordingBooksData.GetRootRecordingBooks(this);
     }
 

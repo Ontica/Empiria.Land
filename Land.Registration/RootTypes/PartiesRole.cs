@@ -45,8 +45,8 @@ namespace Empiria.Land.Registration {
       return BaseObject.Parse<PartiesRole>(thisTypeName, id);
     }
 
-    static public ObjectList<PartiesRole> GetList() {
-      ObjectList<PartiesRole> list = GeneralObject.ParseList<PartiesRole>(thisTypeName);
+    static public FixedList<PartiesRole> GetList() {
+      FixedList<PartiesRole> list = GeneralObject.ParseList<PartiesRole>(thisTypeName);
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 

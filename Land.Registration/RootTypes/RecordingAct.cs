@@ -74,9 +74,9 @@ namespace Empiria.Land.Registration {
       return BaseObject.Parse<RecordingAct>(thisTypeName, dataRow);
     }
 
-    static public ObjectList<RecordingAct> GetList(LRSTransaction transaction) {
+    static public FixedList<RecordingAct> GetList(LRSTransaction transaction) {
       if (transaction.IsEmptyInstance) {
-        return new ObjectList<RecordingAct>();
+        return new FixedList<RecordingAct>();
       }
       return RecordingActsData.GetRecordingActs(transaction);
     }
@@ -227,9 +227,9 @@ namespace Empiria.Land.Registration {
     }
 
     private Lazy<List<TractIndexItem>> _tractIndex = null;
-    public ObjectList<TractIndexItem> TractIndex {
+    public FixedList<TractIndexItem> TractIndex {
       get {
-        return new ObjectList<TractIndexItem>(_tractIndex.Value);
+        return new FixedList<TractIndexItem>(_tractIndex.Value);
       }
     }
 

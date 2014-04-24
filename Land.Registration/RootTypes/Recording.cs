@@ -54,7 +54,7 @@ namespace Empiria.Land.Registration {
     private string recordIntegrityHashCode = String.Empty;
 
     private RecordingDocument recordingDocument = null;
-    private ObjectList<RecordingAct> recordingActList = null;
+    private FixedList<RecordingAct> recordingActList = null;
     private RecordingAttachmentFolderList attachmentFolderList = null;
 
 
@@ -224,7 +224,7 @@ namespace Empiria.Land.Registration {
       set { receiptIssueDate = value; }
     }
 
-    public ObjectList<RecordingAct> RecordingActs {
+    public FixedList<RecordingAct> RecordingActs {
       get {
         if (recordingActList == null) {
           this.recordingActList = RecordingActsData.GetRecordingActs(this);
@@ -399,7 +399,7 @@ namespace Empiria.Land.Registration {
 
       attachmentFolderList.Append(this, "Raíz");
 
-      ObjectList<TractIndexItem> annotations = this.GetPropertiesAnnotationsList();
+      FixedList<TractIndexItem> annotations = this.GetPropertiesAnnotationsList();
       for (int i = 0; i < annotations.Count; i++) {
         string alias = Char.ConvertFromUtf32(65 + i);
         attachmentFolderList.Append(annotations[i].RecordingAct.Recording, alias);
@@ -456,13 +456,13 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public ObjectList<RecordingAct> GetNoAnnotationActs() {
-      ObjectList<RecordingAct> recordingActs = this.RecordingActs;
+    public FixedList<RecordingAct> GetNoAnnotationActs() {
+      FixedList<RecordingAct> recordingActs = this.RecordingActs;
 
-      return new ObjectList<RecordingAct>(recordingActs.FindAll((x) => !x.IsAnnotation));
+      return new FixedList<RecordingAct>(recordingActs.FindAll((x) => !x.IsAnnotation));
     }
 
-    public ObjectList<TractIndexItem> GetPropertiesAnnotationsList() {
+    public FixedList<TractIndexItem> GetPropertiesAnnotationsList() {
       return PropertyData.GetRecordingPropertiesAnnotationsList(this);
     }
 

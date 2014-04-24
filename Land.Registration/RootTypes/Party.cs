@@ -77,17 +77,17 @@ namespace Empiria.Land.Registration {
       return BaseObject.Parse<Party>(thisTypeName, dataRow);
     }
 
-    static public ObjectList<Party> GetList(ObjectTypeInfo partyType, string keywords) {
+    static public FixedList<Party> GetList(ObjectTypeInfo partyType, string keywords) {
       DataTable table = PropertyData.GetParties(partyType, keywords);
 
-      return new ObjectList<Party>((x) => Party.Parse(x), table);
+      return new FixedList<Party>((x) => Party.Parse(x), table);
     }
 
-    static public ObjectList<Party> GetList(PartyFilterType partyFilterType, ObjectTypeInfo partyType,
+    static public FixedList<Party> GetList(PartyFilterType partyFilterType, ObjectTypeInfo partyType,
                                             RecordingAct recordingAct, string keywords) {
       DataTable table = PropertyData.GetParties(partyFilterType, partyType, recordingAct, keywords);
 
-      return new ObjectList<Party>((x) => Party.Parse(x), table);
+      return new FixedList<Party>((x) => Party.Parse(x), table);
     }
 
     #endregion Constructors and parsers

@@ -50,8 +50,8 @@ namespace Empiria.Land.Registration {
       return BaseObject.Parse<NotaryOffice>(thisTypeName, id);
     }
 
-    static public ObjectList<NotaryOffice> GetList(GeographicRegionItem place) {
-      ObjectList<NotaryOffice> list = place.GetContacts<NotaryOffice>("Region_NotaryOffices");
+    static public FixedList<NotaryOffice> GetList(GeographicRegionItem place) {
+      FixedList<NotaryOffice> list = place.GetContacts<NotaryOffice>("Region_NotaryOffices");
 
       list.Sort((x, y) => x.Number.CompareTo(y.Number));
 
@@ -70,16 +70,16 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public ObjectList<Person> GetNotaries() {
-      ObjectList<Person> list = base.GetLinks<Person>("NotaryOffice_Notaries");
+    public FixedList<Person> GetNotaries() {
+      FixedList<Person> list = base.GetLinks<Person>("NotaryOffice_Notaries");
 
       list.Sort((x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
 
       return list;
     }
 
-    public ObjectList<Person> GetNotaries(TimePeriod period) {
-      ObjectList<Person> list = base.GetLinks<Person>("NotaryOffice_Notaries", period);
+    public FixedList<Person> GetNotaries(TimePeriod period) {
+      FixedList<Person> list = base.GetLinks<Person>("NotaryOffice_Notaries", period);
 
       list.Sort((x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
 

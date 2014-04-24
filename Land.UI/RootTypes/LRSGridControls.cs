@@ -34,17 +34,17 @@ namespace Empiria.Land.UI {
 
     static public string GetRecordingActPartiesGrid(RecordingAct recordingAct, bool readOnly) {
       if (!recordingAct.IsAnnotation) {
-        ObjectList<RecordingActParty> primaryParties = RecordingActParty.GetDomainPartyList(recordingAct);
+        FixedList<RecordingActParty> primaryParties = RecordingActParty.GetDomainPartyList(recordingAct);
 
         return GetDomainActPartiesGrid(recordingAct, primaryParties, readOnly);
       } else {
-        ObjectList<RecordingActParty> annotationParties = RecordingActParty.GetList(recordingAct);
+        FixedList<RecordingActParty> annotationParties = RecordingActParty.GetList(recordingAct);
 
         return GetAnnotationPartiesGrid(recordingAct, annotationParties, readOnly);
       }
     }
 
-    static private string GetAnnotationPartiesGrid(RecordingAct recordingAct, ObjectList<RecordingActParty> annotationParties, bool readOnly) {
+    static private string GetAnnotationPartiesGrid(RecordingAct recordingAct, FixedList<RecordingActParty> annotationParties, bool readOnly) {
       string html = String.Empty;
       string temp = String.Empty;
 
@@ -74,7 +74,7 @@ namespace Empiria.Land.UI {
       return html;
     }
 
-    static private string GetDomainActPartiesGrid(RecordingAct recordingAct, ObjectList<RecordingActParty> domainParties, bool readOnly) {
+    static private string GetDomainActPartiesGrid(RecordingAct recordingAct, FixedList<RecordingActParty> domainParties, bool readOnly) {
       string html = String.Empty;
       string temp = String.Empty;
       for (int i = 0; i < domainParties.Count; i++) {
@@ -105,7 +105,7 @@ namespace Empiria.Land.UI {
         html += GetSecondaryPartyRow(baseRecordingActParty);
       }
 
-      ObjectList<RecordingActParty> secondaryParties = RecordingActParty.GetSecondaryPartiesList(recordingAct);
+      FixedList<RecordingActParty> secondaryParties = RecordingActParty.GetSecondaryPartiesList(recordingAct);
       for (int i = 0; i < secondaryParties.Count; i++) {
         if (!secondaryParties[i].Party.Equals(baseRecordingActParty.Party)) {
           continue;
@@ -148,7 +148,7 @@ namespace Empiria.Land.UI {
 
       string html = String.Empty;
       string temp = String.Empty;
-      ObjectList<TractIndexItem> annotations = recording.GetPropertiesAnnotationsList();
+      FixedList<TractIndexItem> annotations = recording.GetPropertiesAnnotationsList();
       for (int i = 0; i < annotations.Count; i++) {
         TractIndexItem association = annotations[i];
         if (i % 2 == 0) {
@@ -192,7 +192,7 @@ namespace Empiria.Land.UI {
     }
 
     static public string GetRecordingsSummaryTable(RecordingBook recordingBook, int pageSize, int pageIndex) {
-      ObjectList<Recording> recordings = RecordingBooksData.GetRecordings(recordingBook);
+      FixedList<Recording> recordings = RecordingBooksData.GetRecordings(recordingBook);
 
       return GetRecordingsSummaryTable(recordings, pageSize, pageIndex);
     }
@@ -232,10 +232,10 @@ namespace Empiria.Land.UI {
                                           "</select>";
       string html = String.Empty;
       string temp = String.Empty;
-      ObjectList<RecordingAct> recordingActs = recording.GetNoAnnotationActs();
+      FixedList<RecordingAct> recordingActs = recording.GetNoAnnotationActs();
       for (int i = 0; i < recordingActs.Count; i++) {
         RecordingAct recordingAct = recordingActs[i];
-        ObjectList<TractIndexItem> properties = recordingActs[i].TractIndex;
+        FixedList<TractIndexItem> properties = recordingActs[i].TractIndex;
         for (int j = 0; j < properties.Count; j++) {
           TractIndexItem tractItem = properties[j];
           if (i % 2 == 0) {
@@ -294,7 +294,7 @@ namespace Empiria.Land.UI {
       return html;
     }
 
-    static public string GetRecordingActsGrid(ObjectList<RecordingAct> recordingActs) {
+    static public string GetRecordingActsGrid(FixedList<RecordingAct> recordingActs) {
       string html = String.Empty;
       int counter = 0;
 
@@ -430,7 +430,7 @@ namespace Empiria.Land.UI {
       return temp;
     }
 
-    static public string GetRecordingsSummaryTable(ObjectList<Recording> recordings, int pageSize, int pageIndex) {
+    static public string GetRecordingsSummaryTable(FixedList<Recording> recordings, int pageSize, int pageIndex) {
       PagedDataSource pageView = GetPagedDataSource(recordings, pageSize, pageIndex);
 
       const string header = @"<table id='tblRecordingsViewer' class='details' style='width:658px'>" +

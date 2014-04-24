@@ -51,7 +51,7 @@ namespace Empiria.Land.Registration.Transactions {
       return fee;
     }
 
-    static internal LRSFee Parse(ObjectList<LRSTransactionAct> list) {
+    static internal LRSFee Parse(FixedList<LRSTransactionAct> list) {
       LRSFee fee = new LRSFee();
 
       foreach (LRSTransactionAct act in list) {

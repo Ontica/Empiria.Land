@@ -88,34 +88,34 @@ namespace Empiria.Land.Registration {
       return new RecordingActParty(recordingAct, party);
     }
 
-    static public ObjectList<RecordingActParty> GetList(RecordingAct recordingAct) {
+    static public FixedList<RecordingActParty> GetList(RecordingAct recordingAct) {
       return RecordingActsData.GetRecordingActPartiesList(recordingAct);
     }
 
-    static public ObjectList<RecordingActParty> GetList(Recording recording, Party party) {
+    static public FixedList<RecordingActParty> GetList(Recording recording, Party party) {
       return PropertyData.GetRecordingPartiesList(recording, party);
     }
 
     public static RecordingActParty GetDomainParty(RecordingAct recordingAct, Party party) {
-      ObjectList<RecordingActParty> owners = GetInvolvedDomainParties(recordingAct);
+      FixedList<RecordingActParty> owners = GetInvolvedDomainParties(recordingAct);
 
       return owners.Find((x) => x.Party.Equals(party));
     }
 
-    static public ObjectList<RecordingActParty> GetDomainPartyList(RecordingAct recordingAct) {
+    static public FixedList<RecordingActParty> GetDomainPartyList(RecordingAct recordingAct) {
       return RecordingActsData.GetDomainPartyList(recordingAct);
     }
 
-    static public ObjectList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
+    static public FixedList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
       return RecordingActsData.GetInvolvedDomainParties(recordingAct);
     }
 
-    static public ObjectList<RecordingActParty> GetSecondaryPartiesList(RecordingAct recordingAct) {
+    static public FixedList<RecordingActParty> GetSecondaryPartiesList(RecordingAct recordingAct) {
       return RecordingActsData.GetSecondaryPartiesList(recordingAct);
     }
 
     public static RecordingActParty GetSecondaryParty(RecordingAct recordingAct, Party party) {
-      ObjectList<RecordingActParty> secondaries = GetSecondaryPartiesList(recordingAct);
+      FixedList<RecordingActParty> secondaries = GetSecondaryPartiesList(recordingAct);
 
       return secondaries.Find((x) => x.Party.Equals(party));
     }
@@ -312,7 +312,7 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public void Delete() {
-      ObjectList<RecordingActParty> secondaries = GetSecondaryPartiesList(this.RecordingAct);
+      FixedList<RecordingActParty> secondaries = GetSecondaryPartiesList(this.RecordingAct);
       for (int i = 0; i < secondaries.Count; i++) {
         secondaries[i].Status = RecordableObjectStatus.Deleted;
         secondaries[i].Save();

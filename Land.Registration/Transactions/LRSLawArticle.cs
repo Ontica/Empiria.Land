@@ -46,8 +46,8 @@ namespace Empiria.Land.Registration.Transactions {
       return BaseObject.Parse<LRSLawArticle>(thisTypeName, id);
     }
 
-    static public ObjectList<LRSLawArticle> GetList() {
-      ObjectList<LRSLawArticle> list = GeneralObject.ParseList<LRSLawArticle>(thisTypeName);
+    static public FixedList<LRSLawArticle> GetList() {
+      FixedList<LRSLawArticle> list = GeneralObject.ParseList<LRSLawArticle>(thisTypeName);
 
       //list.Sort( (x,y) => x.Name.CompareTo(y.Name));
 

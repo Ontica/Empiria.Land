@@ -45,16 +45,16 @@ namespace Empiria.Land.Registration.Transactions {
       return BaseObject.Parse<LRSTransactionType>(thisTypeName, id);
     }
 
-    static public ObjectList<LRSTransactionType> GetList() {
-      ObjectList<LRSTransactionType> list = GeneralObject.ParseList<LRSTransactionType>(thisTypeName);
+    static public FixedList<LRSTransactionType> GetList() {
+      FixedList<LRSTransactionType> list = GeneralObject.ParseList<LRSTransactionType>(thisTypeName);
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
       return list;
     }
 
-    public ObjectList<LRSDocumentType> GetDocumentTypes() {
-      ObjectList<LRSDocumentType> list = this.GetLinks<LRSDocumentType>("TransactionType_DocumentType");
+    public FixedList<LRSDocumentType> GetDocumentTypes() {
+      FixedList<LRSDocumentType> list = this.GetLinks<LRSDocumentType>("TransactionType_DocumentType");
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 

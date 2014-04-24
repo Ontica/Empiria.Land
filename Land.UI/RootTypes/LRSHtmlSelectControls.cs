@@ -32,28 +32,28 @@ namespace Empiria.Land.UI {
 
     static public void LoadLegacyAnnotationActTypesCategoriesCombo(HtmlSelect comboControl) {
       GeneralList listType = GeneralList.Parse("LegacyAnnotationActTypesCategories.List");
-      ObjectList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
+      FixedList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
 
       HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de limitación )");
     }
 
     static public void LoadLegacyTraslativeActTypesCategoriesCombo(HtmlSelect comboControl) {
       GeneralList listType = GeneralList.Parse("LegacyTraslativeActTypesCategories.List");
-      ObjectList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
+      FixedList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
 
       HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de acto jurídico )");
     }
 
     static public void LoadRecordingActTypesCategoriesCombo(HtmlSelect comboControl) {
       GeneralList listType = GeneralList.Parse("RecordingActTypesCategories.List");
-      ObjectList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
+      FixedList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
 
       HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de acto jurídico )");
     }
 
     static public void LoadTransactionActTypesCategoriesCombo(HtmlSelect comboControl) {
       GeneralList listType = GeneralList.Parse("TransactionActTypesCategories.List");
-      ObjectList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
+      FixedList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
 
       HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name");
     }
@@ -61,7 +61,7 @@ namespace Empiria.Land.UI {
     static public void LoadRecordingBookClassesCombo(HtmlSelect comboControl, string headerItemText,
                                                      RecordingActTypeCategory defaultItem) {
       GeneralList listType = GeneralList.Parse("RecordingBookClasses.List");
-      ObjectList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
+      FixedList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
 
       HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", headerItemText);
       if (defaultItem != null && !defaultItem.IsEmptyInstance) {
@@ -82,7 +82,7 @@ namespace Empiria.Land.UI {
 
     static public string GetRecordingBookClassesComboItems(string headerItemText) {
       GeneralList listType = GeneralList.Parse("RecordingBookClasses.List");
-      ObjectList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
+      FixedList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
 
       return HtmlSelectContent.GetComboHtml(list, "Id", "Name", headerItemText);
     }
@@ -90,7 +90,7 @@ namespace Empiria.Land.UI {
     static public string GetBookImageClippersComboItems(RecorderOffice recorderOffice,
                                                         ComboControlUseMode comboControlUseMode,
                                                         Contact defaultBookImageClipper) {
-      ObjectList<Contact> contacts = recorderOffice.GetContactsInRole<Contact>("RecorderOffice_ImageClippers");
+      FixedList<Contact> contacts = recorderOffice.GetContactsInRole<Contact>("RecorderOffice_ImageClippers");
       return GetContactsInRoleComboItems(contacts, defaultBookImageClipper, comboControlUseMode,
                                          "( Seleccionar al cortador del libro )",
                                          "( Todos los cortadores de libros )",
@@ -100,7 +100,7 @@ namespace Empiria.Land.UI {
     static public string GetBookImageDigitalizersComboItems(RecorderOffice recorderOffice,
                                                             ComboControlUseMode comboControlUseMode,
                                                             Contact defaultBookImageDigitalizer) {
-      ObjectList<Contact> contacts = recorderOffice.GetContactsInRole<Contact>("RecorderOffice_ImageDigitalizers");
+      FixedList<Contact> contacts = recorderOffice.GetContactsInRole<Contact>("RecorderOffice_ImageDigitalizers");
 
       return GetContactsInRoleComboItems(contacts, defaultBookImageDigitalizer, comboControlUseMode,
                                          "( Seleccionar al digitalizador del libro )",
@@ -110,7 +110,7 @@ namespace Empiria.Land.UI {
 
     static public string GetRecordingsBatchAnalystComboItems(ComboControlUseMode comboControlUseMode,
                                                              Contact defaultBookBatchRecorderUser) {
-      ObjectList<Contact> contacts =
+      FixedList<Contact> contacts =
                 RecorderOffice.MainRecorderOffice.GetContactsInRole<Contact>("MainRecorderOffice_RecordingsBatchAnalysts");
       contacts.Sort((x, y) => x.Alias.CompareTo(y.Alias));
 
@@ -122,7 +122,7 @@ namespace Empiria.Land.UI {
 
     static public void LoadPropertyTypesCombo(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
                                               PropertyKind defaultItem) {
-      ObjectList<PropertyKind> list = PropertyKind.GetList();
+      FixedList<PropertyKind> list = PropertyKind.GetList();
 
       string header = comboControlUseMode == ComboControlUseMode.ObjectCreation
                                 ? "( Seleccionar tipo de predio )" : "( Todos los tipos )";
@@ -136,7 +136,7 @@ namespace Empiria.Land.UI {
     static public void LoadRecordingActTypesCombo(RecordingActTypeCategory recordingActTypeCategory,
                                                   HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
                                                   RecordingActType defaultRecordingActType) {
-      ObjectList<RecordingActType> recordingActTypeList = recordingActTypeCategory.GetItems();
+      FixedList<RecordingActType> recordingActTypeList = recordingActTypeCategory.GetItems();
 
       string header = (comboControlUseMode == ComboControlUseMode.ObjectCreation)
                               ? "( Primero seleccionar la categoría de la inscripción )" : "( Todos  los actos jurídicos )";
@@ -149,7 +149,7 @@ namespace Empiria.Land.UI {
 
     static public void LoadRecorderOfficeCombo(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
                                                RecorderOffice defaultOffice) {
-      ObjectList<RecorderOffice> officeList = RecorderOffice.GetList();
+      FixedList<RecorderOffice> officeList = RecorderOffice.GetList();
 
 
       string header = (comboControlUseMode == ComboControlUseMode.ObjectCreation)
@@ -163,7 +163,7 @@ namespace Empiria.Land.UI {
 
     static public void LoadDomainRecordingSections(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
                                                    string defaultValue = "") {
-      ObjectList<KeyValuePair> list = KeyValuePair.GetList("LRSDomainTraslativeSection.Combo.List");
+      FixedList<KeyValuePair> list = KeyValuePair.GetList("LRSDomainTraslativeSection.Combo.List");
 
       string header = (comboControlUseMode == ComboControlUseMode.ObjectCreation)
                               ? "( Distrito / Sección )" : "( Todas los Distritos )";
@@ -175,7 +175,7 @@ namespace Empiria.Land.UI {
 
     static public void LoadRecorderOfficeMunicipalitiesCombo(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
                                                              RecorderOffice recorderOffice, GeographicRegionItem defaultItem) {
-      ObjectList<GeographicRegionItem> list = recorderOffice.GetMunicipalities();
+      FixedList<GeographicRegionItem> list = recorderOffice.GetMunicipalities();
 
       string header = (comboControlUseMode == ComboControlUseMode.ObjectCreation)
                               ? "( Seleccionar un municipio )" : "( Todos los municipios )";
@@ -189,7 +189,7 @@ namespace Empiria.Land.UI {
     static public void LoadRecorderOfficersCombo(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
                                                  RecordingBook recordingBook, Contact defaultRecorderOfficer) {
       RecorderOffice office = recordingBook.RecorderOffice;
-      ObjectList<Person> officers = office.GetRecorderOfficials(recordingBook.RecordingsControlTimePeriod);
+      FixedList<Person> officers = office.GetRecorderOfficials(recordingBook.RecordingsControlTimePeriod);
 
       string header = (comboControlUseMode == ComboControlUseMode.ObjectCreation)
                         ? "( Seleccionar al C. Oficial Registrador )" : "( Todos los C. Oficiales Registradores )";
@@ -224,7 +224,7 @@ namespace Empiria.Land.UI {
 
     #region Private methods
 
-    static private string GetContactsInRoleComboItems(ObjectList<Contact> contacts,
+    static private string GetContactsInRoleComboItems(FixedList<Contact> contacts,
                                                       Contact selectedContact,
                                                       ComboControlUseMode comboControlUseMode,
                                                       string objectCreationFirstItem,

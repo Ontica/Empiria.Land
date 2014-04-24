@@ -90,8 +90,8 @@ namespace Empiria.Land.Registration.Transactions {
     private TransactionStatus status = TransactionStatus.Payment;
     private string integrityHashCode = String.Empty;
 
-    private ObjectList<LRSTransactionTrack> track = null;
-    private ObjectList<LRSTransactionAct> recordingActs = null;
+    private FixedList<LRSTransactionTrack> track = null;
+    private FixedList<LRSTransactionAct> recordingActs = null;
     private LRSFee totalFee = null;
 
     #endregion Fields
@@ -141,7 +141,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    static public ObjectList<Contact> GetManagementAgenciesList() {
+    static public FixedList<Contact> GetManagementAgenciesList() {
       GeneralList listType = GeneralList.Parse("LRSTransaction.ManagementAgencies.List");
 
       return listType.GetContacts<Contact>();
@@ -318,7 +318,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public ObjectList<LRSTransactionTrack> Track {
+    public FixedList<LRSTransactionTrack> Track {
       get {
         if (track == null) {
           track = TransactionData.GetLRSTransactionTrack(this);
@@ -383,7 +383,7 @@ namespace Empiria.Land.Registration.Transactions {
       return true;
     }
 
-    public ObjectList<LRSTransactionAct> RecordingActs {
+    public FixedList<LRSTransactionAct> RecordingActs {
       get {
         if (this.recordingActs == null) {
           this.recordingActs = TransactionData.GetLRSTransactionActs(this);
@@ -402,7 +402,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public List<string> GetRecordingActsReceipts() {
-      ObjectList<LRSTransactionAct> ra = this.RecordingActs;
+      FixedList<LRSTransactionAct> ra = this.RecordingActs;
       List<string> list = new List<string>();
 
       for (int i = 0; i < ra.Count; i++) {

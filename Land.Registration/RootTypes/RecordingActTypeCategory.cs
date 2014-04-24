@@ -53,8 +53,8 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public ObjectList<RecordingActType> GetItems() {
-      ObjectList<RecordingActType> list = base.GetTypeLinks<RecordingActType>("RecordingActTypeCategory_Items");
+    public FixedList<RecordingActType> GetItems() {
+      FixedList<RecordingActType> list = base.GetTypeLinks<RecordingActType>("RecordingActTypeCategory_Items");
 
       list.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
 

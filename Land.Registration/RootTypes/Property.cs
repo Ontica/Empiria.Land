@@ -180,7 +180,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public ObjectList<RecordingAct> Annotations {
+    public FixedList<RecordingAct> Annotations {
       get {
         return RecordingBooksData.GetPropertyAnnotationList(this);
       }
@@ -188,7 +188,7 @@ namespace Empiria.Land.Registration {
 
     public RecordingAct FirstRecordingAct {
       get {
-        ObjectList<RecordingAct> domainActs = this.GetRecordingActsTract();
+        FixedList<RecordingAct> domainActs = this.GetRecordingActsTract();
         if (domainActs.Count != 0) {
           return domainActs[0];
         } else {
@@ -200,7 +200,7 @@ namespace Empiria.Land.Registration {
 
     public RecordingAct LastRecordingAct {
       get {
-        ObjectList<RecordingAct> domainActs = this.GetRecordingActsTract();
+        FixedList<RecordingAct> domainActs = this.GetRecordingActsTract();
         if (domainActs.Count != 0) {
           return domainActs[domainActs.Count - 1];
         } else {
@@ -262,16 +262,16 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public ObjectList<RecordingAct> GetRecordingActsTract() {
+    public FixedList<RecordingAct> GetRecordingActsTract() {
       return RecordingActsData.GetPropertyRecordingActList(this);
     }
 
-    public ObjectList<RecordingAct> GetRecordingActsTractUntil(RecordingAct breakAct, bool includeBreakAct) {
+    public FixedList<RecordingAct> GetRecordingActsTractUntil(RecordingAct breakAct, bool includeBreakAct) {
       return RecordingActsData.GetPropertyRecordingActListUntil(this, breakAct, includeBreakAct);
     }
 
     public RecordingAct GetAntecedent(RecordingAct baseRecordingAct) {
-      ObjectList<RecordingAct> tract = this.GetRecordingActsTract();
+      FixedList<RecordingAct> tract = this.GetRecordingActsTract();
 
       int index = tract.IndexOf(baseRecordingAct);
 
@@ -285,7 +285,7 @@ namespace Empiria.Land.Registration {
     }
 
     public RecordingAct GetDomainAntecedent(RecordingAct baseRecordingAct) {
-      ObjectList<RecordingAct> tract = this.GetRecordingActsTractUntil(baseRecordingAct, false);
+      FixedList<RecordingAct> tract = this.GetRecordingActsTractUntil(baseRecordingAct, false);
 
       if (tract.Count == 0) {         // Antecedent no registered
         return InformationAct.Empty;

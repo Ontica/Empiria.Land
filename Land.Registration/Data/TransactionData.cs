@@ -72,16 +72,16 @@ namespace Empiria.Land.Registration.Data {
       return dataset;
     }
 
-    static public ObjectList<LRSTransactionTrack> GetLRSTransactionTrack(LRSTransaction transaction) {
+    static public FixedList<LRSTransactionTrack> GetLRSTransactionTrack(LRSTransaction transaction) {
       DataView view = DataReader.GetDataView(DataOperation.Parse("qryLRSTransactionTrack", transaction.Id));
 
-      return new ObjectList<LRSTransactionTrack>((x) => LRSTransactionTrack.Parse(x), view);
+      return new FixedList<LRSTransactionTrack>((x) => LRSTransactionTrack.Parse(x), view);
     }
 
-    static public ObjectList<LRSTransactionAct> GetLRSTransactionActs(LRSTransaction transaction) {
+    static public FixedList<LRSTransactionAct> GetLRSTransactionActs(LRSTransaction transaction) {
       DataView view = DataReader.GetDataView(DataOperation.Parse("qryLRSTransactionActs", transaction.Id));
 
-      return new ObjectList<LRSTransactionAct>((x) => LRSTransactionAct.Parse(x), view);
+      return new FixedList<LRSTransactionAct>((x) => LRSTransactionAct.Parse(x), view);
     }
 
     static public DataView GetLRSResponsibleTransactionInbox(Contacts.Contact contact, TrackStatus status,
@@ -94,24 +94,24 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetDataView(DataOperation.Parse("SELECT * FROM vwLRSTransactionsTotals"));
     }
 
-    static public ObjectList<Contact> GetContactsWithOutboxDocuments() {
+    static public FixedList<Contact> GetContactsWithOutboxDocuments() {
       DataView view = DataReader.GetDataView(DataOperation.Parse("qryLRSContactsWithOutboxDocuments"));
 
-      return new ObjectList<Contact>((x) => Contact.Parse(x), view);
+      return new FixedList<Contact>((x) => Contact.Parse(x), view);
     }
 
-    //static public ObjectList<RecorderOfficeTransactionFile> GetTransactionFiles(RecorderOfficeTransaction transaction) {
+    //static public FixedList<RecorderOfficeTransactionFile> GetTransactionFiles(RecorderOfficeTransaction transaction) {
     //  string sql = "SELECT * FROM LRSTransactionFiles WHERE TransactionId = " + transaction.Id.ToString() + 
     //               " AND TransactionFileStatus = 'A'";
     //  DataView view = DataReader.GetDataView(DataOperation.Parse(sql));
 
-    //  return new ObjectList<RecorderOfficeTransactionFile>((x) => RecorderOfficeTransactionFile.Parse(x), view);
+    //  return new FixedList<RecorderOfficeTransactionFile>((x) => RecorderOfficeTransactionFile.Parse(x), view);
     //}
 
-    //static public ObjectList<RecorderOfficeTransaction> GetTransactions(RecorderOffice office, DateTime fromDate, DateTime toDate, string filter, string sort) {
+    //static public FixedList<RecorderOfficeTransaction> GetTransactions(RecorderOffice office, DateTime fromDate, DateTime toDate, string filter, string sort) {
     //  DataView view = DataReader.GetDataView(DataOperation.Parse("qryLRSTransactions", office.Id, fromDate, toDate), filter, sort);
 
-    //  return new ObjectList<RecorderOfficeTransaction>((x) => RecorderOfficeTransaction.Parse(x), view);
+    //  return new FixedList<RecorderOfficeTransaction>((x) => RecorderOfficeTransaction.Parse(x), view);
     //}
 
     //static public DataView GetTransactions(RecorderOffice office, DateTime fromDate, DateTime toDate) {

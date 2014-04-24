@@ -47,7 +47,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    static public ObjectList<PropertyKind> GetList() {
+    static public FixedList<PropertyKind> GetList() {
       return GeneralObject.ParseList<PropertyKind>(thisTypeName);
     }
 

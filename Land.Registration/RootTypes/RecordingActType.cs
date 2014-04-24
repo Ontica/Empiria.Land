@@ -152,7 +152,7 @@ namespace Empiria.Land.Registration {
       return instance;
     }
 
-    public ObjectList<RecordingActType> GetAppliesToRecordingActTypesList() {
+    public FixedList<RecordingActType> GetAppliesToRecordingActTypesList() {
       var list = base.GetTypeLinks<RecordingActType>("RecordingActType_AppliesToRecordingAct");
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
@@ -160,7 +160,7 @@ namespace Empiria.Land.Registration {
       return list;
     }
 
-    public ObjectList<LRSLawArticle> GetFinancialLawArticles() {
+    public FixedList<LRSLawArticle> GetFinancialLawArticles() {
       var list = base.GetLinks<LRSLawArticle>("RecordingActType_FinancialLawArticle");
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
@@ -168,7 +168,7 @@ namespace Empiria.Land.Registration {
       return list;
     }
 
-    public ObjectList<DomainActPartyRole> GetRoles() {
+    public FixedList<DomainActPartyRole> GetRoles() {
       var list = base.GetLinks<DomainActPartyRole>("RecordingActType_Roles");
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));

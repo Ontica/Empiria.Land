@@ -51,8 +51,8 @@ namespace Empiria.Land.Registration {
       return BaseObject.Parse<JudicialOffice>(thisTypeName, id);
     }
 
-    static public ObjectList<JudicialOffice> GetList(GeographicRegionItem place) {
-      ObjectList<JudicialOffice> list = place.GetContacts<JudicialOffice>("Region_JudicialOffices");
+    static public FixedList<JudicialOffice> GetList(GeographicRegionItem place) {
+      FixedList<JudicialOffice> list = place.GetContacts<JudicialOffice>("Region_JudicialOffices");
 
       list.Sort((x, y) => x.Number.CompareTo(y.Number));
 
@@ -71,16 +71,16 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public ObjectList<Person> GetJudges() {
-      ObjectList<Person> list = base.GetLinks<Person>("JudicialOffice_Judges");
+    public FixedList<Person> GetJudges() {
+      FixedList<Person> list = base.GetLinks<Person>("JudicialOffice_Judges");
 
       list.Sort((x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
 
       return list;
     }
 
-    public ObjectList<Person> GetJudges(TimePeriod period) {
-      ObjectList<Person> list = base.GetLinks<Person>("JudicialOffice_Judges", period);
+    public FixedList<Person> GetJudges(TimePeriod period) {
+      FixedList<Person> list = base.GetLinks<Person>("JudicialOffice_Judges", period);
 
       list.Sort((x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
 

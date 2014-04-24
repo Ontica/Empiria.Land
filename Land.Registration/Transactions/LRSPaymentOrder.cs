@@ -184,7 +184,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public ObjectList<LRSTransactionAct> GetConcepts() {
+    public FixedList<LRSTransactionAct> GetConcepts() {
       return TransactionData.GetLRSTransactionActs(this.Transaction);
     }
 

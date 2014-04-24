@@ -15,7 +15,7 @@
 //namespace Empiria.Land.Registration.Transactions {
 
 //  /// <summary>List of transaction concepts.</summary>
-//  public class LRSTransactionConceptsList : ObjectList<LRSTransactionAct> {
+//  public class LRSTransactionConceptsList : FixedList<LRSTransactionAct> {
 
 //    #region Fields
 
