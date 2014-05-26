@@ -101,7 +101,7 @@ namespace Empiria.Land.Registration {
       }
       if (json.ContainsKey("PropertyStatus")) {
         rule.PropertyRecordingStatus = (PropertyRecordingStatus) Enum.Parse(typeof(PropertyRecordingStatus),
-                                                                  (string) json["PropertyStatus"]);
+                                                                            (string) json["PropertyStatus"]);
       }
       if (json.ContainsKey("RecordingSectionId")) {
         rule.RecordingSection = RecordingSection.Parse(Convert.ToInt32(json["RecordingSectionId"]));
