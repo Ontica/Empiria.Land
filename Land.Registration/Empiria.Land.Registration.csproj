@@ -99,6 +99,26 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Empiria.Data, Version=5.5.725.0, Culture=neutral, PublicKeyToken=8b7fe9c60c0f43bd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\empiria.assemblies\Empiria.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Empiria.Documents, Version=5.5.725.0, Culture=neutral, PublicKeyToken=8b7fe9c60c0f43bd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\empiria.assemblies\Empiria.Documents.dll</HintPath>
+    </Reference>
+    <Reference Include="Empiria.Foundation, Version=5.5.725.0, Culture=neutral, PublicKeyToken=8b7fe9c60c0f43bd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\empiria.assemblies\Empiria.Foundation.dll</HintPath>
+    </Reference>
+    <Reference Include="Empiria.Geography, Version=5.5.725.0, Culture=neutral, PublicKeyToken=8b7fe9c60c0f43bd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\empiria.assemblies\Empiria.Geography.dll</HintPath>
+    </Reference>
+    <Reference Include="Empiria.Kernel, Version=5.5.725.0, Culture=neutral, PublicKeyToken=8b7fe9c60c0f43bd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\empiria.assemblies\Empiria.Kernel.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System">
       <Name>System</Name>
@@ -112,29 +132,6 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
-    <ProjectReference Include="..\Documents\Empiria.Documents.csproj">
-      <Project>{2BD53D27-BD61-49FE-AFE1-D68E21F58E9A}</Project>
-      <Name>Empiria.Documents</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Foundation\Empiria.Foundation.csproj">
-      <Name>Empiria.Foundation</Name>
-      <Project>{73EA993B-576B-4A5B-ACC5-117DAD0254EE}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\..\empiria\Data\Empiria.Data.csproj">
-      <Name>Empiria.Data</Name>
-      <Project>{20C01648-86CC-4E9E-AD71-BA7AA8E44DBC}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\..\empiria\Kernel\Empiria.Kernel.csproj">
-      <Name>Empiria.Kernel</Name>
-      <Project>{F518E007-2B16-4804-BA45-695EA098E1C0}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Geography\Empiria.Geography.csproj">
-      <Project>{96267945-DBE1-4B2C-88E2-0ECDC5CA7669}</Project>
-      <Name>Empiria.Geography</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\AnalyticsData.cs" />
@@ -228,15 +225,15 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="empiria.strong.name.public.key.snk" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="RootTypes\LandRegistrationExceptionMsg.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Analytics\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="empiria.strong.name.public.key.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
