@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                     System   : Land Registration System          *
 *  Assembly  : Empiria.Land.WebServices.dll                     Pattern  : Assembly Attributes File          *
-*  Version   : 1.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 2.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Empiria Land Web Services.                                                                    *
 *                                                                                                            *
@@ -15,8 +15,8 @@ using System.Runtime.InteropServices;
 *************************************************************************************************************/
 [assembly: AssemblyTitle("Empiria.Land.WS")]
 [assembly: AssemblyDescription("Empiria Land Web Services")]
-[assembly: AssemblyVersion("1.5.0725.0")]
-[assembly: AssemblyFileVersion("1.5.0725")]
+[assembly: AssemblyVersion("2.0.1023.0")]
+[assembly: AssemblyFileVersion("2.0.1023")]
 [assembly: AssemblyCompany("Ontica")]
 [assembly: AssemblyProduct("Empiria Land 2014")]
 [assembly: AssemblyCopyright("(c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.")]

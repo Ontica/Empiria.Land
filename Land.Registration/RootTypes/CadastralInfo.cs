@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : Address                                        Pattern  : IExtensibleData class               *
-*  Version   : 1.5        Date: 25/Jun/2014                   License  : GNU AGPLv3  (See license.txt)       *
+*  Type      : CadastralInfo                                  Pattern  : IExtensibleData class               *
+*  Version   : 2.0        Date: 23/Oct/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
-*  Summary   : Contains extensible data about geographical addresses.                                        *
+*  Summary   : Contains extensible data about real estate cadastral info.                                    *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -13,7 +13,7 @@ using Empiria.DataTypes;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Contains extensible data about geographical addresses.</summary>
+  /// <summary>Contains extensible data about real estate cadastral info.</summary>
   public class CadastralInfo : IExtensibleData {
 
     #region Constructors and parsers
@@ -130,6 +130,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Methods
 
-  }  // class CadastralExtData
+  }  // class CadastralInfo
 
 } // namespace Empiria.Land.Registration
