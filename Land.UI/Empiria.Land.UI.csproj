@@ -117,10 +117,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\empiria.assemblies\Empiria.Kernel.dll</HintPath>
     </Reference>
-    <Reference Include="Empiria.Land.Registration, Version=1.5.725.0, Culture=neutral, PublicKeyToken=8b7fe9c60c0f43bd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\empiria.assemblies\Empiria.Land.Registration.dll</HintPath>
-    </Reference>
     <Reference Include="Empiria.Presentation, Version=5.5.725.0, Culture=neutral, PublicKeyToken=8b7fe9c60c0f43bd, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\empiria.assemblies\Empiria.Presentation.dll</HintPath>
@@ -179,10 +175,17 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="empiria.strong.name.public.key.snk" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj">
+      <Project>{ea85313c-bbbb-4f31-b6b9-05bb79addff1}</Project>
+      <Name>Empiria.Land.Registration</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

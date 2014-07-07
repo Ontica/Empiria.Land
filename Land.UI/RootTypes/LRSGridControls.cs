@@ -300,16 +300,16 @@ namespace Empiria.Land.UI {
 
       int index = 0;
       foreach (var recordingAct in recordingActs) {
-        var propertyEvents = recordingAct.TractIndex;
-        if (propertyEvents.Count != 0) {
-          int propertyEventIndex = 0;
-          foreach (var propertyEvent in propertyEvents) {
-            if (index == 0 && propertyEventIndex == 0) {
+        var tractIndex = recordingAct.TractIndex;
+        if (tractIndex.Count != 0) {
+          int tractItemIndex = 0;
+          foreach (var tractItem in tractIndex) {
+            if (index == 0 && tractItemIndex == 0) {
               counter++;
             }
-            html += GetRecordingActGridRow(recordingAct, propertyEvent, counter,
-                                           index, propertyEventIndex);
-            propertyEventIndex++;
+            html += GetRecordingActGridRow(recordingAct, tractItem, counter, 
+                                           index, tractItemIndex);
+            tractItemIndex++;
           }
         } else {
           counter++;

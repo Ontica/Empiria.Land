@@ -251,15 +251,11 @@ namespace Empiria.Land.Registration.Data {
 
     static internal DataOperation WriteRecordingDocumentOp(RecordingDocument o) {
       Assertion.Require(o.Id != 0, "Document.Id can't be zero");
-      return DataOperation.Parse("writeLRSDocument", o.Id, o.RecordingDocumentType.Id, o.Subtype.Id,
-                                 o.DocumentKey, (char) o.DocumentRecordingRole, o.IssuePlace.Id, o.IssueOffice.Id,
-                                 o.IssuedBy.Id, o.IssuedByPosition.Id, o.IssueDate, o.MainWitness.Id,
-                                 o.MainWitnessPosition.Id, o.SecondaryWitness.Id, o.SecondaryWitnessPosition.Id,
-                                 o.Name, o.FileName, o.BookNumber, o.ExpedientNumber, o.Number,
-                                 o.SheetsCount, o.SealUpperPosition, o.StartSheet, o.EndSheet,
-                                 o.Notes, o.Keywords, o.ReviewedBy.Id, o.AuthorizationKey,
-                                 o.DigitalString, o.DigitalSign, o.PostedBy.Id, o.PostingTime,
-                                 (char) o.Status, o.RecordIntegrityHashCode);
+      return DataOperation.Parse("writeLRSDocument", o.Id, o.DocumentType.Id, o.Subtype.Id, o.UniqueCode, 
+                                 o.IssuePlace.Id, o.IssueOffice.Id, o.IssuedBy.Id, o.IssueDate,
+                                 o.Number, o.ExpedientNo, o.Title, o.Notes, o.SheetsCount, 
+                                 o.ExtensionData.ToJson(), o.Keywords, o.PostedBy.Id, o.PostingTime, 
+                                 (char) o.Status, o.Integrity.GetUpdatedHashCode());
     }
 
     #endregion Public methods

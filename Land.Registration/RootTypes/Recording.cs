@@ -504,7 +504,7 @@ namespace Empiria.Land.Registration {
         this.capturedTime = DateTime.Now;
         this.capturedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
-      this.keywords = EmpiriaString.BuildKeywords(this.number, this.recordingBook.FullName, this.RecordingDocument.DocumentKey);
+      this.keywords = EmpiriaString.BuildKeywords(this.number, this.recordingBook.FullName, this.RecordingDocument.UniqueCode);
 
       RecordingBooksData.WriteRecording(this);
     }

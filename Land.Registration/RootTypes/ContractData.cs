@@ -9,6 +9,8 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+
+using Empiria.DataTypes;
 using Empiria.Geography;
 
 namespace Empiria.Land.Registration {
@@ -22,7 +24,21 @@ namespace Empiria.Land.Registration {
       this.Date = ExecutionServer.DateMaxValue;
       this.Place = GeographicRegionItem.Empty;
       this.Number = String.Empty;
-      this.Interest = InterestData.Empty;
+      this.Interest = Interest.Empty;
+    }
+
+    static internal ContractData Parse(Empiria.Data.JsonObject json) {
+      if (json.IsEmptyInstance) {
+        return ContractData.Empty;
+      }
+
+      var contract = new ContractData();
+      contract.Number = json.Find<String>("Number", String.Empty);
+      contract.Date = json.Find<DateTime>("Date", contract.Date);
+      contract.Place = json.Find<GeographicRegionItem>("PlaceId", contract.Place);
+      contract.Interest = Interest.Parse(json.Slice("Interest"));
+
+      return contract;
     }
 
     static public ContractData Empty {
@@ -47,7 +63,7 @@ namespace Empiria.Land.Registration {
       get; set;
     }
 
-    public InterestData Interest {
+    public Interest Interest {
       get; set;
     }
 

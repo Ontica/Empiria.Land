@@ -38,17 +38,6 @@ namespace Empiria.Land.Registration {
       Initialize();
     }
 
-    static internal RecordingAct Parse(RecordingTask task) {
-      Assertion.AssertObject(task, "task");
-
-      RecordingAct recordingAct = task.RecordingActType.CreateInstance();
-      recordingAct.Transaction = task.Transaction;
-      recordingAct.Document = task.Document;
-      recordingAct.TargetRecordingAct = task.TargetRecordingAct;
-
-      return recordingAct;
-    }
-
     static internal RecordingAct Create(RecordingActType recordingActType, 
                                         Recording recording, Property resource) {
       RecordingAct recordingAct = recordingActType.CreateInstance();
@@ -74,15 +63,24 @@ namespace Empiria.Land.Registration {
       return BaseObject.Parse<RecordingAct>(thisTypeName, dataRow);
     }
 
-    static public FixedList<RecordingAct> GetList(LRSTransaction transaction) {
-      if (transaction.IsEmptyInstance) {
-        return new FixedList<RecordingAct>();
+    static internal RecordingAct Parse(RecordingTask task) {
+      Assertion.AssertObject(task, "task");
+
+      RecordingAct recordingAct = task.RecordingActType.CreateInstance();
+      recordingAct.Document = task.Document;
+      recordingAct.AmendmentOf = task.TargetRecordingAct;
+
+      if (!task.TargetProperty.IsEmptyInstance) {
+        recordingAct.AttachProperty(task.TargetProperty);
       }
-      return RecordingActsData.GetRecordingActs(transaction);
+      return recordingAct;
+    }
+
+    static public FixedList<RecordingAct> GetList(RecordingDocument document) {
+      return RecordingActsData.GetRecordingActs(document);
     }
 
     private void Initialize() {
-      this.Transaction = LRSTransaction.Empty;
       this.Document = RecordingDocument.Empty;
       this.Recording = Recording.Empty;
       this.ExtensionData = RecordingActExtData.Empty;
@@ -91,25 +89,16 @@ namespace Empiria.Land.Registration {
       this.Notes = String.Empty;
       this.CanceledBy = Person.Empty;
       this.CancelationTime = ExecutionServer.DateMaxValue;
-      this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-      this.PostingTime = DateTime.Now;
+      this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      this.RegistrationTime = DateTime.Now;
       this.Status = RecordableObjectStatus.Incomplete;
 
-      if (!this.IsNew) {
-        _tractIndex = new Lazy<List<TractIndexItem>>(() => RecordingActsData.GetTractIndex(this));
-      } else {
-        _tractIndex = new Lazy<List<TractIndexItem>>(() => new List<TractIndexItem>());
-      }
+      _tractIndex = new Lazy<List<TractIndexItem>>(() => RecordingActsData.GetTractIndex(this));
     }
 
     #endregion Constructors and parsers
 
     #region Public properties
-
-    public LRSTransaction Transaction {
-      get;
-      private set;
-    }
 
     public RecordingDocument Document {
       get;
@@ -146,28 +135,38 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    public Contact PostedBy {
+    public Contact RegisteredBy {
       get;
       private set;
     }
 
-    public DateTime PostingTime {
+    public DateTime RegistrationTime {
       get;
       private set;
     }
 
     public RecordableObjectStatus Status {
       get;
-      set;
+      private set;
     }
     
-    private LazyObject<RecordingAct> _targetRecordingAct = LazyObject<RecordingAct>.Empty;
-    public RecordingAct TargetRecordingAct {
+    private LazyObject<RecordingAct> _amendmentOf = LazyObject<RecordingAct>.Empty;
+    public RecordingAct AmendmentOf {
       get { 
-        return _targetRecordingAct;
+        return _amendmentOf;
       }
       private set {
-        _targetRecordingAct = value;
+        _amendmentOf = value;
+      }
+    }
+
+    private LazyObject<RecordingAct> _amendedBy = LazyObject<RecordingAct>.Empty;
+    public RecordingAct AmendedBy {
+      get { 
+        return _amendedBy;
+      }
+      private set {
+        _amendedBy = value;
       }
     }
 
@@ -191,14 +190,14 @@ namespace Empiria.Land.Registration {
       if (version == 1) {
         return new object[] {
           1, "Id", this.Id, "RecordingActType", this.RecordingActType.Id, 
-          "Transaction", this.Transaction.Id, "Document", this.Document.Id, 
-          "TargetRecordingAct", this.TargetRecordingAct.Id, "Recording", this.Recording.Id, 
-          "Index", this.Index, "Notes", this.Notes, "ExtensionData", this.ExtensionData.ToJson(), 
-          "CanceledBy", this.CanceledBy.Id, "CancelationTime", this.CancelationTime,
-          "PostedBy", this.PostedBy.Id, "PostingTime", this.PostingTime, "Status", (char) this.Status,
+          "Document", this.Document.Id, "Index", this.Index, "Notes", this.Notes, 
+          "ExtensionData", this.ExtensionData.ToJson(), "AmendmentOf", this.AmendmentOf.Id, 
+          "AmendedBy", this.AmendedBy.Id, "Recording", this.Recording.Id, 
+          "RegisteredBy", this.RegisteredBy.Id, "RegistrationTime", this.RegistrationTime,
+          "Status", (char) this.Status
         };
       }
-      throw new SecurityException(SecurityException.Msg.WrongRequestedVersionForDIF, version);
+      throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
     }
 
     private IntegrityValidator _validator = null;
@@ -262,29 +261,15 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(property, "property");
 
       var item = new TractIndexItem(this, property);
+     
       _tractIndex.Value.Add(item);
 
       return item;
     }
 
-    public void AppendPropertyEvent(Property property) {
-      if (this.IsNew) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.NotSavedRecordingAct, "AppendProperty");
-      }
-      if (this.Recording.IsNew) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.NotSavedRecording, "AppendProperty");
-      }
-
-      if (property.IsNew) {
-        property.Save();
-      } else if (this.TractIndex.Contains((x) => x.Property.Equals(property))) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.PropertyAlreadyExistsOnRecordingAct,
-                                            property.UniqueCode, this.Id);
-      }
-
-      var propertyEvent = new TractIndexItem(this, property);
-      propertyEvent.Save();
-      //_propertyList.Reset();
+    public void ChangeStatusTo(RecordableObjectStatus newStatus) {
+      this.Status = newStatus;
+      this.Save();
     }
 
     internal void Delete() {
@@ -308,7 +293,6 @@ namespace Empiria.Land.Registration {
       }
       this.Status = RecordableObjectStatus.Deleted;
       this.Save();
-      //_propertyList.Reset();
     }
 
     public IList<Property> GetProperties() {
@@ -343,34 +327,22 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void ImplementsLoadObjectData(DataRow row) {
-      this.Recording = Recording.Parse((int) row["RecordingId"]);
+      this.Document = RecordingDocument.Parse((int) row["DocumentId"]);
       this.Index = (int) row["RecordingActIndex"];
       this.Notes = (string) row["RecordingActNotes"];
-      this.PostedBy = Contact.Parse((int) row["PostedById"]);
-      this.PostingTime = (DateTime) row["PostingTime"];
+      this.ExtensionData = RecordingActExtData.Parse((string) row["RecordingActExtData"]);
+      this.Recording = Recording.Parse((int) row["RecordingId"]);      
+      this.RegisteredBy = Contact.Parse((int) row["RegisteredById"]);
+      this.RegistrationTime = (DateTime) row["RegistrationTime"];
       this.Status = (RecordableObjectStatus) Convert.ToChar(row["RecordingActStatus"]);
-
-      ///OOJJOO  Delete ASAP and use JSON read/write only
-      
-      this.ExtensionData.AppraisalAmount = Money.Parse(Currency.Parse((int) row["AppraisalCurrencyId"]), 
-                                                                      (decimal) row["AppraisalAmount"]);
-      this.ExtensionData.OperationAmount = Money.Parse(Currency.Parse((int) row["OperationCurrencyId"]), 
-                                                                      (decimal) row["OperationAmount"]);
-      this.ExtensionData.Contract.Interest.TermPeriods = (int) row["TermPeriods"];
-      this.ExtensionData.Contract.Interest.TermUnit = Unit.Parse((int) row["TermUnitId"]);
-      this.ExtensionData.Contract.Interest.Rate = (decimal) row["InterestRate"];
-      this.ExtensionData.Contract.Interest.RateType = InterestRateType.Parse((int) row["InterestRateTypeId"]);
-      this.ExtensionData.Contract.Date = (DateTime) row["ContractDate"];
-      this.ExtensionData.Contract.Place = Empiria.Geography.GeographicRegionItem.Parse((int) row["ContractPlaceId"]);
-      this.ExtensionData.Contract.Number = (string) row["ContractNumber"];
 
       Integrity.Assert((string) row["RecordingActDIF"]);
     }
 
     protected override void ImplementsSave() {
       if (base.IsNew) {
-        this.PostingTime = DateTime.Now;
-        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.RegistrationTime = DateTime.Now;
+        this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
 
       foreach (TractIndexItem tractItem in this.TractIndex) {
@@ -402,14 +374,13 @@ namespace Empiria.Land.Registration {
                        this.Status == RecordableObjectStatus.Deleted, "fail");
     }
 
-
     internal RecordingAct WriteOn(RecorderOffice recorderOffice, RecordingSection recordingSection) {
       Assertion.AssertObject(recorderOffice, "recorderOffice");
       Assertion.AssertObject(recordingSection, "recordingSection");
 
       RecordingBook book = this.GetOpenedRecordingBook(recorderOffice, recordingSection);
-      this.Recording = book.CreateRecording(this.Transaction);
-
+      //this.Recording = book.CreateRecording(this.Document.Transaction);
+      //OOJJOO
       this.Save();
 
       return this;

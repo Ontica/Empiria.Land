@@ -154,10 +154,10 @@ namespace Empiria.Land.Registration {
         Task.TargetProperty = new Property();
       }
       Assertion.Assert(this.Task.TargetProperty.IsEmptyInstance == false, 
-                       "Target resource cannot be the empty instance.");
+                       "The target resource cannot be the Property.Empty instance.");
 
       var recordingAct = RecordingAct.Parse(this.Task);
-      recordingAct.AttachProperty(this.Task.TargetProperty);
+
       return recordingAct.WriteOn(this.Task.RecorderOffice,
                                   this.Task.RecordingRule.RecordingSection);
 

@@ -31,8 +31,8 @@ namespace Empiria.Land.Registration.Data {
       return LRSTransactionTrack.Parse(row);
     }
 
-    static public DataView GetLRSTransactions(string filter, string sort) {
-      string sql = "SELECT TOP 500 * FROM qryLRSTransactions()";
+    static public DataView GetLRSTransactionsForUI(string filter, string sort) {
+      string sql = "SELECT TOP 500 * FROM vwLRSTransactionsAndCurrentTrack";
       if (filter.Length != 0 && sort.Length != 0) {
         sql += " WHERE " + filter + " ORDER BY " + sort;
       } else if (filter.Length != 0 && sort.Length == 0) {
@@ -63,7 +63,7 @@ namespace Empiria.Land.Registration.Data {
       if (table.Rows.Count != 0) {
         transactionId = (int) table.Rows[0]["TransactionId"];
       }
-      sql = "SELECT * FROM vwLRSTransactionItemsForWS WHERE TransactionId = '" + transactionId + "'";
+      sql = "SELECT * FROM vwLRSTransactionItemsForWS WHERE TransactionId = " + transactionId;
 
       table = DataReader.GetDataTable(DataOperation.Parse(sql), "Items");
 
@@ -78,8 +78,8 @@ namespace Empiria.Land.Registration.Data {
       return new FixedList<LRSTransactionTrack>((x) => LRSTransactionTrack.Parse(x), view);
     }
 
-    static public FixedList<LRSTransactionAct> GetLRSTransactionActs(LRSTransaction transaction) {
-      DataView view = DataReader.GetDataView(DataOperation.Parse("qryLRSTransactionActs", transaction.Id));
+    static public FixedList<LRSTransactionAct> GetLRSTransactionItems(LRSTransaction transaction) {
+      DataView view = DataReader.GetDataView(DataOperation.Parse("qryLRSTransactionItems", transaction.Id));
 
       return new FixedList<LRSTransactionAct>((x) => LRSTransactionAct.Parse(x), view);
     }
@@ -99,30 +99,6 @@ namespace Empiria.Land.Registration.Data {
 
       return new FixedList<Contact>((x) => Contact.Parse(x), view);
     }
-
-    //static public FixedList<RecorderOfficeTransactionFile> GetTransactionFiles(RecorderOfficeTransaction transaction) {
-    //  string sql = "SELECT * FROM LRSTransactionFiles WHERE TransactionId = " + transaction.Id.ToString() + 
-    //               " AND TransactionFileStatus = 'A'";
-    //  DataView view = DataReader.GetDataView(DataOperation.Parse(sql));
-
-    //  return new FixedList<RecorderOfficeTransactionFile>((x) => RecorderOfficeTransactionFile.Parse(x), view);
-    //}
-
-    //static public FixedList<RecorderOfficeTransaction> GetTransactions(RecorderOffice office, DateTime fromDate, DateTime toDate, string filter, string sort) {
-    //  DataView view = DataReader.GetDataView(DataOperation.Parse("qryLRSTransactions", office.Id, fromDate, toDate), filter, sort);
-
-    //  return new FixedList<RecorderOfficeTransaction>((x) => RecorderOfficeTransaction.Parse(x), view);
-    //}
-
-    //static public DataView GetTransactions(RecorderOffice office, DateTime fromDate, DateTime toDate) {
-    //  DataView view = DataReader.GetDataView(DataOperation.Parse("qryLRSTransactions", office.Id, fromDate, toDate));
-
-    //  return view;
-    //}
-
-    //static public DataView GetTransactionsView(RecorderOffice office, DateTime fromDate, DateTime toDate, string filter) {
-    //  return DataReader.GetDataView(DataOperation.Parse("qryLRSTransactions", office.Id, fromDate, toDate), filter);
-    //}
 
     #endregion Public methods
 

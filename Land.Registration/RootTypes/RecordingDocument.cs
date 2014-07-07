@@ -14,58 +14,15 @@ using Empiria.Contacts;
 using Empiria.Geography;
 using Empiria.Land.Registration.Data;
 using Empiria.Land.Registration.Transactions;
-using Empiria.Ontology;
+using Empiria.Security;
 
 namespace Empiria.Land.Registration {
 
-  public enum DocumentRecordingRole {
-    Appendix = 'A',
-    Main = 'M',
-  }
-
-  public class RecordingDocument : BaseObject {
+  public class RecordingDocument : BaseObject, IExtensible<RecordingDocumentExtData>, IProtected {
 
     #region Fields
 
     private const string thisTypeName = "ObjectType.RecordingDocument";
-
-    private LRSDocumentType documentSubtype = LRSDocumentType.Empty;
-    private string documentKey = String.Empty;
-    private DocumentRecordingRole documentRecordingRole = DocumentRecordingRole.Main;
-    private GeographicRegionItem issuePlace = GeographicRegionItem.Empty;
-    private Organization issueOffice = Organization.Empty;
-    private Contact issuedBy = Person.Empty;
-    private TypeAssociationInfo issuedByPosition = TypeAssociationInfo.Empty;
-
-    private DateTime issueDate = ExecutionServer.DateMinValue;
-    private Contact mainWitness = Person.Empty;
-    private TypeAssociationInfo mainWitnessPosition = TypeAssociationInfo.Empty;
-
-    private Contact secondaryWitness = Person.Empty;
-    private TypeAssociationInfo secondaryWitnessPosition = TypeAssociationInfo.Empty;
-
-    private string name = String.Empty;
-    private string fileName = String.Empty;
-    private string bookNumber = String.Empty;
-    private string expedientNumber = String.Empty;
-    private string number = String.Empty;
-    private int sheetsCount = -1;
-    private decimal sealUpperPosition = -1;
-    private string startSheet = String.Empty;
-    private string endSheet = String.Empty;
-    private string notes = String.Empty;
-    private string keywords = String.Empty;
-    private Contact reviewedBy = Person.Empty;
-    private string authorizationKey = String.Empty;
-
-    private string digitalString = String.Empty;
-    private string digitalSign = String.Empty;
-    private Contact postedBy = Person.Empty;
-    private DateTime postingTime = DateTime.Now;
-    private RecordableObjectStatus status = RecordableObjectStatus.Incomplete;
-    private string recordIntegrityHashCode = String.Empty;
-
-    private RecordingDocumentType recordingDocumentType = null;
 
     #endregion Fields
 
@@ -73,7 +30,7 @@ namespace Empiria.Land.Registration {
 
     private RecordingDocument()
       : base(thisTypeName) {
-      // Instance creation of this type may be invoked with ....
+      // Instance creation of this type may be invoked with RecordingDocument.Create method
     }
 
     protected RecordingDocument(string typeName)
@@ -101,11 +58,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public RecordingDocument Create(RecordingDocumentType documentType) {
-      RecordingDocument newDocument = documentType.CreateInstance();
-
-      newDocument.documentRecordingRole = DocumentRecordingRole.Main;
-
-      return newDocument;
+      return documentType.CreateInstance();
     }
 
     static public RecordingDocument Empty {
@@ -116,164 +69,129 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    public string AuthorizationKey {
-      get { return authorizationKey; }
-    }
-
-    public string BookNumber {
-      get { return bookNumber; }
-      set { bookNumber = value.ToUpperInvariant(); }
-    }
-
-    public string DigitalSign {
-      get { return digitalSign; }
-    }
-
-    public string DigitalString {
-      get { return digitalString; }
-    }
-
-    public string DocumentKey {
-      get { return documentKey; }
-    }
-
-    public DocumentRecordingRole DocumentRecordingRole {
-      get { return documentRecordingRole; }
-      set { documentRecordingRole = value; }
-    }
-
-    public string EndSheet {
-      get { return endSheet; }
-      set { endSheet = value; }
-    }
-
-    public string ExpedientNumber {
-      get { return expedientNumber; }
-      set { expedientNumber = value.ToUpperInvariant(); }
-    }
-
-    public string FileName {
-      get { return fileName; }
-      set { fileName = value; }
-    }
-
-    public DateTime IssueDate {
-      get { return issueDate; }
-      set { issueDate = value; }
-    }
-
-    public Contact IssuedBy {
-      get { return issuedBy; }
-      set { issuedBy = value; }
-    }
-
-    public TypeAssociationInfo IssuedByPosition {
-      get { return issuedByPosition; }
-      set { issuedByPosition = value; }
-    }
-
-    public GeographicRegionItem IssuePlace {
-      get { return issuePlace; }
-      set { issuePlace = value; }
-    }
-
-    public Organization IssueOffice {
-      get { return issueOffice; }
-      set { issueOffice = value; }
-    }
-
-    public string Keywords {
-      get { return keywords; }
-      protected set { keywords = value; }
-    }
-
-    public Contact MainWitness {
-      get { return mainWitness; }
-      set { mainWitness = value; }
-    }
-
-    public TypeAssociationInfo MainWitnessPosition {
-      get { return mainWitnessPosition; }
-      set { mainWitnessPosition = value; }
-    }
-
-    public string Name {
-      get { return name; }
-      set { name = value; }
-    }
-
-    public string Notes {
-      get { return notes; }
-      set { notes = value; }
-    }
-
-    public string Number {
-      get { return number; }
-      set { number = value; }
-    }
-
-    public Contact PostedBy {
-      get { return postedBy; }
-    }
-
-    public DateTime PostingTime {
-      get { return postingTime; }
-    }
-
-    public RecordingDocumentType RecordingDocumentType {
+    private RecordingDocumentType _documentType = null;
+    public RecordingDocumentType DocumentType {
       get {
-        if (this.recordingDocumentType == null) {
-          recordingDocumentType = RecordingDocumentType.Parse(base.ObjectTypeInfo);
+        if (_documentType == null) {
+          _documentType = RecordingDocumentType.Parse(base.ObjectTypeInfo);
         }
-        return recordingDocumentType;
+        return _documentType;
       }
       internal set {
-        recordingDocumentType = value;        
+        _documentType = value;
       }
-    }
-
-    public string RecordIntegrityHashCode {
-      get { return recordIntegrityHashCode; }
-    }
-
-    public Contact ReviewedBy {
-      get { return reviewedBy; }
-      set { reviewedBy = value; }
-    }
-
-    public decimal SealUpperPosition {
-      get { return sealUpperPosition; }
-      set { sealUpperPosition = value; }
-    }
-
-    public Contact SecondaryWitness {
-      get { return secondaryWitness; }
-      set { secondaryWitness = value; }
-    }
-
-
-    public TypeAssociationInfo SecondaryWitnessPosition {
-      get { return secondaryWitnessPosition; }
-      set { secondaryWitnessPosition = value; }
-    }
-
-    public int SheetsCount {
-      get { return sheetsCount; }
-      set { sheetsCount = value; }
-    }
-
-    public string StartSheet {
-      get { return startSheet; }
-      set { startSheet = value; }
-    }
-
-    public RecordableObjectStatus Status {
-      get { return status; }
     }
 
     public LRSDocumentType Subtype {
-      get { return documentSubtype; }
-      set { documentSubtype = value; }
+      get;
+      set;
+    }
+
+    public string UniqueCode {
+      get;
+      private set;
+    }
+
+    public GeographicRegionItem IssuePlace {
+      get;
+      set;
+    }
+
+    public Organization IssueOffice {
+      get;
+      set;
+    }
+
+    public Contact IssuedBy {
+      get;
+      set;
+    }
+
+    public DateTime IssueDate {
+      get;
+      set;
+    }
+
+    public string ExpedientNo {
+      get;
+      set;
+    }
+
+    public string Number {
+      get;
+      set;
+    }
+
+    public string Title {
+      get;
+      private set;
+    }
+
+    public string Notes {
+      get;
+      set;
+    }
+
+    public int SheetsCount {
+      get;
+      set;
+    }
+
+    public RecordingDocumentExtData ExtensionData {
+      get;
+      private set;
+    }
+
+    public string Keywords {
+      get;
+      private set;
+    }
+
+    public Contact PostedBy {
+      get;
+      private set;
+    }
+
+    public DateTime PostingTime {
+      get;
+      private set;
+    }
+
+    public RecordableObjectStatus Status {
+      get;
+      private set;
+    }
+
+    int IProtected.CurrentDataIntegrityVersion {
+      get {
+        return 1;
+      }
+    }
+
+    object[] IProtected.GetDataIntegrityFieldValues(int version) {
+      if (version == 1) {
+        return new object[] {
+          1, "Id", this.Id, "DocumentTypeId", this.ObjectTypeInfo.Id,
+          "SubtypeId", this.Subtype.Id, "UniqueCode", this.UniqueCode,
+          "IssuePlaceId", this.IssuePlace.Id, "IssueOfficeId", this.IssueOffice.Id,
+          "IssuedById", this.IssuedBy.Id, "IssueDate", this.IssueDate,
+          "DocumentNo", this.Number, "ExpedientNo", this.ExpedientNo,
+          "SheetsCount", this.SheetsCount, "ExtensionData", this.ExtensionData.ToJson(),
+          "PostedBy", this.PostedBy.Id, "PostingTime", this.PostingTime,
+          "Status", (char) this.Status,
+        };
+      }
+      throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
+    }
+
+    private IntegrityValidator _validator = null;
+    public IntegrityValidator Integrity {
+      get {
+        if (_validator == null) {
+          _validator = new IntegrityValidator(this);
+        }
+        return _validator;
+      }
     }
 
     #endregion Public properties
@@ -281,74 +199,45 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public void ChangeDocumentType(RecordingDocumentType newRecordingDocumentType) {
-      if (this.RecordingDocumentType.Equals(newRecordingDocumentType)) {
+      if (this.DocumentType.Equals(newRecordingDocumentType)) {
         return;
       }
-      this.RecordingDocumentType = newRecordingDocumentType;
-      this.documentSubtype = LRSDocumentType.Empty;
-      this.issuePlace = GeographicRegionItem.Empty;
-      this.issueOffice = Organization.Empty;
-      this.issuedBy = Person.Empty;
-      this.issuedByPosition = TypeAssociationInfo.Empty;
-      this.issueDate = ExecutionServer.DateMinValue;
-      this.mainWitness = Person.Empty;
-      this.mainWitnessPosition = TypeAssociationInfo.Empty;
-      this.secondaryWitness = Person.Empty;
-      this.secondaryWitnessPosition = TypeAssociationInfo.Empty;
-      this.name = String.Empty;
-      this.fileName = String.Empty;
-      this.bookNumber = String.Empty;
-      this.expedientNumber = String.Empty;
-      this.number = String.Empty;
-      this.startSheet = String.Empty;
-      this.endSheet = String.Empty;
-      this.notes = String.Empty;
-      this.keywords = String.Empty;
-      this.reviewedBy = Person.Empty;
-      this.authorizationKey = String.Empty;
-      this.postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-      this.postingTime = DateTime.Now;
-      this.digitalString = String.Empty;
-      this.digitalSign = String.Empty;
-      this.status = RecordableObjectStatus.Incomplete;
-      this.recordIntegrityHashCode = String.Empty;
+      this.DocumentType = newRecordingDocumentType;
+      this.Subtype = LRSDocumentType.Empty;
+      this.IssuePlace = GeographicRegionItem.Empty;
+      this.IssueOffice = Organization.Empty;
+      this.IssuedBy = Person.Empty;
+      this.IssueDate = ExecutionServer.DateMinValue;
+      this.Number = String.Empty;
+      this.ExpedientNo = String.Empty;
+      this.Title = String.Empty;
+      this.Notes = String.Empty;
+      this.ExtensionData = RecordingDocumentExtData.Empty;
+      this.Keywords = String.Empty;
+      this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      this.PostingTime = DateTime.Now;
+      this.Status = RecordableObjectStatus.Incomplete;
     }
 
     protected override void ImplementsLoadObjectData(DataRow row) {
-      this.documentSubtype = LRSDocumentType.Parse((int) row["DocumentSubtypeId"]);
-      this.documentKey = (string) row["DocumentKey"];
-      this.documentRecordingRole = (DocumentRecordingRole) Convert.ToChar(row["DocumentRecordingRole"]);
-      this.issuePlace = GeographicRegionItem.Parse((int) row["IssuePlaceId"]);
-      this.issueOffice = Organization.Parse((int) row["IssueOfficeId"]);
-      this.issuedBy = Contact.Parse((int) row["IssuedById"]);
-      this.issuedByPosition = TypeAssociationInfo.Parse((int) row["IssuedByPositionId"]);
-      this.issueDate = (DateTime) row["IssueDate"];
-      this.mainWitness = Contact.Parse((int) row["MainWitnessId"]);
-      this.mainWitnessPosition = TypeAssociationInfo.Parse((int) row["MainWitnessPositionId"]);
-      this.secondaryWitness = Contact.Parse((int) row["SecondaryWitnessId"]);
-      this.secondaryWitnessPosition = TypeAssociationInfo.Parse((int) row["SecondaryWitnessPositionId"]);
-      this.name = (string) row["DocumentName"];
-      this.fileName = (string) row["DocumentFileName"];
-      this.bookNumber = (string) row["DocumentBookNumber"];
-      this.expedientNumber = (string) row["DocumentExpedient"];
-      this.number = (string) row["DocumentNumber"];
+      this.Subtype = LRSDocumentType.Parse((int) row["DocumentSubtypeId"]);
+      this.UniqueCode = (string) row["DocumentUniqueCode"];
+      this.IssuePlace = GeographicRegionItem.Parse((int) row["IssuePlaceId"]);
+      this.IssueOffice = Organization.Parse((int) row["IssueOfficeId"]);
+      this.IssuedBy = Contact.Parse((int) row["IssuedById"]);
+      this.IssueDate = (DateTime) row["IssueDate"];
+      this.Number = (string) row["DocumentNo"];
+      this.ExpedientNo = (string) row["ExpedientNo"];
+      this.Title = (string) row["DocumentTitle"];
+      this.Notes = (string) row["DocumentNotes"];
+      this.SheetsCount = (int) row["SheetsCount"];
+      this.ExtensionData = RecordingDocumentExtData.Parse((string) row["DocumentExtData"]);
+      this.Keywords = (string) row["DocumentKeywords"];
+      this.PostedBy = Contact.Parse((int) row["PostedById"]);
+      this.PostingTime = (DateTime) row["PostingTime"];
+      this.Status = (RecordableObjectStatus) Convert.ToChar(row["DocumentStatus"]);
 
-      this.sheetsCount = (int) row["DocumentSheets"];
-      this.sealUpperPosition = (decimal) row["DocumentSealUpperPosition"];
-
-      this.startSheet = (string) row["DocumentStartSheet"];
-      this.endSheet = (string) row["DocumentEndSheet"];
-      this.notes = (string) row["DocumentNotes"];
-      this.keywords = (string) row["DocumentKeywords"];
-      this.reviewedBy = Person.Parse((int) row["DocumentReviewedById"]);
-      this.authorizationKey = (string) row["DocumentAuthorizationKey"];
-
-      this.digitalString = (string) row["DocumentDigitalString"];
-      this.digitalSign = (string) row["DocumentDigitalSign"];
-      this.postedBy = Contact.Parse((int) row["PostedById"]);
-      this.postingTime = (DateTime) row["PostingTime"];
-      this.status = (RecordableObjectStatus) Convert.ToChar(row["DocumentStatus"]);
-      this.recordIntegrityHashCode = (string) row["DocumentRIHC"];
+      Integrity.Assert((string) row["DocumentDIF"]);
     }
 
     protected override void ImplementsSave() {
@@ -358,18 +247,19 @@ namespace Empiria.Land.Registration {
 
     internal void PrepareForSave() {
       if (this.PostedBy.IsEmptyInstance) {      // IsNew
-        this.postingTime = DateTime.Now;
-        this.postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.PostingTime = DateTime.Now;
+        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
-      if (String.IsNullOrWhiteSpace(this.documentKey)) {
-        this.documentKey = TransactionData.GenerateDocumentKey();
+      if (String.IsNullOrWhiteSpace(this.UniqueCode)) {
+        this.UniqueCode = TransactionData.GenerateDocumentKey();
       }
-      this.keywords = EmpiriaString.BuildKeywords(this.DocumentKey, !this.Subtype.IsEmptyInstance ? Name : this.RecordingDocumentType.DisplayName, 
-                                                  this.Name, this.FileName, this.bookNumber, this.expedientNumber, this.number);
+      this.Keywords = EmpiriaString.BuildKeywords(this.UniqueCode, 
+                                    !this.Subtype.IsEmptyInstance ? this.Title : this.DocumentType.DisplayName,
+                                    this.Title, this.ExpedientNo, this.Number);
     }
 
     #endregion Public methods
 
   } // class RecordingDocument
 
-} // namespace Empiria.Geography
+} // namespace Empiria.Land.Registration

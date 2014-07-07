@@ -193,7 +193,7 @@ namespace Empiria.Land.Registration.Data {
       Assertion.Require(o.Id != 0, "Property.Id can not be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSProperty", o.Id, o.ObjectTypeInfo.Id, o.UniqueCode, 
                                                         o.Name, o.PropertyKind.Id, o.RecordingNotes, o.AntecedentNotes,
-                                                        o.Location.ToJson(), o.Location.ToString(), o.Location.ToSearchVector(), 
+                                                        o.Location.ToJson(), o.Location.ToString(), o.Location.ToSearchVector(),
                                                         o.CadastralData.ToJson(), o.Keywords, 
                                                         o.PartitionOf.Id, o.PartitionNo, o.MergedInto.Id, o.PostedBy.Id,
                                                         o.PostingTime, (char) o.Status, o.Integrity.GetUpdatedHashCode());
@@ -215,9 +215,10 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteTractIndexItem(TractIndexItem o) {
       Assertion.Require(o.Id != 0, "TractIndexItem.Id can't be zero");
-      DataOperation dataOperation = DataOperation.Parse("writeLRSPropertyTractIndexItem", o.Id, 
+      DataOperation dataOperation = DataOperation.Parse("writeLRSPropertyTractIndex", o.Id,
                                                         o.Property.Id, o.RecordingAct.Id, o.ExtensionData.ToJson(),
-                                                        o.PostedBy.Id, o.PostingTime, (char) o.Status, o.Integrity.GetUpdatedHashCode());
+                                                        o.PostedBy.Id, o.PostingTime, (char) o.Status, 
+                                                        o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(dataOperation);
     }
 

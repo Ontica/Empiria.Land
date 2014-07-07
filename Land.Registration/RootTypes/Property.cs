@@ -167,7 +167,7 @@ namespace Empiria.Land.Registration {
           "Status", (char) this.Status,
         };
       }
-      throw new SecurityException(SecurityException.Msg.WrongRequestedVersionForDIF, version);
+      throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
     }
 
     private IntegrityValidator _validator = null;
@@ -306,8 +306,8 @@ namespace Empiria.Land.Registration {
       this.PropertyKind = PropertyKind.Parse((int) row["PropertyKindId"]);
       this.RecordingNotes = (string) row["PropertyRecordingNotes"];
       this.AntecedentNotes = (string) row["AntecedentNotes"];
-      this.Location = Address.FromJson((string) row["LocationData"]);
-      this.CadastralData = CadastralInfo.FromJson((string) row["CadastralData"]);
+      this.Location = Address.FromJson((string) row["LocationExtData"]);
+      this.CadastralData = CadastralInfo.FromJson((string) row["CadastralExtData"]);
       _partitionOf = LazyObject<Property>.Parse((int) row["PartitionOfId"]);
       this.PartitionNo = (string) row["PartitionNo"];
       _mergedInto = LazyObject<Property>.Parse((int) row["MergedIntoId"]);

@@ -51,7 +51,7 @@ namespace Empiria.Land.Registration {
     internal new RecordingDocument CreateInstance() {
       RecordingDocument instance = base.CreateInstance();
       
-      instance.RecordingDocumentType = this;
+      instance.DocumentType = this;
       
       return instance;
     }

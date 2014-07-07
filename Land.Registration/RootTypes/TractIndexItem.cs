@@ -136,7 +136,7 @@ namespace Empiria.Land.Registration {
           "PostedBy", this.PostedBy.Id, "PostingTime", this.PostingTime, "Status", (char) this.Status,
         };
       }
-      throw new SecurityException(SecurityException.Msg.WrongRequestedVersionForDIF, version);
+      throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
     }
 
     private IntegrityValidator _validator = null;
@@ -161,7 +161,7 @@ namespace Empiria.Land.Registration {
     protected override void ImplementsLoadObjectData(DataRow row) {
       this.Property = Property.Parse((int) row["PropertyId"]);
       this.RecordingAct = RecordingAct.Parse((int) row["RecordingActId"]);
-      this.ExtensionData = TractIndexItemExtData.Parse((string) row["TractItemExtensionData"]);
+      this.ExtensionData = TractIndexItemExtData.Parse((string) row["TractItemExtData"]);
       this.PostedBy = Contact.Parse((int) row["PostedById"]);
       this.PostingTime = (DateTime) row["PostingTime"];
       this.Status = (RecordableObjectStatus) Convert.ToChar(row["TractIndexItemStatus"]);

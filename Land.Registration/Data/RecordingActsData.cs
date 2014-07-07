@@ -24,9 +24,9 @@ namespace Empiria.Land.Registration.Data {
     #region Public methods
 
     static public FixedList<RecordingAct> GetPropertyRecordingActList(Property property) {
-      var view = DataReader.GetDataView(DataOperation.Parse("qryLRSPropertyRecordingActs", property.Id));
+      var operation = DataOperation.Parse("qryLRSPropertyRecordingActs", property.Id);
 
-      return new FixedList<RecordingAct>((x) => RecordingAct.Parse(x), view);
+      return DataReader.GetFixedList<RecordingAct>(operation, (x) => RecordingAct.Parse(x));
     }
 
     static public FixedList<RecordingAct> GetPropertyRecordingActListUntil(Property property, RecordingAct breakAct, 
@@ -49,23 +49,31 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static public FixedList<RecordingAct> GetRecordingActs(Recording recording) {
-      DataView view = DataReader.GetDataView(DataOperation.Parse("qryLRSRecordingRecordedActs", recording.Id));
+      var operation = DataOperation.Parse("qryLRSRecordingRecordedActs", recording.Id);
 
-      return new FixedList<RecordingAct>((x) => RecordingAct.Parse(x), view);
+      return DataReader.GetFixedList<RecordingAct>(operation, (x) => RecordingAct.Parse(x));
     }
 
-    static public FixedList<RecordingAct> GetRecordingActs(LRSTransaction transaction) {
-      string sql = "SELECT * FROM vwLRSRecordingActs" +
-                   " WHERE TransactionId = " + transaction.Id +
-                   " ORDER BY RecordingActIndex, PostingTime";
+    static public FixedList<RecordingAct> GetRecordingActs(RecordingDocument document) {
+      if (document.IsEmptyInstance) {
+        return new FixedList<RecordingAct>();
+      }
+
+      string sql = "SELECT * FROM LRSRecordingActs" +
+                  " WHERE DocumentId = " + document.Id +
+                  " ORDER BY RecordingActIndex, RegistrationTime";
       var operation = DataOperation.Parse(sql);
 
       return DataReader.GetList<RecordingAct>(operation, (x) => RecordingAct.Parse(x)).ToFixedList();
     }
 
     internal static List<TractIndexItem> GetTractIndex(RecordingAct recordingAct) {
-      var operation = DataOperation.Parse("qryLRSRecordingActPropertiesEvents", recordingAct.Id);
-
+      if (recordingAct.IsEmptyInstance) {
+        return new List<TractIndexItem>();
+      }
+     
+      var operation = DataOperation.Parse("qryLRSRecordingActTractIndex", recordingAct.Id);   
+    
       return DataReader.GetList<TractIndexItem>(operation, (x) => TractIndexItem.Parse(x));
     }
 
@@ -141,22 +149,10 @@ namespace Empiria.Land.Registration.Data {
     static internal int WriteRecordingAct(RecordingAct o) {
       Assertion.Require(o.Id != 0, "RecordingAct.Id can't be zero");
       var operation = DataOperation.Parse("writeLRSRecordingAct", o.Id, o.RecordingActType.Id,
-                                          o.Transaction.Id, o.Document.Id, o.TargetRecordingAct.Id, 
-                                          o.Recording.Id, o.Index, o.Notes, o.ExtensionData.ToJson(), 
-                                          o.Keywords, o.CanceledBy.Id, o.CancelationTime, 
-                                          o.PostedBy.Id, o.PostingTime, (char) o.Status,
-                                          o.Integrity.GetUpdatedHashCode(),
-                                          o.ExtensionData.AppraisalAmount.Amount,
-                                          o.ExtensionData.AppraisalAmount.Currency.Id,
-                                          o.ExtensionData.OperationAmount.Amount,
-                                          o.ExtensionData.OperationAmount.Currency.Id,
-                                          o.ExtensionData.Contract.Interest.TermPeriods,
-                                          o.ExtensionData.Contract.Interest.TermUnit.Id,
-                                          o.ExtensionData.Contract.Interest.Rate,
-                                          o.ExtensionData.Contract.Interest.RateType.Id,
-                                          o.ExtensionData.Contract.Date,
-                                          o.ExtensionData.Contract.Place.Id,
-                                          o.ExtensionData.Contract.Number);
+                                          o.Document.Id, o.Recording.Id, o.Index, o.Notes, 
+                                          o.ExtensionData.ToJson(), o.Keywords, o.AmendmentOf.Id, 
+                                          o.AmendedBy.Id, o.RegisteredBy.Id, o.RegistrationTime, 
+                                          (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 

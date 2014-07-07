@@ -386,7 +386,7 @@ namespace Empiria.Land.Registration.Transactions {
     public FixedList<LRSTransactionAct> RecordingActs {
       get {
         if (this.recordingActs == null) {
-          this.recordingActs = TransactionData.GetLRSTransactionActs(this);
+          this.recordingActs = TransactionData.GetLRSTransactionItems(this);
         }
         return this.recordingActs;
       }
@@ -640,7 +640,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public void AttachDocument(RecordingDocument document) {
       Assertion.AssertObject(document, "document");
-
+ 
       document.Save();
       this.document = document;
       this.Save();
@@ -790,7 +790,8 @@ namespace Empiria.Land.Registration.Transactions {
       lastTrack.CreateNext(notes);
       ResetTrack();
 
-      if (this.Status == TransactionStatus.ToDeliver || this.Status == TransactionStatus.ToReturn) {
+      if (this.Status == TransactionStatus.ToDeliver || 
+          this.Status == TransactionStatus.ToReturn || this.Status == TransactionStatus.Finished) {
         this.closingTime = lastTrack.EndProcessTime;
         this.closedBy = Contact.Parse(ExecutionServer.CurrentUserId);
         this.closingNotes = EmpiriaString.TrimAll(notes);
@@ -870,7 +871,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.postingTime = (DateTime) row["PostingTime"];
       this.postedBy = Contact.Parse((int) row["PostedById"]);
       this.status = (TransactionStatus) Convert.ToChar(row["TransactionStatus"]);
-      this.integrityHashCode = (string) row["TransactionRIHC"];
+      this.integrityHashCode = (string) row["TransactionDIF"];
     }
 
     protected override void ImplementsSave() {
@@ -890,7 +891,7 @@ namespace Empiria.Land.Registration.Transactions {
         this.postingTime = DateTime.Now;
         this.postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
-      this.keywords = EmpiriaString.BuildKeywords(this.Key, this.ReceiptNumber, this.Document.DocumentKey, this.ControlNumber, this.DocumentNumber, this.RequestedBy,
+      this.keywords = EmpiriaString.BuildKeywords(this.Key, this.ReceiptNumber, this.Document.UniqueCode, this.ControlNumber, this.DocumentNumber, this.RequestedBy,
                                                   this.ManagementAgency.FullName, this.receiptTotal.ToString("N2"), this.requestNotes, this.TransactionType.Name,
                                                   this.RecorderOffice.Alias, this.OfficeNotes);
 
