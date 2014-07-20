@@ -27,7 +27,14 @@ namespace Empiria.Land.Registration {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.RecordingAct";   
+    private const string thisTypeName = "ObjectType.RecordingAct";
+
+    private LazyObject<RecordingAct> _amendedBy = LazyObject<RecordingAct>.Empty;
+    private LazyObject<RecordingAct> _amendmentOf = LazyObject<RecordingAct>.Empty;
+    private string _notes = String.Empty;
+
+    private RecordingActType _recordingActType = null;
+    private Lazy<List<TractIndexItem>> _tractIndex = null;
 
     #endregion Fields
 
@@ -89,7 +96,7 @@ namespace Empiria.Land.Registration {
       this.Notes = String.Empty;
       this.CanceledBy = Person.Empty;
       this.CancelationTime = ExecutionServer.DateMaxValue;
-      this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      this.RegisteredBy = Person.Empty;
       this.RegistrationTime = DateTime.Now;
       this.Status = RecordableObjectStatus.Incomplete;
 
@@ -149,8 +156,7 @@ namespace Empiria.Land.Registration {
       get;
       private set;
     }
-    
-    private LazyObject<RecordingAct> _amendmentOf = LazyObject<RecordingAct>.Empty;
+
     public RecordingAct AmendmentOf {
       get { 
         return _amendmentOf;
@@ -160,7 +166,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    private LazyObject<RecordingAct> _amendedBy = LazyObject<RecordingAct>.Empty;
+
     public RecordingAct AmendedBy {
       get { 
         return _amendedBy;
@@ -170,7 +176,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    private string _notes = String.Empty;
     public string Notes {
       get {
         return _notes;
@@ -214,7 +219,6 @@ namespace Empiria.Land.Registration {
       get { return this.RecordingActType.IsAnnotationType; }
     }
 
-    private RecordingActType _recordingActType = null;
     public RecordingActType RecordingActType {
       get {
         if (_recordingActType == null) {
@@ -225,7 +229,6 @@ namespace Empiria.Land.Registration {
       set { _recordingActType = value; }
     }
 
-    private Lazy<List<TractIndexItem>> _tractIndex = null;
     public FixedList<TractIndexItem> TractIndex {
       get {
         return new FixedList<TractIndexItem>(_tractIndex.Value);

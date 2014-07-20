@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSTransactionTrack                            Pattern  : Association Class                   *
+*  Type      : LRSTransactionItem                             Pattern  : Association Class                   *
 *  Version   : 2.0        Date: 23/Oct/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
-*  Summary   : Abstract class that represents a transaction or process on a land registration office.        *
+*  Summary   : Represents a transaction concept in the context of a land registration transaction.           *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -13,61 +13,32 @@ using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Contacts;
+using Empiria.DataTypes;
 using Empiria.Land.Registration.Data;
+using Empiria.Security;
 
 namespace Empiria.Land.Registration.Transactions {
 
-  /// <summary>Abstract class that represents a transaction or process on a land registration office.</summary>
-  public class LRSTransactionItem : BaseObject {
+  /// <summary>Represents a transaction concept in the context of a land registration transaction.</summary>
+  public class LRSTransactionItem : BaseObject, IProtected {
 
     #region Fields
 
     private const string thisTypeName = "ObjectType.LRSTransactionItem";
 
-    private LRSTransaction transaction = LRSTransaction.Empty;
-    private LRSPaymentOrder paymentOrder = LRSPaymentOrder.Empty;
-    private LRSLawArticle appliedLawArticle = LRSLawArticle.Empty;
-    private RecordingActType appliedConcept = RecordingActType.Empty;
-    private CalculationRule calculationRule = CalculationRule.Empty;
-    private decimal operationValue = decimal.Zero;
-    private int sheetsCount = 0;
-    private decimal operationRightsFee = decimal.Zero;
-
-    private decimal sheetsRevisionFee = decimal.Zero;
-    private decimal aclarationFee = decimal.Zero;
-    private decimal usufructFee = decimal.Zero;
-    private decimal easementFee = decimal.Zero;
-    private decimal signCertificationFee = decimal.Zero;
-    private decimal foreignRecordFee = decimal.Zero;
-    private decimal othersFee = decimal.Zero;
-    private decimal discount = decimal.Zero;
-    private int authorizationId = 0;
-    private string notes = String.Empty;
-    private DateTime postingTime = DateTime.Now;
-    private Contact postedBy = Person.Empty;
-    private GeneralObjectStatus status = GeneralObjectStatus.Pending;
-    private string integrityHashCode = String.Empty;
-    // use null initalization instead LRSTransactionItem.Empty because is a fractal object and Empty instance 
-    // parsing throws an infinite loop
-    private LRSTransactionItem parent = null;
-    private int parentId = -1;
-
     #endregion Fields
 
     #region Constructors and parsers
 
-    public LRSTransactionItem(LRSTransaction transaction)
-      : base(thisTypeName) {
-      this.transaction = transaction;
+    public LRSTransactionItem(LRSTransaction transaction) : base(thisTypeName) {
+      this.Transaction = transaction;
     }
 
-    protected LRSTransactionItem()
-      : base(thisTypeName) {
+    protected LRSTransactionItem() : base(thisTypeName) {
       // Instance creation of this type may be invoked with ....
     }
 
-    protected LRSTransactionItem(string typeName)
-      : base(typeName) {
+    protected LRSTransactionItem(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
@@ -84,116 +55,108 @@ namespace Empiria.Land.Registration.Transactions {
     #region Public properties
 
     public LRSTransaction Transaction {
-      get { return transaction; }
+      get;
+      private set;
     }
 
-    public LRSPaymentOrder PaymentOrder {
-      get { return paymentOrder; }
-      set { paymentOrder = value; }
+    public RecordingActType TransactionItemType {
+      get;
+      private set;
     }
 
-    public LRSLawArticle AppliedLawArticle {
-      get { return appliedLawArticle; }
-      set { appliedLawArticle = value; }
-    }
-
-    public RecordingActType AppliedConcept {
-      get { return appliedConcept; }
-      set { appliedConcept = value; }
+    public LRSLawArticle TreasuryCode {
+      get;
+      private set;
     }
 
     public CalculationRule CalculationRule {
-      get { return calculationRule; }
-      set { calculationRule = value; }
+      get;
+      private set;
     }
 
-    public decimal OperationValue {
-      get { return operationValue; }
-      set { operationValue = value; }
+    public LRSPayment Payment {
+      get;
+      private set;
     }
 
-    public int SheetsCount {
-      get { return sheetsCount; }
-      set { sheetsCount = value; }
+    public Quantity Quantity {
+      get;
+      private set;
     }
 
-    public decimal OperationRightsFee {
-      get { return operationRightsFee; }
-      set { operationRightsFee = value; }
+    public Money OperationValue {
+      get;
+      private set;
     }
 
-    public decimal SheetsRevisionFee {
-      get { return sheetsRevisionFee; }
-      set { sheetsRevisionFee = value; }
-    }
-
-    public decimal AclarationFee {
-      get { return aclarationFee; }
-      set { aclarationFee = value; }
-    }
-
-    public decimal UsufructFee {
-      get { return usufructFee; }
-      set { usufructFee = value; }
-    }
-
-    public decimal EasementFee {
-      get { return easementFee; }
-      set { easementFee = value; }
-    }
-
-    public decimal SignCertificationFee {
-      get { return signCertificationFee; }
-      set { signCertificationFee = value; }
-    }
-
-    public decimal ForeignRecordFee {
-      get { return foreignRecordFee; }
-      set { foreignRecordFee = value; }
-    }
-
-    public decimal OthersFee {
-      get { return othersFee; }
-      set { othersFee = value; }
-    }
-
-    public decimal Discount {
-      get { return discount; }
-      set { discount = value; }
-    }
-
-    public int AuthorizationId {
-      get { return authorizationId; }
-      set { authorizationId = value; }
+    public LRSFee Fee {
+      get;
+      private set;
     }
 
     public string Notes {
-      get { return notes; }
-      set { notes = value; }
+      get;
+      set;
     }
 
     public DateTime PostingTime {
-      get { return postingTime; }
+      get;
+      private set;
     }
 
     public Contact PostedBy {
-      get { return postedBy; }
+      get;
+      private set;
     }
 
-    public GeneralObjectStatus Status {
-      get { return status; }
+    public char Status {
+      get;
+      private set;
     }
 
-    public string IntegrityHashCode {
-      get { return integrityHashCode; }
-    }
-
-    public LRSTransactionItem Parent {
+    public decimal ComplexityIndex {
       get {
-        if (parent == null) {
-          parent = LRSTransactionItem.Parse(parentId);
+        if (this.Quantity.Amount == decimal.Zero) {
+          return decimal.One;
+        } else {
+          return this.Quantity.Amount;
         }
-        return parent;
+      }
+    }
+
+    int IProtected.CurrentDataIntegrityVersion {
+      get {
+        return 1;
+      }
+    }
+
+    object[] IProtected.GetDataIntegrityFieldValues(int version) {
+      if (version == 1) {
+        return new object[] {
+          1, "Id", this.Id, "TransactionId", this.Transaction.Id, 
+          "TransactionItemTypeId", this.TransactionItemType.Id,
+          "TreasuryCodeId", this.TreasuryCode.Id, "CalculationRuleId", this.CalculationRule.Id,
+          "PaymentId", this.Payment.Id, "Qty", this.Quantity.Amount, "QtyUnitId", this.Quantity.Unit.Id,
+          "OpValue", this.OperationValue.Amount, "OpValueCurrencyId", this.OperationValue.Currency.Id,
+          "RecordingRightsFee", this.Fee.RecordingRights, "SheetsRevisionFee", this.Fee.SheetsRevision,
+          "AclarationFee", this.Fee.Aclaration, "UsufructFee", this.Fee.Usufruct, 
+          "EasementFee", this.Fee.Easement, "SignCertFee", this.Fee.SignCertification,
+          "ForeignFee", this.Fee.ForeignRecord, "OthersFee", this.Fee.OthersCharges,
+          "DiscountType", this.Fee.Discount.DiscountType.Id, "Discount", this.Fee.Discount.Amount, 
+          "DiscountAuthId", this.Fee.Discount.Authorization.Id, "PostingTime", this.PostingTime,
+          "PostedById", this.PostedBy.Id, "Status", (char) this.Status
+        };
+      }
+      throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
+    }
+
+    private IntegrityValidator _validator = null;
+    public IntegrityValidator Integrity {
+      get {
+        if (_validator == null) {
+          _validator = new IntegrityValidator(this);
+        }
+        return _validator;
       }
     }
 
@@ -201,53 +164,33 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Public methods
 
-    public decimal Subtotal() {
-      decimal subtotal = this.OperationRightsFee + this.SheetsRevisionFee + this.AclarationFee +
-                         this.UsufructFee + this.EasementFee + this.SignCertificationFee +
-                         this.ForeignRecordFee + this.OthersFee;
-
-      return subtotal;
-    }
-
-    public decimal Total() {
-      return Subtotal() - this.Discount;
-    }
-
     public void Delete() {
-      this.status = GeneralObjectStatus.Deleted;
+      this.Status = 'X';
       this.Save();
     }
 
     protected override void ImplementsLoadObjectData(DataRow row) {
-      this.transaction = LRSTransaction.Parse((int) row["TransactionId"]);
-      this.paymentOrder = LRSPaymentOrder.Parse((int) row["PaymentOrderId"]);
-      this.appliedLawArticle = LRSLawArticle.Parse((int) row["AppliedLawArticleId"]);
-      this.appliedConcept = RecordingActType.Parse((int) row["AppliedConceptId"]);
-      this.calculationRule = CalculationRule.Parse((int) row["CalculationRuleId"]);
-      this.operationValue = (decimal) row["OperationValue"];
-      this.sheetsCount = (int) row["SheetsCount"];
-      this.operationRightsFee = (decimal) row["OperationRightsFee"];
-      this.sheetsRevisionFee = (decimal) row["SheetsRevisionFee"];
-      this.aclarationFee = (decimal) row["AclarationFee"];
-      this.usufructFee = (decimal) row["UsufructFee"];
-      this.easementFee = (decimal) row["EasementFee"];
-      this.signCertificationFee = (decimal) row["SignCertificationFee"];
-      this.foreignRecordFee = (decimal) row["ForeignRecordFee"];
-      this.othersFee = (decimal) row["OthersFee"];
-      this.discount = (decimal) row["Discount"];
-      this.authorizationId = (int) row["AuthorizationId"];
-      this.notes = (string) row["TransactionItemNotes"];
-      this.postingTime = (DateTime) row["PostingTime"];
-      this.postedBy = Contact.Parse((int) row["PostedById"]);
-      this.status = (GeneralObjectStatus) Convert.ToChar(row["TransactionItemStatus"]);
-      this.parentId = (int) row["ParentTransactionItemId"];
-      this.integrityHashCode = (string) row["TransactionRIHC"];
+      this.Transaction = LRSTransaction.Parse((int) row["TransactionId"]);
+      this.TransactionItemType = RecordingActType.Parse((int) row["TransactionItemTypeId"]);
+      this.TreasuryCode = LRSLawArticle.Parse((int) row["TreasuryCodeId"]);
+      this.CalculationRule = CalculationRule.Parse((int) row["CalculationRuleId"]);
+      this.Payment = LRSPayment.Parse((int) row["PaymentId"]);
+      this.Quantity = Quantity.Parse(Unit.Parse((int) row["UnitId"]), (decimal) row["Quantity"]);
+      this.OperationValue = Money.Parse(Currency.Parse((int) row["OperationValueCurrencyId"]), 
+                                        (decimal) row["OperationValue"]);
+      this.Fee = LRSFee.Parse(row);
+      this.Notes = (string) row["Notes"];
+      this.PostingTime = (DateTime) row["PostingTime"];
+      this.PostedBy = Contact.Parse((int) row["PostedById"]);
+      this.Status = Convert.ToChar(row["TransactionItemStatus"]);
     }
 
     protected override void ImplementsSave() {
-      this.postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-      this.postingTime = DateTime.Now;
+      this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      this.PostingTime = DateTime.Now;
       TransactionData.WriteTransactionItem(this);
+
+      this.Transaction.OnRecordingActsUpdated();
     }
 
     #endregion Public methods

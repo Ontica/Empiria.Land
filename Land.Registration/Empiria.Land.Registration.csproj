@@ -138,10 +138,9 @@
     <Compile Include="Transactions\LRSFee.cs" />
     <Compile Include="Transactions\LRSTransactionTrack.cs" />
     <Compile Include="Transactions\CalculationRule.cs" />
-    <Compile Include="Transactions\LRSTransactionItem.cs" />
-    <Compile Include="Transactions\LRSPaymentOrder.cs" />
+    <Compile Include="Transactions\LRSPayment.cs" />
     <Compile Include="Transactions\LRSLawArticle.cs" />
-    <Compile Include="Transactions\LRSTransactionAct.cs" />
+    <Compile Include="Transactions\LRSTransactionItem.cs" />
     <Compile Include="Transactions\LRSDocumentType.cs" />
     <Compile Include="Transactions\LRSTransaction.cs" />
     <Compile Include="RootTypes\RecordingAttachmentFolder.cs" />
@@ -175,7 +174,7 @@
     <Compile Include="RootTypes\RecordingBook.cs" />
     <Compile Include="RootTypes\LandRegistrationException.cs" />
     <Compile Include="RootTypes\RecorderOffice.cs" />
-    <Compile Include="Transactions\ZLRSTransactionActList.cs" />
+    <Compile Include="Transactions\LRSTransactionExtData.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -209,9 +208,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Analytics\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="empiria.strong.name.public.key.snk" />

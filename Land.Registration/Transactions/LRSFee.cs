@@ -10,51 +10,40 @@
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System.Data;
 
+using Empiria.DataTypes;
+
 namespace Empiria.Land.Registration.Transactions {
 
   /// <summary>Fee payed in order to obtain a service in a Recorder Office.</summary>
   public class LRSFee {
 
-    #region Fields
-
-    private decimal recordingRights = decimal.Zero;
-    private decimal sheetsRevision = decimal.Zero;
-    private decimal aclaration = decimal.Zero;
-    private decimal usufruct = decimal.Zero;
-    private decimal easement = decimal.Zero;
-    private decimal signCertification = decimal.Zero;
-    private decimal foreignRecord = decimal.Zero;
-    private decimal othersCharges = decimal.Zero;
-    private decimal discount = decimal.Zero;
-
-    #endregion Fields
-
     #region Constructors and parsers
 
     internal LRSFee() {
-      //no-op
+
     }
 
     static internal LRSFee Parse(DataRow row) {
       LRSFee fee = new LRSFee();
 
-      fee.recordingRights = (decimal) row["RecordingRightsFee"];
-      fee.sheetsRevision = (decimal) row["SheetsRevisionFee"];
-      fee.aclaration = (decimal) row["AclarationFee"];
-      fee.usufruct = (decimal) row["UsufructFee"];
-      fee.easement = (decimal) row["ServidumbreFee"];
-      fee.signCertification = (decimal) row["SignCertificationFee"];
-      fee.foreignRecord = (decimal) row["ForeignRecordFee"];
-      fee.othersCharges = (decimal) row["OthersFee"];
-      fee.discount = (decimal) row["Discount"];
+      fee.RecordingRights = (decimal) row["RecordingRightsFee"];
+      fee.SheetsRevision = (decimal) row["SheetsRevisionFee"];
+      fee.Aclaration = (decimal) row["AclarationFee"];
+      fee.Usufruct = (decimal) row["UsufructFee"];
+      fee.Easement = (decimal) row["ServidumbreFee"];
+      fee.SignCertification = (decimal) row["SignCertificationFee"];
+      fee.ForeignRecord = (decimal) row["ForeignRecordFee"];
+      fee.OthersCharges = (decimal) row["OthersFee"];
+      fee.Discount = Discount.Parse(DiscountType.Parse((int) row["DiscountTypeId"]), 
+                                                       (decimal) row["Discount"]);
 
       return fee;
     }
 
-    static internal LRSFee Parse(FixedList<LRSTransactionAct> list) {
+    static internal LRSFee Parse(FixedList<LRSTransactionItem> list) {
       LRSFee fee = new LRSFee();
 
-      foreach (LRSTransactionAct act in list) {
+      foreach (LRSTransactionItem act in list) {
         fee.Add(act.Fee);
       }
       return fee;
@@ -65,59 +54,59 @@ namespace Empiria.Land.Registration.Transactions {
     #region Public properties
 
     public decimal RecordingRights {
-      get { return recordingRights; }
-      set { recordingRights = value; }
+      get;
+      set;
     }
 
     public decimal SheetsRevision {
-      get { return sheetsRevision; }
-      set { sheetsRevision = value; }
+      get;
+      set;
     }
 
     public decimal Aclaration {
-      get { return aclaration; }
-      set { aclaration = value; }
+      get;
+      set;
     }
 
     public decimal Usufruct {
-      get { return usufruct; }
-      set { usufruct = value; }
+      get;
+      set;
     }
 
     public decimal Easement {
-      get { return easement; }
-      set { easement = value; }
+      get;
+      set;
     }
 
     public decimal SignCertification {
-      get { return signCertification; }
-      set { signCertification = value; }
+      get;
+      set;
     }
 
     public decimal ForeignRecord {
-      get { return foreignRecord; }
-      set { foreignRecord = value; }
+      get;
+      set;
     }
 
     public decimal OthersCharges {
-      get { return othersCharges; }
-      set { othersCharges = value; }
+      get;
+      set;
     }
 
     public decimal SubTotal {
       get {
-        return recordingRights + sheetsRevision + aclaration + usufruct + easement +
-               signCertification + foreignRecord + othersCharges;
+        return this.RecordingRights + this.SheetsRevision + this.Aclaration + this.Usufruct +
+               this.Easement + this.SignCertification + this.ForeignRecord + this.OthersCharges;
       }
     }
 
-    public decimal Discount {
-      get { return discount; }
-      set { discount = value; }
+    public Discount Discount {
+      get;
+      set;
     }
 
     public decimal Total {
-      get { return (this.SubTotal - this.Discount); }
+      get { return (this.SubTotal - this.Discount.Amount); }
     }
 
     #endregion Public properties

@@ -67,7 +67,7 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList<RecordingAct>(operation, (x) => RecordingAct.Parse(x)).ToFixedList();
     }
 
-    internal static List<TractIndexItem> GetTractIndex(RecordingAct recordingAct) {
+    static internal List<TractIndexItem> GetTractIndex(RecordingAct recordingAct) {
       if (recordingAct.IsEmptyInstance) {
         return new List<TractIndexItem>();
       }

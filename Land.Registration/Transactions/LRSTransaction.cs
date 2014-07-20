@@ -47,70 +47,59 @@ namespace Empiria.Land.Registration.Transactions {
   }
 
   /// <summary>Represents a transaction or process on a land registration office.</summary>
-  public class LRSTransaction : BaseObject {
+  public class LRSTransaction : BaseObject, IExtensible<LRSTransactionExtData>, IProtected {
 
     #region Fields
 
     private const string thisTypeName = "ObjectType.LRSTransaction";
 
-    private const string newTransactionKey = "Nuevo trámite";
 
-    private LRSTransactionType transactionType = LRSTransactionType.Empty;
-    private string key = newTransactionKey;
-    private LRSDocumentType documentType = LRSDocumentType.Empty;
-    private string documentNumber = String.Empty;
-    private string keywords = String.Empty;
-    private RecorderOffice recorderOffice = RecorderOffice.Empty;
-    private string requestedBy = String.Empty;
-    private Contact managementAgency = Organization.Empty;
-    private string contactEMail = String.Empty;
-    private string contactPhone = String.Empty;
-    private string requestNotes = String.Empty;
-    private string receiptNumber = String.Empty;
-    private decimal receiptTotal = decimal.Zero;
-    private DateTime receiptIssueTime = ExecutionServer.DateMaxValue;
-    private DateTime presentationTime = ExecutionServer.DateMaxValue;
-    private Contact receivedBy = Person.Empty;
-    private string officeNotes = String.Empty;
-    private RecordingDocument document = RecordingDocument.Empty;
-    private decimal complexityIndex = 0m;
-    private DateTime lastReentryTime = ExecutionServer.DateMaxValue;
-    private DateTime elaborationTime = ExecutionServer.DateMaxValue;
-    private Contact elaboratedBy = Person.Empty;
-    private DateTime signTime = ExecutionServer.DateMaxValue;
-    private Contact signedBy = Person.Empty;
-    private Contact closedBy = Person.Empty;
-    private DateTime closingTime = ExecutionServer.DateMaxValue;
-    private DateTime lastDeliveryTime = ExecutionServer.DateMaxValue;
-    private string deliveryNotes = String.Empty;
-    private string closingNotes = String.Empty;
-    private int nonWorkingTime = 0;
-    private DateTime postingTime = DateTime.Now;
-    private Contact postedBy = Person.Empty;
-    private TransactionStatus status = TransactionStatus.Payment;
-    private string integrityHashCode = String.Empty;
+    private Lazy<List<LRSTransactionItem>> _recordingActs = null;
+    private Lazy<List<LRSPayment>> _payments = null;
+    private Lazy<FixedList<LRSTransactionTrack>> _track = null;
 
-    private FixedList<LRSTransactionTrack> track = null;
-    private FixedList<LRSTransactionAct> recordingActs = null;
     private LRSFee totalFee = null;
 
     #endregion Fields
 
     #region Constuctors and parsers
 
-    protected LRSTransaction()
-      : base(thisTypeName) {
-
+    protected LRSTransaction(): base(thisTypeName) {
+      Initialize();
     }
 
-    public LRSTransaction(LRSTransactionType transactionType)
-      : base(thisTypeName) {
-      this.transactionType = transactionType;
+    public LRSTransaction(LRSTransactionType transactionType) : base(thisTypeName) {
+      Initialize();
+      this.TransactionType = transactionType;
     }
 
-    protected LRSTransaction(string typeName)
-      : base(typeName) {
+    protected LRSTransaction(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+      Initialize();
+    }
+
+    private void Initialize() {
+      this.TransactionType = LRSTransactionType.Empty;
+      this.UniqueCode = "Nuevo trámite";
+      this.DocumentType = LRSDocumentType.Empty;
+      this.DocumentDescriptor = String.Empty;
+      this.Document = RecordingDocument.Empty;
+      this.RecorderOffice = RecorderOffice.Empty;
+      this.RequestedBy = String.Empty;
+      this.ManagementAgency = Organization.Empty;
+      this.Keywords = String.Empty;
+      this.PresentationTime = ExecutionServer.DateMaxValue;
+      this.ExpectedDelivery = ExecutionServer.DateMaxValue;
+      this.LastReentryTime = ExecutionServer.DateMaxValue;
+      this.ClosingTime = ExecutionServer.DateMaxValue;
+      this.LastDeliveryTime = ExecutionServer.DateMaxValue;
+      this.Status = TransactionStatus.Payment;
+
+      _recordingActs = 
+              new Lazy<List<LRSTransactionItem>>(() => TransactionData.GetLRSTransactionItems(this));
+      _payments = new Lazy<List<LRSPayment>>(() => TransactionData.GetLRSTransactionPayments(this));
+      _track = new Lazy<FixedList<LRSTransactionTrack>>(() => TransactionData.GetLRSTransactionTrack(this));
+
     }
 
     static public LRSTransaction Parse(int id) {
@@ -145,186 +134,6 @@ namespace Empiria.Land.Registration.Transactions {
       GeneralList listType = GeneralList.Parse("LRSTransaction.ManagementAgencies.List");
 
       return listType.GetContacts<Contact>();
-    }
-
-    #endregion Constructors and parsers
-
-    #region Public properties
-
-    public LRSTransactionType TransactionType {
-      get { return transactionType; }
-    }
-
-    public string Key {
-      get { return key; }
-    }
-
-    public LRSDocumentType DocumentType {
-      get { return documentType; }
-      set { documentType = value; }
-    }
-
-    public string DocumentNumber {
-      get { return documentNumber; }
-      set { documentNumber = EmpiriaString.TrimAll(value); }
-    }
-
-    public RecorderOffice RecorderOffice {
-      get { return recorderOffice; }
-      set { recorderOffice = value; }
-    }
-
-    public string RequestedBy {
-      get { return requestedBy; }
-      set { requestedBy = EmpiriaString.TrimAll(value); }
-    }
-
-    public Contact ManagementAgency {
-      get { return managementAgency; }
-      set { managementAgency = value; }
-    }
-
-    public string ContactEMail {
-      get { return contactEMail; }
-      set { contactEMail = value; }
-    }
-
-    public string ControlNumber {
-      get { return contactPhone; }
-      internal set { contactPhone = value; }
-    }
-
-    public string ContactPhone {
-      get { return contactPhone; }
-      set { contactPhone = value; }
-    }
-
-    public string RequestNotes {
-      get { return requestNotes; }
-      set { requestNotes = EmpiriaString.TrimAll(value); }
-    }
-
-    public string ReceiptNumber {
-      get { return receiptNumber; }
-      set { receiptNumber = value; }
-    }
-
-    public decimal ReceiptTotal {
-      get { return receiptTotal; }
-      set { receiptTotal = value; }
-    }
-
-    public DateTime ReceiptIssueTime {
-      get { return receiptIssueTime; }
-      set { receiptIssueTime = value; }
-    }
-
-    public DateTime PresentationTime {
-      get { return presentationTime; }
-    }
-
-    public Contact ReceivedBy {
-      get { return receivedBy; }
-    }
-
-    public string OfficeNotes {
-      get { return officeNotes; }
-      set { officeNotes = EmpiriaString.TrimAll(value); }
-    }
-
-    public RecordingDocument Document {
-      get { return document; }
-    }
-
-    public decimal ComplexityIndex {
-      get {
-        if (complexityIndex == 0) {
-          UpdateComplexityIndex();
-        }
-        return complexityIndex;
-      }
-    }
-
-    public DateTime LastReentryTime {
-      get { return lastReentryTime; }
-    }
-
-    public DateTime ElaborationTime {
-      get { return elaborationTime; }
-    }
-
-    public Contact ElaboratedBy {
-      get { return elaboratedBy; }
-    }
-
-    public DateTime SignTime {
-      get { return signTime; }
-    }
-
-    public Contact SignedBy {
-      get { return signedBy; }
-    }
-
-    public Contact ClosedBy {
-      get { return closedBy; }
-    }
-
-    public DateTime ClosingTime {
-      get { return closingTime; }
-    }
-
-    public string ClosingNotes {
-      get { return closingNotes; }
-    }
-
-    public DateTime LastDeliveryTime {
-      get { return lastDeliveryTime; }
-    }
-
-    public string DeliveryNotes {
-      get { return deliveryNotes; }
-      set { deliveryNotes = value; }
-    }
-
-    public int NonWorkingTime {
-      get { return nonWorkingTime; }
-    }
-
-    public DateTime PostingTime {
-      get { return postingTime; }
-    }
-
-    public Contact PostedBy {
-      get { return postedBy; }
-    }
-
-    public string Keywords {
-      get { return keywords; }
-    }
-
-    public TransactionStatus Status {
-      get { return status; }
-    }
-
-    public string IntegrityHashCode {
-      get { return integrityHashCode; }
-    }
-
-    public bool ReadyForReentry {
-      get {
-        var user = EmpiriaUser.Current;
-        return ((this.Status == TransactionStatus.Returned) ||
-        (this.Status == TransactionStatus.Delivered && user.CanExecute("LRSTransaction.ReentryByFails")));
-      }
-    }
-
-    public FixedList<LRSTransactionTrack> Track {
-      get {
-        if (track == null) {
-          track = TransactionData.GetLRSTransactionTrack(this);
-        }
-        return track;
-      }
     }
 
     static public string StatusName(TransactionStatus status) {
@@ -374,7 +183,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public static bool StatusIsOfficeWork(TransactionStatus currentStatus) {
+    static public bool StatusIsOfficeWork(TransactionStatus currentStatus) {
       if (currentStatus == TransactionStatus.Payment || currentStatus == TransactionStatus.ToDeliver ||
           currentStatus == TransactionStatus.ToReturn || currentStatus == TransactionStatus.Delivered ||
           currentStatus == TransactionStatus.Returned || currentStatus == TransactionStatus.Finished) {
@@ -383,12 +192,129 @@ namespace Empiria.Land.Registration.Transactions {
       return true;
     }
 
-    public FixedList<LRSTransactionAct> RecordingActs {
+    #endregion Constructors and parsers
+
+    #region Public properties
+
+    public LRSTransactionType TransactionType {
+      get;
+      private set;
+    }
+
+    public string UniqueCode {
+      get;
+      private set;
+    }
+
+    public LRSDocumentType DocumentType {
+      get;
+      set;
+    }
+
+    public string DocumentDescriptor {
+      get;
+      set;
+    }
+
+    public RecordingDocument Document {
+      get;
+      private set;
+    }
+
+    public RecorderOffice RecorderOffice {
+      get;
+      set;
+    }
+
+    public string RequestedBy {
+      get;
+      set;
+    }
+
+    public Contact ManagementAgency {
+      get;
+      set;
+    }
+
+    public LRSTransactionExtData ExtensionData {
+      get;
+      set;
+    }
+
+    public string Keywords {
+      get;
+      private set;
+    }
+
+    public DateTime PresentationTime {
+      get;
+      private set;
+    }
+    
+    public DateTime ExpectedDelivery {
+      get;
+      private set;
+    }
+
+    public DateTime LastReentryTime {
+      get;
+      private set;
+    }
+
+    public DateTime ClosingTime {
+      get;
+      private set;
+    }
+
+    public DateTime LastDeliveryTime {
+      get;
+      private set;
+    }
+
+
+    public int NonWorkingTime {
+      get;
+      private set;
+    }
+
+    public decimal ComplexityIndex {
+      get;
+      private set;
+    }
+
+    public bool IsArchived {
+      get;
+      private set;
+    }
+
+    public TransactionStatus Status {
+      get;
+      private set;
+    }
+
+    public bool ReadyForReentry {
       get {
-        if (this.recordingActs == null) {
-          this.recordingActs = TransactionData.GetLRSTransactionItems(this);
-        }
-        return this.recordingActs;
+        var user = EmpiriaUser.Current;
+        return ((this.Status == TransactionStatus.Returned) ||
+        (this.Status == TransactionStatus.Delivered && user.CanExecute("LRSTransaction.ReentryByFails")));
+      }
+    }
+
+    public FixedList<LRSPayment> Payments {
+      get {
+        return new FixedList<LRSPayment>(_payments.Value);
+      }
+    }
+
+    public FixedList<LRSTransactionItem> RecordingActs {
+      get {
+        return new FixedList<LRSTransactionItem>(_recordingActs.Value);
+      }
+    }
+
+    public FixedList<LRSTransactionTrack> Track {
+      get {
+        return _track.Value;
       }
     }
 
@@ -401,21 +327,77 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public List<string> GetRecordingActsReceipts() {
-      FixedList<LRSTransactionAct> ra = this.RecordingActs;
-      List<string> list = new List<string>();
-
-      for (int i = 0; i < ra.Count; i++) {
-        if (!list.Contains(ra[i].ReceiptNumber)) {
-          list.Add(ra[i].ReceiptNumber);
-        }
+    int IProtected.CurrentDataIntegrityVersion {
+      get {
+        return 1;
       }
-      list.Sort();
-
-      return list;
     }
 
-    static public List<TransactionStatus> NextStatusList(LRSTransactionType type, LRSDocumentType docType, TransactionStatus status) {
+    object[] IProtected.GetDataIntegrityFieldValues(int version) {
+      if (version == 1) {
+        return new object[] {
+          1, "Id", this.Id, "TransactionTypeId", this.TransactionType.Id,
+          "UniqueCode", this.UniqueCode, "DocumentTypeId", this.DocumentType.Id,
+          "DocumentDescriptor", this.DocumentDescriptor, "DocumentId", this.Document.Id,
+          "RecorderOfficeId", this.RecorderOffice.Id, "RequestedBy", this.RequestedBy, 
+          "ManagementAgencyId", this.ManagementAgency.Id, "ExtensionData", this.ExtensionData.ToJson(),
+          "PresentationTime", this.PresentationTime, "ExpectedDelivery", this.ExpectedDelivery,
+          "LastReentryTime", this.LastReentryTime, "ClosingTime", this.ClosingTime,
+          "LastDeliveryTime", this.LastDeliveryTime, "NonWorkingTime", this.NonWorkingTime,
+          "ComplexityIndex", this.ComplexityIndex, "Status", (char) this.Status
+        };
+      }
+      throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
+    }
+
+    private IntegrityValidator _validator = null;
+    public IntegrityValidator Integrity {
+      get {
+        if (_validator == null) {
+          _validator = new IntegrityValidator(this);
+        }
+        return _validator;
+      }
+    }
+
+    #endregion Public properties
+
+    #region Public methods
+
+    public void AttachDocument(RecordingDocument document) {
+      Assertion.AssertObject(document, "document");
+ 
+      document.Save();
+      this.Document = document;
+      this.Save();
+    }
+
+    public void DoReentry(string notes) {
+      if (!this.ReadyForReentry) {
+        throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
+                                            this.UniqueCode);
+      }
+      this.Status = TransactionStatus.Reentry;
+      this.ClosingTime = ExecutionServer.DateMaxValue;
+      this.LastReentryTime = DateTime.Now;
+      LRSTransactionTrack lastTrack = this.GetLastTransactionTack();
+      lastTrack.NextStatus = TransactionStatus.Reentry;
+      lastTrack = lastTrack.CreateNext(notes);
+      lastTrack.NextStatus = TransactionStatus.Control;
+      lastTrack.Status = TrackStatus.OnDelivery;
+      lastTrack.EndProcessTime = lastTrack.CheckInTime;
+      lastTrack.AssignedBy = LRSTransaction.InterestedContact;
+      lastTrack.Save();
+      this.Save();
+      this.ResetTrack();
+    }
+
+    public LRSTransactionTrack GetLastTransactionTack() {
+      return TransactionData.GetLastTransactionTrack(this);
+    }
+
+    static public List<TransactionStatus> NextStatusList(LRSTransactionType type, LRSDocumentType docType,
+                                                         TransactionStatus status) {
       List<TransactionStatus> list = new List<TransactionStatus>();
 
       switch (status) {
@@ -430,7 +412,8 @@ namespace Empiria.Land.Registration.Transactions {
         case TransactionStatus.Process:
         case TransactionStatus.Control:
           if (ExecutionServer.LicenseName == "Zacatecas") {
-            if (type.Id == 701 || type.Id == 704 || docType.Id == 723 || docType.Id == 734) {    // Certificado || Cancelación || Copia simple
+            // Certificado || Cancelación || Copia simple
+            if (type.Id == 701 || type.Id == 704 || docType.Id == 723 || docType.Id == 734) {
               list.Add(TransactionStatus.Elaboration);
             } else if (type.Id == 700 || type.Id == 702 || type.Id == 703) {
               list.Add(TransactionStatus.Qualification);
@@ -588,59 +571,6 @@ namespace Empiria.Land.Registration.Transactions {
       return list;
     }
 
-    static private bool IsArchivable(LRSTransactionType type, LRSDocumentType docType) {
-      if (ExecutionServer.LicenseName == "Zacatecas") {
-        if (docType.Id == 722 || docType.Id == 761) {
-          return true;
-        }
-      }
-      if (ExecutionServer.LicenseName == "Tlaxcala") {
-        if (type.Id == 706 && (docType.Id == 733 || docType.Id == 734 || docType.Id == 736 || docType.Id == 737 ||
-                               docType.Id == 738 || docType.Id == 739 || docType.Id == 740 || docType.Id == 741 ||
-                               docType.Id == 742 || docType.Id == 744 || docType.Id == 755 || docType.Id == 756)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    static private bool IsRecordable(LRSTransactionType type, LRSDocumentType docType) {
-      if (ExecutionServer.LicenseName == "Tlaxcala") {
-        if (type.Id == 700 || type.Id == 704 || type.Id == 707) {
-          return true;
-        } else if (docType.Id == 719 || docType.Id == 721 || docType.Id == 728 || docType.Id == 733 || docType.Id == 736 ||
-                   docType.Id == 737 || docType.Id == 738 || docType.Id == 739 || docType.Id == 740 || docType.Id == 741 ||
-                   docType.Id == 742 || docType.Id == 744 || docType.Id == 755 || docType.Id == 756) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    static private bool IsCertificateIssue(LRSTransactionType type, LRSDocumentType docType) {
-      if (ExecutionServer.LicenseName == "Tlaxcala") {
-        if (type.Id == 702) {    // Certificados
-          return true;
-        } else if (docType.Id == 709 || docType.Id == 735 || docType.Id == 743 ||
-                   docType.Id == 745 || docType.Id == 746 || docType.Id == 747) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    #endregion Public properties
-
-    #region Public methods
-
-    public void AttachDocument(RecordingDocument document) {
-      Assertion.AssertObject(document, "document");
- 
-      document.Save();
-      this.document = document;
-      this.Save();
-    }
-
     public string GetDigitalSign() {
       return Empiria.Security.Cryptographer.CreateDigitalSign(GetDigitalString());
     }
@@ -648,28 +578,23 @@ namespace Empiria.Land.Registration.Transactions {
     public string GetDigitalString() {
       string temp = String.Empty;
 
-      temp = "||" + this.Id.ToString() + "|" + this.Key + "|";
+      temp = "||" + this.Id.ToString() + "|" + this.UniqueCode + "|";
       if (this.PresentationTime != ExecutionServer.DateMaxValue) {
         temp += this.PresentationTime.ToString("yyyyMMddTHH:mm:ss") + "|";
-        temp += this.ReceiptNumber + "|" + this.ReceiptTotal.ToString("F2") + "|";
-      } else {
-        temp += this.PostingTime.ToString("yyyyMMddTHH:mm:ss") + "|";
       }
-      temp += this.PostedBy.Id.ToString() + "|" + this.PostingTime.ToString("yyyyMMddTHH:mm");
-
-      foreach (LRSTransactionAct act in this.RecordingActs) {
-        temp += "|" + act.Id.ToString() + "^" + act.RecordingActType.Id.ToString() + "^";
+      foreach (LRSTransactionItem act in this.RecordingActs) {
+        temp += "|" + act.Id.ToString() + "^" + act.TransactionItemType.Id.ToString() + "^";
         if (act.OperationValue.Amount != decimal.Zero) {
           temp += "B" + act.OperationValue.Amount.ToString("F4") + "^";
         }
-        if (!act.Unit.IsEmptyInstance) {
-          temp += "Q" + act.Quantity.ToString("N2") + "^";
-          temp += "U" + act.Unit.Id.ToString() + "^";
+        if (!act.Quantity.Unit.IsEmptyInstance) {
+          temp += "Q" + act.Quantity.Amount.ToString("N2") + "^";
+          temp += "U" + act.Quantity.Unit.Id.ToString() + "^";
         }
-        temp += act.LawArticle.Id.ToString();
+        temp += act.TreasuryCode.Id.ToString();
         if (ExecutionServer.LicenseName == "Tlaxcala") {
           temp += "^" + "S" + act.Fee.SubTotal.ToString("N2") + "^";
-          temp += "D" + act.Fee.Discount.ToString("N2") + "^";
+          temp += "D" + act.Fee.Discount.Amount.ToString("N2") + "^";
           temp += "T" + act.Fee.Total.ToString("N2");
         }
       }
@@ -678,88 +603,63 @@ namespace Empiria.Land.Registration.Transactions {
       return temp;
     }
 
-    public LRSTransactionTrack GetLastTransactionTack() {
-      return TransactionData.GetLastTransactionTrack(this);
+    protected override void ImplementsSave() {
+      if (base.IsNew) {
+        this.UniqueCode = TransactionData.GenerateTransactionKey();
+      }
+      this.Keywords = EmpiriaString.BuildKeywords(this.UniqueCode, this.Document.UniqueCode,
+                                                  this.DocumentDescriptor, this.RequestedBy, 
+                                                  this.ManagementAgency.FullName,
+                                                  this.TransactionType.Name, 
+                                                  this.RecorderOffice.Alias);
+      TransactionData.WriteTransaction(this);
+      if (base.IsNew) {
+        LRSTransactionTrack track = LRSTransactionTrack.CreateFirst(this);
+        ResetTrack();
+      }
     }
 
-    public void PrintTicket() {
-      string TicketPrinterName = ConfigurationData.GetString("Ticket.PrinterName");
-      string TicketDefaultFontName = ConfigurationData.GetString("Ticket.DefaultFontName");
-      int TicketDefaultFontSize = ConfigurationData.GetInteger("Ticket.DefaultFontSize");
-      string ReportsTemplatesPath = ConfigurationData.GetString("Reports.TemplatesPath");
+    protected override void ImplementsLoadObjectData(DataRow row) {
+      this.TransactionType = LRSTransactionType.Parse((int) row["TransactionTypeId"]);
+      this.UniqueCode = (string) row["TransactionUniqueCode"];
+      this.DocumentType = LRSDocumentType.Parse((int) row["DocumentTypeId"]);
+      this.DocumentDescriptor = (string) row["DocumentDescriptor"];
+      this.Document = RecordingDocument.Parse((int) row["DocumentId"]);
+      this.RecorderOffice = RecorderOffice.Parse((int) row["RecorderOfficeId"]);
+      this.RequestedBy = (string) row["RequestedBy"];
+      this.ManagementAgency = Contact.Parse((int) row["ManagementAgencyId"]);
+      this.Keywords = (string) row["TransactionKeywords"];
+      this.PresentationTime = (DateTime) row["PresentationTime"];
+      this.ExpectedDelivery = (DateTime) row["ExpectedDelivery"];
+      this.LastReentryTime = (DateTime) row["LastReentryTime"];
+      this.ClosingTime = (DateTime) row["ClosingTime"];
+      this.LastDeliveryTime = (DateTime) row["LastDeliveryTime"];
+      this.NonWorkingTime = (int) row["NonWorkingTime"];
+      this.ComplexityIndex = (decimal) row["ComplexityIndex"];
+      this.IsArchived = (bool) row["IsArchived"];
+      this.Status = (TransactionStatus) Convert.ToChar(row["TransactionStatus"]);
 
-      Document document = new Document(TicketDefaultFontName, TicketDefaultFontSize);
-
-      document.LoadTemplate(ReportsTemplatesPath + "transaction.ticket.ert");
-
-      this.FillPrinterDocument(document);
-
-      Ticket ticket = new Ticket();
-      ticket.Load(document);
-      ticket.Print(TicketPrinterName);
+      Integrity.Assert((string) row["TransactionDIF"]);
     }
 
-    public void DoReentry(string notes) {
-      if (!this.ReadyForReentry) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction, this.Key);
-      }
-      this.status = TransactionStatus.Reentry;
-      this.signedBy = Person.Empty;
-      this.signTime = ExecutionServer.DateMaxValue;
-      this.closedBy = Person.Empty;
-      this.closingTime = ExecutionServer.DateMaxValue;
-      this.lastReentryTime = DateTime.Now;
-      LRSTransactionTrack lastTrack = this.GetLastTransactionTack();
-      lastTrack.NextStatus = TransactionStatus.Reentry;
-      lastTrack = lastTrack.CreateNext(notes);
-      lastTrack.NextStatus = TransactionStatus.Control;
-      lastTrack.Status = TrackStatus.OnDelivery;
-      lastTrack.EndProcessTime = lastTrack.CheckInTime;
-      lastTrack.AssignedBy = LRSTransaction.InterestedContact;
-      lastTrack.Save();
-      this.Save();
-      this.ResetTrack();
-    }
-
-    public void SetNextStatus(TransactionStatus nextStatus, Contact nextContact, string notes) {
-      if (nextStatus == TransactionStatus.Returned || nextStatus == TransactionStatus.Delivered || nextStatus == TransactionStatus.Finished) {
-        this.Close(nextStatus, notes);
-        return;
-      }
-      LRSTransactionTrack lastTrack = this.GetLastTransactionTack();
-
-      lastTrack.SetNextStatus(nextStatus, nextContact, notes);
-
-      if (nextStatus == TransactionStatus.OnSign || nextStatus == TransactionStatus.Revision) {
-        this.elaboratedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-        this.elaborationTime = DateTime.Now;
-        this.Save();
-      } else if (this.Status == TransactionStatus.OnSign &&
-                (nextStatus == TransactionStatus.ToDeliver || nextStatus == TransactionStatus.Finished)) {
-        this.signedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-        this.signTime = DateTime.Now;
-        this.Save();
-      }
+    internal void OnRecordingActsUpdated() {
+      _recordingActs = null;
+      totalFee = null;
+      UpdateComplexityIndex();
     }
 
     public void Receive(string notes) {
       if (this.Status != TransactionStatus.Payment) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction, this.Key);
+        throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
+                                            this.UniqueCode);
       }
-      if (this.ReceiptNumber.Length == 0) {
-        throw new NotImplementedException("Este trámite todavía no tiene número de recibo.");
+      if (this.Payments.Count == 0) {
+        throw new NotImplementedException("Este trámite todavía no tiene registrada una boleta de pago.");
       }
 
-      this.receivedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-      this.presentationTime = DateTime.Now;
-      this.signedBy = Person.Empty;
-      this.signTime = ExecutionServer.DateMaxValue;
-      this.closedBy = Person.Empty;
-      this.closingTime = ExecutionServer.DateMaxValue;
-      this.status = TransactionStatus.Received;
-      if (this.ControlNumber.Length == 0) {
-        this.ControlNumber = BuildControlNumber();
-      }
+      this.PresentationTime = DateTime.Now;
+      this.ClosingTime = ExecutionServer.DateMaxValue;
+      this.Status = TransactionStatus.Received;
 
       LRSTransactionTrack lastTrack = this.GetLastTransactionTack();
       lastTrack.NextStatus = TransactionStatus.Received;
@@ -775,23 +675,50 @@ namespace Empiria.Land.Registration.Transactions {
       this.ResetTrack();
     }
 
+    public void ReturnToMe() {
+      LRSTransactionTrack lastTrack = this.GetLastTransactionTack();
+
+      TransactionStatus nextStatus = lastTrack.NextStatus;
+      lastTrack.SetPending();
+
+      this.Save();
+      ResetTrack();
+    }
+
+    public void SetNextStatus(TransactionStatus nextStatus, Contact nextContact, string notes) {
+      if (nextStatus == TransactionStatus.Returned || nextStatus == TransactionStatus.Delivered ||
+          nextStatus == TransactionStatus.Finished) {
+        this.Close(nextStatus, notes);
+        return;
+      }
+      LRSTransactionTrack lastTrack = this.GetLastTransactionTack();
+
+      lastTrack.SetNextStatus(nextStatus, nextContact, notes);
+
+      if (nextStatus == TransactionStatus.OnSign || nextStatus == TransactionStatus.Revision) {
+ 
+        this.Save();
+      } else if (this.Status == TransactionStatus.OnSign &&
+                (nextStatus == TransactionStatus.ToDeliver || nextStatus == TransactionStatus.Finished)) {
+        this.Save();
+      }
+    }
+
     public void Take(string notes) {
       LRSTransactionTrack lastTrack = this.GetLastTransactionTack();
 
       if (lastTrack.NextStatus == TransactionStatus.EndPoint) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.NextStatusCantBeEndPoint, lastTrack.Id);
+        throw new LandRegistrationException(LandRegistrationException.Msg.NextStatusCantBeEndPoint,
+                                            lastTrack.Id);
       }
-      this.status = lastTrack.NextStatus;
+      this.Status = lastTrack.NextStatus;
       lastTrack.CreateNext(notes);
       ResetTrack();
 
       if (this.Status == TransactionStatus.ToDeliver || 
           this.Status == TransactionStatus.ToReturn || this.Status == TransactionStatus.Finished) {
-        this.closingTime = lastTrack.EndProcessTime;
-        this.closedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-        this.closingNotes = EmpiriaString.TrimAll(notes);
+        this.ClosingTime = lastTrack.EndProcessTime;
       }
-
       this.Save();
     }
 
@@ -799,124 +726,32 @@ namespace Empiria.Land.Registration.Transactions {
       LRSTransactionTrack lastTrack = this.GetLastTransactionTack();
 
       if (lastTrack.Status == TrackStatus.OnDelivery) {
-        this.status = lastTrack.CurrentStatus;
+        this.Status = lastTrack.CurrentStatus;
       } else if (lastTrack.Status == TrackStatus.Pending) {
-        this.status = lastTrack.CurrentStatus;
+        this.Status = lastTrack.CurrentStatus;
       } else if (lastTrack.Status == TrackStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.NextStatusCantBeEndPoint, lastTrack.Id);
+        throw new LandRegistrationException(LandRegistrationException.Msg.NextStatusCantBeEndPoint,
+                                            lastTrack.Id);
       }
       this.Save();
-    }
-
-    public void ReturnToMe() {
-      LRSTransactionTrack lastTrack = this.GetLastTransactionTack();
-
-      TransactionStatus nextStatus = lastTrack.NextStatus;
-      if (nextStatus == TransactionStatus.OnSign || nextStatus == TransactionStatus.Revision) {
-        this.elaboratedBy = Person.Empty;
-        this.elaborationTime = ExecutionServer.DateMaxValue;
-      } else if (this.Status == TransactionStatus.OnSign &&
-                (nextStatus == TransactionStatus.ToDeliver || nextStatus == TransactionStatus.Finished)) {
-        this.signedBy = Person.Empty;
-        this.signTime = ExecutionServer.DateMaxValue;
-      }
-      lastTrack.SetPending();
-
-      this.Save();
-      ResetTrack();
-    }
-
-    internal void OnRecordingActsUpdated() {
-      recordingActs = null;
-      totalFee = null;
-      complexityIndex = 0;
-    }
-
-    protected override void ImplementsLoadObjectData(DataRow row) {
-      this.transactionType = LRSTransactionType.Parse((int) row["TransactionTypeId"]);
-      this.key = (string) row["TransactionKey"];
-      this.documentType = LRSDocumentType.Parse((int) row["DocumentTypeId"]);
-      this.documentNumber = (string) row["DocumentNumber"];
-      this.keywords = (string) row["TransactionKeywords"];
-      this.recorderOffice = RecorderOffice.Parse((int) row["RecorderOfficeId"]);
-      this.requestedBy = (string) row["RequestedBy"];
-      this.managementAgency = Contact.Parse((int) row["ManagementAgencyId"]);
-      this.contactEMail = (string) row["ContactEMail"];
-      this.contactPhone = (string) row["ContactPhone"];
-      this.requestNotes = (string) row["RequestNotes"];
-      this.receiptNumber = (string) row["ReceiptNumber"];
-      this.receiptTotal = (decimal) row["ReceiptTotal"];
-      this.receiptIssueTime = (DateTime) row["ReceiptIssueTime"];
-      this.presentationTime = (DateTime) row["PresentationTime"];
-      this.receivedBy = Contact.Parse((int) row["ReceivedById"]);
-      this.officeNotes = (string) row["OfficeNotes"];
-      this.document = RecordingDocument.Parse((int) row["DocumentId"]);
-      this.complexityIndex = (decimal) row["ComplexityIndex"];
-      this.lastReentryTime = (DateTime) row["LastReentryTime"];
-      this.elaborationTime = (DateTime) row["ElaborationTime"];
-      this.elaboratedBy = Contact.Parse((int) row["ElaboratedById"]);
-      this.signTime = (DateTime) row["SignTime"];
-      this.signedBy = Contact.Parse((int) row["SignedById"]);
-      this.closedBy = Contact.Parse((int) row["ClosedById"]);
-      this.closingTime = (DateTime) row["ClosingTime"];
-      this.closingNotes = (string) row["ClosingNotes"];
-      this.lastDeliveryTime = (DateTime) row["LastDeliveryTime"];
-      this.deliveryNotes = (string) row["DeliveryNotes"];
-      this.nonWorkingTime = (int) row["NonWorkingTime"];
-      this.postingTime = (DateTime) row["PostingTime"];
-      this.postedBy = Contact.Parse((int) row["PostedById"]);
-      this.status = (TransactionStatus) Convert.ToChar(row["TransactionStatus"]);
-      this.integrityHashCode = (string) row["TransactionDIF"];
-    }
-
-    protected override void ImplementsSave() {
-      bool isnew = this.postedBy.IsEmptyInstance;
-      PrepareForSave();
-      TransactionData.WriteTransaction(this);
-      if (isnew) {
-        LRSTransactionTrack track = LRSTransactionTrack.CreateFirst(this);
-        ResetTrack();
-      }
-    }
-
-    internal void PrepareForSave() {
-      bool isnew = this.postedBy.IsEmptyInstance;
-      if (isnew) {
-        this.key = TransactionData.GenerateTransactionKey();
-        this.postingTime = DateTime.Now;
-        this.postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-      }
-      this.keywords = EmpiriaString.BuildKeywords(this.Key, this.ReceiptNumber, this.Document.UniqueCode, this.ControlNumber, this.DocumentNumber, this.RequestedBy,
-                                                  this.ManagementAgency.FullName, this.receiptTotal.ToString("N2"), this.requestNotes, this.TransactionType.Name,
-                                                  this.RecorderOffice.Alias, this.OfficeNotes);
-
-      this.integrityHashCode = EmpiriaString.BuildDigitalString(this.Id, this.TransactionType.Id, this.Key, this.DocumentType.Id, this.DocumentNumber,
-                                                                this.RecorderOffice.Id, this.RequestedBy, this.ManagementAgency.Id,
-                                                                this.ContactEMail, this.ContactPhone, this.RequestNotes,
-                                                                this.ReceiptNumber, this.ReceiptTotal, this.ReceiptIssueTime,
-                                                                this.PresentationTime, this.ReceivedBy.Id, this.OfficeNotes, this.ComplexityIndex,
-                                                                this.LastReentryTime, this.ElaborationTime, this.ElaboratedBy.Id, this.SignTime, this.SignedBy.Id,
-                                                                this.ClosedBy.Id, this.ClosingTime, this.ClosingNotes, this.LastDeliveryTime, this.DeliveryNotes,
-                                                                this.NonWorkingTime, this.PostingTime, this.PostedBy.Id, this.Status);
-
     }
 
     public string ValidateStatusChange(TransactionStatus newStatus) {
       if (newStatus == TransactionStatus.Received) {
-        if (this.ReceiptNumber.Length == 0) {
-          return "Este trámite todavía no tiene número de recibo.";
+        if (this.Payments.Count == 0) {
+          return "Este trámite todavía no tiene registrada una boleta de pago.";
         }
       }
-      if (IsRecordable(this.transactionType, this.documentType)) {
-        if (this.transactionType.Id == 704 || this.documentType.Id == 721) {
+      if (IsRecordable(this.TransactionType, this.DocumentType)) {
+        if (this.TransactionType.Id == 704 || this.DocumentType.Id == 721) {
           return String.Empty;
         }
       }
-      if (IsRecordable(this.transactionType, this.documentType)) {
+      if (IsRecordable(this.TransactionType, this.DocumentType)) {
         if (newStatus == TransactionStatus.Revision || newStatus == TransactionStatus.OnSign ||
             newStatus == TransactionStatus.Safeguard || newStatus == TransactionStatus.ToDeliver) {
-          if (document.IsEmptyInstance) {
-            return "Necesito que primero se ingrese la información del documento a inscribir.";
+          if (Document.IsEmptyInstance) {
+            return "Necesito primero se ingrese la información del documento a inscribir.";
           }
         }
       }
@@ -931,7 +766,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (ExecutionServer.LicenseName == "Tlaxcala") {
         return String.Empty;
       }
-      int current = TransactionData.GetLastControlNumber(this.recorderOffice);
+      int current = TransactionData.GetLastControlNumber(this.RecorderOffice);
 
       current++;
 
@@ -949,53 +784,58 @@ namespace Empiria.Land.Registration.Transactions {
       lastTrack.Notes = notes;
       lastTrack.Close();
 
-      this.lastDeliveryTime = lastTrack.EndProcessTime;
-      this.deliveryNotes = notes;
-      this.status = closeStatus;
+      this.LastDeliveryTime = lastTrack.EndProcessTime;
+      this.Status = closeStatus;
       this.Save();
     }
 
-    private void FillPrinterDocument(Document document) {
-      string temp = this.RequestedBy;
-      string[] vector = EmpiriaString.DivideLongString(temp, 29, 2);
-      document.Replace("<@REQUESTED_BY_1@>", vector[0]);
-      document.Replace("<@REQUESTED_BY_2@>", vector.Length > 1 ? vector[1] : String.Empty);
-      document.Replace("<@REQUESTED_BY_3@>", vector.Length > 2 ? vector[2] : String.Empty);
-      document.Replace("<@REQUESTED_BY_4@>", vector.Length > 3 ? vector[3] : String.Empty);
-      document.Replace("<@REQUESTED_BY_5@>", vector.Length > 4 ? vector[4] : String.Empty);
-      document.Replace("<@TRANSACTION_NUMBER@>", this.Key);
-      document.Replace("<@POSTED_BY@>", this.PostedBy.Alias);
-      document.Replace("<@DATE_TIME@>", DateTime.Now.ToString("dd/MMM/yyyy HH:mm"));
+    static private bool IsArchivable(LRSTransactionType type, LRSDocumentType docType) {
+      if (ExecutionServer.LicenseName == "Zacatecas") {
+        if (docType.Id == 722 || docType.Id == 761) {
+          return true;
+        }
+      }
+      if (ExecutionServer.LicenseName == "Tlaxcala") {
+        if (type.Id == 706 && 
+           EmpiriaMath.IsMemberOf(docType.Id, new int[] { 733, 734, 736, 737, 738, 739, 740, 
+                                                          741, 742, 744, 755, 756 })) {
+          return true;
+        }
+      }
+      return false;
+    }
 
-      document.Replace("<@TOTAL@>", this.ReceiptTotal.ToString("C2"));
-      temp = EmpiriaString.SpeechMoney(this.ReceiptTotal);
-      temp = temp.Replace(" 00/100 M.N.", String.Empty);
-      vector = EmpiriaString.DivideLongString(temp, 40, 2);
-      document.Replace("<@TOTAL_STRING_1@>", vector[0]);
-      document.Replace("<@TOTAL_STRING_2@>", vector.Length > 1 ? vector[1] : String.Empty);
-      document.Replace("<@TOTAL_STRING_3@>", vector.Length > 2 ? vector[2] : String.Empty);
-      document.Replace("<@TOTAL_STRING_4@>", vector.Length > 3 ? vector[3] : String.Empty);
+    static private bool IsCertificateIssue(LRSTransactionType type, LRSDocumentType docType) {
+      if (ExecutionServer.LicenseName == "Tlaxcala") {
+        if (type.Id == 702) {    // Certificados
+          return true;
+        } else if (EmpiriaMath.IsMemberOf(docType.Id, new int[] {709, 735, 743, 745, 746, 747 })) {
+          return true;
+        }
+      }
+      return false;
+    }
 
-
-      temp = "||" + this.Id.ToString() + "|" + this.Key + "|" + this.ReceiptTotal.ToString("N2") + "||";
-      document.Replace("<@DIGITAL_STRING@>", temp);
-      temp = Empiria.Security.Cryptographer.CreateDigitalSign(temp);
-      document.Replace("<@DIGITAL_SIGNATURE_1@>", temp.Substring(0, Math.Min(temp.Length, 32)));
-      document.Replace("<@DIGITAL_SIGNATURE_2@>", String.Empty);
-      document.Replace("<@DIGITAL_SIGNATURE_3@>", String.Empty);
-      document.Replace("<@DIGITAL_SIGNATURE_4@>", String.Empty);
-
-      document.BarcodeString = this.Key;
+    static private bool IsRecordable(LRSTransactionType type, LRSDocumentType docType) {
+      if (ExecutionServer.LicenseName == "Tlaxcala") {
+        if (type.Id == 700 || type.Id == 704 || type.Id == 707) {
+          return true;
+        } else if (EmpiriaMath.IsMemberOf(docType.Id, new int[] {719, 721, 728, 733, 736, 737, 738, 739,
+                                                                 740, 741, 742, 744, 755, 756 })) {
+          return true;
+        }
+      }
+      return false;
     }
 
     private void ResetTrack() {
-      this.track = null;
+      this._track = null;
     }
 
     private void UpdateComplexityIndex() {
-      complexityIndex = 0;
-      foreach (LRSTransactionAct act in this.RecordingActs) {
-        complexityIndex += act.ComplexityIndex;
+      this.ComplexityIndex = 0;
+      foreach (LRSTransactionItem act in this.RecordingActs) {
+        this.ComplexityIndex += act.ComplexityIndex;
       }
     }
 

@@ -320,7 +320,7 @@ namespace Empiria.Land.UI {
       return html;
     }
 
-    private static string GetRecordingActGridRow(RecordingAct recordingAct, TractIndexItem propertyEvent, int counter, 
+    static private string GetRecordingActGridRow(RecordingAct recordingAct, TractIndexItem propertyEvent, int counter, 
                                                  int recordingActIndex, int propertyEventIndex) {
       const string row = "<tr class='{CLASS}'>" +
                            "<td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b><br/>" +

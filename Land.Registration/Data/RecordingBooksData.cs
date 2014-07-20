@@ -37,7 +37,7 @@ namespace Empiria.Land.Registration.Data {
       return int.Parse(DataReader.GetScalar<string>(DataOperation.Parse(sql), "0"));
     }
 
-    internal static int GetNextRecordingNumberWithReuse(RecordingBook book) {
+    static internal int GetNextRecordingNumberWithReuse(RecordingBook book) {
       DataTable table = GetBookRecordingNumbers(book);
 
       if (table.Rows.Count == 0 && book.UsePerpetualNumbering) {
@@ -60,7 +60,7 @@ namespace Empiria.Land.Registration.Data {
       return indexValue;
     }
 
-    internal static int GetNextRecordingNumberWithNoReuse(RecordingBook book) {
+    static internal int GetNextRecordingNumberWithNoReuse(RecordingBook book) {
       int currentRecordNumber = GetLastBookRecordingNumber(book);
       if (currentRecordNumber > 0) {
         return currentRecordNumber + 1;
@@ -74,7 +74,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
 
-    internal static RecordingBook GetOpenedBook(RecorderOffice office, RecordingSection recordingSection) {
+    static internal RecordingBook GetOpenedBook(RecorderOffice office, RecordingSection recordingSection) {
       string sql = "SELECT * FROM LRSRecordingBooks WHERE RecordingBookType = 'V'" +
                    " AND (RecordingsClassId = {C}) and RecorderOfficeId = {O} AND (RecordingBookStatus = 'O')";
       sql = sql.Replace("{C}", recordingSection.Id.ToString());
@@ -85,7 +85,7 @@ namespace Empiria.Land.Registration.Data {
       return RecordingBook.Parse(row);
     }
 
-    internal static int GetBookTotalSheets(RecordingBook book) {
+    static internal int GetBookTotalSheets(RecordingBook book) {
       object result = DataReader.GetFieldValue(DataOperation.Parse("getLRSRecordingBooksStats", book.Id),
                                                "DocumentSheets");
       if (result == null || result == DBNull.Value) {
@@ -186,7 +186,7 @@ namespace Empiria.Land.Registration.Data {
                                                        recordingBook.Id, recordingNumber));
     }
 
-    internal static Recording FindRecording(RecordingBook recordingBook, string filter) {
+    static internal Recording FindRecording(RecordingBook recordingBook, string filter) {
       string sql = "SELECT * FROM LRSRecordings WHERE " + 
                   "(RecordingBookId = " + recordingBook.Id.ToString() + " AND RecordingStatus <> 'X')";
       if (!String.IsNullOrWhiteSpace(filter)) {

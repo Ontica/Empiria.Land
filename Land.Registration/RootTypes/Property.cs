@@ -69,7 +69,7 @@ namespace Empiria.Land.Registration {
       this.Location = Address.Empty;
       this.CadastralData = CadastralInfo.Empty;
       this.PartitionNo = String.Empty;
-      this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      this.PostedBy = Person.Empty;
       this.PostingTime = DateTime.Now;
       this.Status = RecordableObjectStatus.Incomplete;
     }
@@ -319,16 +319,25 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void ImplementsSave() {
-      if (this.UniqueCode.Length == 0) {
-        while (true) {
-          string temp = TransactionData.GeneratePropertyKey();
-          if (!PropertyData.ExistsPropertyUniqueCode(temp)) {
-            this.UniqueCode = temp;
-            break;
-          }
-        } // while
+      if (this.IsNew) {
+        this.AssignUniqueCode();
+        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.PostingTime = DateTime.Now;
       }
+      Assertion.Assert(this.UniqueCode.Length != 0, "Property UniqueCode can't be an empty string.");
       PropertyData.WriteProperty(this);
+    }
+
+    private void AssignUniqueCode() {
+      Assertion.Assert(this.UniqueCode.Length == 0, "Property has already assigned a UniqueCode.");
+      
+      while (true) {
+        string temp = TransactionData.GeneratePropertyKey();
+        if (!PropertyData.ExistsPropertyUniqueCode(temp)) {
+          this.UniqueCode = temp;
+          break;
+        }
+      } // while
     }
 
     #endregion Public methods

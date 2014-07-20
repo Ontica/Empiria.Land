@@ -59,7 +59,7 @@ namespace Empiria.Land.Registration {
     private MarriageStatus partyMarriageStatus = MarriageStatus.Empty;
     private string partyAddress = String.Empty;
     private GeographicRegionItem partyAddressPlace = GeographicRegionItem.Empty;
-    private Contact postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+    private Contact postedBy = Person.Empty;
     private DateTime postingTime = DateTime.Now;
     private RecordableObjectStatus status = RecordableObjectStatus.Pending;
     private string integrityHashCode = String.Empty;
@@ -96,7 +96,7 @@ namespace Empiria.Land.Registration {
       return PropertyData.GetRecordingPartiesList(recording, party);
     }
 
-    public static RecordingActParty GetDomainParty(RecordingAct recordingAct, Party party) {
+    static public RecordingActParty GetDomainParty(RecordingAct recordingAct, Party party) {
       FixedList<RecordingActParty> owners = GetInvolvedDomainParties(recordingAct);
 
       return owners.Find((x) => x.Party.Equals(party));
@@ -114,7 +114,7 @@ namespace Empiria.Land.Registration {
       return RecordingActsData.GetSecondaryPartiesList(recordingAct);
     }
 
-    public static RecordingActParty GetSecondaryParty(RecordingAct recordingAct, Party party) {
+    static public RecordingActParty GetSecondaryParty(RecordingAct recordingAct, Party party) {
       FixedList<RecordingActParty> secondaries = GetSecondaryPartiesList(recordingAct);
 
       return secondaries.Find((x) => x.Party.Equals(party));

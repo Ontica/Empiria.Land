@@ -67,7 +67,7 @@ namespace Empiria.Land.Registration {
       this.SpecialCase = "None";
     }
 
-    internal static RecordingRule Parse(string jsonString) {
+    static internal RecordingRule Parse(string jsonString) {
       IDictionary<string, object> json = Empiria.Data.JsonConverter.ToObject(jsonString);
       RecordingRule rule = new RecordingRule();
 
@@ -123,7 +123,7 @@ namespace Empiria.Land.Registration {
       return rule;
     }
 
-    public static PropertyCount ParsePropertyCount(string propertyCount) {
+    static public PropertyCount ParsePropertyCount(string propertyCount) {
       switch (propertyCount) {
         case "1":
           return PropertyCount.One;

@@ -41,7 +41,7 @@ namespace Empiria.Land.Registration {
 
     }
 
-    internal static RecordingAttachmentFolder Parse(Recording recording, string path) {
+    static internal RecordingAttachmentFolder Parse(Recording recording, string path) {
       RecordingAttachmentFolder folder = new RecordingAttachmentFolder();
 
       folder.recording = recording;

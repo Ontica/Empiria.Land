@@ -139,7 +139,7 @@ namespace Empiria.Land.Registration {
 
     public RecordingDocumentExtData ExtensionData {
       get;
-      private set;
+      set;
     }
 
     public string Keywords {
@@ -241,21 +241,16 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void ImplementsSave() {
-      PrepareForSave();
-      RecordingBooksData.WriteRecordingDocument(this);
-    }
-
-    internal void PrepareForSave() {
-      if (this.PostedBy.IsEmptyInstance) {      // IsNew
+      if (this.IsNew) {
         this.PostingTime = DateTime.Now;
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-      }
-      if (String.IsNullOrWhiteSpace(this.UniqueCode)) {
         this.UniqueCode = TransactionData.GenerateDocumentKey();
       }
-      this.Keywords = EmpiriaString.BuildKeywords(this.UniqueCode, 
+      this.Keywords = EmpiriaString.BuildKeywords(this.UniqueCode,
                                     !this.Subtype.IsEmptyInstance ? this.Title : this.DocumentType.DisplayName,
                                     this.Title, this.ExpedientNo, this.Number);
+
+      RecordingBooksData.WriteRecordingDocument(this);
     }
 
     #endregion Public methods

@@ -34,7 +34,7 @@ namespace Empiria.Land.Registration {
       this.TotalArea = Quantity.Parse(Unit.Empty, 0m);
     }
 
-    internal static CadastralInfo FromJson(string json) {
+    static internal CadastralInfo FromJson(string json) {
       return new CadastralInfo();
     }
 

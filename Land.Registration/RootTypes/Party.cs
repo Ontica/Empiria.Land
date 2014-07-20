@@ -54,7 +54,7 @@ namespace Empiria.Land.Registration {
     private string taxIDNumber = String.Empty;
     private string notes = String.Empty;
     private string keywords = String.Empty;
-    private Contact postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+    private Contact postedBy = Person.Empty;
     private DateTime postingTime = DateTime.Now;
     private int replacedById = 0;
     private PartyStatus status = PartyStatus.Pending;

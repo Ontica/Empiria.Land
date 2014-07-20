@@ -500,11 +500,12 @@ namespace Empiria.Land.Registration {
       if (!this.RecordingDocument.IsEmptyInstance) {
         this.RecordingDocument.Save();
       }
-      if (capturedBy.IsEmptyInstance) {
+      if (this.IsNew) {
         this.capturedTime = DateTime.Now;
         this.capturedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
-      this.keywords = EmpiriaString.BuildKeywords(this.number, this.recordingBook.FullName, this.RecordingDocument.UniqueCode);
+      this.keywords = EmpiriaString.BuildKeywords(this.number, this.recordingBook.FullName, 
+                                                  this.RecordingDocument.UniqueCode);
 
       RecordingBooksData.WriteRecording(this);
     }

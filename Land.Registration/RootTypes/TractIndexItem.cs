@@ -49,7 +49,7 @@ namespace Empiria.Land.Registration {
       this.RecordingAct = InformationAct.Empty;
       this.Property = Property.Empty;
       this.ExtensionData = TractIndexItemExtData.Empty;
-      this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      this.PostedBy = Person.Empty;
       this.PostingTime = DateTime.Now;
       this.Status = RecordableObjectStatus.Pending;
     }
@@ -172,6 +172,10 @@ namespace Empiria.Land.Registration {
     protected override void ImplementsSave() {
       if (this.Property.IsNew) {
         this.Property.Save();
+      }
+      if (this.IsNew) {
+        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.PostingTime = DateTime.Now;
       }
       PropertyData.WriteTractIndexItem(this);
     }

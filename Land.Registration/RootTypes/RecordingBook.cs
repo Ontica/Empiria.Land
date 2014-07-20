@@ -54,7 +54,8 @@ namespace Empiria.Land.Registration {
     private string keywords = String.Empty;
     private int startRecordingIndex = 0;
     private int endRecordingIndex = 0;
-    private TimePeriod recordingsControlTimePeriod = new TimePeriod(ExecutionServer.DateMinValue, ExecutionServer.DateMaxValue);
+    private TimePeriod recordingsControlTimePeriod = new TimePeriod(ExecutionServer.DateMinValue, 
+                                                                    ExecutionServer.DateMaxValue);
     private RecordBookDirectory imagingFilesFolder = RecordBookDirectory.Empty;
     private DateTime creationDate = DateTime.Now;
     private DateTime closingDate = ExecutionServer.DateMaxValue;
@@ -604,7 +605,7 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void ImplementsSave() {
-      if (createdBy.IsEmptyInstance) {
+      if (this.IsNew) {
         this.creationDate = DateTime.Now;
         this.createdBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }

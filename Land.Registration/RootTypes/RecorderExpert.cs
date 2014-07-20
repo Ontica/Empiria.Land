@@ -81,7 +81,7 @@ namespace Empiria.Land.Registration {
           throw new LandRegistrationException(LandRegistrationException.Msg.PrecendentPresentationTimeIsAfterThisTransactionDate,
                                               Task.PrecedentRecording.FullNumber, 
                                               Task.PrecedentRecording.Transaction.PresentationTime,
-                                              Task.Transaction.Key, Task.Transaction.PresentationTime);
+                                              Task.Transaction.UniqueCode, Task.Transaction.PresentationTime);
         }
       }
     }
