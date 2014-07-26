@@ -28,8 +28,30 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Constuctors and parsers
 
-    protected LRSPayment() : base(thisTypeName) {
+    internal LRSPayment(LRSTransaction transaction, string receiptNo, 
+                        decimal receiptTotal) : base(thisTypeName) {
+      Assertion.RequireObject(transaction, "transaction");
+      Assertion.Require(transaction != LRSTransaction.Empty, "transaction shouldn't be the empty instance.");
+      Assertion.RequireObject(receiptNo, "receiptNo");
+      Assertion.Require(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
+
       Initialize();
+      this.Transaction = transaction;
+      this.ReceiptNo = receiptNo;
+      this.ReceiptTotal = receiptTotal;
+    }
+
+    internal LRSPayment(Recording recording, string receiptNo, 
+                        decimal receiptTotal) : base(thisTypeName) {
+      Assertion.RequireObject(recording, "recording");
+      Assertion.Require(recording != Recording.Empty, "recording shouldn't be the empty instance.");
+      Assertion.RequireObject(receiptNo, "receiptNo");
+      Assertion.Require(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
+
+      Initialize();
+      this.Recording = recording;
+      this.ReceiptNo = receiptNo;
+      this.ReceiptTotal = receiptTotal;
     }
 
     protected LRSPayment(string typeName) : base(typeName) {
@@ -42,23 +64,13 @@ namespace Empiria.Land.Registration.Transactions {
       this.Recording = Recording.Empty;
       this.PaymentExternalID = String.Empty;
       this.PaymentOffice = Person.Empty;
-      this.ReceiptNo = "Nueva orden de pago";
+      this.ReceiptNo = "No asignado";
       this.ReceiptTotal = decimal.Zero;
       this.ReceiptIssuedTime = ExecutionServer.DateMaxValue;
       this.VerificationTime = ExecutionServer.DateMaxValue;
       this.Notes = String.Empty;
       this.PostingTime = DateTime.Now;
       this.PostedBy = Person.Empty;
-    }
-
-    public LRSPayment(LRSTransaction transaction) : base(thisTypeName) {
-      Initialize();
-      this.Transaction = transaction;
-    }
-
-    public LRSPayment(Recording recording) : base(thisTypeName) {
-      Initialize();
-      this.Recording = recording;
     }
 
     static public LRSPayment Parse(int id) {
@@ -71,6 +83,10 @@ namespace Empiria.Land.Registration.Transactions {
 
     static public LRSPayment Empty {
       get { return BaseObject.ParseEmpty<LRSPayment>(thisTypeName); }
+    }
+
+    static public LRSPayment FeeWaiver {
+      get { return BaseObject.Parse<LRSPayment>(thisTypeName, -3); }
     }
 
     #endregion Constructors and parsers
@@ -89,22 +105,22 @@ namespace Empiria.Land.Registration.Transactions {
 
     public string PaymentExternalID {
       get;
-      set;
+      private set;
     }
 
     public Contact PaymentOffice {
       get;
-      set;
+      private set;
     }
 
     public string ReceiptNo {
       get;
-      set;
+      private set;
     }
 
     public decimal ReceiptTotal {
       get;
-      set;
+      private set;
     }
 
     public DateTime ReceiptIssuedTime {
@@ -183,11 +199,14 @@ namespace Empiria.Land.Registration.Transactions {
 
     protected override void ImplementsSave() {
       if (base.IsNew) {
-        this.ReceiptNo = "RP/OP-" + this.Id.ToString("000000000");
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
         this.PostingTime = DateTime.Now;
       }
       TransactionData.WritePaymentOrder(this);
+    }
+
+    public void Verify() {
+      throw new NotImplementedException();
     }
 
     #endregion Public methods

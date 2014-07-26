@@ -19,8 +19,8 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Constructors and parsers
 
-    internal LRSFee() {
-
+    public LRSFee() {
+      this.Discount = Discount.Empty;
     }
 
     static internal LRSFee Parse(DataRow row) {
@@ -30,9 +30,9 @@ namespace Empiria.Land.Registration.Transactions {
       fee.SheetsRevision = (decimal) row["SheetsRevisionFee"];
       fee.Aclaration = (decimal) row["AclarationFee"];
       fee.Usufruct = (decimal) row["UsufructFee"];
-      fee.Easement = (decimal) row["ServidumbreFee"];
+      fee.Easement = (decimal) row["EasementFee"];
       fee.SignCertification = (decimal) row["SignCertificationFee"];
-      fee.ForeignRecord = (decimal) row["ForeignRecordFee"];
+      fee.ForeignRecord = (decimal) row["ForeignRecordingFee"];
       fee.OthersCharges = (decimal) row["OthersFee"];
       fee.Discount = Discount.Parse(DiscountType.Parse((int) row["DiscountTypeId"]), 
                                                        (decimal) row["Discount"]);
@@ -44,7 +44,7 @@ namespace Empiria.Land.Registration.Transactions {
       LRSFee fee = new LRSFee();
 
       foreach (LRSTransactionItem act in list) {
-        fee.Add(act.Fee);
+        fee.Sum(act.Fee);
       }
       return fee;
     }
@@ -113,7 +113,9 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Internal methods
 
-    internal void Add(LRSFee fee) {
+    internal void Sum(LRSFee fee) {
+      Assertion.RequireObject(fee, "fee");
+
       this.RecordingRights += fee.RecordingRights;
       this.SheetsRevision += fee.SheetsRevision;
       this.Aclaration += fee.Aclaration;

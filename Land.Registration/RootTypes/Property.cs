@@ -25,6 +25,9 @@ namespace Empiria.Land.Registration {
 
     private const string thisTypeName = "ObjectType.Property";
 
+    private LazyObject<Property> _partitionOf = LazyObject<Property>.Empty;
+    private LazyObject<Property> _mergedInto = LazyObject<Property>.Empty;
+
     #endregion Fields
 
     #region Constructors and parsers
@@ -35,7 +38,6 @@ namespace Empiria.Land.Registration {
 
     protected Property(string typeName) : base(typeName) {
       // Empiria Object Type pattern classes always has this constructor. Don't delete
-      Initialize();
     }
 
     static public Property Parse(int id) {
@@ -46,7 +48,7 @@ namespace Empiria.Land.Registration {
       return BaseObject.Parse<Property>(thisTypeName, dataRow);
     }
 
-    static public Property ParseWithTractKey(string propertyKey) {
+    static public Property ParseWithUniqueCode(string propertyKey) {
       DataRow row = PropertyData.GetPropertyWithUniqueCode(propertyKey);
 
       if (row != null) {
@@ -120,7 +122,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    private LazyObject<Property> _partitionOf = LazyObject<Property>.Empty;
     public Property PartitionOf {
       get {
         return _partitionOf;
@@ -129,10 +130,9 @@ namespace Empiria.Land.Registration {
 
     public string PartitionNo {
       get;
-      set;
+      private set;
     }
 
-    private LazyObject<Property> _mergedInto = LazyObject<Property>.Empty;
     public Property MergedInto {
       get {
         return _mergedInto;
@@ -329,7 +329,7 @@ namespace Empiria.Land.Registration {
     }
 
     private void AssignUniqueCode() {
-      Assertion.Assert(this.UniqueCode.Length == 0, "Property has already assigned a UniqueCode.");
+      Assertion.Require(this.UniqueCode.Length == 0, "Property has already assigned a UniqueCode.");
       
       while (true) {
         string temp = TransactionData.GeneratePropertyKey();
@@ -338,6 +338,7 @@ namespace Empiria.Land.Registration {
           break;
         }
       } // while
+      Assertion.Ensure(this.UniqueCode.Length != 0, "Property UniqueCode has not been generated.");
     }
 
     #endregion Public methods

@@ -37,7 +37,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.DeliveryNotes = String.Empty;
     }
 
-    static internal LRSTransactionExtData Parse(string jsonString) {   
+    static internal LRSTransactionExtData Parse(string jsonString) {
       if (String.IsNullOrWhiteSpace(jsonString)) {
         return LRSTransactionExtData.Empty;
       }
@@ -51,7 +51,7 @@ namespace Empiria.Land.Registration.Transactions {
       data.OfficeNotes = json.Find<String>("OfficeNotes", String.Empty);
       data.ClosingNotes = json.Find<String>("ClosingNotes", String.Empty);
       data.DeliveryNotes = json.Find<String>("DeliveryNotes", String.Empty);
-      
+
       return data;
     }
 
@@ -81,7 +81,7 @@ namespace Empiria.Land.Registration.Transactions {
       get;
       set;
     }
-    
+
     public string OfficeNotes {
       get;
       set;

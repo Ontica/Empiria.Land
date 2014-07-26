@@ -136,7 +136,9 @@
     <Compile Include="RootTypes\RecordingTask.cs" />
     <Compile Include="RootTypes\TransactionAct.cs" />
     <Compile Include="Transactions\LRSFee.cs" />
-    <Compile Include="Transactions\LRSTransactionTrack.cs" />
+    <Compile Include="Transactions\LRSPaymentList.cs" />
+    <Compile Include="Transactions\LRSTransactionTaskList.cs" />
+    <Compile Include="Transactions\LRSTransactionTask.cs" />
     <Compile Include="Transactions\CalculationRule.cs" />
     <Compile Include="Transactions\LRSPayment.cs" />
     <Compile Include="Transactions\LRSLawArticle.cs" />
@@ -175,6 +177,7 @@
     <Compile Include="RootTypes\LandRegistrationException.cs" />
     <Compile Include="RootTypes\RecorderOffice.cs" />
     <Compile Include="Transactions\LRSTransactionExtData.cs" />
+    <Compile Include="Transactions\LRSTransactionItemList.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

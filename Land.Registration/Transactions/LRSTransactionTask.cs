@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSTransactionTrack                            Pattern  : Association Class                   *
+*  Type      : LRSTransactionTask                             Pattern  : Association Class                   *
 *  Version   : 2.0        Date: 23/Oct/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
-*  Summary   : Abstract class that represents a transaction or process on a land registration office.        *
+*  Summary   : Workflow item or task inside a LRSTransaction processing time window.                         *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -29,12 +29,12 @@ namespace Empiria.Land.Registration.Transactions {
     Manual = 'M',
   }
 
-  /// <summary>Represents a transaction item track on a land registration office.</summary>
-  public class LRSTransactionTrack : BaseObject {
+  /// <summary>Workflow item or task inside a LRSTransaction processing time window.</summary>
+  public class LRSTransactionTask : BaseObject {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.LRSTransactionTrack";
+    private const string thisTypeName = "ObjectType.LRSTransactionTask";
 
     private LRSTransaction transaction = null;
     private int eventId = -1;
@@ -51,52 +51,52 @@ namespace Empiria.Land.Registration.Transactions {
     private TrackStatus status = TrackStatus.Pending;
     private string integrityHashCode = String.Empty;
 
-    private int previousNodeId = -1;
-    private int nextNodeId = -1;
-    private LRSTransactionTrack previousNode = null;
-    private LRSTransactionTrack nextNode = null;
+    private int previousTaskId = -1;
+    private int nextTaskId = -1;
+    private LRSTransactionTask previousTask = null;
+    private LRSTransactionTask nextTask = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    internal LRSTransactionTrack(LRSTransaction transaction)
+    internal LRSTransactionTask(LRSTransaction transaction)
       : base(thisTypeName) {
       this.transaction = transaction;
     }
 
-    protected LRSTransactionTrack()
+    protected LRSTransactionTask()
       : base(thisTypeName) {
       // Instance creation of this type may be invoked with ....
     }
 
-    protected LRSTransactionTrack(string typeName)
+    protected LRSTransactionTask(string typeName)
       : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
-    static public LRSTransactionTrack Parse(int id) {
-      return BaseObject.Parse<LRSTransactionTrack>(thisTypeName, id);
+    static public LRSTransactionTask Parse(int id) {
+      return BaseObject.Parse<LRSTransactionTask>(thisTypeName, id);
     }
 
-    static internal LRSTransactionTrack Parse(DataRow dataRow) {
-      return BaseObject.Parse<LRSTransactionTrack>(thisTypeName, dataRow);
+    static internal LRSTransactionTask Parse(DataRow dataRow) {
+      return BaseObject.Parse<LRSTransactionTask>(thisTypeName, dataRow);
     }
 
-    static public LRSTransactionTrack Empty {
-      get { return BaseObject.ParseEmpty<LRSTransactionTrack>(thisTypeName); }
+    static public LRSTransactionTask Empty {
+      get { return BaseObject.ParseEmpty<LRSTransactionTask>(thisTypeName); }
     }
 
-    static internal LRSTransactionTrack CreateFirst(LRSTransaction transaction) {
-      LRSTransactionTrack track = new LRSTransactionTrack(transaction);
+    static internal LRSTransactionTask CreateFirst(LRSTransaction transaction) {
+      LRSTransactionTask track = new LRSTransactionTask(transaction);
 
       track.AssignedBy = LRSTransaction.InterestedContact;
       track.CurrentStatus = transaction.Status;
       track.CheckInTime = DateTime.Now;
       track.EndProcessTime = track.CheckInTime;
       track.Responsible = Contact.Parse(ExecutionServer.CurrentUserId);
-      track.previousNode = LRSTransactionTrack.Empty;
-      track.nextNode = LRSTransactionTrack.Empty;
+      track.previousTask = LRSTransactionTask.Empty;
+      track.nextTask = LRSTransactionTask.Empty;
       track.Save();
 
       return track;
@@ -198,21 +198,21 @@ namespace Empiria.Land.Registration.Transactions {
       set { status = value; }
     }
 
-    public LRSTransactionTrack PreviousNode {
+    public LRSTransactionTask PreviousTask {
       get {
-        if (previousNode == null) {
-          previousNode = LRSTransactionTrack.Parse(previousNodeId);
+        if (previousTask == null) {
+          previousTask = LRSTransactionTask.Parse(previousTaskId);
         }
-        return previousNode;
+        return previousTask;
       }
     }
 
-    public LRSTransactionTrack NextNode {
+    public LRSTransactionTask NextTask {
       get {
-        if (nextNode == null) {
-          nextNode = LRSTransactionTrack.Parse(nextNodeId);
+        if (nextTask == null) {
+          nextTask = LRSTransactionTask.Parse(nextTaskId);
         }
-        return nextNode;
+        return nextTask;
       }
     }
 
@@ -244,27 +244,29 @@ namespace Empiria.Land.Registration.Transactions {
       this.CheckOutTime = DateTime.Now;
       this.nextContact = LRSTransaction.InterestedContact;
       this.nextStatus = TransactionStatus.EndPoint;
-      this.nextNodeId = -1;
-      this.nextNode = LRSTransactionTrack.Empty;
+      this.nextTaskId = -1;
+      this.nextTask = LRSTransactionTask.Empty;
       this.Status = TrackStatus.Closed;
 
       this.Save();
     }
 
-    private void ExecuteSpecialCase(LRSTransactionTrack nextTrack) {
+    private void ExecuteSpecialCase(LRSTransactionTask nextTrack) {
       if (nextTrack.IsNew) {
-        if (nextTrack.CurrentStatus == TransactionStatus.ToDeliver || nextTrack.CurrentStatus == TransactionStatus.ToReturn) {
-          nextTrack.NextStatus = (nextTrack.CurrentStatus == TransactionStatus.ToDeliver) ? TransactionStatus.Delivered : TransactionStatus.Returned;
+        if (nextTrack.CurrentStatus == TransactionStatus.ToDeliver || 
+            nextTrack.CurrentStatus == TransactionStatus.ToReturn) {
+          nextTrack.NextStatus = (nextTrack.CurrentStatus == TransactionStatus.ToDeliver) ? 
+                    TransactionStatus.Delivered : TransactionStatus.Returned;
           nextTrack.EndProcessTime = nextTrack.CheckInTime;
           nextTrack.Status = TrackStatus.OnDelivery;
         }
       }
     }
 
-    internal LRSTransactionTrack CreateNext(string notes) {
+    internal LRSTransactionTask CreateNext(string notes) {
       // Create next track
-      LRSTransactionTrack newTrack = new LRSTransactionTrack(this.transaction);
-      newTrack.previousNode = this;
+      LRSTransactionTask newTrack = new LRSTransactionTask(this.transaction);
+      newTrack.previousTask = this;
       newTrack.CurrentStatus = this.NextStatus;
       newTrack.AssignedBy = this.Responsible;
       newTrack.Responsible = Contact.Parse(ExecutionServer.CurrentUserId);
@@ -287,7 +289,7 @@ namespace Empiria.Land.Registration.Transactions {
         this.nextContact = Contact.Parse(ExecutionServer.CurrentUserId);
       }
       this.Status = TrackStatus.Closed;
-      this.nextNode = newTrack;
+      this.nextTask = newTrack;
       this.Save();
 
       return newTrack;
@@ -306,8 +308,8 @@ namespace Empiria.Land.Registration.Transactions {
       this.EndProcessTime = ExecutionServer.DateMaxValue;
       this.CheckOutTime = ExecutionServer.DateMaxValue;
       this.NextStatus = TransactionStatus.EndPoint;
-      this.nextNodeId = -1;
-      this.nextNode = LRSTransactionTrack.Empty;
+      this.nextTaskId = -1;
+      this.nextTask = LRSTransactionTask.Empty;
       this.NextContact = Person.Empty;
       this.Status = TrackStatus.Pending;
       this.Save();
@@ -327,10 +329,10 @@ namespace Empiria.Land.Registration.Transactions {
       this.endProcessTime = (DateTime) row["EndProcessTime"];
       this.checkOutTime = (DateTime) row["CheckOutTime"];
       this.notes = (string) row["TrackNotes"];
-      this.previousNodeId = (int) row["PreviousTrackId"];
-      this.nextNodeId = (int) row["NextTrackId"];
+      this.previousTaskId = (int) row["PreviousTrackId"];
+      this.nextTaskId = (int) row["NextTrackId"];
       this.status = (TrackStatus) Convert.ToChar(row["TrackStatus"]);
-      this.integrityHashCode = (string) row["TrackRIHC"];
+      this.integrityHashCode = (string) row["TrackDIF"];
     }
 
     protected override void ImplementsSave() {
@@ -339,11 +341,11 @@ namespace Empiria.Land.Registration.Transactions {
         //this.postingTime = DateTime.Now;
       }
       //this.currentStatus = this.Transaction.Status;
-      TransactionData.WriteTransactionTrack(this);
+      TransactionData.WriteTransactionTask(this);
     }
 
     #endregion Public methods
 
-  } // class LRSTransactionTrack
+  } // class LRSTransactionTask
 
 } // namespace Empiria.Land.Registration.Transactions

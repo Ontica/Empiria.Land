@@ -5,7 +5,7 @@
 *  Type      : TransactionData                              Pattern  : Data Services Static Class            *
 *  Version   : 2.0        Date: 23/Oct/2014                 License  : GNU AGPLv3  (See license.txt)         *
 *                                                                                                            *
-*  Summary   : Provides database read and write methods for recording office process or transactions.        *
+*  Summary   : Provides database read and write methods for recording office transactions.                   *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -19,15 +19,21 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration.Data {
 
-  /// <summary>Provides database read and write methods for recording office process or transactions.</summary>
+  /// <summary>Provides database read and write methods for recording office transactions.</summary>
   static public class TransactionData {
 
     #region Public methods
 
-    static public LRSTransactionTrack GetLastTransactionTrack(LRSTransaction transaction) {
+    static public LRSTransactionTask GetTransactionLastTask(LRSTransaction transaction) {
       DataRow row = DataReader.GetDataRow(DataOperation.Parse("getLRSLastTransactionTrack", transaction.Id));
 
-      return LRSTransactionTrack.Parse(row);
+      return LRSTransactionTask.Parse(row);
+    }
+
+    static public DataView GetLRSResponsibleTransactionInbox(Contacts.Contact contact, TrackStatus status,
+                                                         string filter, string sort) {
+      DataOperation op = DataOperation.Parse("qryLRSResponsibleTransactionInbox", contact.Id, (char) status);
+      return DataReader.GetDataView(op, filter, sort);
     }
 
     static public DataView GetLRSTransactionsForUI(string filter, string sort) {
@@ -71,12 +77,6 @@ namespace Empiria.Land.Registration.Data {
       return dataset;
     }
 
-    static public FixedList<LRSTransactionTrack> GetLRSTransactionTrack(LRSTransaction transaction) {
-      DataView view = DataReader.GetDataView(DataOperation.Parse("qryLRSTransactionTrack", transaction.Id));
-
-      return new FixedList<LRSTransactionTrack>((x) => LRSTransactionTrack.Parse(x), view);
-    }
-
     static public List<LRSTransactionItem> GetLRSTransactionItems(LRSTransaction transaction) {
       var operation = DataOperation.Parse("qryLRSTransactionItems", transaction.Id);
 
@@ -89,10 +89,10 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList<LRSPayment>(operation, (x) => LRSPayment.Parse(x));
     }
 
-    static public DataView GetLRSResponsibleTransactionInbox(Contacts.Contact contact, TrackStatus status,
-                                                             string filter, string sort) {
-      DataOperation op = DataOperation.Parse("qryLRSResponsibleTransactionInbox", contact.Id, (char) status);
-      return DataReader.GetDataView(op, filter, sort);
+    static public List<LRSTransactionTask> GetLRSTransactionTaskList(LRSTransaction transaction) {
+      var operation = DataOperation.Parse("qryLRSTransactionTrack", transaction.Id);
+
+      return DataReader.GetList<LRSTransactionTask>(operation, (x) => LRSTransactionTask.Parse(x));
     }
 
     static public DataView GetContactsWithActiveTransactions() {
@@ -224,9 +224,10 @@ namespace Empiria.Land.Registration.Data {
       Assertion.Require(o.Id != 0, "LRSTransaction.Id can't be zero");
       return DataOperation.Parse("writeLRSTransaction", o.Id, o.TransactionType.Id, o.UniqueCode,
                                  o.DocumentType.Id, o.DocumentDescriptor, o.Document.Id, o.RecorderOffice.Id,
-                                 o.RequestedBy, o.ManagementAgency.Id, o.ExtensionData, o.Keywords,
-                                 o.PresentationTime, o.ExpectedDelivery, o.LastReentryTime, o.NonWorkingTime, 
-                                 o.ComplexityIndex, o.IsArchived, (char) o.Status, o.Integrity.GetUpdatedHashCode());
+                                 o.RequestedBy, o.ManagementAgency.Id, o.ExtensionData.ToJson(), o.Keywords,
+                                 o.PresentationTime, o.ExpectedDelivery, o.LastReentryTime, o.ClosingTime,
+                                 o.LastDeliveryTime, o.NonWorkingTime, o.ComplexityIndex, o.IsArchived, 
+                                 (char) o.Status, o.Integrity.GetUpdatedHashCode());
     }
 
     static internal int WriteTransactionItem(LRSTransactionItem o) {
@@ -244,18 +245,19 @@ namespace Empiria.Land.Registration.Data {
       return DataWriter.Execute(operation);
     }
 
-    static internal int WriteTransactionTrack(LRSTransactionTrack o) {
-      Assertion.Require(o.Id != 0, "LRSTransactionTrack.Id can't be zero");
+    static internal int WriteTransactionTask(LRSTransactionTask o) {
+      Assertion.Require(o.Id != 0, "LRSTransactionTask.Id can't be zero");
       var operation = DataOperation.Parse("writeLRSTransactionTrack", o.Id, o.Transaction.Id,
                                           o.EventId, (char) o.Mode, o.AssignedBy.Id, o.Responsible.Id, 
                                           o.NextContact.Id, (char) o.CurrentStatus, (char) o.NextStatus, 
                                           o.CheckInTime, o.EndProcessTime, o.CheckOutTime, o.Notes, 
-                                          o.PreviousNode.Id, o.NextNode.Id, (char) o.Status, String.Empty);
+                                          o.PreviousTask.Id, o.NextTask.Id, (char) o.Status, String.Empty);
 
       return DataWriter.Execute(operation);
     }
 
     #endregion Internal methods
+
 
   } // class TransactionData
 

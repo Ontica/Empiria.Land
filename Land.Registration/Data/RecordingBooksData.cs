@@ -25,7 +25,7 @@ namespace Empiria.Land.Registration.Data {
     static internal DataTable GetBookRecordingNumbers(RecordingBook book) {
       string sql = "SELECT RecordingNumber FROM LRSRecordings" +
                    " WHERE RecordingBookId = " + book.Id.ToString() +
-                   " AND RecordingStatus <> 'X' AND (BaseRecordingId = -1) ORDER BY RecordingNumber";
+                   " AND RecordingStatus <> 'X' ORDER BY RecordingNumber";
 
       return DataReader.GetDataTable(DataOperation.Parse(sql));
     }
@@ -33,7 +33,7 @@ namespace Empiria.Land.Registration.Data {
     static internal int GetLastBookRecordingNumber(RecordingBook book) {
       string sql = "SELECT MAX(RecordingNumber) FROM LRSRecordings" +
                    " WHERE RecordingBookId = " + book.Id.ToString() +
-                   " AND RecordingStatus <> 'X' AND (BaseRecordingId = -1)";
+                   " AND RecordingStatus <> 'X'";
       return int.Parse(DataReader.GetScalar<string>(DataOperation.Parse(sql), "0"));
     }
 

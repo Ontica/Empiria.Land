@@ -467,33 +467,41 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void ImplementsLoadObjectData(DataRow row) {
-      this.recordingBook = RecordingBook.Parse((int) row["RecordingBookId"]);
-      this.transaction = LRSTransaction.Parse((int) row["TransactionId"]);
       this.document = RecordingDocument.Parse((int) row["DocumentId"]);
-      this.baseRecordingId = (int) row["BaseRecordingId"];
+      this.recordingBook = RecordingBook.Parse((int) row["RecordingBookId"]);
       this.number = (string) row["RecordingNumber"];
-      this.startImageIndex = (int) row["RecordingBookFirstImage"];
-      this.endImageIndex = (int) row["RecordingBookLastImage"];
       this.notes = (string) row["RecordingNotes"];
+      // EXTDATA
       this.keywords = (string) row["RecordingKeywords"];
       this.presentationTime = (DateTime) row["RecordingPresentationTime"];
-      this.receiptNumber = (string) row["ReceiptNumber"];
-      this.receiptTotal = (decimal) row["ReceiptTotal"];
-      this.receiptIssueDate = (DateTime) row["ReceiptIssueDate"];
-      this.capturedBy = Contact.Parse((int) row["RecordingCapturedById"]);
-      this.capturedTime = (DateTime) row["RecordingCapturedTime"];
-      this.qualifiedBy = Contact.Parse((int) row["RecordingQualifiedById"]);
-      this.qualifiedTime = (DateTime) row["RecordingQualifiedTime"];
-      this.authorizedBy = Contact.Parse((int) row["RecordingAuthorizedById"]);
-      this.authorizedTime = (DateTime) row["RecordingAuthorizedTime"];
-      this.canceledBy = Contact.Parse((int) row["RecordingCanceledById"]);
-      this.canceledTime = (DateTime) row["RecordingCanceledTime"];
-      this.cancelationReasonId = (int) row["RecordingCancelationReasonId"];
-      this.cancelationNotes = (string) row["RecordingCancelationNotes"];
-      this.digitalString = (string) row["RecordingDigitalString"];
-      this.digitalSign = (string) row["RecordingDigitalSign"];
+      this.authorizedTime = (DateTime) row["RecordingAuthorizationTime"];
+      this.qualifiedBy = Contact.Parse((int) row["ReviewedById"]);
+      this.authorizedBy = Contact.Parse((int) row["AuthorizedById"]);
+      this.capturedBy = Contact.Parse((int) row["RecordedById"]);
+      this.capturedTime = (DateTime) row["RecordingTime"];
       this.status = (RecordableObjectStatus) Convert.ToChar(row["RecordingStatus"]);
-      this.recordIntegrityHashCode = (string) row["RecordingRIHC"];
+      this.recordIntegrityHashCode = (string) row["RecordingDIF"];
+
+      //this.transaction = LRSTransaction.Parse((int) row["TransactionId"]);
+
+      //this.startImageIndex = (int) row["RecordingBookFirstImage"];
+      //this.endImageIndex = (int) row["RecordingBookLastImage"];
+
+      //this.receiptNumber = (string) row["ReceiptNumber"];
+      //this.receiptTotal = (decimal) row["ReceiptTotal"];
+      //this.receiptIssueDate = (DateTime) row["ReceiptIssueDate"];
+   
+      //this.qualifiedTime = (DateTime) row["RecordingQualifiedTime"];
+      
+
+      //this.canceledBy = Contact.Parse((int) row["RecordingCanceledById"]);
+      //this.canceledTime = (DateTime) row["RecordingCanceledTime"];
+      //this.cancelationReasonId = (int) row["RecordingCancelationReasonId"];
+      //this.cancelationNotes = (string) row["RecordingCancelationNotes"];
+      //this.digitalString = (string) row["RecordingDigitalString"];
+      //this.digitalSign = (string) row["RecordingDigitalSign"];
+      
+
     }
 
     protected override void ImplementsSave() {

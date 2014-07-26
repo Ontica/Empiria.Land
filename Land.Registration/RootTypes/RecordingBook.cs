@@ -583,25 +583,27 @@ namespace Empiria.Land.Registration {
       this.RecorderOffice = RecorderOffice.Parse((int) row["RecorderOfficeId"]);
       this.BookType = (RecordingBookType) Convert.ToChar(row["RecordingBookType"]);
       this.sectionType = RecordingSection.Parse((int) row["RecordingsClassId"]);
-      this.BookNumber = (string) row["RecordingBookNumber"];
+      this.BookNumber = (string) row["RecordingBookNo"];
       this.Name = (string) row["RecordingBookName"];
       this.FullName = (string) row["RecordingBookFullName"];
       this.keywords = (string) row["RecordingBookKeywords"];
-      this.Description = (string) row["RecordingBookDescription"];
+      //this.Description = (string) row["RecordingBookDescription"];
+    
+      //this.RecordingsControlTimePeriod = new TimePeriod((DateTime) row["RecordingsControlFirstDate"], 
+      //                                                  (DateTime) row["RecordingsControlLastDate"]);
+      this.ImagingFilesFolder = RecordBookDirectory.Parse((int) row["RecordingBookFilesFolderId"]);
       this.StartRecordingIndex = (int) row["StartRecordingIndex"];
       this.EndRecordingIndex = (int) row["EndRecordingIndex"];
-      this.RecordingsControlTimePeriod = new TimePeriod((DateTime) row["RecordingsControlFirstDate"], 
-                                                        (DateTime) row["RecordingsControlLastDate"]);
-      this.ImagingFilesFolder = RecordBookDirectory.Parse((int) row["RecordingBookFilesFolderId"]);
-      this.CreationDate = (DateTime) row["CreationDate"];
-      this.ClosingDate = (DateTime) row["ClosingDate"];
-      this.CreatedBy = Contact.Parse((int) row["CreatedById"]);
-      this.AssignedTo = Contact.Parse((int) row["AssignedToId"]);
-      this.ReviewedBy = Contact.Parse((int) row["ReviewedById"]);
-      this.ApprovedBy = Contact.Parse((int) row["ApprovedById"]);
+
+      //this.CreationDate = (DateTime) row["CreationDate"];
+      //this.ClosingDate = (DateTime) row["ClosingDate"];
+      //this.CreatedBy = Contact.Parse((int) row["CreatedById"]);
+      //this.AssignedTo = Contact.Parse((int) row["AssignedToId"]);
+      //this.ReviewedBy = Contact.Parse((int) row["ReviewedById"]);
+      //this.ApprovedBy = Contact.Parse((int) row["ApprovedById"]);
       this.parentRecordingBookId = (int) row["ParentRecordingBookId"];
       this.Status = (RecordingBookStatus) Convert.ToChar(row["RecordingBookStatus"]);
-      this.recordIntegrityHashCode = (string) row["RecordingBookRIHC"];
+      this.recordIntegrityHashCode = (string) row["RecordingBookDIF"];
     }
 
     protected override void ImplementsSave() {

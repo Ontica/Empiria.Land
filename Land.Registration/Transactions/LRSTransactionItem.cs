@@ -26,24 +26,55 @@ namespace Empiria.Land.Registration.Transactions {
 
     private const string thisTypeName = "ObjectType.LRSTransactionItem";
 
+    LazyObject<LRSPayment> _payment = LazyObject<LRSPayment>.Empty;
+
     #endregion Fields
 
     #region Constructors and parsers
 
-    public LRSTransactionItem(LRSTransaction transaction) : base(thisTypeName) {
-      this.Transaction = transaction;
+    private LRSTransactionItem() : base(thisTypeName) {
+
     }
 
-    protected LRSTransactionItem() : base(thisTypeName) {
-      // Instance creation of this type may be invoked with ....
+    internal LRSTransactionItem(LRSTransaction transaction, RecordingActType transactionItemType, 
+                                LRSLawArticle treasuryCode, Money operationValue, 
+                                Quantity quantity, LRSFee fee) : base(thisTypeName) {
+      this.Initialize();
+      this.Transaction = transaction;
+      this.TransactionItemType = transactionItemType;
+      this.TreasuryCode = treasuryCode;
+      this.Quantity = quantity;
+      this.OperationValue = operationValue;
+      this.CalculationRule = CalculationRule.Empty;
+      this.Fee = fee;
+    }
+
+    internal LRSTransactionItem(LRSTransaction transaction, RecordingActType transactionItemType,
+                                LRSLawArticle treasuryCode, Money operationValue, 
+                                Quantity quantity) : base(thisTypeName) {
+      this.Initialize();
+      this.Transaction = transaction;
+      this.TransactionItemType = transactionItemType;
+      this.TreasuryCode = treasuryCode;
+      this.Quantity = quantity;
+      this.OperationValue = operationValue;
+
+      // Derives the calculation rule from parameters and automatically calculates the right fee
+      this.CalculationRule = CalculationRule.Empty;
+      this.Fee = new LRSFee();
     }
 
     protected LRSTransactionItem(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise.
+      Initialize();
     }
 
-    static public LRSTransactionItem Parse(int id) {
-      return BaseObject.Parse<LRSTransactionItem>(thisTypeName, id);
+    private void Initialize() {
+      this.CalculationRule = CalculationRule.Empty;
+      this.Notes = String.Empty;
+      this.PostingTime = DateTime.Now;
+      this.PostedBy = Person.Empty;
+      this.Status = 'A';
     }
 
     static internal LRSTransactionItem Parse(DataRow dataRow) {
@@ -75,8 +106,9 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public LRSPayment Payment {
-      get;
-      private set;
+      get {
+        return _payment.Instance;
+      }
     }
 
     public Quantity Quantity {
@@ -133,16 +165,16 @@ namespace Empiria.Land.Registration.Transactions {
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
       if (version == 1) {
         return new object[] {
-          1, "Id", this.Id, "TransactionId", this.Transaction.Id, 
+          1, "Id", this.Id, "TransactionId", this.Transaction.Id,
           "TransactionItemTypeId", this.TransactionItemType.Id,
           "TreasuryCodeId", this.TreasuryCode.Id, "CalculationRuleId", this.CalculationRule.Id,
           "PaymentId", this.Payment.Id, "Qty", this.Quantity.Amount, "QtyUnitId", this.Quantity.Unit.Id,
           "OpValue", this.OperationValue.Amount, "OpValueCurrencyId", this.OperationValue.Currency.Id,
           "RecordingRightsFee", this.Fee.RecordingRights, "SheetsRevisionFee", this.Fee.SheetsRevision,
-          "AclarationFee", this.Fee.Aclaration, "UsufructFee", this.Fee.Usufruct, 
+          "AclarationFee", this.Fee.Aclaration, "UsufructFee", this.Fee.Usufruct,
           "EasementFee", this.Fee.Easement, "SignCertFee", this.Fee.SignCertification,
           "ForeignFee", this.Fee.ForeignRecord, "OthersFee", this.Fee.OthersCharges,
-          "DiscountType", this.Fee.Discount.DiscountType.Id, "Discount", this.Fee.Discount.Amount, 
+          "DiscountType", this.Fee.Discount.DiscountType.Id, "Discount", this.Fee.Discount.Amount,
           "DiscountAuthId", this.Fee.Discount.Authorization.Id, "PostingTime", this.PostingTime,
           "PostedById", this.PostedBy.Id, "Status", (char) this.Status
         };
@@ -164,7 +196,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Public methods
 
-    public void Delete() {
+    internal void Delete() {
       this.Status = 'X';
       this.Save();
     }
@@ -174,7 +206,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.TransactionItemType = RecordingActType.Parse((int) row["TransactionItemTypeId"]);
       this.TreasuryCode = LRSLawArticle.Parse((int) row["TreasuryCodeId"]);
       this.CalculationRule = CalculationRule.Parse((int) row["CalculationRuleId"]);
-      this.Payment = LRSPayment.Parse((int) row["PaymentId"]);
+      _payment = LazyObject<LRSPayment>.Parse((int) row["PaymentId"]);
       this.Quantity = Quantity.Parse(Unit.Parse((int) row["UnitId"]), (decimal) row["Quantity"]);
       this.OperationValue = Money.Parse(Currency.Parse((int) row["OperationValueCurrencyId"]), 
                                         (decimal) row["OperationValue"]);
@@ -193,7 +225,20 @@ namespace Empiria.Land.Registration.Transactions {
       this.Transaction.OnRecordingActsUpdated();
     }
 
+    internal LRSTransactionItem MakeCopy() {
+      LRSTransactionItem newItem = new LRSTransactionItem();
+
+      newItem.TransactionItemType = this.TransactionItemType;
+      newItem.TreasuryCode = this.TreasuryCode;
+      newItem.OperationValue = this.OperationValue;
+      newItem.Quantity = this.Quantity;
+      newItem.Notes = this.Notes;
+
+      return newItem;
+    }
+
     #endregion Public methods
+
 
   } // class LRSTransactionItem
 
