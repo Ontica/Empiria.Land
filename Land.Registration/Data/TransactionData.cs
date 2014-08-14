@@ -195,7 +195,8 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int GetLastControlNumber(RecorderOffice recorderOffice) {
-      string sql = "SELECT MAX(ControlNumber) FROM vwLRSTransactions WHERE RecorderOfficeId = " + recorderOffice.Id.ToString();
+      string sql = "SELECT MAX(ControlNumber) FROM vwLRSTransactions " + 
+                   "WHERE RecorderOfficeId = " + recorderOffice.Id.ToString();
 
       string max = DataReader.GetScalar<String>(DataOperation.Parse(sql), String.Empty);
 
@@ -206,9 +207,8 @@ namespace Empiria.Land.Registration.Data {
       }
     }
 
-    static internal int WritePaymentOrder(LRSPayment o) {
-      Assertion.Require(o.Id != 0, "LRSPayment.Id can't be zero");
-      var dataOperation = DataOperation.Parse("writeLRSPaymentOrder", o.Id, o.Transaction.Id, 
+    static internal int WritePayment(LRSPayment o) {
+      var dataOperation = DataOperation.Parse("writeLRSPayment", o.Id, o.Transaction.Id,
                                   o.Recording.Id, o.PaymentExternalID, o.PaymentOffice.Id, o.ReceiptNo,
                                   o.ReceiptTotal, o.ReceiptIssuedTime, o.VerificationTime, o.Notes,
                                   o.PostingTime, o.PostedBy.Id, o.Integrity.GetUpdatedHashCode());
@@ -221,7 +221,6 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal DataOperation WriteTransactionOp(LRSTransaction o) {
-      Assertion.Require(o.Id != 0, "LRSTransaction.Id can't be zero");
       return DataOperation.Parse("writeLRSTransaction", o.Id, o.TransactionType.Id, o.UniqueCode,
                                  o.DocumentType.Id, o.DocumentDescriptor, o.Document.Id, o.RecorderOffice.Id,
                                  o.RequestedBy, o.ManagementAgency.Id, o.ExtensionData.ToJson(), o.Keywords,
@@ -231,7 +230,6 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteTransactionItem(LRSTransactionItem o) {
-      Assertion.Require(o.Id != 0, "LRSTransactionAct.Id can't be zero");
       var operation = DataOperation.Parse("writeLRSTransactionItem", o.Id, o.Transaction.Id,
                                           o.TransactionItemType.Id, o.TreasuryCode.Id, o.CalculationRule.Id,
                                           o.Payment.Id, o.Quantity.Amount, o.Quantity.Unit.Id,
@@ -246,7 +244,6 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteTransactionTask(LRSTransactionTask o) {
-      Assertion.Require(o.Id != 0, "LRSTransactionTask.Id can't be zero");
       var operation = DataOperation.Parse("writeLRSTransactionTrack", o.Id, o.Transaction.Id,
                                           o.EventId, (char) o.Mode, o.AssignedBy.Id, o.Responsible.Id, 
                                           o.NextContact.Id, (char) o.CurrentStatus, (char) o.NextStatus, 
@@ -257,7 +254,6 @@ namespace Empiria.Land.Registration.Data {
     }
 
     #endregion Internal methods
-
 
   } // class TransactionData
 

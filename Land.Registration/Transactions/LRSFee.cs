@@ -114,7 +114,7 @@ namespace Empiria.Land.Registration.Transactions {
     #region Internal methods
 
     internal void Sum(LRSFee fee) {
-      Assertion.RequireObject(fee, "fee");
+      Assertion.AssertObject(fee, "fee");
 
       this.RecordingRights += fee.RecordingRights;
       this.SheetsRevision += fee.SheetsRevision;

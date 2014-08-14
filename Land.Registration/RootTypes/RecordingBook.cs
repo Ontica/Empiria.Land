@@ -134,8 +134,8 @@ namespace Empiria.Land.Registration {
 
     static public RecordingBook GetAssignedBookForRecording(RecorderOffice office, RecordingSection section,
                                                             RecordingDocument document) {
-      Assertion.RequireObject(document, "document");
-      Assertion.Require(!document.IsEmptyInstance && !document.IsNew,
+      Assertion.AssertObject(document, "document");
+      Assertion.Assert(!document.IsEmptyInstance && !document.IsNew,
                         "Document can't be neither an empty or unsaved document.");
       RecordingBook openedBook = RecordingBooksData.GetOpenedBook(office, section);
       if (openedBook.HasSpaceForRecording(document)) {
@@ -402,9 +402,9 @@ namespace Empiria.Land.Registration {
     }
 
     public Recording CreateRecording(LRSTransaction transaction) {
-      Assertion.RequireObject(transaction, "transaction");
-      Assertion.RequireObject(transaction.Document, "document");
-      Assertion.Require(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
+      Assertion.AssertObject(transaction, "transaction");
+      Assertion.AssertObject(transaction.Document, "document");
+      Assertion.Assert(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
                         "Transaction document cannot be neither empty nor a new document instance.");
 
       var recording = new Recording();
@@ -424,11 +424,11 @@ namespace Empiria.Land.Registration {
     }
 
     public Recording CreateRecordingForAnnotation(LRSTransaction transaction, Recording antecedent) {
-      Assertion.RequireObject(transaction, "transaction");
-      Assertion.RequireObject(transaction.Document, "document");
-      Assertion.Require(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
+      Assertion.AssertObject(transaction, "transaction");
+      Assertion.AssertObject(transaction.Document, "document");
+      Assertion.Assert(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
                         "Transaction document can not be neither an empty or a new document instance.");
-      Assertion.Require(!antecedent.IsEmptyInstance && !antecedent.IsNew,
+      Assertion.Assert(!antecedent.IsEmptyInstance && !antecedent.IsNew,
                         "Annotation precedent can not be empty or a new instance.");
 
       Recording recording = new Recording();

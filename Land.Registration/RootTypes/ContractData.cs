@@ -33,9 +33,9 @@ namespace Empiria.Land.Registration {
       }
 
       var contract = new ContractData();
-      contract.Number = json.Find<String>("Number", String.Empty);
-      contract.Date = json.Find<DateTime>("Date", contract.Date);
-      contract.Place = json.Find<GeographicRegionItem>("PlaceId", contract.Place);
+      contract.Number = json.Get<String>("Number", String.Empty);
+      contract.Date = json.Get<DateTime>("Date", contract.Date);
+      contract.Place = json.Get<GeographicRegionItem>("PlaceId", contract.Place);
       contract.Interest = Interest.Parse(json.Slice("Interest"));
 
       return contract;

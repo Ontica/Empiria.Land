@@ -45,7 +45,7 @@ namespace Empiria.Land.Registration {
       }
       if (json.ContainsKey("RecordableObjectStatus")) {
         rule.RecordableObjectStatus = (PropertyRecordingStatus) Enum.Parse(typeof(PropertyRecordingStatus),
-                                                                  (string) json["RecordableObjectStatus"]);
+                                                                           (string) json["RecordableObjectStatus"]);
       }
       if (json.ContainsKey("UseNumbering")) {
         rule.IsInternalDivision = (bool) json["UseNumbering"];

@@ -217,7 +217,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteRecording(Recording o) {
-      Assertion.Require(o.Id != 0, "Recording.Id can't be zero");
+      Assertion.Assert(o.Id != 0, "Recording.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSRecording", o.Id, o.RecordingBook.Id, o.Transaction.Id,
                                                         o.Document.Id, o.BaseRecordingId, o.Number, o.StartImageIndex, o.EndImageIndex, 
                                                         o.Notes, o.Keywords, o.PresentationTime, o.ReceiptNumber, 
@@ -234,7 +234,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteRecordingBook(RecordingBook o) {
-      Assertion.Require(o.Id != 0, "RecordingBook.Id can't be zero");
+      Assertion.Assert(o.Id != 0, "RecordingBook.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSRecordingBook", o.Id, o.RecorderOffice.Id,
                                                         (char) o.BookType, o.RecordingSectionType.Id, o.BookNumber, o.Name,
                                                         o.FullName, o.Description, o.Keywords, o.StartRecordingIndex, o.EndRecordingIndex,
@@ -250,7 +250,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal DataOperation WriteRecordingDocumentOp(RecordingDocument o) {
-      Assertion.Require(o.Id != 0, "Document.Id can't be zero");
+      Assertion.Assert(o.Id != 0, "Document.Id can't be zero");
       return DataOperation.Parse("writeLRSDocument", o.Id, o.DocumentType.Id, o.Subtype.Id, o.UniqueCode, 
                                  o.IssuePlace.Id, o.IssueOffice.Id, o.IssuedBy.Id, o.IssueDate,
                                  o.Number, o.ExpedientNo, o.Title, o.Notes, o.SheetsCount, 

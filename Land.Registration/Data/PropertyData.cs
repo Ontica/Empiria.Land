@@ -159,7 +159,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteHumanParty(HumanParty o) {
-      Assertion.Require(o.Id != 0, "HumanParty.Id can't be zero");
+      Assertion.Assert(o.Id != 0, "HumanParty.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.ObjectTypeInfo.Id, o.FullName,
                                                         o.FirstName, o.FirstFamilyName, o.SecondFamilyName,
                                                         o.MaritalFamilyName, o.ShortName, o.Nicknames, o.Tags,
@@ -174,7 +174,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteOrganizationParty(OrganizationParty o) {
-      Assertion.Require(o.Id != 0, "OrganizationParty.Id can't be zero");
+      Assertion.Assert(o.Id != 0, "OrganizationParty.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.ObjectTypeInfo.Id, o.FullName,
                                                         String.Empty, String.Empty, String.Empty,
                                                         String.Empty, o.ShortName, o.Nicknames, o.Tags,
@@ -190,7 +190,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteProperty(Property o) {
-      Assertion.Require(o.Id != 0, "Property.Id can not be zero");
+      Assertion.Assert(o.Id != 0, "Property.Id can not be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSProperty", o.Id, o.ObjectTypeInfo.Id, o.UniqueCode, 
                                                         o.Name, o.PropertyKind.Id, o.RecordingNotes, o.AntecedentNotes,
                                                         o.Location.ToJson(), o.Location.ToString(), o.Location.ToSearchVector(),
@@ -201,7 +201,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteRecordingActParty(RecordingActParty o) {
-      Assertion.Require(o.Id != 0, "RecordingActParty.Id can't be zero");
+      Assertion.Assert(o.Id != 0, "RecordingActParty.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSRecordingActParty", o.Id, o.RecordingAct.Id,
                                                         o.Party.Id, o.PartyRole.Id, o.SecondaryParty.Id,
                                                         o.SecondaryPartyRole.Id, o.Notes, (char) o.OwnershipMode,
@@ -214,7 +214,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteTractIndexItem(TractIndexItem o) {
-      Assertion.Require(o.Id != 0, "TractIndexItem.Id can't be zero");
+      Assertion.Assert(o.Id != 0, "TractIndexItem.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSPropertyTractIndex", o.Id,
                                                         o.Property.Id, o.RecordingAct.Id, o.ExtensionData.ToJson(),
                                                         o.PostedBy.Id, o.PostingTime, (char) o.Status, 

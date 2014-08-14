@@ -357,7 +357,7 @@ namespace Empiria.Land.Registration {
     public void RemoveProperty(Property property) {
       TractIndexItem propertyEvent = this.TractIndex.Find((x) => x.Property.Equals(property));
 
-      Assertion.RequireObject(propertyEvent, 
+      Assertion.AssertObject(propertyEvent, 
                 new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
                                               property.Id, this.Id));
 
@@ -373,7 +373,7 @@ namespace Empiria.Land.Registration {
         this.Save();
       }
 
-      Assertion.Ensure(property.Status == RecordableObjectStatus.Deleted &&
+      Assertion.Assert(property.Status == RecordableObjectStatus.Deleted &&
                        this.Status == RecordableObjectStatus.Deleted, "fail");
     }
 

@@ -45,12 +45,12 @@ namespace Empiria.Land.Registration.Transactions {
       var json = Empiria.Data.JsonConverter.ToJsonObject(jsonString);
 
       var data = new LRSTransactionExtData();
-      data.RequesterEmail = json.Find<String>("RequesterEmail", String.Empty);
-      data.RequesterPhone = json.Find<String>("RequesterPhone", String.Empty);
-      data.RequesterNotes = json.Find<String>("RequesterNotes", String.Empty);
-      data.OfficeNotes = json.Find<String>("OfficeNotes", String.Empty);
-      data.ClosingNotes = json.Find<String>("ClosingNotes", String.Empty);
-      data.DeliveryNotes = json.Find<String>("DeliveryNotes", String.Empty);
+      data.RequesterEmail = json.Get<String>("RequesterEmail", String.Empty);
+      data.RequesterPhone = json.Get<String>("RequesterPhone", String.Empty);
+      data.RequesterNotes = json.Get<String>("RequesterNotes", String.Empty);
+      data.OfficeNotes = json.Get<String>("OfficeNotes", String.Empty);
+      data.ClosingNotes = json.Get<String>("ClosingNotes", String.Empty);
+      data.DeliveryNotes = json.Get<String>("DeliveryNotes", String.Empty);
 
       return data;
     }

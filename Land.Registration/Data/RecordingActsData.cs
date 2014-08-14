@@ -147,7 +147,7 @@ namespace Empiria.Land.Registration.Data {
 
 
     static internal int WriteRecordingAct(RecordingAct o) {
-      Assertion.Require(o.Id != 0, "RecordingAct.Id can't be zero");
+      Assertion.Assert(o.Id != 0, "RecordingAct.Id can't be zero");
       var operation = DataOperation.Parse("writeLRSRecordingAct", o.Id, o.RecordingActType.Id,
                                           o.Document.Id, o.Recording.Id, o.Index, o.Notes, 
                                           o.ExtensionData.ToJson(), o.Keywords, o.AmendmentOf.Id, 

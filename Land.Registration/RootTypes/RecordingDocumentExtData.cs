@@ -40,18 +40,18 @@ namespace Empiria.Land.Registration {
       var json = Empiria.Data.JsonConverter.ToJsonObject(jsonString);
 
       var data = new RecordingDocumentExtData();
-      data.BookNo = json.Find<String>("BookNo", String.Empty);
-      data.IssuedByPosition = json.Find<TypeAssociationInfo>("IssuedByPositionId", 
+      data.BookNo = json.Get<String>("BookNo", String.Empty);
+      data.IssuedByPosition = json.Get<TypeAssociationInfo>("IssuedByPositionId", 
                                                              TypeAssociationInfo.Empty);
-      data.MainWitness = json.Find<Contact>("MainWitnessId", Person.Empty);
-      data.MainWitnessPosition = json.Find<TypeAssociationInfo>("MainWitnessPositionId",
+      data.MainWitness = json.Get<Contact>("MainWitnessId", Person.Empty);
+      data.MainWitnessPosition = json.Get<TypeAssociationInfo>("MainWitnessPositionId",
                                                                 TypeAssociationInfo.Empty);
-      data.SecondaryWitness = json.Find<Contact>("SecondaryWitnessId", Person.Empty);
-      data.SecondaryWitnessPosition = json.Find<TypeAssociationInfo>("SecondaryWitnessPositionId",
+      data.SecondaryWitness = json.Get<Contact>("SecondaryWitnessId", Person.Empty);
+      data.SecondaryWitnessPosition = json.Get<TypeAssociationInfo>("SecondaryWitnessPositionId",
                                                                      TypeAssociationInfo.Empty);
-      data.StartSheet = json.Find<String>("StartSheet", String.Empty);
-      data.EndSheet = json.Find<String>("EndSheet", String.Empty);
-      data.SealUpperPosition = json.Find<Decimal>("SealUpperPosition", -1m);
+      data.StartSheet = json.Get<String>("StartSheet", String.Empty);
+      data.EndSheet = json.Get<String>("EndSheet", String.Empty);
+      data.SealUpperPosition = json.Get<Decimal>("SealUpperPosition", -1m);
 
       return data;
     }

@@ -311,13 +311,13 @@ namespace Empiria.Land.Registration {
 
     public RecordingAct CreateAnnotation(LRSTransaction transaction,
                                          RecordingActType recordingActType, Property property) {
-      Assertion.RequireObject(transaction, "transaction");
-      Assertion.RequireObject(transaction.Document, "document");
-      Assertion.Require(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
+      Assertion.AssertObject(transaction, "transaction");
+      Assertion.AssertObject(transaction.Document, "document");
+      Assertion.Assert(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
                         "Transaction document can not be neither an empty or a new document instance");
-      Assertion.Require(!property.IsNew && !property.IsEmptyInstance,
+      Assertion.Assert(!property.IsNew && !property.IsEmptyInstance,
                         "Property can not be empty or a new instance");
-      Assertion.Require(!this.IsEmptyInstance && !this.IsNew,
+      Assertion.Assert(!this.IsEmptyInstance && !this.IsNew,
                         "Can not create an annotation using an empty or new recording");
 
       var recording = this.RecordingBook.CreateRecordingForAnnotation(transaction, this);

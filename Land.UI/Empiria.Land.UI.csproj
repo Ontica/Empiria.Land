@@ -97,34 +97,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Empiria.Data, Version=5.5.725.0, Culture=neutral, PublicKeyToken=8b7fe9c60c0f43bd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\empiria.assemblies\Empiria.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="Empiria.Documents, Version=5.5.725.0, Culture=neutral, PublicKeyToken=8b7fe9c60c0f43bd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\empiria.assemblies\Empiria.Documents.dll</HintPath>
-    </Reference>
-    <Reference Include="Empiria.Foundation, Version=5.5.725.0, Culture=neutral, PublicKeyToken=8b7fe9c60c0f43bd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\empiria.assemblies\Empiria.Foundation.dll</HintPath>
-    </Reference>
-    <Reference Include="Empiria.Geography, Version=5.5.725.0, Culture=neutral, PublicKeyToken=8b7fe9c60c0f43bd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\empiria.assemblies\Empiria.Geography.dll</HintPath>
-    </Reference>
-    <Reference Include="Empiria.Kernel, Version=5.5.725.0, Culture=neutral, PublicKeyToken=8b7fe9c60c0f43bd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\empiria.assemblies\Empiria.Kernel.dll</HintPath>
-    </Reference>
-    <Reference Include="Empiria.Presentation, Version=5.5.725.0, Culture=neutral, PublicKeyToken=8b7fe9c60c0f43bd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\empiria.assemblies\Empiria.Presentation.dll</HintPath>
-    </Reference>
-    <Reference Include="Empiria.Presentation.Web, Version=5.5.725.0, Culture=neutral, PublicKeyToken=8b7fe9c60c0f43bd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\empiria.assemblies\Empiria.Presentation.Web.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -182,6 +154,34 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\core\Data\Empiria.Data.csproj">
+      <Project>{20c01648-86cc-4e9e-ad71-ba7aa8e44dbc}</Project>
+      <Name>Empiria.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\core\Foundation\Empiria.Foundation.csproj">
+      <Project>{73ea993b-576b-4a5b-acc5-117dad0254ee}</Project>
+      <Name>Empiria.Foundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\core\Kernel\Empiria.Kernel.csproj">
+      <Project>{f518e007-2b16-4804-ba45-695ea098e1c0}</Project>
+      <Name>Empiria.Kernel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\extended\Documents\Empiria.Documents.csproj">
+      <Project>{2bd53d27-bd61-49fe-afe1-d68e21f58e9a}</Project>
+      <Name>Empiria.Documents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\extended\Geography\Empiria.Geography.csproj">
+      <Project>{96267945-dbe1-4b2c-88e2-0ecdc5ca7669}</Project>
+      <Name>Empiria.Geography</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\extended\Presentation.Web\Empiria.Presentation.Web.csproj">
+      <Project>{0aeea12e-b4f7-4e12-a768-99bb82bd3fc9}</Project>
+      <Name>Empiria.Presentation.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\extended\Presentation\Empiria.Presentation.csproj">
+      <Project>{2790ad3e-0ae4-4c94-83ba-96bc53185b19}</Project>
+      <Name>Empiria.Presentation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj">
       <Project>{ea85313c-bbbb-4f31-b6b9-05bb79addff1}</Project>
       <Name>Empiria.Land.Registration</Name>

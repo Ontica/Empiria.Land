@@ -329,7 +329,7 @@ namespace Empiria.Land.Registration {
     }
 
     private void AssignUniqueCode() {
-      Assertion.Require(this.UniqueCode.Length == 0, "Property has already assigned a UniqueCode.");
+      Assertion.Assert(this.UniqueCode.Length == 0, "Property has already assigned a UniqueCode.");
       
       while (true) {
         string temp = TransactionData.GeneratePropertyKey();
@@ -338,7 +338,7 @@ namespace Empiria.Land.Registration {
           break;
         }
       } // while
-      Assertion.Ensure(this.UniqueCode.Length != 0, "Property UniqueCode has not been generated.");
+      Assertion.Assert(this.UniqueCode.Length != 0, "Property UniqueCode has not been generated.");
     }
 
     #endregion Public methods
