@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSPayment                                     Pattern  : Standard Class                      *
+*  Type      : LRSPayment                                     Pattern  : Empiria Object Type                 *
 *  Version   : 2.0        Date: 23/Oct/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Represents a payment for a recorder office transaction.                                       *
@@ -28,12 +28,14 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Constuctors and parsers
 
+    /// <summary>Initialize payment for transaction.</summary>
     internal LRSPayment(LRSTransaction transaction, string receiptNo, 
                         decimal receiptTotal) : base(thisTypeName) {
-      Assertion.RequireObject(transaction, "transaction");
-      Assertion.Require(transaction != LRSTransaction.Empty, "transaction shouldn't be the empty instance.");
-      Assertion.RequireObject(receiptNo, "receiptNo");
-      Assertion.Require(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
+      Assertion.AssertObject(transaction, "transaction");
+      Assertion.Assert(!transaction.Equals(LRSTransaction.Empty),
+                        "transaction shouldn't be the empty instance.");
+      Assertion.AssertObject(receiptNo, "receiptNo");
+      Assertion.Assert(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
 
       Initialize();
       this.Transaction = transaction;
@@ -41,12 +43,14 @@ namespace Empiria.Land.Registration.Transactions {
       this.ReceiptTotal = receiptTotal;
     }
 
+    /// <summary>Initialize payment for recording. Used for historic recordings
+    /// without a transaction.</summary>
     internal LRSPayment(Recording recording, string receiptNo, 
                         decimal receiptTotal) : base(thisTypeName) {
-      Assertion.RequireObject(recording, "recording");
-      Assertion.Require(recording != Recording.Empty, "recording shouldn't be the empty instance.");
-      Assertion.RequireObject(receiptNo, "receiptNo");
-      Assertion.Require(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
+      Assertion.AssertObject(recording, "recording");
+      Assertion.Assert(recording != Recording.Empty, "recording shouldn't be the empty instance.");
+      Assertion.AssertObject(receiptNo, "receiptNo");
+      Assertion.Assert(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
 
       Initialize();
       this.Recording = recording;
@@ -55,7 +59,6 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     protected LRSPayment(string typeName) : base(typeName) {
-      Initialize();
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
@@ -63,7 +66,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.Transaction = LRSTransaction.Empty;
       this.Recording = Recording.Empty;
       this.PaymentExternalID = String.Empty;
-      this.PaymentOffice = Person.Empty;
+      this.PaymentOffice = Organization.Empty;
       this.ReceiptNo = "No asignado";
       this.ReceiptTotal = decimal.Zero;
       this.ReceiptIssuedTime = ExecutionServer.DateMaxValue;
@@ -82,70 +85,89 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public LRSPayment Empty {
-      get { return BaseObject.ParseEmpty<LRSPayment>(thisTypeName); }
+      get {
+        return BaseObject.ParseEmpty<LRSPayment>(thisTypeName);
+      }
     }
 
     static public LRSPayment FeeWaiver {
-      get { return BaseObject.Parse<LRSPayment>(thisTypeName, -3); }
+      get {
+        return BaseObject.Parse<LRSPayment>(thisTypeName, -3);
+      }
     }
 
     #endregion Constructors and parsers
 
     #region Public properties
 
+    [DataField("TransactionId")]
+    LazyObject<LRSTransaction> _transaction = LazyObject<LRSTransaction>.Empty;
     public LRSTransaction Transaction {
-      get;
-      private set;
+      get { return _transaction; }
+      private set { _transaction = value; }
     }
 
+    [DataField("RecordingId")]
+    LazyObject<Recording> _recording = LazyObject<Recording>.Empty;
     public Recording Recording {
-      get;
-      private set;
+      get { return _recording; }
+      private set { _recording = value; }
     }
 
+    [DataField("PaymentExternalID")]
     public string PaymentExternalID {
       get;
       private set;
     }
 
-    public Contact PaymentOffice {
-      get;
-      private set;
+    [DataField("PaymentOfficeId")]
+    LazyObject<Organization> _paymentOffice = LazyObject<Organization>.Empty;
+    public Organization PaymentOffice {
+      get { return _paymentOffice; }
+      private set { _paymentOffice = value; }
     }
 
+    [DataField("ReceiptNo")]
     public string ReceiptNo {
       get;
       private set;
     }
 
+    [DataField("ReceiptTotal")]
     public decimal ReceiptTotal {
       get;
       private set;
     }
 
+    [DataField("ReceiptIssuedTime")]
     public DateTime ReceiptIssuedTime {
       get;
       private set;
     }
 
+    [DataField("VerificationTime")]
     public DateTime VerificationTime {
       get;
       private set;
     }
 
+    [DataField("Notes")]
     public string Notes {
       get;
-      set;
+      private set;
     }
 
+    [DataField("PostingTime", Default = "DateTime.Now")]
     public DateTime PostingTime {
       get;
       private set;
     }
 
+    [DataField("PostedById")]
+    LazyObject<Contact> _postedBy = LazyObject<Contact>.Empty;
     public Contact PostedBy {
-      get;
-      private set;
+      get { return _postedBy; }
+      private set { _postedBy = value; }
     }
 
     int IProtected.CurrentDataIntegrityVersion {
@@ -182,19 +204,7 @@ namespace Empiria.Land.Registration.Transactions {
     #region Public methods
 
     protected override void ImplementsLoadObjectData(DataRow row) {
-      this.Transaction = LRSTransaction.Parse((int) row["TransactionId"]);
-      this.Recording = Recording.Parse((int) row["RecordingId"]);
-      this.PaymentExternalID = (string) row["PaymentExternalID"];
-      this.PaymentOffice = Contact.Parse((int) row["PaymentOfficeId"]);
-      this.ReceiptNo = (string) row["ReceiptNo"];
-      this.ReceiptTotal = (decimal) row["ReceiptTotal"];
-      this.ReceiptIssuedTime = (DateTime) row["ReceiptIssuedTime"];
-      this.VerificationTime = (DateTime) row["VerificationTime"];
-      this.Notes = (string) row["Notes"];
-      this.PostingTime = (DateTime) row["PostingTime"];
-      this.PostedBy = Contact.Parse((int) row["PostedById"]);
-
-      Integrity.Assert((string) row["PaymentDIF"]);
+      base.DataBind(row);
     }
 
     protected override void ImplementsSave() {
@@ -202,7 +212,7 @@ namespace Empiria.Land.Registration.Transactions {
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
         this.PostingTime = DateTime.Now;
       }
-      TransactionData.WritePaymentOrder(this);
+      TransactionData.WritePayment(this);
     }
 
     public void Verify() {

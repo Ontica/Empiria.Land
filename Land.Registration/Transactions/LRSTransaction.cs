@@ -62,42 +62,20 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Constuctors and parsers
 
-    protected LRSTransaction(): base(thisTypeName) {
-      Initialize();
-    }
-
     public LRSTransaction(LRSTransactionType transactionType) : base(thisTypeName) {
       Initialize();
       this.TransactionType = transactionType;
     }
 
     protected LRSTransaction(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise.
       Initialize();
     }
 
     private void Initialize() {
-      this.TransactionType = LRSTransactionType.Empty;
-      this.UniqueCode = "Nuevo trámite";
-      this.DocumentType = LRSDocumentType.Empty;
-      this.DocumentDescriptor = String.Empty;
-      this.Document = RecordingDocument.Empty;
-      this.RecorderOffice = RecorderOffice.Empty;
-      this.RequestedBy = String.Empty;
-      this.ManagementAgency = Organization.Empty;
-      this.ExtensionData = LRSTransactionExtData.Empty;
-      this.Keywords = String.Empty;
-      this.PresentationTime = ExecutionServer.DateMaxValue;
-      this.ExpectedDelivery = ExecutionServer.DateMaxValue;
-      this.LastReentryTime = ExecutionServer.DateMaxValue;
-      this.ClosingTime = ExecutionServer.DateMaxValue;
-      this.LastDeliveryTime = ExecutionServer.DateMaxValue;
-      this.Status = TransactionStatus.Payment;
-
       _recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
       _payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
       _taskList = new Lazy<LRSTransactionTaskList>(() => LRSTransactionTaskList.Parse(this));
-
     }
 
     static public LRSTransaction Parse(int id) {
@@ -194,44 +172,53 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Public properties
 
+    [DataField("TransactionTypeId")]
     public LRSTransactionType TransactionType {
       get;
       private set;
     }
 
+    [DataField("TransactionUniqueCode", Default = "Nuevo trámite", IsOptional = false)]
     public string UniqueCode {
       get;
       private set;
     }
 
+    [DataField("DocumentTypeId")]
     public LRSDocumentType DocumentType {
       get;
       set;
     }
 
+    [DataField("DocumentDescriptor")]
     public string DocumentDescriptor {
       get;
       set;
     }
 
+    [DataField("DocumentId")]
+    LazyObject<RecordingDocument> _document = LazyObject<RecordingDocument>.Empty;
     public RecordingDocument Document {
+      get { return _document; }
+      private set { _document = value; }
+    }
+
+    [DataField("RecorderOfficeId")]
+    public RecorderOffice RecorderOffice {
       get;
       private set;
     }
 
-    public RecorderOffice RecorderOffice {
-      get;
-      set;
-    }
-
+    [DataField("RequestedBy")]
     public string RequestedBy {
       get;
       set;
     }
 
+    [DataField("ManagementAgencyId", Default = "Contacts.Organization.Empty")]
     public Contact ManagementAgency {
       get;
-      set;
+      private set;
     }
 
     public LRSTransactionExtData ExtensionData {
@@ -239,51 +226,61 @@ namespace Empiria.Land.Registration.Transactions {
       set;
     }
 
+    [DataField("TransactionKeywords")]
     public string Keywords {
       get;
       private set;
     }
 
+    [DataField("PresentationTime")]
     public DateTime PresentationTime {
       get;
       private set;
     }
-    
+
+    [DataField("ExpectedDelivery")]
     public DateTime ExpectedDelivery {
       get;
       private set;
     }
 
+    [DataField("LastReentryTime")]
     public DateTime LastReentryTime {
       get;
       private set;
     }
 
+    [DataField("ClosingTime")]
     public DateTime ClosingTime {
       get;
       private set;
     }
 
+    [DataField("LastDeliveryTime")]
     public DateTime LastDeliveryTime {
       get;
       private set;
     }
 
+    [DataField("NonWorkingTime")]
     public int NonWorkingTime {
       get;
       private set;
     }
 
+    [DataField("ComplexityIndex")]
     public decimal ComplexityIndex {
       get;
       private set;
     }
 
+    [DataField("IsArchived")]
     public bool IsArchived {
       get;
       private set;
     }
 
+    [DataField("TransactionStatus", Default = TransactionStatus.Payment)]
     public TransactionStatus Status {
       get;
       private set;
@@ -311,7 +308,8 @@ namespace Empiria.Land.Registration.Transactions {
 
     public bool IsFeeWaiverApplicable {
       get {
-        return (this.TransactionType.Id == 704 || (this.TransactionType.Id == 700 && this.DocumentType.Id == 722));
+        return (this.TransactionType.Id == 704 || 
+               (this.TransactionType.Id == 700 && this.DocumentType.Id == 722));
       }
     }
 
@@ -710,25 +708,10 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     protected override void ImplementsLoadObjectData(DataRow row) {
-      this.TransactionType = LRSTransactionType.Parse((int) row["TransactionTypeId"]);
-      this.UniqueCode = (string) row["TransactionUniqueCode"];
-      this.DocumentType = LRSDocumentType.Parse((int) row["DocumentTypeId"]);
-      this.DocumentDescriptor = (string) row["DocumentDescriptor"];
-      this.Document = RecordingDocument.Parse((int) row["DocumentId"]);
-      this.RecorderOffice = RecorderOffice.Parse((int) row["RecorderOfficeId"]);
-      this.RequestedBy = (string) row["RequestedBy"];
-      this.ManagementAgency = Contact.Parse((int) row["ManagementAgencyId"]);
-      this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);
-      this.Keywords = (string) row["TransactionKeywords"];
-      this.PresentationTime = (DateTime) row["PresentationTime"];
-      this.ExpectedDelivery = (DateTime) row["ExpectedDelivery"];
-      this.LastReentryTime = (DateTime) row["LastReentryTime"];
-      this.ClosingTime = (DateTime) row["ClosingTime"];
-      this.LastDeliveryTime = (DateTime) row["LastDeliveryTime"];
-      this.NonWorkingTime = (int) row["NonWorkingTime"];
-      this.ComplexityIndex = (decimal) row["ComplexityIndex"];
-      this.IsArchived = (bool) row["IsArchived"];
-      this.Status = (TransactionStatus) Convert.ToChar(row["TransactionStatus"]);
+      base.DataBind(row);
+
+      this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);    
+      //this.Status = (TransactionStatus) Convert.ToChar(row["TransactionStatus"]);
 
       Integrity.Assert((string) row["TransactionDIF"]);
     }
