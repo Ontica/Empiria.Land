@@ -26,8 +26,6 @@ namespace Empiria.Land.Registration.Transactions {
 
     private const string thisTypeName = "ObjectType.LRSTransactionItem";
 
-    LazyObject<LRSPayment> _payment = LazyObject<LRSPayment>.Empty;
-
     #endregion Fields
 
     #region Constructors and parsers
@@ -36,10 +34,13 @@ namespace Empiria.Land.Registration.Transactions {
 
     }
 
+    protected LRSTransactionItem(string typeName) : base(typeName) {
+      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise.
+    }
+
     internal LRSTransactionItem(LRSTransaction transaction, RecordingActType transactionItemType, 
                                 LRSLawArticle treasuryCode, Money operationValue, 
                                 Quantity quantity, LRSFee fee) : base(thisTypeName) {
-      this.Initialize();
       this.Transaction = transaction;
       this.TransactionItemType = transactionItemType;
       this.TreasuryCode = treasuryCode;
@@ -52,7 +53,6 @@ namespace Empiria.Land.Registration.Transactions {
     internal LRSTransactionItem(LRSTransaction transaction, RecordingActType transactionItemType,
                                 LRSLawArticle treasuryCode, Money operationValue, 
                                 Quantity quantity) : base(thisTypeName) {
-      this.Initialize();
       this.Transaction = transaction;
       this.TransactionItemType = transactionItemType;
       this.TreasuryCode = treasuryCode;
@@ -64,19 +64,6 @@ namespace Empiria.Land.Registration.Transactions {
       this.Fee = new LRSFee();
     }
 
-    protected LRSTransactionItem(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise.
-      Initialize();
-    }
-
-    private void Initialize() {
-      this.CalculationRule = CalculationRule.Empty;
-      this.Notes = String.Empty;
-      this.PostingTime = DateTime.Now;
-      this.PostedBy = Person.Empty;
-      this.Status = 'A';
-    }
-
     static internal LRSTransactionItem Parse(DataRow dataRow) {
       return BaseObject.Parse<LRSTransactionItem>(thisTypeName, dataRow);
     }
@@ -85,30 +72,36 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Public properties
 
+    [DataField("TransactionId")]
+    LazyObject<LRSTransaction> _transaction = LazyObject<LRSTransaction>.Empty;
     public LRSTransaction Transaction {
-      get;
-      private set;
+      get { return _transaction.Instance; }
+      private set { _transaction.Instance = value; }
     }
 
+    [DataField("TransactionItemTypeId")]
     public RecordingActType TransactionItemType {
       get;
       private set;
     }
 
+    [DataField("TreasuryCodeId")]
     public LRSLawArticle TreasuryCode {
       get;
       private set;
     }
 
+    [DataField("CalculationRuleId")]
     public CalculationRule CalculationRule {
       get;
       private set;
     }
 
+    [DataField("PaymentId")]
+    LazyObject<LRSPayment> _payment = LazyObject<LRSPayment>.Empty;
     public LRSPayment Payment {
-      get {
-        return _payment.Instance;
-      }
+      get { return _payment.Instance; }
+      private set { _payment.Instance = value; }
     }
 
     public Quantity Quantity {
@@ -126,21 +119,25 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
+    [DataField("Notes")]
     public string Notes {
       get;
       set;
     }
 
+    [DataField("PostingTime", Default = "DateTime.Now")]
     public DateTime PostingTime {
       get;
       private set;
     }
 
+    [DataField("PostedById", Default = "Contacts.Person.Empty")]
     public Contact PostedBy {
       get;
       private set;
     }
 
+    [DataField("TransactionItemStatus", Default = 'A')]
     public char Status {
       get;
       private set;
@@ -201,30 +198,6 @@ namespace Empiria.Land.Registration.Transactions {
       this.Save();
     }
 
-    protected override void OnLoadObjectData(DataRow row) {
-      this.Transaction = LRSTransaction.Parse((int) row["TransactionId"]);
-      this.TransactionItemType = RecordingActType.Parse((int) row["TransactionItemTypeId"]);
-      this.TreasuryCode = LRSLawArticle.Parse((int) row["TreasuryCodeId"]);
-      this.CalculationRule = CalculationRule.Parse((int) row["CalculationRuleId"]);
-      _payment = LazyObject<LRSPayment>.Parse((int) row["PaymentId"]);
-      this.Quantity = Quantity.Parse(Unit.Parse((int) row["UnitId"]), (decimal) row["Quantity"]);
-      this.OperationValue = Money.Parse(Currency.Parse((int) row["OperationValueCurrencyId"]), 
-                                        (decimal) row["OperationValue"]);
-      this.Fee = LRSFee.Parse(row);
-      this.Notes = (string) row["Notes"];
-      this.PostingTime = (DateTime) row["PostingTime"];
-      this.PostedBy = Contact.Parse((int) row["PostedById"]);
-      this.Status = Convert.ToChar(row["TransactionItemStatus"]);
-    }
-
-    protected override void OnSave() {
-      this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-      this.PostingTime = DateTime.Now;
-      TransactionData.WriteTransactionItem(this);
-
-      this.Transaction.OnRecordingActsUpdated();
-    }
-
     internal LRSTransactionItem MakeCopy() {
       LRSTransactionItem newItem = new LRSTransactionItem();
 
@@ -235,6 +208,21 @@ namespace Empiria.Land.Registration.Transactions {
       newItem.Notes = this.Notes;
 
       return newItem;
+    }
+
+    protected override void OnLoadObjectData(DataRow row) {
+      this.Quantity = Quantity.Parse(Unit.Parse((int) row["UnitId"]), (decimal) row["Quantity"]);
+      this.OperationValue = Money.Parse(Currency.Parse((int) row["OperationValueCurrencyId"]),
+                                        (decimal) row["OperationValue"]);
+      this.Fee = LRSFee.Parse(row);
+    }
+
+    protected override void OnSave() {
+      this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      this.PostingTime = DateTime.Now;
+      TransactionData.WriteTransactionItem(this);
+
+      this.Transaction.OnRecordingActsUpdated();
     }
 
     #endregion Public methods

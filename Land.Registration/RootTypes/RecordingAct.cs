@@ -159,21 +159,16 @@ namespace Empiria.Land.Registration {
 
     public RecordingAct AmendmentOf {
       get { 
-        return _amendmentOf;
+        return _amendmentOf.Instance;
       }
       private set {
-        _amendmentOf = value;
+        _amendmentOf.Instance = value;
       }
     }
 
-
     public RecordingAct AmendedBy {
-      get { 
-        return _amendedBy;
-      }
-      private set {
-        _amendedBy = value;
-      }
+      get {  return _amendedBy.Instance; }
+      private set { _amendedBy.Instance = value; }
     }
 
     public string Notes {

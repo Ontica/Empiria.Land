@@ -124,7 +124,7 @@ namespace Empiria.Land.Registration {
 
     public Property PartitionOf {
       get {
-        return _partitionOf;
+        return _partitionOf.Instance;
       }
     }
 
@@ -134,9 +134,7 @@ namespace Empiria.Land.Registration {
     }
 
     public Property MergedInto {
-      get {
-        return _mergedInto;
-      }
+      get { return _mergedInto.Instance; }
     }
 
     public Contact PostedBy {

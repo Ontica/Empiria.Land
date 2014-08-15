@@ -28,13 +28,11 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private RecordingDocument()
-      : base(thisTypeName) {
+    private RecordingDocument() : base(thisTypeName) {
       // Instance creation of this type may be invoked with RecordingDocument.Create method
     }
 
-    protected RecordingDocument(string typeName)
-      : base(typeName) {
+    protected RecordingDocument(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
@@ -51,9 +49,7 @@ namespace Empiria.Land.Registration {
       if (dataRow != null) {
         return RecordingDocument.Parse(dataRow);
       } else {
-        RecordingDocument recordingDocument = RecordingDocument.Empty;
-        // recordingDocument.recording = recording;
-        return recordingDocument;
+        return RecordingDocument.Empty;
       }
     }
 
@@ -69,69 +65,76 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    private RecordingDocumentType _documentType = null;
+    [DataField("RecordingDocumentTypeId")]
     public RecordingDocumentType DocumentType {
-      get {
-        if (_documentType == null) {
-          _documentType = RecordingDocumentType.Parse(base.ObjectTypeInfo);
-        }
-        return _documentType;
-      }
-      internal set {
-        _documentType = value;
-      }
+      get;
+      internal set;
     }
 
+    [DataField("DocumentSubtypeId")]
     public LRSDocumentType Subtype {
       get;
       set;
     }
 
+    [DataField("DocumentUniqueCode")]
     public string UniqueCode {
       get;
       private set;
     }
 
+    [DataField("IssuePlaceId")]
+    private LazyObject<GeographicRegionItem> _issuePlace = LazyObject<GeographicRegionItem>.Empty;
     public GeographicRegionItem IssuePlace {
-      get;
-      set;
+      get { return _issuePlace.Instance; }
+      set { _issuePlace.Instance = value; }
     }
 
+    [DataField("IssueOfficeId")]
+    private LazyObject<Organization> _issueOffice = LazyObject<Organization>.Empty;
     public Organization IssueOffice {
-      get;
-      set;
+      get { return _issueOffice.Instance; }
+      set { _issueOffice.Instance = value; }
     }
 
+    [DataField("IssuedById")]
+    private LazyObject<Contact> _issuedBy = LazyObject<Contact>.Empty;
     public Contact IssuedBy {
-      get;
-      set;
+      get { return _issuedBy.Instance; }
+      set { _issuedBy.Instance = value; }
     }
 
+    [DataField("IssueDate", Default = "ExecutionServer.DateMinValue")]
     public DateTime IssueDate {
       get;
       set;
     }
 
+    [DataField("ExpedientNo")]
     public string ExpedientNo {
       get;
       set;
     }
 
+    [DataField("DocumentNo")]
     public string Number {
       get;
       set;
     }
 
+    [DataField("DocumentTitle")]
     public string Title {
       get;
       private set;
     }
 
+    [DataField("DocumentNotes")]
     public string Notes {
       get;
       set;
     }
 
+    [DataField("SheetsCount")]
     public int SheetsCount {
       get;
       set;
@@ -142,21 +145,25 @@ namespace Empiria.Land.Registration {
       set;
     }
 
+    [DataField("DocumentKeywords")]
     public string Keywords {
       get;
       private set;
     }
 
+    [DataField("PostedById", Default = "Contacts.Person.Empty")]
     public Contact PostedBy {
       get;
       private set;
     }
 
+    [DataField("PostingTime")]
     public DateTime PostingTime {
       get;
       private set;
     }
 
+    [DataField("DocumentStatus", Default = RecordableObjectStatus.Incomplete)]
     public RecordableObjectStatus Status {
       get;
       private set;
@@ -203,40 +210,13 @@ namespace Empiria.Land.Registration {
         return;
       }
       this.DocumentType = newRecordingDocumentType;
-      this.Subtype = LRSDocumentType.Empty;
-      this.IssuePlace = GeographicRegionItem.Empty;
-      this.IssueOffice = Organization.Empty;
-      this.IssuedBy = Person.Empty;
       this.IssueDate = ExecutionServer.DateMinValue;
-      this.Number = String.Empty;
-      this.ExpedientNo = String.Empty;
-      this.Title = String.Empty;
-      this.Notes = String.Empty;
       this.ExtensionData = RecordingDocumentExtData.Empty;
-      this.Keywords = String.Empty;
       this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-      this.PostingTime = DateTime.Now;
-      this.Status = RecordableObjectStatus.Incomplete;
     }
 
     protected override void OnLoadObjectData(DataRow row) {
-      this.Subtype = LRSDocumentType.Parse((int) row["DocumentSubtypeId"]);
-      this.UniqueCode = (string) row["DocumentUniqueCode"];
-      this.IssuePlace = GeographicRegionItem.Parse((int) row["IssuePlaceId"]);
-      this.IssueOffice = Organization.Parse((int) row["IssueOfficeId"]);
-      this.IssuedBy = Contact.Parse((int) row["IssuedById"]);
-      this.IssueDate = (DateTime) row["IssueDate"];
-      this.Number = (string) row["DocumentNo"];
-      this.ExpedientNo = (string) row["ExpedientNo"];
-      this.Title = (string) row["DocumentTitle"];
-      this.Notes = (string) row["DocumentNotes"];
-      this.SheetsCount = (int) row["SheetsCount"];
       this.ExtensionData = RecordingDocumentExtData.Parse((string) row["DocumentExtData"]);
-      this.Keywords = (string) row["DocumentKeywords"];
-      this.PostedBy = Contact.Parse((int) row["PostedById"]);
-      this.PostingTime = (DateTime) row["PostingTime"];
-      this.Status = (RecordableObjectStatus) Convert.ToChar(row["DocumentStatus"]);
-
       Integrity.Assert((string) row["DocumentDIF"]);
     }
 

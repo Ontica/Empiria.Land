@@ -23,13 +23,10 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Constructors and parsers
 
-    public LRSDocumentType()
-      : base(thisTypeName) {
-
+    public LRSDocumentType() : base(thisTypeName) {
     }
 
-    protected LRSDocumentType(string typeName)
-      : base(typeName) {
+    protected LRSDocumentType(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
