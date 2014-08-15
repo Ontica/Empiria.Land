@@ -329,7 +329,7 @@ namespace Empiria.Land.Registration {
       return property.IsFirstRecordingAct(this);
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
+    protected override void OnLoadObjectData(DataRow row) {
       this.Document = RecordingDocument.Parse((int) row["DocumentId"]);
       this.Index = (int) row["RecordingActIndex"];
       this.Notes = (string) row["RecordingActNotes"];
@@ -342,7 +342,7 @@ namespace Empiria.Land.Registration {
       Integrity.Assert((string) row["RecordingActDIF"]);
     }
 
-    protected override void ImplementsSave() {
+    protected override void OnSave() {
       if (base.IsNew) {
         this.RegistrationTime = DateTime.Now;
         this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);

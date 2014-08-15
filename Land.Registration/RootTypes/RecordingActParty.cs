@@ -327,7 +327,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
+    protected override void OnLoadObjectData(DataRow row) {
       this.recordingAct = RecordingAct.Parse((int) row["RecordingActId"]);
       this.party = Party.Parse((int) row["PartyId"]);
       this.partyRole = DomainActPartyRole.Parse((int) row["PartyRoleId"]);
@@ -348,7 +348,7 @@ namespace Empiria.Land.Registration {
       this.integrityHashCode = (string) row["LinkRIHC"];
     }
 
-    protected override void ImplementsSave() {
+    protected override void OnSave() {
       if (base.IsNew) {
         this.postingTime = DateTime.Now;
         this.postedBy = Contact.Parse(ExecutionServer.CurrentUserId);

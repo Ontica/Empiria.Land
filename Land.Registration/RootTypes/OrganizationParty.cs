@@ -117,8 +117,8 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
-      base.ImplementsLoadObjectData(row);
+    protected override void OnLoadObjectData(DataRow row) {
+      base.OnLoadObjectData(row);
       this.assocDocBookNumber = (string) row["OrgDocBookNumber"];
       this.assocDocNumber = (string) row["OrgDocNumber"];
       this.assocDocStartSheet = (string) row["OrgDocStartSheet"];
@@ -131,8 +131,8 @@ namespace Empiria.Land.Registration {
       this.assocDocRecordingNumber = (string) row["OrgDocRecordingNumber"];
     }
 
-    protected override void ImplementsSave() {
-      base.ImplementsSave();
+    protected override void OnSave() {
+      base.OnSave();
       this.Keywords = EmpiriaString.BuildKeywords(base.FullName, this.Nicknames, this.TaxIDNumber);
       PropertyData.WriteOrganizationParty(this);
     }

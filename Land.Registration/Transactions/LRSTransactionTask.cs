@@ -315,7 +315,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.Save();
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
+    protected override void OnLoadObjectData(DataRow row) {
       this.transaction = LRSTransaction.Parse((int) row["TransactionId"]);
       this.eventId = (int) row["EventId"];
 
@@ -335,7 +335,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.integrityHashCode = (string) row["TrackDIF"];
     }
 
-    protected override void ImplementsSave() {
+    protected override void OnSave() {
       if (base.IsNew) {
         //this.postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
         //this.postingTime = DateTime.Now;

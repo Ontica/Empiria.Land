@@ -69,7 +69,7 @@ namespace Empiria.Land.Registration.Data {
       } else if (currentRecordNumber == 0 && !book.UsePerpetualNumbering) {
         return 1;
       } else {
-        throw new NotImplementedException();
+        throw Assertion.AssertNoReachThisCode();
       }
     }
 

@@ -143,13 +143,9 @@ namespace Empiria.Land.Registration {
       return FilesFolder.Empty;
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
-      base.ImplementsLoadObjectData(row);
+    protected override void OnLoadObjectData(DataRow row) {
+      base.OnLoadObjectData(row);
       this.tag = (string) row["NickName"];
-    }
-
-    protected override void ImplementsSave() {
-      base.ImplementsSave();
     }
 
     #endregion Public methods

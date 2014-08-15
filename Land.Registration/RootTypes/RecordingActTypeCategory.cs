@@ -45,7 +45,7 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    public new string NamedKey {
+    public string UniqueKey {
       get { return base.NamedKey; }
     }
 

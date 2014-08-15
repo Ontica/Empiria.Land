@@ -158,7 +158,7 @@ namespace Empiria.Land.Registration {
       base.Save();
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
+    protected override void OnLoadObjectData(DataRow row) {
       this.Property = Property.Parse((int) row["PropertyId"]);
       this.RecordingAct = RecordingAct.Parse((int) row["RecordingActId"]);
       this.ExtensionData = TractIndexItemExtData.Parse((string) row["TractItemExtData"]);
@@ -169,7 +169,7 @@ namespace Empiria.Land.Registration {
       Integrity.Assert((string) row["TractIndexItemDIF"]);
     }
 
-    protected override void ImplementsSave() {
+    protected override void OnSave() {
       if (this.Property.IsNew) {
         this.Property.Save();
       }

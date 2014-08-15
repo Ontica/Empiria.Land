@@ -219,7 +219,7 @@ namespace Empiria.Land.Registration {
       this.Status = RecordableObjectStatus.Incomplete;
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
+    protected override void OnLoadObjectData(DataRow row) {
       this.Subtype = LRSDocumentType.Parse((int) row["DocumentSubtypeId"]);
       this.UniqueCode = (string) row["DocumentUniqueCode"];
       this.IssuePlace = GeographicRegionItem.Parse((int) row["IssuePlaceId"]);
@@ -240,7 +240,7 @@ namespace Empiria.Land.Registration {
       Integrity.Assert((string) row["DocumentDIF"]);
     }
 
-    protected override void ImplementsSave() {
+    protected override void OnSave() {
       if (this.IsNew) {
         this.PostingTime = DateTime.Now;
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);

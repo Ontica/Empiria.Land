@@ -466,7 +466,7 @@ namespace Empiria.Land.Registration {
       return PropertyData.GetRecordingPropertiesAnnotationsList(this);
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
+    protected override void OnLoadObjectData(DataRow row) {
       this.document = RecordingDocument.Parse((int) row["DocumentId"]);
       this.recordingBook = RecordingBook.Parse((int) row["RecordingBookId"]);
       this.number = (string) row["RecordingNumber"];
@@ -504,7 +504,7 @@ namespace Empiria.Land.Registration {
 
     }
 
-    protected override void ImplementsSave() {
+    protected override void OnSave() {
       if (!this.RecordingDocument.IsEmptyInstance) {
         this.RecordingDocument.Save();
       }

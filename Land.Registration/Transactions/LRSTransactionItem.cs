@@ -201,7 +201,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.Save();
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
+    protected override void OnLoadObjectData(DataRow row) {
       this.Transaction = LRSTransaction.Parse((int) row["TransactionId"]);
       this.TransactionItemType = RecordingActType.Parse((int) row["TransactionItemTypeId"]);
       this.TreasuryCode = LRSLawArticle.Parse((int) row["TreasuryCodeId"]);
@@ -217,7 +217,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.Status = Convert.ToChar(row["TransactionItemStatus"]);
     }
 
-    protected override void ImplementsSave() {
+    protected override void OnSave() {
       this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       this.PostingTime = DateTime.Now;
       TransactionData.WriteTransactionItem(this);

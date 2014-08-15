@@ -107,8 +107,8 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
-      base.ImplementsLoadObjectData(row);
+    protected override void OnLoadObjectData(DataRow row) {
+      base.OnLoadObjectData(row);
       this.firstName = (string) row["FirstName"];
       this.firstFamilyName = (string) row["FirstFamilyName"];
       this.secondFamilyName = (string) row["SecondFamilyName"];
@@ -118,8 +118,8 @@ namespace Empiria.Land.Registration {
       this.ifeNumber = (string) row["IFENumber"];
     }
 
-    protected override void ImplementsSave() {
-      base.ImplementsSave();
+    protected override void OnSave() {
+      base.OnSave();
       base.FullName = this.firstName + " " + this.firstFamilyName + " " + this.secondFamilyName;
       if (this.maritalFamilyName.Length != 0 && !this.maritalFamilyName.ToLowerInvariant().StartsWith("de ")) {
         base.FullName += " de " + this.maritalFamilyName;

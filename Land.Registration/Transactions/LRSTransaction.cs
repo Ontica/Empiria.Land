@@ -206,7 +206,7 @@ namespace Empiria.Land.Registration.Transactions {
     [DataField("RecorderOfficeId")]
     public RecorderOffice RecorderOffice {
       get;
-      private set;
+      set;
     }
 
     [DataField("RequestedBy")]
@@ -218,12 +218,13 @@ namespace Empiria.Land.Registration.Transactions {
     [DataField("ManagementAgencyId", Default = "Contacts.Organization.Empty")]
     public Contact ManagementAgency {
       get;
-      private set;
-    }
-
-    public LRSTransactionExtData ExtensionData {
-      get;
       set;
+    }
+    
+    private LRSTransactionExtData _extensionData = LRSTransactionExtData.Empty;
+    public LRSTransactionExtData ExtensionData {
+      get { return _extensionData; }
+      set { _extensionData = value; }
     }
 
     [DataField("TransactionKeywords")]
@@ -691,7 +692,17 @@ namespace Empiria.Land.Registration.Transactions {
       return temp;
     }
 
-    protected override void ImplementsSave() {
+    protected override void OnLoadObjectData(DataRow row) {
+      this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);
+      Integrity.Assert((string) row["TransactionDIF"]);
+    }
+
+    internal void OnRecordingActsUpdated() {
+      _recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
+      this.UpdateComplexityIndex();
+    }
+
+    protected override void OnSave() {
       if (base.IsNew) {
         this.UniqueCode = TransactionData.GenerateTransactionKey();
       }
@@ -705,20 +716,6 @@ namespace Empiria.Land.Registration.Transactions {
         LRSTransactionTask track = LRSTransactionTask.CreateFirst(this);
         ResetTasksList();
       }
-    }
-
-    protected override void ImplementsLoadObjectData(DataRow row) {
-      base.DataBind(row);
-
-      this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);    
-      //this.Status = (TransactionStatus) Convert.ToChar(row["TransactionStatus"]);
-
-      Integrity.Assert((string) row["TransactionDIF"]);
-    }
-
-    internal void OnRecordingActsUpdated() {
-      _recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
-      this.UpdateComplexityIndex();
     }
 
     public void Receive(string notes) {

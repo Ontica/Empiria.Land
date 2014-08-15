@@ -579,7 +579,7 @@ namespace Empiria.Land.Registration {
       return recordingBook;
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
+    protected override void OnLoadObjectData(DataRow row) {
       this.RecorderOffice = RecorderOffice.Parse((int) row["RecorderOfficeId"]);
       this.BookType = (RecordingBookType) Convert.ToChar(row["RecordingBookType"]);
       this.sectionType = RecordingSection.Parse((int) row["RecordingsClassId"]);
@@ -606,12 +606,11 @@ namespace Empiria.Land.Registration {
       this.recordIntegrityHashCode = (string) row["RecordingBookDIF"];
     }
 
-    protected override void ImplementsSave() {
+    protected override void OnSave() {
       if (this.IsNew) {
         this.creationDate = DateTime.Now;
         this.createdBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
-
       this.keywords = EmpiriaString.BuildKeywords(this.FullName);
 
       RecordingBooksData.WriteRecordingBook(this);

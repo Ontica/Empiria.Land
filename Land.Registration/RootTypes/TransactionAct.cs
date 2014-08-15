@@ -41,18 +41,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Constructors and parsers
 
-    #region Public methods
-
-    protected override void ImplementsLoadObjectData(DataRow row) {
-      base.ImplementsLoadObjectData(row);
-    }
-
-    protected override void ImplementsSave() {
-      base.ImplementsSave();
-    }
-
-    #endregion Public methods
-
   } // class TransactionAct
 
 } // namespace Empiria.Land.Registration

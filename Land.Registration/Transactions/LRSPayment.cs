@@ -37,7 +37,6 @@ namespace Empiria.Land.Registration.Transactions {
       Assertion.AssertObject(receiptNo, "receiptNo");
       Assertion.Assert(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
 
-      Initialize();
       this.Transaction = transaction;
       this.ReceiptNo = receiptNo;
       this.ReceiptTotal = receiptTotal;
@@ -52,7 +51,6 @@ namespace Empiria.Land.Registration.Transactions {
       Assertion.AssertObject(receiptNo, "receiptNo");
       Assertion.Assert(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
 
-      Initialize();
       this.Recording = recording;
       this.ReceiptNo = receiptNo;
       this.ReceiptTotal = receiptTotal;
@@ -60,20 +58,6 @@ namespace Empiria.Land.Registration.Transactions {
 
     protected LRSPayment(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
-    }
-
-    private void Initialize() {
-      this.Transaction = LRSTransaction.Empty;
-      this.Recording = Recording.Empty;
-      this.PaymentExternalID = String.Empty;
-      this.PaymentOffice = Organization.Empty;
-      this.ReceiptNo = "No asignado";
-      this.ReceiptTotal = decimal.Zero;
-      this.ReceiptIssuedTime = ExecutionServer.DateMaxValue;
-      this.VerificationTime = ExecutionServer.DateMaxValue;
-      this.Notes = String.Empty;
-      this.PostingTime = DateTime.Now;
-      this.PostedBy = Person.Empty;
     }
 
     static public LRSPayment Parse(int id) {
@@ -127,7 +111,7 @@ namespace Empiria.Land.Registration.Transactions {
       private set { _paymentOffice = value; }
     }
 
-    [DataField("ReceiptNo")]
+    [DataField("ReceiptNo", Default = "No asignado")]
     public string ReceiptNo {
       get;
       private set;
@@ -163,11 +147,10 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
-    [DataField("PostedById")]
-    LazyObject<Contact> _postedBy = LazyObject<Contact>.Empty;
+    [DataField("PostedById", Default = "Contacts.Person.Empty")]
     public Contact PostedBy {
-      get { return _postedBy; }
-      private set { _postedBy = value; }
+      get;
+      private set;
     }
 
     int IProtected.CurrentDataIntegrityVersion {
@@ -203,11 +186,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Public methods
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
-      base.DataBind(row);
-    }
-
-    protected override void ImplementsSave() {
+    protected override void OnSave() {
       if (base.IsNew) {
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
         this.PostingTime = DateTime.Now;

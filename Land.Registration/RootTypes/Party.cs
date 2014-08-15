@@ -208,7 +208,7 @@ namespace Empiria.Land.Registration {
       return PropertyData.GetLastRecordingActParty(this, searchStartDate);
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
+    protected override void OnLoadObjectData(DataRow row) {
       this.fullName = (string) row["PartyFullName"];
       this.shortName = (string) row["PartyShortName"];
       this.nicknames = (string) row["Nicknames"];
@@ -225,7 +225,7 @@ namespace Empiria.Land.Registration {
       this.integrityHashCode = (string) row["PartyRIHC"];
     }
 
-    protected override void ImplementsSave() {
+    protected override void OnSave() {
       if (base.IsNew) {
         this.postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
         this.postingTime = DateTime.Now;

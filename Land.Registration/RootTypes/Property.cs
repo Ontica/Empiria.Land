@@ -300,7 +300,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
+    protected override void OnLoadObjectData(DataRow row) {
       this.UniqueCode = (string) row["PropertyUniqueCode"];
       this.Name = (string) row["PropertyName"];
       this.PropertyKind = PropertyKind.Parse((int) row["PropertyKindId"]);
@@ -318,7 +318,7 @@ namespace Empiria.Land.Registration {
       Integrity.Assert((string) row["PropertyDIF"]);
     }
 
-    protected override void ImplementsSave() {
+    protected override void OnSave() {
       if (this.IsNew) {
         this.AssignUniqueCode();
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);

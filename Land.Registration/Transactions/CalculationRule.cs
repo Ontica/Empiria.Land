@@ -23,8 +23,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Constructors and parsers
 
-    public CalculationRule()
-      : base(thisTypeName) {
+    public CalculationRule() : base(thisTypeName) {
 
     }
 
