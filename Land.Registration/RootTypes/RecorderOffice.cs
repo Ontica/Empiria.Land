@@ -26,19 +26,15 @@ namespace Empiria.Land.Registration {
 
     private const string thisTypeName = "ObjectType.Contact.Organization.RecorderOffice";
 
-    private string tag = String.Empty;
-
     #endregion Fields
 
     #region Constructors and parsers
 
-    public RecorderOffice()
-      : base(thisTypeName) {
+    public RecorderOffice() : base(thisTypeName) {
 
     }
 
-    protected RecorderOffice(string typeName)
-      : base(typeName) {
+    protected RecorderOffice(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
@@ -52,7 +48,7 @@ namespace Empiria.Land.Registration {
 
     static public FixedList<RecorderOffice> GetList() {
       return MainRecorderOffice.GetLinks<RecorderOffice>("MainRecorderOffice_RecorderOffices",
-                                                         (x, y) => x.Tag.CompareTo(y.Tag));
+                                                         (x, y) => x.Number.CompareTo(y.Number));
     }
 
     static public RecorderOffice MainRecorderOffice {
@@ -63,8 +59,10 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    public string Tag {
-      get { return tag; }
+    [DataField("NickName")]
+    public string Number {
+      get;
+      private set;
     }
 
     #endregion Public properties
@@ -74,7 +72,7 @@ namespace Empiria.Land.Registration {
     public RecordingBook AddRootRecordingBook(string rootTag) {
       FixedList<RecordingBook> roots = this.GetRootRecordingBooks();
       if (!roots.Contains((x) => x.BookNumber.Equals(rootTag))) {
-        RecordingBook recordingBook = new RecordingBook(this, rootTag);
+        var recordingBook = new RecordingBook(this, rootTag);
         recordingBook.Save();
         return recordingBook;
       } else {
@@ -133,19 +131,14 @@ namespace Empiria.Land.Registration {
     }
 
     internal FilesFolder GetRootImagesFolder() {
-      FilesFolderList rootFolders = RootFilesFolder.GetRootFilesFolders();
+      var rootFolders = RootFilesFolder.GetRootFilesFolders();
 
       foreach (FilesFolder filesFolder in rootFolders) {
-        if (filesFolder.OwnerId == this.Id) {
+        if (filesFolder.Owner == this) {
           return filesFolder;
         }
       }
       return FilesFolder.Empty;
-    }
-
-    protected override void OnLoadObjectData(DataRow row) {
-      base.OnLoadObjectData(row);
-      this.tag = (string) row["NickName"];
     }
 
     #endregion Public methods

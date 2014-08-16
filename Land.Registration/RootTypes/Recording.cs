@@ -126,13 +126,13 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    [DataField("PresentationTime")]
+    [DataField("RecordingPresentationTime")]
     public DateTime PresentationTime {
       get;
       private set;
     }
 
-    [DataField("AuthorizationTime")]
+    [DataField("RecordingAuthorizationTime")]
     public DateTime AuthorizationTime {
       get;
       private set;
@@ -239,17 +239,6 @@ namespace Empiria.Land.Registration {
       Delete(true);
     }
 
-    private void Delete(bool publicCall) {
-      Assertion.Assert(this.RecordingActs.Count == 0,
-                       "This recording can't be deleted because it has recording acts.");
-      Assertion.Assert(!publicCall || this.RecordingBook.IsAvailableForManualEditing,
-                       "This recording can't be deleted because its recording book is not available for manual editing.");
-      this.Status = RecordableObjectStatus.Deleted;
-      //this.canceledBy = Contact.Parse(ExecutionServer.CurrentUserId);
-      //this.canceledTime = DateTime.Now;
-      this.Save();
-    }
-
     public RecordingAct CreateAnnotation(LRSTransaction transaction,
                                          RecordingActType recordingActType, Property property) {
       Assertion.AssertObject(transaction, "transaction");
@@ -305,16 +294,6 @@ namespace Empiria.Land.Registration {
       this.DeleteMeIfNecessary();
       this.Refresh();
       this.RecordingBook.Refresh();
-    }
-
-    private void DeleteMeIfNecessary() {
-      if (this.RecordingBook.IsAvailableForManualEditing) {
-        return;
-      }
-      if (this.RecordingActs.Count != 0) {
-        return;
-      }
-      this.Delete(false);
     }
 
     public RecordingAttachmentFolder GetAttachementFolder(string folderName) {
@@ -426,6 +405,27 @@ namespace Empiria.Land.Registration {
     #endregion Public methods
 
     #region Private methods
+
+    private void Delete(bool publicCall) {
+      Assertion.Assert(this.RecordingActs.Count == 0,
+                       "This recording can't be deleted because it has recording acts.");
+      Assertion.Assert(!publicCall || this.RecordingBook.IsAvailableForManualEditing,
+                       "This recording can't be deleted because its recording book is not available for manual editing.");
+      this.Status = RecordableObjectStatus.Deleted;
+      //this.canceledBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      //this.canceledTime = DateTime.Now;
+      this.Save();
+    }
+
+    private void DeleteMeIfNecessary() {
+      if (this.RecordingBook.IsAvailableForManualEditing) {
+        return;
+      }
+      if (this.RecordingActs.Count != 0) {
+        return;
+      }
+      this.Delete(false);
+    }
 
     private RecordingAttachmentFolderList GetAttachmentFolderList() {
       var folderList = new RecordingAttachmentFolderList();

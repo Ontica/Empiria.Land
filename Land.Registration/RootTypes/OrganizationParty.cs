@@ -23,16 +23,6 @@ namespace Empiria.Land.Registration {
     #region Fields
 
     private const string thisTypeName = "ObjectType.Party.OrganizationParty";
-    private string assocDocBookNumber = String.Empty;
-    private string assocDocNumber = String.Empty;
-    private string assocDocStartSheet = String.Empty;
-    private string assocDocEndSheet = String.Empty;
-    private NotaryOffice assocDocNotaryOffice = NotaryOffice.Empty;
-    private Person assocDocIssuedBy = Person.Empty;
-    private DateTime assocDocIssueDate = ExecutionServer.DateMaxValue;
-    private Organization assocDocRecordingOffice = Organization.Empty;
-    private DateTime assocDocRecordingDate = ExecutionServer.DateMaxValue;
-    private string assocDocRecordingNumber = String.Empty;
 
     #endregion Fields
 
@@ -55,54 +45,64 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
+    [DataField("OrgDocBookNumber")]
     public string AssocDocBookNumber {
-      get { return assocDocBookNumber; }
-      set { assocDocBookNumber = EmpiriaString.TrimAll(value); }
+      get;
+      set;
     }
 
+    [DataField("OrgDocNumber")]
     public string AssocDocNumber {
-      get { return assocDocNumber; }
-      set { assocDocNumber = EmpiriaString.TrimAll(value); }
+      get;
+      set;
     }
 
+    [DataField("OrgDocEndSheet")]
     public string AssocDocEndSheet {
-      get { return assocDocEndSheet; }
-      set { assocDocEndSheet = EmpiriaString.TrimAll(value); }
+      get;
+      set;
     }
 
+    [DataField("OrgDocIssueDate")]
     public DateTime AssocDocIssueDate {
-      get { return assocDocIssueDate; }
-      set { assocDocIssueDate = value; }
+      get;
+      set;
     }
 
+    [DataField("OrgDocIssuedById")]
     public Person AssocDocIssuedBy {
-      get { return assocDocIssuedBy; }
-      set { assocDocIssuedBy = value; }
+      get;
+      set;
     }
 
+    [DataField("OrgDocNotaryOfficeId")]
     public NotaryOffice AssocDocNotaryOffice {
-      get { return assocDocNotaryOffice; }
-      set { assocDocNotaryOffice = value; }
+      get;
+      set;
     }
 
+    [DataField("OrgDocRecordingDate")]
     public DateTime AssocDocRecordingDate {
-      get { return assocDocRecordingDate; }
-      set { assocDocRecordingDate = value; }
+      get;
+      set;
     }
 
+    [DataField("OrgDocRecordingNumber")]
     public string AssocDocRecordingNumber {
-      get { return assocDocRecordingNumber; }
-      set { assocDocRecordingNumber = EmpiriaString.TrimAll(value); }
+      get;
+      set;
     }
 
+    [DataField("OrgDocRecordingOfficeId")]
     public Organization AssocDocRecordingOffice {
-      get { return assocDocRecordingOffice; }
-      set { assocDocRecordingOffice = value; }
+      get;
+      set;
     }
 
+    [DataField("OrgDocStartSheet")]
     public string AssocDocStartSheet {
-      get { return assocDocStartSheet; }
-      set { assocDocStartSheet = EmpiriaString.TrimAll(value); }
+      get;
+      set;
     }
 
     public override string Keywords {
@@ -115,26 +115,14 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    protected override string ImplementsRegistryID() {
-      if (this.TaxIDNumber.Length != 0) {
-        return this.TaxIDNumber;
-      } else {
-        return String.Empty;
+    public override string RegistryID {
+      get {
+        if (this.TaxIDNumber.Length != 0) {
+          return this.TaxIDNumber;
+        } else {
+          return String.Empty;
+        }
       }
-    }
-
-    protected override void OnLoadObjectData(DataRow row) {
-      base.OnLoadObjectData(row);
-      this.assocDocBookNumber = (string) row["OrgDocBookNumber"];
-      this.assocDocNumber = (string) row["OrgDocNumber"];
-      this.assocDocStartSheet = (string) row["OrgDocStartSheet"];
-      this.assocDocEndSheet = (string) row["OrgDocEndSheet"];
-      this.assocDocNotaryOffice = NotaryOffice.Parse((int) row["OrgDocNotaryOfficeId"]);
-      this.assocDocIssuedBy = Person.Parse((int) row["OrgDocIssuedById"]);
-      this.assocDocIssueDate = (DateTime) row["OrgDocIssueDate"];
-      this.assocDocRecordingOffice = Organization.Parse((int) row["OrgDocRecordingOfficeId"]);
-      this.assocDocRecordingDate = (DateTime) row["OrgDocRecordingDate"];
-      this.assocDocRecordingNumber = (string) row["OrgDocRecordingNumber"];
     }
 
     protected override void OnSave() {

@@ -91,10 +91,22 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    protected override IIdentifiable Reference {
+      get { return this.RecordingBook; }
+      set { this.RecordingBook = (RecordingBook) value; }
+    }
+
+    [DataField("ReferenceId")]
+    LazyObject<RecordingBook> _recordingBook = LazyObject<RecordingBook>.Empty;
+    public RecordingBook RecordingBook {
+      get { return _recordingBook.Instance; }
+      set { _recordingBook.Instance = value; }
+    }
+
     public RecorderOffice RecorderOffice {
       get {
         if (recorderOffice.IsEmptyInstance) {
-          recorderOffice = RecorderOffice.Parse(base.OwnerId);
+          recorderOffice = RecorderOffice.Parse(base.Owner.Id);
         }
         return recorderOffice;
       }
@@ -108,9 +120,9 @@ namespace Empiria.Land.Registration {
                                                   DirectoryInfo physicalFolder) {
       RecordBookDirectory child = new RecordBookDirectory();
       parent.CloneInto(child);
-      child.ParentFilesFolderId = parent.Id;
+      child.ParentFolder = parent;
       child.CopyFrom(physicalFolder);
-      child.ReferenceId = targetRecordingBook.Id;
+      child.Reference = targetRecordingBook;
       child.Tags = parent.Tags;
       child.Status = FilesFolderStatus.Closed;
       child.Save();
@@ -126,13 +138,13 @@ namespace Empiria.Land.Registration {
                                              int recordingsControlCount,
                                              TimePeriod recordingsControlTimePeriod) {
       
-      this.CapturedById = imagesCapturedBy.Id;
-      this.ReviewedById = imagesReviewedBy.Id;
+      this.CapturedBy = imagesCapturedBy;
+      this.ReviewedBy = imagesReviewedBy;
       this.Status = FilesFolderStatus.Opened;
 
       RecordingBook recordingBook = RecordingBook.Create(this, recordingSectionType, recordingsControlCount,
                                                          recordingsControlTimePeriod);
-      this.ReferenceId = recordingBook.Id;
+      this.Reference = recordingBook;
       this.Save();
 
       return recordingBook;
@@ -244,7 +256,7 @@ namespace Empiria.Land.Registration {
       if (rootFolder.Status != FilesFolderStatus.Opened) {
         return 0;
       }
-      RecorderOffice recorderOffice = RecorderOffice.Parse(rootFolder.OwnerId);
+      RecorderOffice recorderOffice = RecorderOffice.Parse(rootFolder.Owner.Id);
 
       FilesFolderList filesFolderList = FilesFolder.CreateAllFromPath(RecordBookDirectory.DirectoryType, rootFolder,
                                                                       rootFolder.PhysicalPath);
@@ -256,7 +268,7 @@ namespace Empiria.Land.Registration {
         if (IsValidName(recorderOffice, newDirectory.DisplayName)) {
           newDirectory.UpdateStatistics();
           if (newDirectory.FilesCount != 0) {
-            newDirectory.OwnerId = recorderOffice.Id;
+            newDirectory.Owner = recorderOffice;
             newDirectory.Save();
             counter++;
           }
@@ -281,7 +293,7 @@ namespace Empiria.Land.Registration {
         return false;
       } else if (!RecordingBook.UseBookLevel && parts.Length != 3) {
         return false;
-      } else if (parts[0] != recorderOffice.Tag) {
+      } else if (parts[0] != recorderOffice.Number) {
         return false;
       } else {
         return true;

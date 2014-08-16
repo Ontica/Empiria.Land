@@ -54,9 +54,9 @@ namespace Empiria.Land.Registration.Transactions {
 
     private const string thisTypeName = "ObjectType.LRSTransaction";
 
-    private Lazy<LRSTransactionItemList> _recordingActs = null;
-    private Lazy<LRSPaymentList> _payments = null;
-    private Lazy<LRSTransactionTaskList> _taskList = null;
+    private Lazy<LRSTransactionItemList> recordingActs = null;
+    private Lazy<LRSPaymentList> payments = null;
+    private Lazy<LRSTransactionTaskList> taskList = null;
 
     #endregion Fields
 
@@ -73,9 +73,9 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     private void Initialize() {
-      _recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
-      _payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
-      _taskList = new Lazy<LRSTransactionTaskList>(() => LRSTransactionTaskList.Parse(this));
+      recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
+      payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
+      taskList = new Lazy<LRSTransactionTaskList>(() => LRSTransactionTaskList.Parse(this));
     }
 
     static public LRSTransaction Parse(int id) {
@@ -297,13 +297,13 @@ namespace Empiria.Land.Registration.Transactions {
 
     public LRSTransactionItemList Items {
       get {
-        return _recordingActs.Value;
+        return recordingActs.Value;
       }
     }
 
     public LRSPaymentList Payments {
       get { 
-        return _payments.Value;
+        return payments.Value;
       }
     }
 
@@ -316,7 +316,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public LRSTransactionTaskList Tasks {
       get {
-        return _taskList.Value;
+        return taskList.Value;
       }
     }
 
@@ -448,7 +448,6 @@ namespace Empiria.Land.Registration.Transactions {
         }
         itemCopy.Save();
       }
-
       return copy;
     }
 
@@ -697,7 +696,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     internal void OnRecordingActsUpdated() {
-      _recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
+      recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
       this.UpdateComplexityIndex();
     }
 
@@ -909,7 +908,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     private void ResetTasksList() {
-      _taskList = new Lazy<LRSTransactionTaskList>(() => LRSTransactionTaskList.Parse(this));
+      taskList = new Lazy<LRSTransactionTaskList>(() => LRSTransactionTaskList.Parse(this));
     }
 
     private void UpdateComplexityIndex() {

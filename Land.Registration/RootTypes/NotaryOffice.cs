@@ -23,18 +23,14 @@ namespace Empiria.Land.Registration {
 
     private const string thisTypeName = "ObjectType.Contact.Organization.NotaryOffice";
 
-    private string number = String.Empty;
-
     #endregion Fields
 
     #region Constructors and parsers
 
-    public NotaryOffice()
-      : base(thisTypeName) {
+    public NotaryOffice() : base(thisTypeName) {
     }
 
-    protected NotaryOffice(string typeName)
-      : base(typeName) {
+    protected NotaryOffice(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
@@ -62,8 +58,10 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
+    [DataField("NickName")]
     public string Number {
-      get { return number; }
+      get;
+      private set;
     }
 
     #endregion Public properties
@@ -84,11 +82,6 @@ namespace Empiria.Land.Registration {
       list.Sort((x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
 
       return list;
-    }
-
-    protected override void OnLoadObjectData(DataRow row) {
-      base.OnLoadObjectData(row);
-      this.number = (string) row["NickName"];
     }
 
     #endregion Public methods

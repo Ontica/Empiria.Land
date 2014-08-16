@@ -63,7 +63,7 @@ namespace Empiria.Land.Registration {
           || recordingNamePath.EndsWith(".D")) {
         recordingNamePath = recordingNamePath.Remove(recordingNamePath.Length - 2);
       }
-      string path = recording.RecordingBook.ImagingFilesFolder.ParentFilesFolder.PhysicalPath;
+      string path = recording.RecordingBook.ImagingFilesFolder.ParentFolder.PhysicalPath;
 
       path += @".apendices\" + recordingNamePath + "-" + recording.Number.Replace("-", String.Empty) + "-000";
 
@@ -71,7 +71,7 @@ namespace Empiria.Land.Registration {
     }
 
     private string GetRootDirectory(RecordingBook recordingBook) {
-      return recordingBook.ImagingFilesFolder.ParentFilesFolder.PhysicalPath + @".apendices";
+      return recordingBook.ImagingFilesFolder.ParentFolder.PhysicalPath + @".apendices";
     }
 
     private string GetRecordingDirectoryPattern(Recording recording) {

@@ -23,13 +23,11 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private LimitationAct()
-      : base(thisTypeName) {
+    private LimitationAct() : base(thisTypeName) {
       // For create instances use Create static method instead
     }
 
-    protected LimitationAct(string typeName)
-      : base(typeName) {
+    protected LimitationAct(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 

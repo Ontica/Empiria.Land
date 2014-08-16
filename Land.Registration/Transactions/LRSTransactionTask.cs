@@ -98,19 +98,19 @@ namespace Empiria.Land.Registration.Transactions {
       set;
     }
 
-    [DataField("AssignedById", Default = "Contact.Person.Empty")]
+    [DataField("AssignedById", Default = "Contacts.Person.Empty")]
     public Contact AssignedBy {
       get;
       set;
     }
 
-    [DataField("ResponsibleId", Default = "Contact.Person.Empty")]
+    [DataField("ResponsibleId", Default = "Contacts.Person.Empty")]
     public Contact Responsible {
       get;
       set;
     }
 
-    [DataField("NextContactId", Default = "Contact.Person.Empty")]
+    [DataField("NextContactId", Default = "Contacts.Person.Empty")]
     public Contact NextContact {
       get;
       set;

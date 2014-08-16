@@ -168,7 +168,7 @@ namespace Empiria.Land.Registration.Data {
                                                         String.Empty, String.Empty, String.Empty, -1, -1,
                                                         ExecutionServer.DateMinValue, -1, ExecutionServer.DateMinValue,
                                                         String.Empty, o.Notes, o.Keywords, o.PostedBy.Id, o.PostingTime,
-                                                        o.ReplacedById, (char) o.Status, o.IntegrityHashCode);
+                                                        o.ReplacedById, (char) o.Status, String.Empty);
 
       return DataWriter.Execute(dataOperation);
     }
@@ -184,7 +184,7 @@ namespace Empiria.Land.Registration.Data {
                                                         o.AssocDocStartSheet, o.AssocDocEndSheet, o.AssocDocNotaryOffice.Id,
                                                         o.AssocDocIssuedBy.Id, o.AssocDocIssueDate, o.AssocDocRecordingOffice.Id,
                                                         o.AssocDocRecordingDate, o.AssocDocRecordingNumber, o.Notes, o.Keywords,
-                                                        o.PostedBy.Id, o.PostingTime, o.ReplacedById, (char) o.Status, o.IntegrityHashCode);
+                                                        o.PostedBy.Id, o.PostingTime, o.ReplacedById, (char) o.Status, String.Empty);
 
       return DataWriter.Execute(dataOperation);
     }

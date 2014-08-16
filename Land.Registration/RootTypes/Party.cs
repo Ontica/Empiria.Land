@@ -35,37 +35,15 @@ namespace Empiria.Land.Registration {
   /// <summary>Abstract class that represents a recording act party.</summary>
   public abstract class Party : BaseObject {
 
-    #region Abstract members
-
-    protected abstract string ImplementsRegistryID();
-
-    #endregion Abstract members
-
     #region Fields
 
     private const string thisTypeName = "ObjectType.Party";
-
-    private string fullName = String.Empty;
-    private string shortName = String.Empty;
-    private string nicknames = String.Empty;
-    private string tags = String.Empty;
-    private GeographicRegionItem registryLocation = GeographicRegionItem.Empty;
-    private DateTime registryDate = ExecutionServer.DateMaxValue;
-    private string taxIDNumber = String.Empty;
-    private string notes = String.Empty;
-    private string keywords = String.Empty;
-    private Contact postedBy = Person.Empty;
-    private DateTime postingTime = DateTime.Now;
-    private int replacedById = 0;
-    private PartyStatus status = PartyStatus.Pending;
-    private string integrityHashCode = String.Empty;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    protected Party(string typeName)
-      : base(typeName) {
+    protected Party(string typeName) : base(typeName) {
       // Empiria Object Type pattern classes always has this constructor. Don't delete
     }
 
@@ -110,13 +88,10 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public string FullName {
-      get { return fullName; }
-      set { fullName = EmpiriaString.TrimAll(value); }
-    }
-
-    public string IntegrityHashCode {
-      get { return integrityHashCode; }
+    [DataField("FullName")]
+    public virtual string FullName {
+      get;
+      set;
     }
 
     public virtual string Keywords {
@@ -125,54 +100,67 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    [DataField("Nicknames")]
     public string Nicknames {
-      get { return nicknames; }
-      set { nicknames = EmpiriaString.TrimAll(value); }
+      get;
+      set;
     }
 
+    [DataField("PartyNotes")]
     public string Notes {
-      get { return notes; }
-      set { notes = EmpiriaString.TrimAll(value); }
+      get;
+      set;
     }
 
+    [DataField("PostedById", Default = "Contacts.Person.Empty")]
     public Contact PostedBy {
-      get { return postedBy; }
+      get;
+      private set;
     }
 
+    [DataField("PostingTime", Default = "DateTime.Now")]
     public DateTime PostingTime {
-      get { return postingTime; }
+      get;
+      private set;
     }
 
+    [DataField("RegistryDate")]
     public DateTime RegistryDate {
-      get { return registryDate; }
-      set { registryDate = value; }
+      get;
+      set;
     }
 
-    public string RegistryID {
-      get { return ImplementsRegistryID(); }
+    public abstract string RegistryID {
+      get;
     }
 
+    [DataField("RegistryLocationId")]
     public GeographicRegionItem RegistryLocation {
-      get { return registryLocation; }
-      set { registryLocation = value; }
+      get;
+      set;
     }
 
+    [DataField("ReplacedById")]
     public int ReplacedById {
-      get { return replacedById; }
+      get;
+      private set;
     }
 
+    [DataField("PartyShortName")]
     public string ShortName {
-      get { return shortName; }
-      set { shortName = EmpiriaString.TrimAll(value); }
+      get;
+      set;
     }
 
+    [DataField("PartyStatus", Default = PartyStatus.Pending)]
     public PartyStatus Status {
-      get { return status; }
+      get;
+      private set;
     }
 
     public string StatusName {
       get {
-        switch (status) {
+        switch (this.Status) {
           case PartyStatus.Pending:
             return "Pendiente";
           case PartyStatus.Registered:
@@ -187,14 +175,16 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    [DataField("PartyTags")]
     public string Tags {
-      get { return tags; }
-      set { tags = EmpiriaString.TrimAll(value); }
+      get;
+      set;
     }
 
+    [DataField("TaxIDNumber")]
     public string TaxIDNumber {
-      get { return taxIDNumber; }
-      set { taxIDNumber = value; }
+      get;
+      set;
     }
 
     #endregion Public properties
@@ -202,7 +192,7 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     internal void Delete() {
-      this.status = PartyStatus.Deleted;
+      this.Status = PartyStatus.Deleted;
       this.Save();
     }
 
@@ -210,27 +200,10 @@ namespace Empiria.Land.Registration {
       return PropertyData.GetLastRecordingActParty(this, searchStartDate);
     }
 
-    protected override void OnLoadObjectData(DataRow row) {
-      this.fullName = (string) row["PartyFullName"];
-      this.shortName = (string) row["PartyShortName"];
-      this.nicknames = (string) row["Nicknames"];
-      this.tags = (string) row["PartyTags"];
-      this.registryDate = (DateTime) row["RegistryDate"];
-      this.registryLocation = GeographicRegionItem.Parse((int) row["RegistryLocationId"]);
-      this.taxIDNumber = (string) row["TaxIDNumber"];
-      this.notes = (string) row["PartyNotes"];
-      this.keywords = (string) row["PartyKeywords"];
-      this.postedBy = Contact.Parse((int) row["PostedById"]);
-      this.postingTime = (DateTime) row["PostingTime"];
-      this.replacedById = (int) row["ReplacedById"];
-      this.status = (PartyStatus) Convert.ToChar(row["PartyStatus"]);
-      this.integrityHashCode = (string) row["PartyRIHC"];
-    }
-
     protected override void OnSave() {
       if (base.IsNew) {
-        this.postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-        this.postingTime = DateTime.Now;
+        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.PostingTime = DateTime.Now;
       }
     }
 

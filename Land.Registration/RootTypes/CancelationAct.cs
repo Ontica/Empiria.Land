@@ -8,7 +8,7 @@
 *  Summary   : Recording act that serves for cancel other recording act.                                     *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
-using System.Data;
+using System;
 
 namespace Empiria.Land.Registration {
 
@@ -23,13 +23,11 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private CancelationAct()
-      : base(thisTypeName) {
+    private CancelationAct() : base(thisTypeName) {
       // For create instances use Create static method instead
     }
 
-    protected CancelationAct(string typeName)
-      : base(typeName) {
+    protected CancelationAct(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 

@@ -8,7 +8,7 @@
 *  Summary   : Represents a domain traslative recording act.                                                 *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
-using System.Data;
+using System;
 
 namespace Empiria.Land.Registration {
 
@@ -23,13 +23,11 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private DomainAct()
-      : base(thisTypeName) {
+    private DomainAct() : base(thisTypeName) {
       // For create instances use Create static method instead
     }
 
-    protected DomainAct(string typeName)
-      : base(typeName) {
+    protected DomainAct(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 

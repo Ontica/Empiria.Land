@@ -20,12 +20,6 @@ namespace Empiria.Land.Registration.Transactions {
   /// lines of one or many transactions.</summary>
   public class LRSTransactionTaskList : FixedList<LRSTransactionTask> {
 
-    #region Fields
-
-    //private LRSFee totalFee = null;
-
-    #endregion Fields
-
     #region Constructors and parsers
 
     private LRSTransactionTaskList(List<LRSTransactionTask> list) : base(list) {

@@ -8,7 +8,7 @@
 *  Summary   : Describes the role that plays a party with respect a domain recording act.                    *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
-
+using System;
 
 namespace Empiria.Land.Registration {
 
@@ -23,13 +23,11 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public DomainActPartyRole()
-      : base(thisTypeName) {
+    public DomainActPartyRole() : base(thisTypeName) {
 
     }
 
-    protected DomainActPartyRole(string typeName)
-      : base(typeName) {
+    protected DomainActPartyRole(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 

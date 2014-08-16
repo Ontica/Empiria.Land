@@ -30,28 +30,16 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    internal TractIndexItem(RecordingAct recordingAct, Property property) : base(thisTypeName) {
-      Assertion.AssertObject(recordingAct, "recordingAct");
-      Assertion.AssertObject(property, "property");
-
-      Initialize();
-
-      this.RecordingAct = recordingAct;
-      this.Property = property;
-    }
-
     protected TractIndexItem(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
-      Initialize();
     }
 
-    private void Initialize() {
-      this.RecordingAct = InformationAct.Empty;
-      this.Property = Property.Empty;
-      this.ExtensionData = TractIndexItemExtData.Empty;
-      this.PostedBy = Person.Empty;
-      this.PostingTime = DateTime.Now;
-      this.Status = RecordableObjectStatus.Pending;
+    internal TractIndexItem(Property property, RecordingAct recordingAct) : base(thisTypeName) {
+      Assertion.AssertObject(property, "property");
+      Assertion.AssertObject(recordingAct, "recordingAct");
+
+      this.Property = property;
+      this.RecordingAct = recordingAct;
     }
 
     static public TractIndexItem Parse(int id) {
@@ -71,12 +59,14 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    public RecordingAct RecordingAct {
+    [DataField("PropertyId", IsOptional = false)]
+    public Property Property {
       get;
       private set;
     }
 
-    public Property Property {
+    [DataField("RecordingActId", Default = "Land.Registration.InformationAct.Empty", IsOptional = false)]
+    public RecordingAct RecordingAct {
       get;
       private set;
     }
@@ -86,16 +76,19 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+    [DataField("PostedById", Default = "Contacts.Person.Empty")]
     public Contact PostedBy {
       get;
       private set;
     }
 
+    [DataField("PostingTime", Default = "DateTime.Now")]
     public DateTime PostingTime {
       get;
       private set;
     }
 
+    [DataField("TractIndexItemStatus", Default = RecordableObjectStatus.Pending)]
     public RecordableObjectStatus Status {
       get;
       set;  // OOJJOO Set the status using a special method and replace this public set accesor by a private one.
@@ -159,14 +152,7 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnLoadObjectData(DataRow row) {
-      this.Property = Property.Parse((int) row["PropertyId"]);
-      this.RecordingAct = RecordingAct.Parse((int) row["RecordingActId"]);
       this.ExtensionData = TractIndexItemExtData.Parse((string) row["TractItemExtData"]);
-      this.PostedBy = Contact.Parse((int) row["PostedById"]);
-      this.PostingTime = (DateTime) row["PostingTime"];
-      this.Status = (RecordableObjectStatus) Convert.ToChar(row["TractIndexItemStatus"]);
-
-      Integrity.Assert((string) row["TractIndexItemDIF"]);
     }
 
     protected override void OnSave() {

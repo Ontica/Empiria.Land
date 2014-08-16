@@ -23,13 +23,11 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public PartiesRole()
-      : base(thisTypeName) {
+    public PartiesRole() : base(thisTypeName) {
 
     }
 
-    protected PartiesRole(string typeName)
-      : base(typeName) {
+    protected PartiesRole(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 

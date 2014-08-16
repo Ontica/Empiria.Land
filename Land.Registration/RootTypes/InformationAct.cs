@@ -25,13 +25,11 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private InformationAct()
-      : base(thisTypeName) {
+    private InformationAct() : base(thisTypeName) {
       // For create instances use Create static method instead
     }
 
-    protected InformationAct(string typeName)
-      : base(typeName) {
+    protected InformationAct(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
@@ -44,10 +42,6 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Constructors and parsers
-
-    #region Public properties
-
-    #endregion Public properties
 
   } // class InformationAct
 

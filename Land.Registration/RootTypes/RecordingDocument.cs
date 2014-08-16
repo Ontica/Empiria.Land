@@ -65,7 +65,7 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField("RecordingDocumentTypeId")]
+    [DataField("DocumentTypeId")]
     public RecordingDocumentType DocumentType {
       get;
       internal set;

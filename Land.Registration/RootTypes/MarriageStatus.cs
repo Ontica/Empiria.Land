@@ -23,13 +23,11 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public MarriageStatus()
-      : base(thisTypeName) {
+    public MarriageStatus() : base(thisTypeName) {
 
     }
 
-    protected MarriageStatus(string typeName)
-      : base(typeName) {
+    protected MarriageStatus(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 

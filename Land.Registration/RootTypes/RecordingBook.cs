@@ -44,60 +44,31 @@ namespace Empiria.Land.Registration {
     static public bool UseBookAttachments = ConfigurationData.GetBoolean("RecordingBook.UseAttachments");
     static public bool UseBookLevel = ConfigurationData.GetBoolean("RecordingBookType.UseBookLevel");
 
-    private RecorderOffice recorderOffice = RecorderOffice.Empty;
-    private RecordingBookType type = RecordingBookType.Volume;
-    private RecordingSection sectionType = RecordingSection.Empty;
-    private string bookNumber = String.Empty;
-    private string name = String.Empty;
-    private string fullName = String.Empty;
-    private string description = String.Empty;
-    private int startRecordingIndex = 0;
-    private int endRecordingIndex = 0;
-    private TimePeriod recordingsControlTimePeriod = new TimePeriod(ExecutionServer.DateMinValue, 
-                                                                    ExecutionServer.DateMaxValue);
-    private RecordBookDirectory imagingFilesFolder = RecordBookDirectory.Empty;
-    private DateTime creationDate = DateTime.Now;
-    private DateTime closingDate = ExecutionServer.DateMaxValue;
-    private Contact createdBy = Person.Empty;
-    private Contact assignedTo = RecorderOffice.Empty;
-    private Contact reviewedBy = RecorderOffice.Empty;
-    private Contact approvedBy = RecorderOffice.Empty;
-    private int parentRecordingBookId = -1;
-    // use null initalization instead RecordingBook.Empty because is a fractal object and Empty instance 
-    // parsing throws an infinite loop
-    private RecordingBook parentRecordingBook = null;
-    private RecordingBookStatus status = RecordingBookStatus.Pending;
-    private string recordIntegrityHashCode = String.Empty;
-
     private FixedList<Recording> recordings = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    public RecordingBook()
-      : base(thisTypeName) {
+    public RecordingBook() : base(thisTypeName) {
 
     }
 
-    protected RecordingBook(string typeName)
-      : base(typeName) {
+    protected RecordingBook(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
-    internal RecordingBook(RecorderOffice recorderOffice, string recordingBookTag)
-      : base(thisTypeName) {
+    internal RecordingBook(RecorderOffice recorderOffice, string recordingBookTag) : base(thisTypeName) {
       this.RecorderOffice = recorderOffice;
       this.Parent = RecordingBook.Empty;
       this.BookType = RecordingBookType.Section;
       this.BookNumber = recordingBookTag;
-      this.Name = this.parentRecordingBook.BuildChildName(recordingBookTag);
-      this.FullName = recorderOffice.Alias + " " + this.parentRecordingBook.BuildChildFullName(recordingBookTag);
+      this.Name = this.Parent.BuildChildName(recordingBookTag);
+      this.FullName = recorderOffice.Alias + " " + this.Parent.BuildChildFullName(recordingBookTag);
       this.ImagingFilesFolder = RecordBookDirectory.Empty;
     }
 
-    internal RecordingBook(RecordingBook parent, string recordingBookTag)
-      : base(thisTypeName) {
+    internal RecordingBook(RecordingBook parent, string recordingBookTag) : base(thisTypeName) {
       this.RecorderOffice = parent.RecorderOffice;
       this.Parent = parent;
       this.BookType = parent.ChildsRecordingBookType;
@@ -108,8 +79,7 @@ namespace Empiria.Land.Registration {
     }
 
     internal RecordingBook(RecordingBook parent, RecordBookDirectory imagingDirectory,
-                           string recordingBookTag)
-      : base(thisTypeName) {
+                           string recordingBookTag) : base(thisTypeName) {
       this.RecorderOffice = parent.RecorderOffice;
       this.Parent = parent;
       this.BookType = parent.ChildsRecordingBookType;
@@ -135,7 +105,7 @@ namespace Empiria.Land.Registration {
                                                             RecordingDocument document) {
       Assertion.AssertObject(document, "document");
       Assertion.Assert(!document.IsEmptyInstance && !document.IsNew,
-                        "Document can't be neither an empty or unsaved document.");
+                       "Document can't be neither an empty or unsaved document.");
       RecordingBook openedBook = RecordingBooksData.GetOpenedBook(office, section);
       if (openedBook.HasSpaceForRecording(document)) {
         return openedBook;
@@ -152,14 +122,93 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    public Contact ApprovedBy {
-      get { return approvedBy; }
-      set { approvedBy = value; }
+    [DataField("RecorderOfficeId")]
+    public RecorderOffice RecorderOffice {
+      get;
+      set;
     }
 
-    public Contact AssignedTo {
-      get { return assignedTo; }
-      set { assignedTo = value; }
+    [DataField("RecordingBookType", Default = RecordingBookType.Volume)]
+    public RecordingBookType BookType {
+      get;
+      set;
+    }
+
+    [DataField("RecordingsClassId")]
+    public RecordingSection RecordingSectionType {
+      get;
+      set;
+    }
+
+    [DataField("RecordingBookNo")]
+    private string _bookNumber = "N/A";
+    public string BookNumber {
+      get { return _bookNumber; }
+      set { _bookNumber = (value == String.Empty || value == "00" || value == "0") ? "N/A" : value; }
+    }
+
+    [DataField("RecordingBookName")]
+    public string Name {
+      get;
+      set;
+    }
+
+    [DataField("RecordingBookFullName")]
+    public string FullName {
+      get;
+      set;
+    }
+
+    //protected RecordingBookExtData ExtendedData {
+
+    //}
+
+    internal string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(this.FullName);
+      }
+    }
+
+    [DataField("RecordingBookFilesFolderId")]
+    public RecordBookDirectory ImagingFilesFolder {
+      get;
+      set;
+    }
+
+    [DataField("StartRecordingIndex")]
+    public int StartRecordingIndex {
+      get;
+      set;
+    }
+
+    [DataField("EndRecordingIndex")]
+    public int EndRecordingIndex {
+      get;
+      set;
+    }
+
+    public bool IsRoot {
+      get {
+        return (_parent.Id == this.Id);
+      }
+    }
+
+    [DataField("ParentRecordingBookId")]
+    LazyObject<RecordingBook> _parent = LazyObject<RecordingBook>.Empty;
+    public RecordingBook Parent {
+      get { return _parent.Instance; }
+      internal set { _parent.Instance = value; }
+    }
+
+    [DataField("RecordingBookStatus", Default = RecordingBookStatus.Pending)]
+    public RecordingBookStatus Status {
+      get;
+      set;
+    }
+
+    public string RecordIntegrityHashCode {
+      get;
+      set;
     }
 
     public RecordingBookType ChildsRecordingBookType {
@@ -188,101 +237,14 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public DateTime ClosingDate {
-      get { return closingDate; }
-      set { closingDate = value; }
-    }
-
-    public int StartRecordingIndex {
-      get { return startRecordingIndex; }
-      set { startRecordingIndex = value; }
-    }
-
-    public int EndRecordingIndex {
-      get { return endRecordingIndex; }
-      set { endRecordingIndex = value; }
-    }
-
-    public TimePeriod RecordingsControlTimePeriod {
-      get { return recordingsControlTimePeriod; }
-      set { recordingsControlTimePeriod = value; }
-    }
-
-    public Contact CreatedBy {
-      get { return createdBy; }
-      set { createdBy = value; }
-    }
-
-    public DateTime CreationDate {
-      get { return creationDate; }
-      set { creationDate = value; }
-    }
-
-    public string Description {
-      get { return description; }
-      set { description = value; }
-    }
-
-    public string FullName {
-      get { return fullName; }
-      set { fullName = value; }
-    }
-
-    public RecordBookDirectory ImagingFilesFolder {
-      get { return imagingFilesFolder; }
-      set { imagingFilesFolder = value; }
-    }
-
     public bool IsAvailableForManualEditing {
       get {
-        return (this.status == RecordingBookStatus.Assigned ||
-                this.status == RecordingBookStatus.Pending ||
-                this.status == RecordingBookStatus.Revision);
+        return (this.Status == RecordingBookStatus.Assigned ||
+                this.Status == RecordingBookStatus.Pending ||
+                this.Status == RecordingBookStatus.Revision);
       }
     }
 
-    public bool IsRoot {
-      get { return (parentRecordingBookId == this.Id); }
-    }
-
-    public string Name {
-      get { return name; }
-      set { name = value; }
-    }
-
-    public string Keywords {
-      get {
-        return EmpiriaString.BuildKeywords(this.FullName);
-      }
-    }
-
-    public RecordingBook Parent {
-      get {
-        if (parentRecordingBook == null) {
-          parentRecordingBook = RecordingBook.Parse(parentRecordingBookId);
-        }
-        return parentRecordingBook;
-      }
-      internal set {
-        parentRecordingBook = value;
-        parentRecordingBookId = parentRecordingBook.Id;
-      }
-    }
-
-    public RecordingSection RecordingSectionType {
-      get { return sectionType; }
-      set { sectionType = value; }
-    }
-
-    public RecorderOffice RecorderOffice {
-      get { return recorderOffice; }
-      set { recorderOffice = value; }
-    }
-
-    public string RecordIntegrityHashCode {
-      get { return recordIntegrityHashCode; }
-      private set { recordIntegrityHashCode = value; }
-    }
 
     public bool ReuseUnusedRecordingNumbers {
       get {
@@ -290,29 +252,9 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public Contact ReviewedBy {
-      get { return reviewedBy; }
-      set { reviewedBy = value; }
-    }
-
-    public RecordingBookStatus Status {
-      get { return status; }
-      set { status = value; }
-    }
-
-    public string BookNumber {
-      get { return bookNumber; }
-      set { bookNumber = (value == String.Empty || value == "00" || value == "0") ? "N/A" : value; }
-    }
-
-    public RecordingBookType BookType {
-      get { return type; }
-      set { type = value; }
-    }
-
     public bool UsePerpetualNumbering {
       get {
-        return sectionType.UsePerpetualNumbering;
+        return this.RecordingSectionType.UsePerpetualNumbering;
       }
     }
 
@@ -320,33 +262,33 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public void Assign(Contact assignedTo, string notes) {
-      this.assignedTo = assignedTo;
-      this.Status = RecordingBookStatus.Assigned;
-      Save();
-    }
-
     internal string BuildChildFullName(string recordingBookTag) {
       switch (this.BookType) {
         case RecordingBookType.Root:
           return "Sección " + recordingBookTag;
         case RecordingBookType.Section:
           if (RecordingBook.UseBookLevel) {
-            return recorderOffice.Alias + " Sección " + this.BookNumber + " Libro " + recordingBookTag;
+            return this.RecorderOffice.Alias + " Sección " + this.BookNumber +
+                                               " Libro " + recordingBookTag;
           } else {
-            return recorderOffice.Alias + " Sección " + this.BookNumber + " Volumen " + recordingBookTag;
+            return this.RecorderOffice.Alias + " Sección " + this.BookNumber +
+                                               " Volumen " + recordingBookTag;
           }
         case RecordingBookType.Book:
           if (RecordingBook.UseBookLevel) {
-            return recorderOffice.Alias + " Sección " + this.Parent.BookNumber + " Libro " + this.BookNumber + " Volumen " + recordingBookTag;
+            return this.RecorderOffice.Alias + " Sección " + this.Parent.BookNumber +
+                                               " Libro " + this.BookNumber +
+                                               " Volumen " + recordingBookTag;
           } else {
             throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType,
                                                 RecordingBookType.Book.ToString());
           }
         case RecordingBookType.Volume:
-          throw new LandRegistrationException(LandRegistrationException.Msg.VolumeRecordingBooksCantHaveChilds, this.FullName);
+          throw new LandRegistrationException(LandRegistrationException.Msg.VolumeRecordingBooksCantHaveChilds,
+                                              this.FullName);
         default:
-          throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType, this.BookType.ToString());
+          throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType,
+                                              this.BookType.ToString());
       }
     }
 
@@ -374,18 +316,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public bool Close(string esign, string notes) {
-      if (!EmpiriaUser.Current.VerifyElectronicSign(esign)) {
-        return false;
-      }
-      this.assignedTo = RecorderOffice.Empty;
-      this.closingDate = DateTime.Now;
-      this.approvedBy = EmpiriaUser.Current.Contact;
-      this.Status = RecordingBookStatus.Closed;
-      Save();
-      return true;
-    }
-
     public Recording CreateQuickRecording(int recordingNumber, string bisSuffixTag) {
       var recording = new Recording(this, RecordingDocument.Empty, 
                                     this.BuildRecordingNumber(recordingNumber, bisSuffixTag));
@@ -402,59 +332,6 @@ namespace Empiria.Land.Registration {
       }
       return temp;
     }
-
-    //public Recording CreateRecording(LRSTransaction transaction) {
-    //  Assertion.AssertObject(transaction, "transaction");
-    //  Assertion.AssertObject(transaction.Document, "document");
-    //  Assertion.Assert(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
-    //                    "Transaction document cannot be neither empty nor a new document instance.");
-
-    //  var recording = new Recording();
-    //  recording.RecordingBook = this;
-    //  recording.Transaction = transaction;
-    //  recording.Document = transaction.Document;
-    //  recording.SetNumber (this.GetNextRecordingNumber());
-    //  recording.Status = RecordableObjectStatus.Incomplete;
-    //  recording.StartImageIndex = -1;
-    //  recording.EndImageIndex = -1;
-    //  recording.PresentationTime = transaction.PresentationTime;
-    //  recording.AuthorizationTime = DateTime.Now;
-    //  recording.AuthorizedBy = Contact.Parse(36);
-    //  recording.Save();
-
-    //  return recording;
-    //}
-
-    //public Recording CreateRecordingForAnnotation(LRSTransaction transaction, Recording antecedent) {
-    //  Assertion.AssertObject(transaction, "transaction");
-    //  Assertion.AssertObject(transaction.Document, "document");
-    //  Assertion.Assert(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
-    //                    "Transaction document can not be neither an empty or a new document instance.");
-    //  Assertion.Assert(!antecedent.IsEmptyInstance && !antecedent.IsNew,
-    //                    "Annotation precedent can not be empty or a new instance.");
-
-    //  Recording recording = new Recording();
-    //  recording.BaseRecordingId = antecedent.Id;
-    //  recording.RecordingBook = antecedent.RecordingBook;
-    //  recording.Transaction = transaction;
-    //  recording.Document = transaction.Document;
-    //  string bisSuffixTag = String.Empty;
-
-    //  int recordingNumber = Recording.SplitRecordingNumber(antecedent.Number, out bisSuffixTag);
-    //  recording.SetNumber(recordingNumber, bisSuffixTag);
-
-    //  recording.Status = RecordableObjectStatus.Incomplete;
-    //  recording.StartImageIndex = -1;
-    //  recording.EndImageIndex = -1;
-    //  recording.PresentationTime = transaction.PresentationTime;
-    //  recording.AuthorizationTime = DateTime.Now;
-    //  recording.AuthorizedBy = Contact.Parse(36);
-    //  recording.Save();
-
-    //  recording.RecordingBook.Refresh();
-
-    //  return recording;
-    //}
 
     public int GetNextRecordingNumber() {
       if (this.ReuseUnusedRecordingNumbers) {
@@ -547,7 +424,7 @@ namespace Empiria.Land.Registration {
       this.recordings = null;
     }
 
-    static internal RecordingBook Create(RecordBookDirectory directory, RecordingSection recordingSectionType,
+    static internal RecordingBook Create(RecordBookDirectory directory, RecordingSection recordingSection,
                                          int recordingsControlCount, TimePeriod recordingsControlTimePeriod) {
       RecordingBook recordingBook = new RecordingBook();
 
@@ -572,59 +449,22 @@ namespace Empiria.Land.Registration {
       recordingBook = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
       if (recordingBook == null) {
         recordingBook = new RecordingBook(currentParent, directory, tag);
-        recordingBook.sectionType = recordingSectionType;
+        recordingBook.RecordingSectionType = recordingSection;
         recordingBook.StartRecordingIndex = 1;
         recordingBook.EndRecordingIndex = recordingsControlCount;
-        recordingBook.recordingsControlTimePeriod = recordingsControlTimePeriod;
+        recordingBook.RecordingsControlTimePeriod = recordingsControlTimePeriod;
 
         recordingBook.Save();
       }
       return recordingBook;
     }
 
-    protected override void OnLoadObjectData(DataRow row) {
-      this.RecorderOffice = RecorderOffice.Parse((int) row["RecorderOfficeId"]);
-      this.BookType = (RecordingBookType) Convert.ToChar(row["RecordingBookType"]);
-      this.sectionType = RecordingSection.Parse((int) row["RecordingsClassId"]);
-      this.BookNumber = (string) row["RecordingBookNo"];
-      this.Name = (string) row["RecordingBookName"];
-      this.FullName = (string) row["RecordingBookFullName"];
-      //this.Description = (string) row["RecordingBookDescription"];
-    
-      //this.RecordingsControlTimePeriod = new TimePeriod((DateTime) row["RecordingsControlFirstDate"], 
-      //                                                  (DateTime) row["RecordingsControlLastDate"]);
-      this.ImagingFilesFolder = RecordBookDirectory.Parse((int) row["RecordingBookFilesFolderId"]);
-      this.StartRecordingIndex = (int) row["StartRecordingIndex"];
-      this.EndRecordingIndex = (int) row["EndRecordingIndex"];
-
-      //this.CreationDate = (DateTime) row["CreationDate"];
-      //this.ClosingDate = (DateTime) row["ClosingDate"];
-      //this.CreatedBy = Contact.Parse((int) row["CreatedById"]);
-      //this.AssignedTo = Contact.Parse((int) row["AssignedToId"]);
-      //this.ReviewedBy = Contact.Parse((int) row["ReviewedById"]);
-      //this.ApprovedBy = Contact.Parse((int) row["ApprovedById"]);
-      this.parentRecordingBookId = (int) row["ParentRecordingBookId"];
-      this.Status = (RecordingBookStatus) Convert.ToChar(row["RecordingBookStatus"]);
-      this.recordIntegrityHashCode = (string) row["RecordingBookDIF"];
-    }
-
     protected override void OnSave() {
       if (this.IsNew) {
-        this.creationDate = DateTime.Now;
-        this.createdBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.CreationDate = DateTime.Now;
+        this.CreatedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
       RecordingBooksData.WriteRecordingBook(this);
-    }
-
-    public void SendToRevision() {
-      this.Status = RecordingBookStatus.Revision;
-      Save();
-    }
-
-    public void Unassign(string notes) {
-      this.assignedTo = RecorderOffice.Empty;
-      this.Status = RecordingBookStatus.Pending;
-      Save();
     }
 
     #endregion Public methods
@@ -640,12 +480,12 @@ namespace Empiria.Land.Registration {
 
       newBook.RecorderOffice = this.RecorderOffice;
       newBook.BookType = this.BookType;
-      newBook.sectionType = this.sectionType;
+      newBook.RecordingSectionType = this.RecordingSectionType;
       newBook.RecordingsControlTimePeriod = this.RecordingsControlTimePeriod;
       newBook.AssignedTo = this.AssignedTo;
       newBook.ReviewedBy = this.ReviewedBy;
       newBook.ApprovedBy = this.ApprovedBy;
-      newBook.parentRecordingBookId = this.parentRecordingBookId;
+      newBook.Parent = this.Parent;
       newBook.Status = this.Status;
 
       return newBook;
@@ -663,7 +503,8 @@ namespace Empiria.Land.Registration {
       if (newBook.UsePerpetualNumbering) {
         newBook.StartRecordingIndex = this.StartRecordingIndex + 50;
         newBook.EndRecordingIndex = this.EndRecordingIndex + 50;
-        newBook.BookNumber = newBook.StartRecordingIndex.ToString("0000") + "-" + newBook.EndRecordingIndex.ToString("0000");
+        newBook.BookNumber = newBook.StartRecordingIndex.ToString("0000") + "-" +
+                             newBook.EndRecordingIndex.ToString("0000");
       } else {
         newBook.StartRecordingIndex = 1;
         newBook.EndRecordingIndex = 250;
@@ -697,6 +538,80 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Private methods
+
+    #region Workflow data and methods
+
+    public Contact ApprovedBy {
+      get;
+      set;
+    }
+
+    public Contact AssignedTo {
+      get;
+      set;
+    }
+
+    public DateTime ClosingDate {
+      get;
+      set;
+    }
+
+    //Default = TimePeriod.Default;
+    public TimePeriod RecordingsControlTimePeriod {
+      get;
+      set;
+    }
+
+    public Contact CreatedBy {
+      get;
+      set;
+    }
+
+    public DateTime CreationDate {
+      get;
+      set;
+    }
+
+    public string Description {
+      get;
+      set;
+    }
+
+    public Contact ReviewedBy {
+      get;
+      set;
+    }
+
+    public void Assign(Contact assignedTo, string notes) {
+      this.AssignedTo = assignedTo;
+      this.Status = RecordingBookStatus.Assigned;
+      Save();
+    }
+
+    public bool Close(string esign, string notes) {
+      if (!EmpiriaUser.Current.VerifyElectronicSign(esign)) {
+        return false;
+      }
+      this.AssignedTo = RecorderOffice.Empty;
+      this.ClosingDate = DateTime.Now;
+      this.ApprovedBy = EmpiriaUser.Current.Contact;
+      this.Status = RecordingBookStatus.Closed;
+      Save();
+      return true;
+    }
+
+    public void SendToRevision() {
+      this.Status = RecordingBookStatus.Revision;
+      Save();
+    }
+
+    public void Unassign(string notes) {
+      this.AssignedTo = RecorderOffice.Empty;
+      this.Status = RecordingBookStatus.Pending;
+      Save();
+    }
+
+    #endregion Workflow data and methods
 
   } // class RecordingBook
 

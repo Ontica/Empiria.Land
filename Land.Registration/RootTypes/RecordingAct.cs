@@ -236,7 +236,7 @@ namespace Empiria.Land.Registration {
     public TractIndexItem AttachResource(Property resource) {
       Assertion.AssertObject(resource, "resource");
 
-      var item = new TractIndexItem(this, resource);
+      var item = new TractIndexItem(resource, this);
      
       attachedResources.Value.Add(item);
 
@@ -302,7 +302,7 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnLoadObjectData(DataRow row) {
-      this.ExtensionData = RecordingActExtData.Parse((string) row["RecordingActExtensionData"]);
+      this.ExtensionData = RecordingActExtData.Parse((string) row["RecordingActExtData"]);
     }
 
     protected override void OnSave() {

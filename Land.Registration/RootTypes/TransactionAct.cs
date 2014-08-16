@@ -25,13 +25,11 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private TransactionAct()
-      : base(thisTypeName) {
+    private TransactionAct() : base(thisTypeName) {
       // For create instances use Create static method instead    
     }
 
-    protected TransactionAct(string typeName)
-      : base(typeName) {
+    protected TransactionAct(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 

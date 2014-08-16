@@ -227,7 +227,6 @@ namespace Empiria.Land.Registration.Transactions {
 
     #endregion Public methods
 
-
   } // class LRSTransactionItem
 
 } // namespace Empiria.Land.Registration.Transactions

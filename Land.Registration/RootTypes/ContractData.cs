@@ -43,7 +43,9 @@ namespace Empiria.Land.Registration {
 
     static public ContractData Empty {
       get {
-        return new ContractData();
+        return new ContractData() {
+          IsEmptyInstance = true
+        };
       }
     }
 
@@ -68,15 +70,8 @@ namespace Empiria.Land.Registration {
     }
 
     public bool IsEmptyInstance {
-      get {
-        if (this.Date == ExecutionServer.DateMaxValue &&
-            this.Place.IsEmptyInstance &&
-            this.Number == String.Empty &&
-            this.Interest.IsEmptyInstance) {
-          return true;
-        } 
-        return false;
-      }
+      get;
+      private set;
     }
 
     #endregion Properties

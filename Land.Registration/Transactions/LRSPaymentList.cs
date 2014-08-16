@@ -21,8 +21,8 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Fields
 
-    private string _receiptNumbers = null;
-    private decimal _total = -1m;
+    private string receiptNumbers = null;
+    private decimal total = -1m;
 
     #endregion Fields
 
@@ -58,19 +58,19 @@ namespace Empiria.Land.Registration.Transactions {
 
     public string ReceiptNumbers {
       get {
-        if (_receiptNumbers == null) {
+        if (receiptNumbers == null) {
           this.CalculateTotals();
         }
-        return _receiptNumbers;
+        return receiptNumbers;
       }
     }
 
     public decimal Total {
       get {
-        if (_total == -1m) {
+        if (total == -1m) {
           this.CalculateTotals();
         }
-        return _total;
+        return total;
       }
     }
 
@@ -122,14 +122,14 @@ namespace Empiria.Land.Registration.Transactions {
     #region Private methods
 
     private void CalculateTotals() {
-      _total = 0;
-      _receiptNumbers = String.Empty;
+      total = 0;
+      receiptNumbers = String.Empty;
       for (int i = 0; i < this.Count; i++) {
-        _total += this[i].ReceiptTotal;
-        if (_receiptNumbers.Length == 0) {
-          _receiptNumbers = this[i].ReceiptNo;
+        total += this[i].ReceiptTotal;
+        if (receiptNumbers.Length == 0) {
+          receiptNumbers = this[i].ReceiptNo;
         } else {
-          _receiptNumbers = this[0].ReceiptNo + "(+ " + i.ToString() + ")";
+          receiptNumbers = this[0].ReceiptNo + " (+ " + i.ToString() + ")";
         }
       }
     }

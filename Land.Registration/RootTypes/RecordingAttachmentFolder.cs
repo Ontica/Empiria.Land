@@ -54,7 +54,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Constructors and parsers
 
-
     #region Public fields
 
     public string Alias {
