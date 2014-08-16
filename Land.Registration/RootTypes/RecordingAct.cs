@@ -28,13 +28,8 @@ namespace Empiria.Land.Registration {
     #region Fields
 
     private const string thisTypeName = "ObjectType.RecordingAct";
-
-    private LazyObject<RecordingAct> _amendedBy = LazyObject<RecordingAct>.Empty;
-    private LazyObject<RecordingAct> _amendmentOf = LazyObject<RecordingAct>.Empty;
-    private string _notes = String.Empty;
-
-    private RecordingActType _recordingActType = null;
-    private Lazy<List<TractIndexItem>> _tractIndex = null;
+    
+    private Lazy<List<TractIndexItem>> attachedResources = null;
 
     #endregion Fields
 
@@ -43,6 +38,10 @@ namespace Empiria.Land.Registration {
     protected RecordingAct(string typeName) : base(typeName) {
       // Empiria Object Type pattern classes always has this constructor. Don't delete.
       Initialize();
+    }
+
+    private void Initialize() {
+      attachedResources = new Lazy<List<TractIndexItem>>(() => RecordingActsData.GetTractIndex(this));
     }
 
     static internal RecordingAct Create(RecordingActType recordingActType, 
@@ -56,7 +55,7 @@ namespace Empiria.Land.Registration {
       } else {
         recordingAct.Status = RecordableObjectStatus.Pending;
       }
-      recordingAct.AttachProperty(resource);
+      recordingAct.AttachResource(resource);
       recordingAct.Save();
 
       return recordingAct;
@@ -78,7 +77,7 @@ namespace Empiria.Land.Registration {
       recordingAct.AmendmentOf = task.TargetRecordingAct;
 
       if (!task.TargetProperty.IsEmptyInstance) {
-        recordingAct.AttachProperty(task.TargetProperty);
+        recordingAct.AttachResource(task.TargetProperty);
       }
       return recordingAct;
     }
@@ -87,39 +86,40 @@ namespace Empiria.Land.Registration {
       return RecordingActsData.GetRecordingActs(document);
     }
 
-    private void Initialize() {
-      this.Document = RecordingDocument.Empty;
-      this.Recording = Recording.Empty;
-      this.ExtensionData = RecordingActExtData.Empty;
-      this.Keywords = String.Empty;
-      this.Index = 0;
-      this.Notes = String.Empty;
-      this.CanceledBy = Person.Empty;
-      this.CancelationTime = ExecutionServer.DateMaxValue;
-      this.RegisteredBy = Person.Empty;
-      this.RegistrationTime = DateTime.Now;
-      this.Status = RecordableObjectStatus.Incomplete;
-
-      _tractIndex = new Lazy<List<TractIndexItem>>(() => RecordingActsData.GetTractIndex(this));
-    }
-
     #endregion Constructors and parsers
 
     #region Public properties
 
+    [DataField("RecordingActTypeId")]
+    public RecordingActType RecordingActType {
+      get;
+      internal set;
+    }
+
+    [DataField("DocumentId")]
+    private LazyObject<RecordingDocument> _document = LazyObject<RecordingDocument>.Empty;
     public RecordingDocument Document {
-      get;
-      private set;
+      get { return _document.Instance; }
+      private set { _document.Instance = value; }
     }
 
+    [DataField("RecordingId")]
+    private LazyObject<Recording> _recording = LazyObject<Recording>.Empty;
     public Recording Recording {
-      get;
-      private set;
+      get { return _recording.Instance; }
+      private set { _recording.Instance = value; }
     }
 
+    [DataField("RecordingActIndex")]
     public int Index {
       get;
       internal set;
+    }
+
+    [DataField("RecordingActNotes")]
+    public string Notes {
+      get;
+      set;
     }
 
     public RecordingActExtData ExtensionData {
@@ -128,56 +128,75 @@ namespace Empiria.Land.Registration {
     }
 
     internal string Keywords {
-      get;
-      private set;
+      get {
+        return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName, 
+                                           this.Recording.FullNumber);
+      }
     }
 
-    public Contact CanceledBy {
-      get;
-      private set;
+    [DataField("AmendmentOfId")]
+    private LazyObject<RecordingAct> _amendmentOf = LazyObject<RecordingAct>.Empty;
+    public RecordingAct AmendmentOf {
+      get { return _amendmentOf.Instance; }
+      private set { _amendmentOf.Instance = value; }
     }
 
-    public DateTime CancelationTime {
-      get;
-      private set;
+    [DataField("AmendedById")]
+    private LazyObject<RecordingAct> _amendedBy = LazyObject<RecordingAct>.Empty;
+    public RecordingAct AmendedBy {
+      get { return _amendedBy.Instance; }
+      private set { _amendedBy.Instance = value; }
     }
 
+    [DataField("RegisteredById", Default = "Contacts.Person.Empty")]
     public Contact RegisteredBy {
       get;
       private set;
     }
 
+    [DataField("RegistrationTime", Default = "DateTime.Now")]
     public DateTime RegistrationTime {
       get;
       private set;
     }
 
+    [DataField("RecordingActStatus", Default = RecordableObjectStatus.Incomplete)]
     public RecordableObjectStatus Status {
       get;
       private set;
     }
 
-    public RecordingAct AmendmentOf {
-      get { 
-        return _amendmentOf.Instance;
-      }
-      private set {
-        _amendmentOf.Instance = value;
-      }
-    }
-
-    public RecordingAct AmendedBy {
-      get {  return _amendedBy.Instance; }
-      private set { _amendedBy.Instance = value; }
-    }
-
-    public string Notes {
+    public bool IsAnnotation {
       get {
-        return _notes;
+        return this.RecordingActType.IsAnnotationType;
       }
-      set { 
-        _notes = EmpiriaString.TrimAll(value);
-     }
+    }
+
+    public string StatusName {
+      get {
+        switch (this.Status) {
+          case RecordableObjectStatus.Obsolete:
+            return "No vigente";
+          case RecordableObjectStatus.Incomplete:
+            return "Incompleto";
+          case RecordableObjectStatus.Pending:
+            return "Pendiente";
+          case RecordableObjectStatus.Registered:
+            return "Registrado";
+          case RecordableObjectStatus.Closed:
+            return "Cerrado";
+          case RecordableObjectStatus.Deleted:
+            return "Eliminado";
+          default:
+            return "No determinado";
+        }
+      }
+    }
+
+    public FixedList<TractIndexItem> TractIndex {
+      get {
+        return new FixedList<TractIndexItem>(attachedResources.Value);
+      }
     }
 
     int IProtected.CurrentDataIntegrityVersion {
@@ -210,57 +229,16 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public bool IsAnnotation {
-      get { return this.RecordingActType.IsAnnotationType; }
-    }
-
-    public RecordingActType RecordingActType {
-      get {
-        if (_recordingActType == null) {
-          _recordingActType = RecordingActType.Parse(base.ObjectTypeInfo);
-        }
-        return _recordingActType;
-      }
-      set { _recordingActType = value; }
-    }
-
-    public FixedList<TractIndexItem> TractIndex {
-      get {
-        return new FixedList<TractIndexItem>(_tractIndex.Value);
-      }
-    }
-
-    public string StatusName {
-      get {
-        switch (this.Status) {
-          case RecordableObjectStatus.Obsolete:
-            return "No vigente";
-          case RecordableObjectStatus.Incomplete:
-            return "Incompleto";
-          case RecordableObjectStatus.Pending:
-            return "Pendiente";
-          case RecordableObjectStatus.Registered:
-            return "Registrado";
-          case RecordableObjectStatus.Closed:
-            return "Cerrado";
-          case RecordableObjectStatus.Deleted:
-            return "Eliminado";
-          default:
-            return "No determinado";
-        }
-      }
-    }
-
     #endregion Public properties
 
     #region Public methods
 
-    public TractIndexItem AttachProperty(Property property) {
-      Assertion.AssertObject(property, "property");
+    public TractIndexItem AttachResource(Property resource) {
+      Assertion.AssertObject(resource, "resource");
 
-      var item = new TractIndexItem(this, property);
+      var item = new TractIndexItem(this, resource);
      
-      _tractIndex.Value.Add(item);
+      attachedResources.Value.Add(item);
 
       return item;
     }
@@ -294,7 +272,7 @@ namespace Empiria.Land.Registration {
     }
 
     public IList<Property> GetProperties() {
-      var tract = _tractIndex.Value;
+      var tract = attachedResources.Value;
       var list = new List<Property>(tract.Count);
       foreach (var item in tract) {
         if (!list.Contains(item.Property)) {
@@ -318,23 +296,13 @@ namespace Empiria.Land.Registration {
       if (this.TractIndex.Count == 0) {
         return false;
       }
-
       Property property = this.TractIndex[0].Property;
 
       return property.IsFirstRecordingAct(this);
     }
 
     protected override void OnLoadObjectData(DataRow row) {
-      this.Document = RecordingDocument.Parse((int) row["DocumentId"]);
-      this.Index = (int) row["RecordingActIndex"];
-      this.Notes = (string) row["RecordingActNotes"];
-      this.ExtensionData = RecordingActExtData.Parse((string) row["RecordingActExtData"]);
-      this.Recording = Recording.Parse((int) row["RecordingId"]);      
-      this.RegisteredBy = Contact.Parse((int) row["RegisteredById"]);
-      this.RegistrationTime = (DateTime) row["RegistrationTime"];
-      this.Status = (RecordableObjectStatus) Convert.ToChar(row["RecordingActStatus"]);
-
-      Integrity.Assert((string) row["RecordingActDIF"]);
+      this.ExtensionData = RecordingActExtData.Parse((string) row["RecordingActExtensionData"]);
     }
 
     protected override void OnSave() {
@@ -342,7 +310,6 @@ namespace Empiria.Land.Registration {
         this.RegistrationTime = DateTime.Now;
         this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
-
       foreach (TractIndexItem tractItem in this.TractIndex) {
         tractItem.Save();
       }

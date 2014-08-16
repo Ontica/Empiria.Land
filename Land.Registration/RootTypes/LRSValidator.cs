@@ -24,37 +24,10 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    static public int FindAnnotationId(RecordingBook recordingBook, RecordingActType annotationType,
-                                       string annotationNumber,
-                                       int imageStartIndex, int imageEndIndex,
-                                       DateTime presentationTime, DateTime authorizationDate,
-                                       Contact authorizedBy, Property toAppendProperty) {
-      Recording annotation = recordingBook.FindRecording(annotationNumber);
-      if (annotation == null) {
-        return 0;
-      }
-      if (!annotation.RecordingActs[0].RecordingActType.Equals(annotationType)) {
-        return -1;
-      }
-      if (annotation.StartImageIndex != imageStartIndex || annotation.EndImageIndex != imageEndIndex) {
-        return -1;
-      }
-      if (annotation.PresentationTime != presentationTime || annotation.AuthorizedTime != authorizationDate) {
-        return -1;
-      }
-      if (!annotation.AuthorizedBy.Equals(authorizedBy)) {
-        return -1;
-      }
-      if (annotation.RecordingActs[0].TractIndex.Contains((x) => x.Property.Equals(toAppendProperty))) {
-        return -1;
-      }
-      return annotation.RecordingActs[0].Id;
-    }
-
     static public int GetOverlappingRecordingsCount(RecordingBook recordingBook, Recording recording,
                                                     int imageStartIndex, int imageEndIndex) {
       FixedList<Recording> list = RecordingBooksData.GetRecordingsOnImageRangeList(recordingBook,
-                                                                                    imageStartIndex, imageEndIndex);
+                                                                                   imageStartIndex, imageEndIndex);
       if (list.Count == 0) {
         return 0;
       }
@@ -73,30 +46,6 @@ namespace Empiria.Land.Registration {
         }
       }
       return counter;
-    }
-
-    static public LandRegistrationException ValidateAnnotationNumber(RecordingBook recordingBook, Recording annotation,
-                                                                    RecordingActType annotationType,
-                                                                    string annotationNumber, int imageStartIndex, int imageEndIndex,
-                                                                    DateTime presentationTime, DateTime authorizationDate,
-                                                                    Contact authorizedBy, Property toAppendProperty) {
-
-      int imageCount = recordingBook.ImagingFilesFolder.FilesCount;
-
-      if ((imageStartIndex <= 0) || (imageEndIndex) <= 0 ||
-          (imageStartIndex > imageEndIndex) || (imageEndIndex > imageCount)) {
-        return new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingImageRange,
-                                             recordingBook.FullName, imageStartIndex, imageEndIndex, imageCount);
-      }
-
-      int annotationId = FindAnnotationId(recordingBook, annotationType, annotationNumber, imageStartIndex, imageEndIndex,
-                                          presentationTime, authorizationDate, authorizedBy, toAppendProperty);
-      if (annotationId == -1) {
-        return new LandRegistrationException(LandRegistrationException.Msg.OtherAnnotationWithEqualNumberExistsInBook,
-                                             recordingBook.FullName, annotationNumber, toAppendProperty.UniqueCode);
-      }
-
-      return null;
     }
 
     static public LandRegistrationException ValidateDeleteRecordingAct(RecordingAct recordingAct) {
@@ -130,11 +79,6 @@ namespace Empiria.Land.Registration {
       }
       return null;
     }
-
-    //static public LandRegistrationException ValidateNextTransactionStatus(LRSTransaction transaction, TransactionStatus nextStatus) {
-    //  string s = transaction.ValidateStatusChange(nextStatus);
-    //  return (s == String.Empty) ? null : s;
-    //}
 
     static public LandRegistrationException ValidateRecordingActAsComplete(RecordingAct recordingAct) {
       if (!recordingAct.RecordingActType.BlockAllFields && 
@@ -184,13 +128,14 @@ namespace Empiria.Land.Registration {
     static public LandRegistrationException ValidateRecordingNumber(RecordingBook recordingBook, Recording recording,
                                                                     int recordingNumber, string bisSuffixRecordingNumber,
                                                                     int imageStartIndex, int imageEndIndex) {
-      string filter = "RecordingId <> " + recording.Id + " AND RecordingNumber = '" +
-                      Recording.RecordingNumber(recordingNumber, bisSuffixRecordingNumber) + "'";
+      string recordingNo = recordingBook.BuildRecordingNumber(recordingNumber, bisSuffixRecordingNumber);
+      string filter = "RecordingId <> " + recording.Id + " AND RecordingNumber = '" + recordingNo + "'";
       Recording findResult = RecordingBooksData.FindRecording(recordingBook, filter);
+      
       if (!findResult.IsEmptyInstance) {
-        return new LandRegistrationException(LandRegistrationException.Msg.RecordingNumberAlreadyExists,
-                                             Recording.RecordingNumber(recordingNumber, bisSuffixRecordingNumber));
+        return new LandRegistrationException(LandRegistrationException.Msg.RecordingNumberAlreadyExists, recordingNo);
       }
+
       int imageCount = recordingBook.ImagingFilesFolder.FilesCount;
 
       if ((imageStartIndex == 0) || (imageEndIndex == 0) ||

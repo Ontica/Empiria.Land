@@ -13,64 +13,42 @@ using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Contacts;
+using Empiria.Security;
 using Empiria.Land.Registration.Data;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {
 
   /// <summary>Represents a general recording in Land Registration System.</summary>
-  public class Recording : BaseObject {
+  public class Recording : BaseObject, IProtected {
 
     #region Fields
 
     private const string thisTypeName = "ObjectType.Recording";
 
-    private RecordingBook recordingBook = RecordingBook.Empty;
-    private LRSTransaction transaction = LRSTransaction.Empty;
-    private RecordingDocument document = null;
-    private int baseRecordingId = -1;
-    private string number = String.Empty;
-    private int startImageIndex = 0;
-    private int endImageIndex = 0;
-    private string notes = String.Empty;
-    private string keywords = String.Empty;
-    private DateTime presentationTime = ExecutionServer.DateMaxValue;
-    private string receiptNumber = String.Empty;
-    private decimal receiptTotal = Decimal.Zero;
-    private DateTime receiptIssueDate = ExecutionServer.DateMaxValue;
-    private Contact capturedBy = Person.Empty;
-    private DateTime capturedTime = DateTime.Now;
-    private Contact qualifiedBy = RecorderOffice.Empty;
-    private DateTime qualifiedTime = ExecutionServer.DateMaxValue;
-    private Contact authorizedBy = RecorderOffice.Empty;
-    private DateTime authorizedTime = ExecutionServer.DateMaxValue;
-    private Contact canceledBy = RecorderOffice.Empty;
-    private DateTime canceledTime = ExecutionServer.DateMaxValue;
-    private int cancelationReasonId = -1;
-    private string cancelationNotes = String.Empty;
-    private string digitalString = String.Empty;
-    private string digitalSign = String.Empty;
-    private RecordableObjectStatus status = RecordableObjectStatus.Incomplete;
-    private string recordIntegrityHashCode = String.Empty;
-
-    private RecordingDocument recordingDocument = null;
-    private FixedList<RecordingAct> recordingActList = null;
-    private RecordingAttachmentFolderList attachmentFolderList = null;
-
+    private Lazy<FixedList<RecordingAct>> recordingActList = null;
+    private Lazy<RecordingAttachmentFolderList> attachmentFolderList = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    public Recording()
-      : base(thisTypeName) {
-      document = RecordingDocument.Empty;
+    internal Recording(RecordingBook recordingBook, 
+                       RecordingDocument document, string number) : base(thisTypeName) {
+      Initialize();
+      this.RecordingBook = recordingBook;
+      this.Document = document;
+      this.Number = number;
     }
 
-    protected Recording(string typeName)
-      : base(typeName) {
+    protected Recording(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
-      document = RecordingDocument.Empty;
+      Initialize();
+    }
+
+    private void Initialize() {
+      recordingActList = new Lazy<FixedList<RecordingAct>>(() => RecordingActsData.GetRecordingActs(this));
+      attachmentFolderList = new Lazy<RecordingAttachmentFolderList>(() => this.GetAttachmentFolderList());
     }
 
     static public Recording Parse(int id) {
@@ -83,15 +61,6 @@ namespace Empiria.Land.Registration {
 
     static public Recording Empty {
       get { return BaseObject.ParseEmpty<Recording>(thisTypeName); }
-    }
-
-    static public string RecordingNumber(int recordingNumber, string bisSuffixTag) {
-      string temp = recordingNumber.ToString("0000");
-
-      if (bisSuffixTag != null && bisSuffixTag.Length != 0) {
-        temp += bisSuffixTag;
-      }
-      return temp;
     }
 
     static public int SplitRecordingNumber(string fullRecordingNumber, out string bisSuffixTag) {
@@ -113,77 +82,90 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    public Contact AuthorizedBy {
-      get { return authorizedBy; }
-      set { authorizedBy = value; }
-    }
-
-    public DateTime AuthorizedTime {
-      get { return authorizedTime; }
-      set { authorizedTime = value; }
-    }
-
-    public int BaseRecordingId {
-      get { return baseRecordingId; }
-      set { baseRecordingId = value; }
-    }
-
-    public Contact CanceledBy {
-      get { return canceledBy; }
-    }
-
-    public DateTime CanceledTime {
-      get { return canceledTime; }
-    }
-
-    public int CancelationReasonId {
-      get { return cancelationReasonId; }
-      set { cancelationReasonId = value; }
-    }
-
-    public string CancelationNotes {
-      get { return cancelationNotes; }
-      set { cancelationNotes = EmpiriaString.TrimAll(value); }
-    }
-
-    public Contact CapturedBy {
-      get { return capturedBy; }
-    }
-
-    public DateTime CapturedTime {
-      get { return capturedTime; }
-    }
-
-    public string DigitalString {
-      get { return digitalString; }
-    }
-
-    public string DigitalSign {
-      get { return digitalSign; }
-    }
-
+    [DataField("DocumentId")]
     public RecordingDocument Document {
-      get { return document; }
-      set { document = value; }
+      get;
+      private set;
+    }
+
+    [DataField("RecordingBookId")]
+    public RecordingBook RecordingBook {
+      get;
+      private set;
+    }
+
+    [DataField("RecordingNumber")]
+    public string Number {
+      get;
+      private set;
+    }
+
+    [DataField("RecordingNotes")]
+    public string Notes {
+      get;
+      set;
+    }
+
+    public RecordingExtData ExtendedData {
+      get;
+      private set;
+    }
+
+    public int StartImageIndex {
+      get { return -1; }
     }
 
     public int EndImageIndex {
-      get { return endImageIndex; }
-      set { endImageIndex = value; }
+      get { return -1; }
     }
 
     public string Keywords {
-      get { return keywords; }
-      protected set { keywords = value; }
+      get {
+        return EmpiriaString.BuildKeywords(this.Number, this.RecordingBook.FullName,
+                                           this.Document.UniqueCode);
+      }
     }
 
-    public string Notes {
-      get { return notes; }
-      set { notes = EmpiriaString.TrimAll(value); }
+    [DataField("PresentationTime")]
+    public DateTime PresentationTime {
+      get;
+      private set;
     }
 
-    public string Number {
-      get { return number; }
+    [DataField("AuthorizationTime")]
+    public DateTime AuthorizationTime {
+      get;
+      private set;
+    }
+
+    [DataField("ReviewedById", Default="Contacts.Person.Empty")]
+    public Contact ReviewedBy {
+      get;
+      private set;
+    }
+
+    [DataField("AuthorizedById", Default = "Contacts.Person.Empty")]
+    public Contact AuthorizedBy {
+      get;
+      private set;
+    }
+
+    [DataField("RecordedById", Default = "Contacts.Person.Empty")]
+    public Contact RecordedBy {
+      get;
+      private set;
+    }
+
+    [DataField("RecordingTime")]
+    public DateTime RecordingTime {
+      get;
+      private set;
+    }
+
+    [DataField("RecordingStatus", Default = RecordableObjectStatus.Incomplete)]
+    public RecordableObjectStatus Status {
+      get;
+      private set;
     }
 
     public string FullNumber {
@@ -196,75 +178,13 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public DateTime PresentationTime {
-      get { return presentationTime; }
-      set { presentationTime = value; }
-    }
-
-    public Contact QualifiedBy {
-      get { return qualifiedBy; }
-    }
-
-    public DateTime QualifiedTime {
-      get { return qualifiedTime; }
-    }
-
-    public string ReceiptNumber {
-      get { return receiptNumber; }
-      set { receiptNumber = value; }
-    }
-
-    public decimal ReceiptTotal {
-      get { return receiptTotal; }
-      set { receiptTotal = value; }
-    }
-
-    public DateTime ReceiptIssueDate {
-      get { return receiptIssueDate; }
-      set { receiptIssueDate = value; }
-    }
-
     public FixedList<RecordingAct> RecordingActs {
-      get {
-        if (recordingActList == null) {
-          this.recordingActList = RecordingActsData.GetRecordingActs(this);
-        }
-        return recordingActList;
-      }
-    }
-
-    public RecordingBook RecordingBook {
-      get { return recordingBook; }
-      set { recordingBook = value; }
-    }
-
-    public RecordingDocument RecordingDocument {
-      get {
-        if (recordingDocument == null) {
-          recordingDocument = RecordingDocument.Parse(this);
-        }
-        return recordingDocument;
-      }
-      set { recordingDocument = value; }
-    }
-
-    public string RecordIntegrityHashCode {
-      get { return recordIntegrityHashCode; }
-    }
-
-    public int StartImageIndex {
-      get { return startImageIndex; }
-      set { startImageIndex = value; }
-    }
-
-    public RecordableObjectStatus Status {
-      get { return status; }
-      set { status = value; }
+      get { return recordingActList.Value; }
     }
 
     public string StatusName {
       get {
-        switch (status) {
+        switch (this.Status) {
           case RecordableObjectStatus.Obsolete:
             return "No vigente";
           case RecordableObjectStatus.NoLegible:
@@ -285,12 +205,33 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public LRSTransaction Transaction {
-      get { return transaction; }
-      set { transaction = value; }
-    }
 
     #endregion Public properties
+
+    int IProtected.CurrentDataIntegrityVersion {
+      get {
+        return 1;
+      }
+    }
+
+    object[] IProtected.GetDataIntegrityFieldValues(int version) {
+      if (version == 1) {
+        return new object[] {
+          1, "Id", this.Id,
+        };
+      }
+      throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
+    }
+
+    private IntegrityValidator _validator = null;
+    public IntegrityValidator Integrity {
+      get {
+        if (_validator == null) {
+          _validator = new IntegrityValidator(this);
+        }
+        return _validator;
+      }
+    }
 
     #region Public methods
 
@@ -304,8 +245,8 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(!publicCall || this.RecordingBook.IsAvailableForManualEditing,
                        "This recording can't be deleted because its recording book is not available for manual editing.");
       this.Status = RecordableObjectStatus.Deleted;
-      this.canceledBy = Contact.Parse(ExecutionServer.CurrentUserId);
-      this.canceledTime = DateTime.Now;
+      //this.canceledBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      //this.canceledTime = DateTime.Now;
       this.Save();
     }
 
@@ -320,9 +261,7 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(!this.IsEmptyInstance && !this.IsNew,
                         "Can not create an annotation using an empty or new recording");
 
-      var recording = this.RecordingBook.CreateRecordingForAnnotation(transaction, this);
-
-      var recordingAct = RecordingAct.Create(recordingActType, recording, property);
+      var recordingAct = RecordingAct.Create(recordingActType, Recording.Empty, property);
 
       this.Refresh();
       this.RecordingBook.Refresh();
@@ -368,7 +307,6 @@ namespace Empiria.Land.Registration {
       this.RecordingBook.Refresh();
     }
 
-
     private void DeleteMeIfNecessary() {
       if (this.RecordingBook.IsAvailableForManualEditing) {
         return;
@@ -389,22 +327,6 @@ namespace Empiria.Land.Registration {
       }
       throw new LandRegistrationException(LandRegistrationException.Msg.AttachmentFolderNotFound, 
                                           folderName);
-    }
-
-    public RecordingAttachmentFolderList GetAttachmentFolderList() {
-      if (attachmentFolderList != null) {
-        return attachmentFolderList;
-      }
-      attachmentFolderList = new RecordingAttachmentFolderList();
-
-      attachmentFolderList.Append(this, "Raíz");
-
-      FixedList<TractIndexItem> annotations = this.GetPropertiesAnnotationsList();
-      for (int i = 0; i < annotations.Count; i++) {
-        string alias = Char.ConvertFromUtf32(65 + i);
-        attachmentFolderList.Append(annotations[i].RecordingAct.Recording, alias);
-      }
-      return attachmentFolderList;
     }
 
     public IList<Property> GetProperties() {
@@ -439,8 +361,8 @@ namespace Empiria.Land.Registration {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
       }
       int currentIndex = recordingAct.Index - 1;
-      this.recordingActList[currentIndex + 1].Index -= 1;
-      this.recordingActList[currentIndex + 1].Save();
+      this.RecordingActs[currentIndex + 1].Index -= 1;
+      this.RecordingActs[currentIndex + 1].Save();
       recordingAct.Index += 1;
       recordingAct.Save();
       this.recordingActList = null;
@@ -456,74 +378,31 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public FixedList<RecordingAct> GetNoAnnotationActs() {
-      FixedList<RecordingAct> recordingActs = this.RecordingActs;
+    public FixedList<RecordingAct> GetAnnotationActs() {
+      return new FixedList<RecordingAct>(this.RecordingActs.FindAll((x) => x.IsAnnotation));
+    }
 
-      return new FixedList<RecordingAct>(recordingActs.FindAll((x) => !x.IsAnnotation));
+    public FixedList<RecordingAct> GetNoAnnotationActs() {
+      return new FixedList<RecordingAct>(this.RecordingActs.FindAll((x) => !x.IsAnnotation));
     }
 
     public FixedList<TractIndexItem> GetPropertiesAnnotationsList() {
       return PropertyData.GetRecordingPropertiesAnnotationsList(this);
     }
 
-    protected override void OnLoadObjectData(DataRow row) {
-      this.document = RecordingDocument.Parse((int) row["DocumentId"]);
-      this.recordingBook = RecordingBook.Parse((int) row["RecordingBookId"]);
-      this.number = (string) row["RecordingNumber"];
-      this.notes = (string) row["RecordingNotes"];
-      // EXTDATA
-      this.keywords = (string) row["RecordingKeywords"];
-      this.presentationTime = (DateTime) row["RecordingPresentationTime"];
-      this.authorizedTime = (DateTime) row["RecordingAuthorizationTime"];
-      this.qualifiedBy = Contact.Parse((int) row["ReviewedById"]);
-      this.authorizedBy = Contact.Parse((int) row["AuthorizedById"]);
-      this.capturedBy = Contact.Parse((int) row["RecordedById"]);
-      this.capturedTime = (DateTime) row["RecordingTime"];
-      this.status = (RecordableObjectStatus) Convert.ToChar(row["RecordingStatus"]);
-      this.recordIntegrityHashCode = (string) row["RecordingDIF"];
-
-      //this.transaction = LRSTransaction.Parse((int) row["TransactionId"]);
-
-      //this.startImageIndex = (int) row["RecordingBookFirstImage"];
-      //this.endImageIndex = (int) row["RecordingBookLastImage"];
-
-      //this.receiptNumber = (string) row["ReceiptNumber"];
-      //this.receiptTotal = (decimal) row["ReceiptTotal"];
-      //this.receiptIssueDate = (DateTime) row["ReceiptIssueDate"];
-   
-      //this.qualifiedTime = (DateTime) row["RecordingQualifiedTime"];
-      
-
-      //this.canceledBy = Contact.Parse((int) row["RecordingCanceledById"]);
-      //this.canceledTime = (DateTime) row["RecordingCanceledTime"];
-      //this.cancelationReasonId = (int) row["RecordingCancelationReasonId"];
-      //this.cancelationNotes = (string) row["RecordingCancelationNotes"];
-      //this.digitalString = (string) row["RecordingDigitalString"];
-      //this.digitalSign = (string) row["RecordingDigitalSign"];
-      
-
-    }
-
     protected override void OnSave() {
-      if (!this.RecordingDocument.IsEmptyInstance) {
-        this.RecordingDocument.Save();
+      if (!this.Document.IsEmptyInstance) {
+        this.Document.Save();
       }
       if (this.IsNew) {
-        this.capturedTime = DateTime.Now;
-        this.capturedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.RecordingTime = DateTime.Now;
+        this.RecordedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
-      this.keywords = EmpiriaString.BuildKeywords(this.number, this.recordingBook.FullName, 
-                                                  this.RecordingDocument.UniqueCode);
-
       RecordingBooksData.WriteRecording(this);
     }
 
     public void Refresh() {
       this.recordingActList = null;
-    }
-
-    public void SetNumber(int recordingNumber, string bisSuffixTag = "") {
-      this.number = RecordingNumber(recordingNumber, bisSuffixTag);
     }
 
     public void UpwardRecordingAct(RecordingAct recordingAct) {
@@ -545,6 +424,23 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Public methods
+
+    #region Private methods
+
+    private RecordingAttachmentFolderList GetAttachmentFolderList() {
+      var folderList = new RecordingAttachmentFolderList();
+
+      folderList.Append(this, "Raíz");
+
+      FixedList<TractIndexItem> annotations = this.GetPropertiesAnnotationsList();
+      for (int i = 0; i < annotations.Count; i++) {
+        string alias = Char.ConvertFromUtf32(65 + i);
+        folderList.Append(annotations[i].RecordingAct.Recording, alias);
+      }
+      return folderList;
+    }
+
+    #endregion Private methods
 
   } // class Recording
 

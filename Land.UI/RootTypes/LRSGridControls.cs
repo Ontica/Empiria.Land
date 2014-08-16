@@ -176,7 +176,7 @@ namespace Empiria.Land.UI {
         if (association.RecordingAct.Recording.PresentationTime != ExecutionServer.DateMaxValue) {
           temp = temp.Replace("{ANNOTATION.PRESENTATION}", "<span id='ancAnnotationPresentation_{PTY_ID}_{REC_ACT_ID}'>" +
                                                            association.RecordingAct.Recording.PresentationTime.ToString("dd/MMM/yyyy HH:mm") + "</span><br />" +
-                                                           "Aut: " + association.RecordingAct.Recording.AuthorizedTime.ToString("dd/MMM/yyyy"));
+                                                           "Aut: " + association.RecordingAct.Recording.AuthorizationTime.ToString("dd/MMM/yyyy"));
         } else {
           temp = temp.Replace("{ANNOTATION.PRESENTATION}", "<span id='ancAnnotationPresentation_{PTY_ID}_{REC_ACT_ID}'>No determinada</span>");
         }
@@ -451,8 +451,8 @@ namespace Empiria.Land.UI {
         }
         temp = temp.Replace("{RECORDING.NUMBER}", recordings[i].Number);
 
-        if (recordings[i].BaseRecordingId != -1) {
-          temp = temp.Replace("{RECORDING.IMAGES}", "*Anotación*");
+        if (recordings[i].GetAnnotationActs().Count != 0) {     // No guarantee that the recording IS AN annotation. Annotation isn't a recording property. 
+          temp = temp.Replace("{RECORDING.IMAGES}", "*¿¿ Puede ser anotación ??*");
         } else if (recordings[i].StartImageIndex <= 0 && recordings[i].EndImageIndex <= 0) {
           temp = temp.Replace("{RECORDING.IMAGES}", "Sin imagen");
         } else {
@@ -463,10 +463,10 @@ namespace Empiria.Land.UI {
         } else {
           temp = temp.Replace("{RECORDING.PRESENTATION.TIME}", recordings[i].PresentationTime.ToString("dd/MMM/yyyy HH:mm"));
         }
-        if (recordings[i].AuthorizedTime == Empiria.ExecutionServer.DateMaxValue) {
+        if (recordings[i].AuthorizationTime == Empiria.ExecutionServer.DateMaxValue) {
           temp = temp.Replace("{RECORDING.AUTHORIZATION.TIME}", "No consta");
         } else {
-          temp = temp.Replace("{RECORDING.AUTHORIZATION.TIME}", recordings[i].AuthorizedTime.ToString("dd/MMM/yyyy"));
+          temp = temp.Replace("{RECORDING.AUTHORIZATION.TIME}", recordings[i].AuthorizationTime.ToString("dd/MMM/yyyy"));
         }
         if (recordings[i].Notes.Length == 0) {
           temp = temp.Replace("{RECORDING.NOTES}", "Ninguna");
@@ -474,7 +474,7 @@ namespace Empiria.Land.UI {
           temp = temp.Replace("{RECORDING.NOTES}", recordings[i].Notes);
         }
         temp = temp.Replace("{RECORDING.STATUS}", recordings[i].StatusName);
-        temp = temp.Replace("{CAPTURED.BY}", recordings[i].CapturedBy.Alias);
+        temp = temp.Replace("{CAPTURED.BY}", recordings[i].RecordedBy.Alias);
 
         temp = temp.Replace("{RECORDING.ID}", recordings[i].Id.ToString());
         html += temp;

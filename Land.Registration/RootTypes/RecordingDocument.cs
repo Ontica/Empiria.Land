@@ -77,7 +77,7 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    [DataField("DocumentUniqueCode")]
+    [DataField("DocumentUniqueCode", IsOptional = false)]
     public string UniqueCode {
       get;
       private set;
@@ -145,10 +145,12 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    [DataField("DocumentKeywords")]
     public string Keywords {
-      get;
-      private set;
+      get {
+        return EmpiriaString.BuildKeywords(this.UniqueCode, 
+                    !this.Subtype.IsEmptyInstance ? this.Title : this.DocumentType.DisplayName,
+                    this.Title, this.ExpedientNo, this.Number);
+      }
     }
 
     [DataField("PostedById", Default = "Contacts.Person.Empty")]
@@ -217,7 +219,6 @@ namespace Empiria.Land.Registration {
 
     protected override void OnLoadObjectData(DataRow row) {
       this.ExtensionData = RecordingDocumentExtData.Parse((string) row["DocumentExtData"]);
-      Integrity.Assert((string) row["DocumentDIF"]);
     }
 
     protected override void OnSave() {
@@ -226,10 +227,6 @@ namespace Empiria.Land.Registration {
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
         this.UniqueCode = TransactionData.GenerateDocumentKey();
       }
-      this.Keywords = EmpiriaString.BuildKeywords(this.UniqueCode,
-                                    !this.Subtype.IsEmptyInstance ? this.Title : this.DocumentType.DisplayName,
-                                    this.Title, this.ExpedientNo, this.Number);
-
       RecordingBooksData.WriteRecordingDocument(this);
     }
 

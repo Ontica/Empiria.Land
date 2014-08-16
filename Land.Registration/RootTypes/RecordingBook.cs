@@ -51,7 +51,6 @@ namespace Empiria.Land.Registration {
     private string name = String.Empty;
     private string fullName = String.Empty;
     private string description = String.Empty;
-    private string keywords = String.Empty;
     private int startRecordingIndex = 0;
     private int endRecordingIndex = 0;
     private TimePeriod recordingsControlTimePeriod = new TimePeriod(ExecutionServer.DateMinValue, 
@@ -252,8 +251,9 @@ namespace Empiria.Land.Registration {
     }
 
     public string Keywords {
-      get { return keywords; }
-      set { keywords = value; }
+      get {
+        return EmpiriaString.BuildKeywords(this.FullName);
+      }
     }
 
     public RecordingBook Parent {
@@ -387,72 +387,74 @@ namespace Empiria.Land.Registration {
     }
 
     public Recording CreateQuickRecording(int recordingNumber, string bisSuffixTag) {
-      var recording = new Recording();
-      recording.RecordingBook = this;
-      recording.Transaction = LRSTransaction.Empty;
-      recording.Document = RecordingDocument.Empty;
-      recording.SetNumber(recordingNumber, bisSuffixTag);
-      recording.Status = RecordableObjectStatus.Incomplete;
-      recording.PresentationTime = ExecutionServer.DateMinValue;
-      recording.StartImageIndex = -1;
-      recording.EndImageIndex = -1;
+      var recording = new Recording(this, RecordingDocument.Empty, 
+                                    this.BuildRecordingNumber(recordingNumber, bisSuffixTag));
       recording.Save();
 
       return recording;
     }
 
-    public Recording CreateRecording(LRSTransaction transaction) {
-      Assertion.AssertObject(transaction, "transaction");
-      Assertion.AssertObject(transaction.Document, "document");
-      Assertion.Assert(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
-                        "Transaction document cannot be neither empty nor a new document instance.");
+    public string BuildRecordingNumber(int recordingNumber, string bisSuffixTag) {
+      string temp = recordingNumber.ToString("0000");
 
-      var recording = new Recording();
-      recording.RecordingBook = this;
-      recording.Transaction = transaction;
-      recording.Document = transaction.Document;
-      recording.SetNumber (this.GetNextRecordingNumber());
-      recording.Status = RecordableObjectStatus.Incomplete;
-      recording.StartImageIndex = -1;
-      recording.EndImageIndex = -1;
-      recording.PresentationTime = transaction.PresentationTime;
-      recording.AuthorizedTime = DateTime.Now;
-      recording.AuthorizedBy = Contact.Parse(36);
-      recording.Save();
-
-      return recording;
+      if (bisSuffixTag != null && bisSuffixTag.Length != 0) {
+        temp += bisSuffixTag;
+      }
+      return temp;
     }
 
-    public Recording CreateRecordingForAnnotation(LRSTransaction transaction, Recording antecedent) {
-      Assertion.AssertObject(transaction, "transaction");
-      Assertion.AssertObject(transaction.Document, "document");
-      Assertion.Assert(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
-                        "Transaction document can not be neither an empty or a new document instance.");
-      Assertion.Assert(!antecedent.IsEmptyInstance && !antecedent.IsNew,
-                        "Annotation precedent can not be empty or a new instance.");
+    //public Recording CreateRecording(LRSTransaction transaction) {
+    //  Assertion.AssertObject(transaction, "transaction");
+    //  Assertion.AssertObject(transaction.Document, "document");
+    //  Assertion.Assert(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
+    //                    "Transaction document cannot be neither empty nor a new document instance.");
 
-      Recording recording = new Recording();
-      recording.BaseRecordingId = antecedent.Id;
-      recording.RecordingBook = antecedent.RecordingBook;
-      recording.Transaction = transaction;
-      recording.Document = transaction.Document;
-      string bisSuffixTag = String.Empty;
+    //  var recording = new Recording();
+    //  recording.RecordingBook = this;
+    //  recording.Transaction = transaction;
+    //  recording.Document = transaction.Document;
+    //  recording.SetNumber (this.GetNextRecordingNumber());
+    //  recording.Status = RecordableObjectStatus.Incomplete;
+    //  recording.StartImageIndex = -1;
+    //  recording.EndImageIndex = -1;
+    //  recording.PresentationTime = transaction.PresentationTime;
+    //  recording.AuthorizationTime = DateTime.Now;
+    //  recording.AuthorizedBy = Contact.Parse(36);
+    //  recording.Save();
 
-      int recordingNumber = Recording.SplitRecordingNumber(antecedent.Number, out bisSuffixTag);
-      recording.SetNumber(recordingNumber, bisSuffixTag);
+    //  return recording;
+    //}
 
-      recording.Status = RecordableObjectStatus.Incomplete;
-      recording.StartImageIndex = -1;
-      recording.EndImageIndex = -1;
-      recording.PresentationTime = transaction.PresentationTime;
-      recording.AuthorizedTime = DateTime.Now;
-      recording.AuthorizedBy = Contact.Parse(36);
-      recording.Save();
+    //public Recording CreateRecordingForAnnotation(LRSTransaction transaction, Recording antecedent) {
+    //  Assertion.AssertObject(transaction, "transaction");
+    //  Assertion.AssertObject(transaction.Document, "document");
+    //  Assertion.Assert(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
+    //                    "Transaction document can not be neither an empty or a new document instance.");
+    //  Assertion.Assert(!antecedent.IsEmptyInstance && !antecedent.IsNew,
+    //                    "Annotation precedent can not be empty or a new instance.");
 
-      recording.RecordingBook.Refresh();
+    //  Recording recording = new Recording();
+    //  recording.BaseRecordingId = antecedent.Id;
+    //  recording.RecordingBook = antecedent.RecordingBook;
+    //  recording.Transaction = transaction;
+    //  recording.Document = transaction.Document;
+    //  string bisSuffixTag = String.Empty;
 
-      return recording;
-    }
+    //  int recordingNumber = Recording.SplitRecordingNumber(antecedent.Number, out bisSuffixTag);
+    //  recording.SetNumber(recordingNumber, bisSuffixTag);
+
+    //  recording.Status = RecordableObjectStatus.Incomplete;
+    //  recording.StartImageIndex = -1;
+    //  recording.EndImageIndex = -1;
+    //  recording.PresentationTime = transaction.PresentationTime;
+    //  recording.AuthorizationTime = DateTime.Now;
+    //  recording.AuthorizedBy = Contact.Parse(36);
+    //  recording.Save();
+
+    //  recording.RecordingBook.Refresh();
+
+    //  return recording;
+    //}
 
     public int GetNextRecordingNumber() {
       if (this.ReuseUnusedRecordingNumbers) {
@@ -474,8 +476,8 @@ namespace Empiria.Land.Registration {
       recordings = null;
     }
 
-    public Recording FindRecording(string recordingNumber) {
-      return Recordings.Find((x) => x.Number.Equals(recordingNumber));
+    public Recording FindRecording(int recordingNumber, string bisSuffixTag) {
+      return Recordings.Find((x) => x.Number == this.BuildRecordingNumber(recordingNumber, bisSuffixTag));
     }
 
     public FixedList<RecordingBook> GetChildBooks() {
@@ -487,7 +489,8 @@ namespace Empiria.Land.Registration {
       if (recording.RecordingBook.Equals(this)) {
         return recording;
       } else {
-        throw new LandRegistrationException(LandRegistrationException.Msg.RecordingNotBelongsToRecordingBook, recordingId, this.Name);
+        throw new LandRegistrationException(LandRegistrationException.Msg.RecordingNotBelongsToRecordingBook,
+                                            recordingId, this.Name);
       }
     }
 
@@ -586,7 +589,6 @@ namespace Empiria.Land.Registration {
       this.BookNumber = (string) row["RecordingBookNo"];
       this.Name = (string) row["RecordingBookName"];
       this.FullName = (string) row["RecordingBookFullName"];
-      this.keywords = (string) row["RecordingBookKeywords"];
       //this.Description = (string) row["RecordingBookDescription"];
     
       //this.RecordingsControlTimePeriod = new TimePeriod((DateTime) row["RecordingsControlFirstDate"], 
@@ -611,8 +613,6 @@ namespace Empiria.Land.Registration {
         this.creationDate = DateTime.Now;
         this.createdBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
-      this.keywords = EmpiriaString.BuildKeywords(this.FullName);
-
       RecordingBooksData.WriteRecordingBook(this);
     }
 

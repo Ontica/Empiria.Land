@@ -78,6 +78,14 @@ namespace Empiria.Land.Registration {
       get { return ifeNumber; }
       set { ifeNumber = EmpiriaString.TrimAll(value); }
     }
+    
+    public override string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(base.FullName, this.Nicknames, this.CURPNumber,
+                                           this.TaxIDNumber, this.IFENumber, 
+                                           this.RegistryDate.ToString("dd/MMM/yyyy"));
+      }
+    }
 
     public string MaritalFamilyName {
       get { return maritalFamilyName; }
@@ -124,8 +132,6 @@ namespace Empiria.Land.Registration {
       if (this.maritalFamilyName.Length != 0 && !this.maritalFamilyName.ToLowerInvariant().StartsWith("de ")) {
         base.FullName += " de " + this.maritalFamilyName;
       }
-      this.Keywords = EmpiriaString.BuildKeywords(base.FullName, this.Nicknames, this.CURPNumber,
-                                                  this.TaxIDNumber, this.IFENumber, this.RegistryDate.ToString("dd/MMM/yyyy"));
       PropertyData.WriteHumanParty(this);
     }
 

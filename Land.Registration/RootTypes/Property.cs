@@ -25,9 +25,6 @@ namespace Empiria.Land.Registration {
 
     private const string thisTypeName = "ObjectType.Property";
 
-    private LazyObject<Property> _partitionOf = LazyObject<Property>.Empty;
-    private LazyObject<Property> _mergedInto = LazyObject<Property>.Empty;
-
     #endregion Fields
 
     #region Constructors and parsers
@@ -63,43 +60,39 @@ namespace Empiria.Land.Registration {
     }
 
     private void Initialize() {
-      this.UniqueCode = String.Empty;
-      this.Name = String.Empty;
-      this.PropertyKind = PropertyKind.Empty;
-      this.RecordingNotes = String.Empty;
-      this.AntecedentNotes = String.Empty;
       this.Location = Address.Empty;
       this.CadastralData = CadastralInfo.Empty;
-      this.PartitionNo = String.Empty;
-      this.PostedBy = Person.Empty;
-      this.PostingTime = DateTime.Now;
-      this.Status = RecordableObjectStatus.Incomplete;
     }
 
     #endregion Constructors and parsers
 
     #region Public properties
 
+    [DataField("PropertyUniqueCode", IsOptional = false)]
     public string UniqueCode {
       get;
       private set;
     }
 
+    [DataField("PropertyName")]
     public string Name {
       get;
       set;
     }
 
+    [DataField("PropertyKindId")]
     public PropertyKind PropertyKind {
       get;
       set;
     }
 
+    [DataField("PropertyRecordingNotes")]
     public string RecordingNotes {
       get;
       set;
     }
 
+    [DataField("AntecedentNotes")]
     public string AntecedentNotes {
       get;
       set;
@@ -122,31 +115,40 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    [DataField("PartitionOfId")]
+    private LazyObject<Property> _partitionOf = LazyObject<Property>.Empty;
     public Property PartitionOf {
-      get {
-        return _partitionOf.Instance;
-      }
+      get { return _partitionOf.Instance; }
+      private set { _partitionOf.Instance = value; }
     }
 
+    [DataField("PartitionNo")]
     public string PartitionNo {
       get;
       private set;
     }
 
+    [DataField("MergedIntoId")]
+    private LazyObject<Property> _mergedInto = LazyObject<Property>.Empty;
     public Property MergedInto {
       get { return _mergedInto.Instance; }
+      private set { _mergedInto.Instance = value; }
     }
 
+    [DataField("PostedById")]
+    private LazyObject<Contact> _postedBy = LazyObject<Contact>.Empty;
     public Contact PostedBy {
-      get;
-      private set;
+      get { return _postedBy.Instance; }
+      private set { _postedBy.Instance = value; }
     }
 
+    [DataField("PostingTime", Default = "DateTime.Now")]
     public DateTime PostingTime {
       get;
       private set;
     }
 
+    [DataField("PropertyStatus", Default = RecordableObjectStatus.Incomplete)]
     public RecordableObjectStatus Status {
       get;
       set;      // OOJJOO -- Remove public set and change status through a special change status method.
@@ -299,21 +301,8 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnLoadObjectData(DataRow row) {
-      this.UniqueCode = (string) row["PropertyUniqueCode"];
-      this.Name = (string) row["PropertyName"];
-      this.PropertyKind = PropertyKind.Parse((int) row["PropertyKindId"]);
-      this.RecordingNotes = (string) row["PropertyRecordingNotes"];
-      this.AntecedentNotes = (string) row["AntecedentNotes"];
       this.Location = Address.FromJson((string) row["LocationExtData"]);
-      this.CadastralData = CadastralInfo.FromJson((string) row["CadastralExtData"]);
-      _partitionOf = LazyObject<Property>.Parse((int) row["PartitionOfId"]);
-      this.PartitionNo = (string) row["PartitionNo"];
-      _mergedInto = LazyObject<Property>.Parse((int) row["MergedIntoId"]);
-      this.PostedBy = Contact.Parse((int) row["PostedById"]);
-      this.PostingTime = (DateTime) row["PostingTime"];
-      this.Status = (RecordableObjectStatus) Convert.ToChar(row["PropertyStatus"]);
-
-      Integrity.Assert((string) row["PropertyDIF"]);
+      this.CadastralData = CadastralInfo.FromJson((string) row["CadastralExtData"]);   
     }
 
     protected override void OnSave() {

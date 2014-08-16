@@ -694,7 +694,6 @@ namespace Empiria.Land.Registration.Transactions {
 
     protected override void OnLoadObjectData(DataRow row) {
       this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);
-      Integrity.Assert((string) row["TransactionDIF"]);
     }
 
     internal void OnRecordingActsUpdated() {

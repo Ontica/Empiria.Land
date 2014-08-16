@@ -105,6 +105,12 @@ namespace Empiria.Land.Registration {
       set { assocDocStartSheet = EmpiriaString.TrimAll(value); }
     }
 
+    public override string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(base.FullName, this.Nicknames, this.TaxIDNumber);
+      }
+    }
+
     #endregion Public properties
 
     #region Public methods
@@ -132,8 +138,7 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnSave() {
-      base.OnSave();
-      this.Keywords = EmpiriaString.BuildKeywords(base.FullName, this.Nicknames, this.TaxIDNumber);
+      base.OnSave(); 
       PropertyData.WriteOrganizationParty(this);
     }
 

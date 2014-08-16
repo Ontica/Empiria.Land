@@ -217,24 +217,15 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteRecording(Recording o) {
-      Assertion.Assert(o.Id != 0, "Recording.Id can't be zero");
-      DataOperation dataOperation = DataOperation.Parse("writeLRSRecording", o.Id, o.RecordingBook.Id, o.Transaction.Id,
-                                                        o.Document.Id, o.BaseRecordingId, o.Number, o.StartImageIndex, o.EndImageIndex, 
-                                                        o.Notes, o.Keywords, o.PresentationTime, o.ReceiptNumber, 
-                                                        o.ReceiptTotal, o.ReceiptIssueDate, o.CapturedBy.Id,
-                                                        o.CapturedTime, o.QualifiedBy.Id, o.QualifiedTime,
-                                                        o.AuthorizedBy.Id, o.AuthorizedTime, o.CanceledBy.Id,
-                                                        o.CanceledTime, o.CancelationReasonId, o.CancelationNotes,
-                                                        o.DigitalString, o.DigitalSign,
-                                                        (char) o.Status, o.RecordIntegrityHashCode);
-      if ((o.Id % 300) == 0) {
-        Empiria.Data.DataReader.Optimize();
-      }
-      return DataWriter.Execute(dataOperation);
+      var op = DataOperation.Parse("writeLRSRecording", o.Id, o.Document.Id, o.RecordingBook.Id,
+                                   o.Number, o.Notes, o.ExtendedData.ToJson(), o.Keywords,
+                                   o.PresentationTime, o.AuthorizationTime, o.ReviewedBy.Id, 
+                                   o.AuthorizedBy.Id, o.RecordedBy.Id, o.RecordingTime,
+                                   (char) o.Status, o.Integrity.GetUpdatedHashCode());
+      return DataWriter.Execute(op);
     }
 
     static internal int WriteRecordingBook(RecordingBook o) {
-      Assertion.Assert(o.Id != 0, "RecordingBook.Id can't be zero");
       DataOperation dataOperation = DataOperation.Parse("writeLRSRecordingBook", o.Id, o.RecorderOffice.Id,
                                                         (char) o.BookType, o.RecordingSectionType.Id, o.BookNumber, o.Name,
                                                         o.FullName, o.Description, o.Keywords, o.StartRecordingIndex, o.EndRecordingIndex,
@@ -250,7 +241,6 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal DataOperation WriteRecordingDocumentOp(RecordingDocument o) {
-      Assertion.Assert(o.Id != 0, "Document.Id can't be zero");
       return DataOperation.Parse("writeLRSDocument", o.Id, o.DocumentType.Id, o.Subtype.Id, o.UniqueCode, 
                                  o.IssuePlace.Id, o.IssueOffice.Id, o.IssuedBy.Id, o.IssueDate,
                                  o.Number, o.ExpedientNo, o.Title, o.Notes, o.SheetsCount, 

@@ -125,6 +125,7 @@
     <Compile Include="RootTypes\Certificate.cs" />
     <Compile Include="RootTypes\RecordableObjectStatus.cs" />
     <Compile Include="RootTypes\RecordingDocumentExtData.cs" />
+    <Compile Include="RootTypes\RecordingExtData.cs" />
     <Compile Include="RootTypes\TractIndexItemExtData.cs" />
     <Compile Include="RootTypes\TractIndexItem.cs" />
     <Compile Include="RootTypes\RecordingActExtData.cs" />

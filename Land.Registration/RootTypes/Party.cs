@@ -101,7 +101,8 @@ namespace Empiria.Land.Registration {
         if (this.RegistryID.Length != 0) {
           temp += " (" + this.RegistryID + ")";
         }
-        if (this.RegistryLocation.IsEmptyInstance || this.RegistryLocation.Equals(GeographicRegionItem.Unknown)) {
+        if (this.RegistryLocation.IsEmptyInstance || 
+            this.RegistryLocation.Equals(GeographicRegionItem.Unknown)) {
           return temp;
         } else {
           return temp + " " + this.RegistryLocation.FullName;
@@ -118,9 +119,10 @@ namespace Empiria.Land.Registration {
       get { return integrityHashCode; }
     }
 
-    public string Keywords {
-      get { return keywords; }
-      protected set { keywords = value; }
+    public virtual string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(this.FullName, this.Nicknames, this.ExtendedName);
+      }
     }
 
     public string Nicknames {
