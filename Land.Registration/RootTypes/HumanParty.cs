@@ -73,8 +73,8 @@ namespace Empiria.Land.Registration {
       get;
       set;
     }
-    
-    public override string Keywords {
+
+    internal protected override string Keywords {
       get {
         return EmpiriaString.BuildKeywords(base.FullName, this.Nicknames, this.CURPNumber,
                                            this.TaxIDNumber, this.IFENumber, 

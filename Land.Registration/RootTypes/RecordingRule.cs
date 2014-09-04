@@ -42,7 +42,7 @@ namespace Empiria.Land.Registration {
 
   /// <summary>Describes the conditions and business rules that have to be fulfilled when a
   /// RecordingAct is registered.</summary>
-  public class RecordingRule : Structure {
+  public class RecordingRule {
 
     #region Fields
 
@@ -52,7 +52,7 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public RecordingRule() : base(thisTypeName) {
+    public RecordingRule() {
       this.AppliesTo = RecordingRuleApplication.Undefined;
       this.AutoCancel = 0;
       this.InputProperties = new PropertyRule[0];

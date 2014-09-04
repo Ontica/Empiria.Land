@@ -84,8 +84,8 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("IssuePlaceId")]
-    private LazyObject<GeographicRegionItem> _issuePlace = LazyObject<GeographicRegionItem>.Empty;
-    public GeographicRegionItem IssuePlace {
+    private LazyObject<GeographicRegion> _issuePlace = LazyObject<GeographicRegion>.Empty;
+    public GeographicRegion IssuePlace {
       get { return _issuePlace.Instance; }
       set { _issuePlace.Instance = value; }
     }

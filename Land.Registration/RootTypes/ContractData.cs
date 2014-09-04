@@ -22,7 +22,7 @@ namespace Empiria.Land.Registration {
 
     public ContractData() {
       this.Date = ExecutionServer.DateMaxValue;
-      this.Place = GeographicRegionItem.Empty;
+      this.Place = GeographicRegion.Empty;
       this.Number = String.Empty;
       this.Interest = Interest.Empty;
     }
@@ -35,7 +35,7 @@ namespace Empiria.Land.Registration {
       var contract = new ContractData();
       contract.Number = json.Get<String>("Number", String.Empty);
       contract.Date = json.Get<DateTime>("Date", contract.Date);
-      contract.Place = json.Get<GeographicRegionItem>("PlaceId", contract.Place);
+      contract.Place = json.Get<GeographicRegion>("PlaceId", contract.Place);
       contract.Interest = Interest.Parse(json.Slice("Interest"));
 
       return contract;
@@ -61,7 +61,7 @@ namespace Empiria.Land.Registration {
       get; set;
     }
 
-    public GeographicRegionItem Place {
+    public GeographicRegion Place {
       get; set;
     }
 

@@ -23,13 +23,11 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public Occupation()
-      : base(thisTypeName) {
+    public Occupation() : base(thisTypeName) {
 
     }
 
-    protected Occupation(string typeName)
-      : base(typeName) {
+    protected Occupation(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 

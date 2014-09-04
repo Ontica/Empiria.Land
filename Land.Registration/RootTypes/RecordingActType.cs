@@ -35,8 +35,7 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private RecordingActType(int typeId)
-      : base(thisTypeName, typeId) {
+    private RecordingActType(int typeId) : base(thisTypeName, typeId) {
       // Empiria Power type pattern classes always has this constructor. Don't delete
     }
 

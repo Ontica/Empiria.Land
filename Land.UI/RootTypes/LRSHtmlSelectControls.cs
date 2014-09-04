@@ -174,8 +174,8 @@ namespace Empiria.Land.UI {
     }
 
     static public void LoadRecorderOfficeMunicipalitiesCombo(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
-                                                             RecorderOffice recorderOffice, GeographicRegionItem defaultItem) {
-      FixedList<GeographicRegionItem> list = recorderOffice.GetMunicipalities();
+                                                             RecorderOffice recorderOffice, GeographicRegion defaultItem) {
+      FixedList<GeographicRegion> list = recorderOffice.GetMunicipalities();
 
       string header = (comboControlUseMode == ComboControlUseMode.ObjectCreation)
                               ? "( Seleccionar un municipio )" : "( Todos los municipios )";

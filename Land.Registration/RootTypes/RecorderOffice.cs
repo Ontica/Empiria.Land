@@ -81,23 +81,23 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public FixedList<GeographicRegionItem> GetNotaryOfficePlaces() {
-      return MainRecorderOffice.GetLinks<GeographicRegionItem>("MainRecorderOffice_NotaryOfficePlaces",
+    public FixedList<GeographicRegion> GetNotaryOfficePlaces() {
+      return MainRecorderOffice.GetLinks<GeographicRegion>("MainRecorderOffice_NotaryOfficePlaces",
                                                                (x, y) => x.Name.CompareTo(y.Name));
     }
 
-    public FixedList<GeographicRegionItem> GetPrivateDocumentIssuePlaces() {
-      return MainRecorderOffice.GetLinks<GeographicRegionItem>("MainRecorderOffice_PrivateDocumentIssuePlace",
+    public FixedList<GeographicRegion> GetPrivateDocumentIssuePlaces() {
+      return MainRecorderOffice.GetLinks<GeographicRegion>("MainRecorderOffice_PrivateDocumentIssuePlace",
                                                                (x, y) => x.Name.CompareTo(y.Name));
     }
 
-    public FixedList<GeographicRegionItem> GetJudicialDocumentIssuePlaces() {
-      return MainRecorderOffice.GetLinks<GeographicRegionItem>("MainRecorderOffice_JudicialDocumentIssuePlace",
+    public FixedList<GeographicRegion> GetJudicialDocumentIssuePlaces() {
+      return MainRecorderOffice.GetLinks<GeographicRegion>("MainRecorderOffice_JudicialDocumentIssuePlace",
                                                                (x, y) => x.Name.CompareTo(y.Name));
     }
 
-    public FixedList<GeographicRegionItem> GetMunicipalities() {
-      return this.GetLinks<GeographicRegionItem>("RecorderOffice_Municipalities",
+    public FixedList<GeographicRegion> GetMunicipalities() {
+      return this.GetLinks<GeographicRegion>("RecorderOffice_Municipalities",
                                                  (x, y) => x.Name.CompareTo(y.Name));
     }
 

@@ -44,44 +44,21 @@ namespace Empiria.Land.Registration {
 
     private const string thisTypeName = "ObjectType.RecordingActParty";
 
-
-    private RecordingAct recordingAct = null;
-    private Party party = null;
-    private DomainActPartyRole partyRole = DomainActPartyRole.Empty;
-    private Party secondaryParty = null;
-    private PartiesRole secondaryPartyRole = PartiesRole.Empty;
-    private string notes = String.Empty;
-    private OwnershipMode ownershipMode = OwnershipMode.Undefined;
-    private Quantity ownershipPart = Quantity.Parse(Unit.Empty, 0m);
-    private string usufructTerm = String.Empty;
-    private UsufructMode usufructMode = UsufructMode.Undefined;
-    private Occupation partyOccupation = Occupation.Empty;
-    private MarriageStatus partyMarriageStatus = MarriageStatus.Empty;
-    private string partyAddress = String.Empty;
-    private GeographicRegionItem partyAddressPlace = GeographicRegionItem.Empty;
-    private Contact postedBy = Person.Empty;
-    private DateTime postingTime = DateTime.Now;
-    private RecordableObjectStatus status = RecordableObjectStatus.Pending;
-    private string integrityHashCode = String.Empty;
-
     #endregion Fields
 
-    #region Constructors and parserssp
+    #region Constructors and parsers
 
-    private RecordingActParty()
-      : base(thisTypeName) {
+    private RecordingActParty() : base(thisTypeName) {
 
     }
 
-    protected RecordingActParty(string typeName)
-      : base(typeName) {
+    protected RecordingActParty(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
-    internal RecordingActParty(RecordingAct recordingAct, Party party)
-      : base(thisTypeName) {
-      this.recordingAct = recordingAct;
-      this.party = party;
+    internal RecordingActParty(RecordingAct recordingAct, Party party) : base(thisTypeName) {
+      this.RecordingAct = recordingAct;
+      this.Party = party;
     }
 
     static public RecordingActParty Create(RecordingAct recordingAct, Party party) {
@@ -132,151 +109,86 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    public string DomainName {
-      get {
-        if (!this.RecordingAct.IsAnnotation) {
-          return GetDomainName(this);
-        } else {
-          RecordingActParty domainParty = RecordingActParty.GetDomainParty(this.recordingAct, this.Party);
-          if (domainParty != null) {
-            return GetDomainName(domainParty);
-          } else {
-            return "Ninguno";
-          } // if
-        } // else
-      } // get
+    [DataField("RecordingActId")]
+    public RecordingAct RecordingAct {
+      get;
+      private set;
     }
 
-    static private string GetDomainName(RecordingActParty party) {
-      switch (party.ownershipMode) {
-        case Land.Registration.OwnershipMode.Bare:
-          return "Nuda propiedad";
-        case Land.Registration.OwnershipMode.Coowner:
-          return "Copropietario";
-        case Land.Registration.OwnershipMode.Owner:
-          return "Propietario único";
-      }
-      switch (party.UsufructMode) {
-        case Land.Registration.UsufructMode.LifeTime:
-          return "Vitalicio";
-        case Land.Registration.UsufructMode.Payment:
-          return "Hasta recibir pago";
-        case Land.Registration.UsufructMode.Time:
-          return party.usufructTerm;
-        case Land.Registration.UsufructMode.Condition:
-          return party.usufructTerm;
-        case Land.Registration.UsufructMode.Date:
-          return "Hasta el " + Convert.ToDateTime(party.usufructTerm).ToString("dd/MMM/yyyy");
-      }
-      return "Ninguno";
+    [DataField("PartyId")]
+    public Party Party {
+      get;
+      private set;
     }
 
-    public string DomainPartName {
-      get {
-        if (!this.RecordingAct.IsAnnotation) {
-          return GetDomainPartName(this);
-        } else {
-          RecordingActParty domainParty = RecordingActParty.GetDomainParty(this.recordingAct, this.party);
-          if (domainParty != null) {
-            return GetDomainPartName(domainParty);
-          } else {
-            return String.Empty;
-          } // if
-        } // else
-      } // get
+    [DataField("PartyRoleId")]
+    public DomainActPartyRole PartyRole {
+      get;
+      set;
     }
 
-    static private string GetDomainPartName(RecordingActParty party) {
-      if (party.OwnershipMode == Land.Registration.OwnershipMode.Owner) {
-        return String.Empty;
-      }
-      if (party.OwnershipPart.Unit == Unit.FullUnit || party.OwnershipPart.Unit == Unit.UndividedUnit) {
-        return party.OwnershipPart.Unit.Symbol;
-      }
-      if (party.OwnershipPart.Unit.IsEmptyInstance) {
-        return String.Empty;
-      }
-      return party.ownershipPart.ToString();
+    [DataField("SecondaryPartyId")]
+    public Party SecondaryParty {
+      get;
+      set;
     }
 
-    public string IntegrityHashCode {
-      get { return integrityHashCode; }
+    [DataField("SecondaryPartyRoleId")]
+    public PartiesRole SecondaryPartyRole {
+      get;
+      set;
     }
 
+    [DataField("RecordingActPartyNotes")]
     public string Notes {
-      get { return notes; }
-      set { notes = value; }
+      get;
+      set;
     }
 
+    [DataField("OwnershipMode", Default = OwnershipMode.Undefined)]
     public OwnershipMode OwnershipMode {
-      get { return ownershipMode; }
-      set { ownershipMode = value; }
+      get;
+      set;
     }
 
     public Quantity OwnershipPart {
-      get { return ownershipPart; }
-      set { ownershipPart = value; }
+      get;
+      set;
     }
 
-    public Party Party {
-      get { return party; }
+    [DataField("UsufructTerm")]
+    public string UsufructTerm {
+      get;
+      set;
     }
 
-    public string PartyAddress {
-      get { return partyAddress; }
-      set { partyAddress = value; }
+    [DataField("UsufructMode", Default = UsufructMode.Undefined)]
+    public UsufructMode UsufructMode {
+      get;
+      set;
     }
 
-    public GeographicRegionItem PartyAddressPlace {
-      get { return partyAddressPlace; }
-      set { partyAddressPlace = value; }
-    }
-
-    public MarriageStatus PartyMarriageStatus {
-      get { return partyMarriageStatus; }
-      set { partyMarriageStatus = value; }
-    }
-
-    public Occupation PartyOccupation {
-      get { return partyOccupation; }
-      set { partyOccupation = value; }
-    }
-
-    public DomainActPartyRole PartyRole {
-      get { return partyRole; }
-      set { partyRole = value; }
-    }
-
+    [DataField("PostedById", Default = "Contacts.Person.Empty")]
     public Contact PostedBy {
-      get { return postedBy; }
+      get;
+      private set;
     }
 
+    [DataField("PostingTime", Default = "DateTime.Now")]
     public DateTime PostingTime {
-      get { return postingTime; }
+      get;
+      private set;
     }
 
-    public RecordingAct RecordingAct {
-      get { return recordingAct; }
-    }
-
-    public Party SecondaryParty {
-      get { return secondaryParty; }
-      set { secondaryParty = value; }
-    }
-
-    public PartiesRole SecondaryPartyRole {
-      get { return secondaryPartyRole; }
-      set { secondaryPartyRole = value; }
-    }
-
+    [DataField("LinkStatus", Default = RecordableObjectStatus.Pending)]
     public RecordableObjectStatus Status {
-      get { return status; }
-      set { status = value; }
+      get;
+      set;
     }
 
     public string StatusName {
       get {
-        switch (status) {
+        switch (this.Status) {
           case RecordableObjectStatus.Obsolete:
             return "No vigente";
           case RecordableObjectStatus.NoLegible:
@@ -297,14 +209,63 @@ namespace Empiria.Land.Registration {
       } // get
     }
 
-    public UsufructMode UsufructMode {
-      get { return usufructMode; }
-      set { usufructMode = value; }
+    public string IntegrityHashCode {
+      get;
+      private set;
     }
 
-    public string UsufructTerm {
-      get { return usufructTerm; }
-      set { usufructTerm = value; }
+    public string DomainName {
+      get {
+        if (!this.RecordingAct.IsAnnotation) {
+          return RecordingActParty.GetDomainName(this);
+        } else {
+          var domainParty = RecordingActParty.GetDomainParty(this.RecordingAct, this.Party);
+          if (domainParty != null) {
+            return RecordingActParty.GetDomainName(domainParty);
+          } else {
+            return "Ninguno";
+          } // if
+        } // else
+      } // get
+    }
+
+    public string DomainPartName {
+      get {
+        if (!this.RecordingAct.IsAnnotation) {
+          return RecordingActParty.GetDomainPartName(this);
+        } else {
+          var domainParty = RecordingActParty.GetDomainParty(this.RecordingAct, this.Party);
+          if (domainParty != null) {
+            return RecordingActParty.GetDomainPartName(domainParty);
+          } else {
+            return String.Empty;
+          } // if
+        } // else
+      } // get
+    }
+    
+    [DataField("PartyOccupationId")]
+    public Occupation PartyOccupation {
+      get;
+      set;
+    }
+
+    [DataField("PartyMarriageStatusId")]
+    public MarriageStatus PartyMarriageStatus {
+      get;
+      set;
+    }
+
+    [DataField("PartyAddress")]
+    public string PartyAddress {
+      get;
+      set;
+    }
+
+    [DataField("PartyAddressPlaceId")]
+    public GeographicRegion PartyAddressPlace {
+      get;
+      set;
     }
 
     #endregion Public properties
@@ -328,35 +289,61 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnLoadObjectData(DataRow row) {
-      this.recordingAct = RecordingAct.Parse((int) row["RecordingActId"]);
-      this.party = Party.Parse((int) row["PartyId"]);
-      this.partyRole = DomainActPartyRole.Parse((int) row["PartyRoleId"]);
-      this.secondaryParty = Party.Parse((int) row["SecondaryPartyId"]);
-      this.secondaryPartyRole = PartiesRole.Parse((int) row["SecondaryPartyRoleId"]);
-      this.notes = (string) row["RecordingActPartyNotes"];
-      this.ownershipMode = (OwnershipMode) Convert.ToChar(row["OwnershipMode"]);
-      this.ownershipPart = Quantity.Parse(Unit.Parse((int) row["OwnershipPartUnitId"]), (decimal) row["OwnershipPartAmount"]);
-      this.usufructMode = (UsufructMode) Convert.ToChar(row["UsufructMode"]);
-      this.usufructTerm = (string) row["UsufructEndCondition"];
-      this.partyOccupation = Occupation.Parse((int) row["PartyOccupationId"]);
-      this.partyMarriageStatus = MarriageStatus.Parse((int) row["PartyMarriageStatusId"]);
-      this.partyAddress = (string) row["PartyAddress"];
-      this.partyAddressPlace = GeographicRegionItem.Parse((int) row["PartyAddressPlaceId"]);
-      this.postedBy = Contact.Parse((int) row["PostedById"]);
-      this.postingTime = (DateTime) row["PostingTime"];
-      this.status = (RecordableObjectStatus) Convert.ToChar(row["LinkStatus"]);
-      this.integrityHashCode = (string) row["LinkRIHC"];
+      this.OwnershipPart = Quantity.Parse(Unit.Parse((int) row["OwnershipPartUnitId"]),
+                                                     (decimal) row["OwnershipPartAmount"]);
     }
 
     protected override void OnSave() {
       if (base.IsNew) {
-        this.postingTime = DateTime.Now;
-        this.postedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.PostingTime = DateTime.Now;
+        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
       PropertyData.WriteRecordingActParty(this);
     }
 
     #endregion Public methods
+
+    #region Private methods
+
+    static private string GetDomainName(RecordingActParty party) {
+      switch (party.OwnershipMode) {
+        case Land.Registration.OwnershipMode.Bare:
+          return "Nuda propiedad";
+        case Land.Registration.OwnershipMode.Coowner:
+          return "Copropietario";
+        case Land.Registration.OwnershipMode.Owner:
+          return "Propietario único";
+      }
+      switch (party.UsufructMode) {
+        case Land.Registration.UsufructMode.LifeTime:
+          return "Vitalicio";
+        case Land.Registration.UsufructMode.Payment:
+          return "Hasta recibir pago";
+        case Land.Registration.UsufructMode.Time:
+          return party.UsufructTerm;
+        case Land.Registration.UsufructMode.Condition:
+          return party.UsufructTerm;
+        case Land.Registration.UsufructMode.Date:
+          return "Hasta el " + Convert.ToDateTime(party.UsufructTerm).ToString("dd/MMM/yyyy");
+      }
+      return "Ninguno";
+    }
+
+    static private string GetDomainPartName(RecordingActParty party) {
+      if (party.OwnershipMode == Land.Registration.OwnershipMode.Owner) {
+        return String.Empty;
+      }
+      if (party.OwnershipPart.Unit == Unit.FullUnit ||
+          party.OwnershipPart.Unit == Unit.UndividedUnit) {
+        return party.OwnershipPart.Unit.Symbol;
+      }
+      if (party.OwnershipPart.Unit.IsEmptyInstance) {
+        return String.Empty;
+      }
+      return party.OwnershipPart.ToString();
+    }
+
+    #endregion Private methods
 
   } // class RecordingActParty
 

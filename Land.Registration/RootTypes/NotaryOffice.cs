@@ -38,7 +38,7 @@ namespace Empiria.Land.Registration {
       get { return BaseObject.ParseEmpty<NotaryOffice>(thisTypeName); }
     }
 
-    static public NotaryOffice Unknown {
+    static public new NotaryOffice Unknown {
       get { return BaseObject.ParseUnknown<NotaryOffice>(thisTypeName); }
     }
 
@@ -46,12 +46,14 @@ namespace Empiria.Land.Registration {
       return BaseObject.Parse<NotaryOffice>(thisTypeName, id);
     }
 
-    static public FixedList<NotaryOffice> GetList(GeographicRegionItem place) {
-      FixedList<NotaryOffice> list = place.GetContacts<NotaryOffice>("Region_NotaryOffices");
+    static private FixedList<NotaryOffice> GetNotariesInPlace(GeographicRegion place) {
+      throw new NotImplementedException();
 
-      list.Sort((x, y) => x.Number.CompareTo(y.Number));
+      //FixedList<NotaryOffice> list = place.GetContacts<NotaryOffice>("Region_NotaryOffices");
 
-      return list;
+      //list.Sort((x, y) => x.Number.CompareTo(y.Number));
+
+      //return list;
     }
 
     #endregion Constructors and parsers
@@ -67,6 +69,7 @@ namespace Empiria.Land.Registration {
     #endregion Public properties
 
     #region Public methods
+
 
     public FixedList<Person> GetNotaries() {
       FixedList<Person> list = base.GetLinks<Person>("NotaryOffice_Notaries");

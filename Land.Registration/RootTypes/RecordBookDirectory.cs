@@ -93,14 +93,13 @@ namespace Empiria.Land.Registration {
 
     protected override IIdentifiable Reference {
       get { return this.RecordingBook; }
-      set { this.RecordingBook = (RecordingBook) value; }
     }
 
     [DataField("ReferenceId")]
     LazyObject<RecordingBook> _recordingBook = LazyObject<RecordingBook>.Empty;
     public RecordingBook RecordingBook {
       get { return _recordingBook.Instance; }
-      set { _recordingBook.Instance = value; }
+      private set { _recordingBook.Instance = value; }
     }
 
     public RecorderOffice RecorderOffice {
@@ -122,7 +121,7 @@ namespace Empiria.Land.Registration {
       parent.CloneInto(child);
       child.ParentFolder = parent;
       child.CopyFrom(physicalFolder);
-      child.Reference = targetRecordingBook;
+      child.RecordingBook = targetRecordingBook;
       child.Tags = parent.Tags;
       child.Status = FilesFolderStatus.Closed;
       child.Save();
@@ -144,7 +143,7 @@ namespace Empiria.Land.Registration {
 
       RecordingBook recordingBook = RecordingBook.Create(this, recordingSectionType, recordingsControlCount,
                                                          recordingsControlTimePeriod);
-      this.Reference = recordingBook;
+      this.RecordingBook = recordingBook;
       this.Save();
 
       return recordingBook;

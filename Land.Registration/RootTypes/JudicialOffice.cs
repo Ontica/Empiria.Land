@@ -27,13 +27,11 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public JudicialOffice()
-      : base(thisTypeName) {
+    public JudicialOffice() : base(thisTypeName) {
 
     }
 
-    protected JudicialOffice(string typeName)
-      : base(typeName) {
+    protected JudicialOffice(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
@@ -41,7 +39,7 @@ namespace Empiria.Land.Registration {
       get { return BaseObject.ParseEmpty<JudicialOffice>(thisTypeName); }
     }
 
-    static public JudicialOffice Unknown {
+    static public new JudicialOffice Unknown {
       get { return BaseObject.ParseUnknown<JudicialOffice>(thisTypeName); }
     }
 
@@ -49,12 +47,14 @@ namespace Empiria.Land.Registration {
       return BaseObject.Parse<JudicialOffice>(thisTypeName, id);
     }
 
-    static public FixedList<JudicialOffice> GetList(GeographicRegionItem place) {
-      FixedList<JudicialOffice> list = place.GetContacts<JudicialOffice>("Region_JudicialOffices");
+    static private FixedList<JudicialOffice> GetJudicialOfficesInPlace(GeographicRegion place) {
+      throw new NotImplementedException();
 
-      list.Sort((x, y) => x.Number.CompareTo(y.Number));
+      //FixedList<JudicialOffice> list = place.GetContacts<JudicialOffice>("Region_JudicialOffices");
 
-      return list;
+      //list.Sort((x, y) => x.Number.CompareTo(y.Number));
+
+      //return list;
     }
 
     #endregion Constructors and parsers

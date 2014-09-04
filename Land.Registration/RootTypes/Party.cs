@@ -79,8 +79,7 @@ namespace Empiria.Land.Registration {
         if (this.RegistryID.Length != 0) {
           temp += " (" + this.RegistryID + ")";
         }
-        if (this.RegistryLocation.IsEmptyInstance || 
-            this.RegistryLocation.Equals(GeographicRegionItem.Unknown)) {
+        if (this.RegistryLocation.IsSpecialCase) {
           return temp;
         } else {
           return temp + " " + this.RegistryLocation.FullName;
@@ -94,7 +93,7 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    public virtual string Keywords {
+    internal protected virtual string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.FullName, this.Nicknames, this.ExtendedName);
       }
@@ -135,7 +134,7 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("RegistryLocationId")]
-    public GeographicRegionItem RegistryLocation {
+    public GeographicRegion RegistryLocation {
       get;
       set;
     }
@@ -197,7 +196,7 @@ namespace Empiria.Land.Registration {
     }
 
     public RecordingActParty GetLastRecordingActParty(DateTime searchStartDate) {
-      return PropertyData.GetLastRecordingActParty(this, searchStartDate);
+      return PropertyData.TryGetLastRecordingActParty(this, searchStartDate);
     }
 
     protected override void OnSave() {
