@@ -43,15 +43,15 @@ namespace Empiria.Land.Registration {
     }
 
     static public TractIndexItem Parse(int id) {
-      return BaseObject.Parse<TractIndexItem>(thisTypeName, id);
+      return BaseObject.ParseId<TractIndexItem>(id);
     }
 
     static internal TractIndexItem Parse(DataRow dataRow) {
-      return BaseObject.Parse<TractIndexItem>(thisTypeName, dataRow);
+      return BaseObject.Parse<TractIndexItem>(dataRow);
     }
     static public TractIndexItem Empty {
       get {
-        return BaseObject.ParseEmpty<TractIndexItem>(thisTypeName);
+        return BaseObject.ParseEmpty<TractIndexItem>();
       }
     }
 

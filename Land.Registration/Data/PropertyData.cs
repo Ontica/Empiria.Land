@@ -48,15 +48,7 @@ namespace Empiria.Land.Registration.Data {
         return "(PartyTypeId <> 0)";
       }
       if (partyType.IsAbstract) {
-        string temp = String.Empty;
-        ObjectTypeInfo[] subTypes = partyType.GetSubclasses();
-        for (int i = 0; i < subTypes.Length; i++) {
-          if (temp.Length != 0) {
-            temp += ",";
-          }
-          temp += subTypes[i].Id.ToString();
-        }
-        return "(PartyTypeId IN (" + temp + "))";
+        return "(PartyTypeId IN (" + partyType.GetSubclassesFilter() + "))";
       } else {
         return "(PartyTypeId = " + partyType.Id.ToString() + ")";
       }

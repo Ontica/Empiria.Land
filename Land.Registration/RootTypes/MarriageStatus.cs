@@ -32,19 +32,19 @@ namespace Empiria.Land.Registration {
     }
 
     static public MarriageStatus Empty {
-      get { return BaseObject.ParseEmpty<MarriageStatus>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<MarriageStatus>(); }
     }
 
     static public MarriageStatus Unknown {
-      get { return BaseObject.ParseUnknown<MarriageStatus>(thisTypeName); }
+      get { return BaseObject.ParseUnknown<MarriageStatus>(); }
     }
 
     static public MarriageStatus Parse(int id) {
-      return BaseObject.Parse<MarriageStatus>(thisTypeName, id);
+      return BaseObject.ParseId<MarriageStatus>(id);
     }
 
     static public FixedList<MarriageStatus> GetList() {
-      FixedList<MarriageStatus> list = GeneralObject.ParseList<MarriageStatus>(thisTypeName);
+      FixedList<MarriageStatus> list = GeneralObject.ParseList<MarriageStatus>();
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 

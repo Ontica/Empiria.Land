@@ -98,11 +98,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public RecordingActParty Parse(int id) {
-      return BaseObject.Parse<RecordingActParty>(thisTypeName, id);
+      return BaseObject.ParseId<RecordingActParty>(id);
     }
 
     static internal RecordingActParty Parse(DataRow dataRow) {
-      return BaseObject.Parse<RecordingActParty>(thisTypeName, dataRow);
+      return BaseObject.Parse<RecordingActParty>(dataRow);
     }
 
     #endregion Constructors and parsers

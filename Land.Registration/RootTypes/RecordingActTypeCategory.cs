@@ -34,11 +34,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public RecordingActTypeCategory Parse(int id) {
-      return BaseObject.Parse<RecordingActTypeCategory>(thisTypeName, id);
+      return BaseObject.ParseId<RecordingActTypeCategory>(id);
     }
 
     static public RecordingActTypeCategory Empty {
-      get { return BaseObject.ParseEmpty<RecordingActTypeCategory>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<RecordingActTypeCategory>(); }
     }
 
     #endregion Constructors and parsers

@@ -32,19 +32,19 @@ namespace Empiria.Land.Registration {
     }
 
     static public Occupation Empty {
-      get { return BaseObject.ParseEmpty<Occupation>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<Occupation>(); }
     }
 
     static public Occupation Unknown {
-      get { return BaseObject.ParseUnknown<Occupation>(thisTypeName); }
+      get { return BaseObject.ParseUnknown<Occupation>(); }
     }
 
     static public Occupation Parse(int id) {
-      return BaseObject.Parse<Occupation>(thisTypeName, id);
+      return BaseObject.ParseId<Occupation>(id);
     }
 
     static public FixedList<Occupation> GetList() {
-      FixedList<Occupation> list = GeneralObject.ParseList<Occupation>(thisTypeName);
+      FixedList<Occupation> list = GeneralObject.ParseList<Occupation>();
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 

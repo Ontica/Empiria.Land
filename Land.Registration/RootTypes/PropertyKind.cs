@@ -32,23 +32,23 @@ namespace Empiria.Land.Registration {
     }
 
     static public PropertyKind Parse(int id) {
-      return BaseObject.Parse<PropertyKind>(thisTypeName, id);
+      return BaseObject.ParseId<PropertyKind>(id);
     }
 
     static public PropertyKind Empty {
       get {
-        return BaseObject.ParseEmpty<PropertyKind>(thisTypeName);
+        return BaseObject.ParseEmpty<PropertyKind>();
       }
     }
 
     static public PropertyKind Unknown {
       get {
-        return BaseObject.ParseUnknown<PropertyKind>(thisTypeName);
+        return BaseObject.ParseUnknown<PropertyKind>();
       }
     }
 
     static public FixedList<PropertyKind> GetList() {
-      return GeneralObject.ParseList<PropertyKind>(thisTypeName);
+      return GeneralObject.ParseList<PropertyKind>();
     }
 
     #endregion Constructors and parsers

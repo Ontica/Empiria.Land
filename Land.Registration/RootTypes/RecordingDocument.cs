@@ -37,11 +37,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public RecordingDocument Parse(int id) {
-      return BaseObject.Parse<RecordingDocument>(thisTypeName, id);
+      return BaseObject.ParseId<RecordingDocument>(id);
     }
 
     static internal RecordingDocument Parse(DataRow dataRow) {
-      return BaseObject.Parse<RecordingDocument>(thisTypeName, dataRow);
+      return BaseObject.Parse<RecordingDocument>(dataRow);
     }
 
     static internal RecordingDocument Parse(Recording recording) {
@@ -58,7 +58,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public RecordingDocument Empty {
-      get { return BaseObject.ParseEmpty<RecordingDocument>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<RecordingDocument>(); }
     }
 
     #endregion Constructors and parsers

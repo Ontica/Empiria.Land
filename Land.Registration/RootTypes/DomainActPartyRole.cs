@@ -32,11 +32,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public DomainActPartyRole Parse(int id) {
-      return BaseObject.Parse<DomainActPartyRole>(thisTypeName, id);
+      return BaseObject.ParseId<DomainActPartyRole>(id);
     }
 
     static public FixedList<DomainActPartyRole> GetList() {
-      FixedList<DomainActPartyRole> list = GeneralObject.ParseList<DomainActPartyRole>(thisTypeName);
+      FixedList<DomainActPartyRole> list = GeneralObject.ParseList<DomainActPartyRole>();
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
@@ -44,15 +44,15 @@ namespace Empiria.Land.Registration {
     }
 
     static public DomainActPartyRole Empty {
-      get { return BaseObject.ParseEmpty<DomainActPartyRole>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<DomainActPartyRole>(); }
     }
 
     static public DomainActPartyRole Unknown {
-      get { return BaseObject.ParseUnknown<DomainActPartyRole>(thisTypeName); }
+      get { return BaseObject.ParseUnknown<DomainActPartyRole>(); }
     }
 
     static public DomainActPartyRole Usufructuary {
-      get { return BaseObject.Parse<DomainActPartyRole>(thisTypeName, "DomainActPartyRole.Usufructuary"); }
+      get { return BaseObject.ParseKey<DomainActPartyRole>("DomainActPartyRole.Usufructuary"); }
     }
 
     #endregion Constructors and parsers

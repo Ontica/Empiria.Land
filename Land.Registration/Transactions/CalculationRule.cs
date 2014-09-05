@@ -33,19 +33,19 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public CalculationRule Empty {
-      get { return BaseObject.ParseEmpty<CalculationRule>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<CalculationRule>(); }
     }
 
     static public CalculationRule Unknown {
-      get { return BaseObject.ParseUnknown<CalculationRule>(thisTypeName); }
+      get { return BaseObject.ParseUnknown<CalculationRule>(); }
     }
 
     static public CalculationRule Parse(int id) {
-      return BaseObject.Parse<CalculationRule>(thisTypeName, id);
+      return BaseObject.ParseId<CalculationRule>(id);
     }
 
     static public FixedList<CalculationRule> GetList() {
-      FixedList<CalculationRule> list = GeneralObject.ParseList<CalculationRule>(thisTypeName);
+      FixedList<CalculationRule> list = GeneralObject.ParseList<CalculationRule>();
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 

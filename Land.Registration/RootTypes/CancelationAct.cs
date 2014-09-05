@@ -32,7 +32,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public new CancelationAct Parse(int id) {
-      return BaseObject.Parse<CancelationAct>(thisTypeName, id);
+      return BaseObject.ParseId<CancelationAct>(id);
     }
 
     #endregion Constructors and parsers

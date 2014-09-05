@@ -62,11 +62,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public RecordingAct Parse(int id) {
-      return BaseObject.Parse<RecordingAct>(thisTypeName, id);
+      return BaseObject.ParseId<RecordingAct>(id);
     }
 
     static internal RecordingAct Parse(DataRow dataRow) {
-      return BaseObject.Parse<RecordingAct>(thisTypeName, dataRow);
+      return BaseObject.Parse<RecordingAct>(dataRow);
     }
 
     static internal RecordingAct Parse(RecordingTask task) {

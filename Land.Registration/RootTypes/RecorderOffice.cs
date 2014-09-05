@@ -39,11 +39,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public new RecorderOffice Empty {
-      get { return RecorderOffice.ParseEmpty<RecorderOffice>(thisTypeName); }
+      get { return RecorderOffice.ParseEmpty<RecorderOffice>(); }
     }
 
     static public new RecorderOffice Parse(int id) {
-      return BaseObject.Parse<RecorderOffice>(thisTypeName, id);
+      return BaseObject.ParseId<RecorderOffice>(id);
     }
 
     static public FixedList<RecorderOffice> GetList() {

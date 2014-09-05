@@ -32,19 +32,19 @@ namespace Empiria.Land.Registration {
     }
 
     static public PartiesRole Empty {
-      get { return BaseObject.ParseEmpty<PartiesRole>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<PartiesRole>(); }
     }
 
     static public PartiesRole Unknown {
-      get { return BaseObject.ParseUnknown<PartiesRole>(thisTypeName); }
+      get { return BaseObject.ParseUnknown<PartiesRole>(); }
     }
 
     static public PartiesRole Parse(int id) {
-      return BaseObject.Parse<PartiesRole>(thisTypeName, id);
+      return BaseObject.ParseId<PartiesRole>(id);
     }
 
     static public FixedList<PartiesRole> GetList() {
-      FixedList<PartiesRole> list = GeneralObject.ParseList<PartiesRole>(thisTypeName);
+      FixedList<PartiesRole> list = GeneralObject.ParseList<PartiesRole>();
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 

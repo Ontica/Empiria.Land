@@ -61,22 +61,22 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public LRSPayment Parse(int id) {
-      return BaseObject.Parse<LRSPayment>(thisTypeName, id);
+      return BaseObject.ParseId<LRSPayment>(id);
     }
 
     static internal LRSPayment Parse(DataRow dataRow) {
-      return BaseObject.Parse<LRSPayment>(thisTypeName, dataRow);
+      return BaseObject.Parse<LRSPayment>(dataRow);
     }
 
     static public LRSPayment Empty {
       get {
-        return BaseObject.ParseEmpty<LRSPayment>(thisTypeName);
+        return BaseObject.ParseEmpty<LRSPayment>();
       }
     }
 
     static public LRSPayment FeeWaiver {
       get {
-        return BaseObject.Parse<LRSPayment>(thisTypeName, -3);
+        return BaseObject.ParseId<LRSPayment>(-3);
       }
     }
 

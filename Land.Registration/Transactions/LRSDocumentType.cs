@@ -31,19 +31,19 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public LRSDocumentType Empty {
-      get { return BaseObject.ParseEmpty<LRSDocumentType>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<LRSDocumentType>(); }
     }
 
     static public LRSDocumentType Unknown {
-      get { return BaseObject.ParseUnknown<LRSDocumentType>(thisTypeName); }
+      get { return BaseObject.ParseUnknown<LRSDocumentType>(); }
     }
 
     static public LRSDocumentType Parse(int id) {
-      return BaseObject.Parse<LRSDocumentType>(thisTypeName, id);
+      return BaseObject.ParseId<LRSDocumentType>(id);
     }
 
     static public FixedList<LRSDocumentType> GetList() {
-      FixedList<LRSDocumentType> list = GeneralObject.ParseList<LRSDocumentType>(thisTypeName);
+      FixedList<LRSDocumentType> list = GeneralObject.ParseList<LRSDocumentType>();
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 

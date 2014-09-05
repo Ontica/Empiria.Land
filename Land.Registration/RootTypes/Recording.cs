@@ -52,7 +52,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public Recording Parse(int id) {
-      return BaseObject.Parse<Recording>(thisTypeName, id);
+      return BaseObject.ParseId<Recording>(id);
     }
 
     static internal Recording Parse(DataRow dataRow) {      
@@ -60,7 +60,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public Recording Empty {
-      get { return BaseObject.ParseEmpty<Recording>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<Recording>(); }
     }
 
     static public int SplitRecordingNumber(string fullRecordingNumber, out string bisSuffixTag) {

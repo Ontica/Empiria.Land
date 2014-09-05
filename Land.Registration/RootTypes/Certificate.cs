@@ -32,7 +32,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public new RecordingCertificate Parse(int id) {
-      return BaseObject.Parse<RecordingCertificate>(thisTypeName, id);
+      return BaseObject.ParseId<RecordingCertificate>(id);
     }
 
     #endregion Constructors and parsers

@@ -36,15 +36,15 @@ namespace Empiria.Land.Registration {
     }
 
     static public new JudicialOffice Empty {
-      get { return BaseObject.ParseEmpty<JudicialOffice>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<JudicialOffice>(); }
     }
 
     static public new JudicialOffice Unknown {
-      get { return BaseObject.ParseUnknown<JudicialOffice>(thisTypeName); }
+      get { return BaseObject.ParseUnknown<JudicialOffice>(); }
     }
 
     static public new JudicialOffice Parse(int id) {
-      return BaseObject.Parse<JudicialOffice>(thisTypeName, id);
+      return BaseObject.ParseId<JudicialOffice>(id);
     }
 
     static private FixedList<JudicialOffice> GetJudicialOfficesInPlace(GeographicRegion place) {

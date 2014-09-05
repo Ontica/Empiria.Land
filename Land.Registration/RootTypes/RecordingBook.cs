@@ -90,15 +90,15 @@ namespace Empiria.Land.Registration {
     }
 
     static public RecordingBook Parse(int id) {
-      return BaseObject.Parse<RecordingBook>(thisTypeName, id);
+      return BaseObject.ParseId<RecordingBook>(id);
     }
 
     static internal RecordingBook Parse(DataRow dataRow) {
-      return BaseObject.Parse<RecordingBook>(thisTypeName, dataRow);
+      return BaseObject.Parse<RecordingBook>(dataRow);
     }
 
     static public RecordingBook Empty {
-      get { return BaseObject.ParseEmpty<RecordingBook>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<RecordingBook>(); }
     }
 
     static public RecordingBook GetAssignedBookForRecording(RecorderOffice office, RecordingSection section,

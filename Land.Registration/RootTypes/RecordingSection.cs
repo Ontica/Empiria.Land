@@ -32,11 +32,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public RecordingSection Parse(int id) {
-      return BaseObject.Parse<RecordingSection>(thisTypeName, id);
+      return BaseObject.ParseId<RecordingSection>(id);
     }
 
     static public RecordingSection Empty {
-      get { return BaseObject.ParseEmpty<RecordingSection>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<RecordingSection>(); }
     }
 
     #endregion Constructors and parsers

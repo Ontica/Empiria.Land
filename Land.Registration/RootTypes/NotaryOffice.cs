@@ -35,15 +35,15 @@ namespace Empiria.Land.Registration {
     }
 
     static public new NotaryOffice Empty {
-      get { return BaseObject.ParseEmpty<NotaryOffice>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<NotaryOffice>(); }
     }
 
     static public new NotaryOffice Unknown {
-      get { return BaseObject.ParseUnknown<NotaryOffice>(thisTypeName); }
+      get { return BaseObject.ParseUnknown<NotaryOffice>(); }
     }
 
     static public new NotaryOffice Parse(int id) {
-      return BaseObject.Parse<NotaryOffice>(thisTypeName, id);
+      return BaseObject.ParseId<NotaryOffice>(id);
     }
 
     static private FixedList<NotaryOffice> GetNotariesInPlace(GeographicRegion place) {

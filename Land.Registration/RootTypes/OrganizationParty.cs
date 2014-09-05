@@ -38,7 +38,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public new OrganizationParty Parse(int id) {
-      return BaseObject.Parse<OrganizationParty>(thisTypeName, id);
+      return BaseObject.ParseId<OrganizationParty>(id);
     }
 
     #endregion Constructors and parsers

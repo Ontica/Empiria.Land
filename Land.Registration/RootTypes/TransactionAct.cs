@@ -34,7 +34,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public new TransactionAct Parse(int id) {
-      return BaseObject.Parse<TransactionAct>(thisTypeName, id);
+      return BaseObject.ParseId<TransactionAct>(id);
     }
 
     #endregion Constructors and parsers

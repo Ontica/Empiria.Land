@@ -53,15 +53,15 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public LRSTransactionTask Parse(int id) {
-      return BaseObject.Parse<LRSTransactionTask>(thisTypeName, id);
+      return BaseObject.ParseId<LRSTransactionTask>(id);
     }
 
     static internal LRSTransactionTask Parse(DataRow dataRow) {
-      return BaseObject.Parse<LRSTransactionTask>(thisTypeName, dataRow);
+      return BaseObject.Parse<LRSTransactionTask>(dataRow);
     }
 
     static public LRSTransactionTask Empty {
-      get { return BaseObject.ParseEmpty<LRSTransactionTask>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<LRSTransactionTask>(); }
     }
 
     static internal LRSTransactionTask CreateFirst(LRSTransaction transaction) {

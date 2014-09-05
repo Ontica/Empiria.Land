@@ -48,11 +48,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public Party Parse(int id) {
-      return BaseObject.Parse<Party>(thisTypeName, id);
+      return BaseObject.ParseId<Party>(id);
     }
 
     static internal Party Parse(DataRow dataRow) {
-      return BaseObject.Parse<Party>(thisTypeName, dataRow);
+      return BaseObject.Parse<Party>(dataRow);
     }
 
     static public FixedList<Party> GetList(ObjectTypeInfo partyType, string keywords) {

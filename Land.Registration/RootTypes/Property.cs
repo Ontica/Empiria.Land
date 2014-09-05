@@ -38,11 +38,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public Property Parse(int id) {
-      return BaseObject.Parse<Property>(thisTypeName, id);
+      return BaseObject.ParseId<Property>(id);
     }
 
     static internal Property Parse(DataRow dataRow) {
-      return BaseObject.Parse<Property>(thisTypeName, dataRow);
+      return BaseObject.Parse<Property>(dataRow);
     }
 
     static public Property ParseWithUniqueCode(string propertyKey) {
@@ -56,7 +56,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public Property Empty {
-      get { return BaseObject.ParseEmpty<Property>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<Property>(); }
     }
 
     private void Initialize() {

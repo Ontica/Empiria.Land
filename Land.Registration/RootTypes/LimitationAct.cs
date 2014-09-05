@@ -32,7 +32,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public new LimitationAct Parse(int id) {
-      return BaseObject.Parse<LimitationAct>(thisTypeName, id);
+      return BaseObject.ParseId<LimitationAct>(id);
     }
 
     #endregion Constructors and parsers

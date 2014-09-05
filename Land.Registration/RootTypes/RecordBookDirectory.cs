@@ -46,11 +46,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public new RecordBookDirectory Parse(int id) {
-      return BaseObject.Parse<RecordBookDirectory>(thisTypeName, id);
+      return BaseObject.ParseId<RecordBookDirectory>(id);
     }
 
     static public new RecordBookDirectory Empty {
-      get { return BaseObject.ParseEmpty<RecordBookDirectory>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<RecordBookDirectory>(); }
     
     }
 

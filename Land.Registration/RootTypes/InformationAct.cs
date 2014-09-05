@@ -34,11 +34,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public new InformationAct Parse(int id) {
-      return BaseObject.Parse<InformationAct>(thisTypeName, id);
+      return BaseObject.ParseId<InformationAct>(id);
     }
 
     static public InformationAct Empty {
-      get { return BaseObject.ParseEmpty<InformationAct>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<InformationAct>(); }
     }
 
     #endregion Constructors and parsers

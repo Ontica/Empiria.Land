@@ -65,7 +65,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static internal LRSTransactionItem Parse(DataRow dataRow) {
-      return BaseObject.Parse<LRSTransactionItem>(thisTypeName, dataRow);
+      return BaseObject.Parse<LRSTransactionItem>(dataRow);
     }
 
     #endregion Constructors and parsers
