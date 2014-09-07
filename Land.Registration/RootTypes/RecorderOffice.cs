@@ -22,20 +22,10 @@ namespace Empiria.Land.Registration {
   /// <summary>A recorder of deeds office.</summary>
   public class RecorderOffice : Organization {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.Contact.Organization.RecorderOffice";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public RecorderOffice() : base(thisTypeName) {
-
-    }
-
-    protected RecorderOffice(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private RecorderOffice() {
+      // Required by Empiria Framework.
     }
 
     static public new RecorderOffice Empty {

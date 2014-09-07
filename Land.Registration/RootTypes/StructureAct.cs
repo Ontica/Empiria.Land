@@ -18,20 +18,10 @@ namespace Empiria.Land.Registration {
   ///as well as the creation of new properties through fusions and divisons.</summary>
   public class StructureAct : RecordingAct {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.RecordingAct.StructureAct";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    private StructureAct() : base(thisTypeName) {
-      // For create instances use Create static method instead
-    }
-
-    protected StructureAct(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private StructureAct(RecordingActType powertype) : base(powertype) {
+      // Required by Empiria Framework for all partitioned types.
     }
 
     static public new StructureAct Parse(int id) {

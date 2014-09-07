@@ -15,20 +15,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Describes the role that plays a party with respect to another party.</summary>
   public class PartiesRole : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.PartiesRole";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public PartiesRole() : base(thisTypeName) {
-
-    }
-
-    protected PartiesRole(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private PartiesRole() {
+      // Required by Empiria Framework.
     }
 
     static public PartiesRole Empty {

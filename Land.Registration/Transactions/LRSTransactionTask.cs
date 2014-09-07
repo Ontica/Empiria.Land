@@ -32,23 +32,13 @@ namespace Empiria.Land.Registration.Transactions {
   /// <summary>Workflow item or task inside a LRSTransaction processing time window.</summary>
   public class LRSTransactionTask : BaseObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.LRSTransactionTask";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    protected LRSTransactionTask() : base(thisTypeName) {
-      // Instance creation of this type may be invoked with ....
+    private LRSTransactionTask() {
+      // Required by Empiria Framework.
     }
     
-    protected LRSTransactionTask(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
-    }
-
-    internal LRSTransactionTask(LRSTransaction transaction) : base(thisTypeName) {
+    internal LRSTransactionTask(LRSTransaction transaction) {
       this.Transaction = transaction;
     }
 
@@ -57,7 +47,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static internal LRSTransactionTask Parse(DataRow dataRow) {
-      return BaseObject.Parse<LRSTransactionTask>(dataRow);
+      return BaseObject.ParseDataRow<LRSTransactionTask>(dataRow);
     }
 
     static public LRSTransactionTask Empty {

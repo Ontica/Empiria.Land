@@ -22,25 +22,15 @@ namespace Empiria.Land.Registration.Transactions {
   /// <summary>Represents a transaction concept in the context of a land registration transaction.</summary>
   public class LRSTransactionItem : BaseObject, IProtected {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.LRSTransactionItem";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    private LRSTransactionItem() : base(thisTypeName) {
-
-    }
-
-    protected LRSTransactionItem(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise.
+    private LRSTransactionItem() {
+      // Required by Empiria Framework.
     }
 
     internal LRSTransactionItem(LRSTransaction transaction, RecordingActType transactionItemType, 
                                 LRSLawArticle treasuryCode, Money operationValue, 
-                                Quantity quantity, LRSFee fee) : base(thisTypeName) {
+                                Quantity quantity, LRSFee fee) {
       this.Transaction = transaction;
       this.TransactionItemType = transactionItemType;
       this.TreasuryCode = treasuryCode;
@@ -52,7 +42,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     internal LRSTransactionItem(LRSTransaction transaction, RecordingActType transactionItemType,
                                 LRSLawArticle treasuryCode, Money operationValue, 
-                                Quantity quantity) : base(thisTypeName) {
+                                Quantity quantity) {
       this.Transaction = transaction;
       this.TransactionItemType = transactionItemType;
       this.TreasuryCode = treasuryCode;
@@ -65,7 +55,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static internal LRSTransactionItem Parse(DataRow dataRow) {
-      return BaseObject.Parse<LRSTransactionItem>(dataRow);
+      return BaseObject.ParseDataRow<LRSTransactionItem>(dataRow);
     }
 
     #endregion Constructors and parsers

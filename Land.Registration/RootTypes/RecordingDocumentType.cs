@@ -15,7 +15,7 @@ using Empiria.Ontology;
 namespace Empiria.Land.Registration {
 
   /// <summary>Power type that describes recording document types.</summary>
-  public sealed class RecordingDocumentType : PowerType<RecordingDocument> {
+  public sealed class RecordingDocumentType : Powertype<RecordingDocument> {
 
     #region Fields
 
@@ -31,11 +31,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public new RecordingDocumentType Parse(int typeId) {
-      return PowerType<RecordingDocument>.Parse<RecordingDocumentType>(typeId);
+      return Powertype<RecordingDocument>.Parse<RecordingDocumentType>(typeId);
     }
 
     static internal RecordingDocumentType Parse(ObjectTypeInfo typeInfo) {
-      return PowerType<RecordingDocument>.Parse<RecordingDocumentType>(typeInfo);
+      return Powertype<RecordingDocument>.Parse<RecordingDocumentType>(typeInfo);
     }
 
     static public RecordingDocumentType Empty {
@@ -48,12 +48,8 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    internal new RecordingDocument CreateInstance() {
-      RecordingDocument instance = base.CreateInstance();
-      
-      instance.DocumentType = this;
-      
-      return instance;
+    public new RecordingDocument CreateInstance() {
+      return base.CreateInstance();
     }
 
     #endregion Public methods

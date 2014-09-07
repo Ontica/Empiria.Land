@@ -17,20 +17,10 @@ namespace Empiria.Land.Registration {
   ///  Transaction acts are not recordable.</summary>
   public class TransactionAct : RecordingAct {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.RecordingAct.TransactionAct";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    private TransactionAct() : base(thisTypeName) {
-      // For create instances use Create static method instead    
-    }
-
-    protected TransactionAct(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    protected TransactionAct(RecordingActType powertype) : base(powertype) {
+      // Required by Empiria Framework for all partitioned types.
     }
 
     static public new TransactionAct Parse(int id) {

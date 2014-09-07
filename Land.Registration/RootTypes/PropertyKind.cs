@@ -15,20 +15,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Describes the kind of a property type.</summary>
   public class PropertyKind : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.PropertyKind";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public PropertyKind() : base(thisTypeName) {
-
-    }
-
-    private PropertyKind(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private PropertyKind() {
+      // Required by Empiria Framework.
     }
 
     static public PropertyKind Parse(int id) {

@@ -35,16 +35,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Abstract class that represents a recording act party.</summary>
   public abstract class Party : BaseObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.Party";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    protected Party(string typeName) : base(typeName) {
-      // Empiria Object Type pattern classes always has this constructor. Don't delete
+    protected Party() {
+      // Required by Empiria Framework.
     }
 
     static public Party Parse(int id) {
@@ -52,7 +46,7 @@ namespace Empiria.Land.Registration {
     }
 
     static internal Party Parse(DataRow dataRow) {
-      return BaseObject.Parse<Party>(dataRow);
+      return BaseObject.ParseDataRow<Party>(dataRow);
     }
 
     static public FixedList<Party> GetList(ObjectTypeInfo partyType, string keywords) {

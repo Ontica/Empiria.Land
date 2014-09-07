@@ -22,8 +22,6 @@ namespace Empiria.Land.Registration {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.RecordingAttachmentFolder";
-
     static private readonly string attachmentFolderPostfixTag =
                             ConfigurationData.GetString("RecordingBook.AttachmentFolderPostfixTag");
 

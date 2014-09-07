@@ -22,12 +22,14 @@ namespace Empiria.Land.Registration {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.FilesFolder.RecordBookDirectory";
-
-    static private readonly string emptyBookUrl = ConfigurationData.GetString("RecordingBook.Empty.Book.Image.Url");
-    static private readonly string emptyImageFullPath = ConfigurationData.GetString("RecordingBook.Empty.Image.Path");
-    static private readonly string emptyImageFileName = ConfigurationData.GetString("RecordingBook.Empty.Image.FileName");
-    static private readonly bool processOnlyNewDirectories = ConfigurationData.GetBoolean("RecordBookDirectory.ProcessOnlyNewDirectories");
+    static private readonly string emptyBookUrl = 
+                            ConfigurationData.GetString("RecordingBook.Empty.Book.Image.Url");
+    static private readonly string emptyImageFullPath = 
+                            ConfigurationData.GetString("RecordingBook.Empty.Image.Path");
+    static private readonly string emptyImageFileName = 
+                            ConfigurationData.GetString("RecordingBook.Empty.Image.FileName");
+    static private readonly bool processOnlyNewDirectories = 
+                            ConfigurationData.GetBoolean("RecordBookDirectory.ProcessOnlyNewDirectories");
 
     private RecorderOffice recorderOffice = RecorderOffice.Empty;
 
@@ -35,14 +37,8 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public RecordBookDirectory()
-      : base(thisTypeName) {
-
-    }
-
-    private RecordBookDirectory(string typeName)
-      : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private RecordBookDirectory() {
+      // Required by Empiria Framework.
     }
 
     static public new RecordBookDirectory Parse(int id) {
@@ -72,7 +68,7 @@ namespace Empiria.Land.Registration {
     #region Public properties
 
     static public ObjectTypeInfo DirectoryType {
-      get { return ObjectTypeInfo.Parse(thisTypeName); }
+      get { return ObjectTypeInfo.Parse<RecordBookDirectory>(); }
     }
 
     public string GetImageURL(int position) {

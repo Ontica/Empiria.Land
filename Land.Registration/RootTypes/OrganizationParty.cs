@@ -20,17 +20,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Represents an organization recording act party.</summary>
   public class OrganizationParty : Party {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.Party.OrganizationParty";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    protected OrganizationParty(string typeName)
-      : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private OrganizationParty() {
+      // Required by Empiria Framework.
     }
 
     static public OrganizationParty Create(ObjectTypeInfo objectTypeInfo) {

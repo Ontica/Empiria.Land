@@ -19,20 +19,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Represents a judicial office.</summary>
   public class JudicialOffice : Organization {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.Contact.Organization.JudicialOffice";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public JudicialOffice() : base(thisTypeName) {
-
-    }
-
-    protected JudicialOffice(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private JudicialOffice() {
+      // Required by Empiria Framework.
     }
 
     static public new JudicialOffice Empty {

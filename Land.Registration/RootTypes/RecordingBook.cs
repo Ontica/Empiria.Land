@@ -40,7 +40,6 @@ namespace Empiria.Land.Registration {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.RecordingBook";
     static public bool UseBookAttachments = ConfigurationData.GetBoolean("RecordingBook.UseAttachments");
     static public bool UseBookLevel = ConfigurationData.GetBoolean("RecordingBookType.UseBookLevel");
 
@@ -50,15 +49,11 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public RecordingBook() : base(thisTypeName) {
-
+    private RecordingBook() {
+      // Required by Empiria Framework.
     }
 
-    protected RecordingBook(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
-    }
-
-    internal RecordingBook(RecorderOffice recorderOffice, string recordingBookTag) : base(thisTypeName) {
+    internal RecordingBook(RecorderOffice recorderOffice, string recordingBookTag) {
       this.RecorderOffice = recorderOffice;
       this.Parent = RecordingBook.Empty;
       this.BookType = RecordingBookType.Section;
@@ -68,7 +63,7 @@ namespace Empiria.Land.Registration {
       this.ImagingFilesFolder = RecordBookDirectory.Empty;
     }
 
-    internal RecordingBook(RecordingBook parent, string recordingBookTag) : base(thisTypeName) {
+    internal RecordingBook(RecordingBook parent, string recordingBookTag) {
       this.RecorderOffice = parent.RecorderOffice;
       this.Parent = parent;
       this.BookType = parent.ChildsRecordingBookType;
@@ -79,7 +74,7 @@ namespace Empiria.Land.Registration {
     }
 
     internal RecordingBook(RecordingBook parent, RecordBookDirectory imagingDirectory,
-                           string recordingBookTag) : base(thisTypeName) {
+                           string recordingBookTag) {
       this.RecorderOffice = parent.RecorderOffice;
       this.Parent = parent;
       this.BookType = parent.ChildsRecordingBookType;
@@ -94,7 +89,7 @@ namespace Empiria.Land.Registration {
     }
 
     static internal RecordingBook Parse(DataRow dataRow) {
-      return BaseObject.Parse<RecordingBook>(dataRow);
+      return BaseObject.ParseDataRow<RecordingBook>(dataRow);
     }
 
     static public RecordingBook Empty {

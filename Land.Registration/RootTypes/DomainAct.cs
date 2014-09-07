@@ -15,20 +15,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Represents a domain traslative recording act.</summary>
   public class DomainAct : RecordingAct {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.RecordingAct.DomainAct";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    private DomainAct() : base(thisTypeName) {
-      // For create instances use Create static method instead
-    }
-
-    protected DomainAct(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private DomainAct(RecordingActType powertype) : base(powertype) {
+      // Required by Empiria Framework for all partitioned types.
     }
 
     static public new DomainAct Parse(int id) {

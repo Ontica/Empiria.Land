@@ -21,20 +21,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Represents a property.</summary>
   public class Property : BaseObject, IProtected {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.Property";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public Property() : base(thisTypeName) {
-      Initialize();
-    }
-
-    protected Property(string typeName) : base(typeName) {
-      // Empiria Object Type pattern classes always has this constructor. Don't delete
+    internal Property() {
+      // Required by Empiria Framework.
     }
 
     static public Property Parse(int id) {
@@ -42,7 +32,7 @@ namespace Empiria.Land.Registration {
     }
 
     static internal Property Parse(DataRow dataRow) {
-      return BaseObject.Parse<Property>(dataRow);
+      return BaseObject.ParseDataRow<Property>(dataRow);
     }
 
     static public Property ParseWithUniqueCode(string propertyKey) {
@@ -57,11 +47,6 @@ namespace Empiria.Land.Registration {
 
     static public Property Empty {
       get { return BaseObject.ParseEmpty<Property>(); }
-    }
-
-    private void Initialize() {
-      this.Location = Address.Empty;
-      this.CadastralData = CadastralInfo.Empty;
     }
 
     #endregion Constructors and parsers

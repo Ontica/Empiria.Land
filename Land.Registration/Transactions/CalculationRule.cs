@@ -15,21 +15,10 @@ namespace Empiria.Land.Registration.Transactions {
   /// <summary>Describes a recorder office transaction type.</summary>
   public class CalculationRule : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.CalculationRule";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public CalculationRule() : base(thisTypeName) {
-
-    }
-
-    protected CalculationRule(string typeName)
-      : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private CalculationRule() {
+      // Required by Empiria Framework.
     }
 
     static public CalculationRule Empty {

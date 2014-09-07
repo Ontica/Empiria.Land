@@ -17,20 +17,10 @@ namespace Empiria.Land.Registration {
   /// properties, persons or neither.</summary>
   public class InformationAct : RecordingAct {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.RecordingAct.InformationAct";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    private InformationAct() : base(thisTypeName) {
-      // For create instances use Create static method instead
-    }
-
-    protected InformationAct(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private InformationAct(RecordingActType powertype) : base(powertype) {
+      // Required by Empiria Framework for all partitioned types.
     }
 
     static public new InformationAct Parse(int id) {

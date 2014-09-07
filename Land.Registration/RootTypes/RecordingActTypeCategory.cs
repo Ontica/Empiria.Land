@@ -15,22 +15,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Describes a recording type category or classificator.</summary>
   public class RecordingActTypeCategory : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.RecordingActTypeCategory";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public RecordingActTypeCategory()
-      : base(thisTypeName) {
-
-    }
-
-    private RecordingActTypeCategory(string typeName)
-      : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private RecordingActTypeCategory() {
+      // Required by Empiria Framework.
     }
 
     static public RecordingActTypeCategory Parse(int id) {

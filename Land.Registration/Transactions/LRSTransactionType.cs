@@ -15,20 +15,10 @@ namespace Empiria.Land.Registration.Transactions {
   /// <summary>Describes a recorder office transaction type.</summary>
   public class LRSTransactionType : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.LRSTransactionType";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public LRSTransactionType() : base(thisTypeName) {
-
-    }
-
-    protected LRSTransactionType(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private LRSTransactionType() {
+      // Required by Empiria Framework.
     }
 
     static public LRSTransactionType Empty {

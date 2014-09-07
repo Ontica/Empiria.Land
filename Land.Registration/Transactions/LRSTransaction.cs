@@ -52,8 +52,6 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.LRSTransaction";
-
     private Lazy<LRSTransactionItemList> recordingActs = null;
     private Lazy<LRSPaymentList> payments = null;
     private Lazy<LRSTransactionTaskList> taskList = null;
@@ -62,17 +60,15 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Constuctors and parsers
 
-    public LRSTransaction(LRSTransactionType transactionType) : base(thisTypeName) {
-      Initialize();
+    private LRSTransaction() {
+      // Required by Empiria Framework.
+    }
+
+    public LRSTransaction(LRSTransactionType transactionType) {
       this.TransactionType = transactionType;
     }
 
-    protected LRSTransaction(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise.
-      Initialize();
-    }
-
-    private void Initialize() {
+    protected override void OnInitialize() {
       recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
       payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
       taskList = new Lazy<LRSTransactionTaskList>(() => LRSTransactionTaskList.Parse(this));
@@ -93,7 +89,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static internal LRSTransaction Parse(DataRow dataRow) {
-      return BaseObject.Parse<LRSTransaction>(dataRow);
+      return BaseObject.ParseDataRow<LRSTransaction>(dataRow);
     }
 
     static public LRSTransaction Empty {

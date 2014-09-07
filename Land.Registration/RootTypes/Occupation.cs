@@ -15,20 +15,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Describes a person occupation or main activity.</summary>
   public class Occupation : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.Occupation";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public Occupation() : base(thisTypeName) {
-
-    }
-
-    protected Occupation(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private Occupation() {
+      // Required by Empiria Framework.
     }
 
     static public Occupation Empty {

@@ -15,20 +15,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Describes a person marriage status.</summary>
   public class MarriageStatus : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.MarriageStatus";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public MarriageStatus() : base(thisTypeName) {
-
-    }
-
-    protected MarriageStatus(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private MarriageStatus() {
+      // Required by Empiria Framework.
     }
 
     static public MarriageStatus Empty {

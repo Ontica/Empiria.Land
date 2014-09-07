@@ -15,20 +15,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Represents a property limitation or property assessment or mortgage act.</summary>
   public class LimitationAct : RecordingAct {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.RecordingAct.LimitationAct";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    private LimitationAct() : base(thisTypeName) {
-      // For create instances use Create static method instead
-    }
-
-    protected LimitationAct(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private LimitationAct(RecordingActType powertype) : base(powertype) {
+      // Required by Empiria Framework for all partitioned types.
     }
 
     static public new LimitationAct Parse(int id) {

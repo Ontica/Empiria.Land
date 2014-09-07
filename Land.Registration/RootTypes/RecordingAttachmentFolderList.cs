@@ -20,12 +20,6 @@ namespace Empiria.Land.Registration {
   /// <summary>Stores directory information about recording attachments.</summary>
   public class RecordingAttachmentFolderList : EmpiriaList<RecordingAttachmentFolder> {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.RecordingAttachmentFolderList";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
     public RecordingAttachmentFolderList() {

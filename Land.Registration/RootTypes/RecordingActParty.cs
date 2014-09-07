@@ -40,23 +40,13 @@ namespace Empiria.Land.Registration {
   /// <summary>Represents a roled association between a recording act and a party.</summary>
   public class RecordingActParty : BaseObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.RecordingActParty";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    private RecordingActParty() : base(thisTypeName) {
-
+    private RecordingActParty() {
+      // Required by Empiria Framework.
     }
 
-    protected RecordingActParty(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
-    }
-
-    internal RecordingActParty(RecordingAct recordingAct, Party party) : base(thisTypeName) {
+    internal RecordingActParty(RecordingAct recordingAct, Party party) {
       this.RecordingAct = recordingAct;
       this.Party = party;
     }
@@ -102,7 +92,7 @@ namespace Empiria.Land.Registration {
     }
 
     static internal RecordingActParty Parse(DataRow dataRow) {
-      return BaseObject.Parse<RecordingActParty>(dataRow);
+      return BaseObject.ParseDataRow<RecordingActParty>(dataRow);
     }
 
     #endregion Constructors and parsers

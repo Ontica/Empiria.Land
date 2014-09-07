@@ -15,20 +15,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Describes the role that plays a party with respect a recording act.</summary>
   public class DomainActPartyRole : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.DomainActPartyRole";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public DomainActPartyRole() : base(thisTypeName) {
-
-    }
-
-    protected DomainActPartyRole(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private DomainActPartyRole() {
+      // Required by Empiria Framework.
     }
 
     static public DomainActPartyRole Parse(int id) {

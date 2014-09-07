@@ -23,9 +23,7 @@ namespace Empiria.Land.Registration {
   public class Recording : BaseObject, IProtected {
 
     #region Fields
-
-    private const string thisTypeName = "ObjectType.Recording";
-
+    
     private Lazy<FixedList<RecordingAct>> recordingActList = null;
     private Lazy<RecordingAttachmentFolderList> attachmentFolderList = null;
 
@@ -33,20 +31,18 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
+    private Recording() {
+      // Required by Empiria Framework.
+    }
+
     internal Recording(RecordingBook recordingBook, 
-                       RecordingDocument document, string number) : base(thisTypeName) {
-      Initialize();
+                       RecordingDocument document, string number) {
       this.RecordingBook = recordingBook;
       this.Document = document;
       this.Number = number;
     }
 
-    protected Recording(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
-      Initialize();
-    }
-
-    private void Initialize() {
+    protected override void OnInitialize() {
       recordingActList = new Lazy<FixedList<RecordingAct>>(() => RecordingActsData.GetRecordingActs(this));
       attachmentFolderList = new Lazy<RecordingAttachmentFolderList>(() => this.GetAttachmentFolderList());
     }
@@ -56,7 +52,7 @@ namespace Empiria.Land.Registration {
     }
 
     static internal Recording Parse(DataRow dataRow) {      
-      return BaseObject.ParseFromBelow<Recording>(thisTypeName, dataRow);
+      return BaseObject.ParseFromBelow<Recording>(dataRow);
     }
 
     static public Recording Empty {

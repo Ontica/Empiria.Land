@@ -12,7 +12,6 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
-
 using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration {
@@ -20,20 +19,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Represents a human recording act party.</summary>
   public class HumanParty : Party {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.Party.HumanParty";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public HumanParty() : base(thisTypeName) {
-
-    }
-
-    protected HumanParty(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private HumanParty() {
+      // Required by Empiria Framework.
     }
 
     static public new HumanParty Parse(int id) {

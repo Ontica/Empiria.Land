@@ -22,19 +22,13 @@ namespace Empiria.Land.Registration {
   /// <summary>Represents a recording act/property association.</summary>
   public class TractIndexItem : BaseObject, IExtensible<TractIndexItemExtData>, IProtected {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.TractIndexItem";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    protected TractIndexItem(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private TractIndexItem() {
+      // Required by Empiria Framework.
     }
 
-    internal TractIndexItem(Property property, RecordingAct recordingAct) : base(thisTypeName) {
+    internal TractIndexItem(Property property, RecordingAct recordingAct) {
       Assertion.AssertObject(property, "property");
       Assertion.AssertObject(recordingAct, "recordingAct");
 
@@ -47,7 +41,7 @@ namespace Empiria.Land.Registration {
     }
 
     static internal TractIndexItem Parse(DataRow dataRow) {
-      return BaseObject.Parse<TractIndexItem>(dataRow);
+      return BaseObject.ParseDataRow<TractIndexItem>(dataRow);
     }
     static public TractIndexItem Empty {
       get {

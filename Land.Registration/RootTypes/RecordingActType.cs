@@ -16,7 +16,7 @@ using Empiria.Ontology;
 namespace Empiria.Land.Registration {
 
   /// <summary>Power type that defines a recording act type.</summary>
-  public sealed class RecordingActType : PowerType<RecordingAct> {
+  public sealed class RecordingActType : Powertype<RecordingAct> {
 
     #region Fields
 
@@ -40,11 +40,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public new RecordingActType Parse(int typeId) {
-      return PowerType<RecordingAct>.Parse<RecordingActType>(typeId);
+      return Powertype<RecordingAct>.Parse<RecordingActType>(typeId);
     }
 
     static internal RecordingActType Parse(ObjectTypeInfo typeInfo) {
-      return PowerType<RecordingAct>.Parse<RecordingActType>(typeInfo);
+      return Powertype<RecordingAct>.Parse<RecordingActType>(typeInfo);
     }
 
     static public RecordingActType Empty {
@@ -144,11 +144,7 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     internal new RecordingAct CreateInstance() {
-      RecordingAct instance = base.CreateInstance();
-
-      instance.RecordingActType = this;
-
-      return instance;
+      return base.CreateInstance();
     }
 
     public FixedList<RecordingActType> GetAppliesToRecordingActTypesList() {

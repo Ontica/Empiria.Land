@@ -44,12 +44,6 @@ namespace Empiria.Land.Registration {
   /// RecordingAct is registered.</summary>
   public class RecordingRule {
 
-    #region Fields
-
-    private const string thisTypeName = "StructureType.RecordingRule";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
     public RecordingRule() {

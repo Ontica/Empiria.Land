@@ -15,20 +15,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Describes a recording section type under which all the books are legaly classified.</summary>
   public class RecordingSection : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.RecordingSection";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public RecordingSection() : base(thisTypeName) {
-
-    }
-
-    private RecordingSection(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private RecordingSection() {
+      // Required by Empiria Framework.
     }
 
     static public RecordingSection Parse(int id) {

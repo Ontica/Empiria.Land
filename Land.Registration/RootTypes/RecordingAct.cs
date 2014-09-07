@@ -19,6 +19,8 @@ using Empiria.Land.Registration.Data;
 using Empiria.Land.Registration.Transactions;
 using Empiria.Security;
 
+using Empiria.Ontology;
+
 namespace Empiria.Land.Registration {
 
   /// <summary>Abstract class that represents a recording act. All recording acts types must be 
@@ -26,21 +28,18 @@ namespace Empiria.Land.Registration {
   public abstract class RecordingAct : BaseObject, IExtensible<RecordingActExtData>, IProtected {
 
     #region Fields
-
-    private const string thisTypeName = "ObjectType.RecordingAct";
-    
+   
     private Lazy<List<TractIndexItem>> attachedResources = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    protected RecordingAct(string typeName) : base(typeName) {
-      // Empiria Object Type pattern classes always has this constructor. Don't delete.
-      Initialize();
+    protected RecordingAct(RecordingActType powertype) : base(powertype) {
+      // Required by Empiria Framework for all partitioned types.
     }
 
-    private void Initialize() {
+    protected override void OnInitialize() {
       attachedResources = new Lazy<List<TractIndexItem>>(() => RecordingActsData.GetTractIndex(this));
     }
 
@@ -66,7 +65,7 @@ namespace Empiria.Land.Registration {
     }
 
     static internal RecordingAct Parse(DataRow dataRow) {
-      return BaseObject.Parse<RecordingAct>(dataRow);
+      return BaseObject.ParseDataRow<RecordingAct>(dataRow);
     }
 
     static internal RecordingAct Parse(RecordingTask task) {
@@ -90,10 +89,10 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField("RecordingActTypeId")]
     public RecordingActType RecordingActType {
-      get;
-      internal set;
+      get {
+        return (RecordingActType) base.ObjectTypeInfo;
+      }
     }
 
     [DataField("DocumentId")]

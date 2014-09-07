@@ -19,19 +19,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Represents a notary office.</summary>
   public class NotaryOffice : Organization {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.Contact.Organization.NotaryOffice";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public NotaryOffice() : base(thisTypeName) {
-    }
-
-    protected NotaryOffice(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private NotaryOffice() {
+      // Required by Empiria Framework.
     }
 
     static public new NotaryOffice Empty {

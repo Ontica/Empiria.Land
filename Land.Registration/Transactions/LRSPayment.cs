@@ -20,17 +20,15 @@ namespace Empiria.Land.Registration.Transactions {
   /// <summary>Represents a payment for a recorder office transaction.</summary>
   public class LRSPayment : BaseObject, IProtected {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.LRSPayment";
-
-    #endregion Fields
-
     #region Constuctors and parsers
+    
+    private LRSPayment() {
+      // Required by Empiria Framework.
+    }
 
     /// <summary>Initialize payment for transaction.</summary>
     internal LRSPayment(LRSTransaction transaction, string receiptNo, 
-                        decimal receiptTotal) : base(thisTypeName) {
+                        decimal receiptTotal) {
       Assertion.AssertObject(transaction, "transaction");
       Assertion.Assert(!transaction.Equals(LRSTransaction.Empty),
                         "transaction shouldn't be the empty instance.");
@@ -45,7 +43,7 @@ namespace Empiria.Land.Registration.Transactions {
     /// <summary>Initialize payment for recording. Used for historic recordings
     /// without a transaction.</summary>
     internal LRSPayment(Recording recording, string receiptNo, 
-                        decimal receiptTotal) : base(thisTypeName) {
+                        decimal receiptTotal) {
       Assertion.AssertObject(recording, "recording");
       Assertion.Assert(recording != Recording.Empty, "recording shouldn't be the empty instance.");
       Assertion.AssertObject(receiptNo, "receiptNo");
@@ -56,16 +54,12 @@ namespace Empiria.Land.Registration.Transactions {
       this.ReceiptTotal = receiptTotal;
     }
 
-    protected LRSPayment(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
-    }
-
     static public LRSPayment Parse(int id) {
       return BaseObject.ParseId<LRSPayment>(id);
     }
 
     static internal LRSPayment Parse(DataRow dataRow) {
-      return BaseObject.Parse<LRSPayment>(dataRow);
+      return BaseObject.ParseDataRow<LRSPayment>(dataRow);
     }
 
     static public LRSPayment Empty {

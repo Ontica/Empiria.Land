@@ -15,22 +15,10 @@ namespace Empiria.Land.Registration.Transactions {
   /// <summary>Describes a recorder office transaction type.</summary>
   public class LRSLawArticle : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.LRSLawArticle";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public LRSLawArticle()
-      : base(thisTypeName) {
-
-    }
-
-    protected LRSLawArticle(string typeName)
-      : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private LRSLawArticle() {
+      // Required by Empiria Framework.
     }
 
     static public LRSLawArticle Empty {

@@ -15,20 +15,10 @@ namespace Empiria.Land.Registration {
   /// <summary>Recording act that serves for cancel other recording act.</summary>
   public class CancelationAct : RecordingAct {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.RecordingAct.CancelationAct";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    private CancelationAct() : base(thisTypeName) {
-      // For create instances use Create static method instead
-    }
-
-    protected CancelationAct(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private CancelationAct(RecordingActType powertype) : base(powertype) {
+      // Required by Empiria Framework for all partitioned types.
     }
 
     static public new CancelationAct Parse(int id) {

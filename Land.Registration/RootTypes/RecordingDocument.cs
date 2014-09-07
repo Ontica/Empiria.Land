@@ -5,11 +5,12 @@
 *  Type      : RecordingDocument                              Pattern  : Empiria Object Type                 *
 *  Version   : 2.0        Date: 23/Oct/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
-*  Summary   : Represents a Land Registration System document that is attached to a Recording.               *
+*  Summary   : Partitioned type that represents a registration document that is attached to recordings.      *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
+
 using Empiria.Contacts;
 using Empiria.Geography;
 using Empiria.Land.Registration.Data;
@@ -18,22 +19,14 @@ using Empiria.Security;
 
 namespace Empiria.Land.Registration {
 
+  /// <summary>Partitioned type that represents a registration document that is attached
+  /// to recordings.</summary>
   public class RecordingDocument : BaseObject, IExtensible<RecordingDocumentExtData>, IProtected {
-
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.RecordingDocument";
-
-    #endregion Fields
 
     #region Constructors and parsers
 
-    private RecordingDocument() : base(thisTypeName) {
-      // Instance creation of this type may be invoked with RecordingDocument.Create method
-    }
-
-    protected RecordingDocument(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private RecordingDocument(RecordingDocumentType powerType) : base(powerType) {
+      // Required by Empiria Framework for all partitioned types.
     }
 
     static public RecordingDocument Parse(int id) {
@@ -41,7 +34,7 @@ namespace Empiria.Land.Registration {
     }
 
     static internal RecordingDocument Parse(DataRow dataRow) {
-      return BaseObject.Parse<RecordingDocument>(dataRow);
+      return BaseObject.ParseDataRow<RecordingDocument>(dataRow);
     }
 
     static internal RecordingDocument Parse(Recording recording) {
@@ -65,10 +58,10 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField("DocumentTypeId")]
     public RecordingDocumentType DocumentType {
-      get;
-      internal set;
+      get {
+        return (RecordingDocumentType) base.ObjectTypeInfo;
+      }
     }
 
     [DataField("DocumentSubtypeId")]
@@ -211,7 +204,7 @@ namespace Empiria.Land.Registration {
       if (this.DocumentType.Equals(newRecordingDocumentType)) {
         return;
       }
-      this.DocumentType = newRecordingDocumentType;
+      base.ReclassifyAs(newRecordingDocumentType);
       this.IssueDate = ExecutionServer.DateMinValue;
       this.ExtensionData = RecordingDocumentExtData.Empty;
       this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
