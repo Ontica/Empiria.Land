@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : RecordingDocument                              Pattern  : Empiria Object Type                 *
+*  Type      : RecordingDocument                              Pattern  : Partitioned type                    *
 *  Version   : 2.0        Date: 23/Oct/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
-*  Summary   : Partitioned type that represents a registration document that is attached to recordings.      *
+*  Summary   : Partitioned type that represents a document that is attached to recordings.                   *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -15,17 +15,18 @@ using Empiria.Contacts;
 using Empiria.Geography;
 using Empiria.Land.Registration.Data;
 using Empiria.Land.Registration.Transactions;
+using Empiria.Ontology;
 using Empiria.Security;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Partitioned type that represents a registration document that is attached
-  /// to recordings.</summary>
+  /// <summary>Partitioned type that represents a document that is attached to recordings.</summary>
+  [PartitionedType(typeof(RecordingDocumentType))]
   public class RecordingDocument : BaseObject, IExtensible<RecordingDocumentExtData>, IProtected {
 
     #region Constructors and parsers
 
-    private RecordingDocument(RecordingDocumentType powerType) : base(powerType) {
+    public RecordingDocument(RecordingDocumentType powerType) : base(powerType) {
       // Required by Empiria Framework for all partitioned types.
     }
 
@@ -47,7 +48,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public RecordingDocument Create(RecordingDocumentType documentType) {
-      return documentType.CreateInstance();
+      return new RecordingDocument(documentType);
     }
 
     static public RecordingDocument Empty {

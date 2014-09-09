@@ -47,7 +47,7 @@ namespace Empiria.Land.UI {
 
     public RecordingDocument FillRecordingDocument(RecordingDocumentType documentType) {
       if (this.Document == RecordingDocument.Empty) {
-        this.document = documentType.CreateInstance();
+        this.document = new RecordingDocument(documentType);
       }
       return ImplementsFillRecordingDocument(documentType);
     }

@@ -16,11 +16,10 @@ using Empiria.Ontology;
 namespace Empiria.Land.Registration {
 
   /// <summary>Power type that defines a recording act type.</summary>
-  public sealed class RecordingActType : Powertype<RecordingAct> {
+  [Powertype(typeof(RecordingAct))]
+  public sealed class RecordingActType : Powertype {
 
     #region Fields
-
-    private const string thisTypeName = "PowerType.RecordingActType";
 
     static readonly string allowEmptyPartiesVector = ConfigurationData.GetString("AllowEmptyParties.Vector");
     static readonly string autoRegisterVector = ConfigurationData.GetString("AutoRegister.RecordingActType");
@@ -35,21 +34,21 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private RecordingActType(int typeId) : base(thisTypeName, typeId) {
-      // Empiria Power type pattern classes always has this constructor. Don't delete
+    private RecordingActType(int typeId) : base(typeId) {
+      // Empiria powertype types always have this constructor.
     }
 
     static public new RecordingActType Parse(int typeId) {
-      return Powertype<RecordingAct>.Parse<RecordingActType>(typeId);
+      return ObjectTypeInfo.Parse<RecordingActType>(typeId);
     }
 
-    static internal RecordingActType Parse(ObjectTypeInfo typeInfo) {
-      return Powertype<RecordingAct>.Parse<RecordingActType>(typeInfo);
+    static internal new RecordingActType Parse(string typeName) {
+      return RecordingActType.Parse<RecordingActType>(typeName);
     }
 
     static public RecordingActType Empty {
       get {
-        return RecordingActType.Parse(ObjectTypeInfo.Parse("ObjectType.RecordingAct.InformationAct.Empty"));
+        return RecordingActType.Parse("ObjectType.RecordingAct.InformationAct.Empty");
       }
     }
 
@@ -143,32 +142,36 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    internal new RecordingAct CreateInstance() {
-      return base.CreateInstance();
+    /// <summary>Factory method to create recording acts</summary>
+    internal RecordingAct CreateInstance() {
+      throw new NotImplementedException();
     }
 
     public FixedList<RecordingActType> GetAppliesToRecordingActTypesList() {
-      var list = base.GetTypeLinks<RecordingActType>("RecordingActType_AppliesToRecordingAct");
+      var json = Empiria.Data.JsonObject.Parse(base.ExtensionData);
 
+      var list = json.GetList<RecordingActType>("AppliesTo");      
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
-      return list;
+      return list.ToFixedList();
     }
 
     public FixedList<LRSLawArticle> GetFinancialLawArticles() {
-      var list = base.GetLinks<LRSLawArticle>("RecordingActType_FinancialLawArticle");
+      var json = Empiria.Data.JsonObject.Parse(base.ExtensionData);
 
+      var list = json.GetList<LRSLawArticle>("FinancialConcepts");
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
-      return list;
+      return list.ToFixedList();
     }
 
     public FixedList<DomainActPartyRole> GetRoles() {
-      var list = base.GetLinks<DomainActPartyRole>("RecordingActType_Roles");
+      var json = Empiria.Data.JsonObject.Parse(base.ExtensionData);
 
+      var list = json.GetList<DomainActPartyRole>("Roles");
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
-      return list;
+      return list.ToFixedList();
     }
 
     #endregion Public methods

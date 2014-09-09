@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : RecordingAct                                   Pattern  : Empiria Object Type                 *
+*  Type      : RecordingAct                                   Pattern  : Partitioned type                    *
 *  Version   : 2.0        Date: 23/Oct/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
-*  Summary   : Abstract class that represents a recording act. All recording acts must be descendents        *
+*  Summary   : Partitioned type that represents a recording act. All recording acts must be descendents      *
 *              of this type.                                                                                 *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
@@ -23,8 +23,9 @@ using Empiria.Ontology;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Abstract class that represents a recording act. All recording acts types must be 
+  /// <summary>Partitioned type that represents a recording act. All recording acts types must be 
   /// descendents of this type.</summary>
+  [PartitionedType(typeof(RecordingActType))]
   public abstract class RecordingAct : BaseObject, IExtensible<RecordingActExtData>, IProtected {
 
     #region Fields

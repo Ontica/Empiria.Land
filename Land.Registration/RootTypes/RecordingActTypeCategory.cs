@@ -42,11 +42,13 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public FixedList<RecordingActType> GetItems() {
-      FixedList<RecordingActType> list = base.GetTypeLinks<RecordingActType>("RecordingActTypeCategory_Items");
+      throw new NotImplementedException();
 
-      list.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
+      //FixedList<RecordingActType> list = base.GetTypeLinks<RecordingActType>("RecordingActTypeCategory_Items");
 
-      return list;
+      //list.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
+
+      //return list;
     }
 
     #endregion Public methods

@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : RecordingDocumentType                          Pattern  : PowerType Item                      *
+*  Type      : RecordingDocumentType                          Pattern  : Power type                          *
 *  Version   : 2.0        Date: 23/Oct/2014                   License  : GNU AGPLv3  (See license.txt)       *
 *                                                                                                            *
 *  Summary   : Power type that describes recording document types.                                           *
@@ -15,44 +15,30 @@ using Empiria.Ontology;
 namespace Empiria.Land.Registration {
 
   /// <summary>Power type that describes recording document types.</summary>
-  public sealed class RecordingDocumentType : Powertype<RecordingDocument> {
-
-    #region Fields
-
-    private const string thisTypeName = "PowerType.GeographicItemType";
-
-    #endregion Fields
+  [Powertype(typeof(RecordingDocument))]
+  public sealed class RecordingDocumentType : Powertype {
 
     #region Constructors and parsers
 
-    private RecordingDocumentType(int typeId)
-      : base(thisTypeName, typeId) {
-      // Empiria PowerType pattern classes always has this constructor. Don't delete
+    private RecordingDocumentType(int typeId) : base(typeId) {
+      // Empiria powertype types always have this constructor.
     }
 
     static public new RecordingDocumentType Parse(int typeId) {
-      return Powertype<RecordingDocument>.Parse<RecordingDocumentType>(typeId);
+      return ObjectTypeInfo.Parse<RecordingDocumentType>(typeId);
     }
 
-    static internal RecordingDocumentType Parse(ObjectTypeInfo typeInfo) {
-      return Powertype<RecordingDocument>.Parse<RecordingDocumentType>(typeInfo);
+    static internal new RecordingDocumentType Parse(string typeName) {
+      return ObjectTypeInfo.Parse<RecordingDocumentType>(typeName);
     }
 
     static public RecordingDocumentType Empty {
       get {
-        return RecordingDocumentType.Parse(ObjectTypeInfo.Parse("ObjectType.RecordingDocument.Empty"));
+        return RecordingDocumentType.Parse("ObjectType.RecordingDocument");
       }
     }
 
     #endregion Constructors and parsers
-
-    #region Public methods
-
-    public new RecordingDocument CreateInstance() {
-      return base.CreateInstance();
-    }
-
-    #endregion Public methods
 
   } // class RecordingDocumentType
 
