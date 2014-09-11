@@ -29,6 +29,12 @@ namespace Empiria.Land.Registration {
       get { return BaseObject.ParseEmpty<RecordingActTypeCategory>(); }
     }
 
+    static public FixedList<RecordingActTypeCategory> GetList(string listName) {
+      GeneralList listType = GeneralList.Parse(listName);
+
+      return listType.GetItems<RecordingActTypeCategory>();
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties

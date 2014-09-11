@@ -26,7 +26,8 @@ namespace Empiria.Land.Registration.Data {
     static public FixedList<RecordingAct> GetPropertyRecordingActList(Property property) {
       var operation = DataOperation.Parse("qryLRSPropertyRecordingActs", property.Id);
 
-      return DataReader.GetFixedList<RecordingAct>(operation, (x) => RecordingAct.Parse(x));
+      return DataReader.GetList<RecordingAct>(operation, 
+                                              (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
     }
 
     static public FixedList<RecordingAct> GetPropertyRecordingActListUntil(Property property, RecordingAct breakAct, 
@@ -51,7 +52,8 @@ namespace Empiria.Land.Registration.Data {
     static public FixedList<RecordingAct> GetRecordingActs(Recording recording) {
       var operation = DataOperation.Parse("qryLRSRecordingRecordedActs", recording.Id);
 
-      return DataReader.GetFixedList<RecordingAct>(operation, (x) => RecordingAct.Parse(x));
+      return DataReader.GetList<RecordingAct>(operation,
+                                              (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
     }
 
     static public FixedList<RecordingAct> GetRecordingActs(RecordingDocument document) {
@@ -64,7 +66,7 @@ namespace Empiria.Land.Registration.Data {
                   " ORDER BY RecordingActIndex, RegistrationTime";
       var operation = DataOperation.Parse(sql);
 
-      return DataReader.GetList<RecordingAct>(operation, (x) => RecordingAct.Parse(x)).ToFixedList();
+      return DataReader.GetList<RecordingAct>(operation, (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
     }
 
     static internal List<TractIndexItem> GetTractIndex(RecordingAct recordingAct) {
@@ -72,9 +74,9 @@ namespace Empiria.Land.Registration.Data {
         return new List<TractIndexItem>();
       }
      
-      var operation = DataOperation.Parse("qryLRSRecordingActTractIndex", recordingAct.Id);   
-    
-      return DataReader.GetList<TractIndexItem>(operation, (x) => TractIndexItem.Parse(x));
+      var operation = DataOperation.Parse("qryLRSRecordingActTractIndex", recordingAct.Id);
+
+      return DataReader.GetList<TractIndexItem>(operation, (x) => BaseObject.ParseList<TractIndexItem>(x));
     }
 
     static internal FixedList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {

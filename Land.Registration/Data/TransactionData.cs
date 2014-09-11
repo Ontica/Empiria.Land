@@ -80,19 +80,20 @@ namespace Empiria.Land.Registration.Data {
     static public List<LRSTransactionItem> GetLRSTransactionItems(LRSTransaction transaction) {
       var operation = DataOperation.Parse("qryLRSTransactionItems", transaction.Id);
 
-      return DataReader.GetList<LRSTransactionItem>(operation, (x) => LRSTransactionItem.Parse(x));
+      return DataReader.GetList<LRSTransactionItem>(operation, 
+                                                    (x) => BaseObject.ParseList<LRSTransactionItem>(x));
     }
 
     static internal List<LRSPayment> GetLRSTransactionPayments(LRSTransaction transaction) {
       var operation = DataOperation.Parse("qryLRSTransactionPayments", transaction.Id);
 
-      return DataReader.GetList<LRSPayment>(operation, (x) => LRSPayment.Parse(x));
+      return DataReader.GetList<LRSPayment>(operation, (x) => BaseObject.ParseList<LRSPayment>(x));
     }
 
     static public List<LRSTransactionTask> GetLRSTransactionTaskList(LRSTransaction transaction) {
       var operation = DataOperation.Parse("qryLRSTransactionTrack", transaction.Id);
 
-      return DataReader.GetList<LRSTransactionTask>(operation, (x) => LRSTransactionTask.Parse(x));
+      return DataReader.GetList<LRSTransactionTask>(operation, (x) => BaseObject.ParseList<LRSTransactionTask>(x));
     }
 
     static public DataView GetContactsWithActiveTransactions() {

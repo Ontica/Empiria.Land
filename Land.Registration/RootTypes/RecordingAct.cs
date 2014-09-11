@@ -148,7 +148,7 @@ namespace Empiria.Land.Registration {
       private set { _amendedBy.Instance = value; }
     }
 
-    [DataField("RegisteredById", Default = "Contacts.Person.Empty")]
+    [DataField("RegisteredById")]
     public Contact RegisteredBy {
       get;
       private set;

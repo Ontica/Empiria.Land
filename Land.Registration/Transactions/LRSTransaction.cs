@@ -105,7 +105,7 @@ namespace Empiria.Land.Registration.Transactions {
     static public FixedList<Contact> GetManagementAgenciesList() {
       GeneralList listType = GeneralList.Parse("LRSTransaction.ManagementAgencies.List");
 
-      return listType.GetContacts<Contact>();
+      return listType.GetItems<Contact>();
     }
 
     static public string StatusName(TransactionStatus status) {
@@ -211,7 +211,7 @@ namespace Empiria.Land.Registration.Transactions {
       set;
     }
 
-    [DataField("ManagementAgencyId", Default = "Contacts.Organization.Empty")]
+    [DataField("ManagementAgencyId")]
     public Contact ManagementAgency {
       get;
       set;

@@ -147,7 +147,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    [DataField("PostedById", Default = "Contacts.Person.Empty")]
+    [DataField("PostedById")]
     public Contact PostedBy {
       get;
       private set;
@@ -174,7 +174,7 @@ namespace Empiria.Land.Registration {
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
       if (version == 1) {
         return new object[] {
-          1, "Id", this.Id, "DocumentTypeId", this.ObjectTypeInfo.Id,
+          1, "Id", this.Id, "DocumentTypeId", this.DocumentType.Id,
           "SubtypeId", this.Subtype.Id, "UniqueCode", this.UniqueCode,
           "IssuePlaceId", this.IssuePlace.Id, "IssueOfficeId", this.IssueOffice.Id,
           "IssuedById", this.IssuedBy.Id, "IssueDate", this.IssueDate,

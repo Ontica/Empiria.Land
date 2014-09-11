@@ -70,7 +70,7 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    [DataField("PostedById", Default = "Contacts.Person.Empty")]
+    [DataField("PostedById")]
     public Contact PostedBy {
       get;
       private set;

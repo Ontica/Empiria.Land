@@ -31,37 +31,32 @@ namespace Empiria.Land.UI {
     #region Public methods
 
     static public void LoadLegacyAnnotationActTypesCategoriesCombo(HtmlSelect comboControl) {
-      GeneralList listType = GeneralList.Parse("LegacyAnnotationActTypesCategories.List");
-      FixedList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
+      var list = RecordingActTypeCategory.GetList("LegacyAnnotationActTypesCategories.List");
 
       HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de limitación )");
     }
 
     static public void LoadLegacyTraslativeActTypesCategoriesCombo(HtmlSelect comboControl) {
-      GeneralList listType = GeneralList.Parse("LegacyTraslativeActTypesCategories.List");
-      FixedList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
+      var list = RecordingActTypeCategory.GetList("LegacyTraslativeActTypesCategories.List");
 
       HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de acto jurídico )");
     }
 
     static public void LoadRecordingActTypesCategoriesCombo(HtmlSelect comboControl) {
-      GeneralList listType = GeneralList.Parse("RecordingActTypesCategories.List");
-      FixedList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
+      var list = RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
 
       HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de acto jurídico )");
     }
 
     static public void LoadTransactionActTypesCategoriesCombo(HtmlSelect comboControl) {
-      GeneralList listType = GeneralList.Parse("TransactionActTypesCategories.List");
-      FixedList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
+      var list = RecordingActTypeCategory.GetList("TransactionActTypesCategories.List");
 
       HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name");
     }
 
     static public void LoadRecordingBookClassesCombo(HtmlSelect comboControl, string headerItemText,
                                                      RecordingActTypeCategory defaultItem) {
-      GeneralList listType = GeneralList.Parse("RecordingBookClasses.List");
-      FixedList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
+      var list = RecordingActTypeCategory.GetList("RecordingBookClasses.List");
 
       HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", headerItemText);
       if (defaultItem != null && !defaultItem.IsEmptyInstance) {
@@ -81,8 +76,7 @@ namespace Empiria.Land.UI {
     }
 
     static public string GetRecordingBookClassesComboItems(string headerItemText) {
-      GeneralList listType = GeneralList.Parse("RecordingBookClasses.List");
-      FixedList<RecordingActTypeCategory> list = listType.GetItems<RecordingActTypeCategory>();
+      var list = RecordingActTypeCategory.GetList("RecordingBookClasses.List");
 
       return HtmlSelectContent.GetComboHtml(list, "Id", "Name", headerItemText);
     }

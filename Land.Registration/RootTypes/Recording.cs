@@ -134,19 +134,19 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    [DataField("ReviewedById", Default="Contacts.Person.Empty")]
+    [DataField("ReviewedById")]
     public Contact ReviewedBy {
       get;
       private set;
     }
 
-    [DataField("AuthorizedById", Default = "Contacts.Person.Empty")]
+    [DataField("AuthorizedById")]
     public Contact AuthorizedBy {
       get;
       private set;
     }
 
-    [DataField("RecordedById", Default = "Contacts.Person.Empty")]
+    [DataField("RecordedById")]
     public Contact RecordedBy {
       get;
       private set;

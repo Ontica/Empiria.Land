@@ -141,7 +141,7 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
-    [DataField("PostedById", Default = "Contacts.Person.Empty")]
+    [DataField("PostedById")]
     public Contact PostedBy {
       get;
       private set;

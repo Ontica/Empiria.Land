@@ -20,7 +20,7 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private RecordingDocumentType(int typeId) : base(typeId) {
+    private RecordingDocumentType() {
       // Empiria powertype types always have this constructor.
     }
 

@@ -138,8 +138,8 @@ namespace Empiria.Land.Registration.Data {
             " OR LRSRecordingActParties.SecondaryPartyId = " + party.Id.ToString() + ")";
 
       var operation = DataOperation.Parse(sql);
-
-      return DataReader.GetFixedList<RecordingActParty>(operation, (x) => RecordingActParty.Parse(x));
+      return DataReader.GetList<RecordingActParty>(operation, (x) => 
+                                                   BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
     static public FixedList<TractIndexItem> GetRecordingPropertiesAnnotationsList(Recording recording) {
