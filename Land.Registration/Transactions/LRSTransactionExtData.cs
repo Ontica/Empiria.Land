@@ -20,12 +20,6 @@ namespace Empiria.Land.Registration.Transactions {
   /// <summary>Contains extensible data for a land registration system transaction.</summary>
   public class LRSTransactionExtData : IExtensibleData {
 
-    #region Fields
-
-    private bool _isEmptyInstance = false;
-
-    #endregion Fields
-
     #region Constructors and parsers
 
     public LRSTransactionExtData() {
@@ -55,11 +49,13 @@ namespace Empiria.Land.Registration.Transactions {
       return data;
     }
 
+    static private readonly LRSTransactionExtData _empty = new LRSTransactionExtData() {
+      IsEmptyInstance = true
+    };
+
     static public LRSTransactionExtData Empty {
       get {
-        var data = new LRSTransactionExtData();
-        data._isEmptyInstance = true;
-        return data;
+        return _empty;
       }
     }
 
@@ -98,7 +94,8 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public bool IsEmptyInstance {
-      get { return _isEmptyInstance; }
+      get;
+      private set;
     }
 
     #endregion Properties

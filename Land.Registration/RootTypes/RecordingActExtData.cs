@@ -41,9 +41,12 @@ namespace Empiria.Land.Registration {
       return data;
     }
 
+    static private readonly RecordingActExtData _empty = new RecordingActExtData() {
+      IsEmptyInstance = true
+    };
     static public RecordingActExtData Empty {
       get {
-        return new RecordingActExtData();
+        return _empty;
       }
     }
 
@@ -67,14 +70,8 @@ namespace Empiria.Land.Registration {
     }
 
     public bool IsEmptyInstance {
-      get {
-        if (this.AppraisalAmount == Money.Empty && 
-            this.OperationAmount == Money.Empty && 
-            this.Contract.IsEmptyInstance) {
-          return true;
-        }
-        return false;
-      }
+      get;
+      private set;
     }
 
     #endregion Properties

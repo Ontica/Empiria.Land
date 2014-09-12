@@ -41,11 +41,13 @@ namespace Empiria.Land.Registration {
       return contract;
     }
 
+    static private readonly ContractData _empty = new ContractData() {
+      IsEmptyInstance = true
+    };
+
     static public ContractData Empty {
       get {
-        return new ContractData() {
-          IsEmptyInstance = true
-        };
+        return _empty;
       }
     }
 

@@ -20,12 +20,6 @@ namespace Empiria.Land.Registration {
   /// <summary>Contains extensible data for a recording act.</summary>
   public class RecordingDocumentExtData : IExtensibleData {
 
-    #region Fields
-
-    private bool _isEmptyInstance = false;
-
-    #endregion Fields
-
     #region Constructors and parsers
 
     public RecordingDocumentExtData() {
@@ -56,11 +50,10 @@ namespace Empiria.Land.Registration {
       return data;
     }
 
+    static private readonly RecordingDocumentExtData _empty = new RecordingDocumentExtData() { IsEmptyInstance = true };
     static public RecordingDocumentExtData Empty {
       get {
-        var data = new RecordingDocumentExtData();
-        data._isEmptyInstance = true;
-        return data;
+        return _empty;
       }
     }
 
@@ -114,7 +107,8 @@ namespace Empiria.Land.Registration {
     }
 
     public bool IsEmptyInstance {
-      get { return _isEmptyInstance; }
+      get;
+      private set;
     }
 
     #endregion Properties

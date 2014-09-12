@@ -27,9 +27,10 @@ namespace Empiria.Land.Registration {
       return new TractIndexItemExtData();
     }
 
+    static private readonly TractIndexItemExtData _empty = new TractIndexItemExtData();
     static public TractIndexItemExtData Empty {
       get {
-        return new TractIndexItemExtData();
+        return _empty;
       }
     }
 

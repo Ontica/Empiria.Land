@@ -39,9 +39,13 @@ namespace Empiria.Land.Registration {
       return new CadastralInfo();
     }
 
+    static private readonly CadastralInfo _empty = new CadastralInfo() {
+      IsEmptyInstance = true
+    };
+
     static public CadastralInfo Empty {
       get {
-        return new CadastralInfo();
+        return _empty;
       }
     }
 
@@ -100,12 +104,8 @@ namespace Empiria.Land.Registration {
     }
 
     public bool IsEmptyInstance {
-      get {
-        if (String.IsNullOrWhiteSpace(this.LotNo)) {
-          return true;
-        }
-        return false;
-      }
+      get;
+      private set;
     }
 
     #endregion Properties
