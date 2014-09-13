@@ -51,6 +51,10 @@ namespace Empiria.Land.Registration {
       this.Party = party;
     }
 
+    static public RecordingActParty Parse(int id) {
+      return BaseObject.ParseId<RecordingActParty>(id);
+    }
+
     static public RecordingActParty Create(RecordingAct recordingAct, Party party) {
       return new RecordingActParty(recordingAct, party);
     }
@@ -85,14 +89,6 @@ namespace Empiria.Land.Registration {
       FixedList<RecordingActParty> secondaries = GetSecondaryPartiesList(recordingAct);
 
       return secondaries.Find((x) => x.Party.Equals(party));
-    }
-
-    static public RecordingActParty Parse(int id) {
-      return BaseObject.ParseId<RecordingActParty>(id);
-    }
-
-    static internal RecordingActParty Parse(DataRow dataRow) {
-      return BaseObject.ParseDataRow<RecordingActParty>(dataRow);
     }
 
     #endregion Constructors and parsers

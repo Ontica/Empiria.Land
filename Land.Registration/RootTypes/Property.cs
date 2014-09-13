@@ -31,15 +31,11 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<Property>(id);
     }
 
-    static internal Property Parse(DataRow dataRow) {
-      return BaseObject.ParseDataRow<Property>(dataRow);
-    }
-
-    static public Property ParseWithUniqueCode(string propertyKey) {
+    static public Property TryParseWithUniqueCode(string propertyKey) {
       DataRow row = PropertyData.GetPropertyWithUniqueCode(propertyKey);
 
       if (row != null) {
-        return Property.Parse(row);
+        return BaseObject.ParseDataRow<Property>(row);
       } else {
         return null;
       }

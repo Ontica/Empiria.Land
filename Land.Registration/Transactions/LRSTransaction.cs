@@ -78,18 +78,14 @@ namespace Empiria.Land.Registration.Transactions {
       return BaseObject.ParseId<LRSTransaction>(id);
     }
 
-    static public LRSTransaction ParseWithNumber(string transactionKey) {
+    static public LRSTransaction TryParseWithNumber(string transactionKey) {
       DataRow row = TransactionData.GetLRSTransactionWithKeyRow(transactionKey);
 
       if (row != null) {
-        return LRSTransaction.Parse(row);
+        return BaseObject.ParseDataRow<LRSTransaction>(row);
       } else {
         return null;
       }
-    }
-
-    static internal LRSTransaction Parse(DataRow dataRow) {
-      return BaseObject.ParseDataRow<LRSTransaction>(dataRow);
     }
 
     static public LRSTransaction Empty {

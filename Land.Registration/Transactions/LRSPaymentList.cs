@@ -28,15 +28,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Constructors and parsers
 
-    public LRSPaymentList(List<LRSPayment> list) : base(list) {
-      this.CalculateTotals();
-    }
-
-    public LRSPaymentList(int capacity) : base(capacity) {
-      // no-op
-    }
-
-    public LRSPaymentList(DataView view) : base((x) => LRSPayment.Parse(x), view) {
+    internal LRSPaymentList(List<LRSPayment> list) : base(list) {
       this.CalculateTotals();
     }
 

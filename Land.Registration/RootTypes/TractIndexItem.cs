@@ -40,9 +40,6 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<TractIndexItem>(id);
     }
 
-    static internal TractIndexItem Parse(DataRow dataRow) {
-      return BaseObject.ParseDataRow<TractIndexItem>(dataRow);
-    }
     static public TractIndexItem Empty {
       get {
         return BaseObject.ParseEmpty<TractIndexItem>();

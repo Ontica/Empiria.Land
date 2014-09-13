@@ -54,10 +54,6 @@ namespace Empiria.Land.Registration.Transactions {
       this.Fee = new LRSFee();
     }
 
-    static internal LRSTransactionItem Parse(DataRow dataRow) {
-      return BaseObject.ParseDataRow<LRSTransactionItem>(dataRow);
-    }
-
     #endregion Constructors and parsers
 
     #region Public properties

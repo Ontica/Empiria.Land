@@ -34,16 +34,12 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<RecordingDocument>(id);
     }
 
-    static internal RecordingDocument Parse(DataRow dataRow) {
-      return BaseObject.ParseDataRow<RecordingDocument>(dataRow);
-    }
-
-    static internal RecordingDocument Parse(Recording recording) {
+    static internal RecordingDocument TryParse(Recording recording) {
       DataRow dataRow = RecordingBooksData.GetRecordingMainDocument(recording);
       if (dataRow != null) {
-        return RecordingDocument.Parse(dataRow);
+        return BaseObject.ParseDataRow<RecordingDocument>(dataRow);
       } else {
-        return RecordingDocument.Empty;
+        return null;
       }
     }
 

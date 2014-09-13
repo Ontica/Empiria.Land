@@ -65,10 +65,6 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<RecordingAct>(id);
     }
 
-    static internal RecordingAct Parse(DataRow dataRow) {
-      return BaseObject.ParseDataRow<RecordingAct>(dataRow);
-    }
-
     static internal RecordingAct Parse(RecordingTask task) {
       Assertion.AssertObject(task, "task");
 
@@ -195,7 +191,7 @@ namespace Empiria.Land.Registration {
 
     public FixedList<TractIndexItem> TractIndex {
       get {
-        return new FixedList<TractIndexItem>(attachedResources.Value);
+        return attachedResources.Value.ToFixedList();
       }
     }
 

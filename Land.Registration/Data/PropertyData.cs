@@ -37,7 +37,7 @@ namespace Empiria.Land.Registration.Data {
       var operation = DataOperation.Parse("qryLRSRecordingActPartyWithParty", party.Id);
       DataRow row = DataReader.GetDataRow(operation);
       if (row != null) {
-        return RecordingActParty.Parse(row);
+        return BaseObject.ParseDataRow<RecordingActParty>(row);
       } else {
         return null;
       }
@@ -145,9 +145,8 @@ namespace Empiria.Land.Registration.Data {
     static public FixedList<TractIndexItem> GetRecordingPropertiesAnnotationsList(Recording recording) {
       var operation = DataOperation.Parse("qryLRSRecordingPropertiesAnnotations", recording.Id);
 
-      DataView view = DataReader.GetDataView(operation);
-
-      return new FixedList<TractIndexItem>((x) => TractIndexItem.Parse(x), view);
+      return DataReader.GetList<TractIndexItem>(operation, (x) =>
+                                                   BaseObject.ParseList<TractIndexItem>(x)).ToFixedList();
     }
 
     static internal int WriteHumanParty(HumanParty o) {

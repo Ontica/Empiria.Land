@@ -88,10 +88,6 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<RecordingBook>(id);
     }
 
-    static internal RecordingBook Parse(DataRow dataRow) {
-      return BaseObject.ParseDataRow<RecordingBook>(dataRow);
-    }
-
     static public RecordingBook Empty {
       get { return BaseObject.ParseEmpty<RecordingBook>(); }
     }

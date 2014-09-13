@@ -28,22 +28,12 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Constructors and parsers
 
-    public LRSTransactionItemList(List<LRSTransactionItem> list) : base(list) {
-      //no-op
-    }
-
-    public LRSTransactionItemList(int capacity) : base(capacity) {
-      // no-op
-    }
-
-    public LRSTransactionItemList(DataView view) : base((x) => LRSTransactionItem.Parse(x), view) {
+    internal LRSTransactionItemList(List<LRSTransactionItem> list) : base(list) {
       this.CalculateTotals();
     }
 
-    static public LRSTransactionItemList Parse(LRSTransaction transaction) {
-      List<LRSTransactionItem> list = TransactionData.GetLRSTransactionItems(transaction);
-      
-      return new LRSTransactionItemList(list);
+    static internal LRSTransactionItemList Parse(LRSTransaction transaction) {
+      return TransactionData.GetLRSTransactionItemsList(transaction);
     }
 
     #endregion Constructors and parsers

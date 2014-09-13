@@ -51,10 +51,6 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<Recording>(id);
     }
 
-    static internal Recording Parse(DataRow dataRow) {      
-      return BaseObject.ParseFromBelow<Recording>(dataRow);
-    }
-
     static public Recording Empty {
       get { return BaseObject.ParseEmpty<Recording>(); }
     }

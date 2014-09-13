@@ -27,7 +27,7 @@ namespace Empiria.Land.Registration.Data {
     static public LRSTransactionTask GetTransactionLastTask(LRSTransaction transaction) {
       DataRow row = DataReader.GetDataRow(DataOperation.Parse("getLRSLastTransactionTrack", transaction.Id));
 
-      return LRSTransactionTask.Parse(row);
+      return BaseObject.ParseDataRow<LRSTransactionTask>(row);
     }
 
     static public DataView GetLRSResponsibleTransactionInbox(Contacts.Contact contact, TrackStatus status,
@@ -77,11 +77,13 @@ namespace Empiria.Land.Registration.Data {
       return dataset;
     }
 
-    static public List<LRSTransactionItem> GetLRSTransactionItems(LRSTransaction transaction) {
+    static public LRSTransactionItemList GetLRSTransactionItemsList(LRSTransaction transaction) {
       var operation = DataOperation.Parse("qryLRSTransactionItems", transaction.Id);
 
-      return DataReader.GetList<LRSTransactionItem>(operation, 
-                                                    (x) => BaseObject.ParseList<LRSTransactionItem>(x));
+      var list = DataReader.GetList<LRSTransactionItem>(operation, 
+                                                       (x) => BaseObject.ParseList<LRSTransactionItem>(x));
+
+      return new LRSTransactionItemList(list);
     }
 
     static internal List<LRSPayment> GetLRSTransactionPayments(LRSTransaction transaction) {
@@ -93,7 +95,8 @@ namespace Empiria.Land.Registration.Data {
     static public List<LRSTransactionTask> GetLRSTransactionTaskList(LRSTransaction transaction) {
       var operation = DataOperation.Parse("qryLRSTransactionTrack", transaction.Id);
 
-      return DataReader.GetList<LRSTransactionTask>(operation, (x) => BaseObject.ParseList<LRSTransactionTask>(x));
+      return DataReader.GetList<LRSTransactionTask>(operation, 
+                                                    (x) => BaseObject.ParseList<LRSTransactionTask>(x));
     }
 
     static public DataView GetContactsWithActiveTransactions() {
@@ -101,9 +104,9 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static public FixedList<Contact> GetContactsWithOutboxDocuments() {
-      DataView view = DataReader.GetDataView(DataOperation.Parse("qryLRSContactsWithOutboxDocuments"));
+      var operation = DataOperation.Parse("qryLRSContactsWithOutboxDocuments");
 
-      return new FixedList<Contact>((x) => Contact.Parse(x), view);
+      return DataReader.GetList<Contact>(operation, (x) => BaseObject.ParseList<Contact>(x)).ToFixedList();
     }
 
     #endregion Public methods

@@ -31,22 +31,22 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static public FixedList<RecordingAct> GetPropertyRecordingActListUntil(Property property, RecordingAct breakAct, 
-                                                                            bool includeBreakAct) {
+                                                                           bool includeBreakAct) {
       var operation = DataOperation.Parse("qryLRSPropertyRecordingActs", property.Id);
       DataView view = DataReader.GetDataView(operation);
       List<RecordingAct> list = new List<RecordingAct>();
       foreach (DataRowView row in view) {
-        var recordingAct = RecordingAct.Parse(row.Row);
+        var recordingAct = BaseObject.ParseDataRow<RecordingAct>(row.Row);
         if (recordingAct.Equals(breakAct)) {
           if (includeBreakAct) {
-            list.Add(RecordingAct.Parse(row.Row));
+            list.Add(BaseObject.ParseDataRow<RecordingAct>(row.Row));
           }
           break;
         } else {
-          list.Add(RecordingAct.Parse(row.Row));
+          list.Add(BaseObject.ParseDataRow<RecordingAct>(row.Row));
         }
       }
-      return new FixedList<RecordingAct>(list);
+      return list.ToFixedList();
     }
 
     static public FixedList<RecordingAct> GetRecordingActs(Recording recording) {
@@ -103,38 +103,35 @@ namespace Empiria.Land.Registration.Data {
               "WHERE (RecordingActId IN (" + ids + ") AND PartyRoleId <> -1) " +
               "AND (LinkStatus <> 'X')";
       }
-      var operation = DataOperation.Parse(sql);
 
-      return new FixedList<RecordingActParty>((x) => RecordingActParty.Parse(x), DataReader.GetDataView(operation));
+      return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
+                                        (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
     static internal FixedList<RecordingActParty> GetRecordingActPartiesList(RecordingAct recordingAct) {
-      string sql = String.Empty;
+      string sql = "SELECT * FROM LRSRecordingActParties " +
+                   "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
+                   "AND LinkStatus <> 'X'";
 
-      sql = "SELECT * FROM LRSRecordingActParties " +
-            "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
-            "AND LinkStatus <> 'X'";
-      DataOperation operation = DataOperation.Parse(sql);
-
-      return new FixedList<RecordingActParty>((x) => RecordingActParty.Parse(x), DataReader.GetDataView(operation));
+      return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
+                                        (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
     static internal FixedList<RecordingActParty> GetDomainPartyList(RecordingAct recordingAct) {
-      string sql = String.Empty;
+      string sql = "SELECT * FROM LRSRecordingActParties " +
+                   "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
+                   "AND PartyRoleId <> -1 AND LinkStatus <> 'X'";
 
-      sql = "SELECT * FROM LRSRecordingActParties " +
-            "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
-            "AND PartyRoleId <> -1 AND LinkStatus <> 'X'";
-
-      var operation = DataOperation.Parse(sql);
-
-      return new FixedList<RecordingActParty>((x) => RecordingActParty.Parse(x), DataReader.GetDataView(operation));
+      return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
+                                        (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
     static internal FixedList<Property> GetRecordingActPropertiesList(RecordingAct recordingAct) {
       var operation = DataOperation.Parse("qryLRSRecordingActProperties", recordingAct.Id);
 
-      return new FixedList<Property>((x) => Property.Parse(x), DataReader.GetDataView(operation));
+
+      return DataReader.GetList<Property>(operation,
+                                         (x) => BaseObject.ParseList<Property>(x)).ToFixedList();
     }
 
     static internal FixedList<RecordingActParty> GetSecondaryPartiesList(RecordingAct recordingAct) {
@@ -142,9 +139,8 @@ namespace Empiria.Land.Registration.Data {
                    "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
                    "AND SecondaryPartyRoleId <> -1 AND LinkStatus <> 'X'";
 
-      var operation = DataOperation.Parse(sql);
-
-      return new FixedList<RecordingActParty>((x) => RecordingActParty.Parse(x), DataReader.GetDataView(operation));
+      return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
+                                        (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
 
