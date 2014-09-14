@@ -173,17 +173,17 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     [DataField("PreviousTrackId")]
-    private LazyObject<LRSTransactionTask> _previousTask = LazyObject<LRSTransactionTask>.Empty;
+    private LazyInstance<LRSTransactionTask> _previousTask = LazyInstance<LRSTransactionTask>.Empty;
     public LRSTransactionTask PreviousTask {
-      get { return _previousTask.Instance; }
-      private set { _previousTask.Instance = value; }
+      get { return _previousTask.Value; }
+      private set { _previousTask.Value = value; }
     }
 
     [DataField("NextTrackId")]
-    private LazyObject<LRSTransactionTask> _nextTask = LazyObject<LRSTransactionTask>.Empty;
+    private LazyInstance<LRSTransactionTask> _nextTask = LazyInstance<LRSTransactionTask>.Empty;
     public LRSTransactionTask NextTask {
-      get { return _nextTask.Instance; }
-      private set { _nextTask.Instance = value; }
+      get { return _nextTask.Value; }
+      private set { _nextTask.Value = value; }
     }
 
     public string StatusName {

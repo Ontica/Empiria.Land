@@ -75,17 +75,17 @@ namespace Empiria.Land.Registration.Transactions {
     #region Public properties
 
     [DataField("TransactionId")]
-    LazyObject<LRSTransaction> _transaction = LazyObject<LRSTransaction>.Empty;
+    LazyInstance<LRSTransaction> _transaction = LazyInstance<LRSTransaction>.Empty;
     public LRSTransaction Transaction {
-      get { return _transaction.Instance; }
-      private set { _transaction.Instance = value; }
+      get { return _transaction.Value; }
+      private set { _transaction.Value = value; }
     }
 
     [DataField("RecordingId")]
-    LazyObject<Recording> _recording = LazyObject<Recording>.Empty;
+    LazyInstance<Recording> _recording = LazyInstance<Recording>.Empty;
     public Recording Recording {
-      get { return _recording.Instance; }
-      private set { _recording.Instance = value; }
+      get { return _recording.Value; }
+      private set { _recording.Value = value; }
     }
 
     [DataField("PaymentExternalID")]
@@ -95,10 +95,10 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     [DataField("PaymentOfficeId")]
-    LazyObject<Organization> _paymentOffice = LazyObject<Organization>.Empty;
+    LazyInstance<Organization> _paymentOffice = LazyInstance<Organization>.Empty;
     public Organization PaymentOffice {
-      get { return _paymentOffice.Instance; }
-      private set { _paymentOffice.Instance = value; }
+      get { return _paymentOffice.Value; }
+      private set { _paymentOffice.Value = value; }
     }
 
     [DataField("ReceiptNo", Default = "No asignado")]

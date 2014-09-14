@@ -88,22 +88,22 @@ namespace Empiria.Land.Registration {
 
     public RecordingActType RecordingActType {
       get {
-        return (RecordingActType) base.ObjectTypeInfo;
+        return (RecordingActType) base.GetEmpiriaType();
       }
     }
 
     [DataField("DocumentId")]
-    private LazyObject<RecordingDocument> _document = LazyObject<RecordingDocument>.Empty;
+    private LazyInstance<RecordingDocument> _document = LazyInstance<RecordingDocument>.Empty;
     public RecordingDocument Document {
-      get { return _document.Instance; }
-      private set { _document.Instance = value; }
+      get { return _document.Value; }
+      private set { _document.Value = value; }
     }
 
     [DataField("RecordingId")]
-    private LazyObject<Recording> _recording = LazyObject<Recording>.Empty;
+    private LazyInstance<Recording> _recording = LazyInstance<Recording>.Empty;
     public Recording Recording {
-      get { return _recording.Instance; }
-      private set { _recording.Instance = value; }
+      get { return _recording.Value; }
+      private set { _recording.Value = value; }
     }
 
     [DataField("RecordingActIndex")]
@@ -131,17 +131,17 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("AmendmentOfId")]
-    private LazyObject<RecordingAct> _amendmentOf = LazyObject<RecordingAct>.Empty;
+    private LazyInstance<RecordingAct> _amendmentOf = LazyInstance<RecordingAct>.Empty;
     public RecordingAct AmendmentOf {
-      get { return _amendmentOf.Instance; }
-      private set { _amendmentOf.Instance = value; }
+      get { return _amendmentOf.Value; }
+      private set { _amendmentOf.Value = value; }
     }
 
     [DataField("AmendedById")]
-    private LazyObject<RecordingAct> _amendedBy = LazyObject<RecordingAct>.Empty;
+    private LazyInstance<RecordingAct> _amendedBy = LazyInstance<RecordingAct>.Empty;
     public RecordingAct AmendedBy {
-      get { return _amendedBy.Instance; }
-      private set { _amendedBy.Instance = value; }
+      get { return _amendedBy.Value; }
+      private set { _amendedBy.Value = value; }
     }
 
     [DataField("RegisteredById")]

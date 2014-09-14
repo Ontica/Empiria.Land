@@ -57,7 +57,7 @@ namespace Empiria.Land.Registration {
 
     public RecordingDocumentType DocumentType {
       get {
-        return (RecordingDocumentType) base.ObjectTypeInfo;
+        return (RecordingDocumentType) base.GetEmpiriaType();
       }
     }
 
@@ -74,24 +74,24 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("IssuePlaceId")]
-    private LazyObject<GeographicRegion> _issuePlace = LazyObject<GeographicRegion>.Empty;
+    private LazyInstance<GeographicRegion> _issuePlace = LazyInstance<GeographicRegion>.Empty;
     public GeographicRegion IssuePlace {
-      get { return _issuePlace.Instance; }
-      set { _issuePlace.Instance = value; }
+      get { return _issuePlace.Value; }
+      set { _issuePlace.Value = value; }
     }
 
     [DataField("IssueOfficeId")]
-    private LazyObject<Organization> _issueOffice = LazyObject<Organization>.Empty;
+    private LazyInstance<Organization> _issueOffice = LazyInstance<Organization>.Empty;
     public Organization IssueOffice {
-      get { return _issueOffice.Instance; }
-      set { _issueOffice.Instance = value; }
+      get { return _issueOffice.Value; }
+      set { _issueOffice.Value = value; }
     }
 
     [DataField("IssuedById")]
-    private LazyObject<Contact> _issuedBy = LazyObject<Contact>.Empty;
+    private LazyInstance<Contact> _issuedBy = LazyInstance<Contact>.Empty;
     public Contact IssuedBy {
-      get { return _issuedBy.Instance; }
-      set { _issuedBy.Instance = value; }
+      get { return _issuedBy.Value; }
+      set { _issuedBy.Value = value; }
     }
 
     [DataField("IssueDate", Default = "ExecutionServer.DateMinValue")]

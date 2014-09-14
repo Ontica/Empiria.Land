@@ -97,10 +97,10 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("PartitionOfId")]
-    private LazyObject<Property> _partitionOf = LazyObject<Property>.Empty;
+    private LazyInstance<Property> _partitionOf = LazyInstance<Property>.Empty;
     public Property PartitionOf {
-      get { return _partitionOf.Instance; }
-      private set { _partitionOf.Instance = value; }
+      get { return _partitionOf.Value; }
+      private set { _partitionOf.Value = value; }
     }
 
     [DataField("PartitionNo")]
@@ -110,17 +110,17 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("MergedIntoId")]
-    private LazyObject<Property> _mergedInto = LazyObject<Property>.Empty;
+    private LazyInstance<Property> _mergedInto = LazyInstance<Property>.Empty;
     public Property MergedInto {
-      get { return _mergedInto.Instance; }
-      private set { _mergedInto.Instance = value; }
+      get { return _mergedInto.Value; }
+      private set { _mergedInto.Value = value; }
     }
 
     [DataField("PostedById")]
-    private LazyObject<Contact> _postedBy = LazyObject<Contact>.Empty;
+    private LazyInstance<Contact> _postedBy = LazyInstance<Contact>.Empty;
     public Contact PostedBy {
-      get { return _postedBy.Instance; }
-      private set { _postedBy.Instance = value; }
+      get { return _postedBy.Value; }
+      private set { _postedBy.Value = value; }
     }
 
     [DataField("PostingTime", Default = "DateTime.Now")]
@@ -142,7 +142,7 @@ namespace Empiria.Land.Registration {
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
       if (version == 1) {
         return new object[] {
-          1, "Id", this.Id, "PropertyType", this.ObjectTypeInfo.Id,
+          1, "Id", this.Id, "PropertyType", this.GetEmpiriaType().Id,
           "PostedBy", this.PostedBy.Id, "PostingTime", this.PostingTime, 
           "PartitionOf", _partitionOf.Id,
           "Status", (char) this.Status,

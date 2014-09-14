@@ -189,10 +189,10 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     [DataField("DocumentId")]
-    LazyObject<RecordingDocument> _document = LazyObject<RecordingDocument>.Empty;
+    LazyInstance<RecordingDocument> _document = LazyInstance<RecordingDocument>.Empty;
     public RecordingDocument Document {
-      get { return _document.Instance; }
-      private set { _document.Instance = value; }
+      get { return _document.Value; }
+      private set { _document.Value = value; }
     }
 
     [DataField("RecorderOfficeId")]

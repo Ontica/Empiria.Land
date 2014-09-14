@@ -150,7 +150,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteHumanParty(HumanParty o) {
-      var dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.ObjectTypeInfo.Id, o.FullName,
+      var dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.GetEmpiriaType().Id, o.FullName,
                                                o.FirstName, o.FirstFamilyName, o.SecondFamilyName,
                                                o.MaritalFamilyName, o.ShortName, o.Nicknames, o.Tags,
                                                (char) o.Gender, o.RegistryDate, o.RegistryLocation.Id,
@@ -164,7 +164,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteOrganizationParty(OrganizationParty o) {
-      var dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.ObjectTypeInfo.Id, o.FullName,
+      var dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.GetEmpiriaType().Id, o.FullName,
                                                String.Empty, String.Empty, String.Empty,
                                                String.Empty, o.ShortName, o.Nicknames, o.Tags,
                                                Contacts.Gender.NotApply, o.RegistryDate, 
@@ -179,7 +179,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteProperty(Property o) {
-      var dataOperation = DataOperation.Parse("writeLRSProperty", o.Id, o.ObjectTypeInfo.Id, o.UniqueCode, 
+      var dataOperation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UniqueCode, 
                                                o.Name, o.PropertyKind.Id, o.RecordingNotes, o.AntecedentNotes,
                                                o.Location.ToJson(), o.Location.ToString(), o.Location.ToSearchVector(),
                                                o.CadastralData.ToJson(), o.Keywords, 

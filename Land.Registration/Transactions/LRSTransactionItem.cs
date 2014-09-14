@@ -59,10 +59,10 @@ namespace Empiria.Land.Registration.Transactions {
     #region Public properties
 
     [DataField("TransactionId")]
-    LazyObject<LRSTransaction> _transaction = LazyObject<LRSTransaction>.Empty;
+    LazyInstance<LRSTransaction> _transaction = LazyInstance<LRSTransaction>.Empty;
     public LRSTransaction Transaction {
-      get { return _transaction.Instance; }
-      private set { _transaction.Instance = value; }
+      get { return _transaction.Value; }
+      private set { _transaction.Value = value; }
     }
 
     [DataField("TransactionItemTypeId")]
@@ -84,10 +84,10 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     [DataField("PaymentId")]
-    LazyObject<LRSPayment> _payment = LazyObject<LRSPayment>.Empty;
+    LazyInstance<LRSPayment> _payment = LazyInstance<LRSPayment>.Empty;
     public LRSPayment Payment {
-      get { return _payment.Instance; }
-      private set { _payment.Instance = value; }
+      get { return _payment.Value; }
+      private set { _payment.Value = value; }
     }
 
     public Quantity Quantity {

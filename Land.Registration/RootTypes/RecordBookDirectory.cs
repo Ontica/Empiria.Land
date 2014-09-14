@@ -92,10 +92,10 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("ReferenceId")]
-    LazyObject<RecordingBook> _recordingBook = LazyObject<RecordingBook>.Empty;
+    LazyInstance<RecordingBook> _recordingBook = LazyInstance<RecordingBook>.Empty;
     public RecordingBook RecordingBook {
-      get { return _recordingBook.Instance; }
-      private set { _recordingBook.Instance = value; }
+      get { return _recordingBook.Value; }
+      private set { _recordingBook.Value = value; }
     }
 
     public RecorderOffice RecorderOffice {
@@ -110,23 +110,6 @@ namespace Empiria.Land.Registration {
     #endregion Public properties
 
     #region Public methods
-
-    static public RecordBookDirectory AppendChild(FilesFolder parent, RecordingBook targetRecordingBook,
-                                                  DirectoryInfo physicalFolder) {
-      RecordBookDirectory child = new RecordBookDirectory();
-      parent.CloneInto(child);
-      child.ParentFolder = parent;
-      child.CopyFrom(physicalFolder);
-      child.RecordingBook = targetRecordingBook;
-      child.Tags = parent.Tags;
-      child.Status = FilesFolderStatus.Closed;
-      child.Save();
-
-      targetRecordingBook.ImagingFilesFolder = child;
-      targetRecordingBook.Save();
-
-      return child;
-    }
 
     public RecordingBook CreateRecordingBook(RecordingSection recordingSectionType,
                                              Contact imagesCapturedBy, Contact imagesReviewedBy,

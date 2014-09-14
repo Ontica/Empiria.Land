@@ -185,10 +185,10 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("ParentRecordingBookId")]
-    LazyObject<RecordingBook> _parent = LazyObject<RecordingBook>.Empty;
+    LazyInstance<RecordingBook> _parent = LazyInstance<RecordingBook>.Empty;
     public RecordingBook Parent {
-      get { return _parent.Instance; }
-      internal set { _parent.Instance = value; }
+      get { return _parent.Value; }
+      internal set { _parent.Value = value; }
     }
 
     [DataField("RecordingBookStatus", Default = RecordingBookStatus.Pending)]
