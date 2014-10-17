@@ -1,4 +1,5 @@
-﻿/* Empiria Land 2014 *****************************************************************************************
+﻿
+/* Empiria Land 2014 *****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *

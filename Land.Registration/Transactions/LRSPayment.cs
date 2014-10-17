@@ -20,8 +20,8 @@ namespace Empiria.Land.Registration.Transactions {
   /// <summary>Represents a payment for a recorder office transaction.</summary>
   public class LRSPayment : BaseObject, IProtected {
 
-    #region Constuctors and parsers
-    
+    #region Constructors and parsers
+
     private LRSPayment() {
       // Required by Empiria Framework.
     }

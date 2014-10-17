@@ -34,11 +34,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public FixedList<LRSLawArticle> GetList() {
-      FixedList<LRSLawArticle> list = GeneralObject.ParseList<LRSLawArticle>();
-
-      //list.Sort( (x,y) => x.Name.CompareTo(y.Name));
-
-      return list;
+      return GeneralObject.ParseList<LRSLawArticle>();
     }
 
     #endregion Constructors and parsers

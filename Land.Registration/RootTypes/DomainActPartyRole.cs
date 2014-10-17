@@ -26,11 +26,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<DomainActPartyRole> GetList() {
-      FixedList<DomainActPartyRole> list = GeneralObject.ParseList<DomainActPartyRole>();
-
-      list.Sort((x, y) => x.Name.CompareTo(y.Name));
-
-      return list;
+      return GeneralObject.ParseList<DomainActPartyRole>();
     }
 
     static public DomainActPartyRole Empty {

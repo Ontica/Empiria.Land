@@ -34,11 +34,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<MarriageStatus> GetList() {
-      FixedList<MarriageStatus> list = GeneralObject.ParseList<MarriageStatus>();
-
-      list.Sort((x, y) => x.Name.CompareTo(y.Name));
-
-      return list;
+      return GeneralObject.ParseList<MarriageStatus>();
     }
 
     #endregion Constructors and parsers

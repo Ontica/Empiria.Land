@@ -283,7 +283,7 @@ namespace Empiria.Land.Registration {
 
     protected override void OnLoadObjectData(DataRow row) {
       this.Location = Address.FromJson((string) row["LocationExtData"]);
-      this.CadastralData = CadastralInfo.FromJson((string) row["CadastralExtData"]);   
+      this.CadastralData = CadastralInfo.FromJson((string) row["CadastralExtData"]);
     }
 
     protected override void OnSave() {

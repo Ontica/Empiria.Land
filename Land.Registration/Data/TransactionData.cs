@@ -50,10 +50,15 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetDataView(DataOperation.Parse(sql));
     }
 
-    static public DataRow GetLRSTransactionWithKeyRow(string transactionKey) {
+    static public LRSTransaction TryGetLRSTransactionWithKey(string transactionKey) {
       string sql = "SELECT * FROM LRSTransactions WHERE TransactionKey = '" + transactionKey + "'";
 
-      return DataReader.GetDataRow(DataOperation.Parse(sql));
+      DataRow row = DataReader.GetDataRow(DataOperation.Parse(sql));
+      if (row != null) {
+        return BaseObject.ParseDataRow<LRSTransaction>(row);
+      } else {
+        return null;
+      }
     }
 
     static public DataSet GetLRSTransactionWithKey(string transactionKey) {

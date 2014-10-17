@@ -34,11 +34,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<PartiesRole> GetList() {
-      FixedList<PartiesRole> list = GeneralObject.ParseList<PartiesRole>();
-
-      list.Sort((x, y) => x.Name.CompareTo(y.Name));
-
-      return list;
+      return GeneralObject.ParseList<PartiesRole>();
     }
 
     #endregion Constructors and parsers

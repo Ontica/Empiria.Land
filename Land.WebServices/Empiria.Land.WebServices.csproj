@@ -141,7 +141,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Empiria.Land.WebServices.AssemblyInfo.cs" />
-    <Compile Include="RootTypes\PaymentServices.cs" />
+    <Compile Include="RootTypes\PaymentServices.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="empiria.strong.name.public.key.snk" />

@@ -121,9 +121,6 @@ namespace Empiria.Land.Registration {
     }
 
     private object GetObject() {
-      //List<KeyValuePair> list = new List<KeyValuePair>();
-
-      //Empiria.KeyValuePair
       return new {
         LotNo = this.LotNo,
       };

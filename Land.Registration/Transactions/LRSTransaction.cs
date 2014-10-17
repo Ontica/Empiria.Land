@@ -10,7 +10,6 @@
 ********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 using Empiria.Contacts;
 using Empiria.DataTypes;
@@ -58,7 +57,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     #endregion Fields
 
-    #region Constuctors and parsers
+    #region Constructors and parsers
 
     private LRSTransaction() {
       // Required by Empiria Framework.
@@ -79,13 +78,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public LRSTransaction TryParseWithNumber(string transactionKey) {
-      DataRow row = TransactionData.GetLRSTransactionWithKeyRow(transactionKey);
-
-      if (row != null) {
-        return BaseObject.ParseDataRow<LRSTransaction>(row);
-      } else {
-        return null;
-      }
+      return TransactionData.TryGetLRSTransactionWithKey(transactionKey);
     }
 
     static public LRSTransaction Empty {
@@ -683,7 +676,7 @@ namespace Empiria.Land.Registration.Transactions {
       return temp;
     }
 
-    protected override void OnLoadObjectData(DataRow row) {
+    protected override void OnLoadObjectData(System.Data.DataRow row) {
       this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);
     }
 
