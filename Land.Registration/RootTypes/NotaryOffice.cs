@@ -13,6 +13,7 @@ using System.Data;
 
 using Empiria.Contacts;
 using Empiria.Geography;
+using Empiria.Ontology;
 
 namespace Empiria.Land.Registration {
 
@@ -37,14 +38,10 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<NotaryOffice>(id);
     }
 
-    static private FixedList<NotaryOffice> GetNotariesInPlace(GeographicRegion place) {
-      throw new NotImplementedException();
+    static public FixedList<NotaryOffice> GetList(GeographicRegion place) {
+      var association = TypeAssociationInfo.Parse("NotaryOffice->Region");
 
-      //FixedList<NotaryOffice> list = place.GetContacts<NotaryOffice>("Region_NotaryOffices");
-
-      //list.Sort((x, y) => x.Number.CompareTo(y.Number));
-
-      //return list;
+      return association.GetInverseLinks<NotaryOffice>(place, (x, y) => x.Number.CompareTo(y.Number));
     }
 
     #endregion Constructors and parsers
@@ -57,10 +54,15 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+    public GeographicRegion Region {
+      get {
+        return base.GetLink<GeographicRegion>("NotaryOffice->Region");
+      }
+    }
+    
     #endregion Public properties
 
     #region Public methods
-
 
     public FixedList<Person> GetNotaries() {
       FixedList<Person> list = base.GetLinks<Person>("NotaryOffice_Notaries");

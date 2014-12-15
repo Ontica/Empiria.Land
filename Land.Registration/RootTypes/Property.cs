@@ -61,7 +61,7 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    [DataField("PropertyKindId")]
+    [DataField("PropertyKind")]
     public PropertyKind PropertyKind {
       get;
       set;
@@ -92,7 +92,7 @@ namespace Empiria.Land.Registration {
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.UniqueCode, this.CadastralData.CadastralCode, this.Name, 
-                                           this.PartitionNo, this.Location.Keywords, this.PropertyKind.Name);
+                                           this.PartitionNo, this.Location.Keywords, this.PropertyKind.Value);
       }
     }
 

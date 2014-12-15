@@ -23,7 +23,7 @@ namespace Empiria.Land.Registration {
     #region Constructors and parsers
 
     public RecordingDocumentExtData() {
-      this.IssuedByPosition = TypeAssociationInfo.Empty;
+      this.IssuedByPosition = RoleType.Empty;
     }
 
     static internal RecordingDocumentExtData Parse(string jsonString) {   
@@ -31,18 +31,15 @@ namespace Empiria.Land.Registration {
         return RecordingDocumentExtData.Empty;
       }
 
-      var json = Empiria.Data.JsonConverter.ToJsonObject(jsonString);
+      var json = Empiria.Json.JsonConverter.ToJsonObject(jsonString);
 
       var data = new RecordingDocumentExtData();
       data.BookNo = json.Get<String>("BookNo", String.Empty);
-      data.IssuedByPosition = json.Get<TypeAssociationInfo>("IssuedByPositionId", 
-                                                             TypeAssociationInfo.Empty);
+      data.IssuedByPosition = json.Get<RoleType>("IssuedByPositionId", RoleType.Empty);
       data.MainWitness = json.Get<Contact>("MainWitnessId", Person.Empty);
-      data.MainWitnessPosition = json.Get<TypeAssociationInfo>("MainWitnessPositionId",
-                                                                TypeAssociationInfo.Empty);
+      data.MainWitnessPosition = json.Get<RoleType>("MainWitnessPositionId", RoleType.Empty);
       data.SecondaryWitness = json.Get<Contact>("SecondaryWitnessId", Person.Empty);
-      data.SecondaryWitnessPosition = json.Get<TypeAssociationInfo>("SecondaryWitnessPositionId",
-                                                                     TypeAssociationInfo.Empty);
+      data.SecondaryWitnessPosition = json.Get<RoleType>("SecondaryWitnessPositionId", RoleType.Empty);
       data.StartSheet = json.Get<String>("StartSheet", String.Empty);
       data.EndSheet = json.Get<String>("EndSheet", String.Empty);
       data.SealUpperPosition = json.Get<Decimal>("SealUpperPosition", -1m);
@@ -66,7 +63,7 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    public TypeAssociationInfo IssuedByPosition {
+    public RoleType IssuedByPosition {
       get;
       set;
     }
@@ -76,7 +73,7 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    public TypeAssociationInfo MainWitnessPosition {
+    public RoleType MainWitnessPosition {
       get;
       set;
     }
@@ -86,7 +83,7 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    public TypeAssociationInfo SecondaryWitnessPosition {
+    public RoleType SecondaryWitnessPosition {
       get;
       set;
     }
@@ -117,7 +114,7 @@ namespace Empiria.Land.Registration {
 
     public string ToJson() {
       if (!this.IsEmptyInstance) {
-        return Empiria.Data.JsonConverter.ToJson(this.GetObject());
+        return Empiria.Json.JsonConverter.ToJson(this.GetObject());
       } else {
         return String.Empty;
       }

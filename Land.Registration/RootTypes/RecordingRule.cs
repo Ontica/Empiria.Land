@@ -62,7 +62,7 @@ namespace Empiria.Land.Registration {
     }
 
     static internal RecordingRule Parse(string jsonString) {
-      IDictionary<string, object> json = Empiria.Data.JsonConverter.ToObject(jsonString);
+      IDictionary<string, object> json = Empiria.Json.JsonConverter.ToObject(jsonString);
       RecordingRule rule = new RecordingRule();
 
       if (json.ContainsKey("AppliesTo")) {

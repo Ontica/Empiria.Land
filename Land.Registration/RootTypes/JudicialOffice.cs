@@ -12,6 +12,7 @@ using System;
 
 using Empiria.Contacts;
 using Empiria.Geography;
+using Empiria.Ontology;
 
 namespace Empiria.Land.Registration {
 
@@ -36,14 +37,10 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<JudicialOffice>(id);
     }
 
-    static private FixedList<JudicialOffice> GetJudicialOfficesInPlace(GeographicRegion place) {
-      throw new NotImplementedException();
+    static public FixedList<JudicialOffice> GetList(GeographicRegion place) {
+      var association = TypeAssociationInfo.Parse("JudicialOffice->Region");
 
-      //FixedList<JudicialOffice> list = place.GetContacts<JudicialOffice>("Region_JudicialOffices");
-
-      //list.Sort((x, y) => x.Number.CompareTo(y.Number));
-
-      //return list;
+      return association.GetInverseLinks<JudicialOffice>(place, (x, y) => x.Number.CompareTo(y.Number));
     }
 
     #endregion Constructors and parsers

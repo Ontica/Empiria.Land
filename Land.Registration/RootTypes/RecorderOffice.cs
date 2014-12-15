@@ -37,7 +37,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<RecorderOffice> GetList() {
-      return MainRecorderOffice.GetLinks<RecorderOffice>("MainRecorderOffice_RecorderOffices",
+      return MainRecorderOffice.GetLinks<RecorderOffice>("RecorderOffice->SubRecorderOffices",
                                                          (x, y) => x.Number.CompareTo(y.Number));
     }
 
@@ -72,44 +72,44 @@ namespace Empiria.Land.Registration {
     }
 
     public FixedList<GeographicRegion> GetNotaryOfficePlaces() {
-      return MainRecorderOffice.GetLinks<GeographicRegion>("MainRecorderOffice_NotaryOfficePlaces",
-                                                               (x, y) => x.Name.CompareTo(y.Name));
+      return MainRecorderOffice.GetLinks<GeographicRegion>("RecorderOffice->NotaryOfficePlaces",
+                                                           (x, y) => x.Name.CompareTo(y.Name));
     }
 
     public FixedList<GeographicRegion> GetPrivateDocumentIssuePlaces() {
-      return MainRecorderOffice.GetLinks<GeographicRegion>("MainRecorderOffice_PrivateDocumentIssuePlace",
-                                                               (x, y) => x.Name.CompareTo(y.Name));
+      return MainRecorderOffice.GetLinks<GeographicRegion>("RecorderOffice->PrivateDocumentIssuePlace",
+                                                           (x, y) => x.Name.CompareTo(y.Name));
     }
 
     public FixedList<GeographicRegion> GetJudicialDocumentIssuePlaces() {
-      return MainRecorderOffice.GetLinks<GeographicRegion>("MainRecorderOffice_JudicialDocumentIssuePlace",
+      return MainRecorderOffice.GetLinks<GeographicRegion>("RecorderOffice->JudicialDocumentIssuePlace",
                                                                (x, y) => x.Name.CompareTo(y.Name));
     }
 
-    public FixedList<GeographicRegion> GetMunicipalities() {
-      return this.GetLinks<GeographicRegion>("RecorderOffice_Municipalities",
-                                                 (x, y) => x.Name.CompareTo(y.Name));
+    public FixedList<Municipality> GetMunicipalities() {
+      return this.GetLinks<Municipality>("RecorderOffice->Municipalities",
+                                         (x, y) => x.Name.CompareTo(y.Name));
     }
 
     public FixedList<Person> GetRecorderOfficials() {
-      return this.GetLinks<Person>("RecorderOffice_RecorderOfficials",
+      return this.GetLinks<Person>("RecorderOffice->RecorderOfficials",
                                    (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
     }
 
     public FixedList<Person> GetRecorderOfficials(TimePeriod period) {
-      return this.GetLinks<Person>("RecorderOffice_RecorderOfficials", period,
+      return this.GetLinks<Person>("RecorderOffice->RecorderOfficials", period,
                                    (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
     }
 
     public FixedList<Organization> GetPropertyTitleOffices() {
-      return MainRecorderOffice.GetLinks<Organization>("MainRecorderOffice_PropertyTitleOffices",
+      return MainRecorderOffice.GetLinks<Organization>("RecorderOffice->PropertyTitleOffices",
                                                        (x, y) => x.FullName.CompareTo(y.FullName));
 
     }
 
-    public FixedList<Contact> GetPropertyTitleSigners(TimePeriod period) {
-      return MainRecorderOffice.GetLinks<Contact>("MainRecorderOffice_PropertyTitleSigners", period,
-                                                  (x, y) => x.FullName.CompareTo(y.FullName));
+    public FixedList<Person> GetPropertyTitleSigners(TimePeriod period) {
+      return MainRecorderOffice.GetLinks<Person>("RecorderOffice->PropertyTitleSigners", period,
+                                                  (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
     }
 
     public FixedList<RecordingBook> GetRecordingBooks(RecordingSection sectionType) {

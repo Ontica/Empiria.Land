@@ -50,8 +50,8 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetDataView(DataOperation.Parse(sql));
     }
 
-    static public LRSTransaction TryGetLRSTransactionWithKey(string transactionKey) {
-      string sql = "SELECT * FROM LRSTransactions WHERE TransactionKey = '" + transactionKey + "'";
+    static public LRSTransaction TryGetLRSTransactionWithUniqueCode(string transactionUniqueCode) {
+      string sql = "SELECT * FROM LRSTransactions WHERE TransactionUniqueCode = '" + transactionUniqueCode + "'";
 
       DataRow row = DataReader.GetDataRow(DataOperation.Parse(sql));
       if (row != null) {
@@ -89,6 +89,12 @@ namespace Empiria.Land.Registration.Data {
                                                        (x) => BaseObject.ParseList<LRSTransactionItem>(x));
 
       return new LRSTransactionItemList(list);
+    }
+
+    static internal List<LRSPayment> GetLRSRecordingPayments(Recording recording) {
+      var operation = DataOperation.Parse("qryLRSRecordingPayments", recording.Id);
+
+      return DataReader.GetList<LRSPayment>(operation, (x) => BaseObject.ParseList<LRSPayment>(x));
     }
 
     static internal List<LRSPayment> GetLRSTransactionPayments(LRSTransaction transaction) {

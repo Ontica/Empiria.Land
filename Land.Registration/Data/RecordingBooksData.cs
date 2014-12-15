@@ -222,7 +222,7 @@ namespace Empiria.Land.Registration.Data {
       DataOperation dataOperation = DataOperation.Parse("writeLRSRecordingBook", o.Id, o.RecorderOffice.Id,
                                                         (char) o.BookType, o.RecordingSectionType.Id, o.BookNumber, o.Name,
                                                         o.FullName, o.Description, o.Keywords, o.StartRecordingIndex, o.EndRecordingIndex,
-                                                        o.RecordingsControlTimePeriod.FromDate, o.RecordingsControlTimePeriod.ToDate,
+                                                        o.RecordingsControlTimePeriod.StartTime, o.RecordingsControlTimePeriod.EndTime,
                                                         o.ImagingFilesFolder.Id, o.CreationDate, o.ClosingDate,
                                                         o.CreatedBy.Id, o.AssignedTo.Id, o.ReviewedBy.Id, o.ApprovedBy.Id,
                                                         o.Parent.Id, (char) o.Status, o.RecordIntegrityHashCode);

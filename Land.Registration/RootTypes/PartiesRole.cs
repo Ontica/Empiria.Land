@@ -41,14 +41,10 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
+    [DataField(GeneralObject.ExtensionDataFieldName + ".InverseRoleName", IsOptional = true)]
     public string InverseRoleName {
-      get {
-        if (base.Name == base.Description) {
-          return String.Empty;
-        } else {
-          return base.Description;
-        }
-      }
+      get;
+      private set;
     }
 
     #endregion Public properties

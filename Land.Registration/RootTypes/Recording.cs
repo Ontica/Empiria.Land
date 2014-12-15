@@ -26,6 +26,7 @@ namespace Empiria.Land.Registration {
     
     private Lazy<FixedList<RecordingAct>> recordingActList = null;
     private Lazy<RecordingAttachmentFolderList> attachmentFolderList = null;
+    private Lazy<LRSPaymentList> payments = null;
 
     #endregion Fields
 
@@ -45,6 +46,7 @@ namespace Empiria.Land.Registration {
     protected override void OnInitialize() {
       recordingActList = new Lazy<FixedList<RecordingAct>>(() => RecordingActsData.GetRecordingActs(this));
       attachmentFolderList = new Lazy<RecordingAttachmentFolderList>(() => this.GetAttachmentFolderList());
+      payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
     }
 
     static public Recording Parse(int id) {
@@ -167,6 +169,12 @@ namespace Empiria.Land.Registration {
         } else {
           return "Inscripción " + this.Number + " en " + this.RecordingBook.FullName;
         }
+      }
+    }
+
+    public LRSPaymentList Payments {
+      get {
+        return payments.Value;
       }
     }
 

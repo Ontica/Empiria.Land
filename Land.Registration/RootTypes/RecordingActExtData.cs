@@ -31,7 +31,7 @@ namespace Empiria.Land.Registration {
         return RecordingActExtData.Empty;
       }
 
-      var json = Empiria.Data.JsonConverter.ToJsonObject(jsonString);
+      var json = Empiria.Json.JsonConverter.ToJsonObject(jsonString);
 
       var data = new RecordingActExtData();
       data.AppraisalAmount = Money.Parse(json.Slice("AppraisalAmount"));
@@ -80,7 +80,7 @@ namespace Empiria.Land.Registration {
 
     public string ToJson() {
       if (!this.IsEmptyInstance) {
-        return Empiria.Data.JsonConverter.ToJson(this.GetObject());
+        return Empiria.Json.JsonConverter.ToJson(this.GetObject());
       } else {
         return String.Empty;
       }

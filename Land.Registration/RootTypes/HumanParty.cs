@@ -22,7 +22,7 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private HumanParty() {
+    public HumanParty() {
       // Required by Empiria Framework.
     }
 

@@ -47,14 +47,19 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public FixedList<RecordingActType> GetItems() {
-      throw new NotImplementedException();
+    //[DataField(ExtensionDataFieldName + ".RecordingActTypes")]
+    // OOJJOO: Improve
 
-      //FixedList<RecordingActType> list = base.GetTypeLinks<RecordingActType>("RecordingActTypeCategory_Items");
-
-      //list.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
-
-      //return list;
+    FixedList<RecordingActType> _recordingActTypesList = null; 
+    public FixedList<RecordingActType> RecordingActTypes {
+      get {
+        if (_recordingActTypesList == null) {
+          var list = base.ExtendedDataField.GetList<RecordingActType>("RecordingActTypes");
+          list.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
+          _recordingActTypesList = list.ToFixedList();
+        }
+        return _recordingActTypesList;
+      }
     }
 
     #endregion Public methods

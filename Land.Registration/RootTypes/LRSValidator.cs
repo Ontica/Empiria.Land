@@ -150,13 +150,13 @@ namespace Empiria.Land.Registration {
                                                                    DateTime presentationTime, DateTime authorizationDate) {
       if (!recordingBook.RecordingsControlTimePeriod.IsInRange(presentationTime)) {
         return new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingPresentationTime,
-                                             recordingBook.RecordingsControlTimePeriod.FromDate.ToString("dd/MMM/yyyy"),
-                                             recordingBook.RecordingsControlTimePeriod.ToDate.ToString("dd/MMM/yyyy"), recordingBook.FullName);
+                                             recordingBook.RecordingsControlTimePeriod.StartTime.ToString("dd/MMM/yyyy"),
+                                             recordingBook.RecordingsControlTimePeriod.EndTime.ToString("dd/MMM/yyyy"), recordingBook.FullName);
       }
       if (!recordingBook.RecordingsControlTimePeriod.IsInRange(authorizationDate)) {
         return new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingAuthorizationDate,
-                                             recordingBook.RecordingsControlTimePeriod.FromDate.ToString("dd/MMM/yyyy"),
-                                             recordingBook.RecordingsControlTimePeriod.ToDate.ToString("dd/MMM/yyyy"), recordingBook.FullName);
+                                             recordingBook.RecordingsControlTimePeriod.StartTime.ToString("dd/MMM/yyyy"),
+                                             recordingBook.RecordingsControlTimePeriod.EndTime.ToString("dd/MMM/yyyy"), recordingBook.FullName);
       }
       return null;
     }

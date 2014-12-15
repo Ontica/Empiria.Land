@@ -126,6 +126,7 @@
     <Compile Include="RootTypes\RecordableObjectStatus.cs" />
     <Compile Include="RootTypes\RecordingDocumentExtData.cs" />
     <Compile Include="RootTypes\RecordingExtData.cs" />
+    <Compile Include="RootTypes\PropertyKind.cs" />
     <Compile Include="RootTypes\TractIndexItemExtData.cs" />
     <Compile Include="RootTypes\TractIndexItem.cs" />
     <Compile Include="RootTypes\RecordingActExtData.cs" />
@@ -168,7 +169,7 @@
     <Compile Include="RootTypes\StructureAct.cs" />
     <Compile Include="RootTypes\LimitationAct.cs" />
     <Compile Include="RootTypes\DomainAct.cs" />
-    <Compile Include="RootTypes\PropertyKind.cs" />
+    <Compile Include="RootTypes\ZZZPropertyKind.cs" />
     <Compile Include="RootTypes\Property.cs" />
     <Compile Include="RootTypes\RecordingAct.cs" />
     <Compile Include="RootTypes\RecordingActTypeCategory.cs" />
@@ -237,6 +238,9 @@
       <Project>{96267945-dbe1-4b2c-88e2-0ecdc5ca7669}</Project>
       <Name>Empiria.Geography</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

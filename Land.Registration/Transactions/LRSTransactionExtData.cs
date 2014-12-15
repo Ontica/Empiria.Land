@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration.Transactions {
         return LRSTransactionExtData.Empty;
       }
 
-      var json = Empiria.Data.JsonConverter.ToJsonObject(jsonString);
+      var json = Empiria.Json.JsonConverter.ToJsonObject(jsonString);
 
       var data = new LRSTransactionExtData();
       data.RequesterEmail = json.Get<String>("RequesterEmail", String.Empty);
@@ -104,7 +104,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public string ToJson() {
       if (!this.IsEmptyInstance) {
-        return Empiria.Data.JsonConverter.ToJson(this.GetObject());
+        return Empiria.Json.JsonConverter.ToJson(this.GetObject());
       } else {
         return String.Empty;
       }

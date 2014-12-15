@@ -77,8 +77,8 @@ namespace Empiria.Land.Registration.Transactions {
       return BaseObject.ParseId<LRSTransaction>(id);
     }
 
-    static public LRSTransaction TryParseWithNumber(string transactionKey) {
-      return TransactionData.TryGetLRSTransactionWithKey(transactionKey);
+    static public LRSTransaction TryParseWithNumber(string transactionUniqueCode) {
+      return TransactionData.TryGetLRSTransactionWithUniqueCode(transactionUniqueCode);
     }
 
     static public LRSTransaction Empty {
@@ -274,9 +274,9 @@ namespace Empiria.Land.Registration.Transactions {
 
     public bool ReadyForReentry {
       get {
-        var user = EmpiriaUser.Current;
+        var user = Empiria.ExecutionServer.CurrentPrincipal;
         return ((this.Status == TransactionStatus.Returned) ||
-        (this.Status == TransactionStatus.Delivered && user.CanExecute("LRSTransaction.ReentryByFails")));
+        (this.Status == TransactionStatus.Delivered && user.IsInRole("LRSTransaction.ReentryByFails")));
       }
     }
 

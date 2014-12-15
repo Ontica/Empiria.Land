@@ -146,6 +146,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="empiria.strong.name.public.key.snk" />
   </ItemGroup>
   <ItemGroup>

@@ -27,7 +27,7 @@ namespace Empiria.Land.Registration {
       this.Interest = Interest.Empty;
     }
 
-    static internal ContractData Parse(Empiria.Data.JsonObject json) {
+    static internal ContractData Parse(Empiria.Json.JsonObject json) {
       if (json.IsEmptyInstance) {
         return ContractData.Empty;
       }
@@ -81,7 +81,7 @@ namespace Empiria.Land.Registration {
     #region Methods
 
     public string ToJson() {
-      return Empiria.Data.JsonConverter.ToJson(this);
+      return Empiria.Json.JsonConverter.ToJson(this);
     }
 
     #endregion Methods

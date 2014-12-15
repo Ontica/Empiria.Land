@@ -180,7 +180,7 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteProperty(Property o) {
       var dataOperation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UniqueCode, 
-                                               o.Name, o.PropertyKind.Id, o.RecordingNotes, o.AntecedentNotes,
+                                               o.Name, o.PropertyKind, o.RecordingNotes, o.AntecedentNotes,
                                                o.Location.ToJson(), o.Location.ToString(), o.Location.ToSearchVector(),
                                                o.CadastralData.ToJson(), o.Keywords, 
                                                o.PartitionOf.Id, o.PartitionNo, o.MergedInto.Id, o.PostedBy.Id,

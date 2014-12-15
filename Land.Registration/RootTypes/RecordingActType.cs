@@ -148,16 +148,16 @@ namespace Empiria.Land.Registration {
     }
 
     public FixedList<RecordingActType> GetAppliesToRecordingActTypesList() {
-      var json = Empiria.Data.JsonObject.Parse(base.ExtensionData);
+      var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
 
-      var list = json.GetList<RecordingActType>("AppliesTo");      
+      var list = json.GetList<RecordingActType>("AppliesTo");
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
       return list.ToFixedList();
     }
 
     public FixedList<LRSLawArticle> GetFinancialLawArticles() {
-      var json = Empiria.Data.JsonObject.Parse(base.ExtensionData);
+      var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
 
       var list = json.GetList<LRSLawArticle>("FinancialConcepts");
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
@@ -166,7 +166,7 @@ namespace Empiria.Land.Registration {
     }
 
     public FixedList<DomainActPartyRole> GetRoles() {
-      var json = Empiria.Data.JsonObject.Parse(base.ExtensionData);
+      var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
 
       var list = json.GetList<DomainActPartyRole>("Roles");
       list.Sort((x, y) => x.Name.CompareTo(y.Name));

@@ -548,9 +548,12 @@ namespace Empiria.Land.Registration {
     }
 
     //Default = TimePeriod.Default;
+    private TimePeriod _timePeriod = TimePeriod.Default;
     public TimePeriod RecordingsControlTimePeriod {
-      get;
-      set;
+      get { return _timePeriod; }
+      set {
+        _timePeriod = value;
+      }
     }
 
     public Contact CreatedBy {
@@ -580,12 +583,13 @@ namespace Empiria.Land.Registration {
     }
 
     public bool Close(string esign, string notes) {
-      if (!EmpiriaUser.Current.VerifyElectronicSign(esign)) {
+      /// OOJJJOO
+      if (!ExecutionServer.CurrentPrincipal.IsInRole("VerifyESign" + esign)) { // .VerifyElectronicSign(esign)) {
         return false;
       }
       this.AssignedTo = RecorderOffice.Empty;
       this.ClosingDate = DateTime.Now;
-      this.ApprovedBy = EmpiriaUser.Current.Contact;
+      this.ApprovedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       this.Status = RecordingBookStatus.Closed;
       Save();
       return true;
