@@ -1,13 +1,13 @@
-﻿/* Empiria Land 2014 *****************************************************************************************
+﻿/* Empiria Land 2015 *****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Documentation                     Assembly : Empiria.Land.Documentation          *
 *  Type      : LandDocumentationException                     Pattern  : Empiria Exception Class             *
-*  Version   : 2.0        Date: 23/Oct/2014                   License  : GNU AGPLv3  (See license.txt)       *
+*  Version   : 2.0        Date: 04/Jan/2015                   License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : The exception that is thrown when a problem occurs in Empiria Land documentation services.    *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Reflection;
 
@@ -50,7 +50,7 @@ namespace Empiria.Land.Documentation {
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="innerException">This is the inner exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
-    public LandDocumentationException(Msg message, Exception innerException, params object[] args) :
+    public LandDocumentationException(Msg message, Exception innerException, params object[] args) : 
                                       base(message.ToString(), GetMessage(message, args), innerException) {
 
     }

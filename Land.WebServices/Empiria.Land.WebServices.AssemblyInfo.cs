@@ -1,12 +1,12 @@
-﻿/* Empiria Land 2014 *****************************************************************************************
+﻿/* Empiria Land 2015 *****************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                     System   : Land Registration System          *
 *  Assembly  : Empiria.Land.WebServices.dll                     Pattern  : Assembly Attributes File          *
-*  Version   : 2.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 2.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Empiria Land Web Services.                                                                    *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -15,11 +15,11 @@ using System.Runtime.InteropServices;
 *************************************************************************************************************/
 [assembly: AssemblyTitle("Empiria.Land.WS")]
 [assembly: AssemblyDescription("Empiria Land Web Services")]
-[assembly: AssemblyVersion("2.0.1023.0")]
-[assembly: AssemblyFileVersion("2.0.1023")]
+[assembly: AssemblyVersion("2.0.0104.0")]
+[assembly: AssemblyFileVersion("2.0.0104")]
 [assembly: AssemblyCompany("Ontica")]
-[assembly: AssemblyProduct("Empiria Land 2014")]
-[assembly: AssemblyCopyright("(c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.")]
+[assembly: AssemblyProduct("Empiria Land 2015")]
+[assembly: AssemblyCopyright("(c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.")]
 [assembly: AssemblyTrademark("Empiria and Ontica are either registered trademarks of La Vía Óntica SC or Ontica LLC.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCulture("")]
