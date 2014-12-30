@@ -136,7 +136,7 @@
     <value>El directorio '{0}' tiene un nombre incorrecto o mal formado, por lo que no puedo determinar la sección y el volumen de registro.</value>
   </data>
   <data name="ImagingFolderNotExists" xml:space="preserve">
-    <value>The imaging directory '{0}' is referenced to the folder path '{1}' that not exists.</value>
+    <value>There is not imaging folder with path '{0}' registered in the database.</value>
   </data>
   <data name="InvalidImagePosition" xml:space="preserve">
     <value>Se solicitó la imágen en la posición {2} de la carpeta de imágenes '{1}' ({0}). Sin embargo, dicha carpeta sólo contiene {3} imágenes.\n\nMUY IMPORTANTE: Es posible que la carpeta de imágenes en cuestión haya sufrido cambios NO AUTORIZADOS, por lo que este hecho debe comunicarse de inmediato al Administrador del sistema o al C. Director del Registro Público.</value>

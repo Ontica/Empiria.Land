@@ -12,6 +12,8 @@ using System;
 using System.Data;
 
 using Empiria.Data;
+using Empiria.Json;
+using Empiria.Land.Registration;
 
 namespace Empiria.Land.Documentation {
 
@@ -20,59 +22,69 @@ namespace Empiria.Land.Documentation {
 
     #region Public methods
 
-    static internal bool DocumentWasDigitalized(string documentKey) {
-      string sql = "SELECT * FROM vwLRSImagingItems WHERE DocumentUniqueCode = '{0}'";
+    static internal bool DocumentWasDigitalized(RecordingDocument document, DocumentImageType imageType) {
+      string sql = "SELECT * FROM vwLRSImagingItems " +
+                   "WHERE DocumentUID = '{0}' AND ImageType = '{1}'";
 
-      sql = String.Format(sql, documentKey);
+      sql = String.Format(sql, document.UID, (char) imageType);
 
       return (DataReader.Count(DataOperation.Parse(sql)) > 0);
     }
 
-    static internal int TryGetDocumentId(string documentKey) {
-      string sql = "SELECT DocumentId FROM LRSDocuments WHERE " +
-                   "(DocumentUniqueCode = '{0}') AND (DocumentStatus <> 'X')";
-      sql = String.Format(sql, documentKey);
+    static internal bool DocumentWasDigitalized(RecordingDocument document, RecordingBook recordingBook,
+                                                string recordingNo, DocumentImageType imageType) {
+      string sql = "SELECT * FROM vwLRSImagingItems " +
+                   "WHERE DocumentUID = '{0}' AND PhysicalBookId = {1} " +
+                   "AND RecordingNo = '{2}' AND ImageType = '{3}'";
 
-      var row = DataReader.GetDataRow(DataOperation.Parse(sql));
-      if (row != null) {
-        return (int) row["DocumentId"];
-      } else {
-        return -1;
-      }
+      sql = String.Format(sql, document.UID, recordingBook.Id, recordingNo, (char) imageType);
+
+      return (DataReader.Count(DataOperation.Parse(sql)) > 0);
     }
 
-    static internal int TryGetRecordingBookId(string recorderOfficeName, string sectionNo, string bookNo) {
-      string sql = "SELECT RecordingBookId FROM OldRecordingModelData " +
+    static internal RecordingBook TryGetRecordingBook(string recorderOfficeName,
+                                                      string sectionNo, string bookNo) {
+                    string sql = "SELECT PhysicalBookId FROM OldRecordingModelData " +
                    "WHERE RecorderOffice = '{0}' AND SectionNo = '{1}' AND " +
-                   "RecordingBookNumber = '{2}'";
+                   "PhysicalBookNo = '{2}'";
       sql = String.Format(sql, recorderOfficeName, sectionNo, bookNo);
 
       var row = DataReader.GetDataRow(DataOperation.Parse(sql));
       if (row != null) {
-        return (int) row["RecordingBookId"];
+        return RecordingBook.Parse((int) row["PhysicalBookId"]);
       } else {
-        return -1;
+        return RecordingBook.Empty;
       }
     }
 
-    static internal Tuple<int, string> TryGetOldRecording(int recordingBookId, int documentId) {
-      string sql = "SELECT OldRecordingId, RecordingNumber FROM OldRecordingModelData " +
-                   "WHERE RecordingBookId = {0} AND DocumentId = {1}";
-      sql = String.Format(sql, recordingBookId, documentId);
+    static internal string TryGetOldRecordingNo(RecordingBook recordingBook, RecordingDocument document) {
+      string sql = "SELECT OldRecordingId, PhysicalRecordingNo FROM OldRecordingModelData " +
+                   "WHERE PhysicalBookId = {0} AND DocumentId = {1}";
+      sql = String.Format(sql, recordingBook.Id, document.Id);
 
       var row = DataReader.GetDataRow(DataOperation.Parse(sql));
       if (row != null) {
-        return new Tuple<int, string>((int) row["OldRecordingId"], (string) row["RecordingNumber"]);
+        return (string) row["PhysicalRecordingNo"];
       } else {
         return null;
       }
     }
 
-    static internal int WriteImagingItem(ImagingItem o) {
-      var operation = DataOperation.Parse("writeLRSImagingItem", o.Id, o.GetEmpiriaType().Id, o.RecordingBook.Id,
-                                          o.Document.Id, o.ManualRecording.Id, o.BaseFolder.Id, o.RelativePath,
+    static internal int WriteImagingItem(DocumentImage o) {
+      var operation = DataOperation.Parse("writeLRSImagingItem", o.Id, o.GetEmpiriaType().Id, o.Document.Id,
+                                          RecordingBook.Empty.Id, String.Empty, Recording.Empty.Id,
+                                          (char) o.DocumentImageType, o.BaseFolder.Id, o.ItemPath,
                                           o.ImagingItemExtData.ToString(), o.FilesCount, o.FilesTotalSize,
-                                          o.ProtectionSeal, o.DigitalizedBy.Id, String.Empty);
+                                          String.Empty);
+      return DataWriter.Execute(operation);
+    }
+
+    static internal int WriteImagingItem(RecordingImage o) {
+      var operation = DataOperation.Parse("writeLRSImagingItem", o.Id, o.GetEmpiriaType().Id, o.Document.Id,
+                                          o.PhysicalBook.Id, o.RecordingNo, o.PhysicalRecording.Id,
+                                          (char) o.DocumentImageType, o.BaseFolder.Id, o.ItemPath,
+                                          o.ImagingItemExtData.ToString(), o.FilesCount, o.FilesTotalSize,
+                                          String.Empty);
       return DataWriter.Execute(operation);
     }
 

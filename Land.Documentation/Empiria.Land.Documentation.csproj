@@ -97,9 +97,11 @@
     <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PresentationCore" />
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -109,17 +111,20 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Empiria.Land.Documentation.AssemblyInfo.cs" />
+    <Compile Include="RootTypes\CandidateImage.cs" />
+    <Compile Include="RootTypes\RecordingCandidateImage.cs" />
+    <Compile Include="RootTypes\RecordingImage.cs" />
     <Compile Include="RootTypes\DataServices.cs" />
-    <Compile Include="RootTypes\LandImaging.cs" />
+    <Compile Include="RootTypes\ImageProcessor.cs" />
     <Compile Include="RootTypes\LandDocumentationException.cs" />
-    <Compile Include="RootTypes\ImagingItem.cs" />
-    <Compile Include="RootTypes\ManualRecordingImageFile.cs" />
+    <Compile Include="RootTypes\DocumentImage.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
