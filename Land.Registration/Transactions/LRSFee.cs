@@ -34,8 +34,7 @@ namespace Empiria.Land.Registration.Transactions {
       fee.SignCertification = (decimal) row["SignCertificationFee"];
       fee.ForeignRecord = (decimal) row["ForeignRecordingFee"];
       fee.OthersCharges = (decimal) row["OthersFee"];
-      fee.Discount = Discount.Parse(DiscountType.Parse((int) row["DiscountTypeId"]), 
-                                                       (decimal) row["Discount"]);
+      fee.Discount = Discount.Parse(DiscountType.Empty, (decimal) row["Discount"]);
 
       return fee;
     }
@@ -123,7 +122,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.Easement += fee.Easement;
       this.SignCertification += fee.SignCertification;
       this.ForeignRecord += fee.ForeignRecord;
-      this.OthersCharges += fee.OthersCharges;
+      this.OthersCharges += fee.OthersCharges;      
       this.Discount += fee.Discount;
     }
 

@@ -166,7 +166,7 @@ namespace Empiria.Land.UI {
       var list = GeneralList.Parse("LRSDomainTraslativeSection.Combo.List");
 
       HtmlSelectContent.LoadCombo(comboControl, list.GetItems<NameValuePair>(), "Value", "Name", header);
-
+       
       if (defaultValue != null) {
         comboControl.Value = defaultValue;
       }

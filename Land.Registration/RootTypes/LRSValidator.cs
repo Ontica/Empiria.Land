@@ -56,10 +56,10 @@ namespace Empiria.Land.Registration {
       FixedList<RecordingAct> domainActs = property.GetRecordingActsTract();
       if ((domainActs.Count > 1) && (property.FirstRecordingAct.Equals(recordingAct))) {
         return new LandRegistrationException(LandRegistrationException.Msg.PropertyIsReferencedInOtherDomainActs,
-                                             property.UniqueCode);
+                                             property.UID);
       }
       if (domainActs.Count == 1 && property.Annotations.Count > 0) {
-        return new LandRegistrationException(LandRegistrationException.Msg.PropertyHasAnnotations, property.UniqueCode);
+        return new LandRegistrationException(LandRegistrationException.Msg.PropertyHasAnnotations, property.UID);
       }
       return null;
     }
@@ -68,14 +68,14 @@ namespace Empiria.Land.Registration {
       FixedList<RecordingAct> domainActs = property.GetRecordingActsTract();
       if ((domainActs.Count > 1) && (property.FirstRecordingAct.Equals(recordingAct))) {
         return new LandRegistrationException(LandRegistrationException.Msg.PropertyIsReferencedInOtherDomainActs,
-                                             property.UniqueCode);
+                                             property.UID);
       }
       if ((domainActs.Count == 1) && (!property.FirstRecordingAct.Equals(recordingAct))) {
         return new LandRegistrationException(LandRegistrationException.Msg.OrphanRecordingActIfPropertyDeleted,
-                                             property.UniqueCode);
+                                             property.UID);
       }
       if ((domainActs.Count == 1) && (property.Annotations.Count > 0)) {
-        return new LandRegistrationException(LandRegistrationException.Msg.PropertyHasAnnotations, property.UniqueCode);
+        return new LandRegistrationException(LandRegistrationException.Msg.PropertyHasAnnotations, property.UID);
       }
       return null;
     }
@@ -136,12 +136,12 @@ namespace Empiria.Land.Registration {
         return new LandRegistrationException(LandRegistrationException.Msg.RecordingNumberAlreadyExists, recordingNo);
       }
 
-      int imageCount = recordingBook.ImagingFilesFolder.FilesCount;
+      int imageCount = 0; // OOJJOO recordingBook.ImagingFilesFolder.FilesCount;
 
       if ((imageStartIndex == 0) || (imageEndIndex == 0) ||
           (imageStartIndex > imageEndIndex) || (imageEndIndex > imageCount)) {
         return new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingImageRange,
-                                             recordingBook.FullName, imageStartIndex, imageEndIndex, imageCount);
+                                             recordingBook.AsText, imageStartIndex, imageEndIndex, imageCount);
       }
       return null;
     }
@@ -151,12 +151,12 @@ namespace Empiria.Land.Registration {
       if (!recordingBook.RecordingsControlTimePeriod.IsInRange(presentationTime)) {
         return new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingPresentationTime,
                                              recordingBook.RecordingsControlTimePeriod.StartTime.ToString("dd/MMM/yyyy"),
-                                             recordingBook.RecordingsControlTimePeriod.EndTime.ToString("dd/MMM/yyyy"), recordingBook.FullName);
+                                             recordingBook.RecordingsControlTimePeriod.EndTime.ToString("dd/MMM/yyyy"), recordingBook.AsText);
       }
       if (!recordingBook.RecordingsControlTimePeriod.IsInRange(authorizationDate)) {
         return new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingAuthorizationDate,
                                              recordingBook.RecordingsControlTimePeriod.StartTime.ToString("dd/MMM/yyyy"),
-                                             recordingBook.RecordingsControlTimePeriod.EndTime.ToString("dd/MMM/yyyy"), recordingBook.FullName);
+                                             recordingBook.RecordingsControlTimePeriod.EndTime.ToString("dd/MMM/yyyy"), recordingBook.AsText);
       }
       return null;
     }

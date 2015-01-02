@@ -47,7 +47,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\empiria.assemblies\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -114,6 +114,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\DocumentsData.cs" />
     <Compile Include="Data\AnalyticsData.cs" />
     <Compile Include="Data\IndexesData.cs" />
     <Compile Include="Data\RecordingActsData.cs" />
@@ -147,7 +148,7 @@
     <Compile Include="Transactions\LRSTransactionItem.cs" />
     <Compile Include="Transactions\LRSDocumentType.cs" />
     <Compile Include="Transactions\LRSTransaction.cs" />
-    <Compile Include="RootTypes\RecordingAttachmentFolder.cs" />
+    <Compile Include="RootTypes\ZZRecordingAttachmentFolder.cs" />
     <Compile Include="Transactions\LRSTransactionType.cs" />
     <Compile Include="RootTypes\PartiesRole.cs" />
     <Compile Include="RootTypes\DomainActPartyRole.cs" />
@@ -161,7 +162,7 @@
     <Compile Include="RootTypes\CancelationAct.cs" />
     <Compile Include="RootTypes\JudicialOffice.cs" />
     <Compile Include="RootTypes\NotaryOffice.cs" />
-    <Compile Include="RootTypes\RecordingAttachmentFolderList.cs" />
+    <Compile Include="RootTypes\ZZRecordingAttachmentFolderList.cs" />
     <Compile Include="RootTypes\RecordingDocument.cs" />
     <Compile Include="RootTypes\RecordingDocumentType.cs" />
     <Compile Include="RootTypes\InformationAct.cs" />

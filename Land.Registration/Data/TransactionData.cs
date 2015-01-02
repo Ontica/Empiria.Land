@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
 *  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
-*  Type      : TransactionData                              Pattern  : Data Services Static Class            *
+*  Type      : TransactionData                              Pattern  : Data Services                         *
 *  Version   : 2.0        Date: 04/Jan/2015                 License  : Please read license.txt file          *
 *                                                                                                            *
 *  Summary   : Provides database read and write methods for recording office transactions.                   *
@@ -48,17 +48,6 @@ namespace Empiria.Land.Registration.Data {
         // no-op
       }
       return DataReader.GetDataView(DataOperation.Parse(sql));
-    }
-
-    static public LRSTransaction TryGetLRSTransactionWithUniqueCode(string transactionUniqueCode) {
-      string sql = "SELECT * FROM LRSTransactions WHERE TransactionUniqueCode = '" + transactionUniqueCode + "'";
-
-      DataRow row = DataReader.GetDataRow(DataOperation.Parse(sql));
-      if (row != null) {
-        return BaseObject.ParseDataRow<LRSTransaction>(row);
-      } else {
-        return null;
-      }
     }
 
     static public DataSet GetLRSTransactionWithKey(string transactionKey) {
@@ -120,38 +109,6 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList<Contact>(operation, (x) => BaseObject.ParseList<Contact>(x)).ToFixedList();
     }
 
-    #endregion Public methods
-
-    #region Internal methods
-
-    static internal string GenerateDocumentKey() {
-      string temp = String.Empty;
-      int hashCode = 0;
-      bool useLetters = false;
-      for (int i = 0; i < 7; i++) {
-        if (useLetters) {
-          temp += EmpiriaMath.GetRandomCharacter(temp);
-          temp += EmpiriaMath.GetRandomCharacter(temp);
-        } else {
-          temp += EmpiriaMath.GetRandomDigit(temp);
-          temp += EmpiriaMath.GetRandomDigit(temp);
-        }
-        hashCode += ((Convert.ToInt32(temp[temp.Length - 2]) + 
-                      Convert.ToInt32(temp[temp.Length - 1])) % ((int) Math.Pow(i + 1, 2)));
-        useLetters = !useLetters;
-      }
-      string prefix = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
-      temp = "RP" + temp.Substring(0, 4) + "-" + temp.Substring(4, 6) + "-" + temp.Substring(10, 4);
-
-      hashCode = (hashCode * Convert.ToInt32(prefix[0])) % 49;
-      hashCode = (hashCode * Convert.ToInt32(prefix[1])) % 53;
-
-      temp += "ABCDEFGHJKMLNPQRSTUVWXYZ".Substring(hashCode % 24, 1);
-      temp += "9A8B7C6D5E4F3G2H1JKR".Substring(hashCode % 20, 1);
-
-      return temp;
-    }  
-
     static public string GeneratePropertyKey() {
       string temp = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
       temp += EmpiriaMath.GetRandomDigit(temp);
@@ -185,7 +142,7 @@ namespace Empiria.Land.Registration.Data {
       return hashCodeConvertionRule.Substring(hashCode % hashCodeConvertionRule.Length, 1);
     }
 
-    static internal string GenerateTransactionKey() {
+    static internal string GenerateTransactionUID() {
       string temp = String.Empty;
       int hashCode = 0;
       bool useLetters = false;
@@ -223,12 +180,12 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WritePayment(LRSPayment o) {
-      var dataOperation = DataOperation.Parse("writeLRSPayment", o.Id, o.Transaction.Id,
-                                  o.Recording.Id, o.PaymentExternalID, o.PaymentOffice.Id, o.ReceiptNo,
-                                  o.ReceiptTotal, o.ReceiptIssuedTime, o.VerificationTime, o.Notes,
-                                  o.PostingTime, o.PostedBy.Id, o.Integrity.GetUpdatedHashCode());
+      var op = DataOperation.Parse("writeLRSPayment", o.Id, o.Transaction.Id,
+                                   o.PaymentOffice.Id, o.ReceiptNo, o.ReceiptTotal, o.ReceiptIssuedTime,
+                                   o.ExtensionData.ToString(), o.Recording.Id, o.PostingTime, 
+                                   o.PostedBy.Id, o.Integrity.GetUpdatedHashCode());
 
-      return DataWriter.Execute(dataOperation);
+      return DataWriter.Execute(op);
     }
 
     static internal int WriteTransaction(LRSTransaction o) {
@@ -236,9 +193,9 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal DataOperation WriteTransactionOp(LRSTransaction o) {
-      return DataOperation.Parse("writeLRSTransaction", o.Id, o.TransactionType.Id, o.UniqueCode,
+      return DataOperation.Parse("writeLRSTransaction", o.Id, o.TransactionType.Id, o.UID,
                                  o.DocumentType.Id, o.DocumentDescriptor, o.Document.Id, o.RecorderOffice.Id,
-                                 o.RequestedBy, o.ManagementAgency.Id, o.ExtensionData.ToJson(), o.Keywords,
+                                 o.RequestedBy, o.Agency.Id, o.ExtensionData.ToJson(), o.Keywords,
                                  o.PresentationTime, o.ExpectedDelivery, o.LastReentryTime, o.ClosingTime,
                                  o.LastDeliveryTime, o.NonWorkingTime, o.ComplexityIndex, o.IsArchived, 
                                  (char) o.Status, o.Integrity.GetUpdatedHashCode());
@@ -246,15 +203,13 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteTransactionItem(LRSTransactionItem o) {
       var operation = DataOperation.Parse("writeLRSTransactionItem", o.Id, o.Transaction.Id,
-                                          o.TransactionItemType.Id, o.TreasuryCode.Id, o.CalculationRule.Id,
+                                          o.TransactionItemType.Id, o.TreasuryCode.Id,
                                           o.Payment.Id, o.Quantity.Amount, o.Quantity.Unit.Id,
                                           o.OperationValue.Amount, o.OperationValue.Currency.Id,
                                           o.Fee.RecordingRights, o.Fee.SheetsRevision, o.Fee.Aclaration,
                                           o.Fee.Usufruct, o.Fee.Easement, o.Fee.SignCertification,
-                                          o.Fee.ForeignRecord, o.Fee.OthersCharges, 
-                                          o.Fee.Discount.DiscountType.Id, o.Fee.Discount.Amount, 
-                                          o.Fee.Discount.Authorization.Id, o.Notes, o.PostingTime,
-                                          o.PostedBy.Id, o.Status, o.Integrity.GetUpdatedHashCode());
+                                          o.Fee.ForeignRecord, o.Fee.OthersCharges, o.Fee.Discount.Amount, 
+                                          o.ExtensionData.ToString(), o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 
@@ -268,7 +223,7 @@ namespace Empiria.Land.Registration.Data {
       return DataWriter.Execute(operation);
     }
 
-    #endregion Internal methods
+    #endregion Public methods
 
   } // class TransactionData
 

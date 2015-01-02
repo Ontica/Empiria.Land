@@ -11,8 +11,11 @@
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
+
 using Empiria.Contacts;
+using Empiria.Json;
 using Empiria.Security;
+
 using Empiria.Land.Registration.Data;
 using Empiria.Land.Registration.Transactions;
 
@@ -27,12 +30,12 @@ namespace Empiria.Land.Registration {
     Deleted = 'X'
   }
 
-  public enum RecordingBookType {
-    Root = 'R',
-    Section = 'S',
-    Book = 'B',
-    Volume = 'V'
-  }
+  //public enum RecordingBookType {
+  //  Root = 'R',
+  //  Section = 'S',
+  //  Book = 'B',
+  //  Volume = 'V'
+  //}
 
   /// <summary>Represents a recording book. A recording book can have a parent recording book and always
   /// belongs to a recorder of deeds office. Instances of this type have a recording book type.</summary>
@@ -54,34 +57,11 @@ namespace Empiria.Land.Registration {
     }
 
     internal RecordingBook(RecorderOffice recorderOffice, string recordingBookTag) {
-      this.RecorderOffice = recorderOffice;
-      this.Parent = RecordingBook.Empty;
-      this.BookType = RecordingBookType.Section;
-      this.BookNumber = recordingBookTag;
-      this.Name = this.Parent.BuildChildName(recordingBookTag);
-      this.FullName = recorderOffice.Alias + " " + this.Parent.BuildChildFullName(recordingBookTag);
-      this.ImagingFilesFolder = RecordBookDirectory.Empty;
-    }
-
-    internal RecordingBook(RecordingBook parent, string recordingBookTag) {
-      this.RecorderOffice = parent.RecorderOffice;
-      this.Parent = parent;
-      this.BookType = parent.ChildsRecordingBookType;
-      this.BookNumber = recordingBookTag;
-      this.Name = parent.BuildChildName(recordingBookTag);
-      this.FullName = parent.BuildChildFullName(recordingBookTag);
-      this.ImagingFilesFolder = RecordBookDirectory.Empty;
-    }
-
-    internal RecordingBook(RecordingBook parent, RecordBookDirectory imagingDirectory,
-                           string recordingBookTag) {
-      this.RecorderOffice = parent.RecorderOffice;
-      this.Parent = parent;
-      this.BookType = parent.ChildsRecordingBookType;
-      this.BookNumber = recordingBookTag;
-      this.Name = parent.BuildChildName(recordingBookTag);
-      this.FullName = parent.BuildChildFullName(recordingBookTag);
-      this.ImagingFilesFolder = imagingDirectory;
+      throw new NotImplementedException();
+      //this.RecorderOffice = recorderOffice;
+      //this.BookNumber = recordingBookTag;
+      //this.AsText = recordingBookTag;
+      //this.FullName = recorderOffice.Alias + " " + this.Parent.BuildChildFullName(recordingBookTag);
     }
 
     static public RecordingBook Parse(int id) {
@@ -94,15 +74,16 @@ namespace Empiria.Land.Registration {
 
     static public RecordingBook GetAssignedBookForRecording(RecorderOffice office, RecordingSection section,
                                                             RecordingDocument document) {
-      Assertion.AssertObject(document, "document");
-      Assertion.Assert(!document.IsEmptyInstance && !document.IsNew,
-                       "Document can't be neither an empty or unsaved document.");
-      RecordingBook openedBook = RecordingBooksData.GetOpenedBook(office, section);
-      if (openedBook.HasSpaceForRecording(document)) {
-        return openedBook;
-      } else {
-        return openedBook.CloseAndCreateNew();
-      }
+      throw new NotImplementedException();
+      //Assertion.AssertObject(document, "document");
+      //Assertion.Assert(!document.IsEmptyInstance && !document.IsNew,
+      //                 "Document can't be neither an empty or unsaved document.");
+      //RecordingBook openedBook = RecordingBooksData.GetOpenedBook(office, section);
+      //if (openedBook.HasSpaceForRecording(document)) {
+      //  return openedBook;
+      //} else {
+      //  return openedBook.CloseAndCreateNew();
+      //}
     }
 
     static public FixedList<RecordingBook> GetList(string filter, string sort = "RecordingBookFullName") {
@@ -119,51 +100,35 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    [DataField("RecordingBookType", Default = RecordingBookType.Volume)]
-    public RecordingBookType BookType {
+    [DataField("RecordingSectionId")]
+    public RecordingSection RecordingSection {
       get;
       set;
     }
 
-    [DataField("RecordingsClassId")]
-    public RecordingSection RecordingSectionType {
-      get;
-      set;
-    }
-
-    [DataField("RecordingBookNo")]
+    [DataField("BookNo")]
     private string _bookNumber = "N/A";
     public string BookNumber {
       get { return _bookNumber; }
       set { _bookNumber = (value == String.Empty || value == "00" || value == "0") ? "N/A" : value; }
     }
 
-    [DataField("RecordingBookName")]
-    public string Name {
+    [DataField("BookAsText")]
+    public string AsText {
       get;
       set;
     }
 
-    [DataField("RecordingBookFullName")]
-    public string FullName {
+    [DataField("BookExtData")]
+    public JsonObject ExtendedData {
       get;
-      set;
+      private set;
     }
-
-    //protected RecordingBookExtData ExtendedData {
-
-    //}
 
     internal string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.FullName);
+        return EmpiriaString.BuildKeywords(this.AsText);
       }
-    }
-
-    [DataField("RecordingBookFilesFolderId")]
-    public RecordBookDirectory ImagingFilesFolder {
-      get;
-      set;
     }
 
     [DataField("StartRecordingIndex")]
@@ -178,20 +143,7 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    public bool IsRoot {
-      get {
-        return (_parent.Id == this.Id);
-      }
-    }
-
-    [DataField("ParentRecordingBookId")]
-    LazyInstance<RecordingBook> _parent = LazyInstance<RecordingBook>.Empty;
-    public RecordingBook Parent {
-      get { return _parent.Value; }
-      internal set { _parent.Value = value; }
-    }
-
-    [DataField("RecordingBookStatus", Default = RecordingBookStatus.Pending)]
+    [DataField("BookStatus", Default = RecordingBookStatus.Pending)]
     public RecordingBookStatus Status {
       get;
       set;
@@ -200,32 +152,6 @@ namespace Empiria.Land.Registration {
     public string RecordIntegrityHashCode {
       get;
       set;
-    }
-
-    public RecordingBookType ChildsRecordingBookType {
-      get {
-        switch (this.BookType) {
-          case RecordingBookType.Root:
-            return RecordingBookType.Section;
-          case RecordingBookType.Section:
-            if (RecordingBook.UseBookLevel) {
-              return RecordingBookType.Book;
-            } else {
-              return RecordingBookType.Volume;
-            }
-          case RecordingBookType.Book:
-            if (RecordingBook.UseBookLevel) {
-              return RecordingBookType.Volume;
-            } else {
-              throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType,
-                                                  RecordingBookType.Book.ToString());
-            }
-          case RecordingBookType.Volume:
-            throw new LandRegistrationException(LandRegistrationException.Msg.VolumeRecordingBooksCantHaveChilds, this.FullName);
-          default:
-            throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType, this.BookType.ToString());
-        }
-      }
     }
 
     public bool IsAvailableForManualEditing {
@@ -245,67 +171,13 @@ namespace Empiria.Land.Registration {
 
     public bool UsePerpetualNumbering {
       get {
-        return this.RecordingSectionType.UsePerpetualNumbering;
+        return this.RecordingSection.UsePerpetualNumbering;
       }
     }
 
     #endregion Public properties
 
     #region Public methods
-
-    internal string BuildChildFullName(string recordingBookTag) {
-      switch (this.BookType) {
-        case RecordingBookType.Root:
-          return "Sección " + recordingBookTag;
-        case RecordingBookType.Section:
-          if (RecordingBook.UseBookLevel) {
-            return this.RecorderOffice.Alias + " Sección " + this.BookNumber +
-                                               " Libro " + recordingBookTag;
-          } else {
-            return this.RecorderOffice.Alias + " Sección " + this.BookNumber +
-                                               " Volumen " + recordingBookTag;
-          }
-        case RecordingBookType.Book:
-          if (RecordingBook.UseBookLevel) {
-            return this.RecorderOffice.Alias + " Sección " + this.Parent.BookNumber +
-                                               " Libro " + this.BookNumber +
-                                               " Volumen " + recordingBookTag;
-          } else {
-            throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType,
-                                                RecordingBookType.Book.ToString());
-          }
-        case RecordingBookType.Volume:
-          throw new LandRegistrationException(LandRegistrationException.Msg.VolumeRecordingBooksCantHaveChilds,
-                                              this.FullName);
-        default:
-          throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType,
-                                              this.BookType.ToString());
-      }
-    }
-
-    internal string BuildChildName(string recordingBookTag) {
-      switch (this.BookType) {
-        case RecordingBookType.Root:
-          return "Sección " + recordingBookTag;
-        case RecordingBookType.Section:
-          if (RecordingBook.UseBookLevel) {
-            return "Libro " + recordingBookTag;
-          } else {
-            return "Volumen " + recordingBookTag;
-          }
-        case RecordingBookType.Book:
-          if (RecordingBook.UseBookLevel) {
-            return "Volumen " + recordingBookTag;
-          } else {
-            throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType,
-                                                RecordingBookType.Book.ToString());
-          }
-        case RecordingBookType.Volume:
-          throw new LandRegistrationException(LandRegistrationException.Msg.VolumeRecordingBooksCantHaveChilds, this.FullName);
-        default:
-          throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType, this.BookType.ToString());
-      }
-    }
 
     public Recording CreateQuickRecording(int recordingNumber, string bisSuffixTag) {
       var recording = new Recording(this, RecordingDocument.Empty, 
@@ -324,32 +196,16 @@ namespace Empiria.Land.Registration {
       return temp;
     }
 
-    public int GetNextRecordingNumber() {
-      if (this.ReuseUnusedRecordingNumbers) {
-        return RecordingBooksData.GetNextRecordingNumberWithReuse(this);
-      } else {
-        return RecordingBooksData.GetNextRecordingNumberWithNoReuse(this);
-      }
-    }
-
-    public void DeleteImageAtIndex(int imageIndex) {
-      this.ImagingFilesFolder.DeleteImageAtIndex(imageIndex);
-      RecordingBooksData.UpdateRecordingsImageIndex(this, imageIndex + 1, -1);
-      recordings = null;
-    }
-
-    public void InsertEmptyImageAtIndex(int imageIndex) {
-      this.ImagingFilesFolder.InsertEmptyImageAtIndex(imageIndex);
-      RecordingBooksData.UpdateRecordingsImageIndex(this, imageIndex + 1, 1);
-      recordings = null;
-    }
+    //public int GetNextRecordingNumber() {
+    //  if (this.ReuseUnusedRecordingNumbers) {
+    //    return RecordingBooksData.GetNextRecordingNumberWithReuse(this);
+    //  } else {
+    //    return RecordingBooksData.GetNextRecordingNumberWithNoReuse(this);
+    //  }
+    //}
 
     public Recording FindRecording(int recordingNumber, string bisSuffixTag) {
       return Recordings.Find((x) => x.Number == this.BuildRecordingNumber(recordingNumber, bisSuffixTag));
-    }
-
-    public FixedList<RecordingBook> GetChildBooks() {
-      return RecordingBooksData.GetChildsRecordingBooks(this);
     }
 
     public Recording GetRecording(int recordingId) {
@@ -358,7 +214,7 @@ namespace Empiria.Land.Registration {
         return recording;
       } else {
         throw new LandRegistrationException(LandRegistrationException.Msg.RecordingNotBelongsToRecordingBook,
-                                            recordingId, this.Name);
+                                            recordingId, this.AsText);
       }
     }
 
@@ -417,37 +273,38 @@ namespace Empiria.Land.Registration {
 
     static internal RecordingBook Create(RecordBookDirectory directory, RecordingSection recordingSection,
                                          int recordingsControlCount, TimePeriod recordingsControlTimePeriod) {
-      RecordingBook recordingBook = new RecordingBook();
+      throw new NotImplementedException();
+      //RecordingBook recordingBook = new RecordingBook();
 
-      FixedList<RecordingBook> recordingBookList = directory.RecorderOffice.GetRootRecordingBooks();
-      string tag = directory.GetRecordingBookTag(RecordingBookType.Section);
-      RecordingBook currentParent = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
-      if (currentParent == null) {
-        currentParent = directory.RecorderOffice.AddRootRecordingBook(tag);
-      }
-      if (RecordingBook.UseBookLevel) {
-        recordingBookList = currentParent.GetChildBooks();
-        tag = directory.GetRecordingBookTag(RecordingBookType.Book);
-        recordingBook = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
-        if (recordingBook == null) {
-          recordingBook = new RecordingBook(currentParent, tag);
-          recordingBook.Save();
-        }
-        currentParent = recordingBook;
-      }
-      recordingBookList = currentParent.GetChildBooks();
-      tag = directory.GetRecordingBookTag(RecordingBookType.Volume);
-      recordingBook = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
-      if (recordingBook == null) {
-        recordingBook = new RecordingBook(currentParent, directory, tag);
-        recordingBook.RecordingSectionType = recordingSection;
-        recordingBook.StartRecordingIndex = 1;
-        recordingBook.EndRecordingIndex = recordingsControlCount;
-        recordingBook.RecordingsControlTimePeriod = recordingsControlTimePeriod;
+      //FixedList<RecordingBook> recordingBookList = directory.RecorderOffice.GetRootRecordingBooks();
+      //string tag = directory.GetRecordingBookTag(RecordingBookType.Section);
+      //RecordingBook currentParent = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
+      //if (currentParent == null) {
+      //  currentParent = directory.RecorderOffice.AddRootRecordingBook(tag);
+      //}
+      //if (RecordingBook.UseBookLevel) {
+      //  recordingBookList = currentParent.GetChildBooks();
+      //  tag = directory.GetRecordingBookTag(RecordingBookType.Book);
+      //  recordingBook = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
+      //  if (recordingBook == null) {
+      //    recordingBook = new RecordingBook(currentParent, tag);
+      //    recordingBook.Save();
+      //  }
+      //  currentParent = recordingBook;
+      //}
+      //recordingBookList = currentParent.GetChildBooks();
+      //tag = directory.GetRecordingBookTag(RecordingBookType.Volume);
+      //recordingBook = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
+      //if (recordingBook == null) {
+      //  recordingBook = new RecordingBook(currentParent, directory, tag);
+      //  recordingBook.RecordingSection = recordingSection;
+      //  recordingBook.StartRecordingIndex = 1;
+      //  recordingBook.EndRecordingIndex = recordingsControlCount;
+      //  recordingBook.RecordingsControlTimePeriod = recordingsControlTimePeriod;
 
-        recordingBook.Save();
-      }
-      return recordingBook;
+      //  recordingBook.Save();
+      //}
+      //return recordingBook;
     }
 
     protected override void OnSave() {
@@ -463,69 +320,72 @@ namespace Empiria.Land.Registration {
     #region Private methods
 
     private int CalculateTotalSheets() {
-      return RecordingBooksData.GetBookTotalSheets(this);
+      throw new NotImplementedException();
+
+      //return RecordingBooksData.GetBookTotalSheets(this);
     }
 
     private RecordingBook Clone() {
       RecordingBook newBook = new RecordingBook();
 
       newBook.RecorderOffice = this.RecorderOffice;
-      newBook.BookType = this.BookType;
-      newBook.RecordingSectionType = this.RecordingSectionType;
+      newBook.RecordingSection = this.RecordingSection;
       newBook.RecordingsControlTimePeriod = this.RecordingsControlTimePeriod;
       newBook.AssignedTo = this.AssignedTo;
       newBook.ReviewedBy = this.ReviewedBy;
       newBook.ApprovedBy = this.ApprovedBy;
-      newBook.Parent = this.Parent;
       newBook.Status = this.Status;
 
       return newBook;
     }
 
     private RecordingBook CloseAndCreateNew() {
-      this.Status = RecordingBookStatus.Closed;
-      this.ClosingDate = DateTime.Now;
-      if (!this.UsePerpetualNumbering) {
-        this.EndRecordingIndex = this.Recordings.Count;
-      }
-      this.Save();
-      RecordingBook newBook = this.Clone();
-      newBook.Status = RecordingBookStatus.Opened;
-      if (newBook.UsePerpetualNumbering) {
-        newBook.StartRecordingIndex = this.StartRecordingIndex + 50;
-        newBook.EndRecordingIndex = this.EndRecordingIndex + 50;
-        newBook.BookNumber = newBook.StartRecordingIndex.ToString("0000") + "-" +
-                             newBook.EndRecordingIndex.ToString("0000");
-      } else {
-        newBook.StartRecordingIndex = 1;
-        newBook.EndRecordingIndex = 250;
-        newBook.BookNumber = (int.Parse(this.BookNumber) + 1).ToString("0000");
-      }
-      newBook.Name = "Volumen " + newBook.BookNumber;
-      newBook.FullName = newBook.Parent.FullName + " " + newBook.Name;
-      newBook.Save();
+      throw new NotImplementedException();
 
-      return newBook;
+      //this.Status = RecordingBookStatus.Closed;
+      //this.ClosingDate = DateTime.Now;
+      //if (!this.UsePerpetualNumbering) {
+      //  this.EndRecordingIndex = this.Recordings.Count;
+      //}
+      //this.Save();
+      //RecordingBook newBook = this.Clone();
+      //newBook.Status = RecordingBookStatus.Opened;
+      //if (newBook.UsePerpetualNumbering) {
+      //  newBook.StartRecordingIndex = this.StartRecordingIndex + 50;
+      //  newBook.EndRecordingIndex = this.EndRecordingIndex + 50;
+      //  newBook.BookNumber = newBook.StartRecordingIndex.ToString("0000") + "-" +
+      //                       newBook.EndRecordingIndex.ToString("0000");
+      //} else {
+      //  newBook.StartRecordingIndex = 1;
+      //  newBook.EndRecordingIndex = 250;
+      //  newBook.BookNumber = (int.Parse(this.BookNumber) + 1).ToString("0000");
+      //}
+      //newBook.AsText = "Volumen " + newBook.BookNumber;
+      //newBook.Save();
+
+      //return newBook;
     }
 
     private bool HasSpaceForRecording(RecordingDocument document) {
-      if (this.UsePerpetualNumbering) {
-        return (RecordingBooksData.GetLastBookRecordingNumber(this) < this.EndRecordingIndex);
-      }
-      // !UsePerpetualNumbering  
-      int currentBookSheets = this.CalculateTotalSheets();
-      int newTotalSheets = currentBookSheets + document.SheetsCount;
+      throw new NotImplementedException();
 
-      int lowerBound = ExecutionServer.LicenseName == "Tlaxcala" ? 275 : 250;
-      int upperBound = ExecutionServer.LicenseName == "Tlaxcala" ? 286 : 260;
+      //if (this.UsePerpetualNumbering) {
+      //  return (RecordingBooksData.GetLastBookRecordingNumber(this) < this.EndRecordingIndex);
+      //}
+      //// !UsePerpetualNumbering  
+      //int currentBookSheets = this.CalculateTotalSheets();
+      //int newTotalSheets = currentBookSheets + document.SheetsCount;
 
-      if (newTotalSheets <= lowerBound) {
-        return true;
-      } else if (currentBookSheets < lowerBound && newTotalSheets <= upperBound) {
-        return true;
-      } else {
-        return false;
-      }
+      //int lowerBound = ExecutionServer.LicenseName == "Tlaxcala" ? 275 : 250;
+      //int upperBound = ExecutionServer.LicenseName == "Tlaxcala" ? 286 : 260;
+
+      //if (newTotalSheets <= lowerBound) {
+      //  return true;
+      //} else if (currentBookSheets < lowerBound && newTotalSheets <= upperBound) {
+      //  return true;
+      //} else {
+      //  return false;
+      //}
     }
 
     #endregion Private methods

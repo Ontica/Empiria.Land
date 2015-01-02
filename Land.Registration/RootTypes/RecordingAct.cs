@@ -284,7 +284,7 @@ namespace Empiria.Land.Registration {
         return propertyEvent;
       } else {
         throw new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
-                                            property.UniqueCode, this.Id);
+                                            property.UID, this.Id);
       }
     }
     

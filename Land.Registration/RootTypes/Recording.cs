@@ -25,7 +25,6 @@ namespace Empiria.Land.Registration {
     #region Fields
     
     private Lazy<FixedList<RecordingAct>> recordingActList = null;
-    private Lazy<RecordingAttachmentFolderList> attachmentFolderList = null;
     private Lazy<LRSPaymentList> payments = null;
 
     #endregion Fields
@@ -39,13 +38,11 @@ namespace Empiria.Land.Registration {
     internal Recording(RecordingBook recordingBook, 
                        RecordingDocument document, string number) {
       this.RecordingBook = recordingBook;
-      this.Document = document;
       this.Number = number;
     }
 
     protected override void OnInitialize() {
       recordingActList = new Lazy<FixedList<RecordingAct>>(() => RecordingActsData.GetRecordingActs(this));
-      attachmentFolderList = new Lazy<RecordingAttachmentFolderList>(() => this.GetAttachmentFolderList());
       payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
     }
 
@@ -76,19 +73,21 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField("DocumentId")]
+    /// <summary>
+    /// oojjoo
+    /// </summary>
     public RecordingDocument Document {
       get;
       private set;
     }
 
-    [DataField("RecordingBookId")]
+    [DataField("PhysicalBookId")]
     public RecordingBook RecordingBook {
       get;
       private set;
     }
 
-    [DataField("RecordingNumber")]
+    [DataField("RecordingNo")]
     public string Number {
       get;
       private set;
@@ -98,6 +97,12 @@ namespace Empiria.Land.Registration {
     public string Notes {
       get;
       set;
+    }
+
+    [DataField("RecordingAsText")]
+    public string AsText {
+      get;
+      private set;
     }
 
     public RecordingExtData ExtendedData {
@@ -115,15 +120,8 @@ namespace Empiria.Land.Registration {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.Number, this.RecordingBook.FullName,
-                                           this.Document.UniqueCode);
+        return EmpiriaString.BuildKeywords(this.Number, this.RecordingBook.AsText);
       }
-    }
-
-    [DataField("RecordingPresentationTime")]
-    public DateTime PresentationTime {
-      get;
-      private set;
     }
 
     [DataField("RecordingAuthorizationTime")]
@@ -165,9 +163,9 @@ namespace Empiria.Land.Registration {
     public string FullNumber {
       get {
         if (ExecutionServer.LicenseName == "Tlaxcala") {
-          return "Partida " + this.Number + " en " + this.RecordingBook.FullName;
+          return "Partida " + this.Number + " en " + this.RecordingBook.AsText;
         } else {
-          return "Inscripción " + this.Number + " en " + this.RecordingBook.FullName;
+          return "Inscripción " + this.Number + " en " + this.RecordingBook.AsText;
         }
       }
     }
@@ -296,18 +294,6 @@ namespace Empiria.Land.Registration {
       this.RecordingBook.Refresh();
     }
 
-    public RecordingAttachmentFolder GetAttachementFolder(string folderName) {
-      RecordingAttachmentFolderList folderList = this.GetAttachmentFolderList();
-
-      foreach (RecordingAttachmentFolder folder in folderList) {
-        if (folder.Name == folderName) {
-          return folder;
-        }
-      }
-      throw new LandRegistrationException(LandRegistrationException.Msg.AttachmentFolderNotFound, 
-                                          folderName);
-    }
-
     public IList<Property> GetProperties() {
       var list = new List<Property>(this.RecordingActs.Count);
       foreach (RecordingAct recordingAct in this.RecordingActs) {
@@ -370,9 +356,6 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnSave() {
-      if (!this.Document.IsEmptyInstance) {
-        this.Document.Save();
-      }
       if (this.IsNew) {
         this.RecordingTime = DateTime.Now;
         this.RecordedBy = Contact.Parse(ExecutionServer.CurrentUserId);
@@ -425,19 +408,6 @@ namespace Empiria.Land.Registration {
         return;
       }
       this.Delete(false);
-    }
-
-    private RecordingAttachmentFolderList GetAttachmentFolderList() {
-      var folderList = new RecordingAttachmentFolderList();
-
-      folderList.Append(this, "Raíz");
-
-      FixedList<TractIndexItem> annotations = this.GetPropertiesAnnotationsList();
-      for (int i = 0; i < annotations.Count; i++) {
-        string alias = Char.ConvertFromUtf32(65 + i);
-        folderList.Append(annotations[i].RecordingAct.Recording, alias);
-      }
-      return folderList;
     }
 
     #endregion Private methods

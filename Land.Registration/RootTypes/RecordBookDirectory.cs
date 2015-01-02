@@ -137,39 +137,39 @@ namespace Empiria.Land.Registration {
       base.Refresh();
     }
 
-    public string GetRecordingBookTag(RecordingBookType recordingBookType) {
-      if (RecordingBook.UseBookLevel) {
-        return GetRecordingBookTagUsingBookLevel(recordingBookType);
-      } else {
-        return GetRecordingBookTagNotUsingBookLevel(recordingBookType);
-      }
-    }
+    //public string GetRecordingBookTag(RecordingBookType recordingBookType) {
+    //  if (RecordingBook.UseBookLevel) {
+    //    return GetRecordingBookTagUsingBookLevel(recordingBookType);
+    //  } else {
+    //    return GetRecordingBookTagNotUsingBookLevel(recordingBookType);
+    //  }
+    //}
 
-    private string GetRecordingBookTagUsingBookLevel(RecordingBookType recordingBookType) {
-      switch (recordingBookType) {
-        case RecordingBookType.Section:
-          return this.DisplayName.Split('-')[1];
-        case RecordingBookType.Book:
-          return this.DisplayName.Split('-')[2];
-        case RecordingBookType.Volume:
-          return this.DisplayName.Split('-')[3];
-        default:
-          return "00";
-      }
-    }
+    //private string GetRecordingBookTagUsingBookLevel(RecordingBookType recordingBookType) {
+    //  switch (recordingBookType) {
+    //    case RecordingBookType.Section:
+    //      return this.DisplayName.Split('-')[1];
+    //    case RecordingBookType.Book:
+    //      return this.DisplayName.Split('-')[2];
+    //    case RecordingBookType.Volume:
+    //      return this.DisplayName.Split('-')[3];
+    //    default:
+    //      return "00";
+    //  }
+    //}
 
-    private string GetRecordingBookTagNotUsingBookLevel(RecordingBookType recordingBookType) {
-      switch (recordingBookType) {
-        case RecordingBookType.Section:
-          return this.DisplayName.Split('-')[1];
-        case RecordingBookType.Book:
-          throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType, RecordingBookType.Book.ToString());
-        case RecordingBookType.Volume:
-          return this.DisplayName.Split('-')[2];
-        default:
-          return "00";
-      }
-    }
+    //private string GetRecordingBookTagNotUsingBookLevel(RecordingBookType recordingBookType) {
+    //  switch (recordingBookType) {
+    //    case RecordingBookType.Section:
+    //      return this.DisplayName.Split('-')[1];
+    //    case RecordingBookType.Book:
+    //      throw new LandRegistrationException(LandRegistrationException.Msg.UnrecognizedRecordingBookType, RecordingBookType.Book.ToString());
+    //    case RecordingBookType.Volume:
+    //      return this.DisplayName.Split('-')[2];
+    //    default:
+    //      return "00";
+    //  }
+    //}
 
     internal void InsertEmptyImageAtIndex(int imageIndex) {
       this.RenameDirectoryImages();

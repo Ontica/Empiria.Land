@@ -14,6 +14,8 @@ using System.Data;
 
 using Empiria.Contacts;
 using Empiria.DataTypes;
+using Empiria.Json;
+
 using Empiria.Land.Registration.Data;
 using Empiria.Security;
 
@@ -77,7 +79,7 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
-    [DataField("CalculationRuleId")]
+    //[DataField("CalculationRuleId")]
     public CalculationRule CalculationRule {
       get;
       private set;
@@ -105,19 +107,25 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
-    [DataField("Notes")]
+    //[DataField("Notes")]
     public string Notes {
       get;
       set;
     }
 
-    [DataField("PostingTime", Default = "DateTime.Now")]
+    [DataField("TransactionItemExtData")]
+    internal JsonObject ExtensionData {
+      get;
+      private set;
+    }
+
+    //[DataField("PostingTime", Default = "DateTime.Now")]
     public DateTime PostingTime {
       get;
       private set;
     }
 
-    [DataField("PostedById")]
+    //[DataField("PostedById")]
     public Contact PostedBy {
       get;
       private set;

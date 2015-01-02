@@ -34,8 +34,12 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<RecordingDocument>(id);
     }
 
+    static public RecordingDocument TryParse(string documentUID) {
+      return BaseObject.TryParse<RecordingDocument>("DocumentUID = '" + documentUID + "'");
+    }
+
     static internal RecordingDocument TryParse(Recording recording) {
-      DataRow dataRow = RecordingBooksData.GetRecordingMainDocument(recording);
+      DataRow dataRow = DocumentsData.GetRecordingMainDocument(recording);
       if (dataRow != null) {
         return BaseObject.ParseDataRow<RecordingDocument>(dataRow);
       } else {
@@ -67,10 +71,28 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    [DataField("DocumentUniqueCode", IsOptional = false)]
-    public string UniqueCode {
+    [DataField("DocumentUID", IsOptional = false)]
+    public string UID {
       get;
       private set;
+    }
+
+    [DataField("ImagingControlID")]
+    public string ImagingControlID {
+      get;
+      private set;
+    }
+
+    [DataField("PresentationTime", Default = "ExecutionServer.DateMaxValue")]
+    public DateTime PresentationTime {
+      get;
+      set;
+    }
+
+    [DataField("AuthorizationTime", Default = "ExecutionServer.DateMaxValue")]
+    public DateTime AuthorizationTime {
+      get;
+      set;
     }
 
     [DataField("IssuePlaceId")]
@@ -100,25 +122,25 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    [DataField("ExpedientNo")]
-    public string ExpedientNo {
-      get;
-      set;
-    }
-
-    [DataField("DocumentNo")]
+    //[DataField("DocumentNo")]
     public string Number {
       get;
       set;
     }
 
-    [DataField("DocumentTitle")]
-    public string Title {
+    //[DataField("ExpedientNo")]
+    public string ExpedientNo {
+      get;
+      set;
+    }
+
+    [DataField("DocumentAsText")]
+    public string AsText {
       get;
       private set;
     }
 
-    [DataField("DocumentNotes")]
+    [DataField("DocumentOverview")]
     public string Notes {
       get;
       set;
@@ -137,9 +159,9 @@ namespace Empiria.Land.Registration {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.UniqueCode, 
-                    !this.Subtype.IsEmptyInstance ? this.Title : this.DocumentType.DisplayName,
-                    this.Title, this.ExpedientNo, this.Number);
+        return EmpiriaString.BuildKeywords(this.UID, 
+                    !this.Subtype.IsEmptyInstance ? this.AsText : this.DocumentType.DisplayName,
+                    this.AsText);
       }
     }
 
@@ -171,11 +193,11 @@ namespace Empiria.Land.Registration {
       if (version == 1) {
         return new object[] {
           1, "Id", this.Id, "DocumentTypeId", this.DocumentType.Id,
-          "SubtypeId", this.Subtype.Id, "UniqueCode", this.UniqueCode,
+          "SubtypeId", this.Subtype.Id, "UID", this.UID,
           "IssuePlaceId", this.IssuePlace.Id, "IssueOfficeId", this.IssueOffice.Id,
           "IssuedById", this.IssuedBy.Id, "IssueDate", this.IssueDate,
-          "DocumentNo", this.Number, "ExpedientNo", this.ExpedientNo,
-          "SheetsCount", this.SheetsCount, "ExtensionData", this.ExtensionData.ToJson(),
+          "AsText", this.AsText, "SheetsCount", this.SheetsCount, 
+          "ExtensionData", this.ExtensionData.ToJson(),
           "PostedBy", this.PostedBy.Id, "PostingTime", this.PostingTime,
           "Status", (char) this.Status,
         };
@@ -215,7 +237,7 @@ namespace Empiria.Land.Registration {
       if (this.IsNew) {
         this.PostingTime = DateTime.Now;
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-        this.UniqueCode = TransactionData.GenerateDocumentKey();
+        this.UID = DocumentsData.GenerateDocumentUID();
       }
       RecordingBooksData.WriteRecordingDocument(this);
     }

@@ -12,8 +12,10 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
-using Empiria.Land.Registration.Data;
+using Empiria.Json;
 using Empiria.Security;
+
+using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -81,14 +83,14 @@ namespace Empiria.Land.Registration.Transactions {
       private set { _transaction.Value = value; }
     }
 
-    [DataField("RecordingId")]
+    [DataField("PhysicalRecordingId")]
     LazyInstance<Recording> _recording = LazyInstance<Recording>.Empty;
     public Recording Recording {
       get { return _recording.Value; }
       private set { _recording.Value = value; }
     }
 
-    [DataField("PaymentExternalID")]
+    //[DataField("PaymentExternalID")]
     public string PaymentExternalID {
       get;
       private set;
@@ -119,14 +121,20 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
-    [DataField("VerificationTime")]
+    //[DataField("VerificationTime")]
     public DateTime VerificationTime {
       get;
       private set;
     }
 
-    [DataField("Notes")]
+    //[DataField("Notes")]
     public string Notes {
+      get;
+      private set;
+    }
+
+    [DataField("PaymentExtData")]
+    internal JsonObject ExtensionData {
       get;
       private set;
     }

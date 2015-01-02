@@ -31,8 +31,8 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<Property>(id);
     }
 
-    static public Property TryParseWithUniqueCode(string propertyKey) {
-      DataRow row = PropertyData.GetPropertyWithUniqueCode(propertyKey);
+    static public Property TryParseWithUID(string propertyUID) {
+      DataRow row = PropertyData.GetPropertyWithUID(propertyUID);
 
       if (row != null) {
         return BaseObject.ParseDataRow<Property>(row);
@@ -49,8 +49,8 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField("PropertyUniqueCode", IsOptional = false)]
-    public string UniqueCode {
+    [DataField("PropertyUID", IsOptional = false)]
+    public string UID {
       get;
       private set;
     }
@@ -91,7 +91,7 @@ namespace Empiria.Land.Registration {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.UniqueCode, this.CadastralData.CadastralCode, this.Name, 
+        return EmpiriaString.BuildKeywords(this.UID, this.CadastralData.CadastralCode, this.Name, 
                                            this.PartitionNo, this.Location.Keywords, this.PropertyKind.Value);
       }
     }
@@ -142,9 +142,8 @@ namespace Empiria.Land.Registration {
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
       if (version == 1) {
         return new object[] {
-          1, "Id", this.Id, "PropertyType", this.GetEmpiriaType().Id,
-          "PostedBy", this.PostedBy.Id, "PostingTime", this.PostingTime, 
-          "PartitionOf", _partitionOf.Id,
+          1, "Id", this.Id, "PropertyType", this.GetEmpiriaType().Id, "UID", this.UID, "PostedBy",
+          this.PostedBy.Id, "PostingTime", this.PostingTime, "PartitionOf", _partitionOf.Id,
           "Status", (char) this.Status,
         };
       }
@@ -174,7 +173,7 @@ namespace Empiria.Land.Registration {
           return domainActs[0];
         } else {
           throw new LandRegistrationException(LandRegistrationException.Msg.PropertyDoesNotHaveAnyRecordingActs,
-                                              this.UniqueCode);
+                                              this.UID);
         }
       }
     }
@@ -288,25 +287,25 @@ namespace Empiria.Land.Registration {
 
     protected override void OnSave() {
       if (this.IsNew) {
-        this.AssignUniqueCode();
+        this.AssignUID();
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
         this.PostingTime = DateTime.Now;
       }
-      Assertion.Assert(this.UniqueCode.Length != 0, "Property UniqueCode can't be an empty string.");
+      Assertion.Assert(this.UID.Length != 0, "Property UniqueIdentifier can't be an empty string.");
       PropertyData.WriteProperty(this);
     }
 
-    private void AssignUniqueCode() {
-      Assertion.Assert(this.UniqueCode.Length == 0, "Property has already assigned a UniqueCode.");
+    private void AssignUID() {
+      Assertion.Assert(this.UID.Length == 0, "Property has already assigned a UniqueIdentifier.");
       
       while (true) {
         string temp = TransactionData.GeneratePropertyKey();
-        if (!PropertyData.ExistsPropertyUniqueCode(temp)) {
-          this.UniqueCode = temp;
+        if (!PropertyData.ExistsPropertyUID(temp)) {
+          this.UID = temp;
           break;
         }
       } // while
-      Assertion.Assert(this.UniqueCode.Length != 0, "Property UniqueCode has not been generated.");
+      Assertion.Assert(this.UID.Length != 0, "Property UniqueIdentifier has not been generated.");
     }
 
     #endregion Public methods

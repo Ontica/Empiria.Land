@@ -77,8 +77,8 @@ namespace Empiria.Land.Registration.Transactions {
       return BaseObject.ParseId<LRSTransaction>(id);
     }
 
-    static public LRSTransaction TryParseWithNumber(string transactionUniqueCode) {
-      return TransactionData.TryGetLRSTransactionWithUniqueCode(transactionUniqueCode);
+    static public LRSTransaction TryParse(string transactionUID) {
+      return BaseObject.TryParse<LRSTransaction>("TransactionUID = '" + transactionUID + "'");
     }
 
     static public LRSTransaction Empty {
@@ -163,8 +163,8 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
-    [DataField("TransactionUniqueCode", Default = "Nuevo trámite", IsOptional = false)]
-    public string UniqueCode {
+    [DataField("TransactionUID", Default = "Nuevo trámite", IsOptional = false)]
+    public string UID {
       get;
       private set;
     }
@@ -200,8 +200,8 @@ namespace Empiria.Land.Registration.Transactions {
       set;
     }
 
-    [DataField("ManagementAgencyId")]
-    public Contact ManagementAgency {
+    [DataField("AgencyId")]
+    public Contact Agency {
       get;
       set;
     }
@@ -218,7 +218,7 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
-    [DataField("PresentationTime")]
+    [DataField("PresentationTime", Default = "ExecutionServer.DateMaxValue")]
     public DateTime PresentationTime {
       get;
       private set;
@@ -347,10 +347,10 @@ namespace Empiria.Land.Registration.Transactions {
       if (version == 1) {
         return new object[] {
           1, "Id", this.Id, "TransactionTypeId", this.TransactionType.Id,
-          "UniqueCode", this.UniqueCode, "DocumentTypeId", this.DocumentType.Id,
+          "UID", this.UID, "DocumentTypeId", this.DocumentType.Id,
           "DocumentDescriptor", this.DocumentDescriptor, "DocumentId", this.Document.Id,
           "RecorderOfficeId", this.RecorderOffice.Id, "RequestedBy", this.RequestedBy, 
-          "ManagementAgencyId", this.ManagementAgency.Id, "ExtensionData", this.ExtensionData.ToJson(),
+          "AgencyId", this.Agency.Id, "ExtensionData", this.ExtensionData.ToJson(),
           "PresentationTime", this.PresentationTime, "ExpectedDelivery", this.ExpectedDelivery,
           "LastReentryTime", this.LastReentryTime, "ClosingTime", this.ClosingTime,
           "LastDeliveryTime", this.LastDeliveryTime, "NonWorkingTime", this.NonWorkingTime,
@@ -447,7 +447,7 @@ namespace Empiria.Land.Registration.Transactions {
     public void DoReentry(string notes) {
       if (!this.ReadyForReentry) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
-                                            this.UniqueCode);
+                                            this.UID);
       }
       this.Status = TransactionStatus.Reentry;
       this.ClosingTime = ExecutionServer.DateMaxValue;
@@ -651,7 +651,7 @@ namespace Empiria.Land.Registration.Transactions {
     public string GetDigitalString() {
       string temp = String.Empty;
 
-      temp = "||" + this.Id.ToString() + "|" + this.UniqueCode + "|";
+      temp = "||" + this.Id.ToString() + "|" + this.UID + "|";
       if (this.PresentationTime != ExecutionServer.DateMaxValue) {
         temp += this.PresentationTime.ToString("yyyyMMddTHH:mm:ss") + "|";
       }
@@ -687,11 +687,11 @@ namespace Empiria.Land.Registration.Transactions {
 
     protected override void OnSave() {
       if (base.IsNew) {
-        this.UniqueCode = TransactionData.GenerateTransactionKey();
+        this.UID = TransactionData.GenerateTransactionUID();
       }
-      this.Keywords = EmpiriaString.BuildKeywords(this.UniqueCode, this.Document.UniqueCode,
+      this.Keywords = EmpiriaString.BuildKeywords(this.UID, this.Document.UID,
                                                   this.DocumentDescriptor, this.RequestedBy, 
-                                                  this.ManagementAgency.FullName,
+                                                  this.Agency.FullName,
                                                   this.TransactionType.Name, 
                                                   this.RecorderOffice.Alias);
       TransactionData.WriteTransaction(this);
@@ -704,7 +704,7 @@ namespace Empiria.Land.Registration.Transactions {
     public void Receive(string notes) {
       if (this.Status != TransactionStatus.Payment) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
-                                            this.UniqueCode);
+                                            this.UID);
       }
       if (this.Payments.Count == 0) {
         throw new NotImplementedException("Este trámite todavía no tiene registrada una boleta de pago.");

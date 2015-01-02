@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
 *  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
-*  Type      : RecordingBooksData                           Pattern  : Data Services Static Class            *
+*  Type      : RecordingBooksData                           Pattern  : Data Services                         *
 *  Version   : 2.0        Date: 04/Jan/2015                 License  : Please read license.txt file          *
 *                                                                                                            *
-*    Summary   : Provides database read and write methods for recording books.                               *
+*  Summary   : Provides database read and write methods for recording books.                                 *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -73,17 +73,16 @@ namespace Empiria.Land.Registration.Data {
       }
     }
 
+    //static internal RecordingBook GetOpenedBook(RecorderOffice office, RecordingSection recordingSection) {
+    //  string sql = "SELECT * FROM LRSRecordingBooks WHERE RecordingBookType = 'V'" +
+    //               " AND (RecordingsClassId = {C}) and RecorderOfficeId = {O} AND (RecordingBookStatus = 'O')";
+    //  sql = sql.Replace("{C}", recordingSection.Id.ToString());
+    //  sql = sql.Replace("{O}", office.Id.ToString());
 
-    static internal RecordingBook GetOpenedBook(RecorderOffice office, RecordingSection recordingSection) {
-      string sql = "SELECT * FROM LRSRecordingBooks WHERE RecordingBookType = 'V'" +
-                   " AND (RecordingsClassId = {C}) and RecorderOfficeId = {O} AND (RecordingBookStatus = 'O')";
-      sql = sql.Replace("{C}", recordingSection.Id.ToString());
-      sql = sql.Replace("{O}", office.Id.ToString());
+    //  DataRow row = DataReader.GetDataRow(DataOperation.Parse(sql));
 
-      DataRow row = DataReader.GetDataRow(DataOperation.Parse(sql));
-
-      return BaseObject.ParseDataRow<RecordingBook>(row);
-    }
+    //  return BaseObject.ParseDataRow<RecordingBook>(row);
+    //}
 
     static internal int GetBookTotalSheets(RecordingBook book) {
       object result = DataReader.GetFieldValue(DataOperation.Parse("getLRSRecordingBooksStats", book.Id),
@@ -104,14 +103,6 @@ namespace Empiria.Land.Registration.Data {
 
       return DataReader.GetList<Recording>(DataOperation.Parse(sql),
                                             (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
-    }
-
-    static public FixedList<RecordingBook> GetChildsRecordingBooks(RecordingBook parentRecordingBook) {
-      var operation = DataOperation.Parse("qryLRSChildRecordingBooks", parentRecordingBook.Id, 
-                                         (char) parentRecordingBook.ChildsRecordingBookType);
-
-      return DataReader.GetList<RecordingBook>(operation,
-                                              (x) => BaseObject.ParseList<RecordingBook>(x)).ToFixedList();
     }
 
     static public FixedList<RecordingAct> GetPropertyAnnotationList(Property property) {
@@ -150,10 +141,6 @@ namespace Empiria.Land.Registration.Data {
 
       return DataReader.GetList<RecordingBook>(DataOperation.Parse(sql),
                                               (x) => BaseObject.ParseList<RecordingBook>(x)).ToFixedList();
-    }
-
-    static public DataRow GetRecordingMainDocument(Recording recording) {
-      return DataReader.GetDataRow(DataOperation.Parse("getLRSRecordingMainDocument", recording.Id));
     }
 
     static public FixedList<Recording> GetRecordings(RecordingBook recordingBook) {
@@ -210,23 +197,20 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteRecording(Recording o) {
-      var op = DataOperation.Parse("writeLRSRecording", o.Id, o.Document.Id, o.RecordingBook.Id,
-                                   o.Number, o.Notes, o.ExtendedData.ToJson(), o.Keywords,
-                                   o.PresentationTime, o.AuthorizationTime, o.ReviewedBy.Id, 
+      var op = DataOperation.Parse("writeLRSPhysicalRecording", o.Id, o.RecordingBook.Id,
+                                   o.Number, o.Notes, o.AsText, o.ExtendedData.ToJson(), 
+                                   o.Keywords, o.AuthorizationTime, o.ReviewedBy.Id, 
                                    o.AuthorizedBy.Id, o.RecordedBy.Id, o.RecordingTime,
                                    (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(op);
     }
 
     static internal int WriteRecordingBook(RecordingBook o) {
-      DataOperation dataOperation = DataOperation.Parse("writeLRSRecordingBook", o.Id, o.RecorderOffice.Id,
-                                                        (char) o.BookType, o.RecordingSectionType.Id, o.BookNumber, o.Name,
-                                                        o.FullName, o.Description, o.Keywords, o.StartRecordingIndex, o.EndRecordingIndex,
-                                                        o.RecordingsControlTimePeriod.StartTime, o.RecordingsControlTimePeriod.EndTime,
-                                                        o.ImagingFilesFolder.Id, o.CreationDate, o.ClosingDate,
-                                                        o.CreatedBy.Id, o.AssignedTo.Id, o.ReviewedBy.Id, o.ApprovedBy.Id,
-                                                        o.Parent.Id, (char) o.Status, o.RecordIntegrityHashCode);
-      return DataWriter.Execute(dataOperation);
+      var operation = DataOperation.Parse("writeLRSPhysicalBook", o.Id, o.RecorderOffice.Id, o.RecordingSection.Id,
+                                           o.BookNumber, o.AsText, o.ExtendedData.ToString(), o.Keywords, 
+                                           o.StartRecordingIndex, o.EndRecordingIndex, (char) o.Status, 
+                                           o.RecordIntegrityHashCode);
+      return DataWriter.Execute(operation);
     }
 
     static internal int WriteRecordingDocument(RecordingDocument o) {
@@ -234,11 +218,12 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal DataOperation WriteRecordingDocumentOp(RecordingDocument o) {
-      return DataOperation.Parse("writeLRSDocument", o.Id, o.DocumentType.Id, o.Subtype.Id, o.UniqueCode, 
+      return DataOperation.Parse("writeLRSDocument", o.Id, o.DocumentType.Id, o.Subtype.Id, o.UID, 
+                                 o.ImagingControlID, o.Notes, o.AsText, o.ExtensionData.ToJson(),
+                                 o.Keywords, o.PresentationTime, o.AuthorizationTime, 
                                  o.IssuePlace.Id, o.IssueOffice.Id, o.IssuedBy.Id, o.IssueDate,
-                                 o.Number, o.ExpedientNo, o.Title, o.Notes, o.SheetsCount, 
-                                 o.ExtensionData.ToJson(), o.Keywords, o.PostedBy.Id, o.PostingTime, 
-                                 (char) o.Status, o.Integrity.GetUpdatedHashCode());
+                                 o.SheetsCount, (char) o.Status, o.PostedBy.Id, o.PostingTime, 
+                                 o.Integrity.GetUpdatedHashCode());
     }
 
     #endregion Public methods

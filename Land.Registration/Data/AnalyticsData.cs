@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
 *  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
-*  Type      : PropertyData                                 Pattern  : Data Services Static Class            *
+*  Type      : PropertyData                                 Pattern  : Data Services                         *
 *  Version   : 2.0        Date: 04/Jan/2015                 License  : Please read license.txt file          *
 *                                                                                                            *
-*    Summary   : Provides database read and write methods for recording books.                               *
+*  Summary   : Provides database read and write methods for recording books.                                 *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;

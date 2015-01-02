@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
 *  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
-*  Type      : PropertyData                                 Pattern  : Data Services Static Class            *
+*  Type      : PropertyData                                 Pattern  : Data Services                         *
 *  Version   : 2.0        Date: 04/Jan/2015                 License  : Please read license.txt file          *
 *                                                                                                            *
-*    Summary   : Provides database read and write methods for recording books.                               *
+*  Summary   : Provides database read and write methods for recording books.                                 *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -21,14 +21,14 @@ namespace Empiria.Land.Registration.Data {
 
     #region Internal methods
 
-    static internal DataRow GetPropertyWithUniqueCode(string uniqueCode) {
-      DataOperation operation = DataOperation.Parse("getLRSPropertyWithTractKey", uniqueCode);
+    static internal DataRow GetPropertyWithUID(string uniqueID) {
+      DataOperation operation = DataOperation.Parse("getLRSPropertyWithTractKey", uniqueID);
 
       return DataReader.GetDataRow(operation);
     }
 
-    static internal bool ExistsPropertyUniqueCode(string uniqueCode) {
-      DataOperation operation = DataOperation.Parse("getLRSPropertyWithTractKey", uniqueCode);
+    static internal bool ExistsPropertyUID(string uniqueID) {
+      DataOperation operation = DataOperation.Parse("getLRSPropertyWithTractKey", uniqueID);
 
       return (DataReader.Count(operation) != 0);
     }
@@ -179,7 +179,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteProperty(Property o) {
-      var dataOperation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UniqueCode, 
+      var dataOperation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID, 
                                                o.Name, o.PropertyKind, o.RecordingNotes, o.AntecedentNotes,
                                                o.Location.ToJson(), o.Location.ToString(), o.Location.ToSearchVector(),
                                                o.CadastralData.ToJson(), o.Keywords, 
@@ -201,7 +201,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteTractIndexItem(TractIndexItem o) {
-      var dataOperation = DataOperation.Parse("writeLRSPropertyTractIndex", o.Id,
+      var dataOperation = DataOperation.Parse("writeLRSTractIndex", o.Id,
                                               o.Property.Id, o.RecordingAct.Id, o.ExtensionData.ToJson(),
                                               o.PostedBy.Id, o.PostingTime, (char) o.Status, 
                                               o.Integrity.GetUpdatedHashCode());

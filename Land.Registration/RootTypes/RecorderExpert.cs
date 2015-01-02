@@ -76,12 +76,14 @@ namespace Empiria.Land.Registration {
 
     public void AssertValidTask() {
       if (NeedCreatePrecedentRecordingAct) {
-        if (Task.PrecedentRecording.PresentationTime > Task.Transaction.PresentationTime) {
-          throw new LandRegistrationException(LandRegistrationException.Msg.PrecendentPresentationTimeIsAfterThisTransactionDate,
-                                              Task.PrecedentRecording.FullNumber, 
-                                              Task.PrecedentRecording.PresentationTime,
-                                              Task.Transaction.UniqueCode, Task.Transaction.PresentationTime);
-        }
+        throw new NotImplementedException();
+
+      //  if (Task.PrecedentRecording.PresentationTime > Task.Transaction.PresentationTime) {
+      //    throw new LandRegistrationException(LandRegistrationException.Msg.PrecendentPresentationTimeIsAfterThisTransactionDate,
+      //                                        Task.PrecedentRecording.FullNumber,
+      //                                        Task.PrecedentRecording.PresentationTime,
+      //                                        Task.Transaction.UID, Task.Transaction.PresentationTime);
+      //  }
       }
     }
 
