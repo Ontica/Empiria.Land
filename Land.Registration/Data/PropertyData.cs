@@ -212,4 +212,4 @@ namespace Empiria.Land.Registration.Data {
 
   } // class PropertyData
 
-} // namespace Empiria.Land.Registration.Registration.Data
+} // namespace Empiria.Land.Registration.Data

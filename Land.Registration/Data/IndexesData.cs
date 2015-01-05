@@ -91,4 +91,4 @@ namespace Empiria.Land.Registration.Data {
 
   } // class IndexesData
 
-} // namespace Empiria.Land.Registration.Registration.Data
+} // namespace Empiria.Land.Registration.Data

@@ -176,14 +176,18 @@ namespace Empiria.Land.Registration.Transactions {
     private LazyInstance<LRSTransactionTask> _previousTask = LazyInstance<LRSTransactionTask>.Empty;
     public LRSTransactionTask PreviousTask {
       get { return _previousTask.Value; }
-      private set { _previousTask.Value = value; }
+      private set {
+        _previousTask = LazyInstance<LRSTransactionTask>.Parse(value);
+      }
     }
 
     [DataField("NextTrackId")]
     private LazyInstance<LRSTransactionTask> _nextTask = LazyInstance<LRSTransactionTask>.Empty;
     public LRSTransactionTask NextTask {
       get { return _nextTask.Value; }
-      private set { _nextTask.Value = value; }
+      private set {
+        _nextTask = LazyInstance<LRSTransactionTask>.Parse(value); 
+      }
     }
 
     public string StatusName {
@@ -236,6 +240,7 @@ namespace Empiria.Land.Registration.Transactions {
       // Create next track
       LRSTransactionTask newTrack = new LRSTransactionTask(this.Transaction);
       newTrack.PreviousTask = this;
+      newTrack.NextTask = LRSTransactionTask.Empty;
       newTrack.CurrentStatus = this.NextStatus;
       newTrack.AssignedBy = this.Responsible;
       newTrack.Responsible = Contact.Parse(ExecutionServer.CurrentUserId);

@@ -28,12 +28,7 @@ namespace Empiria.Land.Registration.Transactions {
 
       fee.RecordingRights = (decimal) row["RecordingRightsFee"];
       fee.SheetsRevision = (decimal) row["SheetsRevisionFee"];
-      fee.Aclaration = (decimal) row["AclarationFee"];
-      fee.Usufruct = (decimal) row["UsufructFee"];
-      fee.Easement = (decimal) row["EasementFee"];
-      fee.SignCertification = (decimal) row["SignCertificationFee"];
-      fee.ForeignRecord = (decimal) row["ForeignRecordingFee"];
-      fee.OthersCharges = (decimal) row["OthersFee"];
+      fee.ForeignRecordingFee = (decimal) row["ForeignRecordingFee"];
       fee.Discount = Discount.Parse(DiscountType.Empty, (decimal) row["Discount"]);
 
       return fee;
@@ -62,40 +57,14 @@ namespace Empiria.Land.Registration.Transactions {
       set;
     }
 
-    public decimal Aclaration {
-      get;
-      set;
-    }
-
-    public decimal Usufruct {
-      get;
-      set;
-    }
-
-    public decimal Easement {
-      get;
-      set;
-    }
-
-    public decimal SignCertification {
-      get;
-      set;
-    }
-
-    public decimal ForeignRecord {
-      get;
-      set;
-    }
-
-    public decimal OthersCharges {
+    public decimal ForeignRecordingFee {
       get;
       set;
     }
 
     public decimal SubTotal {
       get {
-        return this.RecordingRights + this.SheetsRevision + this.Aclaration + this.Usufruct +
-               this.Easement + this.SignCertification + this.ForeignRecord + this.OthersCharges;
+        return this.RecordingRights + this.SheetsRevision + this.ForeignRecordingFee;
       }
     }
 
@@ -117,12 +86,7 @@ namespace Empiria.Land.Registration.Transactions {
 
       this.RecordingRights += fee.RecordingRights;
       this.SheetsRevision += fee.SheetsRevision;
-      this.Aclaration += fee.Aclaration;
-      this.Usufruct += fee.Usufruct;
-      this.Easement += fee.Easement;
-      this.SignCertification += fee.SignCertification;
-      this.ForeignRecord += fee.ForeignRecord;
-      this.OthersCharges += fee.OthersCharges;      
+      this.ForeignRecordingFee += fee.ForeignRecordingFee;   
       this.Discount += fee.Discount;
     }
 

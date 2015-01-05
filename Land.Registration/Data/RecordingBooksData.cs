@@ -230,4 +230,4 @@ namespace Empiria.Land.Registration.Data {
 
   } // class RecordingBooksData
 
-} // namespace Empiria.Land.Registration.Registration.Data
+} // namespace Empiria.Land.Registration.Data

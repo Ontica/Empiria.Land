@@ -64,7 +64,9 @@ namespace Empiria.Land.Registration.Transactions {
     LazyInstance<LRSTransaction> _transaction = LazyInstance<LRSTransaction>.Empty;
     public LRSTransaction Transaction {
       get { return _transaction.Value; }
-      private set { _transaction.Value = value; }
+      private set {
+        _transaction = LazyInstance<LRSTransaction>.Parse(value);
+      }
     }
 
     [DataField("TransactionItemTypeId")]
@@ -89,7 +91,9 @@ namespace Empiria.Land.Registration.Transactions {
     LazyInstance<LRSPayment> _payment = LazyInstance<LRSPayment>.Empty;
     public LRSPayment Payment {
       get { return _payment.Value; }
-      private set { _payment.Value = value; }
+      private set {
+        _payment = LazyInstance<LRSPayment>.Parse(value);
+      }
     }
 
     public Quantity Quantity {
@@ -158,16 +162,11 @@ namespace Empiria.Land.Registration.Transactions {
         return new object[] {
           1, "Id", this.Id, "TransactionId", this.Transaction.Id,
           "TransactionItemTypeId", this.TransactionItemType.Id,
-          "TreasuryCodeId", this.TreasuryCode.Id, "CalculationRuleId", this.CalculationRule.Id,
-          "PaymentId", this.Payment.Id, "Qty", this.Quantity.Amount, "QtyUnitId", this.Quantity.Unit.Id,
+          "TreasuryCodeId", this.TreasuryCode.Id, "PaymentId", this.Payment.Id, "Qty", this.Quantity.Amount, "QtyUnitId", this.Quantity.Unit.Id,
           "OpValue", this.OperationValue.Amount, "OpValueCurrencyId", this.OperationValue.Currency.Id,
           "RecordingRightsFee", this.Fee.RecordingRights, "SheetsRevisionFee", this.Fee.SheetsRevision,
-          "AclarationFee", this.Fee.Aclaration, "UsufructFee", this.Fee.Usufruct,
-          "EasementFee", this.Fee.Easement, "SignCertFee", this.Fee.SignCertification,
-          "ForeignFee", this.Fee.ForeignRecord, "OthersFee", this.Fee.OthersCharges,
-          "DiscountType", this.Fee.Discount.DiscountType.Id, "Discount", this.Fee.Discount.Amount,
-          "DiscountAuthId", this.Fee.Discount.Authorization.Id, "PostingTime", this.PostingTime,
-          "PostedById", this.PostedBy.Id, "Status", (char) this.Status
+          "ForeignFee", this.Fee.ForeignRecordingFee, "Discount", this.Fee.Discount.Amount,
+          "Status", (char) this.Status
         };
       }
       throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);

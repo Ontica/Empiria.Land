@@ -95,7 +95,9 @@ namespace Empiria.Land.Registration {
     LazyInstance<RecordingBook> _recordingBook = LazyInstance<RecordingBook>.Empty;
     public RecordingBook RecordingBook {
       get { return _recordingBook.Value; }
-      private set { _recordingBook.Value = value; }
+      private set {
+        _recordingBook = LazyInstance<RecordingBook>.Parse(value);
+      }
     }
 
     public RecorderOffice RecorderOffice {

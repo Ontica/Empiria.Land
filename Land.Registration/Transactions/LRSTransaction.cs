@@ -185,7 +185,9 @@ namespace Empiria.Land.Registration.Transactions {
     LazyInstance<RecordingDocument> _document = LazyInstance<RecordingDocument>.Empty;
     public RecordingDocument Document {
       get { return _document.Value; }
-      private set { _document.Value = value; }
+      private set {
+        _document = LazyInstance<RecordingDocument>.Parse(value);
+      }
     }
 
     [DataField("RecorderOfficeId")]
@@ -398,9 +400,15 @@ namespace Empiria.Land.Registration.Transactions {
 
     public LRSPayment AddPayment(string receiptNo, decimal receiptTotal) {
       this.AssertAddPayment();
-      var payment = new LRSPayment(this, receiptNo, receiptTotal);
 
-      this.Payments.Add(payment);
+      LRSPayment payment = null;
+      if (this.Payments.Count == 0) {
+        payment = new LRSPayment(this, receiptNo, receiptTotal);
+        this.Payments.Add(payment);
+      } else {
+        payment = this.Payments[0];
+      }
+      payment.Save();
 
       return payment;
     }
@@ -411,6 +419,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public void RemoveItem(LRSTransactionItem item) {
       this.Items.Remove(item);
+      item.Delete();
     }
 
     public LRSTransaction MakeCopy() {

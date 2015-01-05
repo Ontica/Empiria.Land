@@ -158,4 +158,4 @@ namespace Empiria.Land.Registration.Data {
 
   } // class RecordingActsData
 
-} // namespace Empiria.Land.Registration.Registration.Data
+} // namespace Empiria.Land.Registration.Data

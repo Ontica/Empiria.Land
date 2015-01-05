@@ -47,4 +47,4 @@ namespace Empiria.Land.Registration.Data {
 
   } // class AnalyticsData
 
-} // namespace Empiria.Land.Registration.Registration.Data
+} // namespace Empiria.Land.Registration.Data

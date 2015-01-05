@@ -100,7 +100,9 @@ namespace Empiria.Land.Registration {
     private LazyInstance<Property> _partitionOf = LazyInstance<Property>.Empty;
     public Property PartitionOf {
       get { return _partitionOf.Value; }
-      private set { _partitionOf.Value = value; }
+      private set {
+        _partitionOf = LazyInstance<Property>.Parse(value);
+      }
     }
 
     [DataField("PartitionNo")]
@@ -113,14 +115,18 @@ namespace Empiria.Land.Registration {
     private LazyInstance<Property> _mergedInto = LazyInstance<Property>.Empty;
     public Property MergedInto {
       get { return _mergedInto.Value; }
-      private set { _mergedInto.Value = value; }
+      private set {
+        _mergedInto = LazyInstance<Property>.Parse(value);
+      }
     }
 
     [DataField("PostedById")]
     private LazyInstance<Contact> _postedBy = LazyInstance<Contact>.Empty;
     public Contact PostedBy {
       get { return _postedBy.Value; }
-      private set { _postedBy.Value = value; }
+      private set {
+        _postedBy = LazyInstance<Contact>.Parse(value);
+      }
     }
 
     [DataField("PostingTime", Default = "DateTime.Now")]

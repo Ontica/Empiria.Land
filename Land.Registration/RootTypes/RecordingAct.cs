@@ -96,14 +96,18 @@ namespace Empiria.Land.Registration {
     private LazyInstance<RecordingDocument> _document = LazyInstance<RecordingDocument>.Empty;
     public RecordingDocument Document {
       get { return _document.Value; }
-      private set { _document.Value = value; }
+      private set {
+        _document = LazyInstance<RecordingDocument>.Parse(value);
+      }
     }
 
     [DataField("RecordingId")]
     private LazyInstance<Recording> _recording = LazyInstance<Recording>.Empty;
     public Recording Recording {
       get { return _recording.Value; }
-      private set { _recording.Value = value; }
+      private set {
+        _recording = LazyInstance<Recording>.Parse(value);
+      }
     }
 
     [DataField("RecordingActIndex")]
@@ -134,14 +138,18 @@ namespace Empiria.Land.Registration {
     private LazyInstance<RecordingAct> _amendmentOf = LazyInstance<RecordingAct>.Empty;
     public RecordingAct AmendmentOf {
       get { return _amendmentOf.Value; }
-      private set { _amendmentOf.Value = value; }
+      private set {
+        _amendmentOf = LazyInstance<RecordingAct>.Parse(value);
+      }
     }
 
     [DataField("AmendedById")]
     private LazyInstance<RecordingAct> _amendedBy = LazyInstance<RecordingAct>.Empty;
     public RecordingAct AmendedBy {
       get { return _amendedBy.Value; }
-      private set { _amendedBy.Value = value; }
+      private set {
+        _amendedBy = LazyInstance<RecordingAct>.Parse(value);
+      }
     }
 
     [DataField("RegisteredById")]

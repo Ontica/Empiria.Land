@@ -80,14 +80,18 @@ namespace Empiria.Land.Registration.Transactions {
     LazyInstance<LRSTransaction> _transaction = LazyInstance<LRSTransaction>.Empty;
     public LRSTransaction Transaction {
       get { return _transaction.Value; }
-      private set { _transaction.Value = value; }
+      private set {
+        _transaction = LazyInstance<LRSTransaction>.Parse(value);
+      }
     }
 
     [DataField("PhysicalRecordingId")]
     LazyInstance<Recording> _recording = LazyInstance<Recording>.Empty;
     public Recording Recording {
       get { return _recording.Value; }
-      private set { _recording.Value = value; }
+      private set {
+        _recording = LazyInstance<Recording>.Parse(value);
+      }
     }
 
     //[DataField("PaymentExternalID")]
@@ -100,7 +104,7 @@ namespace Empiria.Land.Registration.Transactions {
     LazyInstance<Organization> _paymentOffice = LazyInstance<Organization>.Empty;
     public Organization PaymentOffice {
       get { return _paymentOffice.Value; }
-      private set { _paymentOffice.Value = value; }
+      private set { _paymentOffice = LazyInstance<Organization>.Parse(value); }
     }
 
     [DataField("ReceiptNo", Default = "No asignado")]

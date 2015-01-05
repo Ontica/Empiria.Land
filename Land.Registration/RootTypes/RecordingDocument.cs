@@ -99,21 +99,27 @@ namespace Empiria.Land.Registration {
     private LazyInstance<GeographicRegion> _issuePlace = LazyInstance<GeographicRegion>.Empty;
     public GeographicRegion IssuePlace {
       get { return _issuePlace.Value; }
-      set { _issuePlace.Value = value; }
+      set {
+        _issuePlace = LazyInstance<GeographicRegion>.Parse(value);
+      }
     }
 
     [DataField("IssueOfficeId")]
     private LazyInstance<Organization> _issueOffice = LazyInstance<Organization>.Empty;
     public Organization IssueOffice {
       get { return _issueOffice.Value; }
-      set { _issueOffice.Value = value; }
+      set {
+        _issueOffice = LazyInstance<Organization>.Parse(value);
+      }
     }
 
     [DataField("IssuedById")]
     private LazyInstance<Contact> _issuedBy = LazyInstance<Contact>.Empty;
     public Contact IssuedBy {
       get { return _issuedBy.Value; }
-      set { _issuedBy.Value = value; }
+      set {
+        _issuedBy = LazyInstance<Contact>.Parse(value);
+      }
     }
 
     [DataField("IssueDate", Default = "ExecutionServer.DateMinValue")]

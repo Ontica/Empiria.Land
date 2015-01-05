@@ -56,4 +56,4 @@ namespace Empiria.Land.Registration.Data {
 
   } // class DocumentsData
 
-} // namespace Empiria.Land.Registration.Registration.Data
+} // namespace Empiria.Land.Registration.Data
