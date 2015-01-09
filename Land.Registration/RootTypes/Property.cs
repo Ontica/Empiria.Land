@@ -62,15 +62,24 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("PropertyKind")]
+    private string _propertyKind = PropertyKind.Empty;
     public PropertyKind PropertyKind {
+      get { return _propertyKind; }
+      set {
+        _propertyKind = value;
+      }
+    }
+
+    [DataField("PropertyNotes")]
+    public string Notes {
       get;
       set;
     }
 
-    [DataField("PropertyRecordingNotes")]
-    public string RecordingNotes {
+    [DataField("PropertyAsText")]
+    public string AsText {
       get;
-      set;
+      private set;
     }
 
     [DataField("AntecedentNotes")]
@@ -97,11 +106,11 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("PartitionOfId")]
-    private LazyInstance<Property> _partitionOf = LazyInstance<Property>.Empty;
-    public Property PartitionOf {
-      get { return _partitionOf.Value; }
+    private LazyInstance<Property> _isPartitionOf = LazyInstance<Property>.Empty;
+    public Property IsPartitionOf {
+      get { return _isPartitionOf.Value; }
       private set {
-        _partitionOf = LazyInstance<Property>.Parse(value);
+        _isPartitionOf = LazyInstance<Property>.Parse(value);
       }
     }
 
@@ -149,7 +158,7 @@ namespace Empiria.Land.Registration {
       if (version == 1) {
         return new object[] {
           1, "Id", this.Id, "PropertyType", this.GetEmpiriaType().Id, "UID", this.UID, "PostedBy",
-          this.PostedBy.Id, "PostingTime", this.PostingTime, "PartitionOf", _partitionOf.Id,
+          this.PostedBy.Id, "PostingTime", this.PostingTime, "PartitionOf", _isPartitionOf.Id,
           "Status", (char) this.Status,
         };
       }
@@ -168,7 +177,8 @@ namespace Empiria.Land.Registration {
 
     public FixedList<RecordingAct> Annotations {
       get {
-        return RecordingBooksData.GetPropertyAnnotationList(this);
+        throw new NotImplementedException();
+        //return RecordingBooksData.GetPropertyAnnotationList(this);
       }
     }
 
@@ -286,9 +296,16 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    protected override void OnInitialize() {
+      this.Location = new Address();
+      this.CadastralData = new CadastralInfo();
+    }
+
     protected override void OnLoadObjectData(DataRow row) {
-      this.Location = Address.FromJson((string) row["LocationExtData"]);
-      this.CadastralData = CadastralInfo.FromJson((string) row["CadastralExtData"]);
+      this.Location = new Address();
+      this.CadastralData = new CadastralInfo();
+      //this.Location = Address.FromJson((string) row["LocationExtData"]);
+      //this.CadastralData = CadastralInfo.FromJson((string) row["CadastralExtData"]);
     }
 
     protected override void OnSave() {

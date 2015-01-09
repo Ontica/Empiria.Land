@@ -144,7 +144,7 @@ namespace Empiria.Land.Registration {
 
     /// <summary>Factory method to create recording acts</summary>
     internal RecordingAct CreateInstance() {
-      throw new NotImplementedException();
+      return base.CreateObject<RecordingAct>();
     }
 
     public FixedList<RecordingActType> GetAppliesToRecordingActTypesList() {

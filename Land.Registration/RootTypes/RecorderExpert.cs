@@ -97,54 +97,20 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(this.Task.TargetProperty.IsEmptyInstance,
                        "TargetResource should be the empty instance.");
 
-      var recordingAct = RecordingAct.Parse(this.Task);
-
-      return recordingAct.WriteOn(this.Task.RecorderOffice,
-                                  this.Task.RecordingRule.RecordingSection);
-      
-      /// Original Code
-      //RecordingBook book = this.GetRecordingBook(); 
-      //Recording recording = book.CreateRecording();
-      //return recording.CreateRecordingAct(Task.RecordingActType, Property.Empty);
-
-      // Current-form
-      //using (var context = new StorageContext()) {
-      //  RecordingBook book = this.GetRecordingBook();
-      //  context.Save(book);
-      //  this.RecordingAct.WriteOn(book);
-      //  context.Save(this.RecordingAct);
-      //  context.Update;
-      //}
-
-      /// Ugly-form
-      //using (var context = StorageContext.Open()) {
-      //  RecordingBook book = this.GetRecordingBook();
-      //  context.Attach(book);
-      //  context.Attach(this.RecordingAct);
-      //  this.RecordingAct.WriteOn(book);
-      //  context.Update();
-      //}
-
-      /// Thread-based
-      //using (var context = new StorageContext()) {
-      //  RecordingBook book = this.GetRecordingBook();
-      //  this.RecordingAct.WriteOn(book);
-      //  context.SaveChanges();
-      //}
-
+      return this.Task.Document.AppendRecordingActFromTask(this.Task);
     }
 
-    private RecordingAct DoPropertyAnnotation() {
-      if (this.NeedCreatePrecedentRecording) {
-        this.CreatePrecedentRecording();
-      } else if (this.NeedCreatePrecedentRecordingAct) {
-        this.CreatePrecedentRecordingAct();
-      }
-      var lastRecording = Task.TargetProperty.LastRecordingAct.Recording;
+    //private RecordingAct DoPropertyAnnotation() {
+    //  if (this.NeedCreatePrecedentRecording) {
+    //    this.CreatePrecedentRecording();
+    //  } else if (this.NeedCreatePrecedentRecordingAct) {
+    //    this.CreatePrecedentRecordingAct();
+    //  }
+    //  var lastRecording = Task.TargetProperty.LastRecordingAct.Recording;
 
-      return lastRecording.CreateAnnotation(Task.Transaction, Task.RecordingActType,
-                                            Task.TargetProperty);
-    }
+    //  return lastRecording.CreateAnnotation(Task.Transaction, Task.RecordingActType,
+    //                                        Task.TargetProperty);
+    //}
 
     private RecordingAct DoPropertyRecording() {
       if (this.NeedCreatePrecedentRecording) {
@@ -157,16 +123,7 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(this.Task.TargetProperty.IsEmptyInstance == false, 
                        "The target resource cannot be the Property.Empty instance.");
 
-      var recordingAct = RecordingAct.Parse(this.Task);
-
-      return recordingAct.WriteOn(this.Task.RecorderOffice,
-                                  this.Task.RecordingRule.RecordingSection);
-
-      //ORIGINAL CODE
-      //RecordingBook book = this.GetOpenedRecordingBook();
-      //Recording recording = book.CreateRecording(Task.Transaction);
-
-      //return recording.CreateRecordingAct(Task.RecordingActType, Task.TargetResource);
+      return this.Task.Document.AppendRecordingActFromTask(this.Task);
     }
 
     private RecordingAct DoRecordingActAnnotation() {
@@ -189,12 +146,14 @@ namespace Empiria.Land.Registration {
       if (!this.NeedCreatePrecedentRecording) {
         return;
       }
-
-      Recording recording = Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
-                                                                             Task.QuickAddBisRecordingSuffixTag);
+      
       Property property = new Property();
-      RecordingAct recordingAct = recording.CreateRecordingAct(RecordingActType.Empty, property);
 
+      var document = new RecordingDocument(RecordingDocumentType.Empty);
+      Recording recording = Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber, 
+                                                                             Task.QuickAddBisRecordingSuffixTag);
+      var recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property, recording);
+      
       Task.TargetProperty = property;
       Task.PrecedentRecording = recording;
       if (Task.RecordingRule.AppliesTo == RecordingRuleApplication.RecordingAct) {
@@ -208,7 +167,8 @@ namespace Empiria.Land.Registration {
       }
 
       var property = new Property();
-      var recordingAct = Task.PrecedentRecording.CreateRecordingAct(RecordingActType.Empty, property);
+      var document = new RecordingDocument(RecordingDocumentType.Empty);
+      var recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property, Task.PrecedentRecording);
       Task.TargetProperty = property;
       if (Task.RecordingRule.AppliesTo == RecordingRuleApplication.RecordingAct) {
         Task.TargetRecordingAct = recordingAct;
@@ -227,7 +187,8 @@ namespace Empiria.Land.Registration {
           return this.DoPropertyRecording();       // (e.g. Título de propiedad o compra-venta)
         }
         if (Task.RecordingRule.IsAnnotation) {
-          return this.DoPropertyAnnotation();      // (e.g. Aviso preventivo)
+          //return this.DoPropertyAnnotation();    // (e.g. Aviso preventivo)
+          return this.DoPropertyRecording();
         }
       }
 

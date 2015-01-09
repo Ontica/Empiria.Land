@@ -85,13 +85,15 @@ namespace Empiria.Land.Registration.Data {
     //}
 
     static internal int GetBookTotalSheets(RecordingBook book) {
-      object result = DataReader.GetFieldValue(DataOperation.Parse("getLRSRecordingBooksStats", book.Id),
-                                               "DocumentSheets");
-      if (result == null || result == DBNull.Value) {
-        return 0;
-      } else {
-        return (int) result;
-      }
+      throw new NotImplementedException();
+
+      //object result = DataReader.GetFieldValue(DataOperation.Parse("rptLRSRecordingBooksStats", book.Id),
+      //                                         "DocumentSheets");
+      //if (result == null || result == DBNull.Value) {
+      //  return 0;
+      //} else {
+      //  return (int) result;
+      //}
     }
 
     static internal FixedList<Recording> GetRecordings(RecordingDocument document,
@@ -105,17 +107,8 @@ namespace Empiria.Land.Registration.Data {
                                             (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
     }
 
-    static public FixedList<RecordingAct> GetPropertyAnnotationList(Property property) {
-      var operation = DataOperation.Parse("qryLRSPropertyAnnotations", property.Id);
-      
-      return DataReader.GetList<RecordingAct>(operation,
-                                              (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
-    }
-
-    static public FixedList<RecordingBook> GetRecordingBooks(string filter, string sort = "RecordingBookFullName") {
-      filter = GeneralDataOperations.BuildSqlAndFilter(filter, "RecordingBookType = 'V'");
-
-      string sql = "SELECT * FROM LRSRecordingBooks" +  GeneralDataOperations.GetFilterSortSqlString(filter, sort);
+    static public FixedList<RecordingBook> GetRecordingBooks(string filter, string sort = "BookAsText") {
+      string sql = "SELECT * FROM LRSPhysicalBooks" +  GeneralDataOperations.GetFilterSortSqlString(filter, sort);
 
       return DataReader.GetList<RecordingBook>(DataOperation.Parse(sql),
                                               (x) => BaseObject.ParseList<RecordingBook>(x)).ToFixedList();
@@ -124,8 +117,8 @@ namespace Empiria.Land.Registration.Data {
     static public FixedList<RecordingBook> GetRecordingBooks(RecorderOffice recorderOffice) {
       string filter = "RecorderOfficeId = " + recorderOffice.Id.ToString();
 
-      string sql = "SELECT * FROM LRSRecordingBooks" +
-                   GeneralDataOperations.GetFilterSortSqlString(filter, "RecordingBookFullName");
+      string sql = "SELECT * FROM LRSPhysicalBooks" +
+                   GeneralDataOperations.GetFilterSortSqlString(filter, "BookAsText");
 
       return DataReader.GetList<RecordingBook>(DataOperation.Parse(sql),
                                               (x) => BaseObject.ParseList<RecordingBook>(x)).ToFixedList();
@@ -134,17 +127,17 @@ namespace Empiria.Land.Registration.Data {
     static public FixedList<RecordingBook> GetRecordingBooksInSection(RecorderOffice recorderOffice,
                                                                       RecordingSection sectionType) {
       string filter = "RecorderOfficeId = " + recorderOffice.Id.ToString() + " AND " +
-                      "RecordingsClassId = " + sectionType.Id.ToString();
+                      "RecordingSectionId = " + sectionType.Id.ToString();
 
-      string sql = "SELECT * FROM LRSRecordingBooks" +
-                    GeneralDataOperations.GetFilterSortSqlString(filter, "RecordingBookFullName");
+      string sql = "SELECT * FROM LRSPhysicalBooks" +
+                    GeneralDataOperations.GetFilterSortSqlString(filter, "BookAsText");
 
       return DataReader.GetList<RecordingBook>(DataOperation.Parse(sql),
                                               (x) => BaseObject.ParseList<RecordingBook>(x)).ToFixedList();
     }
 
     static public FixedList<Recording> GetRecordings(RecordingBook recordingBook) {
-      var operation = DataOperation.Parse("qryLRSRecordingBookRecordings", recordingBook.Id);
+      var operation = DataOperation.Parse("qryLRSPhysicalBookRecordings", recordingBook.Id);
 
       return DataReader.GetList<Recording>(operation,
                                           (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
@@ -165,7 +158,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal Recording FindRecording(RecordingBook recordingBook, string filter) {
-      string sql = "SELECT * FROM LRSRecordings WHERE " + 
+      string sql = "SELECT * FROM LRSPhysicalRecordings WHERE " + 
                   "(RecordingBookId = " + recordingBook.Id.ToString() + " AND RecordingStatus <> 'X')";
       if (!String.IsNullOrWhiteSpace(filter)) {
         sql += " AND " + filter;
@@ -187,7 +180,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static public DataView GetVolumeRecordingBooks(RecorderOffice recorderOffice, RecordingBookStatus status, string filter, string sort) {
-      return DataReader.GetDataView(DataOperation.Parse("qryLRSVolumeBooks", recorderOffice.Id, (char) status), filter, sort);
+      return DataReader.GetDataView(DataOperation.Parse("rptLRSVolumeBooks", recorderOffice.Id, (char) status), filter, sort);
     }
 
     static internal int UpdateRecordingsImageIndex(RecordingBook recordingBook, int startImageIndex, int offset) {

@@ -33,40 +33,43 @@ namespace Empiria.Land.Registration.Data {
     static public FixedList<RecordingAct> GetPropertyRecordingActListUntil(Property property, RecordingAct breakAct, 
                                                                            bool includeBreakAct) {
       var operation = DataOperation.Parse("qryLRSPropertyRecordingActs", property.Id);
-      DataView view = DataReader.GetDataView(operation);
+      DataTable table = DataReader.GetDataTable(operation);
       List<RecordingAct> list = new List<RecordingAct>();
-      foreach (DataRowView row in view) {
-        var recordingAct = BaseObject.ParseDataRow<RecordingAct>(row.Row);
+      foreach (DataRow row in table.Rows) {
+        var recordingAct = BaseObject.ParseDataRow<RecordingAct>(row);
+        Assertion.Assert(recordingAct.Document.Id > 0, "DocId not valid");
         if (recordingAct.Equals(breakAct)) {
           if (includeBreakAct) {
-            list.Add(BaseObject.ParseDataRow<RecordingAct>(row.Row));
+            list.Add(BaseObject.ParseDataRow<RecordingAct>(row));
           }
           break;
         } else {
-          list.Add(BaseObject.ParseDataRow<RecordingAct>(row.Row));
+          list.Add(BaseObject.ParseDataRow<RecordingAct>(row));
         }
       }
       return list.ToFixedList();
     }
 
     static public FixedList<RecordingAct> GetRecordingActs(Recording recording) {
-      var operation = DataOperation.Parse("qryLRSRecordingRecordedActs", recording.Id);
+      var operation = DataOperation.Parse("qryLRSPhysicalRecordingRecordedActs", recording.Id);
 
       return DataReader.GetList<RecordingAct>(operation,
                                               (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
     }
 
-    static public FixedList<RecordingAct> GetRecordingActs(RecordingDocument document) {
+    static internal List<RecordingAct> GetRecordingActs(RecordingDocument document) {
       if (document.IsEmptyInstance) {
-        return new FixedList<RecordingAct>();
+        return new List<RecordingAct>();
       }
 
-      string sql = "SELECT * FROM LRSRecordingActs" +
-                  " WHERE DocumentId = " + document.Id +
-                  " ORDER BY RecordingActIndex, RegistrationTime";
+      string sql = "SELECT * FROM LRSRecordingActs " +
+                   "WHERE DocumentId = {0} AND RecordingActStatus <> 'X' " +
+                   "ORDER BY RecordingActIndex, RegistrationTime";
+      sql = String.Format(sql, document.Id);
+
       var operation = DataOperation.Parse(sql);
 
-      return DataReader.GetList<RecordingAct>(operation, (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
+      return DataReader.GetList<RecordingAct>(operation, (x) => BaseObject.ParseList<RecordingAct>(x));
     }
 
     static internal List<TractIndexItem> GetTractIndex(RecordingAct recordingAct) {
@@ -146,10 +149,13 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteRecordingAct(RecordingAct o) {
       Assertion.Assert(o.Id != 0, "RecordingAct.Id can't be zero");
+      Assertion.Assert(!o.Document.IsEmptyInstance, "Document can't be the empty instance.");
+      Assertion.Assert(!o.Document.IsNew, "Document should be saved before add recording acts to it.");
+
       var operation = DataOperation.Parse("writeLRSRecordingAct", o.Id, o.RecordingActType.Id,
-                                          o.Document.Id, o.Recording.Id, o.Index, o.Notes, 
-                                          o.ExtensionData.ToJson(), o.Keywords, o.AmendmentOf.Id, 
-                                          o.AmendedBy.Id, o.RegisteredBy.Id, o.RegistrationTime, 
+                                          o.Document.Id, o.Index, o.Notes, o.ExtensionData.ToJson(),
+                                          o.Keywords, o.AmendmentOf.Id, o.AmendedBy.Id, o.Recording.Id,
+                                          o.RegisteredBy.Id, o.RegistrationTime,
                                           (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }

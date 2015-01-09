@@ -294,7 +294,27 @@ namespace Empiria.Land.UI {
       return html;
     }
 
-    static public string GetRecordingActsGrid(FixedList<RecordingAct> recordingActs) {
+    static public string GetRecordingActsGrid(RecordingDocument document) {
+      string html = String.Empty;
+
+      int counter = 0;
+      for (int i = 0; i < document.RecordingActs.Count; i++) {
+        RecordingAct recordingAct = document.RecordingActs[i];
+
+        if (recordingAct.TractIndex.Count > 0) {
+          counter++;
+          for (int j = 0; j < recordingAct.TractIndex.Count; j++) {
+            html += GetRecordingActGridRow(recordingAct, recordingAct.TractIndex[j], counter, i, j, 
+                                           document.RecordingActs.Count);
+          }
+        } else {
+          html += GetRecordingActGridRow(recordingAct, TractIndexItem.Empty, counter, i, 0, document.RecordingActs.Count);
+        }
+      }
+      return html;
+    }
+
+    static public string GetRecordingActsGridPhysicalBooks(FixedList<RecordingAct> recordingActs) {
       string html = String.Empty;
       int counter = 0;
 
@@ -307,20 +327,132 @@ namespace Empiria.Land.UI {
             if (index == 0 && tractItemIndex == 0) {
               counter++;
             }
-            html += GetRecordingActGridRow(recordingAct, tractItem, counter, 
-                                           index, tractItemIndex);
+            html += GetRecordingActGridRowPhysicalBooks(recordingAct, tractItem, counter,
+                                                        index, tractItemIndex);
             tractItemIndex++;
           }
         } else {
           counter++;
-          html += GetRecordingActGridRow(recordingAct, TractIndexItem.Empty, counter, index, 0);
+          html += GetRecordingActGridRowPhysicalBooks(recordingAct, TractIndexItem.Empty, counter, index, 0);
         }
         index++;
       }  // foreach RecordingAct
       return html;
     }
 
-    static private string GetRecordingActGridRow(RecordingAct recordingAct, TractIndexItem propertyEvent, int counter, 
+    static private string GetRecordingActGridRow(RecordingAct recordingAct, TractIndexItem tractItem, int counter,
+                                                 int recordingActIndex, int tractItemIndex, int recordingActsCount) {
+      const string row = "<tr class='{CLASS}'>" +
+          "<td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b><br/>" +                   
+          "<td style='white-space:normal'>{RECORDING.ACT.URL}</td>" +
+          "<td style='white-space:normal'>{PROPERTY.URL}</td>" + 
+          "<td style='white-space:normal'>{PHYSICAL.RECORDING.DATA}</td>" +
+          "<td>{RECORDING.ACT.STATUS}</td>" + 
+          "<td>{OPTIONS.COMBO}<img class='comboExecuteImage' src='../themes/default/buttons/next.gif' " +
+          "alt='' title='Ejecuta la operación seleccionada' " +
+          "onclick='doOperation(getElement(\"cboRecordingOptions_{ID}_{PROPERTY.ID}\").value, {ID}, {PROPERTY.ID});'/>" +
+          "</td></tr>";
+      const string editableURL = "<a href='javascript:doOperation(\"editRecordingAct\", {RECORDING.BOOK.ID}, {RECORDING.ID})'>" +
+                                 "<b id='ancRecordingAct_{ID}'>{RECORDING.ACT.DISPLAY.NAME}</b></a>";
+      const string readonlyURL = "<b id='ancRecordingAct_{ID}'>{RECORDING.ACT.DISPLAY.NAME}</b>";
+
+
+      const string propertyURL = "<a href='javascript:doOperation(\"editProperty\", {RECORDING.BOOK.ID}, {RECORDING.ID}, {PROPERTY.ID})'>" +
+                                 "<b id='ancRecordingActProperty_{ID}_{PROPERTY.ID}'>{PROPERTY.TRACT}</b></a>";
+
+      const string optionsCombo = "<select id='cboRecordingOptions_{ID}_{PROPERTY.ID}' class='selectBox' style='width:148px'>" +
+                                  "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
+                                  "{INCREMENT_INDEX}" +
+                                  "{DECREMENT_INDEX}" +
+                                  "<option value='selectRecordingActOperation'></option>" +
+                                  "<option value='addPropertyToRecordingAct'>Agregar otro predio</option>" +
+                                  "<option value='addAnotherRecordingActToRecording'>Agregar otro acto</option>" +
+                                  "<option value='modifyRecordingActType'>Modificar este acto</option>" +
+                                  "<option value='deleteRecordingAct'>Eliminar este acto</option>" +
+                                  "</select>";
+      const string propertyOptionsCombo = "<select id='cboRecordingOptions_{ID}_{PROPERTY.ID}' class='selectBox' style='width:148px'>" +
+                                          "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
+                                          "<option value='deleteRecordingActProperty'>Eliminar este predio</option>" +
+                                          "<option value='viewPropertyTract'>Ver la historia de este predio</option>" +
+                                          "</select>";
+
+      string temp = row.Replace("{CLASS}", (counter % 2 == 0) ? "detailsItem" : "detailsOddItem");
+
+      if (tractItemIndex == 0) {
+        temp = temp.Replace("{RECORDING.ACT.INDEX}", counter.ToString("00"));
+        if (recordingAct.RecordingActType.Autoregister) {
+          temp = temp.Replace("{RECORDING.ACT.URL}", readonlyURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
+                                                                         recordingAct.RecordingActType.DisplayName));
+        } else {
+          temp = temp.Replace("{RECORDING.ACT.URL}", editableURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
+                                                                         recordingAct.RecordingActType.DisplayName));
+        }
+        temp = temp.Replace("{RECORDING.ACT.DISPLAY.NAME}", recordingAct.RecordingActType.DisplayName);
+        temp = temp.Replace("{RECORDING.ACT.STATUS}", recordingAct.StatusName);
+      } else {
+        temp = temp.Replace("{RECORDING.ACT.INDEX}", "<i>" + counter.ToString("00") + "</i>");
+        temp = temp.Replace("{RECORDING.ACT.URL}", readonlyURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
+                                                                       "<i>ídem</i>"));
+        temp = temp.Replace("{RECORDING.ACT.STATUS}", @"&nbsp;");
+      }
+
+      temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", tractItem.Property.UID));
+      if (recordingAct.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Property ||
+          recordingAct.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Structure) {
+        temp = temp.Replace("{PROPERTY.STATUS}", tractItem.StatusName);
+      } else {
+        temp = temp.Replace("{PROPERTY.STATUS}", "N/A");
+      }
+
+      RecordingAct antecedent = tractItem.Property.GetDomainAntecedent(recordingAct);
+      if (tractItem.Property.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "&nbsp;");
+      } else if (antecedent.Equals(InformationAct.Empty)) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Sin antecedente");
+      } else if (!antecedent.Recording.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Predio inscrito en: " + 
+                                                          antecedent.Recording.FullNumber);
+      } else if (antecedent.Recording.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + antecedent.Id + " " + 
+                                                          recordingAct.Document.Id  + " " + antecedent.Document.Id + " " + 
+                                                          antecedent.Document.UID);
+      }
+
+      temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", recordingAct.Id.ToString());
+
+      if (tractItemIndex == 0) {
+        temp = temp.Replace("{OPTIONS.COMBO}", optionsCombo);
+        if (recordingActsCount > 1) {
+          if (recordingActIndex != 0) {
+            temp = temp.Replace("{INCREMENT_INDEX}", "<option value='upwardRecordingAct'>Subir en la secuencia</option>");
+          } else {
+            temp = temp.Replace("{INCREMENT_INDEX}", String.Empty);
+          }
+          if (recordingActIndex != recordingActsCount - 1) {
+            temp = temp.Replace("{DECREMENT_INDEX}", "<option value='downwardRecordingAct'>Bajar en la secuencia</option>");
+          } else {
+            temp = temp.Replace("{DECREMENT_INDEX}", String.Empty);
+          }
+        } else { // recording.RecordingActs.Count <= 1
+          temp = temp.Replace("{INCREMENT_INDEX}", String.Empty);
+          temp = temp.Replace("{DECREMENT_INDEX}", String.Empty);
+        }
+      } else { // propertyEventIndex != 0
+        temp = temp.Replace("{OPTIONS.COMBO}", propertyOptionsCombo);
+      }
+
+      temp = temp.Replace("{ID}", recordingAct.Id.ToString());
+      temp = temp.Replace("{PROPERTY.ID}", tractItem.Property.Id.ToString());
+      temp = temp.Replace("{RECORDING.ID}", recordingAct.Recording.Id.ToString());
+      temp = temp.Replace("{RECORDING.BOOK}", recordingAct.Recording.RecordingBook.AsText);
+      temp = temp.Replace("{RECORDING.BOOK.ID}", recordingAct.Recording.RecordingBook.Id.ToString());
+      temp = temp.Replace("{RECORDING.NUMBER}", recordingAct.Recording.Number);
+      
+      return temp;
+    }
+
+    static private string GetRecordingActGridRowPhysicalBooks(RecordingAct recordingAct, 
+                                                 TractIndexItem propertyEvent, int counter, 
                                                  int recordingActIndex, int propertyEventIndex) {
       const string row = "<tr class='{CLASS}'>" +
                            "<td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b><br/>" +

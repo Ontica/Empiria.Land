@@ -40,23 +40,37 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    protected override void OnInitialize() {
-      attachedResources = new Lazy<List<TractIndexItem>>(() => RecordingActsData.GetTractIndex(this));
-    }
-
     static internal RecordingAct Create(RecordingActType recordingActType, 
-                                        Recording recording, Property resource) {
+                                        RecordingDocument document, Property resource,
+                                        RecordingAct amendmentOf, Recording recording, 
+                                        int index) {
+      Assertion.AssertObject(recordingActType, "recordingActType");
+      Assertion.AssertObject(document, "document");
+      Assertion.AssertObject(resource, "resource");
+      Assertion.AssertObject(amendmentOf, "amendmentOf");
+      Assertion.AssertObject(recording, "recording");
+
+      Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance");
+
       RecordingAct recordingAct = recordingActType.CreateInstance();
       recordingAct.Recording = recording;
-      recordingAct.Index = recording.RecordingActs.Count + 1;
+      recordingAct.Index = index;
+      recordingAct.Document = document;
+      recordingAct.AmendmentOf = amendmentOf;
 
       if (recordingActType.Autoregister) {
         recordingAct.Status = RecordableObjectStatus.Registered;
       } else {
         recordingAct.Status = RecordableObjectStatus.Pending;
       }
-      recordingAct.AttachResource(resource);
+      if (recording.IsNew) {
+        recording.Save();
+      }
       recordingAct.Save();
+      if (resource.IsNew) {
+        resource.Save();
+      }
+      recordingAct.AttachResource(resource);
 
       return recordingAct;
     }
@@ -65,21 +79,8 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<RecordingAct>(id);
     }
 
-    static internal RecordingAct Parse(RecordingTask task) {
-      Assertion.AssertObject(task, "task");
-
-      RecordingAct recordingAct = task.RecordingActType.CreateInstance();
-      recordingAct.Document = task.Document;
-      recordingAct.AmendmentOf = task.TargetRecordingAct;
-
-      if (!task.TargetProperty.IsEmptyInstance) {
-        recordingAct.AttachResource(task.TargetProperty);
-      }
-      return recordingAct;
-    }
-
     static public FixedList<RecordingAct> GetList(RecordingDocument document) {
-      return RecordingActsData.GetRecordingActs(document);
+      return RecordingActsData.GetRecordingActs(document).ToFixedList();
     }
 
     #endregion Constructors and parsers
@@ -93,15 +94,12 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("DocumentId")]
-    private LazyInstance<RecordingDocument> _document = LazyInstance<RecordingDocument>.Empty;
     public RecordingDocument Document {
-      get { return _document.Value; }
-      private set {
-        _document = LazyInstance<RecordingDocument>.Parse(value);
-      }
+      get;
+      private set;
     }
 
-    [DataField("RecordingId")]
+    [DataField("PhysicalRecordingId")]
     private LazyInstance<Recording> _recording = LazyInstance<Recording>.Empty;
     public Recording Recording {
       get { return _recording.Value; }
@@ -239,9 +237,15 @@ namespace Empiria.Land.Registration {
 
     public TractIndexItem AttachResource(Property resource) {
       Assertion.AssertObject(resource, "resource");
+      Assertion.Assert(!this.IsNew, "this is new");
+      Assertion.Assert(!this.IsEmptyInstance, "this is empty");
+      Assertion.Assert(!resource.IsEmptyInstance, "resource is empty");
+      Assertion.Assert(!resource.IsNew, "resource is new");
 
       var item = new TractIndexItem(resource, this);
-     
+      
+      item.Save();
+
       attachedResources.Value.Add(item);
 
       return item;
@@ -305,6 +309,11 @@ namespace Empiria.Land.Registration {
       return property.IsFirstRecordingAct(this);
     }
 
+    protected override void OnInitialize() {
+      this.ExtensionData = new RecordingActExtData();
+      this.attachedResources = new Lazy<List<TractIndexItem>>(() => RecordingActsData.GetTractIndex(this));
+    }
+
     protected override void OnLoadObjectData(DataRow row) {
       this.ExtensionData = RecordingActExtData.Parse((string) row["RecordingActExtData"]);
     }
@@ -347,7 +356,7 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(recorderOffice, "recorderOffice");
       Assertion.AssertObject(recordingSection, "recordingSection");
 
-      RecordingBook book = this.GetOpenedRecordingBook(recorderOffice, recordingSection);
+      //RecordingBook book = this.GetOpenedRecordingBook(recorderOffice, recordingSection);
       //this.Recording = book.CreateRecording(this.Document.Transaction);
       //OOJJOO
       this.Save();
@@ -378,14 +387,14 @@ namespace Empiria.Land.Registration {
 
     #endregion Public methods
 
-    #region Private methods
+    //#region Private methods
 
-    private RecordingBook GetOpenedRecordingBook(RecorderOffice recorderOffice, 
-                                                 RecordingSection recordingSection) {
-      return RecordingBook.GetAssignedBookForRecording(recorderOffice, recordingSection, this.Document);
-    }
+    ////private RecordingBook GetOpenedRecordingBook(RecorderOffice recorderOffice, 
+    ////                                             RecordingSection recordingSection) {
+    ////  return RecordingBook.GetAssignedBookForRecording(recorderOffice, recordingSection, this.Document);
+    ////}
 
-    #endregion Private methods
+    //#endregion Private methods
 
   } // class RecordingAct
 

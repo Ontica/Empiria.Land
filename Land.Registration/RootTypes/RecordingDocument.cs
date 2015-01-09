@@ -10,6 +10,7 @@
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
+using System.Collections.Generic;
 
 using Empiria.Contacts;
 using Empiria.Geography;
@@ -23,6 +24,12 @@ namespace Empiria.Land.Registration {
   /// <summary>Partitioned type that represents a document that is attached to recordings.</summary>
   [PartitionedType(typeof(RecordingDocumentType))]
   public class RecordingDocument : BaseObject, IExtensible<RecordingDocumentExtData>, IProtected {
+
+    #region Fields
+
+    private Lazy<List<RecordingAct>> recordingActList = null;
+
+    #endregion Fields
 
     #region Constructors and parsers
 
@@ -45,10 +52,6 @@ namespace Empiria.Land.Registration {
       } else {
         return null;
       }
-    }
-
-    static public RecordingDocument Create(RecordingDocumentType documentType) {
-      return new RecordingDocument(documentType);
     }
 
     static public RecordingDocument Empty {
@@ -189,6 +192,14 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+    public FixedList<RecordingAct> RecordingActs {
+      get {
+        Predicate<RecordingAct> match = (x) => x.Status != RecordableObjectStatus.Deleted;
+        
+        return recordingActList.Value.FindAll(match).ToFixedList();
+      }
+    }
+
     int IProtected.CurrentDataIntegrityVersion {
       get {
         return 1;
@@ -225,6 +236,100 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
+    internal RecordingAct AppendRecordingActFromTask(RecordingTask task) {
+      Assertion.AssertObject(task, "task");
+
+      if (this.IsNew) {
+        this.Save();
+      }
+      var recordingAct = RecordingAct.Create(task.RecordingActType, this, task.TargetProperty,
+                                             task.TargetRecordingAct, Recording.Empty,
+                                             this.RecordingActs.Count);
+      recordingActList.Value.Add(recordingAct);
+
+      this.AuthorizationTime = DateTime.Now;
+      this.Save();
+      return recordingAct;
+    }
+
+    public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Property resource) {
+      return this.AppendRecordingAct(recordingActType, resource, Recording.Empty);
+    }
+
+    public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Property resource,
+                                           Recording recording) {
+      Assertion.AssertObject(recordingActType, "recordingActType");
+      Assertion.AssertObject(resource, "resource");
+      Assertion.AssertObject(recording, "recording");
+
+      Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance");
+      Assertion.Assert(this.Status != RecordableObjectStatus.Closed, 
+                       "Recording acts can't be appended to closed documents");
+
+      if (this.IsNew) {
+        this.Save();
+      }
+      var recordingAct = RecordingAct.Create(recordingActType, this, resource, 
+                                             InformationAct.Empty, recording, 
+                                             this.RecordingActs.Count);
+      recordingActList.Value.Add(recordingAct);
+
+      this.AuthorizationTime = DateTime.Now;
+      this.Save();
+
+      return recordingAct;
+    }
+
+    public void DownwardRecordingAct(RecordingAct recordingAct) {
+      if (this.Status == RecordableObjectStatus.Closed) {
+        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
+      }
+      if (!this.RecordingActs.Contains(recordingAct)) {
+        throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording, recordingAct.Id, this.Id);
+      }
+      if (recordingAct.Status == RecordableObjectStatus.Closed) {
+        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
+      }
+      int currentIndex = recordingAct.Index - 1;
+      this.RecordingActs[currentIndex + 1].Index -= 1;
+      this.RecordingActs[currentIndex + 1].Save();
+      recordingAct.Index += 1;
+      recordingAct.Save();
+      this.recordingActList = null;
+    }
+
+    public void RemoveRecordingAct(RecordingAct recordingAct) {
+      Assertion.AssertObject(recordingAct, "recordingAct");
+
+      Assertion.Assert(this.Status != RecordableObjectStatus.Closed,
+                       "Recording acts can't be removed from closed documents");
+
+      Assertion.Assert(recordingAct.Document == this,
+                       "The recording act doesn't belong to this document");
+
+      recordingActList.Value.Remove(recordingAct);
+
+      recordingAct.Delete();
+    }
+
+    public void UpwardRecordingAct(RecordingAct recordingAct) {
+      if (this.Status == RecordableObjectStatus.Closed) {
+        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
+      }
+      if (!this.RecordingActs.Contains(recordingAct)) {
+        throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording, recordingAct.Id, this.Id);
+      }
+      if (recordingAct.Status == RecordableObjectStatus.Closed) {
+        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
+      }
+      int currentIndex = recordingAct.Index - 1;
+      this.RecordingActs[currentIndex - 1].Index += 1;
+      this.RecordingActs[currentIndex - 1].Save();
+      recordingAct.Index -= 1;
+      recordingAct.Save();
+      this.recordingActList = null;
+    }
+
     public void ChangeDocumentType(RecordingDocumentType newRecordingDocumentType) {
       if (this.DocumentType.Equals(newRecordingDocumentType)) {
         return;
@@ -233,6 +338,13 @@ namespace Empiria.Land.Registration {
       this.IssueDate = ExecutionServer.DateMinValue;
       this.ExtensionData = RecordingDocumentExtData.Empty;
       this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+    }
+
+    protected override void OnInitialize() {
+      this.ExtensionData = new RecordingDocumentExtData();
+      this.Number = String.Empty;
+      this.ExpedientNo = String.Empty;
+      recordingActList = new Lazy<List<RecordingAct>>(() => RecordingActsData.GetRecordingActs(this));
     }
 
     protected override void OnLoadObjectData(DataRow row) {

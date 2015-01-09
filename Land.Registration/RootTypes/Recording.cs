@@ -35,8 +35,12 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    internal Recording(RecordingBook recordingBook, 
-                       RecordingDocument document, string number) {
+    internal Recording(RecordingBook recordingBook, string number) {
+      Assertion.AssertObject(recordingBook, "recordingBook");
+      Assertion.AssertObject(number, "number");
+
+      Assertion.Assert(!recordingBook.IsEmptyInstance, "recordingBook can't be the empty instance.");
+
       this.RecordingBook = recordingBook;
       this.Number = number;
     }
@@ -44,6 +48,7 @@ namespace Empiria.Land.Registration {
     protected override void OnInitialize() {
       recordingActList = new Lazy<FixedList<RecordingAct>>(() => RecordingActsData.GetRecordingActs(this));
       payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
+      this.ExtendedData = new RecordingExtData();
     }
 
     static public Recording Parse(int id) {
@@ -73,12 +78,15 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    /// <summary>
-    /// oojjoo
-    /// </summary>
+   
     public RecordingDocument Document {
-      get;
-      private set;
+      get {
+        if (recordingActList.Value.Count == 0) {
+          return RecordingDocument.Empty;
+        } else {
+          return recordingActList.Value[0].Document;
+        }
+      }
     }
 
     [DataField("PhysicalBookId")]
@@ -98,11 +106,11 @@ namespace Empiria.Land.Registration {
       get;
       set;
     }
-
-    [DataField("RecordingAsText")]
+    
     public string AsText {
-      get;
-      private set;
+      get {
+        return String.Format("Partida {0} en {1}", this.Number, this.RecordingBook.AsText);
+      }
     }
 
     public RecordingExtData ExtendedData {
@@ -237,73 +245,65 @@ namespace Empiria.Land.Registration {
       Delete(true);
     }
 
-    public RecordingAct CreateAnnotation(LRSTransaction transaction,
-                                         RecordingActType recordingActType, Property property) {
-      Assertion.AssertObject(transaction, "transaction");
-      Assertion.AssertObject(transaction.Document, "document");
-      Assertion.Assert(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
-                        "Transaction document can not be neither an empty or a new document instance");
-      Assertion.Assert(!property.IsNew && !property.IsEmptyInstance,
-                        "Property can not be empty or a new instance");
-      Assertion.Assert(!this.IsEmptyInstance && !this.IsNew,
-                        "Can not create an annotation using an empty or new recording");
+    //public RecordingAct CreateAnnotation(LRSTransaction transaction,
+    //                                     RecordingActType recordingActType, Property property) {
+    //  Assertion.AssertObject(transaction, "transaction");
+    //  Assertion.AssertObject(transaction.Document, "document");
+    //  Assertion.Assert(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
+    //                    "Transaction document can not be neither an empty or a new document instance");
+    //  Assertion.Assert(!property.IsNew && !property.IsEmptyInstance,
+    //                    "Property can not be empty or a new instance");
+    //  Assertion.Assert(!this.IsEmptyInstance && !this.IsNew,
+    //                    "Can not create an annotation using an empty or new recording");
 
-      var recordingAct = RecordingAct.Create(recordingActType, Recording.Empty, property);
+    //  var recordingAct = RecordingAct.Create(recordingActType, Recording.Empty, property);
 
-      this.Refresh();
-      this.RecordingBook.Refresh();
+    //  this.Refresh();
+    //  this.RecordingBook.Refresh();
 
-      return recordingAct;
-    }
+    //  return recordingAct;
+    //}
 
-    public RecordingAct CreateRecordingAct(RecordingActType recordingActType, Property property) {
-      if (this.IsNew) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.NotSavedRecording, "CreateRecordingAct");
-      }
-      if (this.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
-      }
-      if (this.Status == RecordableObjectStatus.Obsolete) {
-        this.Status = RecordableObjectStatus.Incomplete;
-        this.Save();
-      }
+    //public RecordingAct CreateRecordingAct(RecordingActType recordingActType, Property property) {
+    //  if (this.IsNew) {
+    //    throw new LandRegistrationException(LandRegistrationException.Msg.NotSavedRecording, "CreateRecordingAct");
+    //  }
+    //  if (this.Status == RecordableObjectStatus.Closed) {
+    //    throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
+    //  }
+    //  if (this.Status == RecordableObjectStatus.Obsolete) {
+    //    this.Status = RecordableObjectStatus.Incomplete;
+    //    this.Save();
+    //  }
 
-      var recordingAct = RecordingAct.Create(recordingActType, this, property);
+    //  var recordingAct = RecordingAct.Create(recordingActType, this, property);
 
-      this.Refresh();
-      this.RecordingBook.Refresh();
+    //  this.Refresh();
+    //  this.RecordingBook.Refresh();
 
-      return recordingAct;
-    }
+    //  return recordingAct;
+    //}
 
-    public void DeleteRecordingAct(RecordingAct recordingAct) {
-      if (this.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
-      }
-      if (!this.RecordingActs.Contains(recordingAct)) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording, 
-                                            recordingAct.Id, this.Id);
-      }
-      if (recordingAct.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
-      }
-      recordingAct.Delete();
-      SortRecordingActs();
-      this.DeleteMeIfNecessary();
-      this.Refresh();
-      this.RecordingBook.Refresh();
-    }
+    //public void DeleteRecordingAct(RecordingAct recordingAct) {
+    //  if (this.Status == RecordableObjectStatus.Closed) {
+    //    throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
+    //  }
+    //  if (!this.RecordingActs.Contains(recordingAct)) {
+    //    throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording, 
+    //                                        recordingAct.Id, this.Id);
+    //  }
+    //  if (recordingAct.Status == RecordableObjectStatus.Closed) {
+    //    throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
+    //  }
+    //  recordingAct.Delete();
+    //  SortRecordingActs();
+    //  this.DeleteMeIfNecessary();
+    //  this.Refresh();
+    //  this.RecordingBook.Refresh();
+    //}
 
     public IList<Property> GetProperties() {
-      var list = new List<Property>(this.RecordingActs.Count);
-      foreach (RecordingAct recordingAct in this.RecordingActs) {
-        foreach (var property in recordingAct.GetProperties()) {
-          if (!list.Contains(property)) {
-            list.Add(property);
-          }
-        } // foreach
-      } // foreach
-      return list;
+      return PropertyData.GetRecordingProperties(this);
     }
 
     public void SortRecordingActs() {
@@ -312,24 +312,6 @@ namespace Empiria.Land.Registration {
         RecordingActs[i].Index = i + 1;
         RecordingActs[i].Save();
       }
-      this.recordingActList = null;
-    }
-
-    public void DownwardRecordingAct(RecordingAct recordingAct) {
-      if (this.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
-      }
-      if (!this.RecordingActs.Contains(recordingAct)) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording, recordingAct.Id, this.Id);
-      }
-      if (recordingAct.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
-      }
-      int currentIndex = recordingAct.Index - 1;
-      this.RecordingActs[currentIndex + 1].Index -= 1;
-      this.RecordingActs[currentIndex + 1].Save();
-      recordingAct.Index += 1;
-      recordingAct.Save();
       this.recordingActList = null;
     }
 
@@ -364,24 +346,6 @@ namespace Empiria.Land.Registration {
     }
 
     public void Refresh() {
-      this.recordingActList = null;
-    }
-
-    public void UpwardRecordingAct(RecordingAct recordingAct) {
-      if (this.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
-      }
-      if (!this.RecordingActs.Contains(recordingAct)) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording, recordingAct.Id, this.Id);
-      }
-      if (recordingAct.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
-      }
-      int currentIndex = recordingAct.Index - 1;
-      this.RecordingActs[currentIndex - 1].Index += 1;
-      this.RecordingActs[currentIndex - 1].Save();
-      recordingAct.Index -= 1;
-      recordingAct.Save();
       this.recordingActList = null;
     }
 

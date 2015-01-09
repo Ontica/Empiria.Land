@@ -86,7 +86,7 @@ namespace Empiria.Land.Registration {
       //}
     }
 
-    static public FixedList<RecordingBook> GetList(string filter, string sort = "RecordingBookFullName") {
+    static public FixedList<RecordingBook> GetList(string filter, string sort = "BookAsText") {
       return RecordingBooksData.GetRecordingBooks(filter, sort);
     }
 
@@ -94,6 +94,7 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
+    
     [DataField("RecorderOfficeId")]
     public RecorderOffice RecorderOffice {
       get;
@@ -180,11 +181,7 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public Recording CreateQuickRecording(int recordingNumber, string bisSuffixTag) {
-      var recording = new Recording(this, RecordingDocument.Empty, 
-                                    this.BuildRecordingNumber(recordingNumber, bisSuffixTag));
-      recording.Save();
-
-      return recording;
+      return new Recording(this, this.BuildRecordingNumber(recordingNumber, bisSuffixTag));
     }
 
     public string BuildRecordingNumber(int recordingNumber, string bisSuffixTag) {
@@ -245,6 +242,10 @@ namespace Empiria.Land.Registration {
       } else {
         return null;
       }
+    }
+
+    public FixedList<Recording> GetRecordings() {
+      return RecordingBooksData.GetRecordings(this);
     }
 
     public Recording GetPreviousRecording(Recording recording) {

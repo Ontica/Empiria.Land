@@ -42,7 +42,6 @@ namespace Empiria.Land.Registration {
       data.SecondaryWitnessPosition = json.Get<RoleType>("SecondaryWitnessPositionId", RoleType.Empty);
       data.StartSheet = json.Get<String>("StartSheet", String.Empty);
       data.EndSheet = json.Get<String>("EndSheet", String.Empty);
-      data.SealUpperPosition = json.Get<Decimal>("SealUpperPosition", -1m);
 
       return data;
     }
@@ -98,11 +97,6 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    public decimal SealUpperPosition {
-      get;
-      set;
-    }
-
     public bool IsEmptyInstance {
       get;
       private set;
@@ -113,6 +107,7 @@ namespace Empiria.Land.Registration {
     #region Methods
 
     public string ToJson() {
+
       if (!this.IsEmptyInstance) {
         return Empiria.Json.JsonConverter.ToJson(this.GetObject());
       } else {
@@ -130,7 +125,6 @@ namespace Empiria.Land.Registration {
         SecondaryWitnessPosition = this.SecondaryWitnessPosition,
         StartSheet = this.StartSheet,
         EndSheet = this.EndSheet,
-        SealUpperPosition = this.SealUpperPosition,
       };
     }
 

@@ -45,6 +45,16 @@ namespace Empiria.Land.Registration {
       return valuesList.First((x) => x.Value == value);
     }
 
+    // User-defined conversion from string to PropertyKind
+    public static implicit operator PropertyKind(string value) {
+      return PropertyKind.Parse(value);
+    }
+
+    // User-defined conversion from PropertyKind to string
+    public static implicit operator string(PropertyKind propertyKind) {
+      return propertyKind.Value;
+    }
+
     static public PropertyKind Empty {
       get {
         PropertyKind empty = new PropertyKind("No determinado");

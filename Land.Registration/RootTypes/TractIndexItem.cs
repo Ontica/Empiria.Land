@@ -56,7 +56,7 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    [DataField("RecordingActId", Default = "Land.Registration.InformationAct.Empty", IsOptional = false)]
+    [DataField("RecordingActId", Default = "Empiria.Land.Registration.InformationAct.Empty", IsOptional = false)]
     public RecordingAct RecordingAct {
       get;
       private set;
@@ -67,13 +67,13 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    [DataField("PostedById")]
+    //[DataField("PostedById")]
     public Contact PostedBy {
       get;
       private set;
     }
 
-    [DataField("PostingTime", Default = "DateTime.Now")]
+    //[DataField("PostingTime", Default = "DateTime.Now")]
     public DateTime PostingTime {
       get;
       private set;
@@ -117,7 +117,7 @@ namespace Empiria.Land.Registration {
         return new object[] {
           1, "Id", this.Id, "RecordingAct", this.RecordingAct.Id, 
           "Property", this.Property.Id, "ExtensionData", this.ExtensionData.ToJson(),        
-          "PostedBy", this.PostedBy.Id, "PostingTime", this.PostingTime, "Status", (char) this.Status,
+          "Status", (char) this.Status,
         };
       }
       throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
@@ -140,6 +140,10 @@ namespace Empiria.Land.Registration {
     internal void Delete() {
       this.Status = RecordableObjectStatus.Deleted;
       base.Save();
+    }
+
+    protected override void OnInitialize() {
+      this.ExtensionData = new TractIndexItemExtData();
     }
 
     protected override void OnLoadObjectData(DataRow row) {

@@ -91,7 +91,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    static public FixedList<Contact> GetManagementAgenciesList() {
+    static public FixedList<Contact> GetAgenciesList() {
       GeneralList listType = GeneralList.Parse("LRSTransaction.ManagementAgencies.List");
 
       return listType.GetItems<Contact>();
@@ -298,6 +298,17 @@ namespace Empiria.Land.Registration.Transactions {
       get {
         return (this.TransactionType.Id == 704 || 
                (this.TransactionType.Id == 700 && this.DocumentType.Id == 722));
+      }
+    }
+
+    public bool IsEmptyItemsTransaction {
+      get {
+        if (this.TransactionType.Id == 706) {
+          if (EmpiriaMath.IsMemberOf(this.DocumentType.Id, new int[] { 733, 738, 734, 742, 756 })) {
+            return true;
+          }
+        }
+        return false;
       }
     }
 
@@ -715,7 +726,7 @@ namespace Empiria.Land.Registration.Transactions {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
                                             this.UID);
       }
-      if (this.Payments.Count == 0) {
+      if (this.Payments.Count == 0 && !this.IsEmptyItemsTransaction) {
         throw new NotImplementedException("Este trámite todavía no tiene registrada una boleta de pago.");
       }
 

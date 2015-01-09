@@ -59,6 +59,7 @@ namespace Empiria.Land.Registration {
       this.RecordingSection = RecordingSection.Empty;
       this.FixedRecorderOffice = RecorderOffice.Empty;
       this.SpecialCase = "None";
+      this.AllowsPartitions = false;
     }
 
     static internal RecordingRule Parse(string jsonString) {
@@ -113,6 +114,9 @@ namespace Empiria.Land.Registration {
           IDictionary<string, object> item = (IDictionary<string, object>) array[i];
           rule.RecordingActTypes[i] = RecordingActType.Parse(Convert.ToInt32(item["Id"]));
         }
+      }
+      if (json.ContainsKey("AllowsPartitions")) {
+        rule.AllowsPartitions = (bool) json["AllowsPartitions"];
       }
       return rule;
     }
@@ -198,6 +202,12 @@ namespace Empiria.Land.Registration {
     }
 
     public string SpecialCase {
+      get;
+      private set;
+    }
+
+
+    public bool AllowsPartitions {
       get;
       private set;
     }

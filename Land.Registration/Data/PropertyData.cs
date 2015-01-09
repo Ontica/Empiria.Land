@@ -22,13 +22,13 @@ namespace Empiria.Land.Registration.Data {
     #region Internal methods
 
     static internal DataRow GetPropertyWithUID(string uniqueID) {
-      DataOperation operation = DataOperation.Parse("getLRSPropertyWithTractKey", uniqueID);
+      DataOperation operation = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
 
       return DataReader.GetDataRow(operation);
     }
 
     static internal bool ExistsPropertyUID(string uniqueID) {
-      DataOperation operation = DataOperation.Parse("getLRSPropertyWithTractKey", uniqueID);
+      DataOperation operation = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
 
       return (DataReader.Count(operation) != 0);
     }
@@ -142,11 +142,20 @@ namespace Empiria.Land.Registration.Data {
                                                    BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
-    static public FixedList<TractIndexItem> GetRecordingPropertiesAnnotationsList(Recording recording) {
-      var operation = DataOperation.Parse("qryLRSRecordingPropertiesAnnotations", recording.Id);
+    static internal FixedList<Property> GetRecordingProperties(Recording recording) {
+      var operation = DataOperation.Parse("qryLRSRecordingProperties", recording.Id);
 
-      return DataReader.GetList<TractIndexItem>(operation, (x) =>
-                                                   BaseObject.ParseList<TractIndexItem>(x)).ToFixedList();
+      return DataReader.GetList<Property>(operation,
+                                          (x) => BaseObject.ParseList<Property>(x)).ToFixedList();
+    }
+
+    static public FixedList<TractIndexItem> GetRecordingPropertiesAnnotationsList(Recording recording) {
+      throw new NotImplementedException();
+
+      //var operation = DataOperation.Parse("qryLRSRecordingPropertiesAnnotations", recording.Id);
+
+      //return DataReader.GetList<TractIndexItem>(operation, (x) =>
+      //                                             BaseObject.ParseList<TractIndexItem>(x)).ToFixedList();
     }
 
     static internal int WriteHumanParty(HumanParty o) {
@@ -179,13 +188,13 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteProperty(Property o) {
-      var dataOperation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID, 
-                                               o.Name, o.PropertyKind, o.RecordingNotes, o.AntecedentNotes,
-                                               o.Location.ToJson(), o.Location.ToString(), o.Location.ToSearchVector(),
-                                               o.CadastralData.ToJson(), o.Keywords, 
-                                               o.PartitionOf.Id, o.PartitionNo, o.MergedInto.Id, o.PostedBy.Id,
-                                               o.PostingTime, (char) o.Status, o.Integrity.GetUpdatedHashCode());
-      return DataWriter.Execute(dataOperation);
+      var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
+                                          o.Name, o.PropertyKind.Value, o.Notes, o.AntecedentNotes,
+                                          o.AsText, o.Location.ToSearchVector(), o.Location.ToJson(),
+                                          o.Keywords, o.IsPartitionOf.Id, o.PartitionNo, o.MergedInto.Id,
+                                          o.PostingTime, o.PostedBy.Id, (char) o.Status,
+                                          o.Integrity.GetUpdatedHashCode());
+      return DataWriter.Execute(operation);
     }
 
     static internal int WriteRecordingActParty(RecordingActParty o) {
@@ -201,10 +210,13 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteTractIndexItem(TractIndexItem o) {
+      Assertion.Assert(o.Id > 0, "Id needs to be positive.");
+      Assertion.Assert(o.Property.Id > 0, "property id needs to be positive.");
+      Assertion.Assert(o.RecordingAct.Id > 0, "recotrding act id needs to be positive.");
+
       var dataOperation = DataOperation.Parse("writeLRSTractIndex", o.Id,
                                               o.Property.Id, o.RecordingAct.Id, o.ExtensionData.ToJson(),
-                                              o.PostedBy.Id, o.PostingTime, (char) o.Status, 
-                                              o.Integrity.GetUpdatedHashCode());
+                                              (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(dataOperation);
     }
 
