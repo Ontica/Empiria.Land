@@ -131,16 +131,22 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    //[DataField("DocumentNo")]
     public string Number {
-      get;
-      set;
+      get {
+        return ExtensionData.DocumentNo;
+      }
+      set {
+        ExtensionData.DocumentNo = value;
+      }
     }
 
-    //[DataField("ExpedientNo")]
     public string ExpedientNo {
-      get;
-      set;
+      get {
+        return ExtensionData.ExpedientNo;
+      }
+      set {
+        ExtensionData.ExpedientNo = value;
+      }
     }
 
     [DataField("DocumentAsText")]
@@ -168,7 +174,7 @@ namespace Empiria.Land.Registration {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.UID, 
+        return EmpiriaString.BuildKeywords(this.UID,
                     !this.Subtype.IsEmptyInstance ? this.AsText : this.DocumentType.DisplayName,
                     this.AsText);
       }
@@ -195,7 +201,7 @@ namespace Empiria.Land.Registration {
     public FixedList<RecordingAct> RecordingActs {
       get {
         Predicate<RecordingAct> match = (x) => x.Status != RecordableObjectStatus.Deleted;
-        
+
         return recordingActList.Value.FindAll(match).ToFixedList();
       }
     }
@@ -213,7 +219,7 @@ namespace Empiria.Land.Registration {
           "SubtypeId", this.Subtype.Id, "UID", this.UID,
           "IssuePlaceId", this.IssuePlace.Id, "IssueOfficeId", this.IssueOffice.Id,
           "IssuedById", this.IssuedBy.Id, "IssueDate", this.IssueDate,
-          "AsText", this.AsText, "SheetsCount", this.SheetsCount, 
+          "AsText", this.AsText, "SheetsCount", this.SheetsCount,
           "ExtensionData", this.ExtensionData.ToJson(),
           "PostedBy", this.PostedBy.Id, "PostingTime", this.PostingTime,
           "Status", (char) this.Status,
@@ -263,14 +269,14 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(recording, "recording");
 
       Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance");
-      Assertion.Assert(this.Status != RecordableObjectStatus.Closed, 
+      Assertion.Assert(this.Status != RecordableObjectStatus.Closed,
                        "Recording acts can't be appended to closed documents");
 
       if (this.IsNew) {
         this.Save();
       }
-      var recordingAct = RecordingAct.Create(recordingActType, this, resource, 
-                                             InformationAct.Empty, recording, 
+      var recordingAct = RecordingAct.Create(recordingActType, this, resource,
+                                             InformationAct.Empty, recording,
                                              this.RecordingActs.Count);
       recordingActList.Value.Add(recordingAct);
 
@@ -307,9 +313,11 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(recordingAct.Document == this,
                        "The recording act doesn't belong to this document");
 
-      recordingActList.Value.Remove(recordingAct);
-
       recordingAct.Delete();
+      recordingActList.Value.Remove(recordingAct);
+      //if (generatesRecording) {
+      //  RemoveRecording();
+      //}
     }
 
     public void UpwardRecordingAct(RecordingAct recordingAct) {

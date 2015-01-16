@@ -26,7 +26,7 @@ namespace Empiria.Land.Registration {
       this.Contract = ContractData.Empty;
     }
 
-    static internal RecordingActExtData Parse(string jsonString) {   
+    static internal RecordingActExtData Parse(string jsonString) {
       if (String.IsNullOrWhiteSpace(jsonString)) {
         return RecordingActExtData.Empty;
       }

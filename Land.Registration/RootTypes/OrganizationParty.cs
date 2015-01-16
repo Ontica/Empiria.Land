@@ -119,7 +119,7 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnSave() {
-      base.OnSave(); 
+      base.OnSave();
       PropertyData.WriteOrganizationParty(this);
     }
 

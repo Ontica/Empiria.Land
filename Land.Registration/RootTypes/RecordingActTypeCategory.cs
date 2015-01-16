@@ -50,7 +50,7 @@ namespace Empiria.Land.Registration {
     //[DataField(ExtensionDataFieldName + ".RecordingActTypes")]
     // OOJJOO: Improve
 
-    FixedList<RecordingActType> _recordingActTypesList = null; 
+    FixedList<RecordingActType> _recordingActTypesList = null;
     public FixedList<RecordingActType> RecordingActTypes {
       get {
         if (_recordingActTypesList == null) {

@@ -67,7 +67,7 @@ namespace Empiria.Land.Registration {
     internal protected override string Keywords {
       get {
         return EmpiriaString.BuildKeywords(base.FullName, this.Nicknames, this.CURPNumber,
-                                           this.TaxIDNumber, this.IFENumber, 
+                                           this.TaxIDNumber, this.IFENumber,
                                            this.RegistryDate.ToString("dd/MMM/yyyy"));
       }
     }

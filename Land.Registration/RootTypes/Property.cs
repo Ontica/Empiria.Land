@@ -100,7 +100,7 @@ namespace Empiria.Land.Registration {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.UID, this.CadastralData.CadastralCode, this.Name, 
+        return EmpiriaString.BuildKeywords(this.UID, this.CadastralData.CadastralCode, this.Name,
                                            this.PartitionNo, this.Location.Keywords, this.PropertyKind.Value);
       }
     }
@@ -320,7 +320,7 @@ namespace Empiria.Land.Registration {
 
     private void AssignUID() {
       Assertion.Assert(this.UID.Length == 0, "Property has already assigned a UniqueIdentifier.");
-      
+
       while (true) {
         string temp = TransactionData.GeneratePropertyKey();
         if (!PropertyData.ExistsPropertyUID(temp)) {

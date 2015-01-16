@@ -120,7 +120,7 @@ namespace Empiria.Land.Registration {
       } else if (this.AppliesOverNewProperty) {
         Task.TargetProperty = new Property();
       }
-      Assertion.Assert(this.Task.TargetProperty.IsEmptyInstance == false, 
+      Assertion.Assert(this.Task.TargetProperty.IsEmptyInstance == false,
                        "The target resource cannot be the Property.Empty instance.");
 
       return this.Task.Document.AppendRecordingActFromTask(this.Task);
@@ -146,14 +146,14 @@ namespace Empiria.Land.Registration {
       if (!this.NeedCreatePrecedentRecording) {
         return;
       }
-      
+
       Property property = new Property();
 
       var document = new RecordingDocument(RecordingDocumentType.Empty);
-      Recording recording = Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber, 
+      Recording recording = Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
                                                                              Task.QuickAddBisRecordingSuffixTag);
       var recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property, recording);
-      
+
       Task.TargetProperty = property;
       Task.PrecedentRecording = recording;
       if (Task.RecordingRule.AppliesTo == RecordingRuleApplication.RecordingAct) {

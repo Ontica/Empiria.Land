@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Describes a property recording condition that serves as a rule for 
+  /// <summary>Describes a property recording condition that serves as a rule for
   /// recording registration.</summary>
   public class PropertyRule {
 

@@ -229,7 +229,7 @@ namespace Empiria.Land.Registration {
         } // else
       } // get
     }
-    
+
     [DataField("PartyOccupationId")]
     public Occupation PartyOccupation {
       get;

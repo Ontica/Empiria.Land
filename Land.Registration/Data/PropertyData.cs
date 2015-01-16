@@ -138,7 +138,7 @@ namespace Empiria.Land.Registration.Data {
             " OR LRSRecordingActParties.SecondaryPartyId = " + party.Id.ToString() + ")";
 
       var operation = DataOperation.Parse(sql);
-      return DataReader.GetList<RecordingActParty>(operation, (x) => 
+      return DataReader.GetList<RecordingActParty>(operation, (x) =>
                                                    BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
@@ -176,7 +176,7 @@ namespace Empiria.Land.Registration.Data {
       var dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.GetEmpiriaType().Id, o.FullName,
                                                String.Empty, String.Empty, String.Empty,
                                                String.Empty, o.ShortName, o.Nicknames, o.Tags,
-                                               Contacts.Gender.NotApply, o.RegistryDate, 
+                                               Contacts.Gender.NotApply, o.RegistryDate,
                                                o.RegistryLocation.Id, String.Empty, o.TaxIDNumber,
                                                String.Empty, o.AssocDocBookNumber, o.AssocDocNumber,
                                                o.AssocDocStartSheet, o.AssocDocEndSheet, o.AssocDocNotaryOffice.Id,

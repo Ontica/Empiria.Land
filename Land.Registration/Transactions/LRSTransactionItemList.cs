@@ -16,7 +16,7 @@ using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration.Transactions {
 
-  /// <summary>List of transaction items or lines. Can be used to hold 
+  /// <summary>List of transaction items or lines. Can be used to hold
   /// lines of one or many transactions.</summary>
   public class LRSTransactionItemList : FixedList<LRSTransactionItem> {
 

@@ -14,7 +14,7 @@ using System.Data;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Recording act that represents the changes on measures and limits of real estates, 
+  /// <summary>Recording act that represents the changes on measures and limits of real estates,
   ///as well as the creation of new properties through fusions and divisons.</summary>
   public class StructureAct : RecordingAct {
 

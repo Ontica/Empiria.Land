@@ -29,7 +29,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     /// <summary>Initialize payment for transaction.</summary>
-    internal LRSPayment(LRSTransaction transaction, string receiptNo, 
+    internal LRSPayment(LRSTransaction transaction, string receiptNo,
                         decimal receiptTotal) {
       Assertion.AssertObject(transaction, "transaction");
       Assertion.Assert(!transaction.Equals(LRSTransaction.Empty),
@@ -44,7 +44,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     /// <summary>Initialize payment for recording. Used for historic recordings
     /// without a transaction.</summary>
-    internal LRSPayment(Recording recording, string receiptNo, 
+    internal LRSPayment(Recording recording, string receiptNo,
                         decimal receiptTotal) {
       Assertion.AssertObject(recording, "recording");
       Assertion.Assert(recording != Recording.Empty, "recording shouldn't be the empty instance.");

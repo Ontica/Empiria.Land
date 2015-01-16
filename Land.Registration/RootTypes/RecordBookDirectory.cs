@@ -22,13 +22,13 @@ namespace Empiria.Land.Registration {
 
     #region Fields
 
-    static private readonly string emptyBookUrl = 
+    static private readonly string emptyBookUrl =
                             ConfigurationData.GetString("RecordingBook.Empty.Book.Image.Url");
-    static private readonly string emptyImageFullPath = 
+    static private readonly string emptyImageFullPath =
                             ConfigurationData.GetString("RecordingBook.Empty.Image.Path");
-    static private readonly string emptyImageFileName = 
+    static private readonly string emptyImageFileName =
                             ConfigurationData.GetString("RecordingBook.Empty.Image.FileName");
-    static private readonly bool processOnlyNewDirectories = 
+    static private readonly bool processOnlyNewDirectories =
                             ConfigurationData.GetBoolean("RecordBookDirectory.ProcessOnlyNewDirectories");
 
     private RecorderOffice recorderOffice = RecorderOffice.Empty;
@@ -47,7 +47,7 @@ namespace Empiria.Land.Registration {
 
     static public new RecordBookDirectory Empty {
       get { return BaseObject.ParseEmpty<RecordBookDirectory>(); }
-    
+
     }
 
     static public int ProcessDirectories(RecorderOffice office) {
@@ -82,7 +82,7 @@ namespace Empiria.Land.Registration {
       if (0 <= position && position < fileInfo.Length) {
         return base.MapPath(fileInfo[position]);
       } else {
-        throw new LandRegistrationException(LandRegistrationException.Msg.InvalidImagePosition, 
+        throw new LandRegistrationException(LandRegistrationException.Msg.InvalidImagePosition,
                                             this.Id, this.DisplayName, position, fileInfo.Length);
       }
     }
@@ -117,7 +117,7 @@ namespace Empiria.Land.Registration {
                                              Contact imagesCapturedBy, Contact imagesReviewedBy,
                                              int recordingsControlCount,
                                              TimePeriod recordingsControlTimePeriod) {
-      
+
       this.CapturedBy = imagesCapturedBy;
       this.ReviewedBy = imagesReviewedBy;
       this.Status = FilesFolderStatus.Opened;

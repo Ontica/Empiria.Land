@@ -23,13 +23,13 @@ using Empiria.Ontology;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Partitioned type that represents a recording act. All recording acts types must be 
+  /// <summary>Partitioned type that represents a recording act. All recording acts types must be
   /// descendents of this type.</summary>
   [PartitionedType(typeof(RecordingActType))]
   public abstract class RecordingAct : BaseObject, IExtensible<RecordingActExtData>, IProtected {
 
     #region Fields
-   
+
     private Lazy<List<TractIndexItem>> attachedResources = null;
 
     #endregion Fields
@@ -40,9 +40,9 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    static internal RecordingAct Create(RecordingActType recordingActType, 
+    static internal RecordingAct Create(RecordingActType recordingActType,
                                         RecordingDocument document, Property resource,
-                                        RecordingAct amendmentOf, Recording recording, 
+                                        RecordingAct amendmentOf, Recording recording,
                                         int index) {
       Assertion.AssertObject(recordingActType, "recordingActType");
       Assertion.AssertObject(document, "document");
@@ -127,7 +127,7 @@ namespace Empiria.Land.Registration {
 
     internal string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName, 
+        return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName,
                                            this.Recording.FullNumber);
       }
     }
@@ -210,10 +210,10 @@ namespace Empiria.Land.Registration {
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
       if (version == 1) {
         return new object[] {
-          1, "Id", this.Id, "RecordingActType", this.RecordingActType.Id, 
-          "Document", this.Document.Id, "Index", this.Index, "Notes", this.Notes, 
-          "ExtensionData", this.ExtensionData.ToJson(), "AmendmentOf", this.AmendmentOf.Id, 
-          "AmendedBy", this.AmendedBy.Id, "Recording", this.Recording.Id, 
+          1, "Id", this.Id, "RecordingActType", this.RecordingActType.Id,
+          "Document", this.Document.Id, "Index", this.Index, "Notes", this.Notes,
+          "ExtensionData", this.ExtensionData.ToJson(), "AmendmentOf", this.AmendmentOf.Id,
+          "AmendedBy", this.AmendedBy.Id, "Recording", this.Recording.Id,
           "RegisteredBy", this.RegisteredBy.Id, "RegistrationTime", this.RegistrationTime,
           "Status", (char) this.Status
         };
@@ -223,7 +223,7 @@ namespace Empiria.Land.Registration {
 
     private IntegrityValidator _validator = null;
     public IntegrityValidator Integrity {
-      get { 
+      get {
         if (_validator == null) {
           _validator = new IntegrityValidator(this);
         }
@@ -243,7 +243,7 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(!resource.IsNew, "resource is new");
 
       var item = new TractIndexItem(resource, this);
-      
+
       item.Save();
 
       attachedResources.Value.Add(item);
@@ -263,11 +263,13 @@ namespace Empiria.Land.Registration {
       if (this.Status == RecordableObjectStatus.Closed) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, this.Id);
       }
-      var properties = this.TractIndex;
-      for (int i = 0; i < properties.Count; i++) {
-        var propertyEvent = properties[i];
+      if (this.IsEmptyInstance) {
+        return;
+      }
+      var tractIndex = this.TractIndex;
+      for (int i = 0; i < tractIndex.Count; i++) {
         var property = TractIndex[i].Property;
-        propertyEvent.Delete();
+        tractIndex[i].Delete();
 
         var tract = property.GetRecordingActsTract();
         if (tract.Count == 0) {
@@ -299,7 +301,7 @@ namespace Empiria.Land.Registration {
                                             property.UID, this.Id);
       }
     }
-    
+
     public bool IsFirstRecordingAct() {
       if (this.TractIndex.Count == 0) {
         return false;
@@ -332,7 +334,7 @@ namespace Empiria.Land.Registration {
     public void RemoveProperty(Property property) {
       TractIndexItem propertyEvent = this.TractIndex.Find((x) => x.Property.Equals(property));
 
-      Assertion.AssertObject(propertyEvent, 
+      Assertion.AssertObject(propertyEvent,
                 new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
                                               property.Id, this.Id));
 
@@ -369,7 +371,7 @@ namespace Empiria.Land.Registration {
     //    this.PostingTime = DateTime.Now;
     //    this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
     //  }
-    //  //RecordingBook book = this.GetRecordingBook(); 
+    //  //RecordingBook book = this.GetRecordingBook();
     //  //Recording recording = book.CreateRecording();
 
     //  //return recording.CreateRecordingAct(Task.RecordingActType, Property.Empty);
@@ -378,8 +380,8 @@ namespace Empiria.Land.Registration {
 
     //  return recording.CreateRecordingAct(Task.RecordingActType, Property.Empty);
 
-    //  RecordingBook 
-    //  this.Recording = 
+    //  RecordingBook
+    //  this.Recording =
     //  RecordingActsData.WriteRecordingAct(this);
 
     //  return this;
@@ -389,7 +391,7 @@ namespace Empiria.Land.Registration {
 
     //#region Private methods
 
-    ////private RecordingBook GetOpenedRecordingBook(RecorderOffice recorderOffice, 
+    ////private RecordingBook GetOpenedRecordingBook(RecorderOffice recorderOffice,
     ////                                             RecordingSection recordingSection) {
     ////  return RecordingBook.GetAssignedBookForRecording(recorderOffice, recordingSection, this.Document);
     ////}

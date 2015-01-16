@@ -158,7 +158,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal Recording FindRecording(RecordingBook recordingBook, string filter) {
-      string sql = "SELECT * FROM LRSPhysicalRecordings WHERE " + 
+      string sql = "SELECT * FROM LRSPhysicalRecordings WHERE " +
                   "(RecordingBookId = " + recordingBook.Id.ToString() + " AND RecordingStatus <> 'X')";
       if (!String.IsNullOrWhiteSpace(filter)) {
         sql += " AND " + filter;
@@ -191,8 +191,8 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteRecording(Recording o) {
       var op = DataOperation.Parse("writeLRSPhysicalRecording", o.Id, o.RecordingBook.Id,
-                                   o.Number, o.Notes, o.AsText, o.ExtendedData.ToJson(), 
-                                   o.Keywords, o.AuthorizationTime, o.ReviewedBy.Id, 
+                                   o.Number, o.Notes, o.AsText, o.ExtendedData.ToJson(),
+                                   o.Keywords, o.AuthorizationTime, o.ReviewedBy.Id,
                                    o.AuthorizedBy.Id, o.RecordedBy.Id, o.RecordingTime,
                                    (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(op);
@@ -200,8 +200,8 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteRecordingBook(RecordingBook o) {
       var operation = DataOperation.Parse("writeLRSPhysicalBook", o.Id, o.RecorderOffice.Id, o.RecordingSection.Id,
-                                           o.BookNumber, o.AsText, o.ExtendedData.ToString(), o.Keywords, 
-                                           o.StartRecordingIndex, o.EndRecordingIndex, (char) o.Status, 
+                                           o.BookNumber, o.AsText, o.ExtendedData.ToString(), o.Keywords,
+                                           o.StartRecordingIndex, o.EndRecordingIndex, (char) o.Status,
                                            o.RecordIntegrityHashCode);
       return DataWriter.Execute(operation);
     }
@@ -211,11 +211,11 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal DataOperation WriteRecordingDocumentOp(RecordingDocument o) {
-      return DataOperation.Parse("writeLRSDocument", o.Id, o.DocumentType.Id, o.Subtype.Id, o.UID, 
-                                 o.ImagingControlID, o.Notes, o.AsText, o.ExtensionData.ToJson(),
-                                 o.Keywords, o.PresentationTime, o.AuthorizationTime, 
+      return DataOperation.Parse("writeLRSDocument", o.Id, o.DocumentType.Id, o.Subtype.Id, o.UID,
+                                 o.ImagingControlID, o.Notes, o.AsText, o.ExtensionData.GetJson(o).ToString(),
+                                 o.Keywords, o.PresentationTime, o.AuthorizationTime,
                                  o.IssuePlace.Id, o.IssueOffice.Id, o.IssuedBy.Id, o.IssueDate,
-                                 o.SheetsCount, (char) o.Status, o.PostedBy.Id, o.PostingTime, 
+                                 o.SheetsCount, (char) o.Status, o.PostedBy.Id, o.PostingTime,
                                  o.Integrity.GetUpdatedHashCode());
     }
 

@@ -74,7 +74,7 @@ namespace Empiria.Land.Registration.Data {
     static public LRSTransactionItemList GetLRSTransactionItemsList(LRSTransaction transaction) {
       var operation = DataOperation.Parse("qryLRSTransactionItems", transaction.Id);
 
-      var list = DataReader.GetList<LRSTransactionItem>(operation, 
+      var list = DataReader.GetList<LRSTransactionItem>(operation,
                                                        (x) => BaseObject.ParseList<LRSTransactionItem>(x));
 
       return new LRSTransactionItemList(list);
@@ -95,7 +95,7 @@ namespace Empiria.Land.Registration.Data {
     static public List<LRSTransactionTask> GetLRSTransactionTaskList(LRSTransaction transaction) {
       var operation = DataOperation.Parse("qryLRSTransactionTrack", transaction.Id);
 
-      return DataReader.GetList<LRSTransactionTask>(operation, 
+      return DataReader.GetList<LRSTransactionTask>(operation,
                                                     (x) => BaseObject.ParseList<LRSTransactionTask>(x));
     }
 
@@ -154,7 +154,7 @@ namespace Empiria.Land.Registration.Data {
           temp += EmpiriaMath.GetRandomDigit(temp);
           temp += EmpiriaMath.GetRandomDigit(temp);
         }
-        hashCode += ((Convert.ToInt32(temp[temp.Length - 2]) + 
+        hashCode += ((Convert.ToInt32(temp[temp.Length - 2]) +
                       Convert.ToInt32(temp[temp.Length - 1])) % ((int) Math.Pow(i + 1, 2)));
         useLetters = !useLetters;
       }
@@ -167,7 +167,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int GetLastControlNumber(RecorderOffice recorderOffice) {
-      string sql = "SELECT MAX(ControlNumber) FROM vwLRSTransactions " + 
+      string sql = "SELECT MAX(ControlNumber) FROM vwLRSTransactions " +
                    "WHERE RecorderOfficeId = " + recorderOffice.Id.ToString();
 
       string max = DataReader.GetScalar<String>(DataOperation.Parse(sql), String.Empty);
@@ -182,7 +182,7 @@ namespace Empiria.Land.Registration.Data {
     static internal int WritePayment(LRSPayment o) {
       var op = DataOperation.Parse("writeLRSPayment", o.Id, o.Transaction.Id,
                                    o.PaymentOffice.Id, o.ReceiptNo, o.ReceiptTotal, o.ReceiptIssuedTime,
-                                   o.ExtensionData.ToString(), o.Recording.Id, o.PostingTime, 
+                                   o.ExtensionData.ToString(), o.Recording.Id, o.PostingTime,
                                    o.PostedBy.Id, 'C', String.Empty);
 
       return DataWriter.Execute(op);
@@ -197,7 +197,7 @@ namespace Empiria.Land.Registration.Data {
                                  o.DocumentType.Id, o.DocumentDescriptor, o.Document.Id, o.RecorderOffice.Id,
                                  o.RequestedBy, o.Agency.Id, o.ExtensionData.ToJson(), o.Keywords,
                                  o.PresentationTime, o.ExpectedDelivery, o.LastReentryTime, o.ClosingTime,
-                                 o.LastDeliveryTime, o.NonWorkingTime, o.ComplexityIndex, o.IsArchived, 
+                                 o.LastDeliveryTime, o.NonWorkingTime, o.ComplexityIndex, o.IsArchived,
                                  (char) o.Status, o.Integrity.GetUpdatedHashCode());
     }
 
@@ -207,16 +207,16 @@ namespace Empiria.Land.Registration.Data {
                                           o.Payment.Id, o.Quantity.Amount, o.Quantity.Unit.Id,
                                           o.OperationValue.Amount, o.OperationValue.Currency.Id,
                                           o.Fee.RecordingRights, o.Fee.SheetsRevision,
-                                          o.Fee.ForeignRecordingFee, o.Fee.Discount.Amount, 
+                                          o.Fee.ForeignRecordingFee, o.Fee.Discount.Amount,
                                           o.ExtensionData.ToString(), o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 
     static internal int WriteTransactionTask(LRSTransactionTask o) {
       var operation = DataOperation.Parse("writeLRSTransactionTrack", o.Id, o.Transaction.Id,
-                                          o.EventId, (char) o.Mode, o.AssignedBy.Id, o.Responsible.Id, 
-                                          o.NextContact.Id, (char) o.CurrentStatus, (char) o.NextStatus, 
-                                          o.CheckInTime, o.EndProcessTime, o.CheckOutTime, o.Notes, 
+                                          o.EventId, (char) o.Mode, o.AssignedBy.Id, o.Responsible.Id,
+                                          o.NextContact.Id, (char) o.CurrentStatus, (char) o.NextStatus,
+                                          o.CheckInTime, o.EndProcessTime, o.CheckOutTime, o.Notes,
                                           o.PreviousTask.Id, o.NextTask.Id, (char) o.Status, String.Empty);
 
       return DataWriter.Execute(operation);

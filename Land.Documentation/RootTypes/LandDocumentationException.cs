@@ -50,7 +50,7 @@ namespace Empiria.Land.Documentation {
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="innerException">This is the inner exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
-    public LandDocumentationException(Msg message, Exception innerException, params object[] args) : 
+    public LandDocumentationException(Msg message, Exception innerException, params object[] args) :
                                       base(message.ToString(), GetMessage(message, args), innerException) {
 
     }

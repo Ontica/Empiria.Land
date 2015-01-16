@@ -72,7 +72,7 @@ namespace Empiria.Land.UI {
                                                                    LRSDocumentType.Parse(docTypeId), status);
       string html = String.Empty;
       for (int i = 0; i < list.Count; i++) {
-        html += HtmlSelectContent.GetComboHtmlItem(Convert.ToString((char) list[i]), 
+        html += HtmlSelectContent.GetComboHtmlItem(Convert.ToString((char) list[i]),
                                                    LRSTransaction.StatusName(list[i]));
       }
       return html;
@@ -166,7 +166,7 @@ namespace Empiria.Land.UI {
       var list = GeneralList.Parse("LRSDomainTraslativeSection.Combo.List");
 
       HtmlSelectContent.LoadCombo(comboControl, list.GetItems<NameValuePair>(), "Value", "Name", header);
-       
+
       if (defaultValue != null) {
         comboControl.Value = defaultValue;
       }

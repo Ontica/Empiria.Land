@@ -6,7 +6,7 @@
 *  Version   : 2.0        Date: 04/Jan/2015                   License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Describes the conditions and business rules that have to be fulfilled when a                  *
-*              RecordingAct is registered.                                                                   *  
+*              RecordingAct is registered.                                                                   *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -67,7 +67,7 @@ namespace Empiria.Land.Registration {
       RecordingRule rule = new RecordingRule();
 
       if (json.ContainsKey("AppliesTo")) {
-        rule.AppliesTo = (RecordingRuleApplication) Enum.Parse(typeof(RecordingRuleApplication), 
+        rule.AppliesTo = (RecordingRuleApplication) Enum.Parse(typeof(RecordingRuleApplication),
                                                                (string) json["AppliesTo"]);
       }
       if (json.ContainsKey("AutoCancel")) {
@@ -166,7 +166,7 @@ namespace Empiria.Land.Registration {
 
     public bool IsMainRecording {
       get {
-        return (!this.RecordingSection.IsEmptyInstance && 
+        return (!this.RecordingSection.IsEmptyInstance &&
                 !this.IsAnnotation && !IsCancelation);
       }
     }
@@ -186,8 +186,8 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    public RecorderOffice FixedRecorderOffice { 
-      get; 
+    public RecorderOffice FixedRecorderOffice {
+      get;
       private set;
     }
 

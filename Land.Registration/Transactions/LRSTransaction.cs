@@ -207,7 +207,7 @@ namespace Empiria.Land.Registration.Transactions {
       get;
       set;
     }
-    
+
     private LRSTransactionExtData _extensionData = LRSTransactionExtData.Empty;
     public LRSTransactionExtData ExtensionData {
       get { return _extensionData; }
@@ -289,14 +289,14 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public LRSPaymentList Payments {
-      get { 
+      get {
         return payments.Value;
       }
     }
 
     public bool IsFeeWaiverApplicable {
       get {
-        return (this.TransactionType.Id == 704 || 
+        return (this.TransactionType.Id == 704 ||
                (this.TransactionType.Id == 700 && this.DocumentType.Id == 722));
       }
     }
@@ -324,7 +324,7 @@ namespace Empiria.Land.Registration.Transactions {
           return this.Tasks[0].Responsible;
         } else {
           return Person.Empty;
-        }        
+        }
       }
     }
 
@@ -362,7 +362,7 @@ namespace Empiria.Land.Registration.Transactions {
           1, "Id", this.Id, "TransactionTypeId", this.TransactionType.Id,
           "UID", this.UID, "DocumentTypeId", this.DocumentType.Id,
           "DocumentDescriptor", this.DocumentDescriptor, "DocumentId", this.Document.Id,
-          "RecorderOfficeId", this.RecorderOffice.Id, "RequestedBy", this.RequestedBy, 
+          "RecorderOfficeId", this.RecorderOffice.Id, "RequestedBy", this.RequestedBy,
           "AgencyId", this.Agency.Id, "ExtensionData", this.ExtensionData.ToJson(),
           "PresentationTime", this.PresentationTime, "ExpectedDelivery", this.ExpectedDelivery,
           "LastReentryTime", this.LastReentryTime, "ClosingTime", this.ClosingTime,
@@ -388,7 +388,7 @@ namespace Empiria.Land.Registration.Transactions {
     #region Public methods
 
     public LRSTransactionItem AddItem(RecordingActType transactionItemType,
-                                      LRSLawArticle treasuryCode, Money operationValue, 
+                                      LRSLawArticle treasuryCode, Money operationValue,
                                       Quantity quantity, LRSFee fee) {
       this.AssertAddItem();
       var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
@@ -458,7 +458,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public void AttachDocument(RecordingDocument document) {
       Assertion.AssertObject(document, "document");
- 
+
       document.Save();
       this.Document = document;
       this.Save();
@@ -474,7 +474,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.LastReentryTime = DateTime.Now;
       LRSTransactionTask currentTask = this.GetCurrentTask();
       currentTask.NextStatus = TransactionStatus.Reentry;
-      
+
       currentTask = currentTask.CreateNext(notes);
       currentTask.NextStatus = TransactionStatus.Control;
       currentTask.Status = TrackStatus.OnDelivery;
@@ -710,9 +710,9 @@ namespace Empiria.Land.Registration.Transactions {
         this.UID = TransactionData.GenerateTransactionUID();
       }
       this.Keywords = EmpiriaString.BuildKeywords(this.UID, this.Document.UID,
-                                                  this.DocumentDescriptor, this.RequestedBy, 
+                                                  this.DocumentDescriptor, this.RequestedBy,
                                                   this.Agency.FullName,
-                                                  this.TransactionType.Name, 
+                                                  this.TransactionType.Name,
                                                   this.RecorderOffice.Alias);
       TransactionData.WriteTransaction(this);
       if (base.IsNew) {
@@ -730,23 +730,25 @@ namespace Empiria.Land.Registration.Transactions {
         throw new NotImplementedException("Este trámite todavía no tiene registrada una boleta de pago.");
       }
 
-      this.PresentationTime = DateTime.Now;
-      this.ClosingTime = ExecutionServer.DateMaxValue;
-      this.Status = TransactionStatus.Received;
+  //    using (var context = StorageContext.Open()) {
+        this.PresentationTime = DateTime.Now;
+        this.ClosingTime = ExecutionServer.DateMaxValue;
+        this.Status = TransactionStatus.Received;
 
-      LRSTransactionTask currentTask = this.GetCurrentTask();
-      currentTask.NextStatus = TransactionStatus.Received;
-      currentTask.NextContact = LRSTransaction.InterestedContact;
+        LRSTransactionTask currentTask = this.GetCurrentTask();
+        currentTask.NextStatus = TransactionStatus.Received;
+        currentTask.NextContact = LRSTransaction.InterestedContact;
 
-      currentTask = currentTask.CreateNext(notes);
-      currentTask.NextStatus = TransactionStatus.Control;
-      currentTask.Status = TrackStatus.OnDelivery;
-      currentTask.EndProcessTime = currentTask.CheckInTime;
-      currentTask.AssignedBy = LRSTransaction.InterestedContact;
-      currentTask.Save();
+        currentTask = currentTask.CreateNext(notes);
+        currentTask.NextStatus = TransactionStatus.Control;
+        currentTask.Status = TrackStatus.OnDelivery;
+        currentTask.EndProcessTime = currentTask.CheckInTime;
+        currentTask.AssignedBy = LRSTransaction.InterestedContact;
+        currentTask.Save();
 
-      this.Save();
-      this.ResetTasksList();
+        this.Save();
+        this.ResetTasksList();
+    //  }
     }
 
     public void ReturnToMe() {
@@ -770,7 +772,7 @@ namespace Empiria.Land.Registration.Transactions {
       currentTask.SetNextStatus(nextStatus, nextContact, notes);
 
       if (nextStatus == TransactionStatus.OnSign || nextStatus == TransactionStatus.Revision) {
- 
+
         this.Save();
       } else if (this.Status == TransactionStatus.OnSign &&
                 (nextStatus == TransactionStatus.ToDeliver || nextStatus == TransactionStatus.Finished)) {
@@ -789,7 +791,7 @@ namespace Empiria.Land.Registration.Transactions {
       currentTask.CreateNext(notes);
       ResetTasksList();
 
-      if (this.Status == TransactionStatus.ToDeliver || 
+      if (this.Status == TransactionStatus.ToDeliver ||
           this.Status == TransactionStatus.ToReturn || this.Status == TransactionStatus.Finished) {
         this.ClosingTime = currentTask.EndProcessTime;
       }
@@ -880,8 +882,8 @@ namespace Empiria.Land.Registration.Transactions {
         }
       }
       if (ExecutionServer.LicenseName == "Tlaxcala") {
-        if (type.Id == 706 && 
-           EmpiriaMath.IsMemberOf(docType.Id, new int[] { 733, 734, 736, 737, 738, 739, 740, 
+        if (type.Id == 706 &&
+           EmpiriaMath.IsMemberOf(docType.Id, new int[] { 733, 734, 736, 737, 738, 739, 740,
                                                           741, 742, 744, 755, 756 })) {
           return true;
         }

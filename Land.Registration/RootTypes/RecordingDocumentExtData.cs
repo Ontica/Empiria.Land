@@ -13,6 +13,7 @@ using System.Collections.Generic;
 
 using Empiria.Contacts;
 using Empiria.DataTypes;
+using Empiria.Json;
 using Empiria.Ontology;
 
 namespace Empiria.Land.Registration {
@@ -26,7 +27,7 @@ namespace Empiria.Land.Registration {
       this.IssuedByPosition = RoleType.Empty;
     }
 
-    static internal RecordingDocumentExtData Parse(string jsonString) {   
+    static internal RecordingDocumentExtData Parse(string jsonString) {
       if (String.IsNullOrWhiteSpace(jsonString)) {
         return RecordingDocumentExtData.Empty;
       }
@@ -34,14 +35,7 @@ namespace Empiria.Land.Registration {
       var json = Empiria.Json.JsonConverter.ToJsonObject(jsonString);
 
       var data = new RecordingDocumentExtData();
-      data.BookNo = json.Get<String>("BookNo", String.Empty);
-      data.IssuedByPosition = json.Get<RoleType>("IssuedByPositionId", RoleType.Empty);
-      data.MainWitness = json.Get<Contact>("MainWitnessId", Person.Empty);
-      data.MainWitnessPosition = json.Get<RoleType>("MainWitnessPositionId", RoleType.Empty);
-      data.SecondaryWitness = json.Get<Contact>("SecondaryWitnessId", Person.Empty);
-      data.SecondaryWitnessPosition = json.Get<RoleType>("SecondaryWitnessPositionId", RoleType.Empty);
-      data.StartSheet = json.Get<String>("StartSheet", String.Empty);
-      data.EndSheet = json.Get<String>("EndSheet", String.Empty);
+      data.LoadJson(json);
 
       return data;
     }
@@ -56,6 +50,16 @@ namespace Empiria.Land.Registration {
     #endregion Constructors and parsers
 
     #region Properties
+
+    public string DocumentNo {
+      get;
+      set;
+    }
+
+    public string ExpedientNo {
+      get;
+      set;
+    }
 
     public string BookNo {
       get;
@@ -109,7 +113,9 @@ namespace Empiria.Land.Registration {
     public string ToJson() {
 
       if (!this.IsEmptyInstance) {
-        return Empiria.Json.JsonConverter.ToJson(this.GetObject());
+
+
+        return JsonConverter.ToJson(this.GetObject());
       } else {
         return String.Empty;
       }
@@ -126,6 +132,54 @@ namespace Empiria.Land.Registration {
         StartSheet = this.StartSheet,
         EndSheet = this.EndSheet,
       };
+    }
+
+    private void LoadJson(JsonObject json) {
+      this.DocumentNo = json.Get<String>("DocumentNo", String.Empty);
+      this.BookNo = json.Get<String>("NotaryBook", String.Empty);
+      this.StartSheet = json.Get<String>("StartSheet", String.Empty);
+      this.EndSheet = json.Get<String>("EndSheet", String.Empty);
+
+      this.ExpedientNo = json.Get<String>("CaseRecordNo", String.Empty);
+
+      this.MainWitness = json.Get<Contact>("WitnessId", Person.Empty);
+      this.MainWitnessPosition = json.Get<RoleType>("WitnessRoleId", RoleType.Empty);
+    }
+
+    public JsonRoot GetJson(RecordingDocument document) {
+      var json = new JsonRoot();
+
+      switch (document.DocumentType.Id) {
+        case 2410:
+          json.AddIfValue(new JsonItem("DocumentNo", document.Number));
+          json.AddIfValue(new JsonItem("NotaryBook", this.BookNo));
+          json.AddIfValue(new JsonItem("StartSheet", this.StartSheet));
+          json.AddIfValue(new JsonItem("EndSheet", this.EndSheet));
+          break;
+        case 2411:
+          json.AddIfValue(new JsonItem("DocumentNo", document.Number));
+          json.AddIfValue(new JsonItem("CaseRecordNo", document.ExpedientNo));
+          break;
+        case 2412:
+          json.AddIfValue(new JsonItem("DocumentNo", document.Number));
+          json.AddIfValue(new JsonItem("CaseRecordNo", document.ExpedientNo));
+          break;
+        case 2413:
+          json.AddIfValue(new JsonItem("DocumentNo", document.Number));
+          json.AddIfValue(new JsonItem("WitnessId", this.MainWitness.Id));
+          json.AddIfValue(new JsonItem("WitnessRoleId", this.MainWitnessPosition.Id));
+          break;
+        case 2414:
+          json.AddIfValue(new JsonItem("DocumentNo", document.Number));
+          break;
+        default:
+          json.AddIfValue(new JsonItem("DocumentNo", document.Number));
+          json.AddIfValue(new JsonItem("NotaryBook", this.BookNo));
+          json.AddIfValue(new JsonItem("StartSheet", this.StartSheet));
+          json.AddIfValue(new JsonItem("EndSheet", this.EndSheet));
+          break;
+      }
+      return json;
     }
 
     #endregion Methods

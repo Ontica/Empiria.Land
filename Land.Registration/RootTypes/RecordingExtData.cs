@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace Empiria.Land.Registration {
-  
+
   public class RecordingExtData {
 
     public string ToJson() {

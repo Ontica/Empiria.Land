@@ -94,7 +94,7 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    
+
     [DataField("RecorderOfficeId")]
     public RecorderOffice RecorderOffice {
       get;
@@ -373,7 +373,7 @@ namespace Empiria.Land.Registration {
       //if (this.UsePerpetualNumbering) {
       //  return (RecordingBooksData.GetLastBookRecordingNumber(this) < this.EndRecordingIndex);
       //}
-      //// !UsePerpetualNumbering  
+      //// !UsePerpetualNumbering
       //int currentBookSheets = this.CalculateTotalSheets();
       //int newTotalSheets = currentBookSheets + document.SheetsCount;
 

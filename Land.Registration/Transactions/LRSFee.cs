@@ -86,7 +86,7 @@ namespace Empiria.Land.Registration.Transactions {
 
       this.RecordingRights += fee.RecordingRights;
       this.SheetsRevision += fee.SheetsRevision;
-      this.ForeignRecordingFee += fee.ForeignRecordingFee;   
+      this.ForeignRecordingFee += fee.ForeignRecordingFee;
       this.Discount += fee.Discount;
     }
 

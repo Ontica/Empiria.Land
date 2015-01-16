@@ -13,7 +13,7 @@ using Empiria.DataTypes;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Contains extensible data about a tract index item, an association 
+  /// <summary>Contains extensible data about a tract index item, an association
   /// recording act/property. </summary>
   public class TractIndexItemExtData : IExtensibleData {
 

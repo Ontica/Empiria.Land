@@ -23,7 +23,7 @@ namespace Empiria.Land.Registration {
   public class Recording : BaseObject, IProtected {
 
     #region Fields
-    
+
     private Lazy<FixedList<RecordingAct>> recordingActList = null;
     private Lazy<LRSPaymentList> payments = null;
 
@@ -78,7 +78,7 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-   
+
     public RecordingDocument Document {
       get {
         if (recordingActList.Value.Count == 0) {
@@ -106,7 +106,7 @@ namespace Empiria.Land.Registration {
       get;
       set;
     }
-    
+
     public string AsText {
       get {
         return String.Format("Partida {0} en {1}", this.Number, this.RecordingBook.AsText);
@@ -289,7 +289,7 @@ namespace Empiria.Land.Registration {
     //    throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
     //  }
     //  if (!this.RecordingActs.Contains(recordingAct)) {
-    //    throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording, 
+    //    throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording,
     //                                        recordingAct.Id, this.Id);
     //  }
     //  if (recordingAct.Status == RecordableObjectStatus.Closed) {

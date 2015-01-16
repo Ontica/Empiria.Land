@@ -10,8 +10,8 @@ namespace Empiria.Land.WebServices {
   public class PaymentServices : EmpiriaWebService {
 
     public PaymentServices() {
-      //Uncomment the following line if using designed components 
-      //InitializeComponent(); 
+      //Uncomment the following line if using designed components
+      //InitializeComponent();
     }
 
     [WebMethod(EnableSession = true)]

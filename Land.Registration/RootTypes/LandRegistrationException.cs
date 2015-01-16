@@ -14,7 +14,7 @@ using System.Reflection;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>The exception that is thrown when a problem occurs in Empiria Government Land 
+  /// <summary>The exception that is thrown when a problem occurs in Empiria Government Land
   /// Registration System.</summary>
   [Serializable]
   public sealed class LandRegistrationException : EmpiriaException {
@@ -65,7 +65,7 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    /// <summary>Initializes a new instance of LandRegistrationException class with a specified error 
+    /// <summary>Initializes a new instance of LandRegistrationException class with a specified error
     /// message.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>

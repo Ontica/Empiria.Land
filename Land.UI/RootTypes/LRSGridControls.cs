@@ -304,7 +304,7 @@ namespace Empiria.Land.UI {
         if (recordingAct.TractIndex.Count > 0) {
           counter++;
           for (int j = 0; j < recordingAct.TractIndex.Count; j++) {
-            html += GetRecordingActGridRow(recordingAct, recordingAct.TractIndex[j], counter, i, j, 
+            html += GetRecordingActGridRow(recordingAct, recordingAct.TractIndex[j], counter, i, j,
                                            document.RecordingActs.Count);
           }
         } else {
@@ -343,11 +343,11 @@ namespace Empiria.Land.UI {
     static private string GetRecordingActGridRow(RecordingAct recordingAct, TractIndexItem tractItem, int counter,
                                                  int recordingActIndex, int tractItemIndex, int recordingActsCount) {
       const string row = "<tr class='{CLASS}'>" +
-          "<td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b><br/>" +                   
+          "<td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b><br/>" +
           "<td style='white-space:normal'>{RECORDING.ACT.URL}</td>" +
-          "<td style='white-space:normal'>{PROPERTY.URL}</td>" + 
+          "<td style='white-space:normal'>{PROPERTY.URL}</td>" +
           "<td style='white-space:normal'>{PHYSICAL.RECORDING.DATA}</td>" +
-          "<td>{RECORDING.ACT.STATUS}</td>" + 
+          "<td>{RECORDING.ACT.STATUS}</td>" +
           "<td>{OPTIONS.COMBO}<img class='comboExecuteImage' src='../themes/default/buttons/next.gif' " +
           "alt='' title='Ejecuta la operación seleccionada' " +
           "onclick='doOperation(getElement(\"cboRecordingOptions_{ID}_{PROPERTY.ID}\").value, {ID}, {PROPERTY.ID});'/>" +
@@ -410,11 +410,11 @@ namespace Empiria.Land.UI {
       } else if (antecedent.Equals(InformationAct.Empty)) {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Sin antecedente");
       } else if (!antecedent.Recording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Predio inscrito en: " + 
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Predio inscrito en: " +
                                                           antecedent.Recording.FullNumber);
       } else if (antecedent.Recording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + antecedent.Id + " " + 
-                                                          recordingAct.Document.Id  + " " + antecedent.Document.Id + " " + 
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + antecedent.Id + " " +
+                                                          recordingAct.Document.Id  + " " + antecedent.Document.Id + " " +
                                                           antecedent.Document.UID);
       }
 
@@ -447,12 +447,12 @@ namespace Empiria.Land.UI {
       temp = temp.Replace("{RECORDING.BOOK}", recordingAct.Recording.RecordingBook.AsText);
       temp = temp.Replace("{RECORDING.BOOK.ID}", recordingAct.Recording.RecordingBook.Id.ToString());
       temp = temp.Replace("{RECORDING.NUMBER}", recordingAct.Recording.Number);
-      
+
       return temp;
     }
 
-    static private string GetRecordingActGridRowPhysicalBooks(RecordingAct recordingAct, 
-                                                 TractIndexItem propertyEvent, int counter, 
+    static private string GetRecordingActGridRowPhysicalBooks(RecordingAct recordingAct,
+                                                 TractIndexItem propertyEvent, int counter,
                                                  int recordingActIndex, int propertyEventIndex) {
       const string row = "<tr class='{CLASS}'>" +
                            "<td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b><br/>" +
@@ -583,7 +583,7 @@ namespace Empiria.Land.UI {
         }
         temp = temp.Replace("{RECORDING.NUMBER}", recordings[i].Number);
 
-        if (recordings[i].GetAnnotationActs().Count != 0) {     // No guarantee that the recording IS AN annotation. Annotation isn't a recording property. 
+        if (recordings[i].GetAnnotationActs().Count != 0) {     // No guarantee that the recording IS AN annotation. Annotation isn't a recording property.
           temp = temp.Replace("{RECORDING.IMAGES}", "*¿¿ Puede ser anotación ??*");
         } else if (recordings[i].StartImageIndex <= 0 && recordings[i].EndImageIndex <= 0) {
           temp = temp.Replace("{RECORDING.IMAGES}", "Sin imagen");

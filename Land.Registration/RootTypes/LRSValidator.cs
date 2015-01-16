@@ -81,11 +81,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public LandRegistrationException ValidateRecordingActAsComplete(RecordingAct recordingAct) {
-      if (!recordingAct.RecordingActType.BlockAllFields && 
+      if (!recordingAct.RecordingActType.BlockAllFields &&
            recordingAct.ExtensionData.AppraisalAmount.Equals(Money.Empty)) {
         return new LandRegistrationException(LandRegistrationException.Msg.EmptyAppraisalAmount);
       }
-      if (recordingAct.RecordingActType.UseOperationAmount && 
+      if (recordingAct.RecordingActType.UseOperationAmount &&
           recordingAct.ExtensionData.OperationAmount.Equals(Money.Empty)) {
         return new LandRegistrationException(LandRegistrationException.Msg.EmptyOperationAmount);
       }
@@ -131,7 +131,7 @@ namespace Empiria.Land.Registration {
       string recordingNo = recordingBook.BuildRecordingNumber(recordingNumber, bisSuffixRecordingNumber);
       string filter = "RecordingId <> " + recording.Id + " AND RecordingNumber = '" + recordingNo + "'";
       Recording findResult = RecordingBooksData.FindRecording(recordingBook, filter);
-      
+
       if (!findResult.IsEmptyInstance) {
         return new LandRegistrationException(LandRegistrationException.Msg.RecordingNumberAlreadyExists, recordingNo);
       }

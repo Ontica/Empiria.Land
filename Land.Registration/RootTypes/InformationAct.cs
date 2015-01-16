@@ -13,7 +13,7 @@ using System;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Represents an information recording act that are not limitations and can be applied to 
+  /// <summary>Represents an information recording act that are not limitations and can be applied to
   /// properties, persons or neither.</summary>
   public class InformationAct : RecordingAct {
 

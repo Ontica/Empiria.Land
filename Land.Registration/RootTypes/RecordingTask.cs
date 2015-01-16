@@ -26,7 +26,7 @@ namespace Empiria.Land.Registration {
     selectProperty,
   }
 
-  /// <summary>Contains data about a recording instruction. A recording task it's needed to create 
+  /// <summary>Contains data about a recording instruction. A recording task it's needed to create
   /// recording acts. RecordingTasks generally are filled by the user services.</summary>
   public class RecordingTask {
 
@@ -76,58 +76,58 @@ namespace Empiria.Land.Registration {
 
     #region Properties
 
-    public LRSTransaction Transaction { 
-      get; 
-      private set;
-    }
-
-    public RecordingDocument Document { 
-      get; 
-      private set;
-    }
-    
-    public RecorderOffice RecorderOffice {
-      get; 
-      private set; 
-    }
-
-    public RecordingActTypeCategory RecordingActTypeCategory { 
-      get; 
-      private set;
-    }
-        
-    public RecordingActType RecordingActType { 
-      get; 
-      private set;
-    }
-
-    public PropertyRecordingType PropertyRecordingType { 
-      get; 
-      private set;
-    }
-    
-    public RecordingBook PrecedentRecordingBook { 
+    public LRSTransaction Transaction {
       get;
       private set;
     }
-    
+
+    public RecordingDocument Document {
+      get;
+      private set;
+    }
+
+    public RecorderOffice RecorderOffice {
+      get;
+      private set;
+    }
+
+    public RecordingActTypeCategory RecordingActTypeCategory {
+      get;
+      private set;
+    }
+
+    public RecordingActType RecordingActType {
+      get;
+      private set;
+    }
+
+    public PropertyRecordingType PropertyRecordingType {
+      get;
+      private set;
+    }
+
+    public RecordingBook PrecedentRecordingBook {
+      get;
+      private set;
+    }
+
     public Recording PrecedentRecording {
       get;
       internal set;
     }
 
-    public Property TargetProperty { 
+    public Property TargetProperty {
       get;
       internal set;
     }
 
-    public RecordingAct TargetRecordingAct { 
+    public RecordingAct TargetRecordingAct {
       get;
       internal set;
     }
-    
-    public int QuickAddRecordingNumber { 
-      get; 
+
+    public int QuickAddRecordingNumber {
+      get;
       private set;
     }
 
@@ -136,7 +136,7 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    public RecordingRule RecordingRule { 
+    public RecordingRule RecordingRule {
       get;
       private set;
     }

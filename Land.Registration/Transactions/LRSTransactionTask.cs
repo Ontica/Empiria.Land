@@ -37,7 +37,7 @@ namespace Empiria.Land.Registration.Transactions {
     private LRSTransactionTask() {
       // Required by Empiria Framework.
     }
-    
+
     internal LRSTransactionTask(LRSTransaction transaction) {
       this.Transaction = transaction;
     }
@@ -186,7 +186,7 @@ namespace Empiria.Land.Registration.Transactions {
     public LRSTransactionTask NextTask {
       get { return _nextTask.Value; }
       private set {
-        _nextTask = LazyInstance<LRSTransactionTask>.Parse(value); 
+        _nextTask = LazyInstance<LRSTransactionTask>.Parse(value);
       }
     }
 
@@ -226,9 +226,9 @@ namespace Empiria.Land.Registration.Transactions {
 
     private void ExecuteSpecialCase(LRSTransactionTask nextTrack) {
       if (nextTrack.IsNew) {
-        if (nextTrack.CurrentStatus == TransactionStatus.ToDeliver || 
+        if (nextTrack.CurrentStatus == TransactionStatus.ToDeliver ||
             nextTrack.CurrentStatus == TransactionStatus.ToReturn) {
-          nextTrack.NextStatus = (nextTrack.CurrentStatus == TransactionStatus.ToDeliver) ? 
+          nextTrack.NextStatus = (nextTrack.CurrentStatus == TransactionStatus.ToDeliver) ?
                     TransactionStatus.Delivered : TransactionStatus.Returned;
           nextTrack.EndProcessTime = nextTrack.CheckInTime;
           nextTrack.Status = TrackStatus.OnDelivery;

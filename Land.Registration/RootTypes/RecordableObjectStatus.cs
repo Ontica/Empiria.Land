@@ -12,7 +12,7 @@ using System;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Enumerates the statuses for recordable documents and objects in the 
+  /// <summary>Enumerates the statuses for recordable documents and objects in the
   /// Land Registration System.</summary>
   public enum RecordableObjectStatus {
     Obsolete = 'S',

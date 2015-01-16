@@ -30,8 +30,8 @@ namespace Empiria.Land.Registration.Transactions {
       // Required by Empiria Framework.
     }
 
-    internal LRSTransactionItem(LRSTransaction transaction, RecordingActType transactionItemType, 
-                                LRSLawArticle treasuryCode, Money operationValue, 
+    internal LRSTransactionItem(LRSTransaction transaction, RecordingActType transactionItemType,
+                                LRSLawArticle treasuryCode, Money operationValue,
                                 Quantity quantity, LRSFee fee) {
       this.Transaction = transaction;
       this.TransactionItemType = transactionItemType;
@@ -43,7 +43,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     internal LRSTransactionItem(LRSTransaction transaction, RecordingActType transactionItemType,
-                                LRSLawArticle treasuryCode, Money operationValue, 
+                                LRSLawArticle treasuryCode, Money operationValue,
                                 Quantity quantity) {
       this.Transaction = transaction;
       this.TransactionItemType = transactionItemType;

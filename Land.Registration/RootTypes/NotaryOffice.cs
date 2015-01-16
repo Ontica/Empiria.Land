@@ -59,7 +59,7 @@ namespace Empiria.Land.Registration {
         return base.GetLink<GeographicRegion>("NotaryOffice->Region");
       }
     }
-    
+
     #endregion Public properties
 
     #region Public methods

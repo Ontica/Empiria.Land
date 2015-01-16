@@ -107,8 +107,8 @@ namespace Empiria.Land.Registration {
 
     }
 
-    public FixedList<Person> GetPropertyTitleSigners(TimePeriod period) {
-      return MainRecorderOffice.GetLinks<Person>("RecorderOffice->PropertyTitleSigners", period,
+    public FixedList<Person> GetPropertyTitleSigners() {
+      return MainRecorderOffice.GetLinks<Person>("RecorderOffice->PropertyTitleSigners",
                                                   (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
     }
 

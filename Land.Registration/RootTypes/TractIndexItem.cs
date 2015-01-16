@@ -115,8 +115,8 @@ namespace Empiria.Land.Registration {
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
       if (version == 1) {
         return new object[] {
-          1, "Id", this.Id, "RecordingAct", this.RecordingAct.Id, 
-          "Property", this.Property.Id, "ExtensionData", this.ExtensionData.ToJson(),        
+          1, "Id", this.Id, "RecordingAct", this.RecordingAct.Id,
+          "Property", this.Property.Id, "ExtensionData", this.ExtensionData.ToJson(),
           "Status", (char) this.Status,
         };
       }
