@@ -255,15 +255,15 @@ namespace Empiria.Land.Documentation {
                                                      ImageProcessor.ErrorsFolderPath);
         destinationFileName = FileServices.MoveFileTo(image.SourceFile, destinationFolder);
         AuditTrail.WriteOperation("SendImageToErrorsBin", "MoveFile",
-                                  new JsonRoot() { new JsonItem("Source", sourceFile),
-                                                   new JsonItem("Destination", destinationFileName),
-                                                   new JsonItem("Reason", exception)});
+                                  new JsonObject() { new JsonItem("Source", sourceFile),
+                                                     new JsonItem("Destination", destinationFileName),
+                                                     new JsonItem("Reason", exception)});
       } catch (Exception e) {
         AuditTrail.WriteException("SendImageToErrorsBin", "MoveFile",
-                                  new JsonRoot() { new JsonItem("Source", sourceFile),
-                                                   new JsonItem("Destination", destinationFileName),
-                                                   new JsonItem("Reason", exception),
-                                                   new JsonItem("OperationException", e)});
+                                  new JsonObject() { new JsonItem("Source", sourceFile),
+                                                     new JsonItem("Destination", destinationFileName),
+                                                     new JsonItem("Reason", exception),
+                                                     new JsonItem("OperationException", e)});
       }
     }
 
@@ -278,15 +278,15 @@ namespace Empiria.Land.Documentation {
                                                      ImageProcessor.ErrorsFolderPath + @"\\out.of.memory");
         destinationFileName = FileServices.MoveFileTo(image.SourceFile, destinationFolder);
         AuditTrail.WriteOperation("SendImageToOutOfMemoryErrorsBin", "MoveFile",
-                                  new JsonRoot() { new JsonItem("Source", sourceFile),
-                                                   new JsonItem("Destination", destinationFileName),
-                                                   new JsonItem("Reason", exception)});
+                                  new JsonObject() { new JsonItem("Source", sourceFile),
+                                                     new JsonItem("Destination", destinationFileName),
+                                                     new JsonItem("Reason", exception)});
       } catch (Exception e) {
         AuditTrail.WriteException("SendImageToOutOfMemoryErrorsBin", "MoveFile",
-                                  new JsonRoot() { new JsonItem("Source", sourceFile),
-                                                   new JsonItem("Destination", destinationFileName),
-                                                   new JsonItem("Reason", exception),
-                                                   new JsonItem("OperationException", e)});
+                                  new JsonObject() { new JsonItem("Source", sourceFile),
+                                                     new JsonItem("Destination", destinationFileName),
+                                                     new JsonItem("Reason", exception),
+                                                     new JsonItem("OperationException", e)});
       }
     }
 

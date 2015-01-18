@@ -12,6 +12,8 @@
 using System;
 using System.Collections.Generic;
 
+using Empiria.Json;
+
 namespace Empiria.Land.Registration {
 
   public enum PropertyCount {
@@ -46,7 +48,37 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public RecordingRule() {
+    private RecordingRule(string jsonString) {
+      Initialize();
+      Load(jsonString);
+    }
+
+    private void Load(string jsonString) {
+      var json = JsonObject.Parse(jsonString);
+
+      this.AppliesTo = json.Get<RecordingRuleApplication>("AppliesTo", RecordingRuleApplication.Undefined);
+      this.AutoCancel = json.Get<Int32>("AutoCancel", 0);
+
+      this.InputProperties = json.GetList<PropertyRule>("InputProperties", false).ToArray();
+
+      this.IsAnnotation = json.Get<bool>("IsAnnotation", false);
+      this.IsCancelation = json.Get<bool>("IsCancelation", false);
+
+      this.NewProperty = PropertyRule.Parse(json.Slice("NewProperties", false));
+
+      this.PropertyCount = ParsePropertyCount(json.Get<string>("PropertyCount", String.Empty));
+      this.PropertyRecordingStatus = json.Get<PropertyRecordingStatus>("PropertyStatus",
+                                                                       PropertyRecordingStatus.Undefined);
+      this.RecordingSection = json.Get<RecordingSection>("RecordingSectionId", RecordingSection.Empty);
+      this.FixedRecorderOffice = json.Get<RecorderOffice>("FixedRecorderOffice", RecorderOffice.Empty);
+      this.SpecialCase = json.Get<string>("SpecialCase", String.Empty);
+      this.RecordingActTypes = json.GetList<RecordingActType>("RecordingActTypes", false).ToArray();
+      this.AllowsPartitions = json.Get<bool>("AllowsPartitions", false);
+      this.IsActive = json.Get<bool>("IsActive", false);
+    }
+
+    private void Initialize() {
+      this.AllowsPartitions = false;
       this.AppliesTo = RecordingRuleApplication.Undefined;
       this.AutoCancel = 0;
       this.InputProperties = new PropertyRule[0];
@@ -59,66 +91,33 @@ namespace Empiria.Land.Registration {
       this.RecordingSection = RecordingSection.Empty;
       this.FixedRecorderOffice = RecorderOffice.Empty;
       this.SpecialCase = "None";
-      this.AllowsPartitions = false;
+    }
+
+    private JsonObject _json = null;
+    public JsonObject ToJson() {
+      if (_json == null) {
+        _json = ConvertToJson();          
+      }
+      return _json;
+    }
+
+    private JsonObject ConvertToJson() {
+      JsonObject json = new JsonObject();
+      json.Add(new JsonItem("AllowsPartitions", this.AllowsPartitions));
+      json.Add(new JsonItem("AppliesTo", this.AppliesTo.ToString()));
+      json.Add(new JsonItem("AutoCancel", this.AutoCancel));
+      json.Add(new JsonItem("IsAnnotation", this.IsAnnotation));
+      json.Add(new JsonItem("IsCancelation", this.IsCancelation));
+      json.Add(new JsonItem("PropertyCount", this.PropertyCount.ToString()));
+      json.Add(new JsonItem("PropertyRecordingStatus", this.PropertyRecordingStatus.ToString()));
+      json.Add(new JsonItem("SpecialCase", this.SpecialCase));
+      json.Add(new JsonItem("IsActive", this.IsActive));
+      
+      return json;
     }
 
     static internal RecordingRule Parse(string jsonString) {
-      IDictionary<string, object> json = Empiria.Json.JsonConverter.ToObject(jsonString);
-      RecordingRule rule = new RecordingRule();
-
-      if (json.ContainsKey("AppliesTo")) {
-        rule.AppliesTo = (RecordingRuleApplication) Enum.Parse(typeof(RecordingRuleApplication),
-                                                               (string) json["AppliesTo"]);
-      }
-      if (json.ContainsKey("AutoCancel")) {
-        rule.AutoCancel = Convert.ToInt32(json["AutoCancel"]);
-      }
-      if (json.ContainsKey("InputProperties")) {
-        List<object> array = (List<object>) json["InputProperties"];
-        rule.InputProperties = new PropertyRule[array.Count];
-        for (int i = 0; i < array.Count; i++) {
-          IDictionary<string, object> item = (IDictionary<string, object>) array[i];
-          rule.InputProperties[i] = PropertyRule.Parse(item);
-        }
-      }
-      if (json.ContainsKey("IsAnnotation")) {
-        rule.IsAnnotation = (bool) json["IsAnnotation"];
-      }
-      if (json.ContainsKey("IsCancelation")) {
-        rule.IsCancelation = (bool) json["IsCancelation"];
-      }
-      if (json.ContainsKey("NewProperties")) {
-        IDictionary<string, object> item = (IDictionary<string, object>) json["NewProperties"];
-        rule.NewProperty = PropertyRule.Parse(item);
-      }
-      if (json.ContainsKey("PropertyCount")) {
-        rule.PropertyCount = ParsePropertyCount(Convert.ToString(json["PropertyCount"]));
-      }
-      if (json.ContainsKey("PropertyStatus")) {
-        rule.PropertyRecordingStatus = (PropertyRecordingStatus) Enum.Parse(typeof(PropertyRecordingStatus),
-                                                                            (string) json["PropertyStatus"]);
-      }
-      if (json.ContainsKey("RecordingSectionId")) {
-        rule.RecordingSection = RecordingSection.Parse(Convert.ToInt32(json["RecordingSectionId"]));
-      }
-      if (json.ContainsKey("FixedRecorderOffice")) {
-        rule.FixedRecorderOffice = RecorderOffice.Parse(Convert.ToInt32(json["FixedRecorderOffice"]));
-      }
-      if (json.ContainsKey("SpecialCase")) {
-        rule.SpecialCase = (string) json["SpecialCase"];
-      }
-      if (json.ContainsKey("RecordingActTypes")) {
-        List<object> array = (List<object>) json["RecordingActTypes"];
-        rule.RecordingActTypes = new RecordingActType[array.Count];
-        for (int i = 0; i < array.Count; i++) {
-          IDictionary<string, object> item = (IDictionary<string, object>) array[i];
-          rule.RecordingActTypes[i] = RecordingActType.Parse(Convert.ToInt32(item["Id"]));
-        }
-      }
-      if (json.ContainsKey("AllowsPartitions")) {
-        rule.AllowsPartitions = (bool) json["AllowsPartitions"];
-      }
-      return rule;
+      return new RecordingRule(jsonString);
     }
 
     static public PropertyCount ParsePropertyCount(string propertyCount) {
@@ -212,7 +211,15 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+    public bool IsActive {
+      get;
+      private set;
+    }
+
     #endregion Properties
+
+
+
 
   }  // class RecordingRule
 

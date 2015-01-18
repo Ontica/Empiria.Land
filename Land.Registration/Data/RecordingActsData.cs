@@ -154,7 +154,7 @@ namespace Empiria.Land.Registration.Data {
 
       var operation = DataOperation.Parse("writeLRSRecordingAct", o.Id, o.RecordingActType.Id,
                                           o.Document.Id, o.Index, o.Notes, o.ExtensionData.ToJson(),
-                                          o.Keywords, o.AmendmentOf.Id, o.AmendedBy.Id, o.Recording.Id,
+                                          o.Keywords, o.AmendmentOf.Id, o.AmendedBy.Id, o.PhysicalRecording.Id,
                                           o.RegisteredBy.Id, o.RegistrationTime,
                                           (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);

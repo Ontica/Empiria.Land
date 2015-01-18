@@ -53,7 +53,7 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance");
 
       RecordingAct recordingAct = recordingActType.CreateInstance();
-      recordingAct.Recording = recording;
+      recordingAct.PhysicalRecording = recording;
       recordingAct.Index = index;
       recordingAct.Document = document;
       recordingAct.AmendmentOf = amendmentOf;
@@ -100,11 +100,11 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("PhysicalRecordingId")]
-    private LazyInstance<Recording> _recording = LazyInstance<Recording>.Empty;
-    public Recording Recording {
-      get { return _recording.Value; }
+    private LazyInstance<Recording> _physicalRecording = LazyInstance<Recording>.Empty;
+    public Recording PhysicalRecording {
+      get { return _physicalRecording.Value; }
       private set {
-        _recording = LazyInstance<Recording>.Parse(value);
+        _physicalRecording = LazyInstance<Recording>.Parse(value);
       }
     }
 
@@ -128,7 +128,7 @@ namespace Empiria.Land.Registration {
     internal string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName,
-                                           this.Recording.FullNumber);
+                                           this.PhysicalRecording.FullNumber);
       }
     }
 
@@ -213,7 +213,7 @@ namespace Empiria.Land.Registration {
           1, "Id", this.Id, "RecordingActType", this.RecordingActType.Id,
           "Document", this.Document.Id, "Index", this.Index, "Notes", this.Notes,
           "ExtensionData", this.ExtensionData.ToJson(), "AmendmentOf", this.AmendmentOf.Id,
-          "AmendedBy", this.AmendedBy.Id, "Recording", this.Recording.Id,
+          "AmendedBy", this.AmendedBy.Id, "Recording", this.PhysicalRecording.Id,
           "RegisteredBy", this.RegisteredBy.Id, "RegistrationTime", this.RegistrationTime,
           "Status", (char) this.Status
         };
@@ -257,7 +257,7 @@ namespace Empiria.Land.Registration {
     }
 
     internal void Delete() {
-      if (this.Recording.Status == RecordableObjectStatus.Closed) {
+      if (this.PhysicalRecording.Status == RecordableObjectStatus.Closed) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
       }
       if (this.Status == RecordableObjectStatus.Closed) {

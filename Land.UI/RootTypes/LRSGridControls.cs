@@ -160,14 +160,14 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{NUMBERING}", Char.ConvertFromUtf32(65 + i));
         temp = temp.Replace("{PROPERTY.TRACT.NUMBER}", association.Property.UID);
         temp = temp.Replace("{RECORDING.ACT.TYPE}", association.RecordingAct.RecordingActType.DisplayName);
-        if (!association.RecordingAct.Recording.Equals(recording)) {
+        if (!association.RecordingAct.PhysicalRecording.Equals(recording)) {
           temp = temp.Replace("{IMAGING.FILES.FOLDER}", "{IMAGING.FILES.FOLDER}"); // OOJJOO association.RecordingAct.Recording.RecordingBook.ImagingFilesFolder.DisplayName
-          if (association.RecordingAct.Recording.StartImageIndex != 0) {
-            temp = temp.Replace("{ANNOTATION.NUMBER}", "<span id='ancAnnotationNumber_{PTY_ID}_{REC_ACT_ID}'><b>" + association.RecordingAct.Recording.Number + "</b></span>" +
-                                                       "&nbsp; Img: <b>" + association.RecordingAct.Recording.StartImageIndex.ToString() + " - " +
-                                                       association.RecordingAct.Recording.EndImageIndex.ToString() + "</b>");
+          if (association.RecordingAct.PhysicalRecording.StartImageIndex != 0) {
+            temp = temp.Replace("{ANNOTATION.NUMBER}", "<span id='ancAnnotationNumber_{PTY_ID}_{REC_ACT_ID}'><b>" + association.RecordingAct.PhysicalRecording.Number + "</b></span>" +
+                                                       "&nbsp; Img: <b>" + association.RecordingAct.PhysicalRecording.StartImageIndex.ToString() + " - " +
+                                                       association.RecordingAct.PhysicalRecording.EndImageIndex.ToString() + "</b>");
           } else {
-            temp = temp.Replace("{ANNOTATION.NUMBER}", "<span id='ancAnnotationNumber_{PTY_ID}_{REC_ACT_ID}'><b>" + association.RecordingAct.Recording.Number + "</b></span>");
+            temp = temp.Replace("{ANNOTATION.NUMBER}", "<span id='ancAnnotationNumber_{PTY_ID}_{REC_ACT_ID}'><b>" + association.RecordingAct.PhysicalRecording.Number + "</b></span>");
           }
         } else {
           temp = temp.Replace("{IMAGING.FILES.FOLDER}", "Este libro");
@@ -176,12 +176,12 @@ namespace Empiria.Land.UI {
         if (association.RecordingAct.Document.PresentationTime != ExecutionServer.DateMaxValue) {
           temp = temp.Replace("{ANNOTATION.PRESENTATION}", "<span id='ancAnnotationPresentation_{PTY_ID}_{REC_ACT_ID}'>" +
                                                            association.RecordingAct.Document.PresentationTime.ToString("dd/MMM/yyyy HH:mm") + "</span><br />" +
-                                                           "Aut: " + association.RecordingAct.Recording.AuthorizationTime.ToString("dd/MMM/yyyy"));
+                                                           "Aut: " + association.RecordingAct.PhysicalRecording.AuthorizationTime.ToString("dd/MMM/yyyy"));
         } else {
           temp = temp.Replace("{ANNOTATION.PRESENTATION}", "<span id='ancAnnotationPresentation_{PTY_ID}_{REC_ACT_ID}'>No determinada</span>");
         }
-        temp = temp.Replace("{RECORDING.ID}", association.RecordingAct.Recording.Id.ToString());
-        temp = temp.Replace("{RECORDING.BOOK.ID}", association.RecordingAct.Recording.RecordingBook.Id.ToString());
+        temp = temp.Replace("{RECORDING.ID}", association.RecordingAct.PhysicalRecording.Id.ToString());
+        temp = temp.Replace("{RECORDING.BOOK.ID}", association.RecordingAct.PhysicalRecording.RecordingBook.Id.ToString());
         temp = temp.Replace("{ANNOTATION.STATUS.NAME}", association.RecordingAct.StatusName);
         temp = temp.Replace("{PTY_ID}", association.Property.Id.ToString());
         temp = temp.Replace("{REC_ACT_ID}", association.RecordingAct.Id.ToString());
@@ -345,7 +345,7 @@ namespace Empiria.Land.UI {
       const string row = "<tr class='{CLASS}'>" +
           "<td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b><br/>" +
           "<td style='white-space:normal'>{RECORDING.ACT.URL}</td>" +
-          "<td style='white-space:normal'>{PROPERTY.URL}</td>" +
+          "<td style='white-space:nowrap'>{PROPERTY.URL}</td>" +
           "<td style='white-space:normal'>{PHYSICAL.RECORDING.DATA}</td>" +
           "<td>{RECORDING.ACT.STATUS}</td>" +
           "<td>{OPTIONS.COMBO}<img class='comboExecuteImage' src='../themes/default/buttons/next.gif' " +
@@ -357,7 +357,7 @@ namespace Empiria.Land.UI {
       const string readonlyURL = "<b id='ancRecordingAct_{ID}'>{RECORDING.ACT.DISPLAY.NAME}</b>";
 
 
-      const string propertyURL = "<a href='javascript:doOperation(\"editProperty\", {RECORDING.BOOK.ID}, {RECORDING.ID}, {PROPERTY.ID})'>" +
+      const string propertyURL = "<a href='javascript:doOperation(\"editProperty\", {ID}, {PROPERTY.ID})'>" +
                                  "<b id='ancRecordingActProperty_{ID}_{PROPERTY.ID}'>{PROPERTY.TRACT}</b></a>";
 
       const string optionsCombo = "<select id='cboRecordingOptions_{ID}_{PROPERTY.ID}' class='selectBox' style='width:148px'>" +
@@ -408,14 +408,12 @@ namespace Empiria.Land.UI {
       if (tractItem.Property.IsEmptyInstance) {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "&nbsp;");
       } else if (antecedent.Equals(InformationAct.Empty)) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Sin antecedente");
-      } else if (!antecedent.Recording.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Sin antecedente registral");
+      } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Predio inscrito en: " +
-                                                          antecedent.Recording.FullNumber);
-      } else if (antecedent.Recording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + antecedent.Id + " " +
-                                                          recordingAct.Document.Id  + " " + antecedent.Document.Id + " " +
-                                                          antecedent.Document.UID);
+                                                          antecedent.PhysicalRecording.FullNumber);
+      } else if (antecedent.PhysicalRecording.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + antecedent.Document.UID);
       }
 
       temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", recordingAct.Id.ToString());
@@ -443,10 +441,10 @@ namespace Empiria.Land.UI {
 
       temp = temp.Replace("{ID}", recordingAct.Id.ToString());
       temp = temp.Replace("{PROPERTY.ID}", tractItem.Property.Id.ToString());
-      temp = temp.Replace("{RECORDING.ID}", recordingAct.Recording.Id.ToString());
-      temp = temp.Replace("{RECORDING.BOOK}", recordingAct.Recording.RecordingBook.AsText);
-      temp = temp.Replace("{RECORDING.BOOK.ID}", recordingAct.Recording.RecordingBook.Id.ToString());
-      temp = temp.Replace("{RECORDING.NUMBER}", recordingAct.Recording.Number);
+      temp = temp.Replace("{RECORDING.ID}", recordingAct.PhysicalRecording.Id.ToString());
+      temp = temp.Replace("{RECORDING.BOOK}", recordingAct.PhysicalRecording.RecordingBook.AsText);
+      temp = temp.Replace("{RECORDING.BOOK.ID}", recordingAct.PhysicalRecording.RecordingBook.Id.ToString());
+      temp = temp.Replace("{RECORDING.NUMBER}", recordingAct.PhysicalRecording.Number);
 
       return temp;
     }
@@ -529,19 +527,19 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{ANTECEDENT.TAG}", "*Anotación*");
         temp = temp.Replace("{ANTECEDENT.STATUS}", String.Empty);
       } else {
-        temp = temp.Replace("{ANTECEDENT.TAG}", "Antecedente: " + antecedent.Recording.FullNumber);
+        temp = temp.Replace("{ANTECEDENT.TAG}", "Antecedente: " + antecedent.PhysicalRecording.FullNumber);
         temp = temp.Replace("{ANTECEDENT.STATUS}", "(" + antecedent.StatusName + ")");
       }
 
       if (propertyEventIndex == 0) {
         temp = temp.Replace("{OPTIONS.COMBO}", optionsCombo);
-        if (recordingAct.Recording.RecordingActs.Count > 1) {
+        if (recordingAct.PhysicalRecording.RecordingActs.Count > 1) {
           if (recordingActIndex != 0) {
             temp = temp.Replace("{INCREMENT_INDEX}", "<option value='upwardRecordingAct'>Subir en la secuencia</option>");
           } else {
             temp = temp.Replace("{INCREMENT_INDEX}", String.Empty);
           }
-          if (recordingActIndex != recordingAct.Recording.RecordingActs.Count - 1) {
+          if (recordingActIndex != recordingAct.PhysicalRecording.RecordingActs.Count - 1) {
             temp = temp.Replace("{DECREMENT_INDEX}", "<option value='downwardRecordingAct'>Bajar en la secuencia</option>");
           } else {
             temp = temp.Replace("{DECREMENT_INDEX}", String.Empty);
@@ -555,10 +553,10 @@ namespace Empiria.Land.UI {
       }
       temp = temp.Replace("{ID}", recordingAct.Id.ToString());
       temp = temp.Replace("{PROPERTY.ID}", propertyEvent.Property.Id.ToString());
-      temp = temp.Replace("{RECORDING.ID}", recordingAct.Recording.Id.ToString());
-      temp = temp.Replace("{RECORDING.BOOK}", recordingAct.Recording.RecordingBook.AsText);
-      temp = temp.Replace("{RECORDING.BOOK.ID}", recordingAct.Recording.RecordingBook.Id.ToString());
-      temp = temp.Replace("{RECORDING.NUMBER}", recordingAct.Recording.Number);
+      temp = temp.Replace("{RECORDING.ID}", recordingAct.PhysicalRecording.Id.ToString());
+      temp = temp.Replace("{RECORDING.BOOK}", recordingAct.PhysicalRecording.RecordingBook.AsText);
+      temp = temp.Replace("{RECORDING.BOOK.ID}", recordingAct.PhysicalRecording.RecordingBook.Id.ToString());
+      temp = temp.Replace("{RECORDING.NUMBER}", recordingAct.PhysicalRecording.Number);
       return temp;
     }
 

@@ -147,10 +147,16 @@ namespace Empiria.Land.Registration {
       return base.CreateObject<RecordingAct>();
     }
 
+    public string AppliesTo() {
+      var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
+
+      return json.Get<string>("AppliesTo");
+    }
+
     public FixedList<RecordingActType> GetAppliesToRecordingActTypesList() {
       var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
 
-      var list = json.GetList<RecordingActType>("AppliesTo");
+      var list = json.GetList<RecordingActType>("RecordingActTypes");
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
       return list.ToFixedList();

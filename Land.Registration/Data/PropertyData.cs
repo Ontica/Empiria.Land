@@ -111,9 +111,9 @@ namespace Empiria.Land.Registration.Data {
         case PartyFilterType.ByKeywords:
           return GetParties(partyType, keywords);
         case PartyFilterType.OnInscription:
-          return GetPartiesOnRecording(partyType, recordingAct.Recording, keywords);
+          return GetPartiesOnRecording(partyType, recordingAct.PhysicalRecording, keywords);
         case PartyFilterType.OnRecordingBook:
-          return GetPartiesOnRecordingBook(partyType, recordingAct.Recording.RecordingBook, keywords);
+          return GetPartiesOnRecordingBook(partyType, recordingAct.PhysicalRecording.RecordingBook, keywords);
         case PartyFilterType.Involved:
           return GetInvolvedParties(partyType, recordingAct, keywords);
         default:

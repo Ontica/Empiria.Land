@@ -11,6 +11,8 @@
 using System;
 using System.Collections.Generic;
 
+using Empiria.Json;
+
 namespace Empiria.Land.Registration {
 
   /// <summary>Describes a property recording condition that serves as a rule for
@@ -28,31 +30,19 @@ namespace Empiria.Land.Registration {
       this.UseNumbering = false;
     }
 
-    static internal PropertyRule Parse(IDictionary<string, object> json) {
+    static internal PropertyRule Parse(JsonObject json) {
       PropertyRule rule = new PropertyRule();
 
-      if (json.ContainsKey("Expire")) {
-        rule.Expire = (bool) json["Expire"];
-      }
-      if (json.ContainsKey("IsInternalDivision")) {
-        rule.IsInternalDivision = (bool) json["IsInternalDivision"];
-      }
-      if (json.ContainsKey("Name")) {
-        rule.Name = (string) json["Name"];
-      }
-      if (json.ContainsKey("PropertyCount")) {
-        rule.PropertyCount = RecordingRule.ParsePropertyCount(Convert.ToString(json["PropertyCount"]));
-      }
-      if (json.ContainsKey("RecordableObjectStatus")) {
-        rule.RecordableObjectStatus = (PropertyRecordingStatus) Enum.Parse(typeof(PropertyRecordingStatus),
-                                                                           (string) json["RecordableObjectStatus"]);
-      }
-      if (json.ContainsKey("UseNumbering")) {
-        rule.IsInternalDivision = (bool) json["UseNumbering"];
-      }
+      rule.Expire = json.Get<bool>("Expire", false);
+      rule.IsInternalDivision = json.Get<bool>("IsInternalDivision", false);
+      rule.Name = json.Get<string>("Name", String.Empty);
+      rule.PropertyCount = RecordingRule.ParsePropertyCount(json.Get<string>("PropertyCount", String.Empty));
+      rule.RecordableObjectStatus = json.Get<PropertyRecordingStatus>("RecordableObjectStatus",
+                                                                      PropertyRecordingStatus.Undefined);
+      rule.UseNumbering = json.Get<bool>("UseNumbering", false);
+
       return rule;
     }
-
 
     #endregion Constructors and parsers
 

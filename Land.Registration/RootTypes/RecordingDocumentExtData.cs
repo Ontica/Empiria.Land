@@ -146,8 +146,8 @@ namespace Empiria.Land.Registration {
       this.MainWitnessPosition = json.Get<RoleType>("WitnessRoleId", RoleType.Empty);
     }
 
-    public JsonRoot GetJson(RecordingDocument document) {
-      var json = new JsonRoot();
+    public JsonObject GetJson(RecordingDocument document) {
+      var json = new JsonObject();
 
       switch (document.DocumentType.Id) {
         case 2410:
