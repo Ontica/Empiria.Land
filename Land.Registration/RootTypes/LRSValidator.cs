@@ -126,9 +126,10 @@ namespace Empiria.Land.Registration {
     }
 
     static public LandRegistrationException ValidateRecordingNumber(RecordingBook recordingBook, Recording recording,
-                                                                    int recordingNumber, string bisSuffixRecordingNumber,
+                                                                    int recordingNumber, string recordingSubNumber,
+                                                                    string bisSuffixRecordingNumber,
                                                                     int imageStartIndex, int imageEndIndex) {
-      string recordingNo = recordingBook.BuildRecordingNumber(recordingNumber, bisSuffixRecordingNumber);
+      string recordingNo = recordingBook.BuildRecordingNumber(recordingNumber, recordingSubNumber, bisSuffixRecordingNumber);
       string filter = "RecordingId <> " + recording.Id + " AND RecordingNumber = '" + recordingNo + "'";
       Recording findResult = RecordingBooksData.FindRecording(recordingBook, filter);
 

@@ -21,6 +21,16 @@ namespace Empiria.Land.Registration.Data {
 
     #region Internal methods
 
+    internal static Property[] GetPropertyPartitions(Property property) {
+      if (property.IsNew || property.IsEmptyInstance) {
+        return new Property[0];
+      }
+      DataOperation operation = DataOperation.Parse("qryLRSPropertyPartitions", property.Id);
+
+      return DataReader.GetList<Property>(operation,
+                                          (x) => BaseObject.ParseList<Property>(x)).ToArray();
+    }
+
     static internal DataRow GetPropertyWithUID(string uniqueID) {
       DataOperation operation = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
 
@@ -190,7 +200,7 @@ namespace Empiria.Land.Registration.Data {
     static internal int WriteProperty(Property o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
                                           o.Name, o.PropertyKind.Value, o.Notes, o.AntecedentNotes,
-                                          o.AsText, o.Location.ToSearchVector(), o.Location.ToJson(),
+                                          o.AsText, o.Location.ToSearchVector(), o.ExtensionData.ToString(),
                                           o.Keywords, o.IsPartitionOf.Id, o.PartitionNo, o.MergedInto.Id,
                                           o.PostingTime, o.PostedBy.Id, (char) o.Status,
                                           o.Integrity.GetUpdatedHashCode());

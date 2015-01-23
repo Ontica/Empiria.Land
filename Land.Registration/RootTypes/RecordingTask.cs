@@ -18,6 +18,13 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {
 
+  public enum LotSubdivisionType {
+    None = 'N',
+    Partial = 'P',
+    Last = 'L',
+    Full = 'F'
+  }
+
   public enum PropertyRecordingType {
     actAppliesToOtherRecordingAct,
     actNotApplyToProperty,
@@ -38,7 +45,9 @@ namespace Empiria.Land.Registration {
                          int recorderOfficeId = -1, int precedentRecordingBookId = -1,
                          int precedentRecordingId = -1, int targetResourceId = -1,
                          int targetRecordingActId = -1, int quickAddRecordingNumber = -1,
-                         string quickAddBisRecordingSuffixTag = "") {
+                         string quickAddRecordingSubnumber = "", string quickAddRecordingSuffixTag = "",
+                         LotSubdivisionType lotSubdivisionType = Registration.LotSubdivisionType.None,
+                         int lotNumber = 0, int totalLots = 0) {
       this.Transaction = LRSTransaction.Parse(transactionId);
       this.Document = RecordingDocument.Parse(documentId);
       this.RecorderOffice = RecorderOffice.Parse(recorderOfficeId);
@@ -61,7 +70,8 @@ namespace Empiria.Land.Registration {
       }
 
       this.QuickAddRecordingNumber = quickAddRecordingNumber;
-      this.QuickAddBisRecordingSuffixTag = quickAddBisRecordingSuffixTag;
+      this.QuickAddRecordingSubNumber = quickAddRecordingSubnumber;
+      this.QuickAddRecordingSuffixTag = quickAddRecordingSuffixTag;
 
       this.RecordingRule = RecordingActType.RecordingRule;
 
@@ -70,6 +80,9 @@ namespace Empiria.Land.Registration {
       } else if (!this.PrecedentRecordingBook.IsEmptyInstance) {
         RecorderOffice = this.PrecedentRecordingBook.RecorderOffice;
       }
+      this.LotSubdivisionType = lotSubdivisionType;
+      this.LotNumber = lotNumber;
+      this.TotalLots = totalLots;
     }
 
     #endregion Constructors and parsers
@@ -131,12 +144,32 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    public string QuickAddBisRecordingSuffixTag {
+    public string QuickAddRecordingSubNumber {
+      get;
+      private set;
+    }
+
+    public string QuickAddRecordingSuffixTag {
       get;
       private set;
     }
 
     public RecordingRule RecordingRule {
+      get;
+      private set;
+    }
+
+    public LotSubdivisionType LotSubdivisionType {
+      get;
+      private set;
+    }
+
+    public int LotNumber {
+      get;
+      private set;
+    }
+
+    public int TotalLots {
       get;
       private set;
     }

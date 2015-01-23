@@ -180,14 +180,17 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public Recording CreateQuickRecording(int recordingNumber, string bisSuffixTag) {
-      return new Recording(this, this.BuildRecordingNumber(recordingNumber, bisSuffixTag));
+    public Recording CreateQuickRecording(int recordingNumber, string subNumber, string bisSuffixTag) {
+      return new Recording(this, this.BuildRecordingNumber(recordingNumber, subNumber, bisSuffixTag));
     }
 
-    public string BuildRecordingNumber(int recordingNumber, string bisSuffixTag) {
+    public string BuildRecordingNumber(int recordingNumber, string subNumber, string bisSuffixTag) {
       string temp = recordingNumber.ToString("0000");
 
-      if (bisSuffixTag != null && bisSuffixTag.Length != 0) {
+      if (!String.IsNullOrWhiteSpace(subNumber)) {
+        temp += subNumber;
+      }
+      if (!String.IsNullOrWhiteSpace(bisSuffixTag)) {
         temp += bisSuffixTag;
       }
       return temp;
@@ -201,8 +204,10 @@ namespace Empiria.Land.Registration {
     //  }
     //}
 
-    public Recording FindRecording(int recordingNumber, string bisSuffixTag) {
-      return Recordings.Find((x) => x.Number == this.BuildRecordingNumber(recordingNumber, bisSuffixTag));
+    public Recording FindRecording(int recordingNumber, string recordingSubNumber, string bisSuffixTag) {
+      string recordingNo = this.BuildRecordingNumber(recordingNumber, recordingSubNumber, bisSuffixTag);
+
+      return Recordings.Find((x) => x.Number == recordingNo);
     }
 
     public Recording GetRecording(int recordingId) {

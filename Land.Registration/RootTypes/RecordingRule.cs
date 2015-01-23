@@ -96,7 +96,7 @@ namespace Empiria.Land.Registration {
     private JsonObject _json = null;
     public JsonObject ToJson() {
       if (_json == null) {
-        _json = ConvertToJson();          
+        _json = ConvertToJson();
       }
       return _json;
     }
@@ -112,7 +112,7 @@ namespace Empiria.Land.Registration {
       json.Add(new JsonItem("PropertyRecordingStatus", this.PropertyRecordingStatus.ToString()));
       json.Add(new JsonItem("SpecialCase", this.SpecialCase));
       json.Add(new JsonItem("IsActive", this.IsActive));
-      
+
       return json;
     }
 

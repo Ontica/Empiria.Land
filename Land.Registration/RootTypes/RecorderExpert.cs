@@ -100,18 +100,6 @@ namespace Empiria.Land.Registration {
       return this.Task.Document.AppendRecordingActFromTask(this.Task);
     }
 
-    //private RecordingAct DoPropertyAnnotation() {
-    //  if (this.NeedCreatePrecedentRecording) {
-    //    this.CreatePrecedentRecording();
-    //  } else if (this.NeedCreatePrecedentRecordingAct) {
-    //    this.CreatePrecedentRecordingAct();
-    //  }
-    //  var lastRecording = Task.TargetProperty.LastRecordingAct.Recording;
-
-    //  return lastRecording.CreateAnnotation(Task.Transaction, Task.RecordingActType,
-    //                                        Task.TargetProperty);
-    //}
-
     private RecordingAct DoPropertyRecording() {
       if (this.NeedCreatePrecedentRecording) {
         this.CreatePrecedentRecording();
@@ -151,10 +139,22 @@ namespace Empiria.Land.Registration {
 
       var document = new RecordingDocument(RecordingDocumentType.Empty);
       Recording recording = Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
-                                                                             Task.QuickAddBisRecordingSuffixTag);
-      var recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property, recording);
+                                                                             Task.QuickAddRecordingSubNumber,
+                                                                             Task.QuickAddRecordingSuffixTag);
 
-      Task.TargetProperty = property;
+
+      RecordingAct recordingAct = null;
+      if (Task.LotSubdivisionType == LotSubdivisionType.Full) {
+        recordingAct = document.AppendRecordingAct(RecordingActType.Parse(2374), property, recording);    // lotification
+      } else {
+        recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property, recording);
+      }
+      if (Task.LotSubdivisionType != LotSubdivisionType.None) {
+        Task.TargetProperty = property.Subdivide(Task.LotSubdivisionType, Task.LotNumber, Task.TotalLots);
+      } else {
+        Task.TargetProperty = property;
+      }
+
       Task.PrecedentRecording = recording;
       if (Task.RecordingRule.AppliesTo == RecordingRuleApplication.RecordingAct) {
         Task.TargetRecordingAct = recordingAct;
