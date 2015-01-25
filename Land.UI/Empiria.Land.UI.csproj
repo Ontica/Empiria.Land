@@ -113,6 +113,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Empiria.Land.UI.AssemblyInfo.cs" />
+    <Compile Include="RootTypes\RecordingActEditorControlBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="RootTypes\LRSDocumentEditorControl.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>

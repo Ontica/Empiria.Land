@@ -161,7 +161,7 @@ namespace Empiria.Land.UI {
     static public void LoadDomainRecordingSections(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
                                                    string defaultValue = "") {
       string header = (comboControlUseMode == ComboControlUseMode.ObjectCreation) ?
-                              "( Distrito / Sección )" : "( Todas los Distritos )";
+                              "( Distrito / Sección )" : "( Todos los Distritos )";
 
       var list = GeneralList.Parse("LRSDomainTraslativeSection.Combo.List");
 
