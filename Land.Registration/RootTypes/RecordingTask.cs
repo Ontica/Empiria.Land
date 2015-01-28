@@ -14,16 +14,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Empiria.DataTypes;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {
-
-  public enum LotSubdivisionType {
-    None = 'N',
-    Partial = 'P',
-    Last = 'L',
-    Full = 'F'
-  }
 
   public enum PropertyRecordingType {
     actAppliesToOtherRecordingAct,
@@ -46,8 +40,7 @@ namespace Empiria.Land.Registration {
                          int precedentRecordingId = -1, int targetResourceId = -1,
                          int targetRecordingActId = -1, int quickAddRecordingNumber = -1,
                          string quickAddRecordingSubnumber = "", string quickAddRecordingSuffixTag = "",
-                         LotSubdivisionType lotSubdivisionType = Registration.LotSubdivisionType.None,
-                         int lotNumber = 0, int totalLots = 0) {
+                         PropertyPartition partition = null) {
       this.Transaction = LRSTransaction.Parse(transactionId);
       this.Document = RecordingDocument.Parse(documentId);
       this.RecorderOffice = RecorderOffice.Parse(recorderOfficeId);
@@ -80,9 +73,7 @@ namespace Empiria.Land.Registration {
       } else if (!this.PrecedentRecordingBook.IsEmptyInstance) {
         RecorderOffice = this.PrecedentRecordingBook.RecorderOffice;
       }
-      this.LotSubdivisionType = lotSubdivisionType;
-      this.LotNumber = lotNumber;
-      this.TotalLots = totalLots;
+      this.PartitionInfo = partition;
     }
 
     #endregion Constructors and parsers
@@ -159,17 +150,7 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    public LotSubdivisionType LotSubdivisionType {
-      get;
-      private set;
-    }
-
-    public int LotNumber {
-      get;
-      private set;
-    }
-
-    public int TotalLots {
+    public PropertyPartition PartitionInfo {
       get;
       private set;
     }

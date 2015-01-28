@@ -200,10 +200,9 @@ namespace Empiria.Land.Registration.Data {
     static internal int WriteProperty(Property o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
                                           o.Name, o.PropertyKind.Value, o.Notes, o.AntecedentNotes,
-                                          o.AsText, o.Location.ToSearchVector(), o.ExtensionData.ToString(),
-                                          o.Keywords, o.IsPartitionOf.Id, o.PartitionNo, o.MergedInto.Id,
-                                          o.PostingTime, o.PostedBy.Id, (char) o.Status,
-                                          o.Integrity.GetUpdatedHashCode());
+                                          o.AsText, o.Location.ToSearchVector(), o.ExtensionData.ToString(), o.Keywords,
+                                          o.LotSize, o.LotSizeUnit.Id, o.IsPartitionOf.Id, o.PartitionNo, o.MergedInto.Id,
+                                          o.PostingTime, o.PostedBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 

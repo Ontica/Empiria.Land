@@ -49,9 +49,7 @@ namespace Empiria.Land.UI {
 
     public void Initialize(LRSTransaction transaction, RecordingDocument document) {
       Assertion.AssertObject(transaction, "transaction");
-
       Assertion.AssertObject(document, "document");
-      Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance.");
 
       this.Transaction = transaction;
       this.Document = document;

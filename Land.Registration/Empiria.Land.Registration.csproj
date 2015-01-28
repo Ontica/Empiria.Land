@@ -128,6 +128,7 @@
     <Compile Include="RootTypes\RecordingDocumentExtData.cs" />
     <Compile Include="RootTypes\RecordingExtData.cs" />
     <Compile Include="RootTypes\PropertyKind.cs" />
+    <Compile Include="RootTypes\PropertyPartition.cs" />
     <Compile Include="RootTypes\TractIndexItemExtData.cs" />
     <Compile Include="RootTypes\TractIndexItem.cs" />
     <Compile Include="RootTypes\RecordingActExtData.cs" />

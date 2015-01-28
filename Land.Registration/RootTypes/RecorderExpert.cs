@@ -144,13 +144,13 @@ namespace Empiria.Land.Registration {
 
 
       RecordingAct recordingAct = null;
-      if (Task.LotSubdivisionType == LotSubdivisionType.Full) {
+      if (Task.PartitionInfo.PartitionType == PropertyPartitionType.Full) {
         recordingAct = document.AppendRecordingAct(RecordingActType.Parse(2374), property, recording);    // lotification
       } else {
         recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property, recording);
       }
-      if (Task.LotSubdivisionType != LotSubdivisionType.None) {
-        Task.TargetProperty = property.Subdivide(Task.LotSubdivisionType, Task.LotNumber, Task.TotalLots);
+      if (Task.PartitionInfo.PartitionType != PropertyPartitionType.None) {
+        Task.TargetProperty = property.Subdivide(Task.PartitionInfo);
       } else {
         Task.TargetProperty = property;
       }

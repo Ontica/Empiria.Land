@@ -9,6 +9,7 @@
 *                                                                                                             *
 ********************************** Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Collections;
 using System.Web.UI.WebControls;
 
 using Empiria.Land.Registration;
@@ -21,7 +22,7 @@ namespace Empiria.Land.UI {
 
     #region Public methods
 
-    static public PagedDataSource GetPagedDataSource(System.Collections.IEnumerable view, int pageSize, int pageIndex) {
+    static public PagedDataSource GetPagedDataSource(IEnumerable view, int pageSize, int pageIndex) {
       PagedDataSource pagedDataSource = new PagedDataSource();
       pagedDataSource.DataSource = view;
 
@@ -44,7 +45,8 @@ namespace Empiria.Land.UI {
       }
     }
 
-    static private string GetAnnotationPartiesGrid(RecordingAct recordingAct, FixedList<RecordingActParty> annotationParties, bool readOnly) {
+    static private string GetAnnotationPartiesGrid(RecordingAct recordingAct,
+                                                   FixedList<RecordingActParty> annotationParties, bool readOnly) {
       string html = String.Empty;
       string temp = String.Empty;
 
@@ -74,7 +76,8 @@ namespace Empiria.Land.UI {
       return html;
     }
 
-    static private string GetDomainActPartiesGrid(RecordingAct recordingAct, FixedList<RecordingActParty> domainParties, bool readOnly) {
+    static private string GetDomainActPartiesGrid(RecordingAct recordingAct,
+                                                  FixedList<RecordingActParty> domainParties, bool readOnly) {
       string html = String.Empty;
       string temp = String.Empty;
       for (int i = 0; i < domainParties.Count; i++) {
@@ -407,6 +410,11 @@ namespace Empiria.Land.UI {
       RecordingAct antecedent = tractItem.Property.GetDomainAntecedent(recordingAct);
       if (tractItem.Property.IsEmptyInstance) {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "&nbsp;");
+      } else if (!tractItem.Property.IsPartitionOf.IsEmptyInstance) {
+        var partitionAntecedent = tractItem.Property.IsPartitionOf.GetDomainAntecedent(recordingAct);
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Fracción " + tractItem.Property.PartitionNo +
+                   (tractItem.Property.IsPartitionOf.MergedInto.Equals(tractItem.Property) ? " y última" : String.Empty)
+                   + " del predio inscrito en " + partitionAntecedent.PhysicalRecording.FullNumber);
       } else if (antecedent.Equals(InformationAct.Empty)) {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Sin antecedente registral");
       } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {

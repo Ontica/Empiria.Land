@@ -12,6 +12,7 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
+using Empiria.DataTypes;
 using Empiria.Geography;
 using Empiria.Json;
 using Empiria.Security;
@@ -94,12 +95,11 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+    [DataField("PropertyExtData")]
+    private JsonObject _extensionData = new JsonObject();
     public JsonObject ExtensionData {
-      get {
-        var jsonObject = new JsonObject();
-
-        return jsonObject;
-      }
+      get { return _extensionData; }
+      private set { _extensionData = value; }
     }
 
     public CadastralInfo CadastralData {
@@ -112,6 +112,18 @@ namespace Empiria.Land.Registration {
         return EmpiriaString.BuildKeywords(this.UID, this.CadastralData.CadastralCode, this.Name,
                                            this.PartitionNo, this.Location.Keywords, this.PropertyKind.Value);
       }
+    }
+
+    [DataField("LotSize")]
+    public decimal LotSize {
+      get;
+      private set;
+    }
+
+    [DataField("LotSizeUnitId")]
+    public Unit LotSizeUnit {
+      get;
+      private set;
     }
 
     [DataField("PartitionOfId")]
@@ -340,23 +352,22 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(this.UID.Length != 0, "Property UniqueIdentifier has not been generated.");
     }
 
-    internal Property Subdivide(LotSubdivisionType lotSubdivisionType, int lotNumber, int totalLots) {
-      Assertion.Assert(lotNumber >= 1, "lotNumber should be greater than zero.");
-      Assertion.Assert(totalLots >= 1, "totalLots should be greater than zero.");
+    internal Property Subdivide(PropertyPartition partitionInfo) {
       Assertion.Assert(!this.IsNew, "New properties can't be subdivided.");
 
-      Property[] partitions = new Property[0];
-      switch (lotSubdivisionType) {
-        case LotSubdivisionType.Partial:
-          partitions = this.CreateRemainingPartitions(totalLots);
+      switch (partitionInfo.PartitionType) {
+        case PropertyPartitionType.Partial:
+          return this.CreatePartition(partitionInfo);
+        case PropertyPartitionType.Last:
+          var partition = this.CreatePartition(partitionInfo);
+          this.MergedInto = partition;
           this.Save();
-          return partitions[lotNumber - 1];
-        case LotSubdivisionType.Last:
-        case LotSubdivisionType.Full:
-          partitions = this.CreateRemainingPartitions(totalLots);
+          return partition;
+        case PropertyPartitionType.Full:
+          var partitions = this.CreateAllPartitions(partitionInfo);
           this.MergedInto = partitions[partitions.Length - 1];
           this.Save();
-          return partitions[lotNumber - 1];
+          return partitions[partitionInfo.PartitionNo - 1];
         default:
           throw Assertion.AssertNoReachThisCode();
       }
@@ -366,22 +377,38 @@ namespace Empiria.Land.Registration {
       return PropertyData.GetPropertyPartitions(this);
     }
 
-    private Property[] CreateRemainingPartitions(int totalLots) {
-      Property[] currentPartitions = this.GetPartitions();
-      Assertion.Assert(currentPartitions.Length < totalLots,
-                       "Current partitions are greater or equal than the number of requested lots.");
+    private Property CreatePartition(PropertyPartition partitionInfo) {
+      //Property[] currentPartitions = this.GetPartitions();
+      //Assertion.Assert(currentPartitions.Length < lotNumber,
+      //                 "Current property partitions are greater or equal than the requested fraction number.");
+      Assertion.Assert(this.MergedInto.IsEmptyInstance,
+                       "Current property have been merged into one or more properties.");
 
-      Property[] partitions = new Property[totalLots];
-      for (int i = 0; i < totalLots; i++) {
+      var lot = new Property();
+      lot.IsPartitionOf = this;
+      if (partitionInfo.PartitionNo != 0) {
+        lot.PartitionNo = partitionInfo.PartitionNo.ToString("00");
+      } else {
+        lot.PartitionNo = "sin número";
+      }
+      lot.LotSize = partitionInfo.Size.Amount;
+      lot.LotSizeUnit = partitionInfo.Size.Unit;
+      lot.ExtensionData.Add("Partition", partitionInfo.ToJson());
+      lot.Save();
+
+      return lot;
+    }
+
+    private Property[] CreateAllPartitions(PropertyPartition partitionInfo) {
+      Property[] currentPartitions = this.GetPartitions();
+      Assertion.Assert(currentPartitions.Length == 0, "Property already has partitions or lots.");
+
+      Property[] partitions = new Property[partitionInfo.TotalPartitions];
+      for (int i = 0; i < partitionInfo.TotalPartitions; i++) {
         Property lot = Property.Empty;
-        if (i < currentPartitions.Length) {
-          lot = currentPartitions[i];
-        } else {
-          lot = new Property();
-          lot.IsPartitionOf = this;
-          lot.PartitionNo = (i + 1).ToString("00");
-          lot.Save();
-        }
+        lot.IsPartitionOf = this;
+        lot.PartitionNo = (i + 1).ToString("00");
+        lot.Save();
         partitions[i] = lot;
       }
       return partitions;
