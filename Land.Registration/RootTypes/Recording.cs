@@ -78,7 +78,6 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-
     public RecordingDocument Document {
       get {
         if (recordingActList.Value.Count == 0) {

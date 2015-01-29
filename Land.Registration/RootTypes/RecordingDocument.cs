@@ -238,35 +238,26 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public bool IsEmptyDocument {
+      get {
+        return (this.DocumentType == RecordingDocumentType.Empty);
+      }
+    }
+
     #endregion Public properties
 
     #region Public methods
 
-    internal RecordingAct AppendRecordingActFromTask(RecordingTask task) {
-      Assertion.AssertObject(task, "task");
-
-      if (this.IsNew) {
-        this.Save();
-      }
-      var recordingAct = RecordingAct.Create(task.RecordingActType, this, task.TargetProperty,
-                                             task.TargetRecordingAct, Recording.Empty,
-                                             this.RecordingActs.Count);
-      recordingActList.Value.Add(recordingAct);
-
-      this.AuthorizationTime = DateTime.Now;
-      this.Save();
-      return recordingAct;
-    }
-
-    public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Property resource) {
-      return this.AppendRecordingAct(recordingActType, resource, Recording.Empty);
-    }
-
     public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Property resource,
-                                           Recording recording) {
+                                           RecordingAct amendmentOf = null,
+                                           Recording physicalRecording = null) {
+      amendmentOf = (amendmentOf != null) ? amendmentOf : InformationAct.Empty;
+      physicalRecording = (physicalRecording != null) ? physicalRecording : Recording.Empty;
+
       Assertion.AssertObject(recordingActType, "recordingActType");
       Assertion.AssertObject(resource, "resource");
-      Assertion.AssertObject(recording, "recording");
+      Assertion.AssertObject(amendmentOf, "amendmentOf");
+      Assertion.AssertObject(physicalRecording, "physicalRecording");
 
       Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance");
       Assertion.Assert(this.Status != RecordableObjectStatus.Closed,
@@ -275,9 +266,9 @@ namespace Empiria.Land.Registration {
       if (this.IsNew) {
         this.Save();
       }
-      var recordingAct = RecordingAct.Create(recordingActType, this, resource,
-                                             InformationAct.Empty, recording,
-                                             this.RecordingActs.Count);
+
+      var recordingAct = RecordingAct.Create(recordingActType, this, resource, amendmentOf,
+                                             this.RecordingActs.Count, physicalRecording);
       recordingActList.Value.Add(recordingAct);
 
       this.AuthorizationTime = DateTime.Now;
@@ -315,9 +306,10 @@ namespace Empiria.Land.Registration {
 
       recordingAct.Delete();
       recordingActList.Value.Remove(recordingAct);
-      //if (generatesRecording) {
-      //  RemoveRecording();
-      //}
+
+      if (this.RecordingActs.Count == 0 && this.IsEmptyDocument) {
+        this.Delete();
+      }
     }
 
     public void UpwardRecordingAct(RecordingAct recordingAct) {
@@ -366,6 +358,11 @@ namespace Empiria.Land.Registration {
         this.UID = DocumentsData.GenerateDocumentUID();
       }
       RecordingBooksData.WriteRecordingDocument(this);
+    }
+
+    private void Delete() {
+      this.Status = RecordableObjectStatus.Deleted;
+      this.Save();
     }
 
     #endregion Public methods

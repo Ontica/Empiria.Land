@@ -125,6 +125,7 @@
     <Compile Include="RootTypes\CadastralInfo.cs" />
     <Compile Include="RootTypes\Certificate.cs" />
     <Compile Include="RootTypes\RecordableObjectStatus.cs" />
+    <Compile Include="RootTypes\RecordingActInfo.cs" />
     <Compile Include="RootTypes\RecordingDocumentExtData.cs" />
     <Compile Include="RootTypes\RecordingExtData.cs" />
     <Compile Include="RootTypes\PropertyKind.cs" />

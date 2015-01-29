@@ -385,12 +385,12 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{RECORDING.ACT.INDEX}", counter.ToString("00"));
         if (recordingAct.RecordingActType.Autoregister) {
           temp = temp.Replace("{RECORDING.ACT.URL}", readonlyURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
-                                                                         recordingAct.RecordingActType.DisplayName));
+                                                                         recordingAct.DisplayName));
         } else {
           temp = temp.Replace("{RECORDING.ACT.URL}", editableURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
-                                                                         recordingAct.RecordingActType.DisplayName));
+                                                                         recordingAct.DisplayName));
         }
-        temp = temp.Replace("{RECORDING.ACT.DISPLAY.NAME}", recordingAct.RecordingActType.DisplayName);
+        temp = temp.Replace("{RECORDING.ACT.DISPLAY.NAME}", recordingAct.DisplayName);
         temp = temp.Replace("{RECORDING.ACT.STATUS}", recordingAct.StatusName);
       } else {
         temp = temp.Replace("{RECORDING.ACT.INDEX}", "<i>" + counter.ToString("00") + "</i>");
@@ -408,7 +408,11 @@ namespace Empiria.Land.UI {
       }
 
       RecordingAct antecedent = tractItem.Property.GetDomainAntecedent(recordingAct);
-      if (tractItem.Property.IsEmptyInstance) {
+      if (recordingAct.IsAmendment && !recordingAct.AmendmentOf.PhysicalRecording.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", recordingAct.AmendmentOf.PhysicalRecording.FullNumber);
+      } else if (recordingAct.IsAmendment && recordingAct.AmendmentOf.PhysicalRecording.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + recordingAct.AmendmentOf.Document.UID);
+      } else if (tractItem.Property.IsEmptyInstance) {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "&nbsp;");
       } else if (!tractItem.Property.IsPartitionOf.IsEmptyInstance) {
         var partitionAntecedent = tractItem.Property.IsPartitionOf.GetDomainAntecedent(recordingAct);
@@ -430,12 +434,14 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{OPTIONS.COMBO}", optionsCombo);
         if (recordingActsCount > 1) {
           if (recordingActIndex != 0) {
-            temp = temp.Replace("{INCREMENT_INDEX}", "<option value='upwardRecordingAct'>Subir en la secuencia</option>");
+            temp = temp.Replace("{INCREMENT_INDEX}", 
+                   "<option value='upwardRecordingAct'>Subir en la secuencia</option>");
           } else {
             temp = temp.Replace("{INCREMENT_INDEX}", String.Empty);
           }
           if (recordingActIndex != recordingActsCount - 1) {
-            temp = temp.Replace("{DECREMENT_INDEX}", "<option value='downwardRecordingAct'>Bajar en la secuencia</option>");
+            temp = temp.Replace("{DECREMENT_INDEX}",
+                   "<option value='downwardRecordingAct'>Bajar en la secuencia</option>");
           } else {
             temp = temp.Replace("{DECREMENT_INDEX}", String.Empty);
           }

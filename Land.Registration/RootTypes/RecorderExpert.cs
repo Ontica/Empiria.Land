@@ -43,25 +43,25 @@ namespace Empiria.Land.Registration {
       get {
         return (Task.RecordingRule.AppliesTo == RecordingRuleApplication.Property &&
                 Task.PropertyRecordingType == PropertyRecordingType.createProperty &&
-                Task.TargetProperty.IsEmptyInstance);
+                Task.PrecedentProperty.IsEmptyInstance);
       }
     }
 
-    private bool NeedCreatePrecedentRecording {
+    private bool NeedCreateResourceOnNewPhysicalRecording {
       get {
-        return (Task.PropertyRecordingType == PropertyRecordingType.selectProperty &&
+        return ((Task.PropertyRecordingType != PropertyRecordingType.createProperty) &&
                 !Task.PrecedentRecordingBook.IsEmptyInstance &&
                 Task.PrecedentRecording.IsEmptyInstance &&
                 Task.QuickAddRecordingNumber != -1);
       }
     }
 
-    private bool NeedCreatePrecedentRecordingAct {
+    private bool NeedCreateAdditionalResourceOnPhysicalRecording {
       get {
-        return (Task.PropertyRecordingType == PropertyRecordingType.selectProperty &&
+        return ((Task.PropertyRecordingType != PropertyRecordingType.createProperty) &&
                 !Task.PrecedentRecordingBook.IsEmptyInstance &&
                 !Task.PrecedentRecording.IsEmptyInstance &&
-                Task.TargetProperty.IsNew);
+                Task.PrecedentProperty.IsNew);
       }
     }
 
@@ -75,7 +75,7 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public void AssertValidTask() {
-      if (NeedCreatePrecedentRecordingAct) {
+      if (NeedCreateAdditionalResourceOnPhysicalRecording) {
         throw new NotImplementedException();
 
       //  if (Task.PrecedentRecording.PresentationTime > Task.Transaction.PresentationTime) {
@@ -91,47 +91,54 @@ namespace Empiria.Land.Registration {
 
     #region Recording methods
 
-    private RecordingAct DoNoneResourceRecording() {
-      Assertion.Assert(this.Task.TargetRecordingAct.IsEmptyInstance,
-                       "TargetRecordingAct should be the empty instance.");
-      Assertion.Assert(this.Task.TargetProperty.IsEmptyInstance,
-                       "TargetResource should be the empty instance.");
-
-      return this.Task.Document.AppendRecordingActFromTask(this.Task);
+    private bool AppliesOverNewPartition {
+      get {
+        return (Task.PartitionInfo.PartitionType != PropertyPartitionType.None);
+      }
     }
 
     private RecordingAct DoPropertyRecording() {
-      if (this.NeedCreatePrecedentRecording) {
-        this.CreatePrecedentRecording();
-      } else if (this.NeedCreatePrecedentRecordingAct) {
-        this.CreatePrecedentRecordingAct();
+      if (this.NeedCreateResourceOnNewPhysicalRecording) {
+        this.CreateResourceOnNewPhysicalRecording();
+      } else if (this.NeedCreateAdditionalResourceOnPhysicalRecording) {
+        this.CreateAdditionalResourceOnPhysicalRecording();
       } else if (this.AppliesOverNewProperty) {
-        Task.TargetProperty = new Property();
+        Task.PrecedentProperty = new Property();
+      } else if (this.AppliesOverNewPartition) {
+        Task.PrecedentProperty = Task.PrecedentProperty.Subdivide(Task.PartitionInfo);
       }
-      Assertion.Assert(this.Task.TargetProperty.IsEmptyInstance == false,
+      Assertion.Assert(this.Task.TargetActInfo.IsEmptyInstance,
+                       "The target recording act should be the empty instance.");
+      Assertion.Assert(!this.Task.PrecedentProperty.IsEmptyInstance,
                        "The target resource cannot be the Property.Empty instance.");
 
-      return this.Task.Document.AppendRecordingActFromTask(this.Task);
-    }
-
-    private RecordingAct DoRecordingActAnnotation() {
-      throw new NotImplementedException("DoRecordingActAnnotation");
+      return this.Task.Document.AppendRecordingAct(this.Task.RecordingActType,
+                                                   this.Task.PrecedentProperty);
     }
 
     private RecordingAct DoRecordingActCancelation() {
-      throw new NotImplementedException("DoRecordingActCancelation");
-    }
+      if (this.NeedCreateResourceOnNewPhysicalRecording) {
+        this.CreateResourceOnNewPhysicalRecording();
+      } else if (this.NeedCreateAdditionalResourceOnPhysicalRecording) {
+        this.CreateAdditionalResourceOnPhysicalRecording();
+      }
+      Assertion.Assert(!this.Task.TargetActInfo.IsEmptyInstance,
+                       "The target recording act should not be the empty instance.");
+      Assertion.Assert(!this.Task.PrecedentProperty.IsEmptyInstance,
+                       "The target resource cannot be the Property.Empty instance.");
 
-    private RecordingAct DoStructureRecording() {
-      return DoPropertyRecording();
+      RecordingAct amendmendOf = CreateAmendmendOfRecordingAct(this.Task.PrecedentProperty);
+
+      return this.Task.Document.AppendRecordingAct(this.Task.RecordingActType,
+                                                   this.Task.PrecedentProperty, amendmendOf);
     }
 
     #endregion Recording methods
 
     #region Private auxiliar methods
 
-    private void CreatePrecedentRecording() {
-      if (!this.NeedCreatePrecedentRecording) {
+    private void CreateResourceOnNewPhysicalRecording() {
+      if (!this.NeedCreateResourceOnNewPhysicalRecording) {
         return;
       }
 
@@ -142,37 +149,36 @@ namespace Empiria.Land.Registration {
                                                                              Task.QuickAddRecordingSubNumber,
                                                                              Task.QuickAddRecordingSuffixTag);
 
-
-      RecordingAct recordingAct = null;
-      if (Task.PartitionInfo.PartitionType == PropertyPartitionType.Full) {
-        recordingAct = document.AppendRecordingAct(RecordingActType.Parse(2374), property, recording);    // lotification
-      } else {
-        recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property, recording);
-      }
+      RecordingAct recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property, 
+                                                              physicalRecording: recording);
+      
       if (Task.PartitionInfo.PartitionType != PropertyPartitionType.None) {
-        Task.TargetProperty = property.Subdivide(Task.PartitionInfo);
+        Task.PrecedentProperty = property.Subdivide(Task.PartitionInfo);
       } else {
-        Task.TargetProperty = property;
+        Task.PrecedentProperty = property;
       }
-
       Task.PrecedentRecording = recording;
-      if (Task.RecordingRule.AppliesTo == RecordingRuleApplication.RecordingAct) {
-        Task.TargetRecordingAct = recordingAct;
-      }
     }
 
-    private void CreatePrecedentRecordingAct() {
-      if (!this.NeedCreatePrecedentRecordingAct) {
+    private RecordingAct CreateAmendmendOfRecordingAct(Property resource) {
+      var document = new RecordingDocument(RecordingDocumentType.Empty);
+      
+      Recording recording = Task.TargetActInfo.PhysicalRecording;
+
+      return document.AppendRecordingAct(Task.TargetActInfo.RecordingActType, 
+                                         resource, physicalRecording: recording);
+    }
+
+    private void CreateAdditionalResourceOnPhysicalRecording() {
+      if (!this.NeedCreateAdditionalResourceOnPhysicalRecording) {
         return;
       }
 
       var property = new Property();
-      var document = new RecordingDocument(RecordingDocumentType.Empty);
-      var recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property, Task.PrecedentRecording);
-      Task.TargetProperty = property;
-      if (Task.RecordingRule.AppliesTo == RecordingRuleApplication.RecordingAct) {
-        Task.TargetRecordingAct = recordingAct;
-      }
+      var document = Task.PrecedentRecording.Document;
+      var recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property, 
+                                                     physicalRecording: Task.PrecedentRecording);
+      Task.PrecedentProperty = property;
     }
 
     private RecordingBook GetOpenedRecordingBook() {
@@ -182,37 +188,32 @@ namespace Empiria.Land.Registration {
     }
 
     private RecordingAct ProcessTask() {
-      if (Task.RecordingRule.AppliesTo == RecordingRuleApplication.Property) {
-        if (Task.RecordingRule.IsMainRecording) {
-          return this.DoPropertyRecording();       // (e.g. Título de propiedad o compra-venta)
-        }
-        if (Task.RecordingRule.IsAnnotation) {
-          //return this.DoPropertyAnnotation();    // (e.g. Aviso preventivo)
-          return this.DoPropertyRecording();
-        }
+      switch (Task.RecordingRule.AppliesTo) {
+        case RecordingRuleApplication.Property:
+          if (Task.RecordingRule.IsMainRecording) {
+            return this.DoPropertyRecording();       // (e.g. Título de propiedad o compra-venta)
+          }
+          if (Task.RecordingRule.IsAnnotation) {
+            //return this.DoPropertyAnnotation();    // (e.g. Aviso preventivo)
+            return this.DoPropertyRecording();
+          }
+          break;
+        case RecordingRuleApplication.Structure:
+          if (Task.RecordingRule.IsMainRecording) {
+            return this.DoPropertyRecording();      // (e.g. Fusión de predios [merge])
+          }
+          break;
+        case RecordingRuleApplication.RecordingAct:
+          //if (Task.RecordingRule.IsAnnotation) {
+          //  return this.DoRecordingActAnnotation();  // (e.g. Nombramiento de albacea)
+          //}
+          if (Task.RecordingRule.IsCancelation) {
+            return this.DoRecordingActCancelation(); // (e.g. Cancelación de crédito hipotecario)
+          }
+          break;
+        default:
+          break;
       }
-
-      if (Task.RecordingRule.AppliesTo == RecordingRuleApplication.Structure) {
-        if (Task.RecordingRule.IsMainRecording) {
-          return this.DoStructureRecording();      // (e.g. Fusión de predios [merge])
-        }
-      }
-
-      if (Task.RecordingRule.AppliesTo == RecordingRuleApplication.RecordingAct) {
-        if (Task.RecordingRule.IsAnnotation) {
-          return this.DoRecordingActAnnotation();  // (e.g. Nombramiento de albacea)
-        }
-        if (Task.RecordingRule.IsCancelation) {
-          return this.DoRecordingActCancelation(); // (e.g. Cancelación de crédito hipotecario)
-        }
-      }
-
-      if (Task.RecordingRule.AppliesTo == RecordingRuleApplication.None) {
-        if (Task.RecordingRule.IsMainRecording) {
-          return this.DoNoneResourceRecording();  // (e.g. contrato entre particulares, cap. matrimoniales)
-        }
-      }
-
       throw new NotImplementedException("RecordingExpert.DoRecording: Recording act '" +
                                         Task.RecordingActType.DisplayName + "' has an undefined or wrong rule.");
     }

@@ -381,8 +381,8 @@ namespace Empiria.Land.Registration {
       //Property[] currentPartitions = this.GetPartitions();
       //Assertion.Assert(currentPartitions.Length < lotNumber,
       //                 "Current property partitions are greater or equal than the requested fraction number.");
-      Assertion.Assert(this.MergedInto.IsEmptyInstance,
-                       "Current property have been merged into one or more properties.");
+      //Assertion.Assert(this.MergedInto.IsEmptyInstance,
+      //                 "Current property already has been merged into one or more properties.");
 
       var lot = new Property();
       lot.IsPartitionOf = this;

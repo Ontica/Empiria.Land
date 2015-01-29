@@ -34,12 +34,11 @@ namespace Empiria.Land.Registration {
 
   public enum RecordingRuleApplication {
     Undefined,
-    None,
     Property,
-    LegalPerson,
-    PersonalProperty,
     RecordingAct,
     Structure,
+    Association,
+    Document,
   }
 
   /// <summary>Describes the conditions and business rules that have to be fulfilled when a

@@ -37,10 +37,10 @@ namespace Empiria.Land.Registration {
                          int recordingActTypeCategoryId = -1, int recordingActTypeId = -1,
                          PropertyRecordingType propertyType = PropertyRecordingType.actNotApplyToProperty,
                          int recorderOfficeId = -1, int precedentRecordingBookId = -1,
-                         int precedentRecordingId = -1, int targetResourceId = -1,
-                         int targetRecordingActId = -1, int quickAddRecordingNumber = -1,
+                         int precedentRecordingId = -1, int precedentResourceId = -1,
+                         int quickAddRecordingNumber = -1,
                          string quickAddRecordingSubnumber = "", string quickAddRecordingSuffixTag = "",
-                         PropertyPartition partition = null) {
+                         PropertyPartition partition = null, RecordingActInfo targetActInfo = null) {
       this.Transaction = LRSTransaction.Parse(transactionId);
       this.Document = RecordingDocument.Parse(documentId);
       this.RecorderOffice = RecorderOffice.Parse(recorderOfficeId);
@@ -49,19 +49,13 @@ namespace Empiria.Land.Registration {
       this.PropertyRecordingType = propertyType;
       this.PrecedentRecordingBook = RecordingBook.Parse(precedentRecordingBookId);
       this.PrecedentRecording = Recording.Parse(precedentRecordingId);
-      if (targetResourceId == 0) {
-        this.TargetProperty = new Property();
-      } else if (targetResourceId == -1) {
-        this.TargetProperty = Property.Empty;
+      if (precedentResourceId == 0) {
+        this.PrecedentProperty = new Property();
+      } else if (precedentResourceId == -1) {
+        this.PrecedentProperty = Property.Empty;
       } else {
-        this.TargetProperty = Property.Parse(targetResourceId);
+        this.PrecedentProperty = Property.Parse(precedentResourceId);
       }
-      if (targetRecordingActId != -1) {
-        this.TargetRecordingAct = RecordingAct.Parse(targetRecordingActId);
-      } else {
-        this.TargetRecordingAct = InformationAct.Empty;
-      }
-
       this.QuickAddRecordingNumber = quickAddRecordingNumber;
       this.QuickAddRecordingSubNumber = quickAddRecordingSubnumber;
       this.QuickAddRecordingSuffixTag = quickAddRecordingSuffixTag;
@@ -73,7 +67,16 @@ namespace Empiria.Land.Registration {
       } else if (!this.PrecedentRecordingBook.IsEmptyInstance) {
         RecorderOffice = this.PrecedentRecordingBook.RecorderOffice;
       }
-      this.PartitionInfo = partition;
+      if (partition != null) {
+        this.PartitionInfo = partition;
+      } else {
+        this.PartitionInfo = new PropertyPartition();
+      }
+      if (targetActInfo != null) {
+        this.TargetActInfo = targetActInfo;
+      } else {
+        this.TargetActInfo = RecordingActInfo.Empty;
+      }
     }
 
     #endregion Constructors and parsers
@@ -120,12 +123,7 @@ namespace Empiria.Land.Registration {
       internal set;
     }
 
-    public Property TargetProperty {
-      get;
-      internal set;
-    }
-
-    public RecordingAct TargetRecordingAct {
+    public Property PrecedentProperty {
       get;
       internal set;
     }
@@ -151,6 +149,11 @@ namespace Empiria.Land.Registration {
     }
 
     public PropertyPartition PartitionInfo {
+      get;
+      private set;
+    }
+    
+    public RecordingActInfo TargetActInfo {
       get;
       private set;
     }

@@ -42,18 +42,20 @@ namespace Empiria.Land.Registration {
 
     static internal RecordingAct Create(RecordingActType recordingActType,
                                         RecordingDocument document, Property resource,
-                                        RecordingAct amendmentOf, Recording recording,
-                                        int index) {
+                                        RecordingAct amendmentOf, int index,
+                                        Recording physicalRecording) {
       Assertion.AssertObject(recordingActType, "recordingActType");
       Assertion.AssertObject(document, "document");
       Assertion.AssertObject(resource, "resource");
       Assertion.AssertObject(amendmentOf, "amendmentOf");
-      Assertion.AssertObject(recording, "recording");
+      Assertion.AssertObject(physicalRecording, "physicalRecording");
 
-      Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance");
+      Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance.");
+      Assertion.Assert(!document.IsNew, "document can't be a new instance.");
+      Assertion.Assert(!amendmentOf.IsNew, "amendmentOf can't be a new instance.");
 
       RecordingAct recordingAct = recordingActType.CreateInstance();
-      recordingAct.PhysicalRecording = recording;
+      recordingAct.PhysicalRecording = physicalRecording;
       recordingAct.Index = index;
       recordingAct.Document = document;
       recordingAct.AmendmentOf = amendmentOf;
@@ -63,14 +65,19 @@ namespace Empiria.Land.Registration {
       } else {
         recordingAct.Status = RecordableObjectStatus.Pending;
       }
-      if (recording.IsNew) {
-        recording.Save();
+      if (physicalRecording.IsNew) {
+        physicalRecording.Save();
       }
       recordingAct.Save();
       if (resource.IsNew) {
         resource.Save();
       }
       recordingAct.AttachResource(resource);
+
+      if (!recordingAct.AmendmentOf.IsEmptyInstance) {
+        recordingAct.AmendmentOf.AmendedBy = recordingAct;
+        recordingAct.AmendmentOf.Save();
+      }
 
       return recordingAct;
     }
@@ -166,6 +173,24 @@ namespace Empiria.Land.Registration {
     public RecordableObjectStatus Status {
       get;
       private set;
+    }
+
+    public string DisplayName {
+      get {
+        if (!this.IsAmendment) {
+          return this.RecordingActType.DisplayName;
+        } else if (this.RecordingActType.IsCancelationType) {
+          return "Cancelación de " + this.AmendmentOf.RecordingActType.DisplayName.ToLowerInvariant();
+        } else {
+          return this.RecordingActType.DisplayName;
+        }
+      }
+    }
+
+    public bool IsAmendment {
+      get {
+        return !this.AmendmentOf.IsEmptyInstance;
+      }
     }
 
     public bool IsAnnotation {
@@ -277,7 +302,19 @@ namespace Empiria.Land.Registration {
           property.Save();
         }
       }
+
       this.Status = RecordableObjectStatus.Deleted;
+      this.Save();
+
+      if (this.IsAmendment && this.AmendmentOf.Document.IsEmptyDocument) {
+          this.AmendmentOf.Delete();
+      } else if (this.IsAmendment && !this.AmendmentOf.Document.IsEmptyDocument) {
+        this.AmendmentOf.RemoveAmendment();
+      }
+    }
+
+    private void RemoveAmendment() {
+      this.AmendmentOf = InformationAct.Empty;
       this.Save();
     }
 

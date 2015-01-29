@@ -39,7 +39,11 @@ namespace Empiria.Land.Registration {
     }
 
     static public new RecordingActType Parse(int typeId) {
-      return ObjectTypeInfo.Parse<RecordingActType>(typeId);
+      if (typeId != -1) {
+        return ObjectTypeInfo.Parse<RecordingActType>(typeId);
+      } else {
+        return RecordingActType.Empty;
+      }
     }
 
     static internal new RecordingActType Parse(string typeName) {
@@ -95,6 +99,12 @@ namespace Empiria.Land.Registration {
     public bool IsAnnotationType {
       get {
         return base.Name.StartsWith("ObjectType.RecordingAct.AnnotationAct");
+      }
+    }
+
+    public bool IsCancelationType {
+      get {
+        return base.Name.StartsWith("ObjectType.RecordingAct.CancelationAct");
       }
     }
 
