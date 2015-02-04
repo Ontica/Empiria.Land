@@ -11,6 +11,7 @@
 using System;
 
 using Empiria.Contacts;
+using Empiria.DataTypes;
 using Empiria.Geography;
 using Empiria.Ontology;
 
@@ -65,7 +66,7 @@ namespace Empiria.Land.Registration {
       return list;
     }
 
-    public FixedList<Person> GetJudges(TimePeriod period) {
+    public FixedList<Person> GetJudges(TimeFrame period) {
       FixedList<Person> list = base.GetLinks<Person>("JudicialOffice_Judges", period);
 
       list.Sort((x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));

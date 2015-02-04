@@ -127,7 +127,12 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(!this.Task.PrecedentProperty.IsEmptyInstance,
                        "The target resource cannot be the Property.Empty instance.");
 
-      RecordingAct amendmendOf = CreateAmendmendOfRecordingAct(this.Task.PrecedentProperty);
+      RecordingAct amendmendOf;
+      if (this.Task.TargetActInfo.RecordingActId == -1) {
+        amendmendOf = CreateAmendmendOfRecordingAct(this.Task.PrecedentProperty);
+      } else {
+        amendmendOf = RecordingAct.Parse(this.Task.TargetActInfo.RecordingActId);
+      }
 
       return this.Task.Document.AppendRecordingAct(this.Task.RecordingActType,
                                                    this.Task.PrecedentProperty, amendmendOf);
@@ -149,9 +154,9 @@ namespace Empiria.Land.Registration {
                                                                              Task.QuickAddRecordingSubNumber,
                                                                              Task.QuickAddRecordingSuffixTag);
 
-      RecordingAct recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property, 
+      RecordingAct recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property,
                                                               physicalRecording: recording);
-      
+
       if (Task.PartitionInfo.PartitionType != PropertyPartitionType.None) {
         Task.PrecedentProperty = property.Subdivide(Task.PartitionInfo);
       } else {
@@ -162,10 +167,10 @@ namespace Empiria.Land.Registration {
 
     private RecordingAct CreateAmendmendOfRecordingAct(Property resource) {
       var document = new RecordingDocument(RecordingDocumentType.Empty);
-      
+
       Recording recording = Task.TargetActInfo.PhysicalRecording;
 
-      return document.AppendRecordingAct(Task.TargetActInfo.RecordingActType, 
+      return document.AppendRecordingAct(Task.TargetActInfo.RecordingActType,
                                          resource, physicalRecording: recording);
     }
 
@@ -176,7 +181,7 @@ namespace Empiria.Land.Registration {
 
       var property = new Property();
       var document = Task.PrecedentRecording.Document;
-      var recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property, 
+      var recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property,
                                                      physicalRecording: Task.PrecedentRecording);
       Task.PrecedentProperty = property;
     }

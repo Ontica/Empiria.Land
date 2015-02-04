@@ -12,6 +12,7 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
+using Empiria.DataTypes;
 using Empiria.Documents.IO;
 using Empiria.Geography;
 
@@ -96,7 +97,7 @@ namespace Empiria.Land.Registration {
                                    (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
     }
 
-    public FixedList<Person> GetRecorderOfficials(TimePeriod period) {
+    public FixedList<Person> GetRecorderOfficials(TimeFrame period) {
       return this.GetLinks<Person>("RecorderOffice->RecorderOfficials", period,
                                    (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
     }

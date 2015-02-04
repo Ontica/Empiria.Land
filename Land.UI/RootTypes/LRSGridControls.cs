@@ -434,7 +434,7 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{OPTIONS.COMBO}", optionsCombo);
         if (recordingActsCount > 1) {
           if (recordingActIndex != 0) {
-            temp = temp.Replace("{INCREMENT_INDEX}", 
+            temp = temp.Replace("{INCREMENT_INDEX}",
                    "<option value='upwardRecordingAct'>Subir en la secuencia</option>");
           } else {
             temp = temp.Replace("{INCREMENT_INDEX}", String.Empty);

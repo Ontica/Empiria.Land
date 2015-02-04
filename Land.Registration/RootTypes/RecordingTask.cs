@@ -152,7 +152,7 @@ namespace Empiria.Land.Registration {
       get;
       private set;
     }
-    
+
     public RecordingActInfo TargetActInfo {
       get;
       private set;

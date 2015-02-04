@@ -13,6 +13,7 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
+using Empiria.DataTypes;
 using Empiria.Json;
 using Empiria.Security;
 
@@ -278,7 +279,7 @@ namespace Empiria.Land.Registration {
     }
 
     static internal RecordingBook Create(RecordBookDirectory directory, RecordingSection recordingSection,
-                                         int recordingsControlCount, TimePeriod recordingsControlTimePeriod) {
+                                         int recordingsControlCount, TimeFrame recordingsControlTimePeriod) {
       throw new NotImplementedException();
       //RecordingBook recordingBook = new RecordingBook();
 
@@ -414,8 +415,8 @@ namespace Empiria.Land.Registration {
     }
 
     //Default = TimePeriod.Default;
-    private TimePeriod _timePeriod = TimePeriod.Default;
-    public TimePeriod RecordingsControlTimePeriod {
+    private TimeFrame _timePeriod = TimeFrame.Default;
+    public TimeFrame RecordingsControlTimePeriod {
       get { return _timePeriod; }
       set {
         _timePeriod = value;

@@ -116,7 +116,7 @@ namespace Empiria.Land.Registration {
         return null;
       }
       RecorderOffice office = recordingBook.RecorderOffice;
-      FixedList<Person> officers = office.GetRecorderOfficials(new TimePeriod(autorizationDate, autorizationDate));
+      FixedList<Person> officers = office.GetRecorderOfficials(new TimeFrame(autorizationDate, autorizationDate));
 
       if (!officers.Contains(authorizedBy)) {
         return new LandRegistrationException(LandRegistrationException.Msg.RecorderOfficialOutOfPeriod,

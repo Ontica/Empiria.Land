@@ -500,6 +500,11 @@ namespace Empiria.Land.Registration.Transactions {
           break;
         case TransactionStatus.Received:
         case TransactionStatus.Reentry:
+          if (ExecutionServer.LicenseName == "Tlaxcala") {
+            if (type.Id == 706 && (docType.Id == 744)) {
+              list.Add(TransactionStatus.Recording);
+            }
+          }
           list.Add(TransactionStatus.Control);
           break;
         case TransactionStatus.Process:

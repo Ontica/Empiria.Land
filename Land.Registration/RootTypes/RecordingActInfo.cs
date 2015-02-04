@@ -7,10 +7,15 @@ namespace Empiria.Land.Registration {
 
   public class RecordingActInfo {
 
+    public RecordingActInfo(int recordingActId) {
+      Initialize();
+      this.RecordingActId = recordingActId;
+    }
+
     public RecordingActInfo(int recordingActTypeId, int physicalBookId,
                             int recordingId = -1, int recordingNo = -1,
                             string recordingSubNo = "", string recordingSuffixTag = "") {
-
+      Initialize();
       this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
       this.PhysicalBook = RecordingBook.Parse(physicalBookId);
 
@@ -23,6 +28,13 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    private void Initialize() {
+      this.RecordingActId = -1;
+      this.RecordingActType = RecordingActType.Empty;
+      this.PhysicalBook = RecordingBook.Empty;
+      this.PhysicalRecording = Recording.Empty;
+    }
+
     static public RecordingActInfo Empty {
       get {
         return new RecordingActInfo(-1, -1);
@@ -31,8 +43,15 @@ namespace Empiria.Land.Registration {
 
     public bool IsEmptyInstance {
       get {
-        return (RecordingActType.Equals(RecordingActType.Empty) && PhysicalBook.IsEmptyInstance);
+        return (RecordingActId == -1 &&
+                RecordingActType.Equals(RecordingActType.Empty) &&
+                PhysicalBook.IsEmptyInstance);
       }
+    }
+
+    public int RecordingActId {
+      get;
+      private set;
     }
 
     public RecordingActType RecordingActType {

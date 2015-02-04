@@ -12,6 +12,7 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
+using Empiria.DataTypes;
 using Empiria.Geography;
 using Empiria.Ontology;
 
@@ -72,7 +73,7 @@ namespace Empiria.Land.Registration {
       return list;
     }
 
-    public FixedList<Person> GetNotaries(TimePeriod period) {
+    public FixedList<Person> GetNotaries(TimeFrame period) {
       FixedList<Person> list = base.GetLinks<Person>("NotaryOffice_Notaries", period);
 
       list.Sort((x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
