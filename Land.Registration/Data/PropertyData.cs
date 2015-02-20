@@ -197,12 +197,22 @@ namespace Empiria.Land.Registration.Data {
       return DataWriter.Execute(dataOperation);
     }
 
+    static internal int WriteAssociation(Association o) {
+      var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
+                                          o.Name, o.PropertyKind.Value, o.Notes, o.AntecedentNotes,
+                                          o.AsText, "", o.ExtensionData.ToString(),
+                                          o.Keywords, 0, -1, -1, "", -1, o.PostingTime, o.PostedBy.Id,
+                                          (char) o.Status, o.Integrity.GetUpdatedHashCode());
+      return DataWriter.Execute(operation);
+    }
+
     static internal int WriteProperty(Property o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
                                           o.Name, o.PropertyKind.Value, o.Notes, o.AntecedentNotes,
-                                          o.AsText, o.Location.ToSearchVector(), o.ExtensionData.ToString(), o.Keywords,
-                                          o.LotSize, o.LotSizeUnit.Id, o.IsPartitionOf.Id, o.PartitionNo, o.MergedInto.Id,
-                                          o.PostingTime, o.PostedBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
+                                          o.AsText, o.Location.ToSearchVector(), o.ExtensionData.ToString(),
+                                          o.Keywords, o.LotSize, o.LotSizeUnit.Id, o.IsPartitionOf.Id,
+                                          o.PartitionNo, o.MergedInto.Id, o.PostingTime, o.PostedBy.Id,
+                                          (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 
@@ -220,11 +230,11 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteTractIndexItem(TractIndexItem o) {
       Assertion.Assert(o.Id > 0, "Id needs to be positive.");
-      Assertion.Assert(o.Property.Id > 0, "property id needs to be positive.");
+      Assertion.Assert(o.Resource.Id > 0, "property id needs to be positive.");
       Assertion.Assert(o.RecordingAct.Id > 0, "recotrding act id needs to be positive.");
 
       var dataOperation = DataOperation.Parse("writeLRSTractIndex", o.Id,
-                                              o.Property.Id, o.RecordingAct.Id, o.ExtensionData.ToJson(),
+                                              o.Resource.Id, o.RecordingAct.Id, o.ExtensionData.ToJson(),
                                               (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(dataOperation);
     }

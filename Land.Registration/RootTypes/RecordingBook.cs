@@ -205,6 +205,12 @@ namespace Empiria.Land.Registration {
     //  }
     //}
 
+    public bool ExistsRecording(int recordingNumber, string recordingSubNumber, string bisSuffixTag) {
+      string recordingNo = this.BuildRecordingNumber(recordingNumber, recordingSubNumber, bisSuffixTag);
+
+      return Recordings.Contains((x) => x.Number == recordingNo);
+    }
+
     public Recording FindRecording(int recordingNumber, string recordingSubNumber, string bisSuffixTag) {
       string recordingNo = this.BuildRecordingNumber(recordingNumber, recordingSubNumber, bisSuffixTag);
 

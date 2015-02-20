@@ -23,16 +23,16 @@ namespace Empiria.Land.Registration.Data {
 
     #region Public methods
 
-    static public FixedList<RecordingAct> GetPropertyRecordingActList(Property property) {
-      var operation = DataOperation.Parse("qryLRSPropertyRecordingActs", property.Id);
+    static public FixedList<RecordingAct> GetPropertyRecordingActList(Resource resource) {
+      var operation = DataOperation.Parse("qryLRSPropertyRecordingActs", resource.Id);
 
       return DataReader.GetList<RecordingAct>(operation,
                                               (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
     }
 
-    static public FixedList<RecordingAct> GetPropertyRecordingActListUntil(Property property, RecordingAct breakAct,
+    static public FixedList<RecordingAct> GetPropertyRecordingActListUntil(Resource resource, RecordingAct breakAct,
                                                                            bool includeBreakAct) {
-      var operation = DataOperation.Parse("qryLRSPropertyRecordingActs", property.Id);
+      var operation = DataOperation.Parse("qryLRSPropertyRecordingActs", resource.Id);
       DataTable table = DataReader.GetDataTable(operation);
       List<RecordingAct> list = new List<RecordingAct>();
       foreach (DataRow row in table.Rows) {
@@ -92,7 +92,7 @@ namespace Empiria.Land.Registration.Data {
         string ids = String.Empty;
         FixedList<TractIndexItem> events = recordingAct.TractIndex;
         for (int i = 0; i < events.Count; i++) {
-          FixedList<RecordingAct> acts = events[i].Property.GetRecordingActsTract();
+          FixedList<RecordingAct> acts = events[i].Resource.GetRecordingActsTract();
 
           for (int j = 0; j < acts.Count; j++) {
             if (ids.Length != 0) {

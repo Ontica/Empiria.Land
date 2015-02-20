@@ -745,7 +745,7 @@ namespace Empiria.Land.Registration.Transactions {
         currentTask.NextContact = LRSTransaction.InterestedContact;
 
         currentTask = currentTask.CreateNext(notes);
-        currentTask.NextStatus = TransactionStatus.Control;
+        currentTask.NextStatus = this.GetAfterReceiveNextStatus();
         currentTask.Status = TrackStatus.OnDelivery;
         currentTask.EndProcessTime = currentTask.CheckInTime;
         currentTask.AssignedBy = LRSTransaction.InterestedContact;
@@ -754,6 +754,18 @@ namespace Empiria.Land.Registration.Transactions {
         this.Save();
         this.ResetTasksList();
     //  }
+    }
+
+    private TransactionStatus GetAfterReceiveNextStatus() {
+      if (ExecutionServer.LicenseName == "Zacatecas") {
+        return TransactionStatus.Control;
+      }
+      if (LRSTransaction.IsRecordable(this.TransactionType, this.DocumentType)) {
+        return TransactionStatus.Recording;
+      } else if (LRSTransaction.IsCertificateIssue(this.TransactionType, this.DocumentType)) {
+        return TransactionStatus.Elaboration;
+      }
+      return TransactionStatus.Control;
     }
 
     public void ReturnToMe() {
@@ -845,12 +857,12 @@ namespace Empiria.Land.Registration.Transactions {
 
     private void AssertAddItem() {
       Assertion.Assert(this.Status == TransactionStatus.Payment,
-              "The transaction is in an status that doesn't permit aggregate new services or products.");
+              "The transaction's status doesn't permit aggregate new services or products.");
     }
 
     private void AssertAddPayment() {
       Assertion.Assert(this.Status == TransactionStatus.Payment,
-              "The transaction is in an status that doesn't permit aggregate new payments.");
+              "The transaction's status doesn't permit aggregate new payments.");
     }
 
     private string BuildControlNumber() {

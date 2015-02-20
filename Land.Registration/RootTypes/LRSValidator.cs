@@ -52,30 +52,31 @@ namespace Empiria.Land.Registration {
       if (recordingAct.TractIndex.Count > 1) {
         return new LandRegistrationException(LandRegistrationException.Msg.RecordingActHasTwoOrMoreProperties);
       }
-      Property property = recordingAct.TractIndex[0].Property;
-      FixedList<RecordingAct> domainActs = property.GetRecordingActsTract();
-      if ((domainActs.Count > 1) && (property.FirstRecordingAct.Equals(recordingAct))) {
+      Resource resource = recordingAct.TractIndex[0].Resource;
+      FixedList<RecordingAct> domainActs = resource.GetRecordingActsTract();
+      if ((domainActs.Count > 1) && (resource.FirstRecordingAct.Equals(recordingAct))) {
         return new LandRegistrationException(LandRegistrationException.Msg.PropertyIsReferencedInOtherDomainActs,
-                                             property.UID);
+                                             resource.UID);
       }
-      if (domainActs.Count == 1 && property.Annotations.Count > 0) {
-        return new LandRegistrationException(LandRegistrationException.Msg.PropertyHasAnnotations, property.UID);
+      if (domainActs.Count == 1 && resource.Annotations.Count > 0) {
+        return new LandRegistrationException(LandRegistrationException.Msg.PropertyHasAnnotations, resource.UID);
       }
       return null;
     }
 
-    static public LandRegistrationException ValidateDeleteRecordingActProperty(RecordingAct recordingAct, Property property) {
-      FixedList<RecordingAct> domainActs = property.GetRecordingActsTract();
-      if ((domainActs.Count > 1) && (property.FirstRecordingAct.Equals(recordingAct))) {
+    static public LandRegistrationException ValidateDeleteRecordingActProperty(RecordingAct recordingAct,
+                                                                               Resource resource) {
+      FixedList<RecordingAct> domainActs = resource.GetRecordingActsTract();
+      if ((domainActs.Count > 1) && (resource.FirstRecordingAct.Equals(recordingAct))) {
         return new LandRegistrationException(LandRegistrationException.Msg.PropertyIsReferencedInOtherDomainActs,
-                                             property.UID);
+                                             resource.UID);
       }
-      if ((domainActs.Count == 1) && (!property.FirstRecordingAct.Equals(recordingAct))) {
+      if ((domainActs.Count == 1) && (!resource.FirstRecordingAct.Equals(recordingAct))) {
         return new LandRegistrationException(LandRegistrationException.Msg.OrphanRecordingActIfPropertyDeleted,
-                                             property.UID);
+                                             resource.UID);
       }
-      if ((domainActs.Count == 1) && (property.Annotations.Count > 0)) {
-        return new LandRegistrationException(LandRegistrationException.Msg.PropertyHasAnnotations, property.UID);
+      if ((domainActs.Count == 1) && (resource.Annotations.Count > 0)) {
+        return new LandRegistrationException(LandRegistrationException.Msg.PropertyHasAnnotations, resource.UID);
       }
       return null;
     }

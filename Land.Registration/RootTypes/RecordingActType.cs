@@ -108,6 +108,12 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public bool IsModificationType {
+      get {
+        return this.RecordingRule.IsModification;
+      }
+    }
+
     public bool IsDomainActType {
       get {
         return base.Name.StartsWith("ObjectType.RecordingAct.DomainAct");

@@ -161,7 +161,7 @@ namespace Empiria.Land.UI {
         }
 
         temp = temp.Replace("{NUMBERING}", Char.ConvertFromUtf32(65 + i));
-        temp = temp.Replace("{PROPERTY.TRACT.NUMBER}", association.Property.UID);
+        temp = temp.Replace("{PROPERTY.TRACT.NUMBER}", association.Resource.UID);
         temp = temp.Replace("{RECORDING.ACT.TYPE}", association.RecordingAct.RecordingActType.DisplayName);
         if (!association.RecordingAct.PhysicalRecording.Equals(recording)) {
           temp = temp.Replace("{IMAGING.FILES.FOLDER}", "{IMAGING.FILES.FOLDER}"); // OOJJOO association.RecordingAct.Recording.RecordingBook.ImagingFilesFolder.DisplayName
@@ -186,7 +186,7 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{RECORDING.ID}", association.RecordingAct.PhysicalRecording.Id.ToString());
         temp = temp.Replace("{RECORDING.BOOK.ID}", association.RecordingAct.PhysicalRecording.RecordingBook.Id.ToString());
         temp = temp.Replace("{ANNOTATION.STATUS.NAME}", association.RecordingAct.StatusName);
-        temp = temp.Replace("{PTY_ID}", association.Property.Id.ToString());
+        temp = temp.Replace("{PTY_ID}", association.Resource.Id.ToString());
         temp = temp.Replace("{REC_ACT_ID}", association.RecordingAct.Id.ToString());
 
         html += temp;
@@ -261,13 +261,13 @@ namespace Empiria.Land.UI {
             temp = temp.Replace("{RECORDING.ACT.URL}", idemURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
                                                                        "<i>ídem</i>"));
           }
-          temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", tractItem.Property.UID));
-          if (tractItem.Property.Status == RecordableObjectStatus.Registered && tractItem.Status != RecordableObjectStatus.Registered) {
+          temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", tractItem.Resource.UID));
+          if (tractItem.Resource.Status == RecordableObjectStatus.Registered && tractItem.Status != RecordableObjectStatus.Registered) {
             temp = temp.Replace("{PROPERTY.STATUS}", "Parcial");
           } else {
             temp = temp.Replace("{PROPERTY.STATUS}", tractItem.StatusName);
           }
-          temp = temp.Replace("{PROPERTY.STATUS}", tractItem.Property.StatusName);
+          temp = temp.Replace("{PROPERTY.STATUS}", tractItem.Resource.StatusName);
           temp = temp.Replace("{RECORDING.ACT.STATUS}", recordingAct.StatusName);
           if (j == 0) {
             temp = temp.Replace("{OPTIONS.COMBO}", optionsCombo);
@@ -290,7 +290,7 @@ namespace Empiria.Land.UI {
             temp = temp.Replace("{OPTIONS.COMBO}", propertyOptionsCombo);
           }
           temp = temp.Replace("{ID}", recordingAct.Id.ToString());
-          temp = temp.Replace("{PROPERTY.ID}", tractItem.Property.Id.ToString());
+          temp = temp.Replace("{PROPERTY.ID}", tractItem.Resource.Id.ToString());
           html += temp;
         }  // for j
       } // for i
@@ -345,6 +345,7 @@ namespace Empiria.Land.UI {
 
     static private string GetRecordingActGridRow(RecordingAct recordingAct, TractIndexItem tractItem, int counter,
                                                  int recordingActIndex, int tractItemIndex, int recordingActsCount) {
+
       const string row = "<tr class='{CLASS}'>" +
           "<td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b><br/>" +
           "<td style='white-space:normal'>{RECORDING.ACT.URL}</td>" +
@@ -399,7 +400,7 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{RECORDING.ACT.STATUS}", @"&nbsp;");
       }
 
-      temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", tractItem.Property.UID));
+      temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", tractItem.Resource.UID));
       if (recordingAct.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Property ||
           recordingAct.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Structure) {
         temp = temp.Replace("{PROPERTY.STATUS}", tractItem.StatusName);
@@ -407,25 +408,10 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{PROPERTY.STATUS}", "N/A");
       }
 
-      RecordingAct antecedent = tractItem.Property.GetDomainAntecedent(recordingAct);
-      if (recordingAct.IsAmendment && !recordingAct.AmendmentOf.PhysicalRecording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", recordingAct.AmendmentOf.PhysicalRecording.FullNumber);
-      } else if (recordingAct.IsAmendment && recordingAct.AmendmentOf.PhysicalRecording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + recordingAct.AmendmentOf.Document.UID);
-      } else if (tractItem.Property.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "&nbsp;");
-      } else if (!tractItem.Property.IsPartitionOf.IsEmptyInstance) {
-        var partitionAntecedent = tractItem.Property.IsPartitionOf.GetDomainAntecedent(recordingAct);
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Fracción " + tractItem.Property.PartitionNo +
-                   (tractItem.Property.IsPartitionOf.MergedInto.Equals(tractItem.Property) ? " y última" : String.Empty)
-                   + " del predio inscrito en " + partitionAntecedent.PhysicalRecording.FullNumber);
-      } else if (antecedent.Equals(InformationAct.Empty)) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Sin antecedente registral");
-      } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Predio inscrito en: " +
-                                                          antecedent.PhysicalRecording.FullNumber);
-      } else if (antecedent.PhysicalRecording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + antecedent.Document.UID);
+      if (tractItem.Resource is Association) {
+        temp = FillAssociationGridRow(recordingAct, (Association) tractItem.Resource, temp);
+      } else {
+        temp = FillPropertyGridRow(recordingAct, (Property) tractItem.Resource, temp);
       }
 
       temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", recordingAct.Id.ToString());
@@ -454,12 +440,57 @@ namespace Empiria.Land.UI {
       }
 
       temp = temp.Replace("{ID}", recordingAct.Id.ToString());
-      temp = temp.Replace("{PROPERTY.ID}", tractItem.Property.Id.ToString());
+      temp = temp.Replace("{PROPERTY.ID}", tractItem.Resource.Id.ToString());
       temp = temp.Replace("{RECORDING.ID}", recordingAct.PhysicalRecording.Id.ToString());
       temp = temp.Replace("{RECORDING.BOOK}", recordingAct.PhysicalRecording.RecordingBook.AsText);
       temp = temp.Replace("{RECORDING.BOOK.ID}", recordingAct.PhysicalRecording.RecordingBook.Id.ToString());
       temp = temp.Replace("{RECORDING.NUMBER}", recordingAct.PhysicalRecording.Number);
 
+      return temp;
+    }
+
+    private static string FillPropertyGridRow(RecordingAct recordingAct, Property property, string temp) {
+      RecordingAct antecedent = property.GetDomainAntecedent(recordingAct);
+
+      if (recordingAct.IsAmendment && !recordingAct.AmendmentOf.PhysicalRecording.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", recordingAct.AmendmentOf.PhysicalRecording.FullNumber);
+      } else if (recordingAct.IsAmendment && recordingAct.AmendmentOf.PhysicalRecording.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + recordingAct.AmendmentOf.Document.UID);
+      } else if (property.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "&nbsp;");
+      } else if (!property.IsPartitionOf.IsEmptyInstance) {
+        var partitionAntecedent = property.IsPartitionOf.GetDomainAntecedent(recordingAct);
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Fracción " + property.PartitionNo +
+                   (property.IsPartitionOf.MergedInto.Equals(property) ? " y última" : String.Empty)
+                   + " del predio inscrito en " + partitionAntecedent.PhysicalRecording.FullNumber);
+      } else if (antecedent.Equals(InformationAct.Empty)) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Sin antecedente registral");
+      } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Predio inscrito en: " +
+                             antecedent.PhysicalRecording.FullNumber);
+      } else if (antecedent.PhysicalRecording.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + antecedent.Document.UID);
+      }
+      return temp;
+    }
+
+    private static string FillAssociationGridRow(RecordingAct recordingAct, Association association, string temp) {
+      RecordingAct antecedent = association.GetDomainAntecedent(recordingAct);
+
+      if (recordingAct.IsAmendment && !recordingAct.AmendmentOf.PhysicalRecording.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", recordingAct.AmendmentOf.PhysicalRecording.FullNumber);
+      } else if (recordingAct.IsAmendment && recordingAct.AmendmentOf.PhysicalRecording.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + recordingAct.AmendmentOf.Document.UID);
+      } else if (association.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "&nbsp;");
+      } else if (antecedent.Equals(InformationAct.Empty)) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Sin antecedente registral");
+      } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Entidad inscrita en: " +
+                             antecedent.PhysicalRecording.FullNumber);
+      } else if (antecedent.PhysicalRecording.IsEmptyInstance) {
+        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + antecedent.Document.UID);
+      }
       return temp;
     }
 
@@ -522,7 +553,7 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{RECORDING.ACT.STATUS}", @"&nbsp;");
       }
 
-      temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", propertyEvent.Property.UID));
+      temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", propertyEvent.Resource.UID));
       if (recordingAct.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Property ||
           recordingAct.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Structure) {
         temp = temp.Replace("{PROPERTY.STATUS}", propertyEvent.StatusName);
@@ -530,8 +561,8 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{PROPERTY.STATUS}", "N/A");
       }
 
-      RecordingAct antecedent = propertyEvent.Property.GetDomainAntecedent(recordingAct);
-      if (propertyEvent.Property.IsEmptyInstance) {
+      RecordingAct antecedent = propertyEvent.Resource.GetDomainAntecedent(recordingAct);
+      if (propertyEvent.Resource.IsEmptyInstance) {
         temp = temp.Replace("{ANTECEDENT.TAG}", String.Empty);
         temp = temp.Replace("{ANTECEDENT.STATUS}", String.Empty);
       } else if (antecedent.Equals(InformationAct.Empty)) {
@@ -566,7 +597,7 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{OPTIONS.COMBO}", propertyOptionsCombo);
       }
       temp = temp.Replace("{ID}", recordingAct.Id.ToString());
-      temp = temp.Replace("{PROPERTY.ID}", propertyEvent.Property.Id.ToString());
+      temp = temp.Replace("{PROPERTY.ID}", propertyEvent.Resource.Id.ToString());
       temp = temp.Replace("{RECORDING.ID}", recordingAct.PhysicalRecording.Id.ToString());
       temp = temp.Replace("{RECORDING.BOOK}", recordingAct.PhysicalRecording.RecordingBook.AsText);
       temp = temp.Replace("{RECORDING.BOOK.ID}", recordingAct.PhysicalRecording.RecordingBook.Id.ToString());
@@ -600,17 +631,20 @@ namespace Empiria.Land.UI {
         } else if (recordings[i].StartImageIndex <= 0 && recordings[i].EndImageIndex <= 0) {
           temp = temp.Replace("{RECORDING.IMAGES}", "Sin imagen");
         } else {
-          temp = temp.Replace("{RECORDING.IMAGES}", "De la " + recordings[i].StartImageIndex.ToString() + " a la " + recordings[i].EndImageIndex);
+          temp = temp.Replace("{RECORDING.IMAGES}", "De la " + recordings[i].StartImageIndex.ToString() +
+                              " a la " + recordings[i].EndImageIndex);
         }
         if (recordings[i].Document.PresentationTime == Empiria.ExecutionServer.DateMaxValue) {
           temp = temp.Replace("{RECORDING.PRESENTATION.TIME}", "No consta");
         } else {
-          temp = temp.Replace("{RECORDING.PRESENTATION.TIME}", recordings[i].Document.PresentationTime.ToString("dd/MMM/yyyy HH:mm"));
+          temp = temp.Replace("{RECORDING.PRESENTATION.TIME}",
+                                recordings[i].Document.PresentationTime.ToString("dd/MMM/yyyy HH:mm"));
         }
         if (recordings[i].AuthorizationTime == Empiria.ExecutionServer.DateMaxValue) {
           temp = temp.Replace("{RECORDING.AUTHORIZATION.TIME}", "No consta");
         } else {
-          temp = temp.Replace("{RECORDING.AUTHORIZATION.TIME}", recordings[i].AuthorizationTime.ToString("dd/MMM/yyyy"));
+          temp = temp.Replace("{RECORDING.AUTHORIZATION.TIME}",
+                                recordings[i].AuthorizationTime.ToString("dd/MMM/yyyy"));
         }
         if (recordings[i].Notes.Length == 0) {
           temp = temp.Replace("{RECORDING.NOTES}", "Ninguna");

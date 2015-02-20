@@ -124,6 +124,8 @@
     <Compile Include="Empiria.Land.Registration.AssemblyInfo.cs" />
     <Compile Include="RootTypes\CadastralInfo.cs" />
     <Compile Include="RootTypes\Certificate.cs" />
+    <Compile Include="RootTypes\Association.cs" />
+    <Compile Include="RootTypes\Resource.cs" />
     <Compile Include="RootTypes\RecordableObjectStatus.cs" />
     <Compile Include="RootTypes\RecordingActInfo.cs" />
     <Compile Include="RootTypes\RecordingDocumentExtData.cs" />

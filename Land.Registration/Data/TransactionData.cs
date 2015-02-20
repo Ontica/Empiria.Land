@@ -109,6 +109,26 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList<Contact>(operation, (x) => BaseObject.ParseList<Contact>(x)).ToFixedList();
     }
 
+    static public string GenerateAssociationKey() {
+      string temp = ExecutionServer.LicenseName == "Zacatecas" ? "ZS-SC-" : "TL-SC-";
+
+      temp += EmpiriaMath.GetRandomCharacter(temp);
+      temp += EmpiriaMath.GetRandomDigit(temp);
+      temp += EmpiriaMath.GetRandomCharacter(temp);
+      temp += EmpiriaMath.GetRandomDigit(temp);
+      temp += EmpiriaMath.GetRandomCharacter(temp);
+      temp += EmpiriaMath.GetRandomDigit(temp);
+      temp += EmpiriaMath.GetRandomDigit(temp);
+
+      int hashCode = 0;
+      for (int i = 0; i < temp.Length; i++) {
+        hashCode += (Convert.ToInt32(temp[i]) + Convert.ToInt32(i == 0 ? 0 : temp[i - 1])) * (i + 1);
+      }
+      temp += GetChecksumCharacterCode(hashCode);
+
+      return temp;
+    }
+
     static public string GeneratePropertyKey() {
       string temp = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
       temp += EmpiriaMath.GetRandomDigit(temp);
@@ -208,7 +228,8 @@ namespace Empiria.Land.Registration.Data {
                                           o.OperationValue.Amount, o.OperationValue.Currency.Id,
                                           o.Fee.RecordingRights, o.Fee.SheetsRevision,
                                           o.Fee.ForeignRecordingFee, o.Fee.Discount.Amount,
-                                          o.ExtensionData.ToString(), o.Status, o.Integrity.GetUpdatedHashCode());
+                                          o.ExtensionData.ToString(), o.Status,
+                                          o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 

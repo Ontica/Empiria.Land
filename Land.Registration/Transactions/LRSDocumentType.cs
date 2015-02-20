@@ -10,6 +10,9 @@
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
+using Empiria.Collections;
+using Empiria.Contacts;
+
 namespace Empiria.Land.Registration.Transactions {
 
   /// <summary>Describes a recorder office transaction type.</summary>
@@ -39,9 +42,19 @@ namespace Empiria.Land.Registration.Transactions {
 
     #endregion Constructors and parsers
 
+    #region Properties
+
     public string LArt {
       get { return base.NamedKey; }
     }
+
+    public FixedList<Contact> IssuedByEntities {
+      get {
+        return base.GetLinks<Contact>("DocumentType->IssuedBy");
+      }
+    }
+
+    #endregion Properties
 
   } // class DocumentType
 

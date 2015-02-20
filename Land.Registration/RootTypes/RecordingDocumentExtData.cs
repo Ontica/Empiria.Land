@@ -166,8 +166,12 @@ namespace Empiria.Land.Registration {
           break;
         case 2413:
           json.AddIfValue(new JsonItem("DocumentNo", document.Number));
-          json.AddIfValue(new JsonItem("WitnessId", this.MainWitness.Id));
-          json.AddIfValue(new JsonItem("WitnessRoleId", this.MainWitnessPosition.Id));
+          if (this.MainWitness != null) {
+            json.AddIfValue(new JsonItem("WitnessId", this.MainWitness.Id));
+          }
+          if (this.MainWitnessPosition != null) {
+            json.AddIfValue(new JsonItem("WitnessRoleId", this.MainWitnessPosition.Id));
+          }
           break;
         case 2414:
           json.AddIfValue(new JsonItem("DocumentNo", document.Number));

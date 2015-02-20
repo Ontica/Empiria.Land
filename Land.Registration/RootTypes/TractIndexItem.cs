@@ -28,11 +28,11 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    internal TractIndexItem(Property property, RecordingAct recordingAct) {
-      Assertion.AssertObject(property, "property");
+    internal TractIndexItem(Resource resource, RecordingAct recordingAct) {
+      Assertion.AssertObject(resource, "resource");
       Assertion.AssertObject(recordingAct, "recordingAct");
 
-      this.Property = property;
+      this.Resource = resource;
       this.RecordingAct = recordingAct;
     }
 
@@ -50,8 +50,8 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField("PropertyId", IsOptional = false)]
-    public Property Property {
+    [DataField("PropertyId", Default = "Empiria.Land.Registration.Property.Empty", IsOptional = false)]
+    public Resource Resource {
       get;
       private set;
     }
@@ -116,7 +116,7 @@ namespace Empiria.Land.Registration {
       if (version == 1) {
         return new object[] {
           1, "Id", this.Id, "RecordingAct", this.RecordingAct.Id,
-          "Property", this.Property.Id, "ExtensionData", this.ExtensionData.ToJson(),
+          "Property", this.Resource.Id, "ExtensionData", this.ExtensionData.ToJson(),
           "Status", (char) this.Status,
         };
       }
@@ -151,8 +151,8 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnSave() {
-      if (this.Property.IsNew) {
-        this.Property.Save();
+      if (this.Resource.IsNew) {
+        this.Resource.Save();
       }
       if (this.IsNew) {
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);

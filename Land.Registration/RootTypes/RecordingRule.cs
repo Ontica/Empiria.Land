@@ -62,18 +62,19 @@ namespace Empiria.Land.Registration {
 
       this.IsAnnotation = json.Get<bool>("IsAnnotation", false);
       this.IsCancelation = json.Get<bool>("IsCancelation", false);
-
+      this.IsModification = json.Get<bool>("IsModification", false);
+      
       this.NewProperty = PropertyRule.Parse(json.Slice("NewProperties", false));
 
       this.PropertyCount = ParsePropertyCount(json.Get<string>("PropertyCount", String.Empty));
       this.PropertyRecordingStatus = json.Get<PropertyRecordingStatus>("PropertyStatus",
                                                                        PropertyRecordingStatus.Undefined);
       this.RecordingSection = json.Get<RecordingSection>("RecordingSectionId", RecordingSection.Empty);
-      this.FixedRecorderOffice = json.Get<RecorderOffice>("FixedRecorderOffice", RecorderOffice.Empty);
       this.SpecialCase = json.Get<string>("SpecialCase", String.Empty);
       this.RecordingActTypes = json.GetList<RecordingActType>("RecordingActTypes", false).ToArray();
       this.AllowsPartitions = json.Get<bool>("AllowsPartitions", false);
       this.IsActive = json.Get<bool>("IsActive", false);
+      this.AskForResourceName = json.Get<bool>("AskForResourceName", false);
     }
 
     private void Initialize() {
@@ -83,12 +84,13 @@ namespace Empiria.Land.Registration {
       this.InputProperties = new PropertyRule[0];
       this.IsAnnotation = false;
       this.IsCancelation = false;
+      this.IsModification = false;
       this.NewProperty = new PropertyRule();
       this.PropertyCount = Land.Registration.PropertyCount.Undefined;
       this.PropertyRecordingStatus = PropertyRecordingStatus.Undefined;
       this.RecordingActTypes = new RecordingActType[0];
       this.RecordingSection = RecordingSection.Empty;
-      this.FixedRecorderOffice = RecorderOffice.Empty;
+      this.AskForResourceName = false;
       this.SpecialCase = "None";
     }
 
@@ -107,6 +109,8 @@ namespace Empiria.Land.Registration {
       json.Add(new JsonItem("AutoCancel", this.AutoCancel));
       json.Add(new JsonItem("IsAnnotation", this.IsAnnotation));
       json.Add(new JsonItem("IsCancelation", this.IsCancelation));
+      json.Add(new JsonItem("IsModification", this.IsModification));
+      json.Add(new JsonItem("AskForResourceName", this.AskForResourceName));
       json.Add(new JsonItem("PropertyCount", this.PropertyCount.ToString()));
       json.Add(new JsonItem("PropertyRecordingStatus", this.PropertyRecordingStatus.ToString()));
       json.Add(new JsonItem("SpecialCase", this.SpecialCase));
@@ -162,10 +166,15 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+    public bool IsModification {
+      get;
+      private set;
+    }
+
     public bool IsMainRecording {
       get {
         return (!this.RecordingSection.IsEmptyInstance &&
-                !this.IsAnnotation && !IsCancelation);
+                !this.IsAnnotation && !IsCancelation && !IsModification);
       }
     }
 
@@ -180,11 +189,6 @@ namespace Empiria.Land.Registration {
     }
 
     public PropertyRecordingStatus PropertyRecordingStatus {
-      get;
-      private set;
-    }
-
-    public RecorderOffice FixedRecorderOffice {
       get;
       private set;
     }
@@ -215,10 +219,12 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+    public bool AskForResourceName {
+      get;
+      private set;
+    }
+
     #endregion Properties
-
-
-
 
   }  // class RecordingRule
 

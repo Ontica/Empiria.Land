@@ -40,8 +40,26 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
+    internal static RecordingAct Create(RecordingActType recordingActType, 
+                                        RecordingDocument document, int index) {
+      Assertion.AssertObject(recordingActType, "recordingActType");
+      Assertion.AssertObject(document, "document");
+
+      RecordingAct recordingAct = recordingActType.CreateInstance();
+      recordingAct.Document = document;
+      recordingAct.Index = index;
+      if (recordingActType.Autoregister) {
+        recordingAct.Status = RecordableObjectStatus.Registered;
+      } else {
+        recordingAct.Status = RecordableObjectStatus.Pending;
+      }
+      recordingAct.Save();
+
+      return recordingAct;
+    }
+
     static internal RecordingAct Create(RecordingActType recordingActType,
-                                        RecordingDocument document, Property resource,
+                                        RecordingDocument document, Resource resource,
                                         RecordingAct amendmentOf, int index,
                                         Recording physicalRecording) {
       Assertion.AssertObject(recordingActType, "recordingActType");
@@ -179,6 +197,8 @@ namespace Empiria.Land.Registration {
       get {
         if (!this.IsAmendment) {
           return this.RecordingActType.DisplayName;
+        } else if (this.RecordingActType.IsModificationType) {
+          return "Modificación de " + this.AmendmentOf.RecordingActType.DisplayName.ToLowerInvariant();
         } else if (this.RecordingActType.IsCancelationType) {
           return "Cancelación de " + this.AmendmentOf.RecordingActType.DisplayName.ToLowerInvariant();
         } else {
@@ -260,7 +280,7 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public TractIndexItem AttachResource(Property resource) {
+    public TractIndexItem AttachResource(Resource resource) {
       Assertion.AssertObject(resource, "resource");
       Assertion.Assert(!this.IsNew, "this is new");
       Assertion.Assert(!this.IsEmptyInstance, "this is empty");
@@ -293,7 +313,7 @@ namespace Empiria.Land.Registration {
       }
       var tractIndex = this.TractIndex;
       for (int i = 0; i < tractIndex.Count; i++) {
-        var property = TractIndex[i].Property;
+        var property = TractIndex[i].Resource;
         tractIndex[i].Delete();
 
         var tract = property.GetRecordingActsTract();
@@ -322,15 +342,15 @@ namespace Empiria.Land.Registration {
       var tract = attachedResources.Value;
       var list = new List<Property>(tract.Count);
       foreach (var item in tract) {
-        if (!list.Contains(item.Property)) {
-          list.Add(item.Property);
+        if (!list.Contains((Property) item.Resource)) {
+          list.Add((Property) item.Resource);
         }
       }
       return list;
     }
 
     public TractIndexItem GetPropertyEvent(Property property) {
-      var propertyEvent = this.TractIndex.Find((x) => x.Property.Equals(property));
+      var propertyEvent = this.TractIndex.Find((x) => x.Resource.Equals(property));
       if (propertyEvent != null) {
         return propertyEvent;
       } else {
@@ -343,9 +363,9 @@ namespace Empiria.Land.Registration {
       if (this.TractIndex.Count == 0) {
         return false;
       }
-      Property property = this.TractIndex[0].Property;
+      Resource resource = this.TractIndex[0].Resource;
 
-      return property.IsFirstRecordingAct(this);
+      return resource.IsFirstRecordingAct(this);
     }
 
     protected override void OnInitialize() {
@@ -369,7 +389,7 @@ namespace Empiria.Land.Registration {
     }
 
     public void RemoveProperty(Property property) {
-      TractIndexItem propertyEvent = this.TractIndex.Find((x) => x.Property.Equals(property));
+      TractIndexItem propertyEvent = this.TractIndex.Find((x) => x.Resource.Equals(property));
 
       Assertion.AssertObject(propertyEvent,
                 new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,

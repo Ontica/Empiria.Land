@@ -22,7 +22,7 @@ namespace Empiria.Land.Registration {
   public enum PropertyRecordingType {
     actAppliesToOtherRecordingAct,
     actNotApplyToProperty,
-    actAppliesOnlyToSection,
+    actAppliesToDocument,
     createProperty,
     selectProperty,
   }
@@ -36,17 +36,18 @@ namespace Empiria.Land.Registration {
     public RecordingTask(int transactionId = -1, int documentId = -1,
                          int recordingActTypeCategoryId = -1, int recordingActTypeId = -1,
                          PropertyRecordingType propertyType = PropertyRecordingType.actNotApplyToProperty,
-                         int recorderOfficeId = -1, int precedentRecordingBookId = -1,
+                         int precedentRecordingBookId = -1,
                          int precedentRecordingId = -1, int precedentResourceId = -1,
                          int quickAddRecordingNumber = -1,
-                         string quickAddRecordingSubnumber = "", string quickAddRecordingSuffixTag = "",
+                         string resourceName = "", string quickAddRecordingSubnumber = "", 
+                         string quickAddRecordingSuffixTag = "",
                          PropertyPartition partition = null, RecordingActInfo targetActInfo = null) {
       this.Transaction = LRSTransaction.Parse(transactionId);
       this.Document = RecordingDocument.Parse(documentId);
-      this.RecorderOffice = RecorderOffice.Parse(recorderOfficeId);
       this.RecordingActTypeCategory = RecordingActTypeCategory.Parse(recordingActTypeCategoryId);
       this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
       this.PropertyRecordingType = propertyType;
+      this.ResourceName = EmpiriaString.TrimAll(resourceName);
       this.PrecedentRecordingBook = RecordingBook.Parse(precedentRecordingBookId);
       this.PrecedentRecording = Recording.Parse(precedentRecordingId);
       if (precedentResourceId == 0) {
@@ -62,11 +63,6 @@ namespace Empiria.Land.Registration {
 
       this.RecordingRule = RecordingActType.RecordingRule;
 
-      if (!RecordingRule.FixedRecorderOffice.IsEmptyInstance) {
-        this.RecorderOffice = RecordingRule.FixedRecorderOffice;
-      } else if (!this.PrecedentRecordingBook.IsEmptyInstance) {
-        RecorderOffice = this.PrecedentRecordingBook.RecorderOffice;
-      }
       if (partition != null) {
         this.PartitionInfo = partition;
       } else {
@@ -89,11 +85,6 @@ namespace Empiria.Land.Registration {
     }
 
     public RecordingDocument Document {
-      get;
-      private set;
-    }
-
-    public RecorderOffice RecorderOffice {
       get;
       private set;
     }
@@ -123,7 +114,12 @@ namespace Empiria.Land.Registration {
       internal set;
     }
 
-    public Property PrecedentProperty {
+    public string ResourceName {
+      get;
+      private set;
+    }
+
+    public Resource PrecedentProperty {
       get;
       internal set;
     }

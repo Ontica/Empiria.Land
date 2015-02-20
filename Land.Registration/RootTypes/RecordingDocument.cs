@@ -247,8 +247,27 @@ namespace Empiria.Land.Registration {
     #endregion Public properties
 
     #region Public methods
+    
+    public RecordingAct AppendRecordingAct(RecordingActType recordingActType) {
+      Assertion.AssertObject(recordingActType, "recordingActType");
+      Assertion.Assert(recordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Document, 
+                       "This method is allowed only for document type recording acts.");
+      Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance");
+      Assertion.Assert(this.Status != RecordableObjectStatus.Closed,
+                       "Recording acts can't be appended to closed documents");
 
-    public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Property resource,
+      if (this.IsNew) {
+        this.Save();
+      }
+      var recordingAct = RecordingAct.Create(recordingActType, this, this.RecordingActs.Count);
+      recordingActList.Value.Add(recordingAct);
+      this.AuthorizationTime = DateTime.Now;
+      this.Save();
+
+      return recordingAct;
+    }
+
+    public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Resource resource,
                                            RecordingAct amendmentOf = null,
                                            Recording physicalRecording = null) {
       amendmentOf = (amendmentOf != null) ? amendmentOf : InformationAct.Empty;
@@ -259,9 +278,10 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(amendmentOf, "amendmentOf");
       Assertion.AssertObject(physicalRecording, "physicalRecording");
 
-      Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance");
+      Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance.");
       Assertion.Assert(this.Status != RecordableObjectStatus.Closed,
-                       "Recording acts can't be appended to closed documents");
+                       "Recording acts can't be appended to closed documents.");
+      Assertion.AssertObject(!resource.IsEmptyInstance, "Resource can't be empty instance.");
 
       if (this.IsNew) {
         this.Save();
