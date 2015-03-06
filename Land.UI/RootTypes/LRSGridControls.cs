@@ -400,7 +400,12 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{RECORDING.ACT.STATUS}", @"&nbsp;");
       }
 
-      temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", tractItem.Resource.UID));
+      if (tractItem.Resource is Property && ((Property) tractItem.Resource).CadastralKey.Length != 0) {
+        temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", tractItem.Resource.UID 
+                                              + " <br />" + ((Property) tractItem.Resource).CadastralKey));
+      } else {
+        temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", tractItem.Resource.UID));
+      }
       if (recordingAct.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Property ||
           recordingAct.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Structure) {
         temp = temp.Replace("{PROPERTY.STATUS}", tractItem.StatusName);

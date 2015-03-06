@@ -25,8 +25,12 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    internal Property() {
+    private Property() {
       // Required by Empiria Framework.
+    }
+
+    internal Property(string cadastralKey) {
+      this.CadastralKey = cadastralKey;
     }
 
     static public new Property Parse(int id) {
@@ -63,9 +67,15 @@ namespace Empiria.Land.Registration {
 
     internal protected override string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(base.Keywords, this.CadastralData.CadastralCode,
+        return EmpiriaString.BuildKeywords(base.Keywords, this.CadastralKey,
                                            this.PartitionNo, this.Location.Keywords);
       }
+    }
+
+    [DataField("CadastralKey")]
+    public string CadastralKey {
+      get;
+      private set;
     }
 
     [DataField("LotSize")]
@@ -127,6 +137,7 @@ namespace Empiria.Land.Registration {
     protected override void OnSave() {
       PropertyData.WriteProperty(this);
     }
+
     internal Property Subdivide(PropertyPartition partitionInfo) {
       Assertion.Assert(!this.IsNew, "New properties can't be subdivided.");
 
@@ -139,10 +150,12 @@ namespace Empiria.Land.Registration {
           this.Save();
           return partition;
         case PropertyPartitionType.Full:
-          var partitions = this.CreateAllPartitions(partitionInfo);
-          this.MergedInto = partitions[partitions.Length - 1];
-          this.Save();
-          return partitions[partitionInfo.PartitionNo - 1];
+          return this.CreatePartition(partitionInfo);
+
+          //var partitions = this.CreateAllPartitions(partitionInfo);
+          //this.MergedInto = partitions[partitions.Length - 1];
+          //this.Save();
+          //return partitions[partitionInfo.PartitionNo - 1];
         default:
           throw Assertion.AssertNoReachThisCode();
       }
@@ -159,10 +172,14 @@ namespace Empiria.Land.Registration {
       //Assertion.Assert(this.MergedInto.IsEmptyInstance,
       //                 "Current property already has been merged into one or more properties.");
 
-      var lot = new Property();
+      string prefix = String.Empty;
+      if (partitionInfo.PartitionType == PropertyPartitionType.Full) {
+        prefix = "Lote ";
+      }
+      var lot = new Property(partitionInfo.CadastralKey);
       lot.IsPartitionOf = this;
       if (partitionInfo.PartitionNo != 0) {
-        lot.PartitionNo = partitionInfo.PartitionNo.ToString("00");
+        lot.PartitionNo = prefix + partitionInfo.PartitionNo.ToString("00");
       } else {
         lot.PartitionNo = "sin número";
       }
@@ -180,7 +197,7 @@ namespace Empiria.Land.Registration {
 
       Property[] partitions = new Property[partitionInfo.TotalPartitions];
       for (int i = 0; i < partitionInfo.TotalPartitions; i++) {
-        Property lot = new Property();
+        Property lot = new Property(partitionInfo.CadastralKey);
         lot.IsPartitionOf = this;
         lot.PartitionNo = (i + 1).ToString("00");
         lot.Save();

@@ -136,7 +136,7 @@ namespace Empiria.Land.Registration {
       } else if (this.NeedCreateAdditionalResourceOnPhysicalRecording) {
         this.CreateAdditionalResourceOnPhysicalRecording();
       } else if (this.AppliesOverNewProperty) {
-        Task.PrecedentProperty = new Property();
+        Task.PrecedentProperty = new Property(Task.CadastralKey);
       } else if (this.AppliesOverNewPartition) {
         Task.PrecedentProperty = ((Property)Task.PrecedentProperty).Subdivide(Task.PartitionInfo);
       }
@@ -199,7 +199,7 @@ namespace Empiria.Land.Registration {
         return;
       }
 
-      Property property = new Property();
+      Property property = new Property(Task.CadastralKey);
 
       var document = new RecordingDocument(RecordingDocumentType.Empty);
       Recording recording = Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
@@ -231,7 +231,7 @@ namespace Empiria.Land.Registration {
         return;
       }
 
-      var property = new Property();
+      var property = new Property(Task.CadastralKey);
       var document = Task.PrecedentRecording.Document;
       var recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property,
                                                      physicalRecording: Task.PrecedentRecording);

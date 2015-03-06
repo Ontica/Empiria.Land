@@ -152,11 +152,11 @@ namespace Empiria.Land.Registration.Data {
                                                    BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
-    static internal FixedList<Property> GetRecordingProperties(Recording recording) {
+    static internal FixedList<Resource> GetRecordingResources(Recording recording) {
       var operation = DataOperation.Parse("qryLRSRecordingProperties", recording.Id);
 
-      return DataReader.GetList<Property>(operation,
-                                          (x) => BaseObject.ParseList<Property>(x)).ToFixedList();
+      return DataReader.GetList<Resource>(operation,
+                                          (x) => BaseObject.ParseList<Resource>(x)).ToFixedList();
     }
 
     static public FixedList<TractIndexItem> GetRecordingPropertiesAnnotationsList(Recording recording) {
@@ -199,19 +199,21 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteAssociation(Association o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
-                                          o.Name, o.PropertyKind.Value, o.Notes, o.AntecedentNotes,
-                                          o.AsText, "", o.ExtensionData.ToString(),
-                                          o.Keywords, 0, -1, -1, "", -1, o.PostingTime, o.PostedBy.Id,
+                                          String.Empty, o.Name, o.PropertyKind.Value, o.Notes, 
+                                          o.AntecedentNotes, o.AsText, String.Empty, 
+                                          o.ExtensionData.ToString(), o.Keywords, 0, -1, -1, 
+                                          String.Empty, -1, o.PostingTime, o.PostedBy.Id,
                                           (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 
     static internal int WriteProperty(Property o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
-                                          o.Name, o.PropertyKind.Value, o.Notes, o.AntecedentNotes,
-                                          o.AsText, o.Location.ToSearchVector(), o.ExtensionData.ToString(),
-                                          o.Keywords, o.LotSize, o.LotSizeUnit.Id, o.IsPartitionOf.Id,
-                                          o.PartitionNo, o.MergedInto.Id, o.PostingTime, o.PostedBy.Id,
+                                          o.CadastralKey, o.Name, o.PropertyKind.Value, o.Notes, 
+                                          o.AntecedentNotes, o.AsText, o.Location.ToSearchVector(), 
+                                          o.ExtensionData.ToString(), o.Keywords, o.LotSize, 
+                                          o.LotSizeUnit.Id, o.IsPartitionOf.Id, o.PartitionNo, 
+                                          o.MergedInto.Id, o.PostingTime, o.PostedBy.Id,
                                           (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }

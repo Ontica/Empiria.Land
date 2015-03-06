@@ -31,10 +31,12 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public PropertyPartition(PropertyPartitionType partitionType = PropertyPartitionType.None,
-                             int partitionNo = 0, int totalPartitions = 0, decimal partitionSize = 0m,
-                             int partitionSizeUnitId = -1, decimal availableSize = 0m,
-                             int availableSizeUnitId = -1) {
+    public PropertyPartition(string cadastralKey, 
+                             PropertyPartitionType partitionType = PropertyPartitionType.None,
+                             int partitionNo = 0, int totalPartitions = 0,
+                             decimal partitionSize = 0m, int partitionSizeUnitId = -1, 
+                             decimal availableSize = 0m, int availableSizeUnitId = -1) {
+      this.CadastralKey = cadastralKey;
       this.PartitionType = partitionType;
       this.PartitionNo = partitionNo;
       this.TotalPartitions = totalPartitions;
@@ -47,6 +49,11 @@ namespace Empiria.Land.Registration {
     #region Properties
 
     public PropertyPartitionType PartitionType {
+      get;
+      private set;
+    }
+
+    public string CadastralKey {
       get;
       private set;
     }
