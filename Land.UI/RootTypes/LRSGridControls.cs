@@ -465,9 +465,17 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "&nbsp;");
       } else if (!property.IsPartitionOf.IsEmptyInstance) {
         var partitionAntecedent = property.IsPartitionOf.GetDomainAntecedent(recordingAct);
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Fracción " + property.PartitionNo +
-                   (property.IsPartitionOf.MergedInto.Equals(property) ? " y última" : String.Empty)
-                   + " del predio inscrito en " + partitionAntecedent.PhysicalRecording.FullNumber);
+        if (property.PartitionNo.StartsWith("Lote") ||
+            property.PartitionNo.StartsWith("Casa") ||
+            property.PartitionNo.StartsWith("Departamento")) {
+          temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", property.PartitionNo +
+                     (property.IsPartitionOf.MergedInto.Equals(property) ? " y última" : String.Empty)
+                     + " del predio inscrito en " + partitionAntecedent.PhysicalRecording.FullNumber);
+        } else {
+          temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Fracción " + property.PartitionNo +
+                     (property.IsPartitionOf.MergedInto.Equals(property) ? " y última" : String.Empty)
+                     + " del predio inscrito en " + partitionAntecedent.PhysicalRecording.FullNumber);
+        }
       } else if (antecedent.Equals(InformationAct.Empty)) {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Sin antecedente registral");
       } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {

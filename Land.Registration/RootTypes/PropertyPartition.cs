@@ -26,6 +26,18 @@ namespace Empiria.Land.Registration {
     Full = 'F'
   }
 
+  public enum PropertyPartitionSubtype {
+    None = 'N',
+    Whole = 'W',
+    Lot = 'L',
+    Apartment = 'A',
+    House = 'H',
+    Partial = 'P',
+    PartialUnknown = 'Q',
+    Last = 'S',
+    LastUnknown = 'T',
+  }
+
   /// <summary>Contains data about a property partition or subdivision.</summary>
   public class PropertyPartition {
 
@@ -33,11 +45,13 @@ namespace Empiria.Land.Registration {
 
     public PropertyPartition(string cadastralKey, 
                              PropertyPartitionType partitionType = PropertyPartitionType.None,
+                             PropertyPartitionSubtype partitionSubtype = PropertyPartitionSubtype.None, 
                              int partitionNo = 0, int totalPartitions = 0,
                              decimal partitionSize = 0m, int partitionSizeUnitId = -1, 
                              decimal availableSize = 0m, int availableSizeUnitId = -1) {
       this.CadastralKey = cadastralKey;
       this.PartitionType = partitionType;
+      this.PartitionSubtype = partitionSubtype;
       this.PartitionNo = partitionNo;
       this.TotalPartitions = totalPartitions;
       this.Size = Quantity.Parse(Unit.Parse(partitionSizeUnitId), partitionSize);
@@ -49,6 +63,11 @@ namespace Empiria.Land.Registration {
     #region Properties
 
     public PropertyPartitionType PartitionType {
+      get;
+      private set;
+    }
+
+    public PropertyPartitionSubtype PartitionSubtype {
       get;
       private set;
     }
@@ -90,7 +109,8 @@ namespace Empiria.Land.Registration {
       var json = new JsonObject();
 
       json.Add(new JsonItem("type", this.PartitionType.ToString()));
-
+      json.Add(new JsonItem("subType", this.PartitionSubtype.ToString()));
+      json.Add(new JsonItem("partitionNo", this.PartitionNo.ToString()));
       json.Add(new JsonItem("availableSize", this.AvailableSize.Amount));
       json.Add(new JsonItem("availableSizeUnit", this.AvailableSize.Unit.Id));
       if (this.TotalPartitions != 0) {

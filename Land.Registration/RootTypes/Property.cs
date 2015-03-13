@@ -172,14 +172,12 @@ namespace Empiria.Land.Registration {
       //Assertion.Assert(this.MergedInto.IsEmptyInstance,
       //                 "Current property already has been merged into one or more properties.");
 
-      string prefix = String.Empty;
-      if (partitionInfo.PartitionType == PropertyPartitionType.Full) {
-        prefix = "Lote ";
-      }
+      string prefix = GetPartitionSubtypeName(partitionInfo);
+
       var lot = new Property(partitionInfo.CadastralKey);
       lot.IsPartitionOf = this;
       if (partitionInfo.PartitionNo != 0) {
-        lot.PartitionNo = prefix + partitionInfo.PartitionNo.ToString("00");
+        lot.PartitionNo = prefix + " " + partitionInfo.PartitionNo.ToString("00");
       } else {
         lot.PartitionNo = "sin número";
       }
@@ -189,6 +187,22 @@ namespace Empiria.Land.Registration {
       lot.Save();
 
       return lot;
+    }
+
+    private string GetPartitionSubtypeName(PropertyPartition partitionInfo) {
+      if (partitionInfo.PartitionType != PropertyPartitionType.Full) {
+        return String.Empty;
+      }
+      switch (partitionInfo.PartitionSubtype) {
+        case PropertyPartitionSubtype.Apartment:
+          return "Departamento";
+        case PropertyPartitionSubtype.House:
+          return "Casa";
+        case PropertyPartitionSubtype.Lot:
+          return "Lote";
+        default:
+          throw Assertion.AssertNoReachThisCode();
+      }
     }
 
     private Property[] CreateAllPartitions(PropertyPartition partitionInfo) {
