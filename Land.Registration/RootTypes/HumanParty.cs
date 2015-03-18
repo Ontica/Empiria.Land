@@ -22,93 +22,63 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public HumanParty() {
+    private HumanParty() {
       // Required by Empiria Framework.
+    }
+
+    public HumanParty(string UID, string firstName,
+                      string lastName, string lastName2) :
+                                  base(UID, HumanParty.BuildFullName(firstName, lastName, lastName2)) {
+      this.FirstName = EmpiriaString.TrimAll(firstName);
+      this.LastName = EmpiriaString.TrimAll(lastName);
+      this.LastName2 = EmpiriaString.TrimAll(lastName2);
+    }
+
+    static private string BuildFullName(string firstName, string lastName, string lastName2) {
+      Assertion.AssertObject(firstName, "firstName");
+      Assertion.AssertObject(lastName, "lastName");
+
+      firstName = EmpiriaString.TrimAll(firstName);
+      lastName = EmpiriaString.TrimAll(lastName);
+      lastName2 = EmpiriaString.TrimAll(lastName2);
+
+      string fullName = firstName + " " + lastName;
+      if (lastName2.Length != 0) {
+        fullName += " " + lastName2;
+      }
+      return fullName;
     }
 
     static public new HumanParty Parse(int id) {
       return BaseObject.ParseId<HumanParty>(id);
     }
 
+    static public HumanParty Empty {
+      get {
+        return BaseObject.ParseEmpty<HumanParty>();
+      }
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
 
-    [DataField("CURPNumber")]
-    public string CURPNumber {
-      get;
-      set;
-    }
-
-    [DataField("FirstFamilyName")]
-    public string FirstFamilyName {
-      get;
-      set;
-    }
-
     [DataField("FirstName")]
     public string FirstName {
       get;
-      set;
+      private set;
     }
 
-    [DataField("Gender", Default = Gender.Unknown)]
-    public Gender Gender {
+    [DataField("LastName")]
+    public string LastName {
       get;
-      set;
+      private set;
     }
 
-    [DataField("IFENumber")]
-    public string IFENumber {
+    [DataField("LastName2")]
+    public string LastName2 {
       get;
-      set;
-    }
-
-    internal protected override string Keywords {
-      get {
-        return EmpiriaString.BuildKeywords(base.FullName, this.Nicknames, this.CURPNumber,
-                                           this.TaxIDNumber, this.IFENumber,
-                                           this.RegistryDate.ToString("dd/MMM/yyyy"));
-      }
-    }
-
-    [DataField("MaritalFamilyName")]
-    public string MaritalFamilyName {
-      get;
-      set;
-    }
-
-    [DataField("SecondFamilyName")]
-    public string SecondFamilyName {
-      get;
-      set;
-    }
-
-    public override string RegistryID {
-      get {
-        if (this.CURPNumber.Length != 0) {
-          return this.CURPNumber;
-        } else if (this.TaxIDNumber.Length != 0) {
-          return this.TaxIDNumber;
-        } else if (this.IFENumber.Length != 0) {
-          return this.IFENumber;
-        } else if (this.RegistryDate != ExecutionServer.DateMaxValue) {
-          return this.RegistryDate.ToString("dd/MMM/yyyy");
-        } else {
-          return String.Empty;
-        }
-      }
-    }
-
-    public override string FullName {
-      get {
-        string fullName = this.FirstName + " " + this.FirstFamilyName + " " + this.SecondFamilyName;
-        if (this.MaritalFamilyName.Length != 0 &&
-           !this.MaritalFamilyName.ToLowerInvariant().StartsWith("de ")) {
-          fullName += " de " + this.MaritalFamilyName;
-        }
-        return fullName;
-      }
+      private set;
     }
 
     #endregion Public properties

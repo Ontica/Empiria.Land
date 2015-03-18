@@ -27,8 +27,7 @@ namespace Empiria.Land.Registration {
 
   public enum PartyFilterType {
     ByKeywords = 1,
-    OnInscription = 2,
-    OnRecordingBook = 3,
+    //OnInscription = 2,
     Involved = 4,
   }
 
@@ -39,6 +38,11 @@ namespace Empiria.Land.Registration {
 
     protected Party() {
       // Required by Empiria Framework.
+    }
+
+    protected Party(string UID, string fullName) {
+      this.UID = UID;
+      this.FullName = fullName;
     }
 
     static public Party Parse(int id) {
@@ -66,79 +70,35 @@ namespace Empiria.Land.Registration {
       get {
         string temp = this.FullName;
 
-        if (this.RegistryID.Length != 0) {
-          temp += " (" + this.RegistryID + ")";
+        if (this.UID.Length != 0) {
+          temp += " (" + this.UID + ")";
         }
-        if (this.RegistryLocation.IsSpecialCase) {
-          return temp;
-        } else {
-          return temp + " " + this.RegistryLocation.FullName;
-        }
+        return temp;
       }
     }
 
-    [DataField("FullName")]
-    public virtual string FullName {
+    [DataField("PartyFullName")]
+    public string FullName {
       get;
-      set;
+      private set;
     }
 
-    internal protected virtual string Keywords {
+    [DataField("PartyUID")]
+    public string UID {
+      get;
+      private set;
+    }
+
+    [DataField("PartyExtData")]
+    public string ExtendedData {
+      get;
+      private set;
+    }
+
+    protected internal virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.FullName, this.Nicknames, this.ExtendedName);
+        return EmpiriaString.BuildKeywords(this.UID, this.FullName);
       }
-    }
-
-    [DataField("Nicknames")]
-    public string Nicknames {
-      get;
-      set;
-    }
-
-    [DataField("PartyNotes")]
-    public string Notes {
-      get;
-      set;
-    }
-
-    [DataField("PostedById")]
-    public Contact PostedBy {
-      get;
-      private set;
-    }
-
-    [DataField("PostingTime", Default = "DateTime.Now")]
-    public DateTime PostingTime {
-      get;
-      private set;
-    }
-
-    [DataField("RegistryDate")]
-    public DateTime RegistryDate {
-      get;
-      set;
-    }
-
-    public abstract string RegistryID {
-      get;
-    }
-
-    [DataField("RegistryLocationId")]
-    public GeographicRegion RegistryLocation {
-      get;
-      set;
-    }
-
-    [DataField("ReplacedById")]
-    public int ReplacedById {
-      get;
-      private set;
-    }
-
-    [DataField("PartyShortName")]
-    public string ShortName {
-      get;
-      set;
     }
 
     [DataField("PartyStatus", Default = PartyStatus.Pending)]
@@ -164,18 +124,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    [DataField("PartyTags")]
-    public string Tags {
-      get;
-      set;
-    }
-
-    [DataField("TaxIDNumber")]
-    public string TaxIDNumber {
-      get;
-      set;
-    }
-
     #endregion Public properties
 
     #region Public methods
@@ -187,13 +135,6 @@ namespace Empiria.Land.Registration {
 
     public RecordingActParty GetLastRecordingActParty(DateTime searchStartDate) {
       return PropertyData.TryGetLastRecordingActParty(this, searchStartDate);
-    }
-
-    protected override void OnSave() {
-      if (base.IsNew) {
-        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-        this.PostingTime = DateTime.Now;
-      }
     }
 
     #endregion Public methods

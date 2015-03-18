@@ -26,8 +26,8 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    static public OrganizationParty Create(ObjectTypeInfo objectTypeInfo) {
-      return BaseObject.Create<OrganizationParty>(objectTypeInfo);
+    public OrganizationParty(string UID, string fullName) : base(UID, fullName) {
+
     }
 
     static public new OrganizationParty Parse(int id) {
@@ -36,87 +36,7 @@ namespace Empiria.Land.Registration {
 
     #endregion Constructors and parsers
 
-    #region Public properties
-
-    [DataField("OrgDocBookNumber")]
-    public string AssocDocBookNumber {
-      get;
-      set;
-    }
-
-    [DataField("OrgDocNumber")]
-    public string AssocDocNumber {
-      get;
-      set;
-    }
-
-    [DataField("OrgDocEndSheet")]
-    public string AssocDocEndSheet {
-      get;
-      set;
-    }
-
-    [DataField("OrgDocIssueDate")]
-    public DateTime AssocDocIssueDate {
-      get;
-      set;
-    }
-
-    [DataField("OrgDocIssuedById")]
-    public Person AssocDocIssuedBy {
-      get;
-      set;
-    }
-
-    [DataField("OrgDocNotaryOfficeId")]
-    public NotaryOffice AssocDocNotaryOffice {
-      get;
-      set;
-    }
-
-    [DataField("OrgDocRecordingDate")]
-    public DateTime AssocDocRecordingDate {
-      get;
-      set;
-    }
-
-    [DataField("OrgDocRecordingNumber")]
-    public string AssocDocRecordingNumber {
-      get;
-      set;
-    }
-
-    [DataField("OrgDocRecordingOfficeId")]
-    public Organization AssocDocRecordingOffice {
-      get;
-      set;
-    }
-
-    [DataField("OrgDocStartSheet")]
-    public string AssocDocStartSheet {
-      get;
-      set;
-    }
-
-    internal protected override string Keywords {
-      get {
-        return EmpiriaString.BuildKeywords(base.FullName, this.Nicknames, this.TaxIDNumber);
-      }
-    }
-
-    #endregion Public properties
-
     #region Public methods
-
-    public override string RegistryID {
-      get {
-        if (this.TaxIDNumber.Length != 0) {
-          return this.TaxIDNumber;
-        } else {
-          return String.Empty;
-        }
-      }
-    }
 
     protected override void OnSave() {
       base.OnSave();
