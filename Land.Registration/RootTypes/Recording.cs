@@ -302,7 +302,7 @@ namespace Empiria.Land.Registration {
     //}
 
     public IList<Resource> GetResources() {
-      return PropertyData.GetRecordingResources(this);
+      return PropertyData.GetPhysicalRecordingResources(this);
     }
 
     public void SortRecordingActs() {
@@ -330,10 +330,6 @@ namespace Empiria.Land.Registration {
 
     public FixedList<RecordingAct> GetNoAnnotationActs() {
       return new FixedList<RecordingAct>(this.RecordingActs.FindAll((x) => !x.IsAnnotation));
-    }
-
-    public FixedList<TractIndexItem> GetPropertiesAnnotationsList() {
-      return PropertyData.GetRecordingPropertiesAnnotationsList(this);
     }
 
     protected override void OnSave() {

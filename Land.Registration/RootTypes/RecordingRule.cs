@@ -5,8 +5,8 @@
 *  Type      : RecordingRule                                  Pattern  : Empiria Structure Type              *
 *  Version   : 2.0        Date: 04/Jan/2015                   License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Describes the conditions and business rules that have to be fulfilled when a                  *
-*              RecordingAct is registered.                                                                   *
+*  Summary   : Describes the conditions and business rules that have to be fulfilled                         *
+*              when a RecordingAct is registered.                                                            *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -41,8 +41,8 @@ namespace Empiria.Land.Registration {
     Document,
   }
 
-  /// <summary>Describes the conditions and business rules that have to be fulfilled when a
-  /// RecordingAct is registered.</summary>
+  /// <summary>Describes the conditions and business rules that have to be fulfilled
+  ///  when a RecordingAct is registered.</summary>
   public class RecordingRule {
 
     #region Constructors and parsers
@@ -63,7 +63,7 @@ namespace Empiria.Land.Registration {
       this.IsAnnotation = json.Get<bool>("IsAnnotation", false);
       this.IsCancelation = json.Get<bool>("IsCancelation", false);
       this.IsModification = json.Get<bool>("IsModification", false);
-      
+
       this.NewProperty = PropertyRule.Parse(json.Slice("NewProperties", false));
 
       this.PropertyCount = ParsePropertyCount(json.Get<string>("PropertyCount", String.Empty));

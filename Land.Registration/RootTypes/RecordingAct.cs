@@ -30,17 +30,18 @@ namespace Empiria.Land.Registration {
 
     #region Fields
 
-    private Lazy<List<TractIndexItem>> attachedResources = null;
+    private Lazy<List<RecordingActTarget>> targets = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    protected RecordingAct(RecordingActType powertype) : base(powertype) {
+    protected RecordingAct(RecordingActType powertype)
+      : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    internal static RecordingAct Create(RecordingActType recordingActType, 
+    internal static RecordingAct Create(RecordingActType recordingActType,
                                         RecordingDocument document, int index) {
       Assertion.AssertObject(recordingActType, "recordingActType");
       Assertion.AssertObject(document, "document");
@@ -127,7 +128,9 @@ namespace Empiria.Land.Registration {
     [DataField("PhysicalRecordingId")]
     private LazyInstance<Recording> _physicalRecording = LazyInstance<Recording>.Empty;
     public Recording PhysicalRecording {
-      get { return _physicalRecording.Value; }
+      get {
+        return _physicalRecording.Value;
+      }
       private set {
         _physicalRecording = LazyInstance<Recording>.Parse(value);
       }
@@ -160,7 +163,9 @@ namespace Empiria.Land.Registration {
     [DataField("AmendmentOfId")]
     private LazyInstance<RecordingAct> _amendmentOf = LazyInstance<RecordingAct>.Empty;
     public RecordingAct AmendmentOf {
-      get { return _amendmentOf.Value; }
+      get {
+        return _amendmentOf.Value;
+      }
       private set {
         _amendmentOf = LazyInstance<RecordingAct>.Parse(value);
       }
@@ -169,7 +174,9 @@ namespace Empiria.Land.Registration {
     [DataField("AmendedById")]
     private LazyInstance<RecordingAct> _amendedBy = LazyInstance<RecordingAct>.Empty;
     public RecordingAct AmendedBy {
-      get { return _amendedBy.Value; }
+      get {
+        return _amendedBy.Value;
+      }
       private set {
         _amendedBy = LazyInstance<RecordingAct>.Parse(value);
       }
@@ -240,9 +247,9 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public FixedList<TractIndexItem> TractIndex {
+    public FixedList<RecordingActTarget> Targets {
       get {
-        return attachedResources.Value.ToFixedList();
+        return targets.Value.ToFixedList();
       }
     }
 
@@ -280,18 +287,18 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public TractIndexItem AttachResource(Resource resource) {
+    public RecordingActTarget AttachResource(Resource resource) {
       Assertion.AssertObject(resource, "resource");
       Assertion.Assert(!this.IsNew, "this is new");
       Assertion.Assert(!this.IsEmptyInstance, "this is empty");
       Assertion.Assert(!resource.IsEmptyInstance, "resource is empty");
       Assertion.Assert(!resource.IsNew, "resource is new");
 
-      var item = new TractIndexItem(resource, this);
+      var item = new ResourceTarget(this, resource, ResourceRole.Informative);
 
       item.Save();
 
-      attachedResources.Value.Add(item);
+      targets.Value.Add(item);
 
       return item;
     }
@@ -311,9 +318,9 @@ namespace Empiria.Land.Registration {
       if (this.IsEmptyInstance) {
         return;
       }
-      var tractIndex = this.TractIndex;
+      var tractIndex = this.Targets;
       for (int i = 0; i < tractIndex.Count; i++) {
-        var property = TractIndex[i].Resource;
+        var property = Targets[i].Resource;
         tractIndex[i].Delete();
 
         var tract = property.GetRecordingActsTract();
@@ -327,7 +334,7 @@ namespace Empiria.Land.Registration {
       this.Save();
 
       if (this.IsAmendment && this.AmendmentOf.Document.IsEmptyDocument) {
-          this.AmendmentOf.Delete();
+        this.AmendmentOf.Delete();
       } else if (this.IsAmendment && !this.AmendmentOf.Document.IsEmptyDocument) {
         this.AmendmentOf.RemoveAmendment();
       }
@@ -339,7 +346,7 @@ namespace Empiria.Land.Registration {
     }
 
     public IList<Property> GetProperties() {
-      var tract = attachedResources.Value;
+      var tract = targets.Value;
       var list = new List<Property>(tract.Count);
       foreach (var item in tract) {
         if (!list.Contains((Property) item.Resource)) {
@@ -349,8 +356,8 @@ namespace Empiria.Land.Registration {
       return list;
     }
 
-    public TractIndexItem GetPropertyEvent(Property property) {
-      var propertyEvent = this.TractIndex.Find((x) => x.Resource.Equals(property));
+    public RecordingActTarget GetPropertyEvent(Property property) {
+      var propertyEvent = this.Targets.Find((x) => x.Resource.Equals(property));
       if (propertyEvent != null) {
         return propertyEvent;
       } else {
@@ -360,17 +367,17 @@ namespace Empiria.Land.Registration {
     }
 
     public bool IsFirstRecordingAct() {
-      if (this.TractIndex.Count == 0) {
+      if (this.Targets.Count == 0) {
         return false;
       }
-      Resource resource = this.TractIndex[0].Resource;
+      Resource resource = this.Targets[0].Resource;
 
       return resource.IsFirstRecordingAct(this);
     }
 
     protected override void OnInitialize() {
       this.ExtensionData = new RecordingActExtData();
-      this.attachedResources = new Lazy<List<TractIndexItem>>(() => RecordingActsData.GetTractIndex(this));
+      this.targets = new Lazy<List<RecordingActTarget>>(() => RecordingActsData.GetRecordingActTargets(this));
     }
 
     protected override void OnLoadObjectData(DataRow row) {
@@ -382,14 +389,14 @@ namespace Empiria.Land.Registration {
         this.RegistrationTime = DateTime.Now;
         this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
-      foreach (TractIndexItem tractItem in this.TractIndex) {
+      foreach (RecordingActTarget tractItem in this.Targets) {
         tractItem.Save();
       }
       RecordingActsData.WriteRecordingAct(this);
     }
 
     public void RemoveProperty(Property property) {
-      TractIndexItem propertyEvent = this.TractIndex.Find((x) => x.Resource.Equals(property));
+      RecordingActTarget propertyEvent = this.Targets.Find((x) => x.Resource.Equals(property));
 
       Assertion.AssertObject(propertyEvent,
                 new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
@@ -402,7 +409,7 @@ namespace Empiria.Land.Registration {
       }
 
       //_propertyList.Reset();
-      if (this.TractIndex.Count == 0) {
+      if (this.Targets.Count == 0) {
         this.Status = RecordableObjectStatus.Deleted;
         this.Save();
       }

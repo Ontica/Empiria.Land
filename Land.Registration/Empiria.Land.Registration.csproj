@@ -125,6 +125,9 @@
     <Compile Include="RootTypes\CadastralInfo.cs" />
     <Compile Include="RootTypes\Certificate.cs" />
     <Compile Include="RootTypes\Association.cs" />
+    <Compile Include="RootTypes\DocumentTarget.cs" />
+    <Compile Include="RootTypes\PartyTarget.cs" />
+    <Compile Include="RootTypes\ResourceTarget.cs" />
     <Compile Include="RootTypes\Resource.cs" />
     <Compile Include="RootTypes\RecordableObjectStatus.cs" />
     <Compile Include="RootTypes\RecordingActInfo.cs" />
@@ -132,8 +135,9 @@
     <Compile Include="RootTypes\RecordingExtData.cs" />
     <Compile Include="RootTypes\PropertyKind.cs" />
     <Compile Include="RootTypes\PropertyPartition.cs" />
-    <Compile Include="RootTypes\TractIndexItemExtData.cs" />
-    <Compile Include="RootTypes\TractIndexItem.cs" />
+    <Compile Include="RootTypes\RecordingActTarget.cs" />
+    <Compile Include="RootTypes\RecordingActTargetExtData.cs" />
+    <Compile Include="RootTypes\ZZTractIndexItem.cs" />
     <Compile Include="RootTypes\RecordingActExtData.cs" />
     <Compile Include="RootTypes\ContractData.cs" />
     <Compile Include="RootTypes\PropertyRule.cs" />

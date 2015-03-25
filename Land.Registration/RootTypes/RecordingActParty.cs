@@ -284,7 +284,7 @@ namespace Empiria.Land.Registration {
         this.PostingTime = DateTime.Now;
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
-      PropertyData.WriteRecordingActParty(this);
+      RecordingActsData.WriteRecordingActParty(this);
     }
 
     #endregion Public methods

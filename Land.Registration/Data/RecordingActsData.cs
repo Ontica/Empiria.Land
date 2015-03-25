@@ -72,14 +72,14 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList<RecordingAct>(operation, (x) => BaseObject.ParseList<RecordingAct>(x));
     }
 
-    static internal List<TractIndexItem> GetTractIndex(RecordingAct recordingAct) {
+    static internal List<RecordingActTarget> GetRecordingActTargets(RecordingAct recordingAct) {
       if (recordingAct.IsEmptyInstance) {
-        return new List<TractIndexItem>();
+        return new List<RecordingActTarget>();
       }
 
-      var operation = DataOperation.Parse("qryLRSRecordingActTractIndex", recordingAct.Id);
+      var operation = DataOperation.Parse("qryLRSRecordingActTargets", recordingAct.Id);
 
-      return DataReader.GetList<TractIndexItem>(operation, (x) => BaseObject.ParseList<TractIndexItem>(x));
+      return DataReader.GetList<RecordingActTarget>(operation, (x) => BaseObject.ParseList<RecordingActTarget>(x));
     }
 
     static internal FixedList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
@@ -90,9 +90,8 @@ namespace Empiria.Land.Registration.Data {
               "AND PartyRoleId <> -1 AND LinkStatus <> 'X'";
       } else {
         string ids = String.Empty;
-        FixedList<TractIndexItem> events = recordingAct.TractIndex;
-        for (int i = 0; i < events.Count; i++) {
-          FixedList<RecordingAct> acts = events[i].Resource.GetRecordingActsTract();
+        for (int i = 0; i < recordingAct.Targets.Count; i++) {
+          FixedList<RecordingAct> acts = recordingAct.Targets[i].Resource.GetRecordingActsTract();
 
           for (int j = 0; j < acts.Count; j++) {
             if (ids.Length != 0) {
@@ -108,7 +107,7 @@ namespace Empiria.Land.Registration.Data {
       }
 
       return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
-                                        (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
+                                                  (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
     static internal FixedList<RecordingActParty> GetRecordingActPartiesList(RecordingAct recordingAct) {
@@ -117,7 +116,7 @@ namespace Empiria.Land.Registration.Data {
                    "AND LinkStatus <> 'X'";
 
       return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
-                                        (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
+                                                   (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
     static internal FixedList<RecordingActParty> GetDomainPartyList(RecordingAct recordingAct) {
@@ -126,7 +125,7 @@ namespace Empiria.Land.Registration.Data {
                    "AND PartyRoleId <> -1 AND LinkStatus <> 'X'";
 
       return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
-                                        (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
+                                                  (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
     static internal FixedList<Property> GetRecordingActPropertiesList(RecordingAct recordingAct) {
@@ -143,9 +142,8 @@ namespace Empiria.Land.Registration.Data {
                    "AND SecondaryPartyRoleId <> -1 AND LinkStatus <> 'X'";
 
       return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
-                                        (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
+                                                  (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
-
 
     static internal int WriteRecordingAct(RecordingAct o) {
       Assertion.Assert(o.Id != 0, "RecordingAct.Id can't be zero");
@@ -157,6 +155,54 @@ namespace Empiria.Land.Registration.Data {
                                           o.Keywords, o.AmendmentOf.Id, o.AmendedBy.Id, o.PhysicalRecording.Id,
                                           o.RegisteredBy.Id, o.RegistrationTime,
                                           (char) o.Status, o.Integrity.GetUpdatedHashCode());
+      return DataWriter.Execute(operation);
+    }
+
+    static internal int WriteRecordingActParty(RecordingActParty o) {
+      var dataOperation = DataOperation.Parse("writeLRSRecordingActParty", o.Id, o.RecordingAct.Id,
+                                               o.Party.Id, o.PartyRole.Id, o.SecondaryParty.Id,
+                                               o.SecondaryPartyRole.Id, o.Notes, (char) o.OwnershipMode,
+                                               o.OwnershipPart.Amount, o.OwnershipPart.Unit.Id,
+                                               (char) o.UsufructMode, o.UsufructTerm,
+                                               o.PartyOccupation.Id, o.PartyMarriageStatus.Id,
+                                               o.PartyAddress, o.PartyAddressPlace.Id, o.PostedBy.Id,
+                                               o.PostingTime, (char) o.Status, o.IntegrityHashCode);
+      return DataWriter.Execute(dataOperation);
+    }
+
+    static internal int WriteDocumentTarget(DocumentTarget o) {
+      Assertion.Assert(o.Id > 0, "Id needs to be positive.");
+      Assertion.Assert(o.Document.Id > 0, "Document Id must be positive.");
+      Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
+
+      var operation = DataOperation.Parse("writeLRSRecordingActTarget", o.Id, o.GetEmpiriaType().Id,
+                                          o.RecordingAct.Id, -1, ResourceRole.NotApply, -1,
+                                          o.TargetAct.Id, -1, o.ExtensionData.ToJson(), (char) o.Status,
+                                          o.Integrity.GetUpdatedHashCode());
+      return DataWriter.Execute(operation);
+    }
+
+    static internal int WritePartyTarget(PartyTarget o) {
+      Assertion.Assert(o.Id > 0, "Id needs to be positive.");
+      Assertion.Assert(o.Party.Id > 0, "Party Id must be positive.");
+      Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
+
+      var operation = DataOperation.Parse("writeLRSRecordingActTarget", o.Id, o.GetEmpiriaType().Id,
+                                          o.RecordingAct.Id, o.Resource.Id, (char) o.ResourceRole, o.Party.Id,
+                                          o.TargetAct.Id, -1, o.ExtensionData.ToJson(), (char) o.Status,
+                                          o.Integrity.GetUpdatedHashCode());
+      return DataWriter.Execute(operation);
+    }
+
+    static internal int WriteResourceTarget(ResourceTarget o) {
+      Assertion.Assert(o.Id > 0, "Id needs to be positive.");
+      Assertion.Assert(o.Resource.Id > 0, "Resource Id must be positive.");
+      Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
+
+      var operation = DataOperation.Parse("writeLRSRecordingActTarget", o.Id, o.GetEmpiriaType().Id,
+                                          o.RecordingAct.Id, o.Resource.Id, (char) o.ResourceRole, -1,
+                                          o.TargetAct.Id, -1, o.ExtensionData.ToJson(), (char) o.Status,
+                                          o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 

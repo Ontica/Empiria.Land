@@ -39,7 +39,7 @@ namespace Empiria.Land.Registration {
                          int precedentRecordingBookId = -1,
                          int precedentRecordingId = -1, int precedentResourceId = -1,
                          int quickAddRecordingNumber = -1,
-                         string resourceName = "", string cadastralKey = "", 
+                         string resourceName = "", string cadastralKey = "",
                          string quickAddRecordingSubnumber = "",
                          string quickAddRecordingSuffixTag = "",
                          PropertyPartition partition = null, RecordingActInfo targetActInfo = null) {

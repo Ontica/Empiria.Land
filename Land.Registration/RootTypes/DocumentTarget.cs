@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : Association                                    Pattern  : Empiria Object Type                 *
+*  Type      : DocumentTarget                                 Pattern  : Association Class                   *
 *  Version   : 2.0        Date: 04/Jan/2015                   License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Represents a social association or organization.                                              *
+*  Summary   : Application of a recording act with a party (person or organization).                         *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -13,54 +13,52 @@ using System.Data;
 
 using Empiria.Contacts;
 using Empiria.DataTypes;
-using Empiria.Geography;
-using Empiria.Json;
 using Empiria.Security;
+
 using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Represents a social association or organization.</summary>
-  public class Association : Resource {
+  /// <summary>Application of a recording act with a party (person or organization).</summary>
+  public class DocumentTarget : RecordingActTarget {
 
     #region Constructors and parsers
 
-    private Association() {
-      // Required by Empiria Framework
+    protected DocumentTarget() {
+      // Required by Empiria Framework.
     }
 
-    internal Association(string associationName) : base(associationName) {
+    internal DocumentTarget(RecordingAct recordingAct, RecordingDocument document)
+        : base(recordingAct) {
+      Assertion.AssertObject(document, "document");
 
+      this.Document = document;
+    }
+
+    static public new ResourceTarget Parse(int id) {
+      return BaseObject.ParseId<ResourceTarget>(id);
     }
 
     #endregion Constructors and parsers
 
+    #region Public properties
+
+    [DataField("TargetDocumentId", Default = "Empiria.Land.Registration.InformationAct.Empty")]
+    public RecordingDocument Document {
+      get;
+      private set;
+    }
+
+    #endregion Public properties
+
     #region Public methods
 
-    protected override string CreatePropertyKey() {
-      return TransactionData.GenerateAssociationKey();
-    }
-
     protected override void OnSave() {
-      PropertyData.WriteAssociation(this);
-    }
-
-    static public new Resource Parse(int id) {
-      return BaseObject.ParseId<Resource>(id);
-    }
-
-    static public new Resource TryParseWithUID(string propertyUID) {
-      DataRow row = PropertyData.GetPropertyWithUID(propertyUID);
-
-      if (row != null) {
-        return BaseObject.ParseDataRow<Resource>(row);
-      } else {
-        return null;
-      }
+      RecordingActsData.WriteDocumentTarget(this);
     }
 
     #endregion Public methods
 
-  }  // class Association
+  } // class DocumentTarget
 
 } // namespace Empiria.Land.Registration

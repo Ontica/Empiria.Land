@@ -28,7 +28,7 @@ namespace Empiria.Land.Registration {
     protected Resource() {
       // Required by Empiria Framework.
     }
-    
+
     protected Resource(string name) {
       this.Name = name;
     }

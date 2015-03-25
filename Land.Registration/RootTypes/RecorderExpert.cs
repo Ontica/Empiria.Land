@@ -75,12 +75,12 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public void AssertValidTask() {
-      string sMsg = String.Empty; 
+      string sMsg = String.Empty;
       if (NeedCreateAdditionalResourceOnPhysicalRecording) {
         throw new NotImplementedException();
       }
-      if (NeedCreateResourceOnNewPhysicalRecording && 
-          Task.PrecedentRecordingBook.ExistsRecording(Task.QuickAddRecordingNumber, 
+      if (NeedCreateResourceOnNewPhysicalRecording &&
+          Task.PrecedentRecordingBook.ExistsRecording(Task.QuickAddRecordingNumber,
                                                       Task.QuickAddRecordingSubNumber,
                                                       Task.QuickAddRecordingSuffixTag)) {
           sMsg = "La partida indicada ya existe en el libro seleccionado,\n" +

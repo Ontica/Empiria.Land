@@ -247,10 +247,10 @@ namespace Empiria.Land.Registration {
     #endregion Public properties
 
     #region Public methods
-    
+
     public RecordingAct AppendRecordingAct(RecordingActType recordingActType) {
       Assertion.AssertObject(recordingActType, "recordingActType");
-      Assertion.Assert(recordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Document, 
+      Assertion.Assert(recordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Document,
                        "This method is allowed only for document type recording acts.");
       Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance");
       Assertion.Assert(this.Status != RecordableObjectStatus.Closed,

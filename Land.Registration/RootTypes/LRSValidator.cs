@@ -49,10 +49,10 @@ namespace Empiria.Land.Registration {
     }
 
     static public LandRegistrationException ValidateDeleteRecordingAct(RecordingAct recordingAct) {
-      if (recordingAct.TractIndex.Count > 1) {
+      if (recordingAct.Targets.Count > 1) {
         return new LandRegistrationException(LandRegistrationException.Msg.RecordingActHasTwoOrMoreProperties);
       }
-      Resource resource = recordingAct.TractIndex[0].Resource;
+      Resource resource = recordingAct.Targets[0].Resource;
       FixedList<RecordingAct> domainActs = resource.GetRecordingActsTract();
       if ((domainActs.Count > 1) && (resource.FirstRecordingAct.Equals(recordingAct))) {
         return new LandRegistrationException(LandRegistrationException.Msg.PropertyIsReferencedInOtherDomainActs,

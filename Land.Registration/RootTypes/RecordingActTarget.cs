@@ -2,10 +2,11 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : PropertyEvent                                  Pattern  : Association Class                   *
+*  Type      : RecordingActTarget                             Pattern  : Association Class                   *
 *  Version   : 2.0        Date: 04/Jan/2015                   License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Represents a recording act/property association.                                              *
+*  Summary   : Application of a recording act with another entity that can be a resource (property or        *
+*              association), a document, a party (person or organization) or another recording act.          *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -19,30 +20,30 @@ using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Represents a recording act/property association.</summary>
-  public class TractIndexItem : BaseObject, IExtensible<TractIndexItemExtData>, IProtected {
+  /// <summary>Application of a recording act with another entity that can be a resource (property
+  /// or association), a document, a party (person or organization) or another recording act.</summary>
+  public abstract class RecordingActTarget : BaseObject, IExtensible<RecordingActTargetExtData>, IProtected {
 
     #region Constructors and parsers
 
-    private TractIndexItem() {
+    protected RecordingActTarget() {
       // Required by Empiria Framework.
     }
 
-    internal TractIndexItem(Resource resource, RecordingAct recordingAct) {
-      Assertion.AssertObject(resource, "resource");
+    protected RecordingActTarget(RecordingAct recordingAct) {
       Assertion.AssertObject(recordingAct, "recordingAct");
+      Assertion.Assert(!recordingAct.IsEmptyInstance, "recordingAct can't be the empty instance");
 
-      this.Resource = resource;
       this.RecordingAct = recordingAct;
     }
 
-    static public TractIndexItem Parse(int id) {
-      return BaseObject.ParseId<TractIndexItem>(id);
+    static public RecordingActTarget Parse(int id) {
+      return BaseObject.ParseId<RecordingActTarget>(id);
     }
 
-    static public TractIndexItem Empty {
+    static public RecordingActTarget Empty {
       get {
-        return BaseObject.ParseEmpty<TractIndexItem>();
+        return BaseObject.ParseEmpty<RecordingActTarget>();
       }
     }
 
@@ -50,39 +51,36 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField("PropertyId", Default = "Empiria.Land.Registration.Property.Empty", IsOptional = false)]
-    public Resource Resource {
-      get;
-      private set;
-    }
-
-    [DataField("RecordingActId", Default = "Empiria.Land.Registration.InformationAct.Empty", IsOptional = false)]
+    [DataField("RecordingActId", Default = "Empiria.Land.Registration.InformationAct.Empty")]
     public RecordingAct RecordingAct {
       get;
       private set;
     }
 
-    public TractIndexItemExtData ExtensionData {
+    [DataField("TargetRecordingActId", Default = "Empiria.Land.Registration.InformationAct.Empty")]
+    public RecordingAct TargetAct {
       get;
       private set;
     }
 
-    //[DataField("PostedById")]
-    public Contact PostedBy {
+    /// <summary>
+    ///  OOJJOO QUITAR ESTO.NO TODOS TIENEN RESOURCE.
+    /// </summary>
+    [DataField("TargetPropertyId", Default = "Empiria.Land.Registration.Property.Empty")]
+    public Resource Resource {
       get;
       private set;
     }
 
-    //[DataField("PostingTime", Default = "DateTime.Now")]
-    public DateTime PostingTime {
+    public RecordingActTargetExtData ExtensionData {
       get;
       private set;
     }
 
-    [DataField("TractIndexItemStatus", Default = RecordableObjectStatus.Pending)]
+    [DataField("RecordingActTargetStatus", Default = RecordableObjectStatus.Pending)]
     public RecordableObjectStatus Status {
       get;
-      set;  // OOJJOO Set the status using a special method and replace this public set accesor by a private one.
+      private set;
     }
 
     public string StatusName {
@@ -116,7 +114,7 @@ namespace Empiria.Land.Registration {
       if (version == 1) {
         return new object[] {
           1, "Id", this.Id, "RecordingAct", this.RecordingAct.Id,
-          "Property", this.Resource.Id, "ExtensionData", this.ExtensionData.ToJson(),
+          "ExtensionData", this.ExtensionData.ToJson(),
           "Status", (char) this.Status,
         };
       }
@@ -143,26 +141,15 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnInitialize() {
-      this.ExtensionData = new TractIndexItemExtData();
+      this.ExtensionData = new RecordingActTargetExtData();
     }
 
     protected override void OnLoadObjectData(DataRow row) {
-      this.ExtensionData = TractIndexItemExtData.Parse((string) row["TractItemExtData"]);
-    }
-
-    protected override void OnSave() {
-      if (this.Resource.IsNew) {
-        this.Resource.Save();
-      }
-      if (this.IsNew) {
-        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-        this.PostingTime = DateTime.Now;
-      }
-      PropertyData.WriteTractIndexItem(this);
+      this.ExtensionData = RecordingActTargetExtData.Parse((string) row["RecordingActTargetExtData"]);
     }
 
     #endregion Public methods
 
-  } // class TractIndexItem
+  } // class RecordingActTarget
 
 } // namespace Empiria.Land.Registration
