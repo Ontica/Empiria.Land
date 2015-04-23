@@ -122,10 +122,13 @@
     <Compile Include="Data\PropertyData.cs" />
     <Compile Include="Data\RecordingBooksData.cs" />
     <Compile Include="Empiria.Land.Registration.AssemblyInfo.cs" />
+    <Compile Include="RootTypes\DocumentAct.cs" />
     <Compile Include="RootTypes\CadastralInfo.cs" />
+    <Compile Include="RootTypes\ModificationAct.cs" />
     <Compile Include="RootTypes\Certificate.cs" />
     <Compile Include="RootTypes\Association.cs" />
     <Compile Include="RootTypes\DocumentTarget.cs" />
+    <Compile Include="RootTypes\AssociationAct.cs" />
     <Compile Include="RootTypes\PartyTarget.cs" />
     <Compile Include="RootTypes\ResourceTarget.cs" />
     <Compile Include="RootTypes\Resource.cs" />
