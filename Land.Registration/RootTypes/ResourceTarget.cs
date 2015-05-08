@@ -49,6 +49,19 @@ namespace Empiria.Land.Registration {
       this.ResourceRole = resourceRole;
     }
 
+    internal ResourceTarget(RecordingAct recordingAct, Resource resource,
+                            ResourceRole resourceRole, decimal percentage) : base(recordingAct) {
+      Assertion.AssertObject(resource, "resource");
+      Assertion.Assert(resourceRole != Registration.ResourceRole.NotApply,
+                       "resourceRole has a wrong value.");
+      Assertion.Assert(decimal.Zero < percentage && percentage < decimal.One,
+                       "percentage should be a value greater than zero and less than one.");
+
+      this.Resource = resource;
+      this.ResourceRole = resourceRole;
+      this.Percentage = percentage;
+    }
+
     static public new ResourceTarget Parse(int id) {
       return BaseObject.ParseId<ResourceTarget>(id);
     }
@@ -65,6 +78,12 @@ namespace Empiria.Land.Registration {
 
     [DataField("TargetPropertyRole", Default = ResourceRole.Informative)]
     public ResourceRole ResourceRole {
+      get;
+      private set;
+    }
+
+    [DataField("TargetPropertyPercentage", Default = 1.0)]
+    public decimal Percentage {
       get;
       private set;
     }

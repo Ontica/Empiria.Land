@@ -178,9 +178,9 @@ namespace Empiria.Land.Registration.Data {
       Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
 
       var operation = DataOperation.Parse("writeLRSRecordingActTarget", o.Id, o.GetEmpiriaType().Id,
-                                          o.RecordingAct.Id, -1, ResourceRole.NotApply, -1,
-                                          o.TargetAct.Id, -1, o.ExtensionData.ToJson(), (char) o.Status,
-                                          o.Integrity.GetUpdatedHashCode());
+                                          o.RecordingAct.Id, -1, ResourceRole.NotApply, 1.0m,
+                                          -1, o.TargetAct.Id, -1, o.ExtensionData.ToJson(),
+                                          (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 
@@ -190,9 +190,9 @@ namespace Empiria.Land.Registration.Data {
       Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
 
       var operation = DataOperation.Parse("writeLRSRecordingActTarget", o.Id, o.GetEmpiriaType().Id,
-                                          o.RecordingAct.Id, -1, (char) o.ResourceRole, o.Party.Id,
-                                          o.TargetAct.Id, -1, o.ExtensionData.ToJson(), (char) o.Status,
-                                          o.Integrity.GetUpdatedHashCode());
+                                          o.RecordingAct.Id, -1, (char) o.ResourceRole, 1.0m,
+                                          o.Party.Id, o.TargetAct.Id, -1, o.ExtensionData.ToJson(),
+                                          (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 
@@ -202,9 +202,9 @@ namespace Empiria.Land.Registration.Data {
       Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
 
       var operation = DataOperation.Parse("writeLRSRecordingActTarget", o.Id, o.GetEmpiriaType().Id,
-                                          o.RecordingAct.Id, o.Resource.Id, (char) o.ResourceRole, -1,
-                                          o.TargetAct.Id, -1, o.ExtensionData.ToJson(), (char) o.Status,
-                                          o.Integrity.GetUpdatedHashCode());
+                                          o.RecordingAct.Id, o.Resource.Id, (char) o.ResourceRole, o.Percentage,
+                                          -1, o.TargetAct.Id, -1, o.ExtensionData.ToJson(),
+                                          (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 
