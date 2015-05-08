@@ -21,11 +21,30 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
+    internal DocumentAct(RecordingActType recordingActType,
+                         RecordingDocument document) : base(recordingActType, document) {
+      this.AttachDocument();
+    }
+
     static public new DocumentAct Parse(int id) {
       return BaseObject.ParseId<DocumentAct>(id);
     }
 
     #endregion Constructors and parsers
+
+<<<<<<< HEAD
+
+=======
+>>>>>>> parent of e916ed1... AssociationAct and DocumentAct refactoring
+    #region Private methods
+
+    private void AttachDocument() {
+      var target = new DocumentTarget(this, this.Document);
+
+      base.AttachTarget(target);
+    }
+
+    #endregion Private methods
 
   } // class DocumentAct
 

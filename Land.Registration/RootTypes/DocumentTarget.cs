@@ -28,8 +28,7 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    internal DocumentTarget(RecordingAct recordingAct, RecordingDocument document)
-        : base(recordingAct) {
+    internal DocumentTarget(RecordingAct recordingAct, RecordingDocument document) : base(recordingAct) {
       Assertion.AssertObject(document, "document");
 
       this.Document = document;
@@ -43,7 +42,7 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField("TargetDocumentId", Default = "Empiria.Land.Registration.InformationAct.Empty")]
+    [DataField("TargetDocumentId")]
     public RecordingDocument Document {
       get;
       private set;
