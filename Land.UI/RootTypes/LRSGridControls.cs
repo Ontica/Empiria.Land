@@ -184,7 +184,7 @@ namespace Empiria.Land.UI {
         RecordingAct recordingAct = recordingActs[i];
         FixedList<RecordingActTarget> properties = recordingActs[i].Targets;
         for (int j = 0; j < properties.Count; j++) {
-          RecordingActTarget tractItem = properties[j];
+          var tractItem = (ResourceTarget) properties[j];
           if (i % 2 == 0) {
             temp = row.Replace("{CLASS}", "detailsItem");
           } else {
@@ -251,11 +251,12 @@ namespace Empiria.Land.UI {
         if (recordingAct.Targets.Count > 0) {
           counter++;
           for (int j = 0; j < recordingAct.Targets.Count; j++) {
-            html += GetRecordingActGridRow(recordingAct, recordingAct.Targets[j], counter, i, j,
+            html += GetRecordingActGridRow(recordingAct, (ResourceTarget) recordingAct.Targets[j], counter, i, j,
                                            document.RecordingActs.Count);
           }
         } else {
-          html += GetRecordingActGridRow(recordingAct, RecordingActTarget.Empty, counter, i, 0, document.RecordingActs.Count);
+          html += GetRecordingActGridRow(recordingAct, (ResourceTarget) RecordingActTarget.Empty,
+                                         counter, i, 0, document.RecordingActs.Count);
         }
       }
       return html;
@@ -274,20 +275,20 @@ namespace Empiria.Land.UI {
             if (index == 0 && tractItemIndex == 0) {
               counter++;
             }
-            html += GetRecordingActGridRowPhysicalBooks(recordingAct, tractItem, counter,
+            html += GetRecordingActGridRowPhysicalBooks(recordingAct, (ResourceTarget) tractItem, counter,
                                                         index, tractItemIndex);
             tractItemIndex++;
           }
         } else {
           counter++;
-          html += GetRecordingActGridRowPhysicalBooks(recordingAct, RecordingActTarget.Empty, counter, index, 0);
+          html += GetRecordingActGridRowPhysicalBooks(recordingAct, (ResourceTarget) RecordingActTarget.Empty, counter, index, 0);
         }
         index++;
       }  // foreach RecordingAct
       return html;
     }
 
-    static private string GetRecordingActGridRow(RecordingAct recordingAct, RecordingActTarget tractItem, int counter,
+    static private string GetRecordingActGridRow(RecordingAct recordingAct, ResourceTarget tractItem, int counter,
                                                  int recordingActIndex, int tractItemIndex, int recordingActsCount) {
 
       const string row = "<tr class='{CLASS}'>" +
@@ -452,7 +453,7 @@ namespace Empiria.Land.UI {
     }
 
     static private string GetRecordingActGridRowPhysicalBooks(RecordingAct recordingAct,
-                                                              RecordingActTarget target, int counter,
+                                                              ResourceTarget target, int counter,
                                                               int recordingActIndex, int propertyEventIndex) {
       const string row = "<tr class='{CLASS}'>" +
                            "<td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b><br/>" +

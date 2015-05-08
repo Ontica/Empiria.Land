@@ -78,7 +78,9 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
-      return RecordingActsData.GetInvolvedDomainParties(recordingAct);
+      throw new NotImplementedException("OOJJOO");
+
+      //return RecordingActsData.GetInvolvedDomainParties(recordingAct);
     }
 
     static public FixedList<RecordingActParty> GetSecondaryPartiesList(RecordingAct recordingAct) {

@@ -36,12 +36,30 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    protected RecordingAct(RecordingActType powertype)
-      : base(powertype) {
+    protected RecordingAct(RecordingActType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    internal static RecordingAct Create(RecordingActType recordingActType,
+    protected RecordingAct(RecordingActType recordingActType,
+                           RecordingDocument document) : base(recordingActType) {
+      Assertion.AssertObject(recordingActType, "recordingActType");
+      Assertion.AssertObject(document, "document");
+      Assertion.Assert(!document.IsEmptyInstance,
+                       "document can't be the empty instance.");
+
+      this.Document = document;
+    }
+
+    protected RecordingAct(RecordingActType recordingActType, RecordingDocument document,
+                           Recording physicalRecording) : this(recordingActType, document) {
+      Assertion.AssertObject(physicalRecording, "physicalRecording");
+      Assertion.Assert(!physicalRecording.IsEmptyInstance,
+                       "physicalRecording can't be the empty instance");
+
+      this.PhysicalRecording = physicalRecording;
+    }
+
+    static internal RecordingAct Create(RecordingActType recordingActType,
                                         RecordingDocument document, int index) {
       Assertion.AssertObject(recordingActType, "recordingActType");
       Assertion.AssertObject(document, "document");
@@ -91,7 +109,7 @@ namespace Empiria.Land.Registration {
       if (resource.IsNew) {
         resource.Save();
       }
-      recordingAct.AttachResource(resource);
+      recordingAct.AttachResource(resource, ResourceRole.Informative);
 
       if (!recordingAct.AmendmentOf.IsEmptyInstance) {
         recordingAct.AmendmentOf.AmendedBy = recordingAct;
@@ -287,16 +305,16 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public RecordingActTarget AttachResource(Resource resource) {
+    protected RecordingActTarget AttachResource(Resource resource, ResourceRole role) {
       Assertion.AssertObject(resource, "resource");
-      Assertion.Assert(!this.IsNew, "this is new");
+      //Assertion.Assert(!this.IsNew, "this is new");
       Assertion.Assert(!this.IsEmptyInstance, "this is empty");
       Assertion.Assert(!resource.IsEmptyInstance, "resource is empty");
-      Assertion.Assert(!resource.IsNew, "resource is new");
+      //Assertion.Assert(!resource.IsNew, "resource is new");
 
-      var item = new ResourceTarget(this, resource, ResourceRole.Informative);
+      var item = new ResourceTarget(this, resource, role);
 
-      item.Save();
+      //item.Save();
 
       targets.Value.Add(item);
 
@@ -320,14 +338,7 @@ namespace Empiria.Land.Registration {
       }
       var tractIndex = this.Targets;
       for (int i = 0; i < tractIndex.Count; i++) {
-        var property = Targets[i].Resource;
         tractIndex[i].Delete();
-
-        var tract = property.GetRecordingActsTract();
-        if (tract.Count == 0) {
-          property.Status = RecordableObjectStatus.Deleted;
-          property.Save();
-        }
       }
 
       this.Status = RecordableObjectStatus.Deleted;
@@ -345,36 +356,6 @@ namespace Empiria.Land.Registration {
       this.Save();
     }
 
-    public IList<Property> GetProperties() {
-      var tract = targets.Value;
-      var list = new List<Property>(tract.Count);
-      foreach (var item in tract) {
-        if (!list.Contains((Property) item.Resource)) {
-          list.Add((Property) item.Resource);
-        }
-      }
-      return list;
-    }
-
-    public RecordingActTarget GetPropertyEvent(Property property) {
-      var propertyEvent = this.Targets.Find((x) => x.Resource.Equals(property));
-      if (propertyEvent != null) {
-        return propertyEvent;
-      } else {
-        throw new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
-                                            property.UID, this.Id);
-      }
-    }
-
-    public bool IsFirstRecordingAct() {
-      if (this.Targets.Count == 0) {
-        return false;
-      }
-      Resource resource = this.Targets[0].Resource;
-
-      return resource.IsFirstRecordingAct(this);
-    }
-
     protected override void OnInitialize() {
       this.ExtensionData = new RecordingActExtData();
       this.targets = new Lazy<List<RecordingActTarget>>(() => RecordingActsData.GetRecordingActTargets(this));
@@ -389,78 +370,70 @@ namespace Empiria.Land.Registration {
         this.RegistrationTime = DateTime.Now;
         this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
+      RecordingActsData.WriteRecordingAct(this);
       foreach (RecordingActTarget tractItem in this.Targets) {
         tractItem.Save();
       }
-      RecordingActsData.WriteRecordingAct(this);
     }
-
-    public void RemoveProperty(Property property) {
-      RecordingActTarget propertyEvent = this.Targets.Find((x) => x.Resource.Equals(property));
-
-      Assertion.AssertObject(propertyEvent,
-                new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
-                                              property.Id, this.Id));
-
-      propertyEvent.Delete();
-      if (property.GetRecordingActsTract().Count == 0) {
-        property.Status = RecordableObjectStatus.Deleted;
-        property.Save();
-      }
-
-      //_propertyList.Reset();
-      if (this.Targets.Count == 0) {
-        this.Status = RecordableObjectStatus.Deleted;
-        this.Save();
-      }
-
-      Assertion.Assert(property.Status == RecordableObjectStatus.Deleted &&
-                       this.Status == RecordableObjectStatus.Deleted, "fail");
-    }
-
-    internal RecordingAct WriteOn(RecorderOffice recorderOffice, RecordingSection recordingSection) {
-      Assertion.AssertObject(recorderOffice, "recorderOffice");
-      Assertion.AssertObject(recordingSection, "recordingSection");
-
-      //RecordingBook book = this.GetOpenedRecordingBook(recorderOffice, recordingSection);
-      //this.Recording = book.CreateRecording(this.Document.Transaction);
-      //OOJJOO
-      this.Save();
-
-      return this;
-    }
-
-    //internal RecordingAct WriteOn(RecorderOffice recorderOffice, RecordingSection recordingSection) {
-    //  if (base.IsNew) {
-    //    this.PostingTime = DateTime.Now;
-    //    this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-    //  }
-    //  //RecordingBook book = this.GetRecordingBook();
-    //  //Recording recording = book.CreateRecording();
-
-    //  //return recording.CreateRecordingAct(Task.RecordingActType, Property.Empty);
-    //  RecordingBook book = this.GetRecordingBook(RecorderOffice recorderOffice, RecordingSection recordingSection);
-    //  Recording recording = book.CreateRecording();
-
-    //  return recording.CreateRecordingAct(Task.RecordingActType, Property.Empty);
-
-    //  RecordingBook
-    //  this.Recording =
-    //  RecordingActsData.WriteRecordingAct(this);
-
-    //  return this;
-    //}
 
     #endregion Public methods
 
-    //#region Private methods
+    #region Resource methods to refactor
 
-    ////private RecordingBook GetOpenedRecordingBook(RecorderOffice recorderOffice,
-    ////                                             RecordingSection recordingSection) {
-    ////  return RecordingBook.GetAssignedBookForRecording(recorderOffice, recordingSection, this.Document);
-    ////}
+    //public IList<Property> GetProperties() {
+    //  var tract = targets.Value;
+    //  var list = new List<Property>(tract.Count);
+    //  foreach (var item in tract) {
+    //    if (!list.Contains((Property) item.Resource)) {
+    //      list.Add((Property) item.Resource);
+    //    }
+    //  }
+    //  return list;
+    //}
 
-    //#endregion Private methods
+    //public RecordingActTarget GetPropertyEvent(Property property) {
+    //  var propertyEvent = this.Targets.Find((x) => x.Resource.Equals(property));
+    //  if (propertyEvent != null) {
+    //    return propertyEvent;
+    //  } else {
+    //    throw new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
+    //                                        property.UID, this.Id);
+    //  }
+    //}
+
+    //public bool IsFirstRecordingAct() {
+    //  if (this.Targets.Count == 0) {
+    //    return false;
+    //  }
+    //  Resource resource = this.Targets[0].Resource;
+
+    //  return resource.IsFirstRecordingAct(this);
+    //}
+
+    //public void RemoveProperty(Property property) {
+    //  RecordingActTarget propertyEvent = this.Targets.Find((x) => x.Resource.Equals(property));
+
+    //  Assertion.AssertObject(propertyEvent,
+    //            new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
+    //                                          property.Id, this.Id));
+
+    //  propertyEvent.Delete();
+    //  if (property.GetRecordingActsTract().Count == 0) {
+    //    property.Status = RecordableObjectStatus.Deleted;
+    //    property.Save();
+    //  }
+
+    //  //_propertyList.Reset();
+    //  if (this.Targets.Count == 0) {
+    //    this.Status = RecordableObjectStatus.Deleted;
+    //    this.Save();
+    //  }
+
+    //  Assertion.Assert(property.Status == RecordableObjectStatus.Deleted &&
+    //                   this.Status == RecordableObjectStatus.Deleted, "fail");
+    //}
+
+    #endregion
 
   } // class RecordingAct
 

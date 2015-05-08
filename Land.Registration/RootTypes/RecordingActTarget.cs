@@ -63,15 +63,6 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    /// <summary>
-    ///  OOJJOO QUITAR ESTO.NO TODOS TIENEN RESOURCE.
-    /// </summary>
-    [DataField("TargetPropertyId", Default = "Empiria.Land.Registration.Property.Empty")]
-    public Resource Resource {
-      get;
-      private set;
-    }
-
     public RecordingActTargetExtData ExtensionData {
       get;
       private set;
@@ -135,7 +126,7 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    internal void Delete() {
+    internal virtual void Delete() {
       this.Status = RecordableObjectStatus.Deleted;
       base.Save();
     }

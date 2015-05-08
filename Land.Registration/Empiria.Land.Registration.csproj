@@ -140,7 +140,6 @@
     <Compile Include="RootTypes\PropertyPartition.cs" />
     <Compile Include="RootTypes\RecordingActTarget.cs" />
     <Compile Include="RootTypes\RecordingActTargetExtData.cs" />
-    <Compile Include="RootTypes\ZZTractIndexItem.cs" />
     <Compile Include="RootTypes\RecordingActExtData.cs" />
     <Compile Include="RootTypes\ContractData.cs" />
     <Compile Include="RootTypes\PropertyRule.cs" />
@@ -159,7 +158,6 @@
     <Compile Include="Transactions\LRSTransactionItem.cs" />
     <Compile Include="Transactions\LRSDocumentType.cs" />
     <Compile Include="Transactions\LRSTransaction.cs" />
-    <Compile Include="RootTypes\ZZRecordingAttachmentFolder.cs" />
     <Compile Include="Transactions\LRSTransactionType.cs" />
     <Compile Include="RootTypes\PartiesRole.cs" />
     <Compile Include="RootTypes\DomainActPartyRole.cs" />
@@ -173,7 +171,6 @@
     <Compile Include="RootTypes\CancelationAct.cs" />
     <Compile Include="RootTypes\JudicialOffice.cs" />
     <Compile Include="RootTypes\NotaryOffice.cs" />
-    <Compile Include="RootTypes\ZZRecordingAttachmentFolderList.cs" />
     <Compile Include="RootTypes\RecordingDocument.cs" />
     <Compile Include="RootTypes\RecordingDocumentType.cs" />
     <Compile Include="RootTypes\InformationAct.cs" />
@@ -181,7 +178,6 @@
     <Compile Include="RootTypes\StructureAct.cs" />
     <Compile Include="RootTypes\LimitationAct.cs" />
     <Compile Include="RootTypes\DomainAct.cs" />
-    <Compile Include="RootTypes\ZZZPropertyKind.cs" />
     <Compile Include="RootTypes\Property.cs" />
     <Compile Include="RootTypes\RecordingAct.cs" />
     <Compile Include="RootTypes\RecordingActTypeCategory.cs" />
@@ -253,6 +249,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Edition\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

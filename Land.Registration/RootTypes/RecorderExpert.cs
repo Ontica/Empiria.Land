@@ -113,23 +113,6 @@ namespace Empiria.Land.Registration {
       return this.Task.Document.AppendRecordingAct(this.Task.RecordingActType);
     }
 
-    private RecordingAct DoCreateAssociation() {
-      Task.PrecedentProperty = new Association(Task.ResourceName);
-
-      return this.Task.Document.AppendRecordingAct(this.Task.RecordingActType,
-                                                   this.Task.PrecedentProperty);
-    }
-
-    private RecordingAct DoCreateRecordingOnAssociation() {
-      if (this.NeedCreateResourceOnNewPhysicalRecording) {
-        this.CreateAssociationOnNewPhysicalRecording();
-      }
-      Assertion.Assert(!this.Task.PrecedentProperty.IsEmptyInstance,
-                       "The target resource cannot be the Resource.Empty instance.");
-      return this.Task.Document.AppendRecordingAct(this.Task.RecordingActType,
-                                                   this.Task.PrecedentProperty);
-    }
-
     private RecordingAct DoPropertyRecording() {
       if (this.NeedCreateResourceOnNewPhysicalRecording) {
         this.CreateResourceOnNewPhysicalRecording();
@@ -175,23 +158,41 @@ namespace Empiria.Land.Registration {
 
     #region Private auxiliar methods
 
-    private void CreateAssociationOnNewPhysicalRecording() {
-      if (!this.NeedCreateResourceOnNewPhysicalRecording) {
-        return;
+    private RecordingAct CreateAssociationAct() {
+      Association association = this.GetAssociation();
+      var recordingAct = new AssociationAct(this.Task.RecordingActType,
+                                            this.Task.Document, association);
+      recordingAct.Save();
+
+      return recordingAct;
+    }
+
+    private Association GetAssociation() {
+      if (Task.RecordingRule.PropertyRecordingStatus == PropertyRecordingStatus.Unregistered) {
+        return new Association(Task.ResourceName);
+      } else if (this.NeedCreateResourceOnNewPhysicalRecording) {
+        return this.CreateAssociationOnPhysicalRecording();
+      } else {
+        return (Association) this.Task.PrecedentProperty;
       }
+    }
+
+    private Association CreateAssociationOnPhysicalRecording() {
+      Assertion.Assert(this.NeedCreateResourceOnNewPhysicalRecording,
+                       "Association resource was already created on physical recording.");
 
       var association = new Association(Task.ResourceName);
 
       var document = new RecordingDocument(RecordingDocumentType.Empty);
-      Recording recording = Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
-                                                                             Task.QuickAddRecordingSubNumber,
-                                                                             Task.QuickAddRecordingSuffixTag);
+      Recording physicalRecording =
+              Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
+                                                               Task.QuickAddRecordingSubNumber,
+                                                               Task.QuickAddRecordingSuffixTag);
+      var precedentAct = new AssociationAct(RecordingActType.Parse(2750),
+                                            this.Task.Document, association, physicalRecording);
+      precedentAct.Save();
 
-      RecordingAct recordingAct = document.AppendRecordingAct(RecordingActType.Parse(2750), association,
-                                                              physicalRecording: recording);
-
-      Task.PrecedentProperty = association;
-      Task.PrecedentRecording = recording;
+      return association;
     }
 
     private void CreateResourceOnNewPhysicalRecording() {
@@ -247,11 +248,7 @@ namespace Empiria.Land.Registration {
     private RecordingAct ProcessTask() {
       switch (Task.RecordingRule.AppliesTo) {
         case RecordingRuleApplication.Association:
-          if (Task.RecordingRule.PropertyRecordingStatus == PropertyRecordingStatus.Unregistered) {
-            return this.DoCreateAssociation();       // (e.g. Alta de sociedad civil)
-          } else {
-            return this.DoCreateRecordingOnAssociation();       // (e.g. Alta de sociedad civil)
-          }
+          return this.CreateAssociationAct();
         case RecordingRuleApplication.Property:
           if (Task.RecordingRule.IsMainRecording) {
             return this.DoPropertyRecording();       // (e.g. Título de propiedad o compra-venta)

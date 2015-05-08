@@ -83,31 +83,33 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal FixedList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
-      string sql = String.Empty;
-      if (!recordingAct.IsAnnotation) {
-        sql = "SELECT * FROM LRSRecordingActParties " +
-              "WHERE RecordingActId = " + recordingAct.Id + " " +
-              "AND PartyRoleId <> -1 AND LinkStatus <> 'X'";
-      } else {
-        string ids = String.Empty;
-        for (int i = 0; i < recordingAct.Targets.Count; i++) {
-          FixedList<RecordingAct> acts = recordingAct.Targets[i].Resource.GetRecordingActsTract();
+      throw new NotImplementedException("OOJJOO");
 
-          for (int j = 0; j < acts.Count; j++) {
-            if (ids.Length != 0) {
-              ids += ",";
-            }
-            ids += acts[j].Id.ToString();
-          }
-        }
-        sql = "SELECT DISTINCT * " +
-              "FROM LRSRecordingActParties " +
-              "WHERE (RecordingActId IN (" + ids + ") AND PartyRoleId <> -1) " +
-              "AND (LinkStatus <> 'X')";
-      }
+      //string sql = String.Empty;
+      //if (!recordingAct.IsAnnotation) {
+      //  sql = "SELECT * FROM LRSRecordingActParties " +
+      //        "WHERE RecordingActId = " + recordingAct.Id + " " +
+      //        "AND PartyRoleId <> -1 AND LinkStatus <> 'X'";
+      //} else {
+      //  string ids = String.Empty;
+      //  for (int i = 0; i < recordingAct.Targets.Count; i++) {
+      //    FixedList<RecordingAct> acts = recordingAct.Targets[i].Resource.GetRecordingActsTract();
 
-      return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
-                                                  (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
+      //    for (int j = 0; j < acts.Count; j++) {
+      //      if (ids.Length != 0) {
+      //        ids += ",";
+      //      }
+      //      ids += acts[j].Id.ToString();
+      //    }
+      //  }
+      //  sql = "SELECT DISTINCT * " +
+      //        "FROM LRSRecordingActParties " +
+      //        "WHERE (RecordingActId IN (" + ids + ") AND PartyRoleId <> -1) " +
+      //        "AND (LinkStatus <> 'X')";
+      //}
+
+      //return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
+      //                                            (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
     static internal FixedList<RecordingActParty> GetRecordingActPartiesList(RecordingAct recordingAct) {
@@ -188,7 +190,7 @@ namespace Empiria.Land.Registration.Data {
       Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
 
       var operation = DataOperation.Parse("writeLRSRecordingActTarget", o.Id, o.GetEmpiriaType().Id,
-                                          o.RecordingAct.Id, o.Resource.Id, (char) o.ResourceRole, o.Party.Id,
+                                          o.RecordingAct.Id, -1, (char) o.ResourceRole, o.Party.Id,
                                           o.TargetAct.Id, -1, o.ExtensionData.ToJson(), (char) o.Status,
                                           o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);

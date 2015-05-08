@@ -51,12 +51,6 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    //[DataField("TargetPropertyId", Default = "Empiria.Land.Registration.Property.Empty")]
-    //public Resource Resource {
-    //  get;
-    //  private set;
-    //}
-
     public ResourceRole ResourceRole {
       get {
         return ResourceRole.Informative;
@@ -68,9 +62,6 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     protected override void OnSave() {
-      if (this.Resource.IsNew) {
-        this.Resource.Save();
-      }
       RecordingActsData.WritePartyTarget(this);
     }
 

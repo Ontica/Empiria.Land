@@ -52,7 +52,8 @@ namespace Empiria.Land.Registration {
       if (recordingAct.Targets.Count > 1) {
         return new LandRegistrationException(LandRegistrationException.Msg.RecordingActHasTwoOrMoreProperties);
       }
-      Resource resource = recordingAct.Targets[0].Resource;
+
+      Resource resource = ((ResourceTarget) recordingAct.Targets[0]).Resource;
       FixedList<RecordingAct> domainActs = resource.GetRecordingActsTract();
       if ((domainActs.Count > 1) && (resource.FirstRecordingAct.Equals(recordingAct))) {
         return new LandRegistrationException(LandRegistrationException.Msg.PropertyIsReferencedInOtherDomainActs,

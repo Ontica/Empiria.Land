@@ -21,6 +21,17 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
+    public AssociationAct(RecordingActType recordingActType, RecordingDocument document,
+                          Association association) : base(recordingActType, document) {
+      base.AttachResource(association, ResourceRole.Informative);
+    }
+
+    public AssociationAct(RecordingActType recordingActType, RecordingDocument document,
+                          Association association, Recording physicalRecording)
+                          : base(recordingActType, document, physicalRecording) {
+      base.AttachResource(association, ResourceRole.Informative);
+    }
+
     static public new AssociationAct Parse(int id) {
       return BaseObject.ParseId<AssociationAct>(id);
     }

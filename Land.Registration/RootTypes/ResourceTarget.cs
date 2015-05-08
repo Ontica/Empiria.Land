@@ -39,13 +39,13 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    internal ResourceTarget(RecordingAct recordingAct, Resource resource, ResourceRole resourceRole)
-         : base(recordingAct) {
+    internal ResourceTarget(RecordingAct recordingAct, Resource resource,
+                            ResourceRole resourceRole) : base(recordingAct) {
       Assertion.AssertObject(resource, "resource");
       Assertion.Assert(resourceRole != Registration.ResourceRole.NotApply,
-                       "resourceRole wrong value");
+                       "resourceRole has a wrong value.");
 
-      //this.Resource = resource;
+      this.Resource = resource;
       this.ResourceRole = resourceRole;
     }
 
@@ -57,12 +57,11 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-
-    //[DataField("TargetPropertyId", Default = "Empiria.Land.Registration.Property.Empty")]
-    //public Resource Resource {
-    //  get;
-    //  private set;
-    //}
+    [DataField("TargetPropertyId", Default = "Empiria.Land.Registration.Property.Empty")]
+    public Resource Resource {
+      get;
+      private set;
+    }
 
     [DataField("TargetPropertyRole", Default = ResourceRole.Informative)]
     public ResourceRole ResourceRole {
@@ -73,6 +72,11 @@ namespace Empiria.Land.Registration {
     #endregion Public properties
 
     #region Public methods
+
+    internal override void Delete() {
+      base.Delete();
+      this.Resource.TryDelete();
+    }
 
     protected override void OnSave() {
       if (this.Resource.IsNew) {
