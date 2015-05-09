@@ -48,6 +48,7 @@ namespace Empiria.Land.Registration {
                        "document can't be the empty instance.");
 
       this.Document = document;
+      this.Index = this.Document.AddRecordingAct(this);
     }
 
     protected RecordingAct(RecordingActType recordingActType, RecordingDocument document,
@@ -57,24 +58,6 @@ namespace Empiria.Land.Registration {
                        "physicalRecording can't be the empty instance");
 
       this.PhysicalRecording = physicalRecording;
-    }
-
-    static internal RecordingAct Create(RecordingActType recordingActType,
-                                        RecordingDocument document, int index) {
-      Assertion.AssertObject(recordingActType, "recordingActType");
-      Assertion.AssertObject(document, "document");
-
-      RecordingAct recordingAct = recordingActType.CreateInstance();
-      recordingAct.Document = document;
-      recordingAct.Index = index;
-      if (recordingActType.Autoregister) {
-        recordingAct.Status = RecordableObjectStatus.Registered;
-      } else {
-        recordingAct.Status = RecordableObjectStatus.Pending;
-      }
-      recordingAct.Save();
-
-      return recordingAct;
     }
 
     static internal RecordingAct Create(RecordingActType recordingActType,
@@ -109,7 +92,8 @@ namespace Empiria.Land.Registration {
       if (resource.IsNew) {
         resource.Save();
       }
-      recordingAct.AttachResource(resource, ResourceRole.Informative);
+      var resourceTarget = new ResourceTarget(recordingAct, resource, ResourceRole.Informative);
+      recordingAct.AttachTarget(resourceTarget);
 
       if (!recordingAct.AmendmentOf.IsEmptyInstance) {
         recordingAct.AmendmentOf.AmendedBy = recordingAct;
@@ -305,20 +289,13 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    protected RecordingActTarget AttachResource(Resource resource, ResourceRole role) {
-      Assertion.AssertObject(resource, "resource");
-      //Assertion.Assert(!this.IsNew, "this is new");
-      Assertion.Assert(!this.IsEmptyInstance, "this is empty");
-      Assertion.Assert(!resource.IsEmptyInstance, "resource is empty");
-      //Assertion.Assert(!resource.IsNew, "resource is new");
+    protected void AttachTarget(RecordingActTarget recordingTarget) {
+      Assertion.Assert(!this.IsEmptyInstance, "Recording act can't be the empty instance.");
+      Assertion.AssertObject(recordingTarget, "recordingTarget");
+      Assertion.Assert(recordingTarget.RecordingAct.Equals(this), 
+                       "Target recording act is different to this instance.");
 
-      var item = new ResourceTarget(this, resource, role);
-
-      //item.Save();
-
-      targets.Value.Add(item);
-
-      return item;
+      targets.Value.Add(recordingTarget);
     }
 
     public void ChangeStatusTo(RecordableObjectStatus newStatus) {
@@ -366,13 +343,21 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnSave() {
+      // writes any chang to the document and the related physical recording
+      this.Document.Save();
+      if (this.PhysicalRecording.IsNew) {
+        this.PhysicalRecording.Save();
+      }
+      // writes the recording act
       if (base.IsNew) {
         this.RegistrationTime = DateTime.Now;
         this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
       RecordingActsData.WriteRecordingAct(this);
-      foreach (RecordingActTarget tractItem in this.Targets) {
-        tractItem.Save();
+
+      // writes each recording at target
+      foreach (RecordingActTarget recordingActTarget in this.Targets) {
+        recordingActTarget.Save();
       }
     }
 
@@ -438,3 +423,23 @@ namespace Empiria.Land.Registration {
   } // class RecordingAct
 
 } // namespace Empiria.Land.Registration
+
+
+
+//static internal RecordingAct Create(RecordingActType recordingActType,
+//                                RecordingDocument document, int index) {
+//  Assertion.AssertObject(recordingActType, "recordingActType");
+//  Assertion.AssertObject(document, "document");
+
+//  RecordingAct recordingAct = recordingActType.CreateInstance();
+//  recordingAct.Document = document;
+//  recordingAct.Index = index;
+//  if (recordingActType.Autoregister) {
+//    recordingAct.Status = RecordableObjectStatus.Registered;
+//  } else {
+//    recordingAct.Status = RecordableObjectStatus.Pending;
+//  }
+//  recordingAct.Save();
+
+//  return recordingAct;
+//}

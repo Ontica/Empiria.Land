@@ -248,23 +248,19 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public RecordingAct AppendRecordingAct(RecordingActType recordingActType) {
-      Assertion.AssertObject(recordingActType, "recordingActType");
-      Assertion.Assert(recordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Document,
-                       "This method is allowed only for document type recording acts.");
-      Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance");
-      Assertion.Assert(this.Status != RecordableObjectStatus.Closed,
-                       "Recording acts can't be appended to closed documents");
+    /// <summary>Adds a recording act to the document's recording acts collection.</summary>
+    /// <param name="recordingAct">The item to be added to the end of the RecordingActs collection.</param>
+    /// <returns> The recording act's index inside the RecordingActs collection.</returns>
+    internal int AddRecordingAct(RecordingAct recordingAct) {
+      Assertion.AssertObject(recordingAct, "recordingAct");
 
-      if (this.IsNew) {
-        this.Save();
-      }
-      var recordingAct = RecordingAct.Create(recordingActType, this, this.RecordingActs.Count);
       recordingActList.Value.Add(recordingAct);
-      this.AuthorizationTime = DateTime.Now;
-      this.Save();
 
-      return recordingAct;
+      // updates the authorization time of the document each time it's modified
+      this.AuthorizationTime = DateTime.Now;
+
+      /// returns the collection's index of the recording act
+      return recordingActList.Value.Count - 1;
     }
 
     public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Resource resource,
@@ -297,24 +293,6 @@ namespace Empiria.Land.Registration {
       return recordingAct;
     }
 
-    public void DownwardRecordingAct(RecordingAct recordingAct) {
-      if (this.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
-      }
-      if (!this.RecordingActs.Contains(recordingAct)) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording, recordingAct.Id, this.Id);
-      }
-      if (recordingAct.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
-      }
-      int currentIndex = recordingAct.Index - 1;
-      this.RecordingActs[currentIndex + 1].Index -= 1;
-      this.RecordingActs[currentIndex + 1].Save();
-      recordingAct.Index += 1;
-      recordingAct.Save();
-      this.recordingActList = null;
-    }
-
     public void RemoveRecordingAct(RecordingAct recordingAct) {
       Assertion.AssertObject(recordingAct, "recordingAct");
 
@@ -330,24 +308,6 @@ namespace Empiria.Land.Registration {
       if (this.RecordingActs.Count == 0 && this.IsEmptyDocument) {
         this.Delete();
       }
-    }
-
-    public void UpwardRecordingAct(RecordingAct recordingAct) {
-      if (this.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
-      }
-      if (!this.RecordingActs.Contains(recordingAct)) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording, recordingAct.Id, this.Id);
-      }
-      if (recordingAct.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
-      }
-      int currentIndex = recordingAct.Index - 1;
-      this.RecordingActs[currentIndex - 1].Index += 1;
-      this.RecordingActs[currentIndex - 1].Save();
-      recordingAct.Index -= 1;
-      recordingAct.Save();
-      this.recordingActList = null;
     }
 
     public void ChangeDocumentType(RecordingDocumentType newRecordingDocumentType) {
@@ -390,3 +350,60 @@ namespace Empiria.Land.Registration {
   } // class RecordingDocument
 
 } // namespace Empiria.Land.Registration
+
+
+
+//public RecordingAct AppendRecordingAct(RecordingActType recordingActType) {
+//  Assertion.AssertObject(recordingActType, "recordingActType");
+//  Assertion.Assert(recordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Document,
+//                   "This method is allowed only for document type recording acts.");
+//  Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance");
+//  Assertion.Assert(this.Status != RecordableObjectStatus.Closed,
+//                   "Recording acts can't be appended to closed documents");
+
+//  if (this.IsNew) {
+//    this.Save();
+//  }
+//  var recordingAct = RecordingAct.Create(recordingActType, this, this.RecordingActs.Count);
+//  recordingActList.Value.Add(recordingAct);
+//  this.AuthorizationTime = DateTime.Now;
+//  this.Save();
+
+//  return recordingAct;
+//}
+
+//public void DownwardRecordingAct(RecordingAct recordingAct) {
+//  if (this.Status == RecordableObjectStatus.Closed) {
+//    throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
+//  }
+//  if (!this.RecordingActs.Contains(recordingAct)) {
+//    throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording, recordingAct.Id, this.Id);
+//  }
+//  if (recordingAct.Status == RecordableObjectStatus.Closed) {
+//    throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
+//  }
+//  int currentIndex = recordingAct.Index - 1;
+//  this.RecordingActs[currentIndex + 1].Index -= 1;
+//  this.RecordingActs[currentIndex + 1].Save();
+//  recordingAct.Index += 1;
+//  recordingAct.Save();
+//  this.recordingActList = null;
+//}
+    
+//public void UpwardRecordingAct(RecordingAct recordingAct) {
+//  if (this.Status == RecordableObjectStatus.Closed) {
+//    throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
+//  }
+//  if (!this.RecordingActs.Contains(recordingAct)) {
+//    throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording, recordingAct.Id, this.Id);
+//  }
+//  if (recordingAct.Status == RecordableObjectStatus.Closed) {
+//    throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
+//  }
+//  int currentIndex = recordingAct.Index - 1;
+//  this.RecordingActs[currentIndex - 1].Index += 1;
+//  this.RecordingActs[currentIndex - 1].Save();
+//  recordingAct.Index -= 1;
+//  recordingAct.Save();
+//  this.recordingActList = null;
+//}

@@ -230,14 +230,6 @@ namespace Empiria.Land.Registration {
 
     abstract protected string CreatePropertyKey();
 
-    internal void TryDelete() {
-      var tract = this.GetRecordingActsTract();
-      if (tract.Count == 0) {
-        this.Status = RecordableObjectStatus.Deleted;
-        this.Save();
-      }
-    }
-
     public bool IsFirstRecordingAct(RecordingAct recordingAct) {
       if (recordingAct.IsAnnotation) {
         return false;
@@ -312,7 +304,15 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnSave() {
-      throw new NotImplementedException();
+      Assertion.AssertNoReachThisCode();
+    }
+
+    internal void TryDelete() {
+      var tract = this.GetRecordingActsTract();
+      if (tract.Count == 0) {
+        this.Status = RecordableObjectStatus.Deleted;
+        this.Save();
+      }
     }
 
     #endregion Public methods

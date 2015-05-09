@@ -109,10 +109,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    private RecordingAct DoDocumentRecording() {
-      return this.Task.Document.AppendRecordingAct(this.Task.RecordingActType);
-    }
-
     private RecordingAct DoPropertyRecording() {
       if (this.NeedCreateResourceOnNewPhysicalRecording) {
         this.CreateResourceOnNewPhysicalRecording();
@@ -160,11 +156,19 @@ namespace Empiria.Land.Registration {
 
     private RecordingAct CreateAssociationAct() {
       Association association = this.GetAssociation();
-      var recordingAct = new AssociationAct(this.Task.RecordingActType,
-                                            this.Task.Document, association);
-      recordingAct.Save();
+      var associationAct = new AssociationAct(this.Task.RecordingActType,
+                                              this.Task.Document, association);
+      associationAct.Save();
 
-      return recordingAct;
+      return associationAct;
+    }
+
+    private RecordingAct CreateDocumentAct() {
+      var documentAct = new DocumentAct(this.Task.RecordingActType,
+                                        this.Task.Document);
+      documentAct.Save();
+
+      return documentAct;
     }
 
     private Association GetAssociation() {
@@ -188,8 +192,8 @@ namespace Empiria.Land.Registration {
               Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
                                                                Task.QuickAddRecordingSubNumber,
                                                                Task.QuickAddRecordingSuffixTag);
-      var precedentAct = new AssociationAct(RecordingActType.Parse(2750),
-                                            this.Task.Document, association, physicalRecording);
+      var precedentAct = new AssociationAct(RecordingActType.Parse(2750), document,
+                                            association, physicalRecording);
       precedentAct.Save();
 
       return association;
@@ -249,6 +253,8 @@ namespace Empiria.Land.Registration {
       switch (Task.RecordingRule.AppliesTo) {
         case RecordingRuleApplication.Association:
           return this.CreateAssociationAct();
+        case RecordingRuleApplication.Document:
+          return this.CreateDocumentAct();      // (e.g. Testamento, Nombramiento de albacea o Capitulaciones matrimoniales)
         case RecordingRuleApplication.Property:
           if (Task.RecordingRule.IsMainRecording) {
             return this.DoPropertyRecording();       // (e.g. Título de propiedad o compra-venta)
@@ -271,8 +277,6 @@ namespace Empiria.Land.Registration {
             return this.DoRecordingActCancelation(); // (e.g. Cancelación de crédito hipotecario)
           }
           break;
-        case RecordingRuleApplication.Document:
-          return this.DoDocumentRecording();      // (e.g. Testamento, Nombramiento de albacea o Capitulaciones matrimoniales)
         default:
           break;
       }
