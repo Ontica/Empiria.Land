@@ -113,6 +113,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Empiria.Land.UI.AssemblyInfo.cs" />
+    <Compile Include="Utility\DocumentActGridRow.cs" />
+    <Compile Include="Utility\AssociationActGridRow.cs" />
+    <Compile Include="Utility\RecordingActGridRow.cs" />
+    <Compile Include="RootTypes\RecordingActsGrid.cs" />
     <Compile Include="RootTypes\RecordingActEditorControlBase.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -190,6 +194,7 @@
       <Name>Empiria.Land.Registration</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
