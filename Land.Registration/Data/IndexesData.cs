@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
 *  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
 *  Type      : PartyIndexData                               Pattern  : Data Services                         *
-*  Version   : 2.0        Date: 04/Jan/2015                 License  : Please read license.txt file          *
+*  Version   : 2.0        Date: 25/Jun/2015                 License  : Please read license.txt file          *
 *                                                                                                            *
 *    Summary   : Provides database read and write methods for recording books.                               *
 *                                                                                                            *

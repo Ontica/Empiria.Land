@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Documentation                     Assembly : Empiria.Land.Documentation          *
 *  Type      : DocumentImage                                  Pattern  : Empiria Object Type                 *
-*  Version   : 2.0        Date: 04/Jan/2015                   License  : Please read license.txt file        *
+*  Version   : 2.0        Date: 25/Jun/2015                   License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Represents a document image in Land Registration System.                                      *
 *                                                                                                            *
@@ -150,9 +150,9 @@ namespace Empiria.Land.Documentation {
       string destinationFolder = this.GetTargetFolderName();
       string destinationFileName = FileServices.MoveFileTo(this.SourceFile, destinationFolder);
 
-      AuditTrail.WriteOperation("SendImageToFinished", "MoveTiffFile",
-                                new JsonObject() { new JsonItem("Source", this.SourceFile.FullName),
-                                                   new JsonItem("Destination", destinationFileName) } );
+      FileAuditTrail.WriteOperation("SendImageToFinished", "MoveTiffFile",
+                                    new JsonObject() { new JsonItem("Source", this.SourceFile.FullName),
+                                                       new JsonItem("Destination", destinationFileName) } );
       this.ReadyToCreate = true;
 
       DocumentImage documentImage;

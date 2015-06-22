@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Documentation                     Assembly : Empiria.Land.Documentation          *
 *  Type      : ImageProcessor                                 Pattern  : Domain Service                      *
-*  Version   : 2.0        Date: 04/Jan/2015                   License  : Please read license.txt file        *
+*  Version   : 2.0        Date: 25/Jun/2015                   License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Document imaging processing service for Empiria Land System.                                  *
 *                                                                                                            *
@@ -254,13 +254,13 @@ namespace Empiria.Land.Documentation {
         var destinationFolder = ReplaceImagingFolder(image.SourceFile.Directory.FullName,
                                                      ImageProcessor.ErrorsFolderPath);
         destinationFileName = FileServices.MoveFileTo(image.SourceFile, destinationFolder);
-        AuditTrail.WriteOperation("SendImageToErrorsBin", "MoveFile",
-                                  new JsonObject() { new JsonItem("Source", sourceFile),
+        FileAuditTrail.WriteOperation("SendImageToErrorsBin", "MoveFile",
+                                      new JsonObject() { new JsonItem("Source", sourceFile),
                                                      new JsonItem("Destination", destinationFileName),
                                                      new JsonItem("Reason", exception)});
       } catch (Exception e) {
-        AuditTrail.WriteException("SendImageToErrorsBin", "MoveFile",
-                                  new JsonObject() { new JsonItem("Source", sourceFile),
+        FileAuditTrail.WriteException("SendImageToErrorsBin", "MoveFile",
+                                      new JsonObject() { new JsonItem("Source", sourceFile),
                                                      new JsonItem("Destination", destinationFileName),
                                                      new JsonItem("Reason", exception),
                                                      new JsonItem("OperationException", e)});
@@ -277,16 +277,16 @@ namespace Empiria.Land.Documentation {
         var destinationFolder = ReplaceImagingFolder(image.SourceFile.Directory.FullName,
                                                      ImageProcessor.ErrorsFolderPath + @"\\out.of.memory");
         destinationFileName = FileServices.MoveFileTo(image.SourceFile, destinationFolder);
-        AuditTrail.WriteOperation("SendImageToOutOfMemoryErrorsBin", "MoveFile",
-                                  new JsonObject() { new JsonItem("Source", sourceFile),
-                                                     new JsonItem("Destination", destinationFileName),
-                                                     new JsonItem("Reason", exception)});
+        FileAuditTrail.WriteOperation("SendImageToOutOfMemoryErrorsBin", "MoveFile",
+                                      new JsonObject() { new JsonItem("Source", sourceFile),
+                                                         new JsonItem("Destination", destinationFileName),
+                                                         new JsonItem("Reason", exception)});
       } catch (Exception e) {
-        AuditTrail.WriteException("SendImageToOutOfMemoryErrorsBin", "MoveFile",
-                                  new JsonObject() { new JsonItem("Source", sourceFile),
-                                                     new JsonItem("Destination", destinationFileName),
-                                                     new JsonItem("Reason", exception),
-                                                     new JsonItem("OperationException", e)});
+        FileAuditTrail.WriteException("SendImageToOutOfMemoryErrorsBin", "MoveFile",
+                                      new JsonObject() { new JsonItem("Source", sourceFile),
+                                                         new JsonItem("Destination", destinationFileName),
+                                                         new JsonItem("Reason", exception),
+                                                         new JsonItem("OperationException", e)});
       }
     }
 

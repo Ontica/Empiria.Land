@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingAct                                   Pattern  : Partitioned type                    *
-*  Version   : 2.0        Date: 04/Jan/2015                   License  : Please read license.txt file        *
+*  Version   : 2.0        Date: 25/Jun/2015                   License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Partitioned type that represents a recording act. All recording acts must be descendents      *
 *              of this type.                                                                                 *
@@ -292,7 +292,7 @@ namespace Empiria.Land.Registration {
     protected void AttachTarget(RecordingActTarget recordingTarget) {
       Assertion.Assert(!this.IsEmptyInstance, "Recording act can't be the empty instance.");
       Assertion.AssertObject(recordingTarget, "recordingTarget");
-      Assertion.Assert(recordingTarget.RecordingAct.Equals(this), 
+      Assertion.Assert(recordingTarget.RecordingAct.Equals(this),
                        "Target recording act is different to this instance.");
 
       targets.Value.Add(recordingTarget);

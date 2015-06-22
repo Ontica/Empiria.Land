@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                     System   : Land Registration System          *
 *  Assembly  : Empiria.Land.UI.dll                              Pattern  : Assembly Attributes File          *
-*  Version   : 2.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 2.0        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Empiria Land Registration System User Interface.                                              *
 *                                                                                                            *
@@ -15,8 +15,8 @@ using System.Runtime.InteropServices;
 *************************************************************************************************************/
 [assembly: AssemblyTitle("Empiria.Land.UI")]
 [assembly: AssemblyDescription("Empiria Land Registration System User Interface")]
-[assembly: AssemblyVersion("2.0.0104.0")]
-[assembly: AssemblyFileVersion("2.0.0104")]
+[assembly: AssemblyVersion("2.0.0625.0")]
+[assembly: AssemblyFileVersion("2.0.0625")]
 [assembly: AssemblyCompany("Ontica")]
 [assembly: AssemblyProduct("Empiria Land 2015")]
 [assembly: AssemblyCopyright("(c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.")]

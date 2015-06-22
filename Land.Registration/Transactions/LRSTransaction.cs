@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecorderOfficeTransaction                      Pattern  : Association Class                   *
-*  Version   : 2.0        Date: 04/Jan/2015                   License  : Please read license.txt file        *
+*  Version   : 2.0        Date: 25/Jun/2015                   License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Represents a transaction or process in a land registration office.                            *
 *                                                                                                            *

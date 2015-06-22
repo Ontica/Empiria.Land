@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
 *  Type      : LRSPaymentList                                 Pattern  : Empiria List Class                  *
-*  Version   : 2.0        Date: 04/Jan/2015                   License  : Please read license.txt file        *
+*  Version   : 2.0        Date: 25/Jun/2015                   License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : List of LRSPayment instances. Can hold one or heterogeneous transaction payments.             *
 *                                                                                                            *

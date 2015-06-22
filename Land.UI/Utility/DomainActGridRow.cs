@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 using Empiria.Land.Registration;
 
 namespace Empiria.Land.UI.Utilities {
 
-  internal class DocumentActGridRow : RecordingActGridRow {
+  internal class DomainActGridRow : RecordingActGridRow {
 
     #region Constructors and parsers
 
-    internal DocumentActGridRow(RecordingDocument document,
-                                DocumentAct recordingAct) : base(document, recordingAct) {
+    internal DomainActGridRow(RecordingDocument document,
+                              DomainAct domainAct): base(document, domainAct) {
 
     }
 
@@ -17,18 +20,18 @@ namespace Empiria.Land.UI.Utilities {
 
     #region Public methods
 
-    internal string GetRecordingActRow(DocumentTarget target) {
+    internal string GetRecordingActRow(ResourceTarget target) {
       string row = base.GetRowTemplate();
 
-      row = row.Replace("{{STATUS}}", base.RecordingAct.StatusName);
-      row = row.Replace("{{RECORDING.ACT.URL}}", base.RecordingAct.DisplayName);
-      row = row.Replace("{{RESOURCE.URL}}", "No aplica");
+      row = row.Replace("{{STATUS}}", this.RecordingAct.StatusName);
+      row = row.Replace("{{RECORDING.ACT.URL}}", this.RecordingAct.DisplayName);
+      row = row.Replace("{{RESOURCE.URL}}", target.Resource.UID);
 
-      row = row.Replace("{{ID}}", base.RecordingAct.Id.ToString());
-      row = row.Replace("{{TARGET.ID}}", base.RecordingAct.Id.ToString());
+      row = row.Replace("{{ID}}", this.RecordingAct.Id.ToString());
+      row = row.Replace("{{TARGET.ID}}", this.RecordingAct.Id.ToString());
 
-      row = row.Replace("{{RESOURCE.ID}}", base.RecordingAct.Id.ToString());
-      row = row.Replace("{{ANTECEDENT}}", base.RecordingAct.Id.ToString());
+      row = row.Replace("{{RESOURCE.ID}}", this.RecordingAct.Id.ToString());
+      row = row.Replace("{{ANTECEDENT}}", this.RecordingAct.Id.ToString());
       row = row.Replace("{{OPTIONS.COMBO}}", this.GetOptionsCombo(target));
 
       return row;
@@ -38,18 +41,19 @@ namespace Empiria.Land.UI.Utilities {
 
     #region Private methods
 
-    private string GetOptionsCombo(DocumentTarget target) {
+    private string GetOptionsCombo(ResourceTarget target) {
       const string template =
         "<select id='cboRecordingOptions_{{TARGET.ID}}' class='selectBox' style='width:148px'>" +
         "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
         "<option value='modifyRecordingActType'>Modificar este acto</option>" +
         "<option value='deleteRecordingAct'>Eliminar este acto</option>" +
+        "<option value='viewResourceTract'>Ver la historia de este predio</option>" +
         "</select><img class='comboExecuteImage' src='../themes/default/buttons/next.gif' " +
         "alt='' title='Ejecuta la operación seleccionada' onclick='" +
         "doOperation(getElement(\"cboRecordingOptions_{{TARGET.ID}}\").value, {{ID}}, {{RESOURCE.ID}});'/>";
 
       string html = template.Replace("{{ID}}", target.RecordingAct.Id.ToString());
-      html = html.Replace("{{RESOURCE.ID}}", "-1");
+      html = html.Replace("{{RESOURCE.ID}}", target.Resource.Id.ToString());
       html = html.Replace("{{TARGET.ID}}", target.Id.ToString());
 
       return html;
@@ -57,6 +61,6 @@ namespace Empiria.Land.UI.Utilities {
 
     #endregion Private methods
 
-  }  // class DocumentActGridRow
+  }  // class DomainActGridRow
 
-}  // namespace Empiria.Land.UI.Utilities 
+}  // namespace Empiria.Land.UI.Utilities

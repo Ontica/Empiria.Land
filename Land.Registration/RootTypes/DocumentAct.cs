@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : DocumentAct                                    Pattern  : Empiria Object Type                 *
-*  Version   : 2.0        Date: 04/Jan/2015                   License  : Please read license.txt file        *
+*  Version   : 2.0        Date: 25/Jun/2015                   License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Represents a recording act that applies to documents, not to resources.                       *
 *                                                                                                            *
@@ -32,10 +32,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Constructors and parsers
 
-<<<<<<< HEAD
-
-=======
->>>>>>> parent of e916ed1... AssociationAct and DocumentAct refactoring
     #region Private methods
 
     private void AttachDocument() {

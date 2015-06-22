@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecorderExpert                                 Pattern  : Standard Class                      *
-*  Version   : 2.0        Date: 04/Jan/2015                   License  : Please read license.txt file        *
+*  Version   : 2.0        Date: 25/Jun/2015                   License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Performs the registry of recording acts based on a supplied recording task                    *
 *              and a set of rules defined for each recording act type.                                       *
@@ -39,7 +39,7 @@ namespace Empiria.Land.Registration {
 
     #region Properties
 
-    private bool AppliesOverNewProperty {
+    private bool CreateNewResource {
       get {
         return (Task.RecordingRule.AppliesTo == RecordingRuleApplication.Property &&
                 Task.PropertyRecordingType == PropertyRecordingType.createProperty &&
@@ -111,10 +111,10 @@ namespace Empiria.Land.Registration {
 
     private RecordingAct DoPropertyRecording() {
       if (this.NeedCreateResourceOnNewPhysicalRecording) {
-        this.CreateResourceOnNewPhysicalRecording();
+        this.CreatePropertyOnPhysicalRecording();
       } else if (this.NeedCreateAdditionalResourceOnPhysicalRecording) {
         this.CreateAdditionalResourceOnPhysicalRecording();
-      } else if (this.AppliesOverNewProperty) {
+      } else if (this.CreateNewResource) {
         Task.PrecedentProperty = new Property(Task.CadastralKey);
       } else if (this.AppliesOverNewPartition) {
         Task.PrecedentProperty = ((Property)Task.PrecedentProperty).Subdivide(Task.PartitionInfo);
@@ -130,7 +130,7 @@ namespace Empiria.Land.Registration {
 
     private RecordingAct DoRecordingActCancelation() {
       if (this.NeedCreateResourceOnNewPhysicalRecording) {
-        this.CreateResourceOnNewPhysicalRecording();
+        this.CreatePropertyOnPhysicalRecording();
       } else if (this.NeedCreateAdditionalResourceOnPhysicalRecording) {
         this.CreateAdditionalResourceOnPhysicalRecording();
       }
@@ -171,13 +171,45 @@ namespace Empiria.Land.Registration {
       return documentAct;
     }
 
+    private RecordingAct CreateDomainAct() {
+      Property property = this.GetProperty();
+
+      var domainAct = new DomainAct(this.Task.RecordingActType,
+                                    this.Task.Document, property);
+      domainAct.Save();
+
+      return domainAct;
+    }
+
     private Association GetAssociation() {
-      if (Task.RecordingRule.PropertyRecordingStatus == PropertyRecordingStatus.Unregistered) {
+      if (this.CreateNewResource) {
         return new Association(Task.ResourceName);
       } else if (this.NeedCreateResourceOnNewPhysicalRecording) {
         return this.CreateAssociationOnPhysicalRecording();
       } else {
         return (Association) this.Task.PrecedentProperty;
+      }
+    }
+
+    private Property GetProperty() {
+      if (this.CreateNewResource) {
+        return new Property(Task.CadastralKey);
+      }
+
+      Property property = null;
+
+      if (this.NeedCreateResourceOnNewPhysicalRecording) {
+        property = this.CreatePropertyOnPhysicalRecording();
+      } else if (this.NeedCreateAdditionalResourceOnPhysicalRecording) {
+        property = this.CreateAdditionalResourceOnPhysicalRecording();
+      } else {
+        property = (Property) this.Task.PrecedentProperty;
+      }
+
+      if (this.AppliesOverNewPartition) {
+        return property.Subdivide(Task.PartitionInfo);
+      } else {
+        return property;
       }
     }
 
@@ -189,9 +221,9 @@ namespace Empiria.Land.Registration {
 
       var document = new RecordingDocument(RecordingDocumentType.Empty);
       Recording physicalRecording =
-              Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
-                                                               Task.QuickAddRecordingSubNumber,
-                                                               Task.QuickAddRecordingSuffixTag);
+            Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
+                                                             Task.QuickAddRecordingSubNumber,
+                                                             Task.QuickAddRecordingSuffixTag);
       var precedentAct = new AssociationAct(RecordingActType.Parse(2750), document,
                                             association, physicalRecording);
       precedentAct.Save();
@@ -199,27 +231,35 @@ namespace Empiria.Land.Registration {
       return association;
     }
 
-    private void CreateResourceOnNewPhysicalRecording() {
-      if (!this.NeedCreateResourceOnNewPhysicalRecording) {
-        return;
-      }
+    private Property CreatePropertyOnPhysicalRecording() {
+      Assertion.Assert(this.NeedCreateResourceOnNewPhysicalRecording,
+                       "Wrong RecordingTask values to execute this method.");
 
       Property property = new Property(Task.CadastralKey);
 
       var document = new RecordingDocument(RecordingDocumentType.Empty);
-      Recording recording = Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
-                                                                             Task.QuickAddRecordingSubNumber,
-                                                                             Task.QuickAddRecordingSuffixTag);
+      Recording physicalRecording =
+            Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
+                                                             Task.QuickAddRecordingSubNumber,
+                                                             Task.QuickAddRecordingSuffixTag);
+      var precedentAct = new DomainAct(RecordingActType.Empty, document,
+                                       property, physicalRecording);
 
-      RecordingAct recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property,
-                                                              physicalRecording: recording);
+      precedentAct.Save();
 
-      if (Task.PartitionInfo.PartitionType != PropertyPartitionType.None) {
-        Task.PrecedentProperty = property.Subdivide(Task.PartitionInfo);
-      } else {
-        Task.PrecedentProperty = property;
-      }
-      Task.PrecedentRecording = recording;
+      return property;
+    }
+
+    private Property CreateAdditionalResourceOnPhysicalRecording() {
+      Assertion.Assert(this.NeedCreateAdditionalResourceOnPhysicalRecording,
+                       "Wrong RecordingTask values to execute this method.");
+
+
+      var property = new Property(Task.CadastralKey);
+      var document = Task.PrecedentRecording.Document;
+      var recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property,
+                                                     physicalRecording: Task.PrecedentRecording);
+      return property;
     }
 
     private RecordingAct CreateAmendmendOfRecordingAct(Resource resource) {
@@ -231,18 +271,6 @@ namespace Empiria.Land.Registration {
                                          resource, physicalRecording: recording);
     }
 
-    private void CreateAdditionalResourceOnPhysicalRecording() {
-      if (!this.NeedCreateAdditionalResourceOnPhysicalRecording) {
-        return;
-      }
-
-      var property = new Property(Task.CadastralKey);
-      var document = Task.PrecedentRecording.Document;
-      var recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property,
-                                                     physicalRecording: Task.PrecedentRecording);
-      Task.PrecedentProperty = property;
-    }
-
     //private RecordingBook GetOpenedRecordingBook() {
     //  return RecordingBook.GetAssignedBookForRecording(this.Task.RecorderOffice,
     //                                                   this.Task.RecordingRule.RecordingSection,
@@ -250,38 +278,51 @@ namespace Empiria.Land.Registration {
     //}
 
     private RecordingAct ProcessTask() {
-      switch (Task.RecordingRule.AppliesTo) {
-        case RecordingRuleApplication.Association:
-          return this.CreateAssociationAct();
-        case RecordingRuleApplication.Document:
-          return this.CreateDocumentAct();      // (e.g. Testamento, Nombramiento de albacea o Capitulaciones matrimoniales)
-        case RecordingRuleApplication.Property:
-          if (Task.RecordingRule.IsMainRecording) {
-            return this.DoPropertyRecording();       // (e.g. Título de propiedad o compra-venta)
-          }
-          if (Task.RecordingRule.IsAnnotation) {
-            //return this.DoPropertyAnnotation();    // (e.g. Aviso preventivo)
-            return this.DoPropertyRecording();
-          }
-          break;
-        case RecordingRuleApplication.Structure:
-          if (Task.RecordingRule.IsMainRecording) {
-            return this.DoPropertyRecording();      // (e.g. Fusión de predios [merge])
-          }
-          break;
-        case RecordingRuleApplication.RecordingAct:
-          //if (Task.RecordingRule.IsAnnotation) {
-          //  return this.DoRecordingActAnnotation();  // (e.g. Nombramiento de albacea)
-          //}
-          if (Task.RecordingRule.IsCancelation) {
-            return this.DoRecordingActCancelation(); // (e.g. Cancelación de crédito hipotecario)
-          }
-          break;
-        default:
-          break;
+      var recordingActType = this.Task.RecordingActType;
+
+      if (recordingActType.IsSubtypeOf<AssociationAct>()) {
+        return this.CreateAssociationAct();     // Acta asamblea, Constitución S.C.
+      } else if (recordingActType.IsSubtypeOf<DocumentAct>()) {
+        return this.CreateDocumentAct();        // Testamento, Nombr. de albacea, Capit. matrimoniales.
+      } else if (recordingActType.IsSubtypeOf<DomainAct>()) {
+        return this.CreateDomainAct();          // Testamento, Nombr. de albacea, Capit. matrimoniales.
+      //} else if (recordingActType.IsSubtypeOf<LimitationAct>()) {
+      //} else if (recordingActType.IsSubtypeOf<InformationAct>()) {
+      //} else if (recordingActType.IsSubtypeOf<ModificationAct>()) {
+      //} else if (recordingActType.IsSubtypeOf<CancelationAct>()) {
+      //} else if (recordingActType.IsSubtypeOf<StructureAct>()) {
+      } else {
+        throw Assertion.AssertNoReachThisCode();
       }
-      throw new NotImplementedException("RecordingExpert.DoRecording: Recording act '" +
-                                        Task.RecordingActType.DisplayName + "' has an undefined or wrong rule.");
+
+      //switch (Task.RecordingRule.AppliesTo) {
+      //  case RecordingRuleApplication.Property:
+      //    if (Task.RecordingRule.IsMainRecording) {
+      //      return this.DoPropertyRecording();       // (e.g. Título de propiedad o compra-venta)
+      //    }
+      //    if (Task.RecordingRule.IsAnnotation) {
+      //      //return this.DoPropertyAnnotation();    // (e.g. Aviso preventivo)
+      //      return this.DoPropertyRecording();
+      //    }
+      //    break;
+      //  case RecordingRuleApplication.Structure:
+      //    if (Task.RecordingRule.IsMainRecording) {
+      //      return this.DoPropertyRecording();      // (e.g. Fusión de predios [merge])
+      //    }
+      //    break;
+      //  case RecordingRuleApplication.RecordingAct:
+      //    //if (Task.RecordingRule.IsAnnotation) {
+      //    //  return this.DoRecordingActAnnotation();  // (e.g. Nombramiento de albacea)
+      //    //}
+      //    if (Task.RecordingRule.IsCancelation) {
+      //      return this.DoRecordingActCancelation(); // (e.g. Cancelación de crédito hipotecario)
+      //    }
+      //    break;
+      //  default:
+      //    break;
+      //}
+      //throw new NotImplementedException("RecordingExpert.DoRecording: Recording act '" +
+      //                                  Task.RecordingActType.DisplayName + "' has an undefined or wrong rule.");
     }
 
     #endregion Private auxiliar methods

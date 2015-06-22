@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingDocument                              Pattern  : Partitioned type                    *
-*  Version   : 2.0        Date: 04/Jan/2015                   License  : Please read license.txt file        *
+*  Version   : 2.0        Date: 25/Jun/2015                   License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Partitioned type that represents a document that is attached to recordings.                   *
 *                                                                                                            *
@@ -389,7 +389,7 @@ namespace Empiria.Land.Registration {
 //  recordingAct.Save();
 //  this.recordingActList = null;
 //}
-    
+
 //public void UpwardRecordingAct(RecordingAct recordingAct) {
 //  if (this.Status == RecordableObjectStatus.Closed) {
 //    throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);

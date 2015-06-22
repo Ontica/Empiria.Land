@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                    System   : Land Registration System            *
 *  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land.UI                     *
 *  Type      : RecordingActsGrid                               Pattern  : Standard class                      *
-*  Version   : 2.0        Date: 04/Jan/2015                    License  : Please read license.txt file        *
+*  Version   : 2.0        Date: 25/Jun/2015                    License  : Please read license.txt file        *
 *                                                                                                             *
 *  Summary   : Generates the grid HTML content for a document's recording acts.                               *
 *                                                                                                             *
@@ -62,17 +62,15 @@ namespace Empiria.Land.UI {
     }
 
     private string GetRecordingActRow(RecordingAct recordingAct, RecordingActTarget recordingActTarget) {
-      //RecordingActGridRow row = null;
-
       if (recordingAct is AssociationAct) {
         var row = new AssociationActGridRow(document, (AssociationAct) recordingAct);
         return row.GetRecordingActRow((ResourceTarget) recordingActTarget);
       } else if (recordingAct is DocumentAct) {
         var row = new DocumentActGridRow(document, (DocumentAct) recordingAct);
         return row.GetRecordingActRow((DocumentTarget) recordingActTarget);
-      //} else if (recordingAct is DomainAct) {
-      //  row = new DomainActGridRow(recordingAct, recordingActTarget);
-      //  return row.GetRecordingActRow(counter);
+      } else if (recordingAct is DomainAct) {
+        var row = new DomainActGridRow(document, (DomainAct) recordingAct);
+        return row.GetRecordingActRow((ResourceTarget) recordingActTarget);
       //} else if (recordingAct is LimitationAct) {
       //  html += GetLimitationActGridRow(recordingAct, counter);
       //} else if (recordingAct is InformationAct) {

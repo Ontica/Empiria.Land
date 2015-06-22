@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Empiria.Land.UI.AssemblyInfo.cs" />
+    <Compile Include="Utility\DomainActGridRow.cs" />
     <Compile Include="Utility\DocumentActGridRow.cs" />
     <Compile Include="Utility\AssociationActGridRow.cs" />
     <Compile Include="Utility\RecordingActGridRow.cs" />

@@ -3,7 +3,7 @@
 *  Solution  : Empiria Land                                    System   : Land Registration System            *
 *  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land.UI                     *
 *  Type      : RecordingActEditorControlBase                   Pattern  : User Control                        *
-*  Version   : 2.0        Date: 04/Jan/2015                    License  : Please read license.txt file        *
+*  Version   : 2.0        Date: 25/Jun/2015                    License  : Please read license.txt file        *
 *                                                                                                             *
 *  Summary   : User control to collect recording act information. This type should be derived in              *
 *              a concrete aspx user control.                                                                  *
