@@ -1,48 +1,59 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web;
 using System.Web.Http;
-using System.Web.Routing;
+using System.Web.Http.ExceptionHandling;
 
-using Empiria.WebServices;
+using Empiria.WebApi;
 
-namespace Empiria.Land.WebAPI {
+namespace Empiria.Land.WebApi {
 
   static public class WebApiConfig {
 
     #region Public methods
 
     static public void Register(HttpConfiguration config) {
+      //config.SuppressHostPrincipal();
       // To enable attribute routing.
       config.MapHttpAttributeRoutes();
       // To configure convention-based routing.
-      RegisterWebApiRoutes(config);
-    }
-
-    static void RegisterWebApiRoutes(HttpConfiguration config) {
-      //string baseApiURL = "api/v0";
-
-     // RegisterDefaultRestRoutes(config, "Security", baseApiURL + "/security");
-      //RegisterDefaultRestRoutes(config, "Member", baseApiURL + "/plans");
-      //RegisterDefaultRestRoutes(config, "Ordering", baseApiURL + "/ordering");
-      //RegisterDefaultRestRoutes(config, "Orders", baseApiURL + "/ordering/orders");
-      //RegisterDefaultRestRoutes(config, "CurrentOrder", baseApiURL + "/ordering/orders/current");
+      WebApiConfig.RegisterWebApiRoutes(config);
     }
 
     #endregion Public methods
 
-  }
+    #region Private methods
+
+    static private void RegisterHttp404ErrorHandlerRoute(HttpRouteCollection routes) {
+      routes.MapHttpRoute(
+        name: "Error404Handler",
+        routeTemplate: "{*url}",
+        defaults: new {
+          controller = "Security", action = "Http404ErrorHandler"
+        }
+      );
+    }
+
+    static private void RegisterWebApiRoutes(HttpConfiguration config) {
+      WebApiConfig.RegisterHttp404ErrorHandlerRoute(config.Routes);
+    }
+
+    #endregion Private methods
+
+  }  // class WebApiConfig
 
   public class WebApiApplication : WebApiGlobal {
 
     protected override void Application_Start(object sender, EventArgs e) {
       base.Application_Start(sender, e);
+      RegisterGlobalHandlers(GlobalConfiguration.Configuration);
       GlobalConfiguration.Configure(WebApiConfig.Register);
       RegisterFormatters(GlobalConfiguration.Configuration);
       RegisterGlobalFilters(GlobalConfiguration.Configuration);
+    }
+
+    private void RegisterGlobalHandlers(HttpConfiguration config) {
+      config.MessageHandlers.Add(new AuditTrailHandler());
+      config.Services.Replace(typeof(IExceptionHandler), new WebApiExceptionHandler());
+      config.MessageHandlers.Add(new WebApiResponseHandler());
     }
 
     protected void Application_BeginRequest(object sender, EventArgs e) {
@@ -50,18 +61,28 @@ namespace Empiria.Land.WebAPI {
     }
 
     private void RegisterFormatters(HttpConfiguration config) {
-      var jsonFormatter = config.Formatters.JsonFormatter;
-      jsonFormatter.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+      var settings = new Newtonsoft.Json.JsonSerializerSettings();
 
+      settings.Formatting = Newtonsoft.Json.Formatting.Indented;
+      settings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
+
+      // Add System.Data.DataView serializer
+      settings.Converters.Add(new Empiria.Json.DataViewConverter());
+      settings.Converters.Add(new Empiria.Json.DataRowConverter());
+
+      config.Formatters.JsonFormatter.SerializerSettings = settings;
+
+      // Remove Xml formatter
       config.Formatters.Remove(config.Formatters.XmlFormatter);
     }
 
     static public void RegisterGlobalFilters(HttpConfiguration config) {
       // Denies anonymous access to every controller without the AllowAnonymous attribute
-      config.Filters.Add(new AuthorizeAttribute());
-      //config.Filters.Add(new System.Web.Mvc.RequireHttpsAttribute());
+      if (!ExecutionServer.IsPassThroughServer) {
+        config.Filters.Add(new AuthorizeAttribute());
+      }
     }
 
   }  // class WebApiApplication
 
-}  // namespace Empiria.Land.WebAPI
+}  // namespace Empiria.Land.WebApi

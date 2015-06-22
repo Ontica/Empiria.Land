@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Empiria.Land.WebAPI</RootNamespace>
-    <AssemblyName>Empiria.Land.WebAPI</AssemblyName>
+    <RootNamespace>Empiria.Land.WebApi</RootNamespace>
+    <AssemblyName>Empiria.Land.WebApi</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
@@ -94,9 +94,6 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Models\WebApiConfig.cs">
-      <SubType>Code</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\PropertyController.cs" />
@@ -104,9 +101,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\EmpiriaWebApiException.cs" />
-    <Compile Include="Models\LoginModel.cs" />
-    <Compile Include="Empiria.Land.WebAPI.AssemblyInfo.cs" />
+    <Compile Include="Empiria.Land.WebApi.AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -123,6 +118,7 @@
   <ItemGroup>
     <Folder Include="App_Code\" />
     <Folder Include="App_Start\" />
+    <Folder Include="Models\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
@@ -138,15 +134,10 @@
       <Project>{f518e007-2b16-4804-ba45-695ea098e1c0}</Project>
       <Name>Empiria.Kernel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\empiria\extended\WebServices\Empiria.WebServices.csproj">
-      <Project>{29b783cb-dc89-4156-b61c-a889365bc93e}</Project>
-      <Name>Empiria.WebServices</Name>
+    <ProjectReference Include="..\..\..\..\empiria\extended\WebApi\Empiria.WebApi.csproj">
+      <Project>{42b7d25b-356f-4e93-9f17-a2f9422c368d}</Project>
+      <Name>Empiria.WebApi</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Models\EmpiriaWebApiExceptionMsg.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
