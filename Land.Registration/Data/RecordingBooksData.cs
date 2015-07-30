@@ -96,15 +96,25 @@ namespace Empiria.Land.Registration.Data {
       //}
     }
 
+    static public FixedList<RecorderOffice> GetRecorderOffices(RecordingSection sectionType) {
+      string sql = "SELECT DISTINCT Contacts.* FROM LRSPhysicalBooks INNER JOIN Contacts" +
+                   " ON LRSPhysicalBooks.RecorderOfficeId = Contacts.ContactId" +
+                   " WHERE LRSPhysicalBooks.RecordingSectionId = " + sectionType.Id +
+                   " ORDER BY Contacts.NickName";
+
+      return DataReader.GetList<RecorderOffice>(DataOperation.Parse(sql),
+                                               (x) => BaseObject.ParseList<RecorderOffice>(x)).ToFixedList();
+    }
+
     static internal FixedList<Recording> GetRecordings(RecordingDocument document,
-                                                        Transactions.LRSTransaction transaction) {
+                                                       Transactions.LRSTransaction transaction) {
       string sql = "SELECT * FROM LRSRecordings WHERE TransactionId = {T} " +
                    "AND DocumentId = {D} AND RecordingStatus <> 'X' ORDER BY RecordingId";
       sql = sql.Replace("{T}", transaction.Id.ToString());
       sql = sql.Replace("{D}", document.Id.ToString());
 
       return DataReader.GetList<Recording>(DataOperation.Parse(sql),
-                                            (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
+                                           (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
     }
 
     static public FixedList<RecordingBook> GetRecordingBooks(string filter, string sort = "BookAsText") {
@@ -159,7 +169,7 @@ namespace Empiria.Land.Registration.Data {
 
     static internal Recording FindRecording(RecordingBook recordingBook, string filter) {
       string sql = "SELECT * FROM LRSPhysicalRecordings WHERE " +
-                  "(RecordingBookId = " + recordingBook.Id.ToString() + " AND RecordingStatus <> 'X')";
+                   "(RecordingBookId = " + recordingBook.Id.ToString() + " AND RecordingStatus <> 'X')";
       if (!String.IsNullOrWhiteSpace(filter)) {
         sql += " AND " + filter;
       }

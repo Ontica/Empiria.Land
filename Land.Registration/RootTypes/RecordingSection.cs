@@ -10,6 +10,8 @@
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
+using Empiria.Land.Registration.Data;
+
 namespace Empiria.Land.Registration {
 
   /// <summary>Describes a recording section type under which all the books are legaly classified.</summary>
@@ -29,6 +31,14 @@ namespace Empiria.Land.Registration {
       get { return BaseObject.ParseEmpty<RecordingSection>(); }
     }
 
+    static public FixedList<RecordingSection> GetList() {
+      var list = GeneralObject.ParseList<RecordingSection>();
+
+      list.Sort((x, y) => x.NamedKey.CompareTo(y.NamedKey));
+
+      return list;
+    }
+
     #endregion Constructors and parsers
 
     #region Properties
@@ -46,6 +56,18 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Properties
+
+    #region Methods
+
+    public FixedList<RecorderOffice> GetRecorderOffices() {
+      return RecordingBooksData.GetRecorderOffices(this);
+    }
+
+    public FixedList<RecordingBook> GetRecordingBooks(RecorderOffice recorderOffice) {
+      return RecordingBooksData.GetRecordingBooksInSection(recorderOffice, this);
+    }
+
+    #endregion Methods
 
   } // class RecordingSection
 
