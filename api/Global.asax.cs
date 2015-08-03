@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.ExceptionHandling;
 
 using Empiria.WebApi;
@@ -11,9 +12,15 @@ namespace Empiria.Land.WebApi {
     #region Public methods
 
     static public void Register(HttpConfiguration config) {
+      // To enable CORS
+      var cors = new EnableCorsAttribute("*", "*", "*");
+      config.EnableCors(cors);
+
       //config.SuppressHostPrincipal();
+
       // To enable attribute routing.
       config.MapHttpAttributeRoutes();
+
       // To configure convention-based routing.
       WebApiConfig.RegisterWebApiRoutes(config);
     }

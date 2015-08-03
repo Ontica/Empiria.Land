@@ -15,7 +15,7 @@ namespace Empiria.Land.WebApi {
     #region Public APIs
 
     [HttpPost, AllowAnonymous]
-    [Route("api/v1/security/change-password")]
+    [Route("v1/security/change-password")]
     public void ChangePassword(LoginModel login) {
       try {
         base.RequireBody(login);
@@ -29,25 +29,20 @@ namespace Empiria.Land.WebApi {
     [HttpGet, HttpPost, HttpPut, HttpDelete, HttpPatch, HttpHead, HttpOptions]
     [AllowAnonymous]
     public void Http404ErrorHandler() {
-      var e = new WebApiException(WebApiException.Msg.EndpointNotFound,
-                                  base.Request.RequestUri.AbsoluteUri);
-
-      throw base.CreateHttpException(HttpErrorCode.NotFound, e);
+      throw new WebApiException(WebApiException.Msg.EndpointNotFound,
+                                base.Request.RequestUri.AbsoluteUri);
     }
 
     #region Login Controllers
 
     [HttpPost, AllowAnonymous]
-    [Route("api/v1/security/login")]
+    [Route("v1/security/login")]
     public SingleObjectModel Login(LoginModel login) {
       try {
         base.RequireHeader("User-Agent");
         base.RequireBody(login);
 
-        EmpiriaPrincipal principal = AuthenticationHttpModule.Authenticate(login.api_key,
-                                                                           login.user_name,
-                                                                           login.password);
-        Assertion.AssertObject(principal, "principal");
+        EmpiriaPrincipal principal = this.GetPrincipal(login);
 
         return new SingleObjectModel(base.Request, LoginModel.ToOAuth(principal),
                                      "Empiria.Security.OAuthObject");
@@ -59,7 +54,7 @@ namespace Empiria.Land.WebApi {
     #endregion Login Controllers
 
     [HttpPost]
-    [Route("api/v1/security/logout")]
+    [Route("v1/security/logout")]
     public void Logout() {
       try {
         throw new NotImplementedException();
@@ -70,6 +65,19 @@ namespace Empiria.Land.WebApi {
     }
 
     #endregion Public APIs
+
+    #region Private methods
+
+    private EmpiriaPrincipal GetPrincipal(LoginModel login) {
+      EmpiriaPrincipal principal = AuthenticationHttpModule.Authenticate(login.api_key,
+                                                                         login.user_name,
+                                                                         login.password);
+      Assertion.AssertObject(principal, "principal");
+
+      return principal;
+    }
+
+    #endregion Private methods
 
   }  // class SecurityController
 
