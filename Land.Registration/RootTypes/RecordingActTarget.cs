@@ -51,13 +51,13 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField("RecordingActId", Default = "Empiria.Land.Registration.InformationAct.Empty")]
+    [DataField("RecordingActId")]
     public RecordingAct RecordingAct {
       get;
       private set;
     }
 
-    [DataField("TargetRecordingActId", Default = "Empiria.Land.Registration.InformationAct.Empty")]
+    [DataField("TargetRecordingActId")]
     public RecordingAct TargetAct {
       get;
       private set;

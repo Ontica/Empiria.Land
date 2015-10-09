@@ -24,6 +24,9 @@ namespace Empiria.Land.Registration.Data {
     #region Public methods
 
     static public FixedList<RecordingAct> GetPropertyRecordingActList(Resource resource) {
+      if (resource.IsEmptyInstance) {
+        return new FixedList<RecordingAct>();
+      }
       var operation = DataOperation.Parse("qryLRSPropertyRecordingActs", resource.Id);
 
       return DataReader.GetList<RecordingAct>(operation,
@@ -51,6 +54,9 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static public FixedList<RecordingAct> GetRecordingActs(Recording recording) {
+      if (recording.IsEmptyInstance) {
+        return new FixedList<RecordingAct>();
+      }
       var operation = DataOperation.Parse("qryLRSPhysicalRecordingRecordedActs", recording.Id);
 
       return DataReader.GetList<RecordingAct>(operation,

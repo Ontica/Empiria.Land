@@ -15,7 +15,7 @@ using Empiria.Contacts;
 
 namespace Empiria.Land.Registration.Transactions {
 
-  /// <summary>Describes a recorder office transaction type.</summary>
+  /// <summary>Describes a recorder office document type.</summary>
   public class LRSDocumentType : GeneralObject {
 
     #region Constructors and parsers
@@ -48,9 +48,13 @@ namespace Empiria.Land.Registration.Transactions {
       get { return base.NamedKey; }
     }
 
+    private FixedList<Contact> _issuedByEntities = null;
     public FixedList<Contact> IssuedByEntities {
       get {
-        return base.GetLinks<Contact>("DocumentType->IssuedBy");
+        if (_issuedByEntities == null) {
+          _issuedByEntities = base.GetLinks<Contact>("DocumentType->IssuedBy");
+        }
+        return _issuedByEntities;
       }
     }
 

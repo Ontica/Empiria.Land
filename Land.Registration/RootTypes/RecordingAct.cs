@@ -111,6 +111,12 @@ namespace Empiria.Land.Registration {
       return RecordingActsData.GetRecordingActs(document).ToFixedList();
     }
 
+    static public RecordingAct Empty {
+      get {
+        return BaseObject.ParseEmpty<InformationAct>();
+      }
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
@@ -329,7 +335,7 @@ namespace Empiria.Land.Registration {
     }
 
     private void RemoveAmendment() {
-      this.AmendmentOf = InformationAct.Empty;
+      this.AmendmentOf = RecordingAct.Empty;
       this.Save();
     }
 

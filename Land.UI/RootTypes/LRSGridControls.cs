@@ -338,7 +338,7 @@ namespace Empiria.Land.UI {
       if (target.Resource.IsEmptyInstance) {
         temp = temp.Replace("{ANTECEDENT.TAG}", String.Empty);
         temp = temp.Replace("{ANTECEDENT.STATUS}", String.Empty);
-      } else if (antecedent.Equals(InformationAct.Empty)) {
+      } else if (antecedent.Equals(RecordingAct.Empty)) {
         temp = temp.Replace("{ANTECEDENT.TAG}", "Sin antecedente");
         temp = temp.Replace("{ANTECEDENT.STATUS}", String.Empty);
       } else if (recordingAct.RecordingActType.RecordingRule.IsAnnotation) {

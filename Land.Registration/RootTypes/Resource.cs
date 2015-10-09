@@ -183,7 +183,7 @@ namespace Empiria.Land.Registration {
         if (domainActs.Count != 0) {
           return domainActs[domainActs.Count - 1];
         } else {
-          return InformationAct.Empty;
+          return RecordingAct.Empty;
         }
       }
     }
@@ -236,7 +236,7 @@ namespace Empiria.Land.Registration {
       }
 
       RecordingAct firstRecordingAct = this.FirstRecordingAct;
-      if (firstRecordingAct != InformationAct.Empty) {
+      if (firstRecordingAct != RecordingAct.Empty) {
         return firstRecordingAct.Equals(recordingAct);
       } else {
         return true;
@@ -249,7 +249,7 @@ namespace Empiria.Land.Registration {
       }
 
       RecordingAct lastRecordingAct = this.LastRecordingAct;
-      if (lastRecordingAct != InformationAct.Empty) {
+      if (lastRecordingAct != RecordingAct.Empty) {
         return lastRecordingAct.Equals(recordingAct);
       } else {
         return true;
@@ -270,11 +270,11 @@ namespace Empiria.Land.Registration {
       int index = tract.IndexOf(baseRecordingAct);
 
       if (index == -1) {
-        return InformationAct.Empty;
+        return RecordingAct.Empty;
       } else if ((index + 1) < tract.Count) {
         return tract[index + 1];
       } else {
-        return InformationAct.Empty; // No Antecedent
+        return RecordingAct.Empty; // No Antecedent
       }
     }
 
@@ -282,7 +282,7 @@ namespace Empiria.Land.Registration {
       FixedList<RecordingAct> tract = this.GetRecordingActsTractUntil(baseRecordingAct, false);
 
       if (tract.Count == 0) {         // Antecedent no registered
-        return InformationAct.Empty;
+        return RecordingAct.Empty;
       }
       RecordingAct antecedent = tract.FindLast((x) => x is DomainAct);
       if (antecedent != null) {
@@ -290,7 +290,7 @@ namespace Empiria.Land.Registration {
       } else if (tract[0].RecordingActType.Equals(RecordingActType.Empty)) {
         return tract[0];
       } else {
-        return InformationAct.Empty;
+        return RecordingAct.Empty;
       }
     }
 

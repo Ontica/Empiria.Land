@@ -166,7 +166,7 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + recordingAct.AmendmentOf.Document.UID);
       } else if (association.IsEmptyInstance) {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "&nbsp;");
-      } else if (antecedent.Equals(InformationAct.Empty)) {
+      } else if (antecedent.Equals(RecordingAct.Empty)) {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Sin antecedente registral");
       } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Entidad inscrita en: " +
@@ -199,7 +199,7 @@ namespace Empiria.Land.UI {
                      (property.IsPartitionOf.MergedInto.Equals(property) ? " y última" : String.Empty)
                      + " del predio inscrito en " + partitionAntecedent.PhysicalRecording.FullNumber);
         }
-      } else if (antecedent.Equals(InformationAct.Empty)) {
+      } else if (antecedent.Equals(RecordingAct.Empty)) {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Sin antecedente registral");
       } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Predio inscrito en: " +

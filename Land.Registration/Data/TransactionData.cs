@@ -81,6 +81,9 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal List<LRSPayment> GetLRSRecordingPayments(Recording recording) {
+      if (recording.IsEmptyInstance) {
+        return new List<LRSPayment>();
+      }
       var operation = DataOperation.Parse("qryLRSRecordingPayments", recording.Id);
 
       return DataReader.GetList<LRSPayment>(operation, (x) => BaseObject.ParseList<LRSPayment>(x));

@@ -266,7 +266,7 @@ namespace Empiria.Land.Registration {
     public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Resource resource,
                                            RecordingAct amendmentOf = null,
                                            Recording physicalRecording = null) {
-      amendmentOf = (amendmentOf != null) ? amendmentOf : InformationAct.Empty;
+      amendmentOf = (amendmentOf != null) ? amendmentOf : RecordingAct.Empty;
       physicalRecording = (physicalRecording != null) ? physicalRecording : Recording.Empty;
 
       Assertion.AssertObject(recordingActType, "recordingActType");

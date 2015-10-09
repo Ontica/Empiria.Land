@@ -27,12 +27,6 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<InformationAct>(id);
     }
 
-    static public InformationAct Empty {
-      get {
-        return BaseObject.ParseEmpty<InformationAct>();
-      }
-    }
-
     #endregion Constructors and parsers
 
   } // class InformationAct
