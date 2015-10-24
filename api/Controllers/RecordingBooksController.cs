@@ -70,7 +70,7 @@ namespace Empiria.Land.WebApi {
       var recorderOffice = RecorderOffice.Parse(recordingOfficeId);
 
       FixedList<RecordingBook> books = section.GetRecordingBooks(recorderOffice);
- 
+
       ArrayList array = new ArrayList(books.Count);
 
       foreach (RecordingBook book in books) {
@@ -84,7 +84,7 @@ namespace Empiria.Land.WebApi {
           section = new {
             id = book.RecordingSection.Id,
             name = book.RecordingSection.Name,
-          }, 
+          },
           recorderOffice = new {
             id = book.RecorderOffice.Id,
             name = book.RecorderOffice.Alias,

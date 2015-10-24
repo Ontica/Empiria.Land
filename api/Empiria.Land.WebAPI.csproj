@@ -137,7 +137,7 @@
       <Project>{f518e007-2b16-4804-ba45-695ea098e1c0}</Project>
       <Name>Empiria.Kernel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\empiria\extended\WebApi\Empiria.WebApi.csproj">
+    <ProjectReference Include="..\..\..\..\empiria\extensions\WebApi\Empiria.WebApi.csproj">
       <Project>{42b7d25b-356f-4e93-9f17-a2f9422c368d}</Project>
       <Name>Empiria.WebApi</Name>
     </ProjectReference>
