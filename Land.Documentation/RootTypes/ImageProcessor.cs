@@ -1,9 +1,9 @@
-﻿/* Empiria Land 2015 *****************************************************************************************
+﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Documentation                     Assembly : Empiria.Land.Documentation          *
 *  Type      : ImageProcessor                                 Pattern  : Domain Service                      *
-*  Version   : 2.0        Date: 25/Jun/2015                   License  : Please read license.txt file        *
+*  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Document imaging processing service for Empiria Land System.                                  *
 *                                                                                                            *
@@ -13,13 +13,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
-//using System.Windows.Media.Imaging;
-
-using System.Linq;
 
 using Empiria.Documents.IO;
 using Empiria.Json;
-using Empiria.Security;
 
 namespace Empiria.Land.Documentation {
 

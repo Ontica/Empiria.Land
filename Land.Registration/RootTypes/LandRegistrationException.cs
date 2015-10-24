@@ -1,9 +1,9 @@
-﻿/* Empiria Land 2015 *****************************************************************************************
+﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : LandRegistrationException                      Pattern  : Exception Class                     *
-*  Version   : 2.0        Date: 25/Jun/2015                   License  : Please read license.txt file        *
+*  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : The exception that is thrown when a problem occurs in Empiria Government Land Registration    *
 *              System.                                                                                       *

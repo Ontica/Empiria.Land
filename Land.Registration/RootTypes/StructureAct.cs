@@ -1,9 +1,9 @@
-﻿/* Empiria Land 2015 *****************************************************************************************
+﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : StructureAct                                   Pattern  : Empiria Object Type                 *
-*  Version   : 2.0        Date: 25/Jun/2015                   License  : Please read license.txt file        *
+*  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Recording act that represents the changes on measures and limits of real estates,             *
 *              as well as the creation of new properties through fusions and divisons.                       *

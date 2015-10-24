@@ -1,9 +1,9 @@
-﻿/* Empiria Land 2015 *****************************************************************************************
+﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Documentation                     Assembly : Empiria.Land.Documentation          *
 *  Type      : DocumentImage                                  Pattern  : Empiria Object Type                 *
-*  Version   : 2.0        Date: 25/Jun/2015                   License  : Please read license.txt file        *
+*  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Represents a document image in Land Registration System.                                      *
 *                                                                                                            *
@@ -16,7 +16,6 @@ using Empiria.Documents;
 using Empiria.Documents.IO;
 using Empiria.Json;
 using Empiria.Land.Registration;
-using Empiria.Security;
 
 namespace Empiria.Land.Documentation {
 
@@ -118,7 +117,6 @@ namespace Empiria.Land.Documentation {
     internal virtual string GetTargetFolderName() {
       DateTime date = this.Document.PresentationTime;
 
-      // E:\images\2015\2015-01\2015-01-04\RP02WL-91PK57-TG62K5\RP02WL-91PK57-TG62K5_E.01_of_01.png
       return rootTargetFolder + @"\" + date.Year + @"\" + date.ToString("yyyy-MM") + @"\" +
              date.ToString("yyyy-MM-dd") + @"\" + this.Document.UID;
     }

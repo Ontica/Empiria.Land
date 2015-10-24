@@ -170,7 +170,7 @@
       <Project>{f518e007-2b16-4804-ba45-695ea098e1c0}</Project>
       <Name>Empiria.Kernel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\extended\Documents\Empiria.Documents.csproj">
+    <ProjectReference Include="..\..\extensions\Documents\Empiria.Documents.csproj">
       <Project>{2bd53d27-bd61-49fe-afe1-d68e21f58e9a}</Project>
       <Name>Empiria.Documents</Name>
     </ProjectReference>

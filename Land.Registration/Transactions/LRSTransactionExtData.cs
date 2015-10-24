@@ -1,9 +1,9 @@
-﻿/* Empiria Land 2015 *****************************************************************************************
+﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration.Transactions         Assembly : Empiria.Land.Registration           *
 *  Type      : LRSTransactionExtData                          Pattern  : IExtensibleData class               *
-*  Version   : 2.0        Date: 25/Jun/2015                   License  : Please read license.txt file        *
+*  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Contains extensible data for a land registration system transaction.                          *
 *                                                                                                            *

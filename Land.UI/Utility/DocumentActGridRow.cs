@@ -59,4 +59,4 @@ namespace Empiria.Land.UI.Utilities {
 
   }  // class DocumentActGridRow
 
-}  // namespace Empiria.Land.UI.Utilities 
+}  // namespace Empiria.Land.UI.Utilities

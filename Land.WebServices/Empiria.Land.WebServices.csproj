@@ -162,7 +162,7 @@
       <Project>{f518e007-2b16-4804-ba45-695ea098e1c0}</Project>
       <Name>Empiria.Kernel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\extended\WebServices\Empiria.WebServices.csproj">
+    <ProjectReference Include="..\..\extensions\WebServices\Empiria.WebServices.csproj">
       <Project>{29b783cb-dc89-4156-b61c-a889365bc93e}</Project>
       <Name>Empiria.WebServices</Name>
     </ProjectReference>
