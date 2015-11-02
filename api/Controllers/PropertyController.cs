@@ -2,8 +2,6 @@
 using System.Web.Http;
 
 using Empiria.Data;
-using Empiria.DataTypes;
-using Empiria.Json;
 
 using Empiria.WebApi;
 using Empiria.WebApi.Models;
@@ -14,8 +12,30 @@ namespace Empiria.Land.WebApi {
 
     #region Public APIs
 
+    [HttpGet]
+    [Route("v1/properties/{propertyUID}")]
+    public SingleObjectModel GetProperty(string propertyUID) {
+      try {
+        base.RequireResource(propertyUID, "propertyUID");
+
+        string sql = "SELECT * FROM LRSProperties WHERE PropertyUID = '{0}'";
+
+        var data = DataReader.GetDataRow(DataOperation.Parse(String.Format(sql, propertyUID)));
+
+        if (data != null) {
+          return new SingleObjectModel(this.Request, data, "Empiria.Land.Property");
+        } else {
+          throw new ResourceNotFoundException("Property.UniqueID",
+                        String.Format("Property with unique ID '{0}' was not found.", propertyUID));
+        }
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
     [HttpGet, AllowAnonymous]
-    [Route("v1/properties/{cadastralKey}")]
+    [Route("v1/cadastral-properties/{cadastralKey}")]
     public SingleObjectModel GetPropertyWithCadastralKey(string cadastralKey) {
       try {
         base.RequireResource(cadastralKey, "cadastralKey");
@@ -28,7 +48,7 @@ namespace Empiria.Land.WebApi {
           return new SingleObjectModel(this.Request, data, "Empiria.Land.Property");
         } else {
           throw new ResourceNotFoundException("Property.CadastralKey",
-                      String.Format("Property with cadastral key '{0}' was not found.", cadastralKey));
+                        String.Format("Property with cadastral key '{0}' was not found.", cadastralKey));
         }
 
       } catch (Exception e) {

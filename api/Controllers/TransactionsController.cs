@@ -2,8 +2,6 @@
 using System.Web.Http;
 
 using Empiria.Data;
-using Empiria.DataTypes;
-using Empiria.Json;
 
 using Empiria.WebApi;
 using Empiria.WebApi.Models;
