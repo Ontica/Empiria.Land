@@ -15,12 +15,12 @@ namespace Empiria.Land.WebApi {
     #region Public APIs
 
     [HttpPost, AllowAnonymous]
-    [Route("v1/security/change-password")]
-    public void ChangePassword(LoginModel login) {
+    [Route("v1/security/change-password/userEmail")]
+    public void ChangePassword([FromBody] LoginModel login, [FromUri] string userEmail) {
       try {
         base.RequireBody(login);
 
-        EmpiriaUser.ChangePassword(login.api_key, login.user_name, login.password);
+        EmpiriaUser.ChangePassword(login.api_key, login.user_name, userEmail, login.password);
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }

@@ -12,6 +12,7 @@ namespace Empiria.Land.WebApi {
     #region Public methods
 
     static public void Register(HttpConfiguration config) {
+
       // To enable CORS
       var cors = new EnableCorsAttribute("*", "*", "*");
       config.EnableCors(cors);
