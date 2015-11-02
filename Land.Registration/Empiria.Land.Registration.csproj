@@ -114,6 +114,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Certification\CertificateIssueMode.cs" />
+    <Compile Include="Certification\CertificateStatus.cs" />
+    <Compile Include="Certification\CertificateBuilder.cs" />
+    <Compile Include="Certification\CertificateDTO.cs" />
+    <Compile Include="Certification\CertificateExtData.cs" />
+    <Compile Include="Certification\CertificateType.cs" />
     <Compile Include="Data\DocumentsData.cs" />
     <Compile Include="Data\AnalyticsData.cs" />
     <Compile Include="Data\IndexesData.cs" />
@@ -122,10 +128,11 @@
     <Compile Include="Data\PropertyData.cs" />
     <Compile Include="Data\RecordingBooksData.cs" />
     <Compile Include="Empiria.Land.Registration.AssemblyInfo.cs" />
+    <Compile Include="RootTypes\RecordingCertificate.cs" />
     <Compile Include="RootTypes\DocumentAct.cs" />
     <Compile Include="RootTypes\CadastralInfo.cs" />
     <Compile Include="RootTypes\ModificationAct.cs" />
-    <Compile Include="RootTypes\Certificate.cs" />
+    <Compile Include="Certification\Certificate.cs" />
     <Compile Include="RootTypes\Association.cs" />
     <Compile Include="RootTypes\DocumentTarget.cs" />
     <Compile Include="RootTypes\AssociationAct.cs" />
