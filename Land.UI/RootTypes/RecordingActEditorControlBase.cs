@@ -65,7 +65,8 @@ namespace Empiria.Land.UI {
       if (!ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Register")) {
         return false;
       }
-      if (this.Transaction.Status != TransactionStatus.Recording) {
+      if (!(this.Transaction.Status == TransactionStatus.Recording ||
+            this.Transaction.Status == TransactionStatus.Elaboration)) {
         return false;
       }
       if (this.Transaction.Document.Status != RecordableObjectStatus.Incomplete) {

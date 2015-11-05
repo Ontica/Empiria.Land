@@ -158,7 +158,7 @@ namespace Empiria.Land.UI {
     #region OLD Private methods
 
     static private string FillAssociationGridRow(RecordingAct recordingAct, Association association, string temp) {
-      RecordingAct antecedent = association.GetDomainAntecedent(recordingAct);
+      RecordingAct antecedent = association.GetIncorporationAct();
 
       if (recordingAct.IsAmendment && !recordingAct.AmendmentOf.PhysicalRecording.IsEmptyInstance) {
         temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", recordingAct.AmendmentOf.PhysicalRecording.FullNumber);

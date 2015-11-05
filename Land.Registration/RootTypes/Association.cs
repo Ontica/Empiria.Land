@@ -33,6 +33,20 @@ namespace Empiria.Land.Registration {
 
     }
 
+    static public new Association Parse(int id) {
+      return BaseObject.ParseId<Association>(id);
+    }
+
+    static public new Resource TryParseWithUID(string propertyUID) {
+      DataRow row = PropertyData.GetPropertyWithUID(propertyUID);
+
+      if (row != null) {
+        return BaseObject.ParseDataRow<Resource>(row);
+      } else {
+        return null;
+      }
+    }
+
     #endregion Constructors and parsers
 
     #region Public methods
@@ -45,17 +59,19 @@ namespace Empiria.Land.Registration {
       PropertyData.WriteAssociation(this);
     }
 
-    static public new Resource Parse(int id) {
-      return BaseObject.ParseId<Resource>(id);
-    }
+    public RecordingAct GetIncorporationAct() {
+      FixedList<RecordingAct> tract = this.GetRecordingActsTractUntil(RecordingAct.Empty, false);
 
-    static public new Resource TryParseWithUID(string propertyUID) {
-      DataRow row = PropertyData.GetPropertyWithUID(propertyUID);
-
-      if (row != null) {
-        return BaseObject.ParseDataRow<Resource>(row);
+      if (tract.Count == 0) {         // Antecedent no registered
+        return RecordingAct.Empty;
+      }
+      RecordingAct antecedent = tract.FindLast((x) => x.Id == 2750);    // Incorporation act
+      if (antecedent != null) {
+        return antecedent;
+      } else if (tract[0].RecordingActType.Equals(RecordingActType.Empty)) {
+        return tract[0];        // Incorporation act
       } else {
-        return null;
+        return RecordingAct.Empty;
       }
     }
 

@@ -122,6 +122,56 @@ namespace Empiria.Land.Registration {
       return TransactionData.GeneratePropertyKey();
     }
 
+    public RecordingAct GetDomainAntecedent() {
+      return this.GetDomainAntecedent(RecordingAct.Empty);
+    }
+
+    public RecordingAct GetDomainAntecedent(RecordingAct baseRecordingAct) {
+      FixedList<RecordingAct> tract = this.GetRecordingActsTractUntil(baseRecordingAct, false);
+
+      if (tract.Count == 0) {         // Antecedent no registered
+        return RecordingAct.Empty;
+      }
+      RecordingAct antecedent = tract.FindLast((x) => x is DomainAct);
+      if (antecedent != null) {
+        return antecedent;
+      } else if (tract[0].RecordingActType.Equals(RecordingActType.Empty)) {
+        return tract[0];
+      } else {
+        return RecordingAct.Empty;
+      }
+    }
+
+    public Property[] GetPartitions() {
+      return PropertyData.GetPropertyPartitions(this);
+    }
+
+    /// <summary>Returns the temporary domain act if it exists, or RecordingAct.Empty otherwise.</summary>
+    public RecordingAct GetProvisionalDomainAct() {
+      if (this.GetDomainAntecedent() != RecordingAct.Empty) {
+        return RecordingAct.Empty;
+      }
+
+      FixedList<RecordingAct> tract = this.GetRecordingActsTractUntil(RecordingAct.Empty, false);
+
+      if (tract.Count == 0) {         // Antecedent no registered
+        return RecordingAct.Empty;
+      }
+      if (tract.Count == 1 && EmpiriaMath.IsMemberOf(tract[0].RecordingActType.Id, new int[] { 2284, 2257 })) {
+        return tract[0];
+      } else if (tract.Count == 2 && (tract[0].RecordingActType.Id == 2257 &&
+                                      tract[1].RecordingActType.Id == 2284)) {
+        return tract[1];
+      } else {
+        return RecordingAct.Empty;
+      }
+    }
+
+    public bool IsProvisional() {
+      return (this.GetDomainAntecedent() == RecordingAct.Empty &&
+              this.GetProvisionalDomainAct() != RecordingAct.Empty);
+    }
+
     protected override void OnInitialize() {
       this.Location = new Address();
       this.CadastralData = new CadastralInfo();
@@ -161,9 +211,9 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public Property[] GetPartitions() {
-      return PropertyData.GetPropertyPartitions(this);
-    }
+    #endregion Public methods
+
+    #region Private methods
 
     private Property CreatePartition(PropertyPartition partitionInfo) {
       //Property[] currentPartitions = this.GetPartitions();
@@ -220,7 +270,7 @@ namespace Empiria.Land.Registration {
       return partitions;
     }
 
-    #endregion Public methods
+    #endregion Private methods
 
   } // class Property
 

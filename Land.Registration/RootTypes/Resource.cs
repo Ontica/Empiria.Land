@@ -264,35 +264,20 @@ namespace Empiria.Land.Registration {
       return RecordingActsData.GetPropertyRecordingActListUntil(this, breakAct, includeBreakAct);
     }
 
-    public RecordingAct GetAntecedent(RecordingAct baseRecordingAct) {
-      FixedList<RecordingAct> tract = this.GetRecordingActsTract();
+    ///// <summary>TODO: OOJJOO To be deprecated ???</summary>
+    //public RecordingAct GetAntecedent(RecordingAct baseRecordingAct) {
+    //  FixedList<RecordingAct> tract = this.GetRecordingActsTract();
 
-      int index = tract.IndexOf(baseRecordingAct);
+    //  int index = tract.IndexOf(baseRecordingAct);
 
-      if (index == -1) {
-        return RecordingAct.Empty;
-      } else if ((index + 1) < tract.Count) {
-        return tract[index + 1];
-      } else {
-        return RecordingAct.Empty; // No Antecedent
-      }
-    }
-
-    public RecordingAct GetDomainAntecedent(RecordingAct baseRecordingAct) {
-      FixedList<RecordingAct> tract = this.GetRecordingActsTractUntil(baseRecordingAct, false);
-
-      if (tract.Count == 0) {         // Antecedent no registered
-        return RecordingAct.Empty;
-      }
-      RecordingAct antecedent = tract.FindLast((x) => x is DomainAct);
-      if (antecedent != null) {
-        return antecedent;
-      } else if (tract[0].RecordingActType.Equals(RecordingActType.Empty)) {
-        return tract[0];
-      } else {
-        return RecordingAct.Empty;
-      }
-    }
+    //  if (index == -1) {
+    //    return RecordingAct.Empty;
+    //  } else if ((index + 1) < tract.Count) {
+    //    return tract[index + 1];
+    //  } else {
+    //    return RecordingAct.Empty; // No Antecedent
+    //  }
+    //}
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
