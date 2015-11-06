@@ -7,4 +7,5 @@ Empiria Land includes the following software components:
 * B) Empiria Land Documentation Services
 * C) Empiria Land Transaction Services
 * D) Empiria Land UI (User interface services)
-* E) Empiria Land Web Services
+* E) Empiria Land Web API (HTTP/REST-based)
+* F) Empiria Land Web Services (SOAP/XML-based)
