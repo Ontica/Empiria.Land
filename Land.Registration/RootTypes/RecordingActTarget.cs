@@ -12,11 +12,7 @@
 using System;
 using System.Data;
 
-using Empiria.Contacts;
-using Empiria.DataTypes;
 using Empiria.Security;
-
-using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration {
 

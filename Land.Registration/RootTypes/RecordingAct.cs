@@ -111,9 +111,10 @@ namespace Empiria.Land.Registration {
       return RecordingActsData.GetRecordingActs(document).ToFixedList();
     }
 
+    static private readonly RecordingAct _empty = BaseObject.ParseEmpty<RecordingAct>();
     static public RecordingAct Empty {
       get {
-        return BaseObject.ParseEmpty<InformationAct>();
+        return _empty.Clone<RecordingAct>();
       }
     }
 

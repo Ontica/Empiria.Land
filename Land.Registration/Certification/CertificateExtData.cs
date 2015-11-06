@@ -84,6 +84,11 @@ namespace Empiria.Land.Certification {
       private set;
     }
 
+    public int StartingYear {
+      get;
+      private set;
+    }
+
     public string FromOwnerName {
       get;
       private set;
@@ -131,6 +136,7 @@ namespace Empiria.Land.Certification {
         Operation = this.Operation,
         OperationDate = this.OperationDate,
         SeekForName = this.SeekForName,
+        StartingYear = this.StartingYear,
         FromOwnerName = this.FromOwnerName,
         MarginalNotes = this.MarginalNotes,
         UseMarginalNotesAsFullBody = this.UseMarginalNotesAsFullBody,
@@ -144,6 +150,7 @@ namespace Empiria.Land.Certification {
       this.Operation = json.Get<String>("Operation", String.Empty);
       this.OperationDate = json.Get<DateTime>("OperationDate", ExecutionServer.DateMaxValue);
       this.SeekForName = json.Get<String>("SeekForName", String.Empty);
+      this.StartingYear = json.Get<Int32>("StartingYear", 0);
       this.FromOwnerName = json.Get<String>("FromOwnerName", String.Empty);
       this.MarginalNotes = json.Get<String>("MarginalNotes", String.Empty);
       this.UseMarginalNotesAsFullBody = json.Get<Boolean>("UseMarginalNotesAsFullBody", false);
@@ -156,6 +163,7 @@ namespace Empiria.Land.Certification {
       this.Operation = data.Operation;
       this.OperationDate = data.OperationDate;
       this.SeekForName = data.SeekForName;
+      this.StartingYear = data.StartingYear;
       this.FromOwnerName = data.FromOwnerName;
       this.MarginalNotes = data.MarginalNotes;
       this.UseMarginalNotesAsFullBody = data.UseMarginalNotesAsFullBody;

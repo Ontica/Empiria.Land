@@ -55,8 +55,11 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<Recording>(id);
     }
 
+    static private readonly Recording _empty = BaseObject.ParseEmpty<Recording>();
     static public Recording Empty {
-      get { return BaseObject.ParseEmpty<Recording>(); }
+      get {
+        return _empty.Clone<Recording>();
+      }
     }
 
     static public int SplitRecordingNumber(string fullRecordingNumber, out string bisSuffixTag) {

@@ -26,6 +26,7 @@ namespace Empiria.Land.Certification {
       this.Operation = String.Empty;
       this.OperationDate = ExecutionServer.DateMaxValue;
       this.SeekForName = String.Empty;
+      this.StartingYear = 0;
       this.FromOwnerName = String.Empty;
       this.ToOwnerName = String.Empty;
       this.MarginalNotes = String.Empty;
@@ -85,6 +86,10 @@ namespace Empiria.Land.Certification {
       set;
     }
 
+    public int StartingYear {
+      get;
+      set;
+    }
     public string FromOwnerName {
       get;
       set;

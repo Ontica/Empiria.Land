@@ -67,10 +67,14 @@ namespace Empiria.Land.Certification {
       template.Replace("{{UBICACION.PREDIO}}", o.ExtensionData.PropertyLocation);
       template.Replace("{{MEDIDAS.Y.COLINDANCIAS}}", o.ExtensionData.PropertyMetesAndBounds);
 
+      template.Replace("{{AÑO.BÚSQUEDA}}", o.ExtensionData.StartingYear >= 1900 ?
+                          EmpiriaString.SpeechInteger(o.ExtensionData.StartingYear).ToLowerInvariant() :
+                          AsWarning("AÑO DE BÚSQUEDA NO PROPORCIONADO"));
+
       template.Replace("{{ELABORADO.POR}}", o.IssuedBy.Nickname);
       template.Replace("{{NUMERO.TRAMITE}}", o.Transaction.UID);
       template.Replace("{{FECHA.PRESENTACION}}",
-                   o.Transaction.PresentationTime.ToString("dd/MMM/yyyy HH:mm"));
+                        o.Transaction.PresentationTime.ToString("dd/MMM/yyyy HH:mm"));
       template.Replace("{{NUMERO.RECIBO}}", o.Transaction.Payments.ReceiptNumbers);
       template.Replace("{{IMPORTE.DERECHOS}}", o.Transaction.Payments.Total.ToString("C2"));
 
@@ -99,7 +103,7 @@ namespace Empiria.Land.Certification {
 
     private string GetIssueDate() {
       if (this.Certificate.Status != CertificateStatus.Pending) {
-        return this.Certificate.IssueTime.ToString("dd \\de MMMM \\del año yyyy").ToUpperInvariant();
+        return EmpiriaString.SpeechDate(this.Certificate.IssueTime).ToUpperInvariant();
       } else {
         return AsWarning("SIN FECHA DE EXPEDICIÓN");
       }
@@ -153,14 +157,18 @@ namespace Empiria.Land.Certification {
     }
 
     private string GetDocumentOrPhysicalRecording() {
-      var antecedent = this.Certificate.Property.GetDomainAntecedent(InformationAct.Empty);
+      var antecedent = this.Certificate.Property.GetDomainAntecedent();
 
-      if (antecedent.Equals(InformationAct.Empty)) {
-        return AsWarning("NO SE ENCONTRÓ INFORMACIÓN DEL " +
-                         "ANTECEDENTE REGISTRAL, FAVOR DE REVISAR EL FOLIO DEL PREDIO. " +
-                         "ES POSIBLE QUE ESTE TIPO DE CERTIFICADO PARA ESE PREDIO NO " +
-                         "DEBA SER EMITIDO");
-      } else if (antecedent.PhysicalRecording.IsEmptyInstance) {
+      if (antecedent.Equals(RecordingAct.Empty)) {
+        // If there are not domain acts, then try to get a provisional domain act
+        antecedent = this.Certificate.Property.GetProvisionalDomainAct();
+        if (antecedent.Equals(RecordingAct.Empty)) {
+          return AsWarning("NO SE ENCONTRÓ INFORMACIÓN DEL ANTECEDENTE REGISTRAL. " +
+                           "FAVOR DE REVISAR EL FOLIO DEL PREDIO. " +
+                           "ES POSIBLE QUE EL CERTIFICADO NO DEBA SER EMITIDO");
+        }
+      }
+      if (antecedent.PhysicalRecording.IsEmptyInstance) {
         return this.GetPhysicalDocument(antecedent.Document);
       } else {
         return this.GetPhysicalRecording(antecedent.PhysicalRecording);
@@ -191,8 +199,19 @@ namespace Empiria.Land.Certification {
       var text = new StringBuilder(template);
 
       text.Replace("{{DOCUMENT}}", document.UID);
-      text.Replace("{{DATE}}", document.AuthorizationTime.ToString("dd \\de MMMM \\de yyyy"));
+      if (document.AuthorizationTime != ExecutionServer.DateMaxValue) {
+        text.Replace("{{DATE}}", document.AuthorizationTime.ToString("dd \\de MMMM \\de yyyy"));
 
+        return text.ToString();
+      }
+
+      var antecedent = this.Certificate.Property.GetProvisionalDomainAct();
+
+      if (!antecedent.Equals(Recording.Empty)) {
+        text.Replace("{{DATE}}", antecedent.RegistrationTime.ToString("dd \\de MMMM \\de yyyy"));
+      } else {
+        text.Replace("{{DATE}}", AsWarning("FECHA DE INSCRIPCIÓN NO DETERMINADA"));
+      }
       return text.ToString();
     }
 

@@ -129,13 +129,13 @@ namespace Empiria.Land.Registration {
     public RecordingAct GetDomainAntecedent(RecordingAct baseRecordingAct) {
       FixedList<RecordingAct> tract = this.GetRecordingActsTractUntil(baseRecordingAct, false);
 
-      if (tract.Count == 0) {         // Antecedent no registered
+      if (tract.Count == 0) {         // Antecedent no registered. OOJJOO Should throw an error?
         return RecordingAct.Empty;
       }
       RecordingAct antecedent = tract.FindLast((x) => x is DomainAct);
       if (antecedent != null) {
         return antecedent;
-      } else if (tract[0].RecordingActType.Equals(RecordingActType.Empty)) {
+      } else if (tract[0].RecordingActType.Equals(RecordingActType.Empty)) {  // No registered act
         return tract[0];
       } else {
         return RecordingAct.Empty;
@@ -159,9 +159,9 @@ namespace Empiria.Land.Registration {
       }
       if (tract.Count == 1 && EmpiriaMath.IsMemberOf(tract[0].RecordingActType.Id, new int[] { 2284, 2257 })) {
         return tract[0];
-      } else if (tract.Count == 2 && (tract[0].RecordingActType.Id == 2257 &&
-                                      tract[1].RecordingActType.Id == 2284)) {
-        return tract[1];
+      } else if (tract.Count == 2 && (tract[0].RecordingActType.Id == 2284 && 
+                                      tract[1].RecordingActType.Id == 2257)) {
+        return tract[0];
       } else {
         return RecordingAct.Empty;
       }
