@@ -5,7 +5,7 @@
 *  Type      : CertificateBuilder                             Pattern  : Builder Class                       *
 *  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Builds a certificate output using a text template.                                            *
+*  Summary   : Builds a certificate output using a text-based template.                                      *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -16,7 +16,7 @@ using Empiria.Land.Registration;
 
 namespace Empiria.Land.Certification {
 
-  /// <summary>Builds a certificate output using a template.</summary>
+  /// <summary>Builds a certificate output using a text-based template.</summary>
   internal class CertificateBuilder {
 
     #region Constructors and parsers

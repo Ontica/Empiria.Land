@@ -114,6 +114,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Certification\CertificateAssembler.cs" />
     <Compile Include="Certification\CertificateIssueMode.cs" />
     <Compile Include="Certification\CertificateStatus.cs" />
     <Compile Include="Certification\CertificateBuilder.cs" />

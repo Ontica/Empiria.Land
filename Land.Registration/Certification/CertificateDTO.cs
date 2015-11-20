@@ -5,117 +5,114 @@
 *  Type      : CertificateDTO                                 Pattern  : Data Transfer Object                *
 *  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Holds certificate data.                                                                       *
+*  Summary   : Data transfer object that holds data to build land certificates.                              *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Land.Certification {
 
-  /// <summary>Holds certificate data.</summary>
+  /// <summary>Data transfer object that holds data to build land certificates.</summary>
   public class CertificateDTO {
 
-    public CertificateDTO() {
-      this.CertificateTypeUID = String.Empty;
-      this.TransactionUID = String.Empty;
-      this.RecorderOfficeId = -1;
-      this.PropertyUID = String.Empty;
-      this.PropertyCommonName = String.Empty;
-      this.PropertyLocation = String.Empty;
-      this.PropertyMetesAndBounds = String.Empty;
-      this.Operation = String.Empty;
-      this.OperationDate = ExecutionServer.DateMaxValue;
-      this.SeekForName = String.Empty;
-      this.StartingYear = 0;
-      this.FromOwnerName = String.Empty;
-      this.ToOwnerName = String.Empty;
-      this.MarginalNotes = String.Empty;
-      this.UseMarginalNotesAsFullBody = false;
-      this.UserNotes = String.Empty;
-    }
-
-    #region Properties
+    #region Public properties
 
     public string CertificateTypeUID {
       get;
       set;
-    }
+    } = String.Empty;
+
 
     public string TransactionUID {
       get;
       set;
-    }
+    } = String.Empty;
+
 
     public int RecorderOfficeId {
       get;
       set;
-    }
+    } = -1;
+
 
     public string PropertyUID {
       get;
       set;
-    }
+    } = String.Empty;
+
 
     public string PropertyCommonName {
       get;
       set;
-    }
+    } = String.Empty;
+
 
     public string PropertyLocation {
       get;
       set;
-    }
+    } = String.Empty;
+
 
     public string PropertyMetesAndBounds {
       get;
       set;
-    }
+    } = String.Empty;
+
 
     public string Operation {
       get;
       set;
-    }
+    } = String.Empty;
+
 
     public DateTime OperationDate {
       get;
       set;
-    }
+    } = ExecutionServer.DateMaxValue;
+
 
     public string SeekForName {
       get;
       set;
-    }
+    } = String.Empty;
+
 
     public int StartingYear {
       get;
       set;
-    }
+    } = 0;
+
+
     public string FromOwnerName {
       get;
       set;
-    }
+    } = String.Empty;
+
 
     public string ToOwnerName {
       get;
       set;
-    }
+    } = String.Empty;
+
 
     public string MarginalNotes {
       get;
       set;
-    }
+    } = String.Empty;
+
 
     public bool UseMarginalNotesAsFullBody {
       get;
       set;
-    }
+    } = false;
+
 
     public string UserNotes {
       get;
       set;
-    }
+    } = String.Empty;
 
-    #endregion Properties
+    #endregion Public properties
 
   } // class CertificateDTO
 

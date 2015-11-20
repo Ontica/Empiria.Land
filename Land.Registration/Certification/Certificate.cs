@@ -21,23 +21,12 @@ namespace Empiria.Land.Certification {
 
   /// <summary>Represents a certificate for property ownership or non ownership.</summary>
   [PartitionedType(typeof(CertificateType))]
-  public class Certificate : BaseObject, IProtected {
+  public partial class Certificate : BaseObject, IProtected {
 
     #region Constructors and parsers
 
     private Certificate(CertificateType powerType) : base(powerType) {
       // Required by Empiria Framework for all partitioned types.
-    }
-
-    static public Certificate Create(CertificateDTO data) {
-      Assertion.AssertObject(data, "data");
-
-      var assembler = new CertificateAssembler(data);
-
-      var newCertificate = assembler.CreateCertificate();
-      newCertificate.Save();
-
-      return newCertificate;
     }
 
     static public Certificate Parse(int id) {
@@ -287,18 +276,6 @@ namespace Empiria.Land.Certification {
       this.Save();
     }
 
-    public void Update(CertificateDTO data) {
-      Assertion.AssertObject(data, "data");
-
-      Assertion.Assert(this.Status == CertificateStatus.Pending,
-                       "This certificate can't be updated. It's not in pending status.");
-
-      var assembler = new CertificateAssembler(data);
-
-      assembler.UpdateCertificate(this);
-      this.Save();
-    }
-
     #endregion Public methods
 
     #region Protected methods
@@ -365,80 +342,6 @@ namespace Empiria.Land.Certification {
     }
 
     #endregion Private methods
-
-    #region Inner Class: CertificateAssembler
-
-    /// <summary>Assembles a Certificate instance using a CertificateDTO data.</summary>
-    private class CertificateAssembler {
-
-      private CertificateDTO data = new CertificateDTO();
-
-      internal CertificateAssembler(CertificateDTO data) {
-        this.data = data;
-      }
-
-      internal Certificate CreateCertificate() {
-        var certificate = new Certificate(this.GetCertificateType());
-        this.LoadData(certificate);
-
-        return certificate;
-      }
-
-      internal void UpdateCertificate(Certificate certificate) {
-        AssertImmutableData(certificate);
-        LoadData(certificate);
-      }
-
-      #region Private methods
-
-      private void AssertImmutableData(Certificate certificate) {
-        Validate.IsTrue(certificate.Transaction.Equals(this.GetTransaction()),
-                        "Certificate Transaction was changed between calls. {0}  {1}", certificate.Transaction.Id, this.GetTransaction().Id);
-      }
-
-      private CertificateType GetCertificateType() {
-        Validate.NotNull(data.CertificateTypeUID, "Certificate type can't be null.");
-
-        return CertificateType.Parse(data.CertificateTypeUID);
-      }
-
-      private Property GetProperty() {
-        if (data.PropertyUID.Length == 0) {
-          return Property.Empty;
-        }
-        var property = Property.TryParseWithUID(data.PropertyUID);
-        Validate.NotNull(property,
-                        "Property with unique ID '{0}' was not found.", data.PropertyUID);
-        return property;
-      }
-
-      private RecorderOffice GetRecorderOffice() {
-        return RecorderOffice.Parse(data.RecorderOfficeId);
-      }
-
-      private LRSTransaction GetTransaction() {
-        var transaction = LRSTransaction.TryParse(data.TransactionUID);
-        Validate.NotNull(transaction,
-                         "Transaction with unique ID '{0}' was not found.", data.TransactionUID);
-
-        return transaction;
-      }
-
-      private void LoadData(Certificate certificate) {
-        certificate.Transaction = this.GetTransaction();
-        certificate.RecorderOffice = this.GetRecorderOffice();
-        certificate.Property = this.GetProperty();
-        certificate.OwnerName = data.ToOwnerName;
-        certificate.UserNotes = data.UserNotes;
-
-        certificate.ExtensionData = new CertificateExtData(this.data);
-      }
-
-      #endregion Private methods
-
-    }  // inner class CertificateAssembler
-
-    #endregion Inner Class: CertificateAssembler
 
   } // class Certificate
 
