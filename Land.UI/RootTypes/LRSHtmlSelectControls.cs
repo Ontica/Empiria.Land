@@ -73,7 +73,7 @@ namespace Empiria.Land.UI {
       string html = String.Empty;
       for (int i = 0; i < list.Count; i++) {
         html += HtmlSelectContent.GetComboHtmlItem(Convert.ToString((char) list[i]),
-                                                   LRSTransaction.StatusName(list[i]));
+                                                   LRSTransaction.GetStatusName(list[i]));
       }
       return html;
     }

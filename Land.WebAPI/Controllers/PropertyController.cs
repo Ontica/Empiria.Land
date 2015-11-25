@@ -2,9 +2,10 @@
 using System.Web.Http;
 
 using Empiria.Data;
-
 using Empiria.WebApi;
 using Empiria.WebApi.Models;
+
+using Empiria.Land.Registration;
 
 namespace Empiria.Land.WebApi {
 
@@ -34,8 +35,29 @@ namespace Empiria.Land.WebApi {
       }
     }
 
+    /// <summary>Gets textual information about a registered property given its unique ID.</summary>
+    [HttpGet]
+    [Route("v1/properties/{propertyUID}/as-html")]
+    public SingleObjectModel GetPropertyTextInfo([FromUri] string propertyUID) {
+      try {
+        base.RequireResource(propertyUID, "propertyUID");
+
+        var property = Property.TryParseWithUID(propertyUID);
+
+        if (property != null) {
+          return new SingleObjectModel(this.Request, this.GetPropertyAsTextModel(property),
+                                       "Empiria.Land.PropertyAsHtml");
+        } else {
+          throw new ResourceNotFoundException("Property.UniqueID",
+                                              "Property with unique ID '{0}' was not found.", propertyUID);
+        }
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
     [HttpGet, AllowAnonymous]
-    [Route("v1/cadastral-properties/{cadastralKey}")]
+    [Route("v1/properties/cadastral/{cadastralKey}")]
     public SingleObjectModel GetPropertyWithCadastralKey(string cadastralKey) {
       try {
         base.RequireResource(cadastralKey, "cadastralKey");
@@ -57,6 +79,17 @@ namespace Empiria.Land.WebApi {
     }
 
     #endregion Public APIs
+
+    #region Private methods
+
+    private object GetPropertyAsTextModel(Property o) {
+      return new {
+        uid = o.UID,
+        asHtml = o.AsText,
+      };
+    }
+
+    #endregion Private methods
 
   }  // class PropertyController
 

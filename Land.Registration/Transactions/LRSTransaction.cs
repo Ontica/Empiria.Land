@@ -97,7 +97,7 @@ namespace Empiria.Land.Registration.Transactions {
       return listType.GetItems<Contact>();
     }
 
-    static public string StatusName(TransactionStatus status) {
+    static public string GetStatusName(TransactionStatus status) {
       switch (status) {
         case TransactionStatus.Payment:
           if (ExecutionServer.LicenseName == "Zacatecas") {
@@ -262,6 +262,13 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
+
+    public DateTime EstimatedDueTime {
+      get {
+        return this.PresentationTime.AddDays(2);
+      }
+    }
+
     [DataField("IsArchived")]
     public bool IsArchived {
       get;
@@ -272,6 +279,12 @@ namespace Empiria.Land.Registration.Transactions {
     public TransactionStatus Status {
       get;
       private set;
+    }
+
+    public string StatusName {
+      get {
+        return LRSTransaction.GetStatusName(this.Status);
+      }
     }
 
     public bool ReadyForReentry {

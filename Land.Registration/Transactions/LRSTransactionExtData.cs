@@ -102,6 +102,10 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Methods
 
+    public T GetObject<T>(string objectKey) {
+      return default(T);
+    }
+
     public string ToJson() {
       if (!this.IsEmptyInstance) {
         return Empiria.Json.JsonConverter.ToJson(this.GetObject());

@@ -109,7 +109,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public string CurrentStatusName {
-      get { return LRSTransaction.StatusName(this.CurrentStatus); }
+      get { return LRSTransaction.GetStatusName(this.CurrentStatus); }
     }
 
     [DataField("NextTransactionStatus", Default = TransactionStatus.EndPoint)]
@@ -119,7 +119,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public string NextStatusName {
-      get { return LRSTransaction.StatusName(this.NextStatus); }
+      get { return LRSTransaction.GetStatusName(this.NextStatus); }
     }
 
     [DataField("CheckInTime", Default = "DateTime.Now")]
