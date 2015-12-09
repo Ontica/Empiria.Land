@@ -148,18 +148,21 @@ namespace Empiria.Land.Registration {
 
     /// <summary>Returns the temporary domain act if it exists, or RecordingAct.Empty otherwise.</summary>
     public RecordingAct GetProvisionalDomainAct() {
-      if (this.GetDomainAntecedent() != RecordingAct.Empty) {
-        return RecordingAct.Empty;
-      }
+      //if (this.GetDomainAntecedent().Equals(RecordingAct.Empty)) {
+      //  return RecordingAct.Empty;
+      //}
 
       FixedList<RecordingAct> tract = this.GetRecordingActsTractUntil(RecordingAct.Empty, false);
 
       if (tract.Count == 0) {         // Antecedent no registered
         return RecordingAct.Empty;
       }
-      // Avisos preventivos primero y segundo
-      if (EmpiriaMath.IsMemberOf(tract[0].RecordingActType.Id, new int[] { 2284, 2257 })) {
-        return tract[0];
+      // Avisos preventivos primero o segundo, o denuncia de erección
+      var provisional = tract.FindLast((x) => x.RecordingActType.Id == 2284 ||
+                                              x.RecordingActType.Id == 2257 ||
+                                              x.RecordingActType.Id == 2371);
+      if (provisional != null) {
+        return provisional;
      // } else if (tract.Count == 2 && (tract[0].RecordingActType.Id == 2284 &&
      //                                 tract[1].RecordingActType.Id == 2257)) {
      //   return tract[0];

@@ -14,11 +14,8 @@ using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Contacts;
-using Empiria.DataTypes;
 using Empiria.Land.Registration.Data;
-using Empiria.Land.Registration.Transactions;
 using Empiria.Security;
-
 using Empiria.Ontology;
 
 namespace Empiria.Land.Registration {
