@@ -58,7 +58,7 @@ namespace Empiria.Land.WebApi {
 
         var transaction = certificateRequest.CreateTransaction();
 
-        return new SingleObjectModel(this.Request, this.GetTransactionModel(transaction),
+        return new SingleObjectModel(this.Request, this.GetTransactionModel(transaction, certificateRequest),
                                      "Empiria.Land.CertificateIssuingTransaction");
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -84,8 +84,8 @@ namespace Empiria.Land.WebApi {
 
     #region Private methods
 
-    private object GetTransactionModel(LRSTransaction o) {
-      var externalTransaction = o.ExtensionData.GetObject<CertificateRequest>("ExternalTransaction");
+    private object GetTransactionModel(LRSTransaction o, CertificateRequest et) {
+      var externalTransaction = et; //o.ExtensionData.GetObject<CertificateRequest>("ExternalTransaction");
 
       return new {
         uid = o.UID,

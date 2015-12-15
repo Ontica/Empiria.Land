@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Http;
 
 using Empiria.Data;
@@ -27,7 +28,7 @@ namespace Empiria.Land.WebApi {
           return new SingleObjectModel(this.Request, data, "Empiria.Land.Property");
         } else {
           throw new ResourceNotFoundException("Property.UniqueID",
-                        String.Format("Property with unique ID '{0}' was not found.", propertyUID));
+                                              "Property with unique ID '{0}' was not found.", propertyUID);
         }
 
       } catch (Exception e) {
@@ -56,6 +57,43 @@ namespace Empiria.Land.WebApi {
       }
     }
 
+    [HttpGet]
+    [Route("v1/properties/{propertyUID}/antecedent")]
+    public SingleObjectModel GetPropertyAntecedent(string propertyUID) {
+      try {
+        base.RequireResource(propertyUID, "propertyUID");
+
+        var property = Property.TryParseWithUID(propertyUID);
+
+        if (property == null) {
+          throw new ResourceNotFoundException("Property.UniqueID",
+                                              "Property with unique ID '{0}' was not found.", propertyUID);
+        }
+
+        var domainAntecedent = property.GetDomainAntecedent();
+        var provisionalAntecedent = property.GetProvisionalDomainAct();
+        var fullTract = property.GetRecordingActsTractUntil(RecordingAct.Empty, false);
+
+        var data = new {
+          domain = GetRecordingActModel(domainAntecedent),
+          provisional = GetRecordingActModel(provisionalAntecedent),
+          fullTract = fullTract.Select((x) => GetRecordingActModel(x)),
+        };
+
+        return new SingleObjectModel(this.Request, data, "Empiria.Land.PropertyAntecedents");
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+    private object GetRecordingActModel(RecordingAct act) {
+      return new {
+        id = act.Id,
+        typeId = act.RecordingActType.Id,
+        type = act.RecordingActType.DisplayName,
+      };
+    }
+
     [HttpGet, AllowAnonymous]
     [Route("v1/properties/cadastral/{cadastralKey}")]
     public SingleObjectModel GetPropertyWithCadastralKey(string cadastralKey) {
@@ -70,7 +108,7 @@ namespace Empiria.Land.WebApi {
           return new SingleObjectModel(this.Request, data, "Empiria.Land.Property");
         } else {
           throw new ResourceNotFoundException("Property.CadastralKey",
-                        String.Format("Property with cadastral key '{0}' was not found.", cadastralKey));
+                                              "Property with cadastral key '{0}' was not found.", cadastralKey);
         }
 
       } catch (Exception e) {
@@ -85,7 +123,8 @@ namespace Empiria.Land.WebApi {
     private object GetPropertyAsTextModel(Property o) {
       return new {
         uid = o.UID,
-        asHtml = o.AsText,
+        asHtml = "El folio electrónico del predio es <strong>" + o.UID  + "</strong>.<br/><br/>Este es el texto que debería " +
+                 "desplegarse en el <i>editor de trámites</i> CITyS para confirmar que se trata del mismo predio.",
       };
     }
 

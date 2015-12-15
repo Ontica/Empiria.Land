@@ -32,12 +32,13 @@ namespace Empiria.Land.WebApi.Models {
     /// <summary>Creates a Land Transaction using the data of this certificate request.</summary>
     /// <returns>The Land Transaction created instance.</returns>
     internal LRSTransaction CreateTransaction() {
-      var transaction = new LRSTransaction(LRSTransactionType.Parse(701)) {
+      var transaction = new LRSTransaction(LRSTransactionType.Parse(702)) {
         RequestedBy = this.RequestedBy,
       };
 
+      transaction.Save();
       transaction.AddPayment(this.PaymentReceiptNo, this.PaymentAmount);
-
+      transaction.Receive("Citys Certificate Request Test");
       return transaction;
     }
 
