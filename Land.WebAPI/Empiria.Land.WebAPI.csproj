@@ -148,10 +148,6 @@
       <Project>{ea85313c-bbbb-4f31-b6b9-05bb79addff1}</Project>
       <Name>Empiria.Land.Registration</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Land.Services\Empiria.Land.Services.csproj">
-      <Project>{233b176a-cd8a-437a-ad6f-14db078ddbed}</Project>
-      <Name>Empiria.Land.Services</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
