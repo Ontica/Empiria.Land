@@ -95,6 +95,14 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList<LRSPayment>(operation, (x) => BaseObject.ParseList<LRSPayment>(x));
     }
 
+    static internal bool ExistsExternalTransactionNo(string externalTransactionNo) {
+      var sql = "SELECT * FROM LRSTransactions WHERE ExternalTransactionNo = '{0}'";
+
+      var operation = DataOperation.Parse(String.Format(sql, externalTransactionNo));
+
+      return (DataReader.Count(operation) > 0);
+    }
+
     static public List<LRSTransactionTask> GetLRSTransactionTaskList(LRSTransaction transaction) {
       var operation = DataOperation.Parse("qryLRSTransactionTrack", transaction.Id);
 
@@ -217,11 +225,12 @@ namespace Empiria.Land.Registration.Data {
 
     static internal DataOperation WriteTransactionOp(LRSTransaction o) {
       return DataOperation.Parse("writeLRSTransaction", o.Id, o.TransactionType.Id, o.UID,
-                                 o.DocumentType.Id, o.DocumentDescriptor, o.Document.Id, o.RecorderOffice.Id,
-                                 o.RequestedBy, o.Agency.Id, o.ExtensionData.ToJson(), o.Keywords,
-                                 o.PresentationTime, o.ExpectedDelivery, o.LastReentryTime, o.ClosingTime,
-                                 o.LastDeliveryTime, o.NonWorkingTime, o.ComplexityIndex, o.IsArchived,
-                                 (char) o.Status, o.Integrity.GetUpdatedHashCode());
+                  o.DocumentType.Id, o.DocumentDescriptor, o.Document.Id, o.RecorderOffice.Id,
+                  o.RequestedBy, o.Agency.Id, o.ExternalTransaction.ExternalTransactionNo,
+                  o.ExternalTransaction.ToString(), o.ExtensionData.ToString(),
+                  o.Keywords, o.PresentationTime, o.ExpectedDelivery, o.LastReentryTime, o.ClosingTime,
+                  o.LastDeliveryTime, o.NonWorkingTime, o.ComplexityIndex, o.IsArchived,
+                  (char) o.Status, o.Integrity.GetUpdatedHashCode());
     }
 
     static internal int WriteTransactionItem(LRSTransactionItem o) {

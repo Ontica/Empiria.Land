@@ -65,6 +65,22 @@ namespace Empiria.Land.WebApi {
       }
     }
 
+    /// <summary>Request a new transaction to record a new pending note.</summary>
+    [HttpPost]
+    [Route("v1/transactions/request-pending-note-recording")]
+    public SingleObjectModel RequestPendingNoteRecording([FromBody] PendingNoteRequest pendingNoteRequest) {
+      try {
+        base.RequireBody(pendingNoteRequest);
+
+        var transaction = pendingNoteRequest.CreateTransaction();
+
+        return new SingleObjectModel(this.Request, this.GetTransactionModel(transaction, pendingNoteRequest),
+                                     "Empiria.Land.PendingNoteTransaction");
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
     ///// <summary>Request a new transaction to issue an unregistered property UID (aka folio real).</summary>
     //[HttpPost]
     //[Route("v1/citys/request-property-uid")]
@@ -84,12 +100,25 @@ namespace Empiria.Land.WebApi {
 
     #region Private methods
 
-    private object GetTransactionModel(LRSTransaction o, CertificateRequest et) {
-      var externalTransaction = et; //o.ExtensionData.GetObject<CertificateRequest>("ExternalTransaction");
-
+    private object GetTransactionModel(LRSTransaction o, PendingNoteRequest externalTransaction) {
       return new {
         uid = o.UID,
-        externalTransactionNo = externalTransaction.TransactionNo,
+        externalTransactionNo = externalTransaction.ExternalTransactionNo,
+        notaryId = externalTransaction.NotaryId,
+        requestedBy = o.RequestedBy,
+        presentationTime = o.PresentationTime,
+        realPropertyUID = externalTransaction.RealPropertyUID,
+        projectedActId = externalTransaction.ProjectedActId,
+        projectedOwner = externalTransaction.ProjectedOwner,
+        estimatedDueTime = o.EstimatedDueTime,
+        status = o.StatusName,
+      };
+    }
+
+    private object GetTransactionModel(LRSTransaction o, CertificateRequest externalTransaction) {
+      return new {
+        uid = o.UID,
+        externalTransactionNo = externalTransaction.ExternalTransactionNo,
         requestedBy = o.RequestedBy,
         presentationTime = o.PresentationTime,
         realPropertyUID = externalTransaction.RealPropertyUID,

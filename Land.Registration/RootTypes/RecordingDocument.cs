@@ -277,7 +277,7 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance.");
       Assertion.Assert(this.Status != RecordableObjectStatus.Closed,
                        "Recording acts can't be appended to closed documents.");
-      Assertion.AssertObject(!resource.IsEmptyInstance, "Resource can't be empty instance.");
+      Assertion.AssertObject(!resource.IsEmptyInstance, "Resource can't be an empty instance.");
 
       if (this.IsNew) {
         this.Save();

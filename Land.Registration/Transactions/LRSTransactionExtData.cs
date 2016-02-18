@@ -114,6 +114,10 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+    public override string ToString() {
+      return this.ToJson().ToString();
+    }
+
     private object GetObject() {
       return new {
         RequesterEmail = this.RequesterEmail,

@@ -38,8 +38,7 @@ namespace Empiria.Land.Documentation {
 
     static public new RecordingCandidateImage Parse(FileInfo sourceFile) {
       Assertion.AssertObject(sourceFile, "sourceFile");
-      Assertion.Assert(sourceFile.Exists,
-                       String.Format("File '{0}' does not exist.", sourceFile.FullName));
+      Assertion.Assert(sourceFile.Exists, "File '{0}' does not exist.", sourceFile.FullName);
 
       return new RecordingCandidateImage(sourceFile);
     }

@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Services                       *
-*  Namespace : Empiria.Land.Services                          Assembly : Empiria.Land.Services.dll           *
+*  Namespace : Empiria.Land.WebApi.Models                     Assembly : Empiria.Land.WebApi.dll             *
 *  Type      : ExternalCertificateType                        Pattern  : Enumeration Type                    *
 *  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *

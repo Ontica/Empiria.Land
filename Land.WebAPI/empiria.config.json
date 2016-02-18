@@ -12,6 +12,126 @@
       "type": "",
       "key": "License.IsSpecial",
       "value": false
+    },
+    {
+      "type": "",
+      "key": "License.Number",
+      "value": "VUH3IWA8-TLA35HAF-C46V2PKJ-MX75GSK9"
+    },
+    {
+      "type": "",
+      "key": "License.SerialNumber",
+      "value": "FI6FF696E3369LM-LY63U3GB3AN6GQ3-R9SX3ORF369KLZ6-ZFMDF3NXE9MEC33"
+    },
+    {
+      "type": "",
+      "key": "Customer.Name",
+      "value": "Gobierno del Estado de Tlaxcala"
+    },
+    {
+      "type": "",
+      "key": "Customer.Url",
+      "value": "http://www.tlaxcala.gob.mx/"
+    },
+    {
+      "type": "",
+      "key": "DateTime.MaxValue",
+      "value": "2078/12/31"
+    },
+    {
+      "type": "",
+      "key": "DateTime.MinValue",
+      "value": "1900/01/01"
+    },
+    {
+      "type": "",
+      "key": "DateTime.NullValue",
+      "value": "1900/01/01"
+    },
+    {
+      "type": "",
+      "key": "Default.Currency.Id",
+      "value": 600
+    },
+    {
+      "type": "",
+      "key": "IsDevelopmentServer",
+      "value": true
+    },
+    {
+      "type": "",
+      "key": "Organization.Id",
+      "value": 1
+    },
+    {
+      "type": "",
+      "key": "Server.Id",
+      "value": 40
+    },
+    {
+      "type": "",
+      "key": "Server.Name",
+      "value": "Registro Inmobiliario del Estado de Tlaxcala"
+    },
+    {
+      "type": "",
+      "key": "Service.Provider",
+      "value": "Departamento de Informática, DNRP"
+    },
+    {
+      "type": "",
+      "key": "Service.Provider",
+      "value": "Departamento de Informática, DNRP"
+    },
+    {
+      "type": "",
+      "key": "Support.Url",
+      "value": "http://empiria.ontica.org/support/exceptions.aspx"
+    },
+    {
+      "type": "",
+      "key": "System.Description",
+      "value": "Servicios web para el Registro Público de la Propiedad del Gobierno del Estado de Tlaxcala"
+    },
+    {
+      "type": "",
+      "key": "System.Name",
+      "value": "Empiria Land 2.0"
+    },
+    {
+      "type": "",
+      "key": "System.Url",
+      "value": "http://www.ontica.org/land/"
+    },
+    {
+      "type": "Data",
+      "key": "§DataSource.Default",
+      "value": "UyphNVLnsz61AvWOk8NlkBecUSY2vJ2+I0z0iS9l28IOI2zNXPLJkESP86mDxc6c1E21dOzThN4KjsRGHkg3/hu3knuPD7FXqv2mbBf9WnzFD/VWAqeXNYR7uqI5+5Kz"
+    },
+    {
+      "type": "Data",
+      "key": "DataCache.PlaceBackExpirationMinutes",
+      "value": 0
+    },
+    {
+      "type": "Data",
+      "key": "DataIntegration.Execution.Seconds",
+      "value": 180
+    },
+    {
+      "type": "Data",
+      "key": "DataTechnology.Default",
+      "value": 1
+    },
+    {
+      "type": "Land.WebApi",
+      "key": "PendingNoteRequest.NotariesArray",
+      "value": "54~71~72~73~74~75~77~79~80~409"
+    },
+    {
+      "type": "Land.WebApi",
+      "key": "PendingNoteRequest.ProjectedActsArray",
+      "value": "2203~2206~2207~2208~2209~2214~2335~2371~2787"
     }
   ]
 }

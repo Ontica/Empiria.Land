@@ -67,6 +67,37 @@ namespace Empiria.Land.Registration.Transactions {
       this.TransactionType = transactionType;
     }
 
+    public LRSTransaction(LRSExternalTransaction externalTransaction) {
+      this.TransactionType = externalTransaction.TransactionType;
+      this.DocumentType = externalTransaction.DocumentType;
+      this.ExternalTransaction = externalTransaction;
+      this.RequestedBy = externalTransaction.RequestedBy;
+      this.Agency = externalTransaction.Agency;
+      this.DocumentDescriptor = "CITyS-" + externalTransaction.ExternalTransactionNo;
+      this.RecorderOffice = RecorderOffice.Parse(99);
+
+      this.Save();
+
+      this.ApplyItemsRule(externalTransaction);
+
+      this.AddPayment(externalTransaction.PaymentReceiptNo, externalTransaction.PaymentAmount);
+
+      this.Receive("Recibido automáticamente desde el sistema externo de trámites.");
+    }
+
+    private void ApplyItemsRule(LRSExternalTransaction externalTransaction) {
+      if (this.TransactionType.Id == 699 && this.DocumentType.Id == 708) {
+        this.AddItem(RecordingActType.Parse(2284), LRSLawArticle.Parse(874), 146.00m);
+        this.AddItem(RecordingActType.Parse(2114), LRSLawArticle.Parse(859), 146.00m);
+      } else if (this.TransactionType.Id == 702 && this.DocumentType.Id == 713) {
+        this.AddItem(RecordingActType.Parse(2114), LRSLawArticle.Parse(859), 146.00m);
+      } else if (this.TransactionType.Id == 702 && this.DocumentType.Id == 710) {
+        this.AddItem(RecordingActType.Parse(2111), LRSLawArticle.Parse(859), 146.00m);
+      } else if (this.TransactionType.Id == 702 && this.DocumentType.Id == 711) {
+        this.AddItem(RecordingActType.Parse(2112), LRSLawArticle.Parse(859), 146.00m);
+      }
+    }
+
     protected override void OnInitialize() {
       recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
       payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
@@ -214,6 +245,18 @@ namespace Empiria.Land.Registration.Transactions {
       set { _extensionData = value; }
     }
 
+    public bool IsExternalTransaction {
+      get {
+        return !this.ExternalTransaction.IsEmptyInstance;
+      }
+    }
+
+    private LRSExternalTransaction _externalTransaction = LRSExternalTransaction.Empty;
+    public LRSExternalTransaction ExternalTransaction {
+      get { return _externalTransaction; }
+      set { _externalTransaction = value; }
+    }
+
     [DataField("TransactionKeywords")]
     public string Keywords {
       get;
@@ -261,7 +304,6 @@ namespace Empiria.Land.Registration.Transactions {
       get;
       private set;
     }
-
 
     public DateTime EstimatedDueTime {
       get {
@@ -376,7 +418,8 @@ namespace Empiria.Land.Registration.Transactions {
           "UID", this.UID, "DocumentTypeId", this.DocumentType.Id,
           "DocumentDescriptor", this.DocumentDescriptor, "DocumentId", this.Document.Id,
           "RecorderOfficeId", this.RecorderOffice.Id, "RequestedBy", this.RequestedBy,
-          "AgencyId", this.Agency.Id, "ExtensionData", this.ExtensionData.ToJson(),
+          "AgencyId", this.Agency.Id, "ExternalTransaction", this.ExternalTransaction.ToString(),
+          "ExtensionData", this.ExtensionData.ToString(),
           "PresentationTime", this.PresentationTime, "ExpectedDelivery", this.ExpectedDelivery,
           "LastReentryTime", this.LastReentryTime, "ClosingTime", this.ClosingTime,
           "LastDeliveryTime", this.LastDeliveryTime, "NonWorkingTime", this.NonWorkingTime,
@@ -401,12 +444,29 @@ namespace Empiria.Land.Registration.Transactions {
     #region Public methods
 
     public LRSTransactionItem AddItem(RecordingActType transactionItemType,
+                                      LRSLawArticle treasuryCode, decimal recordingRights) {
+      this.AssertAddItem();
+
+
+      var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
+                                        Money.Zero, Quantity.One,
+                                        new LRSFee() { RecordingRights = recordingRights });
+      this.Items.Add(item);
+
+      item.Save();
+
+      return item;
+    }
+
+    public LRSTransactionItem AddItem(RecordingActType transactionItemType,
                                       LRSLawArticle treasuryCode, Money operationValue,
                                       Quantity quantity, LRSFee fee) {
       this.AssertAddItem();
       var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
                                         operationValue, quantity, fee);
       this.Items.Add(item);
+
+      item.Save();
 
       return item;
     }
@@ -418,6 +478,7 @@ namespace Empiria.Land.Registration.Transactions {
       var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
                                         operationValue, quantity);
       this.Items.Add(item);
+      item.Save();
 
       return item;
     }
@@ -514,7 +575,7 @@ namespace Empiria.Land.Registration.Transactions {
         case TransactionStatus.Received:
         case TransactionStatus.Reentry:
           if (ExecutionServer.LicenseName == "Tlaxcala") {
-            if (type.Id == 706 && (docType.Id == 744)) {
+            if (type.Id == 699 || (type.Id == 706 && (docType.Id == 744))) {
               list.Add(TransactionStatus.Recording);
             }
           }
@@ -912,9 +973,9 @@ namespace Empiria.Land.Registration.Transactions {
         }
       }
       if (ExecutionServer.LicenseName == "Tlaxcala") {
-        if (type.Id == 706 &&
+        if (type.Id == 699 || type.Id == 704 || (type.Id == 706 &&
            EmpiriaMath.IsMemberOf(docType.Id, new int[] { 733, 734, 736, 737, 738, 739, 740,
-                                                          741, 742, 744, 755, 756 })) {
+                                                          741, 742, 744, 755, 756 }))) {
           return true;
         }
       }
@@ -934,7 +995,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     static private bool IsRecordable(LRSTransactionType type, LRSDocumentType docType) {
       if (ExecutionServer.LicenseName == "Tlaxcala") {
-        if (type.Id == 700 || type.Id == 704 || type.Id == 707) {
+        if (type.Id == 699 || type.Id == 700 || type.Id == 704 || type.Id == 707) {
           return true;
         } else if (EmpiriaMath.IsMemberOf(docType.Id, new int[] {719, 721, 728, 733, 736, 737, 738, 739,
                                                                  740, 741, 742, 744, 755, 756 })) {

@@ -104,8 +104,7 @@
     <Compile Include="Empiria.Land.WebApi.AssemblyInfo.cs" />
     <Compile Include="Models\ExternalCertificateType.cs" />
     <Compile Include="Models\CertificateRequest.cs" />
-    <Compile Include="Models\ExternalTransactionBase.cs" />
-    <Compile Include="Models\ExternalTransactionType.cs" />
+    <Compile Include="Models\PendingNoteRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -125,6 +124,7 @@
   <ItemGroup>
     <Folder Include="App_Code\" />
     <Folder Include="App_Start\" />
+    <Folder Include="bin\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>

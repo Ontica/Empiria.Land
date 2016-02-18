@@ -191,7 +191,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WritePartyTarget(PartyTarget o) {
-      Assertion.Assert(o.Id > 0, "Id needs to be positive.");
+      Assertion.Assert(o.Id > 0, "Id must be positive.");
       Assertion.Assert(o.Party.Id > 0, "Party Id must be positive.");
       Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
 
@@ -203,7 +203,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal int WriteResourceTarget(ResourceTarget o) {
-      Assertion.Assert(o.Id > 0, "Id needs to be positive.");
+      Assertion.Assert(o.Id > 0, "Id must be positive.");
       Assertion.Assert(o.Resource.Id > 0, "Resource Id must be positive.");
       Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
 
