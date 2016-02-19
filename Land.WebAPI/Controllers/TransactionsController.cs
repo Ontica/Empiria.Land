@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*	 Solution  : Empiria Land                                     System   : Land Web API                      *
+*  Solution  : Empiria Land                                     System   : Land Web API                      *
 *  Namespace : Empiria.Land.WebApi                              Assembly : Empiria.Land.WebApi.dll           *
 *  Type      : TransactionsController                           Pattern  : Web API                           *
 *  Version   : 1.0                                              License  : Please read license.txt file      *

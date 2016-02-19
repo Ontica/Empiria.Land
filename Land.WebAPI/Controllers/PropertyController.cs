@@ -27,10 +27,8 @@ namespace Empiria.Land.WebApi {
         if (data != null) {
           return new SingleObjectModel(this.Request, data, "Empiria.Land.Property");
         } else {
-          throw new ResourceNotFoundException("Property.UniqueID",
-                                              "Property with unique ID '{0}' was not found.", propertyUID);
+          throw this.PropertyNotFound(propertyUID);
         }
-
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
@@ -49,8 +47,7 @@ namespace Empiria.Land.WebApi {
           return new SingleObjectModel(this.Request, this.GetPropertyAsTextModel(property),
                                        "Empiria.Land.PropertyAsHtml");
         } else {
-          throw new ResourceNotFoundException("Property.UniqueID",
-                                              "Property with unique ID '{0}' was not found.", propertyUID);
+          throw this.PropertyNotFound(propertyUID);
         }
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -66,8 +63,7 @@ namespace Empiria.Land.WebApi {
         var property = Property.TryParseWithUID(propertyUID);
 
         if (property == null) {
-          throw new ResourceNotFoundException("Property.UniqueID",
-                                              "Property with unique ID '{0}' was not found.", propertyUID);
+          throw this.PropertyNotFound(propertyUID);
         }
 
         var domainAntecedent = property.GetDomainAntecedent();
@@ -108,9 +104,8 @@ namespace Empiria.Land.WebApi {
           return new SingleObjectModel(this.Request, data, "Empiria.Land.Property");
         } else {
           throw new ResourceNotFoundException("Property.CadastralKey",
-                                              "Property with cadastral key '{0}' was not found.", cadastralKey);
+            "No tengo registrado ningún predio con la clave catastral '{0}'.", cadastralKey);
         }
-
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }
@@ -126,6 +121,11 @@ namespace Empiria.Land.WebApi {
         asHtml = "El folio electrónico del predio es <strong>" + o.UID  + "</strong>.<br/><br/>Este es el texto que debería " +
                  "desplegarse en el <i>editor de trámites</i> CITyS para confirmar que se trata del mismo predio.",
       };
+    }
+
+    private Exception PropertyNotFound(string propertyUID) {
+      return new ResourceNotFoundException("Property.UniqueID",
+          "No tengo registrado ningún predio con el folio real '{0}'.", propertyUID);
     }
 
     #endregion Private methods

@@ -107,29 +107,35 @@ namespace Empiria.Land.WebApi.Models {
       this.CleanData();
 
       Assertion.Assert(this.IsNotaryValid(),
-                       "NotaryId field has an invalid or unregistered value.");
+        "No tengo registrado al notario que envía el aviso: '{0}'.", this.NotaryId);
       Assertion.Assert(this.IsProjectedActValid(),
-                       "ProjectedActId field has an invalid or unregistered value.");
+        "No reconozco la operación proyectada: '{0}'", this.ProjectedActId);
 
-      Assertion.AssertObject(this.ProjectedOwner, "ProjectedOwner");
-      Assertion.AssertObject(this.RealPropertyUID, "RealPropertyUID");
+      Assertion.AssertObject(this.ProjectedOwner,
+        "Necesito que el campo 'A favor de:' no sea vacío.");
+      Assertion.AssertObject(this.RealPropertyUID,
+        "Requiero se proporcione el folio electrónico del predio.");
 
       Assertion.AssertObject(Property.TryParseWithUID(this.RealPropertyUID),
-                             String.Format("There is not registered a real property with unique ID '{0}'.",
-                                            this.RealPropertyUID));
+        "No tengo registrado ningún predio con folio real '{0}'.", this.RealPropertyUID);
+
       if (!this.IsPartition) {
         return;
       }
 
-      Assertion.AssertObject(this.PartitionName, "PartitionName");
-      Assertion.AssertObject(this.PartitionLocation, "PartitionLocation");
-      Assertion.Assert(this.PartitionLocation.Length > 20,
-                       "PartitionLocation field is too short.");
-      Assertion.Assert(this.PartitionSize > 10m,
-                       "PartitionSize field is too small.");
-      Assertion.AssertObject(this.PartitionMetesAndBounds, "PartitionMetesAndBounds");
-      Assertion.Assert(this.PartitionMetesAndBounds.Length > 50,
-                       "PartitionMetesAndBounds field is too short.");
+      Assertion.AssertObject(this.PartitionName,
+        "Necesito la denominación o nombre de la fracción (si no consta debe teclearse 'Sin número')");
+      Assertion.AssertObject(this.PartitionLocation,
+        "Requiero conocer la ubicación de la fracción.");
+      Assertion.Assert(this.PartitionLocation.Length >= 20,
+        "Favor de especificar la ubicación de la fracción en 20 o más caracteres: " +
+        "calle, número, colonia, etc.");
+      Assertion.Assert(this.PartitionSize >= 10m,
+        "Las fracciones no pueden ser menores a 10 metros cuadrados.");
+      Assertion.AssertObject(this.PartitionMetesAndBounds,
+        "Necesito se proporcionen las medidas y colindancias de la fracción.");
+      Assertion.Assert(this.PartitionMetesAndBounds.Length >= 50,
+        "Las medidas y colindancias deberían ser más específicas (50 o más caracteres).");
     }
 
     /// <summary>Creates a Land Transaction using the data of this certificate request.</summary>

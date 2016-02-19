@@ -101,18 +101,26 @@ namespace Empiria.Land.Registration.Transactions {
       this.PaymentReceiptNo = EmpiriaString.TrimAll(this.PaymentReceiptNo);
       this.RequestedBy = EmpiriaString.TrimAll(this.RequestedBy).ToUpperInvariant();
 
-      Assertion.AssertObject(this.ExternalTransactionNo, "ExternalTransactionNo");
-      Assertion.AssertObject(this.RequestedBy, "RequestedBy");
-      Assertion.Assert(this.RequestedBy.Length > 10, "RequestedBy field is too short.");
+      Assertion.AssertObject(this.ExternalTransactionNo,
+        "Requiero el número de trámite CITyS");
+      Assertion.AssertObject(this.RequestedBy,
+        "Favor de proporcionar el nombre de quien solicita el trámite.");
+      Assertion.Assert(this.RequestedBy.Length >= 10,
+        "El campo de quien solicita el trámite es demasiado pequeño (menos de 10 caracteres).");
 
-      Assertion.AssertObject(this.PaymentReceiptNo, "PaymentReceiptNo");
-      Assertion.Assert(this.PaymentReceiptNo.Length > 3, "PaymentReceiptNo field is too short.");
-      Assertion.Assert(this.PaymentAmount > 100m, "PaymentAmount field must be greater than $100.00.");
+      Assertion.AssertObject(this.PaymentReceiptNo,
+        "Requiero se proporcione el número de recibo.");
+      Assertion.Assert(this.PaymentReceiptNo.Length > 3,
+        "El número de recibo debería contener más de 3 caractres.");
+      Assertion.Assert(this.PaymentAmount > 100m,
+        "El importe del trámite debería ser mayor a $100.00.");
       Assertion.Assert(this.ExternalTransactionTime < DateTime.Now,
-                      "ExternalTransactionTime field is later than now.");
+        "La fecha y hora del trámite externo no puede ser mayor a la fecha y hora actual: {0}",
+        this.ExternalTransactionTime);
 
       Assertion.Assert(!Data.TransactionData.ExistsExternalTransactionNo(this.ExternalTransactionNo),
-                       "Another transaction with the same ExternalTransactionNo was already registered.");
+                       "Ya tengo registrado otro trámite externo con el mismo número: '{0}'",
+                       this.ExternalTransactionNo);
 
     }
 

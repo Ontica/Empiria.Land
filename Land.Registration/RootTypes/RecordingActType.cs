@@ -9,6 +9,7 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Linq;
 
 using Empiria.Land.Registration.Transactions;
 using Empiria.Ontology;
@@ -63,36 +64,24 @@ namespace Empiria.Land.Registration {
     public bool AllowsEmptyParties {
       get {
         string[] array = allowEmptyPartiesVector.Split('~');
-        for (int i = 0; i < array.Length; i++) {
-          if (int.Parse(array[i]) == base.Id) {
-            return true;
-          }
-        }
-        return false;
+
+        return array.Contains(base.Id.ToString());
       }
     }
 
     public bool Autoregister {
       get {
         string[] array = autoRegisterVector.Split('~');
-        for (int i = 0; i < array.Length; i++) {
-          if (int.Parse(array[i]) == base.Id) {
-            return true;
-          }
-        }
-        return false;
+
+        return array.Contains(base.Id.ToString());
       }
     }
 
     public bool BlockAllFields {
       get {
         string[] array = blockAllFieldsVector.Split('~');
-        for (int i = 0; i < array.Length; i++) {
-          if (int.Parse(array[i]) == base.Id) {
-            return true;
-          }
-        }
-        return false;
+
+        return array.Contains(base.Id.ToString());
       }
     }
 
@@ -130,12 +119,8 @@ namespace Empiria.Land.Registration {
           return false;
         }
         string[] array = useCreditFieldsVector.Split('~');
-        for (int i = 0; i < array.Length; i++) {
-          if (int.Parse(array[i]) == this.Id) {
-            return true;
-          }
-        }
-        return false;
+
+        return array.Contains(base.Id.ToString());
       }
     }
 
@@ -145,12 +130,8 @@ namespace Empiria.Land.Registration {
           return false;
         }
         string[] array = blockOperationAmountVector.Split('~');
-        for (int i = 0; i < array.Length; i++) {
-          if (int.Parse(array[i]) == base.Id) {
-            return false;
-          }
-        }
-        return true;
+
+        return array.Contains(base.Id.ToString());
       }
     }
 
