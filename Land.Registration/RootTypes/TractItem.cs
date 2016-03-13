@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : RecordingActTarget                             Pattern  : Association Class                   *
+*  Type      : TractItem                                      Pattern  : Association Class                   *
 *  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Application of a recording act with another entity that can be a resource (property or        *
@@ -12,34 +12,41 @@
 using System;
 using System.Data;
 
+using Empiria.Contacts;
 using Empiria.Security;
+
+using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration {
 
   /// <summary>Application of a recording act with another entity that can be a resource (property
   /// or association), a document, a party (person or organization) or another recording act.</summary>
-  public abstract class RecordingActTarget : BaseObject, IExtensible<RecordingActTargetExtData>, IProtected {
+  public class TractItem : BaseObject, IExtensible<TractItemExtData>, IProtected {
 
     #region Constructors and parsers
 
-    protected RecordingActTarget() {
+    protected TractItem() {
       // Required by Empiria Framework.
     }
 
-    protected RecordingActTarget(RecordingAct recordingAct) {
+    public TractItem(RecordingAct recordingAct, Resource resource,
+                     ResourceRole resourceRole = ResourceRole.Informative,
+                     decimal recordingActPercentage = 1.0m) {
       Assertion.AssertObject(recordingAct, "recordingAct");
-      Assertion.Assert(!recordingAct.IsEmptyInstance, "recordingAct can't be the empty instance");
+      Assertion.Assert(!recordingAct.IsEmptyInstance, "recordingAct can't be the empty instance.");
+      Assertion.AssertObject(resource, "resource");
+      Assertion.Assert(!resource.IsEmptyInstance, "resource can't be the empty instance.");
+      Assertion.Assert(decimal.Zero < recordingActPercentage && recordingActPercentage <= decimal.One,
+        "Recording act percentage must be a number greater than zero and less or equal than one.");
 
       this.RecordingAct = recordingAct;
+      this.Resource = resource;
+      this.ResourceRole = resourceRole;
     }
 
-    static public RecordingActTarget Parse(int id) {
-      return BaseObject.ParseId<RecordingActTarget>(id);
-    }
-
-    static public RecordingActTarget Empty {
+    static public TractItem Empty {
       get {
-        return BaseObject.ParseEmpty<RecordingActTarget>();
+        return BaseObject.ParseEmpty<TractItem>();
       }
     }
 
@@ -53,18 +60,54 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    [DataField("TargetRecordingActId")]
-    public RecordingAct TargetAct {
+    [DataField("ResourceId", Default = "Empiria.Land.Registration.Property.Empty")]
+    public Resource Resource {
       get;
       private set;
     }
 
-    public RecordingActTargetExtData ExtensionData {
+    [DataField("ResourceRole", Default = ResourceRole.Informative)]
+    public ResourceRole ResourceRole {
       get;
       private set;
     }
 
-    [DataField("RecordingActTargetStatus", Default = RecordableObjectStatus.Pending)]
+    [DataField("RecordingActPercentage", Default = 1.0)]
+    public decimal RecordingActPercentage {
+      get;
+      private set;
+    }
+
+    [DataField("LastAmendedById")]
+    public RecordingAct LastAmendedBy {
+      get;
+      private set;
+    }
+
+    public bool WasCanceled {
+      get {
+        return this.LastAmendedBy.RecordingActType.IsCancelationActType;
+      }
+    }
+
+    public bool WasModified {
+      get {
+        return this.LastAmendedBy.RecordingActType.IsModificationActType;
+      }
+    }
+
+    public TractItemExtData ExtensionData {
+      get;
+      protected set;
+    }
+
+    [DataField("RegisteredById")]
+    public Contact RegisteredBy {
+      get;
+      private set;
+    }
+
+    [DataField("TractItemStatus", Default = RecordableObjectStatus.Pending)]
     public RecordableObjectStatus Status {
       get;
       private set;
@@ -125,18 +168,27 @@ namespace Empiria.Land.Registration {
     internal virtual void Delete() {
       this.Status = RecordableObjectStatus.Deleted;
       base.Save();
+      this.Resource.TryDelete();
     }
 
     protected override void OnInitialize() {
-      this.ExtensionData = new RecordingActTargetExtData();
+      this.ExtensionData = new TractItemExtData();
     }
 
     protected override void OnLoadObjectData(DataRow row) {
-      this.ExtensionData = RecordingActTargetExtData.Parse((string) row["RecordingActTargetExtData"]);
+      this.ExtensionData = TractItemExtData.Parse((string) row["TractItemExtData"]);
+    }
+
+    protected override void OnSave() {
+      if (this.Resource.IsNew) {
+        this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.Resource.Save();
+      }
+      RecordingActsData.WriteTractItem(this);
     }
 
     #endregion Public methods
 
-  } // class RecordingActTarget
+  } // class TractItem
 
 } // namespace Empiria.Land.Registration

@@ -10,7 +10,6 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
 
 using Empiria.Json;
 
@@ -35,10 +34,11 @@ namespace Empiria.Land.Registration {
   public enum RecordingRuleApplication {
     Undefined,
     Property,
-    RecordingAct,
-    Structure,
     Association,
     Document,
+    RecordingAct,
+    Structure,
+    Party,
   }
 
   /// <summary>Describes the conditions and business rules that have to be fulfilled
@@ -48,8 +48,7 @@ namespace Empiria.Land.Registration {
     #region Constructors and parsers
 
     private RecordingRule(string jsonString) {
-      Initialize();
-      Load(jsonString);
+      this.Load(jsonString);
     }
 
     private void Load(string jsonString) {
@@ -59,10 +58,6 @@ namespace Empiria.Land.Registration {
       this.AutoCancel = json.Get<Int32>("AutoCancel", 0);
 
       this.InputProperties = json.GetList<PropertyRule>("InputProperties", false).ToArray();
-
-      this.IsAnnotation = json.Get<bool>("IsAnnotation", false);
-      this.IsCancelation = json.Get<bool>("IsCancelation", false);
-      this.IsModification = json.Get<bool>("IsModification", false);
 
       this.NewProperty = PropertyRule.Parse(json.Slice("NewProperties", false));
 
@@ -75,23 +70,6 @@ namespace Empiria.Land.Registration {
       this.AllowsPartitions = json.Get<bool>("AllowsPartitions", false);
       this.IsActive = json.Get<bool>("IsActive", false);
       this.AskForResourceName = json.Get<bool>("AskForResourceName", false);
-    }
-
-    private void Initialize() {
-      this.AllowsPartitions = false;
-      this.AppliesTo = RecordingRuleApplication.Undefined;
-      this.AutoCancel = 0;
-      this.InputProperties = new PropertyRule[0];
-      this.IsAnnotation = false;
-      this.IsCancelation = false;
-      this.IsModification = false;
-      this.NewProperty = new PropertyRule();
-      this.PropertyCount = Land.Registration.PropertyCount.Undefined;
-      this.PropertyRecordingStatus = PropertyRecordingStatus.Undefined;
-      this.RecordingActTypes = new RecordingActType[0];
-      this.RecordingSection = RecordingSection.Empty;
-      this.AskForResourceName = false;
-      this.SpecialCase = "None";
     }
 
     private JsonObject _json = null;
@@ -107,9 +85,6 @@ namespace Empiria.Land.Registration {
       json.Add(new JsonItem("AllowsPartitions", this.AllowsPartitions));
       json.Add(new JsonItem("AppliesTo", this.AppliesTo.ToString()));
       json.Add(new JsonItem("AutoCancel", this.AutoCancel));
-      json.Add(new JsonItem("IsAnnotation", this.IsAnnotation));
-      json.Add(new JsonItem("IsCancelation", this.IsCancelation));
-      json.Add(new JsonItem("IsModification", this.IsModification));
       json.Add(new JsonItem("AskForResourceName", this.AskForResourceName));
       json.Add(new JsonItem("PropertyCount", this.PropertyCount.ToString()));
       json.Add(new JsonItem("PropertyRecordingStatus", this.PropertyRecordingStatus.ToString()));
@@ -141,88 +116,65 @@ namespace Empiria.Land.Registration {
 
     #region Properties
 
-    public RecordingRuleApplication AppliesTo {
-      get;
-      private set;
-    }
-
-    public int AutoCancel {
-      get;
-      private set;
-    }
-
-    public PropertyRule[] InputProperties {
-      get;
-      private set;
-    }
-
-    public bool IsAnnotation {
-      get;
-      private set;
-    }
-
-    public bool IsCancelation {
-      get;
-      private set;
-    }
-
-    public bool IsModification {
-      get;
-      private set;
-    }
-
-    public bool IsMainRecording {
-      get {
-        return (!this.RecordingSection.IsEmptyInstance &&
-                !this.IsAnnotation && !IsCancelation && !IsModification);
-      }
-    }
-
-    public PropertyRule NewProperty {
-      get;
-      private set;
-    }
-
-    public PropertyCount PropertyCount {
-      get;
-      private set;
-    }
-
-    public PropertyRecordingStatus PropertyRecordingStatus {
-      get;
-      private set;
-    }
-
-    public RecordingSection RecordingSection {
-      get;
-      private set;
-    }
-
-    public RecordingActType[] RecordingActTypes {
-      get;
-      private set;
-    }
-
-    public string SpecialCase {
-      get;
-      private set;
-    }
-
-
     public bool AllowsPartitions {
       get;
       private set;
-    }
+    } = false;
 
-    public bool IsActive {
+    public RecordingRuleApplication AppliesTo {
       get;
       private set;
-    }
+    } = RecordingRuleApplication.Undefined;
 
     public bool AskForResourceName {
       get;
       private set;
-    }
+    } = false;
+
+    public int AutoCancel {
+      get;
+      private set;
+    } = 0;
+
+    public PropertyRule[] InputProperties {
+      get;
+      private set;
+    } = new PropertyRule[0];
+
+    public PropertyRule NewProperty {
+      get;
+      private set;
+    } = new PropertyRule();
+
+    public PropertyCount PropertyCount {
+      get;
+      private set;
+    } = PropertyCount.Undefined;
+
+    public PropertyRecordingStatus PropertyRecordingStatus {
+      get;
+      private set;
+    } = PropertyRecordingStatus.Undefined;
+
+    public RecordingSection RecordingSection {
+      get;
+      private set;
+    } = RecordingSection.Empty;
+
+    public RecordingActType[] RecordingActTypes {
+      get;
+      private set;
+    } = new RecordingActType[0];
+
+    public string SpecialCase {
+      get;
+      private set;
+    } = "None";
+
+    public bool IsActive {
+      get;
+      private set;
+    } = false;
 
     #endregion Properties
 

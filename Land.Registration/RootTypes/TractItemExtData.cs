@@ -2,32 +2,31 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : RecordingActTargetExtData                      Pattern  : IExtensibleData class               *
+*  Type      : TractItemExtData                               Pattern  : IExtensibleData class               *
 *  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Contains extensible data for RecordingActTarget items.                                        *
+*  Summary   : Contains extensible data for TractItem instances.                                             *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using Empiria.DataTypes;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Contains extensible data for RecordingActTarget items.</summary>
-  public class RecordingActTargetExtData : IExtensibleData {
+  /// <summary>Contains extensible data for TractItem instances.</summary>
+  public class TractItemExtData : IExtensibleData {
 
     #region Constructors and parsers
 
-    public RecordingActTargetExtData() {
+    public TractItemExtData() {
       this.Notes = String.Empty;
     }
 
-    static public RecordingActTargetExtData Parse(string json) {
-      return new RecordingActTargetExtData();
+    static public TractItemExtData Parse(string json) {
+      return new TractItemExtData();
     }
 
-    static private readonly RecordingActTargetExtData _empty = new RecordingActTargetExtData();
-    static public RecordingActTargetExtData Empty {
+    static private readonly TractItemExtData _empty = new TractItemExtData();
+    static public TractItemExtData Empty {
       get {
         return _empty;
       }
@@ -71,6 +70,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Methods
 
-  }  // class RecordingActTargetExtData
+  }  // class TractItemExtData
 
 } // namespace Empiria.Land.Registration

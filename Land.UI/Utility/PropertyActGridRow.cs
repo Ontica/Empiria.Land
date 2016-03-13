@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Empiria.Land.Registration;
 
 namespace Empiria.Land.UI.Utilities {
 
-  internal class DomainActGridRow : RecordingActGridRow {
+  internal class PropertyActGridRow : RecordingActGridRow {
 
     #region Constructors and parsers
 
-    internal DomainActGridRow(RecordingDocument document,
-                              DomainAct domainAct): base(document, domainAct) {
+    internal PropertyActGridRow(RecordingDocument document,
+                                RecordingAct recordingAct): base(document, recordingAct) {
 
     }
 
@@ -20,19 +17,19 @@ namespace Empiria.Land.UI.Utilities {
 
     #region Public methods
 
-    internal string GetRecordingActRow(ResourceTarget target) {
+    internal override string GetRecordingActRow(TractItem tractItem) {
       string row = base.GetRowTemplate();
 
       row = row.Replace("{{STATUS}}", this.RecordingAct.StatusName);
       row = row.Replace("{{RECORDING.ACT.URL}}", this.RecordingAct.DisplayName);
-      row = row.Replace("{{RESOURCE.URL}}", target.Resource.UID);
+      row = row.Replace("{{RESOURCE.URL}}", tractItem.Resource.UID);
 
       row = row.Replace("{{ID}}", this.RecordingAct.Id.ToString());
       row = row.Replace("{{TARGET.ID}}", this.RecordingAct.Id.ToString());
 
       row = row.Replace("{{RESOURCE.ID}}", this.RecordingAct.Id.ToString());
       row = row.Replace("{{ANTECEDENT}}", this.RecordingAct.Id.ToString());
-      row = row.Replace("{{OPTIONS.COMBO}}", this.GetOptionsCombo(target));
+      row = row.Replace("{{OPTIONS.COMBO}}", this.GetOptionsCombo(tractItem));
 
       return row;
     }
@@ -41,7 +38,7 @@ namespace Empiria.Land.UI.Utilities {
 
     #region Private methods
 
-    private string GetOptionsCombo(ResourceTarget target) {
+    private string GetOptionsCombo(TractItem tractItem) {
       const string template =
         "<select id='cboRecordingOptions_{{TARGET.ID}}' class='selectBox' style='width:148px'>" +
         "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
@@ -52,15 +49,15 @@ namespace Empiria.Land.UI.Utilities {
         "alt='' title='Ejecuta la operación seleccionada' onclick='" +
         "doOperation(getElement(\"cboRecordingOptions_{{TARGET.ID}}\").value, {{ID}}, {{RESOURCE.ID}});'/>";
 
-      string html = template.Replace("{{ID}}", target.RecordingAct.Id.ToString());
-      html = html.Replace("{{RESOURCE.ID}}", target.Resource.Id.ToString());
-      html = html.Replace("{{TARGET.ID}}", target.Id.ToString());
+      string html = template.Replace("{{ID}}", tractItem.RecordingAct.Id.ToString());
+      html = html.Replace("{{RESOURCE.ID}}", tractItem.Resource.Id.ToString());
+      html = html.Replace("{{TARGET.ID}}", tractItem.Id.ToString());
 
       return html;
     }
 
     #endregion Private methods
 
-  }  // class DomainActGridRow
+  }  // class PropertyActGridRow
 
 }  // namespace Empiria.Land.UI.Utilities

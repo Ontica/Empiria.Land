@@ -27,7 +27,7 @@ namespace Empiria.Land.Registration {
 
     #region Fields
 
-    private Lazy<List<RecordingActTarget>> targets = null;
+    private Lazy<List<TractItem>> tractIndex = null;
 
     #endregion Fields
 
@@ -40,7 +40,9 @@ namespace Empiria.Land.Registration {
     protected RecordingAct(RecordingActType recordingActType,
                            RecordingDocument document) : base(recordingActType) {
       Assertion.AssertObject(recordingActType, "recordingActType");
+
       Assertion.AssertObject(document, "document");
+
       Assertion.Assert(!document.IsEmptyInstance,
                        "document can't be the empty instance.");
 
@@ -51,6 +53,7 @@ namespace Empiria.Land.Registration {
     protected RecordingAct(RecordingActType recordingActType, RecordingDocument document,
                            Recording physicalRecording) : this(recordingActType, document) {
       Assertion.AssertObject(physicalRecording, "physicalRecording");
+
       Assertion.Assert(!physicalRecording.IsEmptyInstance,
                        "physicalRecording can't be the empty instance");
 
@@ -89,8 +92,8 @@ namespace Empiria.Land.Registration {
       if (resource.IsNew) {
         resource.Save();
       }
-      var resourceTarget = new ResourceTarget(recordingAct, resource, ResourceRole.Informative);
-      recordingAct.AttachTarget(resourceTarget);
+      var resourceTarget = new TractItem(recordingAct, resource);
+      recordingAct.AddTractItem(resourceTarget);
 
       if (!recordingAct.AmendmentOf.IsEmptyInstance) {
         recordingAct.AmendmentOf.AmendedBy = recordingAct;
@@ -210,9 +213,9 @@ namespace Empiria.Land.Registration {
       get {
         if (!this.IsAmendment) {
           return this.RecordingActType.DisplayName;
-        } else if (this.RecordingActType.IsModificationType) {
+        } else if (this.RecordingActType.IsModificationActType) {
           return "Modificación de " + this.AmendmentOf.RecordingActType.DisplayName.ToLowerInvariant();
-        } else if (this.RecordingActType.IsCancelationType) {
+        } else if (this.RecordingActType.IsCancelationActType) {
           return "Cancelación de " + this.AmendmentOf.RecordingActType.DisplayName.ToLowerInvariant();
         } else {
           return this.RecordingActType.DisplayName;
@@ -228,7 +231,7 @@ namespace Empiria.Land.Registration {
 
     public bool IsAnnotation {
       get {
-        return this.RecordingActType.IsAnnotationType;
+        return this.RecordingActType.IsInformationActType;
       }
     }
 
@@ -253,9 +256,9 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public FixedList<RecordingActTarget> Targets {
+    public FixedList<TractItem> TractIndex {
       get {
-        return targets.Value.ToFixedList();
+        return tractIndex.Value.ToFixedList();
       }
     }
 
@@ -293,13 +296,13 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    protected void AttachTarget(RecordingActTarget recordingTarget) {
+    protected void AddTractItem(TractItem tractItem) {
       Assertion.Assert(!this.IsEmptyInstance, "Recording act can't be the empty instance.");
-      Assertion.AssertObject(recordingTarget, "recordingTarget");
-      Assertion.Assert(recordingTarget.RecordingAct.Equals(this),
-                       "Target recording act is different to this instance.");
+      Assertion.AssertObject(tractItem, "tractItem");
+      Assertion.Assert(tractItem.RecordingAct.Equals(this),
+                       "TractItem recording act is different to this instance.");
 
-      targets.Value.Add(recordingTarget);
+      tractIndex.Value.Add(tractItem);
     }
 
     public void ChangeStatusTo(RecordableObjectStatus newStatus) {
@@ -317,7 +320,7 @@ namespace Empiria.Land.Registration {
       if (this.IsEmptyInstance) {
         return;
       }
-      var tractIndex = this.Targets;
+      var tractIndex = this.TractIndex;
       for (int i = 0; i < tractIndex.Count; i++) {
         tractIndex[i].Delete();
       }
@@ -339,7 +342,7 @@ namespace Empiria.Land.Registration {
 
     protected override void OnInitialize() {
       this.ExtensionData = new RecordingActExtData();
-      this.targets = new Lazy<List<RecordingActTarget>>(() => RecordingActsData.GetRecordingActTargets(this));
+      this.tractIndex = new Lazy<List<TractItem>>(() => RecordingActsData.GetRecordingActTargets(this));
     }
 
     protected override void OnLoadObjectData(DataRow row) {
@@ -360,8 +363,8 @@ namespace Empiria.Land.Registration {
       RecordingActsData.WriteRecordingAct(this);
 
       // writes each recording at target
-      foreach (RecordingActTarget recordingActTarget in this.Targets) {
-        recordingActTarget.Save();
+      foreach (TractItem target in this.TractIndex) {
+        target.Save();
       }
     }
 

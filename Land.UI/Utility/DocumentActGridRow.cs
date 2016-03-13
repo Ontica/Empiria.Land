@@ -9,15 +9,15 @@ namespace Empiria.Land.UI.Utilities {
     #region Constructors and parsers
 
     internal DocumentActGridRow(RecordingDocument document,
-                                DocumentAct recordingAct) : base(document, recordingAct) {
+                                RecordingAct recordingAct) : base(document, recordingAct) {
 
     }
-
+  
     #endregion Constructors and parsers
 
     #region Public methods
 
-    internal string GetRecordingActRow(DocumentTarget target) {
+    internal override string GetRecordingActRow(TractItem tractItem) {
       string row = base.GetRowTemplate();
 
       row = row.Replace("{{STATUS}}", base.RecordingAct.StatusName);
@@ -29,7 +29,7 @@ namespace Empiria.Land.UI.Utilities {
 
       row = row.Replace("{{RESOURCE.ID}}", base.RecordingAct.Id.ToString());
       row = row.Replace("{{ANTECEDENT}}", base.RecordingAct.Id.ToString());
-      row = row.Replace("{{OPTIONS.COMBO}}", this.GetOptionsCombo(target));
+      row = row.Replace("{{OPTIONS.COMBO}}", this.GetOptionsCombo(tractItem));
 
       return row;
     }
@@ -38,7 +38,7 @@ namespace Empiria.Land.UI.Utilities {
 
     #region Private methods
 
-    private string GetOptionsCombo(DocumentTarget target) {
+    private string GetOptionsCombo(TractItem tractItem) {
       const string template =
         "<select id='cboRecordingOptions_{{TARGET.ID}}' class='selectBox' style='width:148px'>" +
         "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
@@ -48,9 +48,9 @@ namespace Empiria.Land.UI.Utilities {
         "alt='' title='Ejecuta la operación seleccionada' onclick='" +
         "doOperation(getElement(\"cboRecordingOptions_{{TARGET.ID}}\").value, {{ID}}, {{RESOURCE.ID}});'/>";
 
-      string html = template.Replace("{{ID}}", target.RecordingAct.Id.ToString());
+      string html = template.Replace("{{ID}}", tractItem.RecordingAct.Id.ToString());
       html = html.Replace("{{RESOURCE.ID}}", "-1");
-      html = html.Replace("{{TARGET.ID}}", target.Id.ToString());
+      html = html.Replace("{{TARGET.ID}}", tractItem.Id.ToString());
 
       return html;
     }

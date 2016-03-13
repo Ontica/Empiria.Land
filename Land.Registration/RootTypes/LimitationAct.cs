@@ -21,11 +21,31 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
+    internal LimitationAct(RecordingActType recordingActType, RecordingDocument document,
+                           Property property, decimal percentage = 1.0m) : base(recordingActType, document) {
+      Assertion.Assert(recordingActType.AppliesTo == RecordingRuleApplication.Property,
+                       "{0} doesn't apply to properties (real estate).", recordingActType.DisplayName);
+
+      Assertion.AssertObject(property, "property");
+
+      this.AttachProperty(property, percentage);
+    }
+
     static public new LimitationAct Parse(int id) {
       return BaseObject.ParseId<LimitationAct>(id);
     }
 
     #endregion Constructors and parsers
+
+    #region Private methods
+
+    private void AttachProperty(Property property, decimal percentage) {
+      var tractItem = new TractItem(this, property, recordingActPercentage: percentage);
+
+      base.AddTractItem(tractItem);
+    }
+
+    #endregion Private methods
 
   } // class LimitationAct
 

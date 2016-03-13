@@ -22,21 +22,26 @@ namespace Empiria.Land.Registration {
     }
 
     internal DomainAct(RecordingActType recordingActType, RecordingDocument document,
-                       Property property) : base(recordingActType, document) {
-      this.AttachProperty(property);
+                       Resource resource, decimal percentage = 1.0m) : base(recordingActType, document) {
+      Assertion.Assert(recordingActType.AppliesToResources,
+                       "{0} doesn't apply to resources (real estate or associations).",
+                       recordingActType.DisplayName);
+
+      Assertion.AssertObject(resource, "resource");
+
+      this.AttachResource(resource, percentage);
     }
 
     internal DomainAct(RecordingActType recordingActType, RecordingDocument document,
-                       Property property, Recording physicalRecording)
+                       Resource resource, Recording physicalRecording, decimal percentage = 1.0m)
                        : base(recordingActType, document, physicalRecording) {
-      this.AttachProperty(property);
-    }
+      Assertion.Assert(recordingActType.AppliesToResources,
+                    "{0} doesn't apply to resources (real estate or associations).",
+                    recordingActType.DisplayName);
 
-    internal DomainAct(RecordingActType recordingActType, RecordingDocument document,
-                       Property property, Recording physicalRecording,
-                       ResourceRole role, decimal percentage = 1.0m)
-                       : base(recordingActType, document, physicalRecording) {
-      this.AttachProperty(property, role, percentage);
+      Assertion.AssertObject(resource, "resource");
+
+      this.AttachResource(resource, percentage);
     }
 
     static public new DomainAct Parse(int id) {
@@ -47,20 +52,11 @@ namespace Empiria.Land.Registration {
 
     #region Private methods
 
-    private void AttachProperty(Property property) {
-      Assertion.AssertObject(property, "property");
+    private void AttachResource(Resource resource, decimal percentage) {
+      var tractItem = new TractItem(this, resource,
+                                    recordingActPercentage:percentage);
 
-      var target = new ResourceTarget(this, property, ResourceRole.Informative);
-
-      base.AttachTarget(target);
-    }
-
-    private void AttachProperty(Property property, ResourceRole role, decimal percentage) {
-      Assertion.AssertObject(property, "property");
-
-      var target = new ResourceTarget(this, property, role, percentage);
-
-      base.AttachTarget(target);
+      base.AddTractItem(tractItem);
     }
 
     #endregion Private methods

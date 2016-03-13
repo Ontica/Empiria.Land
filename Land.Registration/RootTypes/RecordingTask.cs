@@ -10,11 +10,7 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-using Empiria.DataTypes;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {
@@ -45,7 +41,7 @@ namespace Empiria.Land.Registration {
                          PropertyPartition partition = null, RecordingActInfo targetActInfo = null) {
       this.Transaction = LRSTransaction.Parse(transactionId);
       this.Document = RecordingDocument.Parse(documentId);
-      this.RecordingActTypeCategory = RecordingActTypeCategory.Parse(recordingActTypeCategoryId);
+      //this.RecordingActTypeCategory = RecordingActTypeCategory.Parse(recordingActTypeCategoryId);
       this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
       this.PropertyRecordingType = propertyType;
       this.ResourceName = EmpiriaString.TrimAll(resourceName);
@@ -63,8 +59,6 @@ namespace Empiria.Land.Registration {
       this.QuickAddRecordingNumber = quickAddRecordingNumber;
       this.QuickAddRecordingSubNumber = quickAddRecordingSubnumber;
       this.QuickAddRecordingSuffixTag = quickAddRecordingSuffixTag;
-
-      this.RecordingRule = RecordingActType.RecordingRule;
 
       if (partition != null) {
         this.PartitionInfo = partition;
@@ -92,15 +86,20 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    public RecordingActTypeCategory RecordingActTypeCategory {
-      get;
-      private set;
-    }
+    //public RecordingActTypeCategory RecordingActTypeCategory {
+    //  get;
+    //  private set;
+    //}
 
     public RecordingActType RecordingActType {
       get;
       private set;
     }
+
+    public decimal RecordingActPercentage {
+      get;
+      private set;
+    } = decimal.One;
 
     public PropertyRecordingType PropertyRecordingType {
       get;
@@ -143,11 +142,6 @@ namespace Empiria.Land.Registration {
     }
 
     public string QuickAddRecordingSuffixTag {
-      get;
-      private set;
-    }
-
-    public RecordingRule RecordingRule {
       get;
       private set;
     }

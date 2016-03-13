@@ -41,7 +41,8 @@ namespace Empiria.Land.Registration {
 
     private bool CreateNewResource {
       get {
-        return (Task.RecordingRule.AppliesTo == RecordingRuleApplication.Property &&
+        return ((Task.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Property ||
+                 Task.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Association) &&
                 Task.PropertyRecordingType == PropertyRecordingType.createProperty &&
                 Task.PrecedentProperty.IsEmptyInstance);
       }
@@ -141,7 +142,7 @@ namespace Empiria.Land.Registration {
 
       RecordingAct amendmendOf;
       if (this.Task.TargetActInfo.RecordingActId == -1) {
-        amendmendOf = CreateAmendmendOfRecordingAct(this.Task.PrecedentProperty);
+        amendmendOf = this.CreateAmendmendOfRecordingAct(this.Task.PrecedentProperty);
       } else {
         amendmendOf = RecordingAct.Parse(this.Task.TargetActInfo.RecordingActId);
       }
@@ -154,31 +155,82 @@ namespace Empiria.Land.Registration {
 
     #region Private auxiliar methods
 
-    private RecordingAct CreateAssociationAct() {
-      Association association = this.GetAssociation();
-      var associationAct = new AssociationAct(this.Task.RecordingActType,
-                                              this.Task.Document, association);
-      associationAct.Save();
-
-      return associationAct;
-    }
-
-    private RecordingAct CreateDocumentAct() {
-      var documentAct = new DocumentAct(this.Task.RecordingActType,
-                                        this.Task.Document);
-      documentAct.Save();
-
-      return documentAct;
-    }
-
-    private RecordingAct CreateDomainAct() {
-      Property property = this.GetProperty();
+    private DomainAct CreateDomainAct() {
+      /// ToDo: Fist validate if the resource is compatible with the act
+      Resource resource = this.GetResource();
 
       var domainAct = new DomainAct(this.Task.RecordingActType,
-                                    this.Task.Document, property);
+                                    this.Task.Document, resource, this.Task.RecordingActPercentage);
       domainAct.Save();
 
       return domainAct;
+    }
+
+    private InformationAct CreateInformationAct() {
+      InformationAct informationAct = null;
+
+      switch (this.Task.RecordingActType.AppliesTo) {
+        case RecordingRuleApplication.Association:
+        case RecordingRuleApplication.Property:
+          Resource resource = this.GetResource();
+          informationAct = new InformationAct(this.Task.RecordingActType,
+                                              this.Task.Document, resource);
+          break;
+        //case RecordingRuleApplication.Document:
+        //  RecordingDocument targetDocument = this.GetTargetDocument();
+        //  informationAct = new InformationAct(this.Task.RecordingActType,
+        //                                      this.Task.Document, targetDocument);
+        //  break;
+        //case RecordingRuleApplication.RecordingAct:
+        //  RecordingAct targetRecordingAct = this.GetTargetRecordingAct();
+        //  informationAct = new InformationAct(this.Task.RecordingActType,
+        //                                      this.Task.Document, targetRecordingAct);
+        //  break;
+        default:
+          throw Assertion.AssertNoReachThisCode();
+      }
+
+      informationAct.Save();
+
+      return informationAct;
+    }
+
+    private RecordingAct GetTargetRecordingAct() {
+      throw new NotImplementedException();
+    }
+
+    private RecordingDocument GetTargetDocument() {
+      throw new NotImplementedException();
+    }
+
+    private LimitationAct CreateLimitationAct() {
+      Property property = this.GetProperty();
+
+      var limitationAct = new LimitationAct(this.Task.RecordingActType,
+                                            this.Task.Document, property);
+      limitationAct.Save();
+
+      return limitationAct;
+    }
+    
+
+    //private RecordingAct CreateDocumentAct() {
+    //  var documentAct = new DocumentAct(this.Task.RecordingActType,
+    //                                    this.Task.Document);
+    //  documentAct.Save();
+
+    //  return documentAct;
+    //}
+
+    private Resource GetResource() {
+      switch (this.Task.RecordingActType.RecordingRule.AppliesTo) {
+        case RecordingRuleApplication.Association:
+          return this.GetAssociation();
+        case RecordingRuleApplication.Property:
+          return this.GetProperty();
+        default:
+          throw Assertion.AssertNoReachThisCode();
+      }
     }
 
     private Association GetAssociation() {
@@ -224,8 +276,8 @@ namespace Empiria.Land.Registration {
             Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
                                                              Task.QuickAddRecordingSubNumber,
                                                              Task.QuickAddRecordingSuffixTag);
-      var precedentAct = new AssociationAct(RecordingActType.Parse(2750), document,
-                                            association, physicalRecording);
+      var precedentAct = new DomainAct(RecordingActType.Parse(2750), document,
+                                       association, physicalRecording);
       precedentAct.Save();
 
       return association;
@@ -280,20 +332,28 @@ namespace Empiria.Land.Registration {
     private RecordingAct ProcessTask() {
       var recordingActType = this.Task.RecordingActType;
 
-      if (recordingActType.IsSubtypeOf<AssociationAct>()) {
-        return this.CreateAssociationAct();     // Acta asamblea, Constitución S.C.
-      } else if (recordingActType.IsSubtypeOf<DocumentAct>()) {
-        return this.CreateDocumentAct();        // Testamento, Nombr. de albacea, Capit. matrimoniales.
-      } else if (recordingActType.IsSubtypeOf<DomainAct>()) {
-        return this.CreateDomainAct();          // Testamento, Nombr. de albacea, Capit. matrimoniales.
-      //} else if (recordingActType.IsSubtypeOf<LimitationAct>()) {
-      //} else if (recordingActType.IsSubtypeOf<InformationAct>()) {
-      //} else if (recordingActType.IsSubtypeOf<ModificationAct>()) {
-      //} else if (recordingActType.IsSubtypeOf<CancelationAct>()) {
-      //} else if (recordingActType.IsSubtypeOf<StructureAct>()) {
+      if (recordingActType.IsDomainActType) {
+        return this.CreateDomainAct();          // CV, Donación, Título de propiedad, Constitución SC,
+      } else if (recordingActType.IsLimitationActType) {
+        return this.CreateLimitationAct();     // Hipoteca, Embargo, Inmovilización, Aviso preventivo
+      } else if (recordingActType.IsInformationActType) {
+        return this.CreateInformationAct();     // Testamento, Cap matrim, Anotación marginal
+      //} else if (recordingActType.IsModificationActType) {
+        //return this.CreateInformationAct();     // Testamento, Cap matrim, Anotación marginal
       } else {
-        throw Assertion.AssertNoReachThisCode();
+        throw new NotImplementedException("RecordingExpert.DoRecording: Recording act '" +
+                                          Task.RecordingActType.DisplayName + "' has an undefined or wrong rule.");
       }
+
+      //if (recordingActType.IsSubtypeOf<DocumentAct>()) {
+      //  return this.CreateDocumentAct();        // Testamento, Nombr. de albacea, Capit. matrimoniales.
+      ////} else if (recordingActType.IsSubtypeOf<InformationAct>()) {
+      ////} else if (recordingActType.IsSubtypeOf<ModificationAct>()) {
+      ////} else if (recordingActType.IsSubtypeOf<CancelationAct>()) {
+      ////} else if (recordingActType.IsSubtypeOf<StructureAct>()) {
+      //} else {
+      //  throw Assertion.AssertNoReachThisCode();
+      //}
 
       //switch (Task.RecordingRule.AppliesTo) {
       //  case RecordingRuleApplication.Property:

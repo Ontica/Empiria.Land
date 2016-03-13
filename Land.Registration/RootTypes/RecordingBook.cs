@@ -5,20 +5,17 @@
 *  Type      : RecordingBook                                  Pattern  : Empiria Object Type                 *
 *  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Represents a recording book. A recording book can have a parent recording book and always     *
+*  Summary   : Represents a physical recording book. A recording book can have a parent recording book and   *
 *              belongs to a recorder of deeds office. Instances of this type have a recording book type.     *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Data;
 
 using Empiria.Contacts;
 using Empiria.DataTypes;
 using Empiria.Json;
-using Empiria.Security;
 
 using Empiria.Land.Registration.Data;
-using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {
 
@@ -31,15 +28,8 @@ namespace Empiria.Land.Registration {
     Deleted = 'X'
   }
 
-  //public enum RecordingBookType {
-  //  Root = 'R',
-  //  Section = 'S',
-  //  Book = 'B',
-  //  Volume = 'V'
-  //}
-
-  /// <summary>Represents a recording book. A recording book can have a parent recording book and always
-  /// belongs to a recorder of deeds office. Instances of this type have a recording book type.</summary>
+  /// <summary>Represents a physical recording book. A recording book can have a parent recording book
+  /// and belongs to a recorder of deeds office. Instances of this type have a recording book type.</summary>
   public class RecordingBook : BaseObject {
 
     #region Fields

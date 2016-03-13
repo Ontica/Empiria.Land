@@ -46,43 +46,49 @@ namespace Empiria.Land.UI {
       for (int i = 0; i < document.RecordingActs.Count; i++) {
         var recordingAct = document.RecordingActs[i];
 
-        for (int j = 0; j < recordingAct.Targets.Count; j++) {
+        for (int j = 0; j < recordingAct.TractIndex.Count; j++) {
           if (j == 0) {
-            html += this.GetRecordingActRow(recordingAct, recordingAct.Targets[j]);
+            html += this.GetRecordingActRow(recordingAct, recordingAct.TractIndex[j]);
           } else {
-            html += this.GetAdditionalTargetRow(recordingAct, recordingAct.Targets[j]);
+            html += this.GetAdditionalTargetRow(recordingAct, recordingAct.TractIndex[j]);
           }
         } // for int i
       } // for int j
       return html;
     }
 
-    private string GetAdditionalTargetRow(RecordingAct recordingAct, RecordingActTarget recordingActTarget) {
+    private string GetAdditionalTargetRow(RecordingAct recordingAct, TractItem baseTarget) {
  	    throw new NotImplementedException();
     }
 
-    private string GetRecordingActRow(RecordingAct recordingAct, RecordingActTarget recordingActTarget) {
-      if (recordingAct is AssociationAct) {
-        var row = new AssociationActGridRow(document, (AssociationAct) recordingAct);
-        return row.GetRecordingActRow((ResourceTarget) recordingActTarget);
-      } else if (recordingAct is DocumentAct) {
-        var row = new DocumentActGridRow(document, (DocumentAct) recordingAct);
-        return row.GetRecordingActRow((DocumentTarget) recordingActTarget);
-      } else if (recordingAct is DomainAct) {
-        var row = new DomainActGridRow(document, (DomainAct) recordingAct);
-        return row.GetRecordingActRow((ResourceTarget) recordingActTarget);
-      //} else if (recordingAct is LimitationAct) {
-      //  html += GetLimitationActGridRow(recordingAct, counter);
-      //} else if (recordingAct is InformationAct) {
-      //  html += GetInformationActGridRow(recordingAct, counter);
-      //} else if (recordingAct is ModificationAct) {
-      //  html += GetModificationActGridRow(recordingAct, counter);
-      //} else if (recordingAct is CancelationAct) {
-      //  html += GetCancelationActGridRow(recordingAct, counter);
-      //} else if (recordingAct is StructureAct) {
-      //  html += GetStructureActGridRow(recordingAct, counter);
-      } else {
-        throw Assertion.AssertNoReachThisCode();
+    private string GetRecordingActRow(RecordingAct recordingAct, TractItem baseTarget) {
+      RecordingActGridRow row = null;
+      switch (recordingAct.RecordingActType.RecordingRule.AppliesTo) {
+
+        case RecordingRuleApplication.Association:
+          row = new AssociationActGridRow(document, recordingAct);
+          return row.GetRecordingActRow(baseTarget);
+
+        case RecordingRuleApplication.Document:
+          row = new DocumentActGridRow(document, recordingAct);
+          return row.GetRecordingActRow(baseTarget);
+
+        case RecordingRuleApplication.Party:
+          //row = new PartyActGridRow(document, (DomainAct) recordingAct);
+          //return row.GetRecordingActRow(recordingActTarget);
+
+        case RecordingRuleApplication.Property:
+          row = new PropertyActGridRow(document, (DomainAct) recordingAct);
+          return row.GetRecordingActRow(baseTarget);
+
+        case RecordingRuleApplication.RecordingAct:
+          throw new NotImplementedException();
+
+        case RecordingRuleApplication.Structure:
+          throw new NotImplementedException();
+
+        default:
+          throw Assertion.AssertNoReachThisCode();
       }
     }
 
@@ -94,7 +100,7 @@ namespace Empiria.Land.UI {
 
     #region Private auxiliar methods
 
-    static private string GetAdditionalPropertyOptionsCombo(ResourceTarget target) {
+    static private string GetAdditionalPropertyOptionsCombo(TractItem tractItem) {
       const string template =
         "<select id='cboRecordingOptions_{{TARGET.ID}}' class='selectBox' style='width:148px'>" +
         "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
@@ -104,15 +110,15 @@ namespace Empiria.Land.UI {
         "alt='' title='Ejecuta la operación seleccionada' onclick='" +
         "doOperation(getElement(\"cboRecordingOptions_{{TARGET.ID}}\").value, {{ID}}, {{RESOURCE.ID}});'/>";
 
-      string html = template.Replace("{{TARGET.ID}}", target.Id.ToString());
+      string html = template.Replace("{{TARGET.ID}}", tractItem.Id.ToString());
 
-      html = html.Replace("{{ID}}", target.RecordingAct.Id.ToString());
-      html = html.Replace("{{RESOURCE.ID}}", target.Resource.Id.ToString());
+      html = html.Replace("{{ID}}", tractItem.RecordingAct.Id.ToString());
+      html = html.Replace("{{RESOURCE.ID}}", tractItem.Resource.Id.ToString());
 
       return html;
     }
 
-    static private string GetPropertyOptionsCombo(ResourceTarget target,
+    static private string GetPropertyOptionsCombo(TractItem tractItem,
                                                   int recordingActsCount, int recordingActIndex) {
       const string template =
         "<select id='cboRecordingOptions_{{TARGET.ID}}' class='selectBox' style='width:148px'>" +
@@ -129,7 +135,7 @@ namespace Empiria.Land.UI {
         "alt='' title='Ejecuta la operación seleccionada' onclick='" +
         "doOperation(getElement(\"cboRecordingOptions_{{TARGET.ID}}\").value, {{ID}}, {{RESOURCE.ID}});'/>";
 
-      string html = template.Replace("{{TARGET.ID}}", target.Id.ToString());
+      string html = template.Replace("{{TARGET.ID}}", tractItem.Id.ToString());
       if (recordingActsCount > 1) {
         if (recordingActIndex != 0) {
           html = html.Replace("{{INCREMENT_INDEX}}",
@@ -147,8 +153,8 @@ namespace Empiria.Land.UI {
         html = html.Replace("{{INCREMENT_INDEX}}", String.Empty);
         html = html.Replace("{{DECREMENT_INDEX}}", String.Empty);
       }
-      html = html.Replace("{{ID}}", target.RecordingAct.Id.ToString());
-      html = html.Replace("{{RESOURCE.ID}}", target.Resource.Id.ToString());
+      html = html.Replace("{{ID}}", tractItem.RecordingAct.Id.ToString());
+      html = html.Replace("{{RESOURCE.ID}}", tractItem.Resource.Id.ToString());
 
       return html;
     }
@@ -210,7 +216,7 @@ namespace Empiria.Land.UI {
       return temp;
     }
 
-    static private string GetRecordingActGridRow(RecordingAct recordingAct, ResourceTarget tractItem, int counter,
+    static private string GetRecordingActGridRow(RecordingAct recordingAct, TractItem tractItem, int counter,
                                                  int recordingActIndex, int tractItemIndex, int recordingActsCount) {
 
       const string row = "<tr class='{CLASS}'>" +

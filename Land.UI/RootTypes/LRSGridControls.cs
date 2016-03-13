@@ -182,9 +182,9 @@ namespace Empiria.Land.UI {
       FixedList<RecordingAct> recordingActs = recording.GetNoAnnotationActs();
       for (int i = 0; i < recordingActs.Count; i++) {
         RecordingAct recordingAct = recordingActs[i];
-        FixedList<RecordingActTarget> properties = recordingActs[i].Targets;
+        FixedList<TractItem> properties = recordingActs[i].TractIndex;
         for (int j = 0; j < properties.Count; j++) {
-          var tractItem = (ResourceTarget) properties[j];
+          var tractItem = properties[j];
           if (i % 2 == 0) {
             temp = row.Replace("{CLASS}", "detailsItem");
           } else {

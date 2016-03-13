@@ -85,27 +85,39 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public bool IsAnnotationType {
-      get {
-        return base.Name.StartsWith("ObjectType.RecordingAct.AnnotationAct");
-      }
-    }
-
-    public bool IsCancelationType {
+    public bool IsCancelationActType {
       get {
         return base.Name.StartsWith("ObjectType.RecordingAct.CancelationAct");
-      }
-    }
-
-    public bool IsModificationType {
-      get {
-        return this.RecordingRule.IsModification;
       }
     }
 
     public bool IsDomainActType {
       get {
         return base.Name.StartsWith("ObjectType.RecordingAct.DomainAct");
+      }
+    }
+
+    public bool IsInformationActType {
+      get {
+        return base.Name.StartsWith("ObjectType.RecordingAct.InformationAct");
+      }
+    }
+
+    public bool IsLimitationActType {
+      get {
+        return base.Name.StartsWith("ObjectType.RecordingAct.LimitationAct");
+      }
+    }
+
+    public bool IsModificationActType {
+      get {
+        return base.Name.StartsWith("ObjectType.RecordingAct.ModificationAct");
+      }
+    }
+
+    public bool IsStructureActType {
+      get {
+        return base.Name.StartsWith("ObjectType.RecordingAct.StructureAct");
       }
     }
 
@@ -135,6 +147,11 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public ResourceRole ResourceRole {
+      get;
+      private set;
+    } = ResourceRole.Informative;
+
     #endregion Public properties
 
     #region Public methods
@@ -144,10 +161,17 @@ namespace Empiria.Land.Registration {
       return base.CreateObject<RecordingAct>();
     }
 
-    public string AppliesTo() {
-      var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
+    public RecordingRuleApplication AppliesTo {
+      get {
+        return this.RecordingRule.AppliesTo;
+      }
+    }
 
-      return json.Get<string>("AppliesTo");
+    public bool AppliesToResources {
+      get {
+        return (this.RecordingRule.AppliesTo == RecordingRuleApplication.Association ||
+                this.RecordingRule.AppliesTo == RecordingRuleApplication.Property);
+      }
     }
 
     public FixedList<RecordingActType> GetAppliesToRecordingActTypesList() {

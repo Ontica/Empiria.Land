@@ -34,6 +34,8 @@ namespace Empiria.Land.UI.Utilities {
 
     #region Public methods
 
+    internal abstract string GetRecordingActRow(TractItem baseTarget);
+
     protected string GetRowTemplate() {
       const string template = "<tr class='{{CLASS}}'>" +
                               "<td><b id='ancRecordingActIndex_{{TARGET.ID}}'>{{INDEX}}</b><br/>" +

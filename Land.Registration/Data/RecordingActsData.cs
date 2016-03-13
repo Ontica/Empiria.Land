@@ -78,14 +78,14 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList<RecordingAct>(operation, (x) => BaseObject.ParseList<RecordingAct>(x));
     }
 
-    static internal List<RecordingActTarget> GetRecordingActTargets(RecordingAct recordingAct) {
+    static internal List<TractItem> GetRecordingActTargets(RecordingAct recordingAct) {
       if (recordingAct.IsEmptyInstance) {
-        return new List<RecordingActTarget>();
+        return new List<TractItem>();
       }
 
-      var operation = DataOperation.Parse("qryLRSRecordingActTargets", recordingAct.Id);
+      var operation = DataOperation.Parse("qryLRSTractIndexByRecordingAct", recordingAct.Id);
 
-      return DataReader.GetList<RecordingActTarget>(operation, (x) => BaseObject.ParseList<RecordingActTarget>(x));
+      return DataReader.GetList<TractItem>(operation, (x) => BaseObject.ParseList<TractItem>(x));
     }
 
     static internal FixedList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
@@ -178,39 +178,29 @@ namespace Empiria.Land.Registration.Data {
       return DataWriter.Execute(dataOperation);
     }
 
-    static internal int WriteDocumentTarget(DocumentTarget o) {
-      Assertion.Assert(o.Id > 0, "Id needs to be positive.");
-      Assertion.Assert(o.Document.Id > 0, "Document Id must be positive.");
-      Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
-
-      var operation = DataOperation.Parse("writeLRSRecordingActTarget", o.Id, o.GetEmpiriaType().Id,
-                                          o.RecordingAct.Id, -1, ResourceRole.NotApply, 1.0m,
-                                          -1, o.TargetAct.Id, -1, o.ExtensionData.ToJson(),
-                                          (char) o.Status, o.Integrity.GetUpdatedHashCode());
-      return DataWriter.Execute(operation);
-    }
-
-    static internal int WritePartyTarget(PartyTarget o) {
-      Assertion.Assert(o.Id > 0, "Id must be positive.");
-      Assertion.Assert(o.Party.Id > 0, "Party Id must be positive.");
-      Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
-
-      var operation = DataOperation.Parse("writeLRSRecordingActTarget", o.Id, o.GetEmpiriaType().Id,
-                                          o.RecordingAct.Id, -1, (char) o.ResourceRole, 1.0m,
-                                          o.Party.Id, o.TargetAct.Id, -1, o.ExtensionData.ToJson(),
-                                          (char) o.Status, o.Integrity.GetUpdatedHashCode());
-      return DataWriter.Execute(operation);
-    }
-
-    static internal int WriteResourceTarget(ResourceTarget o) {
-      Assertion.Assert(o.Id > 0, "Id must be positive.");
+    static internal int WriteTractItem(TractItem o) {
+      Assertion.Assert(o.Id != 0, "TractItem.Id can't be zero");
       Assertion.Assert(o.Resource.Id > 0, "Resource Id must be positive.");
       Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
 
-      var operation = DataOperation.Parse("writeLRSRecordingActTarget", o.Id, o.GetEmpiriaType().Id,
-                                          o.RecordingAct.Id, o.Resource.Id, (char) o.ResourceRole, o.Percentage,
-                                          -1, o.TargetAct.Id, -1, o.ExtensionData.ToJson(),
-                                          (char) o.Status, o.Integrity.GetUpdatedHashCode());
+      var operation = DataOperation.Parse("writeLRSTractItem", o.Id, o.GetEmpiriaType().Id,
+                      o.RecordingAct.Id, o.Resource.Id, (char) o.ResourceRole,
+                      -1, String.Empty, o.RecordingActPercentage,
+                      -1, -1, -1, o.LastAmendedBy.Id, o.ExtensionData.ToJson(),
+                      o.RegisteredBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
+      return DataWriter.Execute(operation);
+    }
+
+    static internal int WriteStructureTractItem(StructureTractItem o) {
+      Assertion.Assert(o.Id != 0, "TractItem.Id can't be zero");
+      Assertion.Assert(o.Resource.Id > 0, "Resource Id must be positive.");
+      Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
+
+      var operation = DataOperation.Parse("writeLRSTractItem", o.Id, o.GetEmpiriaType().Id,
+                      o.RecordingAct.Id, o.Resource.Id, (char) o.ResourceRole,
+                      o.RelatedRealEstate.Id, o.PartitionName, o.RecordingActPercentage,
+                      -1, -1, -1, o.LastAmendedBy.Id, o.ExtensionData.ToJson(),
+                      o.RegisteredBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 

@@ -54,6 +54,8 @@ namespace Empiria.Land.WebApi {
     [Route("v1/transactions/request-certificate")]
     public SingleObjectModel RequestCertificate([FromBody] CertificateRequest certificateRequest) {
       try {
+        var dryRun = base.Request.RequestUri.Query.Contains("dry-run");
+
         base.RequireBody(certificateRequest);
 
         var transaction = certificateRequest.CreateTransaction();
@@ -70,6 +72,8 @@ namespace Empiria.Land.WebApi {
     [Route("v1/transactions/request-pending-note-recording")]
     public SingleObjectModel RequestPendingNoteRecording([FromBody] PendingNoteRequest pendingNoteRequest) {
       try {
+        var dryRun = base.Request.RequestUri.Query.Contains("dry-run");
+
         base.RequireBody(pendingNoteRequest);
 
         var transaction = pendingNoteRequest.CreateTransaction();

@@ -11,11 +11,6 @@
 using System;
 using System.Data;
 
-using Empiria.Contacts;
-using Empiria.DataTypes;
-using Empiria.Geography;
-using Empiria.Json;
-using Empiria.Security;
 using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration {
@@ -65,7 +60,7 @@ namespace Empiria.Land.Registration {
       if (tract.Count == 0) {         // Antecedent no registered
         return RecordingAct.Empty;
       }
-      RecordingAct antecedent = tract.FindLast((x) => x.Id == 2750);    // Incorporation act
+      RecordingAct antecedent = tract.FindLast((x) => EmpiriaMath.IsMemberOf(x.Id, new int[] { 2750, 2709, 2710, 2711 }));    // Incorporation act
       if (antecedent != null) {
         return antecedent;
       } else if (tract[0].RecordingActType.Equals(RecordingActType.Empty)) {
