@@ -127,7 +127,7 @@
     <Compile Include="Data\IndexesData.cs" />
     <Compile Include="Data\RecordingActsData.cs" />
     <Compile Include="Data\TransactionData.cs" />
-    <Compile Include="Data\PropertyData.cs" />
+    <Compile Include="Data\ResourceData.cs" />
     <Compile Include="Data\RecordingBooksData.cs" />
     <Compile Include="Empiria.Land.Registration.AssemblyInfo.cs" />
     <Compile Include="RootTypes\RecordingCertificate.cs" />
@@ -142,13 +142,13 @@
     <Compile Include="RootTypes\RecordingActInfo.cs" />
     <Compile Include="RootTypes\RecordingDocumentExtData.cs" />
     <Compile Include="RootTypes\RecordingExtData.cs" />
-    <Compile Include="RootTypes\PropertyKind.cs" />
-    <Compile Include="RootTypes\PropertyPartition.cs" />
+    <Compile Include="RootTypes\RealEstateKind.cs" />
+    <Compile Include="RootTypes\RealEstatePartition.cs" />
     <Compile Include="RootTypes\TractItem.cs" />
     <Compile Include="RootTypes\TractItemExtData.cs" />
     <Compile Include="RootTypes\RecordingActExtData.cs" />
     <Compile Include="RootTypes\ContractData.cs" />
-    <Compile Include="RootTypes\PropertyRule.cs" />
+    <Compile Include="RootTypes\RealEstateRule.cs" />
     <Compile Include="RootTypes\RecordingRule.cs" />
     <Compile Include="RootTypes\RecordingSection.cs" />
     <Compile Include="RootTypes\RecorderExpert.cs" />
@@ -185,7 +185,7 @@
     <Compile Include="RootTypes\StructureAct.cs" />
     <Compile Include="RootTypes\LimitationAct.cs" />
     <Compile Include="RootTypes\DomainAct.cs" />
-    <Compile Include="RootTypes\Property.cs" />
+    <Compile Include="RootTypes\RealEstate.cs" />
     <Compile Include="RootTypes\RecordingAct.cs" />
     <Compile Include="RootTypes\RecordingActTypeCategory.cs" />
     <Compile Include="RootTypes\LRSValidator.cs" />

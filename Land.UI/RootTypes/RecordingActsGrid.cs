@@ -65,27 +65,27 @@ namespace Empiria.Land.UI {
       RecordingActGridRow row = null;
       switch (recordingAct.RecordingActType.RecordingRule.AppliesTo) {
 
+        case RecordingRuleApplication.RealEstate:
+          row = new PropertyActGridRow(document, recordingAct);
+          return row.GetRecordingActRow(baseTarget);
+
         case RecordingRuleApplication.Association:
           row = new AssociationActGridRow(document, recordingAct);
-          return row.GetRecordingActRow(baseTarget);
-
-        case RecordingRuleApplication.Document:
-          row = new DocumentActGridRow(document, recordingAct);
-          return row.GetRecordingActRow(baseTarget);
-
-        case RecordingRuleApplication.Party:
-          //row = new PartyActGridRow(document, (DomainAct) recordingAct);
-          //return row.GetRecordingActRow(recordingActTarget);
-
-        case RecordingRuleApplication.Property:
-          row = new PropertyActGridRow(document, (DomainAct) recordingAct);
           return row.GetRecordingActRow(baseTarget);
 
         case RecordingRuleApplication.RecordingAct:
           throw new NotImplementedException();
 
+        case RecordingRuleApplication.Document:
+          row = new DocumentActGridRow(document, recordingAct);
+          return row.GetRecordingActRow(baseTarget);
+
         case RecordingRuleApplication.Structure:
           throw new NotImplementedException();
+
+        case RecordingRuleApplication.Party:
+        //row = new PartyActGridRow(document, (DomainAct) recordingAct);
+        //return row.GetRecordingActRow(recordingActTarget);
 
         default:
           throw Assertion.AssertNoReachThisCode();
@@ -183,7 +183,7 @@ namespace Empiria.Land.UI {
       return temp;
     }
 
-    static private string FillPropertyGridRow(RecordingAct recordingAct, Property property, string temp) {
+    static private string FillPropertyGridRow(RecordingAct recordingAct, RealEstate property, string temp) {
       RecordingAct antecedent = property.GetDomainAntecedent(recordingAct);
 
       if (recordingAct.IsAmendment && !recordingAct.AmendmentOf.PhysicalRecording.IsEmptyInstance) {
@@ -275,13 +275,13 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{RECORDING.ACT.STATUS}", @"&nbsp;");
       }
 
-      if (tractItem.Resource is Property && ((Property) tractItem.Resource).CadastralKey.Length != 0) {
+      if (tractItem.Resource is RealEstate && ((RealEstate) tractItem.Resource).CadastralKey.Length != 0) {
         temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", tractItem.Resource.UID
-                                              + " <br />" + ((Property) tractItem.Resource).CadastralKey));
+                                              + " <br />" + ((RealEstate) tractItem.Resource).CadastralKey));
       } else {
         temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", tractItem.Resource.UID));
       }
-      if (recordingAct.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Property ||
+      if (recordingAct.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.RealEstate ||
           recordingAct.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Structure) {
         temp = temp.Replace("{PROPERTY.STATUS}", tractItem.StatusName);
       } else {
@@ -291,7 +291,7 @@ namespace Empiria.Land.UI {
       if (tractItem.Resource is Association) {
         temp = FillAssociationGridRow(recordingAct, (Association) tractItem.Resource, temp);
       } else {
-        temp = FillPropertyGridRow(recordingAct, (Property) tractItem.Resource, temp);
+        temp = FillPropertyGridRow(recordingAct, (RealEstate) tractItem.Resource, temp);
       }
 
       temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", recordingAct.Id.ToString());

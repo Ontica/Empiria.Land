@@ -85,11 +85,11 @@ namespace Empiria.Land.Certification {
         return CertificateType.Parse(data.CertificateTypeUID);
       }
 
-      private Property GetProperty() {
+      private RealEstate GetProperty() {
         if (data.PropertyUID.Length == 0) {
-          return Property.Empty;
+          return RealEstate.Empty;
         }
-        var property = Property.TryParseWithUID(data.PropertyUID);
+        var property = RealEstate.TryParseWithUID(data.PropertyUID);
         Validate.NotNull(property,
                         "Property with unique ID '{0}' was not found.", data.PropertyUID);
         return property;

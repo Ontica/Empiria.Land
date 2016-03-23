@@ -15,7 +15,7 @@ using Empiria.Json;
 
 namespace Empiria.Land.Registration {
 
-  public enum PropertyCount {
+  public enum ResourceCount {
     Undefined,
     One,
     OneOrMore,
@@ -23,7 +23,7 @@ namespace Empiria.Land.Registration {
     TwoOrMore,
   }
 
-  public enum PropertyRecordingStatus {
+  public enum ResourceRecordingStatus {
     Undefined,
     NotApply,
     Both,
@@ -33,7 +33,7 @@ namespace Empiria.Land.Registration {
 
   public enum RecordingRuleApplication {
     Undefined,
-    Property,
+    RealEstate,
     Association,
     Document,
     RecordingAct,
@@ -45,37 +45,50 @@ namespace Empiria.Land.Registration {
   ///  when a RecordingAct is registered.</summary>
   public class RecordingRule {
 
+    #region Fields
+
+    private RecordingActType recordingActType = null;
+
+    #endregion Fields
+
     #region Constructors and parsers
 
-    private RecordingRule(string jsonString) {
-      this.Load(jsonString);
+    private RecordingRule(RecordingActType recordingActType) {
+      this.recordingActType = recordingActType;
+
+      this.Load();
     }
 
-    private void Load(string jsonString) {
-      var json = JsonObject.Parse(jsonString);
+    private void Load() {
+      try {
+        var json = JsonObject.Parse(recordingActType.ExtensionData);
 
-      this.AppliesTo = json.Get<RecordingRuleApplication>("AppliesTo", RecordingRuleApplication.Undefined);
-      this.AutoCancel = json.Get<Int32>("AutoCancel", 0);
+        this.AppliesTo = json.Get<RecordingRuleApplication>("AppliesTo", RecordingRuleApplication.Undefined);
+        this.AutoCancel = json.Get<Int32>("AutoCancel", 0);
 
-      this.InputProperties = json.GetList<PropertyRule>("InputProperties", false).ToArray();
+        this.InputResources = json.GetList<RealEstateRule>("InputResources", false).ToArray();
 
-      this.NewProperty = PropertyRule.Parse(json.Slice("NewProperties", false));
+        this.NewResource = RealEstateRule.Parse(json.Slice("NewResource", false));
 
-      this.PropertyCount = ParsePropertyCount(json.Get<string>("PropertyCount", String.Empty));
-      this.PropertyRecordingStatus = json.Get<PropertyRecordingStatus>("PropertyStatus",
-                                                                       PropertyRecordingStatus.Undefined);
-      this.RecordingSection = json.Get<RecordingSection>("RecordingSectionId", RecordingSection.Empty);
-      this.SpecialCase = json.Get<string>("SpecialCase", String.Empty);
-      this.RecordingActTypes = json.GetList<RecordingActType>("RecordingActTypes", false).ToArray();
-      this.AllowsPartitions = json.Get<bool>("AllowsPartitions", false);
-      this.IsActive = json.Get<bool>("IsActive", false);
-      this.AskForResourceName = json.Get<bool>("AskForResourceName", false);
+        this.ResourceCount = ParseResourceCount(json.Get<string>("ResourceCount", String.Empty));
+        this.ResourceRecordingStatus = json.Get<ResourceRecordingStatus>("ResourceStatus",
+                                                                         ResourceRecordingStatus.Undefined);
+        this.RecordingSection = json.Get<RecordingSection>("RecordingSectionId", RecordingSection.Empty);
+        this.SpecialCase = json.Get<string>("SpecialCase", String.Empty);
+        this.RecordingActTypes = json.GetList<RecordingActType>("RecordingActTypes", false).ToArray();
+        this.AllowsPartitions = json.Get<bool>("AllowsPartitions", false);
+        this.IsActive = json.Get<bool>("IsActive", false);
+        this.AskForResourceName = json.Get<bool>("AskForResourceName", false);
+      } catch (Exception e) {
+        throw new LandRegistrationException(LandRegistrationException.Msg.MistakeInRecordingRuleConfig, e,
+                                            this.recordingActType.Id);
+      }
     }
 
     private JsonObject _json = null;
     public JsonObject ToJson() {
       if (_json == null) {
-        _json = ConvertToJson();
+        _json = this.ConvertToJson();
       }
       return _json;
     }
@@ -86,30 +99,32 @@ namespace Empiria.Land.Registration {
       json.Add(new JsonItem("AppliesTo", this.AppliesTo.ToString()));
       json.Add(new JsonItem("AutoCancel", this.AutoCancel));
       json.Add(new JsonItem("AskForResourceName", this.AskForResourceName));
-      json.Add(new JsonItem("PropertyCount", this.PropertyCount.ToString()));
-      json.Add(new JsonItem("PropertyRecordingStatus", this.PropertyRecordingStatus.ToString()));
+      json.Add(new JsonItem("ResourceCount", this.ResourceCount.ToString()));
+      json.Add(new JsonItem("ResourceRecordingStatus", this.ResourceRecordingStatus.ToString()));
       json.Add(new JsonItem("SpecialCase", this.SpecialCase));
       json.Add(new JsonItem("IsActive", this.IsActive));
 
       return json;
     }
 
-    static internal RecordingRule Parse(string jsonString) {
-      return new RecordingRule(jsonString);
+    static internal RecordingRule Parse(RecordingActType recordingActType) {
+      Assertion.AssertObject(recordingActType, "recordingActType");
+
+      return new RecordingRule(recordingActType);
     }
 
-    static public PropertyCount ParsePropertyCount(string propertyCount) {
-      switch (propertyCount) {
+    static public ResourceCount ParseResourceCount(string resourceCount) {
+      switch (resourceCount) {
         case "1":
-          return PropertyCount.One;
+          return ResourceCount.One;
         case "1+":
-          return PropertyCount.OneOrMore;
+          return ResourceCount.OneOrMore;
         case "2":
-          return PropertyCount.Two;
+          return ResourceCount.Two;
         case "2+":
-          return PropertyCount.TwoOrMore;
+          return ResourceCount.TwoOrMore;
       }
-      return PropertyCount.Undefined;
+      return ResourceCount.Undefined;
     }
 
     #endregion Constructors and parsers
@@ -136,25 +151,25 @@ namespace Empiria.Land.Registration {
       private set;
     } = 0;
 
-    public PropertyRule[] InputProperties {
+    public RealEstateRule[] InputResources {
       get;
       private set;
-    } = new PropertyRule[0];
+    } = new RealEstateRule[0];
 
-    public PropertyRule NewProperty {
+    public RealEstateRule NewResource {
       get;
       private set;
-    } = new PropertyRule();
+    } = new RealEstateRule();
 
-    public PropertyCount PropertyCount {
+    public ResourceCount ResourceCount {
       get;
       private set;
-    } = PropertyCount.Undefined;
+    } = ResourceCount.Undefined;
 
-    public PropertyRecordingStatus PropertyRecordingStatus {
+    public ResourceRecordingStatus ResourceRecordingStatus {
       get;
       private set;
-    } = PropertyRecordingStatus.Undefined;
+    } = ResourceRecordingStatus.Undefined;
 
     public RecordingSection RecordingSection {
       get;

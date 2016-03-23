@@ -170,6 +170,9 @@
   <data name="InvalidTransactionTrack" xml:space="preserve">
     <value>La transacción a la que pertenece el evento que se está enviando, no coincide con la transacción base.</value>
   </data>
+  <data name="MistakeInRecordingRuleConfig" xml:space="preserve">
+    <value>There is a mistake in the definition of the recording rule for the RecordingActType with id = {0}.</value>
+  </data>
   <data name="NextStatusCantBeEndPoint" xml:space="preserve">
     <value>El último track {0} del trámite tiene marcado como siguiente paso un estado final o end point. Es probable que el trámite tenga algún dato incorrecto en la historia de pasos.</value>
   </data>

@@ -50,14 +50,14 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<Party> GetList(ObjectTypeInfo partyType, string keywords) {
-      DataTable table = PropertyData.GetParties(partyType, keywords);
+      DataTable table = ResourceData.GetParties(partyType, keywords);
 
       return BaseObject.ParseList<Party>(table).ToFixedList();
     }
 
     static public FixedList<Party> GetList(PartyFilterType partyFilterType, ObjectTypeInfo partyType,
                                            RecordingAct recordingAct, string keywords) {
-      DataTable table = PropertyData.GetParties(partyFilterType, partyType, recordingAct, keywords);
+      DataTable table = ResourceData.GetParties(partyFilterType, partyType, recordingAct, keywords);
 
       return BaseObject.ParseList<Party>(table).ToFixedList();
     }
@@ -134,7 +134,7 @@ namespace Empiria.Land.Registration {
     }
 
     public RecordingActParty GetLastRecordingActParty(DateTime searchStartDate) {
-      return PropertyData.TryGetLastRecordingActParty(this, searchStartDate);
+      return ResourceData.TryGetLastRecordingActParty(this, searchStartDate);
     }
 
     #endregion Public methods

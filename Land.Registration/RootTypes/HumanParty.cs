@@ -87,7 +87,7 @@ namespace Empiria.Land.Registration {
 
     protected override void OnSave() {
       base.OnSave();
-      PropertyData.WriteHumanParty(this);
+      ResourceData.WriteHumanParty(this);
     }
 
     #endregion Public methods

@@ -41,7 +41,7 @@ namespace Empiria.Land.WebApi {
       try {
         base.RequireResource(propertyUID, "propertyUID");
 
-        var property = Property.TryParseWithUID(propertyUID);
+        var property = RealEstate.TryParseWithUID(propertyUID);
 
         if (property != null) {
           return new SingleObjectModel(this.Request, this.GetPropertyAsTextModel(property),
@@ -60,7 +60,7 @@ namespace Empiria.Land.WebApi {
       try {
         base.RequireResource(propertyUID, "propertyUID");
 
-        var property = Property.TryParseWithUID(propertyUID);
+        var property = RealEstate.TryParseWithUID(propertyUID);
 
         if (property == null) {
           throw this.PropertyNotFound(propertyUID);
@@ -115,7 +115,7 @@ namespace Empiria.Land.WebApi {
 
     #region Private methods
 
-    private object GetPropertyAsTextModel(Property o) {
+    private object GetPropertyAsTextModel(RealEstate o) {
       return new {
         uid = o.UID,
         asHtml = "El folio electrónico del predio es <strong>" + o.UID  + "</strong>.<br/><br/>Este es el texto que debería " +

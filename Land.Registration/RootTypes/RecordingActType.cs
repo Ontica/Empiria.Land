@@ -122,7 +122,7 @@ namespace Empiria.Land.Registration {
     }
 
     public RecordingRule RecordingRule {
-      get { return RecordingRule.Parse(base.ExtensionData); }
+      get { return RecordingRule.Parse(this); }
     }
 
     public bool UseCreditFields {
@@ -170,7 +170,7 @@ namespace Empiria.Land.Registration {
     public bool AppliesToResources {
       get {
         return (this.RecordingRule.AppliesTo == RecordingRuleApplication.Association ||
-                this.RecordingRule.AppliesTo == RecordingRuleApplication.Property);
+                this.RecordingRule.AppliesTo == RecordingRuleApplication.RealEstate);
       }
     }
 

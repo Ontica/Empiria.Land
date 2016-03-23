@@ -12,7 +12,7 @@ namespace Empiria.Land.UI.Utilities {
                                 RecordingAct recordingAct) : base(document, recordingAct) {
 
     }
-  
+
     #endregion Constructors and parsers
 
     #region Public methods

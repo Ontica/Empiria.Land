@@ -116,7 +116,7 @@ namespace Empiria.Land.WebApi.Models {
       Assertion.AssertObject(this.RealPropertyUID,
         "Requiero se proporcione el folio electrónico del predio.");
 
-      Assertion.AssertObject(Property.TryParseWithUID(this.RealPropertyUID),
+      Assertion.AssertObject(RealEstate.TryParseWithUID(this.RealPropertyUID),
         "No tengo registrado ningún predio con folio real '{0}'.", this.RealPropertyUID);
 
       if (!this.IsPartition) {

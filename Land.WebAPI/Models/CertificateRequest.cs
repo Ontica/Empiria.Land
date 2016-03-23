@@ -67,7 +67,7 @@ namespace Empiria.Land.WebApi.Models {
         "No reconozco el tipo de certificado: '{0}'", this.CertificateType.ToString());
       Assertion.AssertObject(this.RealPropertyUID,
         "No se ha proporcionado el folio electrónico del predio.");
-      Assertion.AssertObject(Property.TryParseWithUID(this.RealPropertyUID),
+      Assertion.AssertObject(RealEstate.TryParseWithUID(this.RealPropertyUID),
         "No tengo registrado ningún predio con folio real '{0}'.", this.RealPropertyUID);
     }
 

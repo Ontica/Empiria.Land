@@ -60,7 +60,7 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    [DataField("ResourceId", Default = "Empiria.Land.Registration.Property.Empty")]
+    [DataField("ResourceId", Default = "Empiria.Land.Registration.RealEstate.Empty")]
     public Resource Resource {
       get;
       private set;

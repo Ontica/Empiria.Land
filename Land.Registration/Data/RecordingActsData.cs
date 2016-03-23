@@ -23,7 +23,7 @@ namespace Empiria.Land.Registration.Data {
 
     #region Public methods
 
-    static public FixedList<RecordingAct> GetPropertyRecordingActList(Resource resource) {
+    static public FixedList<RecordingAct> GetResourceRecordingActList(Resource resource) {
       if (resource.IsEmptyInstance) {
         return new FixedList<RecordingAct>();
       }
@@ -33,7 +33,7 @@ namespace Empiria.Land.Registration.Data {
                                               (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
     }
 
-    static public FixedList<RecordingAct> GetPropertyRecordingActListUntil(Resource resource, RecordingAct breakAct,
+    static public FixedList<RecordingAct> GetResourceRecordingActListUntil(Resource resource, RecordingAct breakAct,
                                                                            bool includeBreakAct) {
       var operation = DataOperation.Parse("qryLRSPropertyRecordingActs", resource.Id);
       DataTable table = DataReader.GetDataTable(operation);
@@ -136,12 +136,12 @@ namespace Empiria.Land.Registration.Data {
                                                   (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
-    static internal FixedList<Property> GetRecordingActPropertiesList(RecordingAct recordingAct) {
+    static internal FixedList<RealEstate> GetRecordingActPropertiesList(RecordingAct recordingAct) {
       var operation = DataOperation.Parse("qryLRSRecordingActProperties", recordingAct.Id);
 
 
-      return DataReader.GetList<Property>(operation,
-                                         (x) => BaseObject.ParseList<Property>(x)).ToFixedList();
+      return DataReader.GetList<RealEstate>(operation,
+                                         (x) => BaseObject.ParseList<RealEstate>(x)).ToFixedList();
     }
 
     static internal FixedList<RecordingActParty> GetSecondaryPartiesList(RecordingAct recordingAct) {

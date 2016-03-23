@@ -41,16 +41,16 @@ namespace Empiria.Land.Registration {
 
     private bool CreateNewResource {
       get {
-        return ((Task.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Property ||
+        return ((Task.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.RealEstate ||
                  Task.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Association) &&
-                Task.PropertyRecordingType == PropertyRecordingType.createProperty &&
-                Task.PrecedentProperty.IsEmptyInstance);
+                 Task.RecordingTaskType == RecordingTaskType.createProperty &&
+                 Task.PrecedentProperty.IsEmptyInstance);
       }
     }
 
     private bool NeedCreateResourceOnNewPhysicalRecording {
       get {
-        return ((Task.PropertyRecordingType != PropertyRecordingType.createProperty) &&
+        return ((Task.RecordingTaskType != RecordingTaskType.createProperty) &&
                 !Task.PrecedentRecordingBook.IsEmptyInstance &&
                 Task.PrecedentRecording.IsEmptyInstance &&
                 Task.QuickAddRecordingNumber != -1);
@@ -59,7 +59,7 @@ namespace Empiria.Land.Registration {
 
     private bool NeedCreateAdditionalResourceOnPhysicalRecording {
       get {
-        return ((Task.PropertyRecordingType != PropertyRecordingType.createProperty) &&
+        return ((Task.RecordingTaskType != RecordingTaskType.createProperty) &&
                 !Task.PrecedentRecordingBook.IsEmptyInstance &&
                 !Task.PrecedentRecording.IsEmptyInstance &&
                 Task.PrecedentProperty.IsNew);
@@ -116,9 +116,9 @@ namespace Empiria.Land.Registration {
       } else if (this.NeedCreateAdditionalResourceOnPhysicalRecording) {
         this.CreateAdditionalResourceOnPhysicalRecording();
       } else if (this.CreateNewResource) {
-        Task.PrecedentProperty = new Property(Task.CadastralKey);
+        Task.PrecedentProperty = new RealEstate(Task.CadastralKey);
       } else if (this.AppliesOverNewPartition) {
-        Task.PrecedentProperty = ((Property)Task.PrecedentProperty).Subdivide(Task.PartitionInfo);
+        Task.PrecedentProperty = ((RealEstate)Task.PrecedentProperty).Subdivide(Task.PartitionInfo);
       }
       Assertion.Assert(this.Task.TargetActInfo.IsEmptyInstance,
                        "The target recording act should be the empty instance.");
@@ -171,7 +171,7 @@ namespace Empiria.Land.Registration {
 
       switch (this.Task.RecordingActType.AppliesTo) {
         case RecordingRuleApplication.Association:
-        case RecordingRuleApplication.Property:
+        case RecordingRuleApplication.RealEstate:
           Resource resource = this.GetResource();
           informationAct = new InformationAct(this.Task.RecordingActType,
                                               this.Task.Document, resource);
@@ -204,7 +204,7 @@ namespace Empiria.Land.Registration {
     }
 
     private LimitationAct CreateLimitationAct() {
-      Property property = this.GetProperty();
+      RealEstate property = this.GetProperty();
 
       var limitationAct = new LimitationAct(this.Task.RecordingActType,
                                             this.Task.Document, property);
@@ -212,7 +212,6 @@ namespace Empiria.Land.Registration {
 
       return limitationAct;
     }
-    
 
     //private RecordingAct CreateDocumentAct() {
     //  var documentAct = new DocumentAct(this.Task.RecordingActType,
@@ -226,7 +225,7 @@ namespace Empiria.Land.Registration {
       switch (this.Task.RecordingActType.RecordingRule.AppliesTo) {
         case RecordingRuleApplication.Association:
           return this.GetAssociation();
-        case RecordingRuleApplication.Property:
+        case RecordingRuleApplication.RealEstate:
           return this.GetProperty();
         default:
           throw Assertion.AssertNoReachThisCode();
@@ -243,19 +242,19 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    private Property GetProperty() {
+    private RealEstate GetProperty() {
       if (this.CreateNewResource) {
-        return new Property(Task.CadastralKey);
+        return new RealEstate(Task.CadastralKey);
       }
 
-      Property property = null;
+      RealEstate property = null;
 
       if (this.NeedCreateResourceOnNewPhysicalRecording) {
         property = this.CreatePropertyOnPhysicalRecording();
       } else if (this.NeedCreateAdditionalResourceOnPhysicalRecording) {
         property = this.CreateAdditionalResourceOnPhysicalRecording();
       } else {
-        property = (Property) this.Task.PrecedentProperty;
+        property = (RealEstate) this.Task.PrecedentProperty;
       }
 
       if (this.AppliesOverNewPartition) {
@@ -283,11 +282,11 @@ namespace Empiria.Land.Registration {
       return association;
     }
 
-    private Property CreatePropertyOnPhysicalRecording() {
+    private RealEstate CreatePropertyOnPhysicalRecording() {
       Assertion.Assert(this.NeedCreateResourceOnNewPhysicalRecording,
                        "Wrong RecordingTask values to execute this method.");
 
-      Property property = new Property(Task.CadastralKey);
+      RealEstate property = new RealEstate(Task.CadastralKey);
 
       var document = new RecordingDocument(RecordingDocumentType.Empty);
       Recording physicalRecording =
@@ -302,12 +301,12 @@ namespace Empiria.Land.Registration {
       return property;
     }
 
-    private Property CreateAdditionalResourceOnPhysicalRecording() {
+    private RealEstate CreateAdditionalResourceOnPhysicalRecording() {
       Assertion.Assert(this.NeedCreateAdditionalResourceOnPhysicalRecording,
                        "Wrong RecordingTask values to execute this method.");
 
 
-      var property = new Property(Task.CadastralKey);
+      var property = new RealEstate(Task.CadastralKey);
       var document = Task.PrecedentRecording.Document;
       var recordingAct = document.AppendRecordingAct(RecordingActType.Empty, property,
                                                      physicalRecording: Task.PrecedentRecording);

@@ -42,9 +42,9 @@ namespace Empiria.Land.Registration {
     /// additional role entry with the 'Extended' role value.</summary>
     Merged = 'M',
 
-    /// <summary>The recording act merges one or more resources into this 
-    /// already created resource. This resource is extended but the merged ones 
-    /// are not longer available. The recording act must have one or more role 
+    /// <summary>The recording act merges one or more resources into this
+    /// already created resource. This resource is extended but the merged ones
+    /// are not longer available. The recording act must have one or more role
     /// additional entries with 'Merged' value.</summary>
     Extended = 'T',
 

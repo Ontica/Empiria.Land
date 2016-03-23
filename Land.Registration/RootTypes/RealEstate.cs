@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : Recording                                      Pattern  : Empiria Object Type                 *
+*  Type      : RealEstate                                     Pattern  : Empiria Object Type                 *
 *  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Represents a real estate property.                                                            *
+*  Summary   : Represents a real estate or land property.                                                    *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -17,35 +17,35 @@ using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Represents a real estate property.</summary>
-  public class Property : Resource {
+  /// <summary>Represents a real estate or land property.</summary>
+  public class RealEstate : Resource {
 
     #region Constructors and parsers
 
-    private Property() {
+    private RealEstate() {
       // Required by Empiria Framework.
     }
 
-    internal Property(string cadastralKey) {
+    internal RealEstate(string cadastralKey) {
       this.CadastralKey = cadastralKey;
     }
 
-    static public new Property Parse(int id) {
-      return BaseObject.ParseId<Property>(id);
+    static public new RealEstate Parse(int id) {
+      return BaseObject.ParseId<RealEstate>(id);
     }
 
-    static public new Property TryParseWithUID(string propertyUID) {
-      DataRow row = PropertyData.GetPropertyWithUID(propertyUID);
+    static public new RealEstate TryParseWithUID(string propertyUID) {
+      DataRow row = ResourceData.GetResourceWithUID(propertyUID);
 
       if (row != null) {
-        return BaseObject.ParseDataRow<Property>(row);
+        return BaseObject.ParseDataRow<RealEstate>(row);
       } else {
         return null;
       }
     }
 
-    static public Property Empty {
-      get { return BaseObject.ParseEmpty<Property>(); }
+    static public RealEstate Empty {
+      get { return BaseObject.ParseEmpty<RealEstate>(); }
     }
 
     #endregion Constructors and parsers
@@ -88,11 +88,11 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("PartitionOfId")]
-    private LazyInstance<Property> _isPartitionOf = LazyInstance<Property>.Empty;
-    public Property IsPartitionOf {
+    private LazyInstance<RealEstate> _isPartitionOf = LazyInstance<RealEstate>.Empty;
+    public RealEstate IsPartitionOf {
       get { return _isPartitionOf.Value; }
       private set {
-        _isPartitionOf = LazyInstance<Property>.Parse(value);
+        _isPartitionOf = LazyInstance<RealEstate>.Parse(value);
       }
     }
 
@@ -103,11 +103,11 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("MergedIntoId")]
-    private LazyInstance<Property> _mergedInto = LazyInstance<Property>.Empty;
-    public Property MergedInto {
+    private LazyInstance<RealEstate> _mergedInto = LazyInstance<RealEstate>.Empty;
+    public RealEstate MergedInto {
       get { return _mergedInto.Value; }
       private set {
-        _mergedInto = LazyInstance<Property>.Parse(value);
+        _mergedInto = LazyInstance<RealEstate>.Parse(value);
       }
     }
 
@@ -142,8 +142,8 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public Property[] GetPartitions() {
-      return PropertyData.GetPropertyPartitions(this);
+    public RealEstate[] GetPartitions() {
+      return ResourceData.GetRealEstatePartitions(this);
     }
 
     /// <summary>Returns the temporary domain act if it exists, or RecordingAct.Empty otherwise.</summary>
@@ -189,10 +189,10 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnSave() {
-      PropertyData.WriteProperty(this);
+      ResourceData.WriteRealEstate(this);
     }
 
-    internal Property Subdivide(PropertyPartition partitionInfo) {
+    internal RealEstate Subdivide(RealEstatePartition partitionInfo) {
       Assertion.Assert(!this.IsNew, "New properties can't be subdivided.");
 
       switch (partitionInfo.PartitionType) {
@@ -219,7 +219,7 @@ namespace Empiria.Land.Registration {
 
     #region Private methods
 
-    private Property CreatePartition(PropertyPartition partitionInfo) {
+    private RealEstate CreatePartition(RealEstatePartition partitionInfo) {
       //Property[] currentPartitions = this.GetPartitions();
       //Assertion.Assert(currentPartitions.Length < lotNumber,
       //                 "Current property partitions are greater or equal than the requested fraction number.");
@@ -228,7 +228,7 @@ namespace Empiria.Land.Registration {
 
       string prefix = GetPartitionSubtypeName(partitionInfo);
 
-      var lot = new Property(partitionInfo.CadastralKey);
+      var lot = new RealEstate(partitionInfo.CadastralKey);
       lot.IsPartitionOf = this;
       if (partitionInfo.PartitionNo != 0) {
         lot.PartitionNo = prefix + " " + partitionInfo.PartitionNo.ToString("00");
@@ -243,7 +243,7 @@ namespace Empiria.Land.Registration {
       return lot;
     }
 
-    private string GetPartitionSubtypeName(PropertyPartition partitionInfo) {
+    private string GetPartitionSubtypeName(RealEstatePartition partitionInfo) {
       if (partitionInfo.PartitionType != PropertyPartitionType.Full) {
         return String.Empty;
       }
@@ -259,13 +259,13 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    private Property[] CreateAllPartitions(PropertyPartition partitionInfo) {
-      Property[] currentPartitions = this.GetPartitions();
-      Assertion.Assert(currentPartitions.Length == 0, "Property already has partitions or lots.");
+    private RealEstate[] CreateAllPartitions(RealEstatePartition partitionInfo) {
+      RealEstate[] currentPartitions = this.GetPartitions();
+      Assertion.Assert(currentPartitions.Length == 0, "Real estate already has partitions or lots.");
 
-      Property[] partitions = new Property[partitionInfo.TotalPartitions];
+      RealEstate[] partitions = new RealEstate[partitionInfo.TotalPartitions];
       for (int i = 0; i < partitionInfo.TotalPartitions; i++) {
-        Property lot = new Property(partitionInfo.CadastralKey);
+        RealEstate lot = new RealEstate(partitionInfo.CadastralKey);
         lot.IsPartitionOf = this;
         lot.PartitionNo = (i + 1).ToString("00");
         lot.Save();
@@ -276,6 +276,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Private methods
 
-  } // class Property
+  } // class RealEstate
 
 } // namespace Empiria.Land.Registration

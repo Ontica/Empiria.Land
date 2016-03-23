@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
 *  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
-*  Type      : PropertyData                                 Pattern  : Data Services                         *
+*  Type      : ResourceData                                 Pattern  : Data Services                         *
 *  Version   : 2.0                                          License  : Please read license.txt file          *
 *                                                                                                            *
-*  Summary   : Provides database read and write methods for recording books.                                 *
+*  Summary   : Provides db read and write methods for recordable resources: real estate and associations.    *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -16,28 +16,29 @@ using Empiria.Ontology;
 
 namespace Empiria.Land.Registration.Data {
 
-  /// <summary>Provides database read and write methods for recording books.</summary>
-  static public class PropertyData {
+  /// <summary>Provides db read and write methods for recordable
+  /// resources: real estate and associations.</summary>
+  static public class ResourceData {
 
     #region Internal methods
 
-    internal static Property[] GetPropertyPartitions(Property property) {
+    internal static RealEstate[] GetRealEstatePartitions(RealEstate property) {
       if (property.IsNew || property.IsEmptyInstance) {
-        return new Property[0];
+        return new RealEstate[0];
       }
       DataOperation operation = DataOperation.Parse("qryLRSPropertyPartitions", property.Id);
 
-      return DataReader.GetList<Property>(operation,
-                                          (x) => BaseObject.ParseList<Property>(x)).ToArray();
+      return DataReader.GetList<RealEstate>(operation,
+                                          (x) => BaseObject.ParseList<RealEstate>(x)).ToArray();
     }
 
-    static internal DataRow GetPropertyWithUID(string uniqueID) {
+    static internal DataRow GetResourceWithUID(string uniqueID) {
       DataOperation operation = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
 
       return DataReader.GetDataRow(operation);
     }
 
-    static internal bool ExistsPropertyUID(string uniqueID) {
+    static internal bool ExistsResourceUID(string uniqueID) {
       DataOperation operation = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
 
       return (DataReader.Count(operation) != 0);
@@ -168,7 +169,7 @@ namespace Empiria.Land.Registration.Data {
       return DataWriter.Execute(operation);
     }
 
-    static internal int WriteProperty(Property o) {
+    static internal int WriteRealEstate(RealEstate o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
                                           o.CadastralKey, o.Name, o.PropertyKind.Value, o.Notes,
                                           o.AntecedentNotes, o.AsText, o.Location.ToSearchVector(),
@@ -181,6 +182,6 @@ namespace Empiria.Land.Registration.Data {
 
     #endregion Internal methods
 
-  } // class PropertyData
+  } // class ResourceData
 
 } // namespace Empiria.Land.Registration.Data

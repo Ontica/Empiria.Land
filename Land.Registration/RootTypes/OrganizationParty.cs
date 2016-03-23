@@ -40,7 +40,7 @@ namespace Empiria.Land.Registration {
 
     protected override void OnSave() {
       base.OnSave();
-      PropertyData.WriteOrganizationParty(this);
+      ResourceData.WriteOrganizationParty(this);
     }
 
     #endregion Public methods

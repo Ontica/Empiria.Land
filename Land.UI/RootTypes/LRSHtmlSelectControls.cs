@@ -118,12 +118,12 @@ namespace Empiria.Land.UI {
     }
 
     static public void LoadPropertyTypesCombo(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
-                                              PropertyKind defaultItem) {
-      FixedList<PropertyKind> list = PropertyKind.GetList();
+                                              RealEstateKind defaultItem) {
+      FixedList<RealEstateKind> list = RealEstateKind.GetList();
 
       string header = comboControlUseMode == ComboControlUseMode.ObjectCreation
                                 ? "( Seleccionar tipo de predio )" : "( Todos los tipos )";
-      HtmlSelectContent.LoadCombo(comboControl, list, "Value", "Value", header, String.Empty, PropertyKind.Unknown.Value);
+      HtmlSelectContent.LoadCombo(comboControl, list, "Value", "Value", header, String.Empty, RealEstateKind.Unknown.Value);
 
       if (defaultItem != null && !defaultItem.IsEmptyValue) {
         comboControl.Value = defaultItem.Value;

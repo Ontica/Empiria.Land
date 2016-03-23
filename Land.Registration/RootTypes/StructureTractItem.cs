@@ -23,11 +23,11 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    internal StructureTractItem(RecordingAct recordingAct, Property realEstate,
+    internal StructureTractItem(RecordingAct recordingAct, RealEstate realEstate,
                                 ResourceRole realEstateRole,
-                                Property relatedRealState = null,
+                                RealEstate relatedRealState = null,
                                 string partitionName = "",
-                                decimal recordingActPercentage = decimal.One) : 
+                                decimal recordingActPercentage = decimal.One) :
                                   base(recordingAct, realEstate, realEstateRole, recordingActPercentage) {
       Assertion.Assert(realEstateRole != ResourceRole.Edited &&
                        realEstateRole != ResourceRole.Informative,
@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(partitionName, "realEstatePartitionName");
 
       if (relatedRealState == null) {
-        relatedRealState = Property.Empty;
+        relatedRealState = RealEstate.Empty;
       }
       this.RelatedRealEstate = relatedRealState;
       this.PartitionName = partitionName;
@@ -48,7 +48,7 @@ namespace Empiria.Land.Registration {
     #region Public properties
 
     [DataField("RelatedResourceId")]
-    public Property RelatedRealEstate {
+    public RealEstate RelatedRealEstate {
       get;
       private set;
     }

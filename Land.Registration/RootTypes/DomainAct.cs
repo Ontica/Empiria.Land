@@ -35,9 +35,10 @@ namespace Empiria.Land.Registration {
     internal DomainAct(RecordingActType recordingActType, RecordingDocument document,
                        Resource resource, Recording physicalRecording, decimal percentage = 1.0m)
                        : base(recordingActType, document, physicalRecording) {
-      Assertion.Assert(recordingActType.AppliesToResources,
-                    "{0} doesn't apply to resources (real estate or associations).",
-                    recordingActType.DisplayName);
+      Assertion.Assert(recordingActType.AppliesToResources ||
+                       recordingActType.Equals(RecordingActType.Empty),
+                       "{0} doesn't apply to resources (real estate or associations).",
+                       recordingActType.DisplayName);
 
       Assertion.AssertObject(resource, "resource");
 

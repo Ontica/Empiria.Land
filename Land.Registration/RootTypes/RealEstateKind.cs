@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : PropertyKind                                   Pattern  : Value object                        *
+*  Type      : RealEstateKind                                 Pattern  : Value object                        *
 *  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : String classificator for properties.                                                          *
+*  Summary   : String classificator for real estate properties.                                              *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -15,58 +15,58 @@ using Empiria.Ontology;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>String classificator for properties.</summary>
-  public class PropertyKind : ValueObject<string> {
+  /// <summary>String classificator for real estate properties.</summary>
+  public class RealEstateKind : ValueObject<string> {
 
     #region Fields
 
-    private const string thisTypeName = "ValueType.ListItem.PropertyKind";
+    private const string thisTypeName = "ValueType.ListItem.RealEstateKind";
 
-    static private FixedList<PropertyKind> valuesList =
-           PropertyKind.ValueTypeInfo.GetValuesList<PropertyKind, string>((x) => new PropertyKind(x));
+    static private FixedList<RealEstateKind> valuesList =
+           RealEstateKind.ValueTypeInfo.GetValuesList<RealEstateKind, string>((x) => new RealEstateKind(x));
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    private PropertyKind(string value) : base(value) {
+    private RealEstateKind(string value) : base(value) {
 
     }
 
-    static public PropertyKind Parse(string value) {
+    static public RealEstateKind Parse(string value) {
       Assertion.AssertObject(value, "value");
 
-      if (value == PropertyKind.Empty.Value) {
-        return PropertyKind.Empty;
+      if (value == RealEstateKind.Empty.Value) {
+        return RealEstateKind.Empty;
       }
-      if (value == PropertyKind.Unknown.Value) {
-        return PropertyKind.Unknown;
+      if (value == RealEstateKind.Unknown.Value) {
+        return RealEstateKind.Unknown;
       }
       return valuesList.First((x) => x.Value == value);
     }
 
     // User-defined conversion from string to PropertyKind
-    public static implicit operator PropertyKind(string value) {
-      return PropertyKind.Parse(value);
+    public static implicit operator RealEstateKind(string value) {
+      return RealEstateKind.Parse(value);
     }
 
     // User-defined conversion from PropertyKind to string
-    public static implicit operator string(PropertyKind propertyKind) {
+    public static implicit operator string(RealEstateKind propertyKind) {
       return propertyKind.Value;
     }
 
-    static public PropertyKind Empty {
+    static public RealEstateKind Empty {
       get {
-        PropertyKind empty = new PropertyKind("No determinado");
+        RealEstateKind empty = new RealEstateKind("No determinado");
         empty.MarkAsEmpty();
 
         return empty;
       }
     }
 
-    static public PropertyKind Unknown {
+    static public RealEstateKind Unknown {
       get {
-        PropertyKind unknown = new PropertyKind("No proporcionado");
+        RealEstateKind unknown = new RealEstateKind("No proporcionado");
         unknown.MarkAsUnknown();
 
         return unknown;
@@ -79,12 +79,12 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    static public FixedList<PropertyKind> GetList() {
+    static public FixedList<RealEstateKind> GetList() {
       return valuesList;
     }
 
     #endregion Constructors and parsers
 
-  } // class PropertyKind
+  } // class RealEstateKind
 
-} // namespace Empiria.Geography
+} // namespace Empiria.Land.Registration

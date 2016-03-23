@@ -64,7 +64,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<RecordingActParty> GetList(Recording recording, Party party) {
-      return PropertyData.GetRecordingPartiesList(recording, party);
+      return ResourceData.GetRecordingPartiesList(recording, party);
     }
 
     static public RecordingActParty GetDomainParty(RecordingAct recordingAct, Party party) {

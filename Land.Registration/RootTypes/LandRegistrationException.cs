@@ -37,6 +37,7 @@ namespace Empiria.Land.Registration {
       InvalidRecordingNumber,
       InvalidRecordingPresentationTime,
       InvalidTransactionTrack,
+      MistakeInRecordingRuleConfig,
       NextStatusCantBeEndPoint,
       NotSavedRecording,
       NotSavedRecordingAct,

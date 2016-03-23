@@ -2,43 +2,42 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : PropertyRule                                   Pattern  : Standard  Class                     *
+*  Type      : RealEstateRule                                 Pattern  : Standard  Class                     *
 *  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Describes a property recording condition that serves as a rule for recording registration.    *
+*  Summary   : Describes a real estate recording condition that serves as a recording registration rule.     *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
 
 using Empiria.Json;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Describes a property recording condition that serves as a rule for
-  /// recording registration.</summary>
-  public class PropertyRule {
+  /// <summary>Describes a real estate recording condition that serves as a
+  /// recording registration rule.</summary>
+  public class RealEstateRule {
 
     #region Constructors and parsers
 
-    internal PropertyRule() {
+    internal RealEstateRule() {
       this.Expire = false;
       this.IsInternalDivision = false;
       this.Name = String.Empty;
-      this.PropertyCount = Land.Registration.PropertyCount.Undefined;
-      this.RecordableObjectStatus = PropertyRecordingStatus.Undefined;
+      this.ResourceCount = Land.Registration.ResourceCount.Undefined;
+      this.RecordableObjectStatus = ResourceRecordingStatus.Undefined;
       this.UseNumbering = false;
     }
 
-    static internal PropertyRule Parse(JsonObject json) {
-      PropertyRule rule = new PropertyRule();
+    static internal RealEstateRule Parse(JsonObject json) {
+      RealEstateRule rule = new RealEstateRule();
 
       rule.Expire = json.Get<bool>("Expire", false);
       rule.IsInternalDivision = json.Get<bool>("IsInternalDivision", false);
       rule.Name = json.Get<string>("Name", String.Empty);
-      rule.PropertyCount = RecordingRule.ParsePropertyCount(json.Get<string>("PropertyCount", String.Empty));
-      rule.RecordableObjectStatus = json.Get<PropertyRecordingStatus>("RecordableObjectStatus",
-                                                                      PropertyRecordingStatus.Undefined);
+      rule.ResourceCount = RecordingRule.ParseResourceCount(json.Get<string>("ResourceCount", String.Empty));
+      rule.RecordableObjectStatus = json.Get<ResourceRecordingStatus>("RecordableObjectStatus",
+                                                                      ResourceRecordingStatus.Undefined);
       rule.UseNumbering = json.Get<bool>("UseNumbering", false);
 
       return rule;
@@ -63,12 +62,12 @@ namespace Empiria.Land.Registration {
       internal set;
     }
 
-    public PropertyCount PropertyCount {
+    public ResourceCount ResourceCount {
       get;
       internal set;
     }
 
-    public PropertyRecordingStatus RecordableObjectStatus {
+    public ResourceRecordingStatus RecordableObjectStatus {
       get;
       internal set;
     }
@@ -80,6 +79,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Properties
 
-  }  // class PropertyRule
+  }  // class RealEstateRule
 
 }  // namespace Empiria.Land.Registration

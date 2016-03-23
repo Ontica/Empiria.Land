@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : PropertyPart                                   Pattern  : Standard Class                      *
+*  Type      : RealEstatePartition                            Pattern  : Standard Class                      *
 *  Version   : 2.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Contains data about a property partition or subdivision.                                      *
@@ -34,17 +34,17 @@ namespace Empiria.Land.Registration {
     LastUnknown = 'T',
   }
 
-  /// <summary>Contains data about a property partition or subdivision.</summary>
-  public class PropertyPartition {
+  /// <summary>Contains data about a real estate partition or subdivision.</summary>
+  public class RealEstatePartition {
 
     #region Constructors and parsers
 
-    public PropertyPartition(string cadastralKey,
-                             PropertyPartitionType partitionType = PropertyPartitionType.None,
-                             PropertyPartitionSubtype partitionSubtype = PropertyPartitionSubtype.None,
-                             int partitionNo = 0, int totalPartitions = 0,
-                             decimal partitionSize = 0m, int partitionSizeUnitId = -1,
-                             decimal availableSize = 0m, int availableSizeUnitId = -1) {
+    public RealEstatePartition(string cadastralKey,
+                               PropertyPartitionType partitionType = PropertyPartitionType.None,
+                               PropertyPartitionSubtype partitionSubtype = PropertyPartitionSubtype.None,
+                               int partitionNo = 0, int totalPartitions = 0,
+                               decimal partitionSize = 0m, int partitionSizeUnitId = -1,
+                               decimal availableSize = 0m, int availableSizeUnitId = -1) {
       this.CadastralKey = cadastralKey;
       this.PartitionType = partitionType;
       this.PartitionSubtype = partitionSubtype;
@@ -117,6 +117,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Public methods
 
-  }  // class PropertyPartition
+  }  // class RealEstatePartition
 
 }  // namespace Empiria.Land.Registration

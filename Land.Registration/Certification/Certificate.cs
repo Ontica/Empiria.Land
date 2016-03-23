@@ -66,7 +66,7 @@ namespace Empiria.Land.Certification {
     }
 
     [DataField("PropertyId")]
-    public Property Property {
+    public RealEstate Property {
       get;
       private set;
     }

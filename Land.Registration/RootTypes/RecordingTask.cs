@@ -15,7 +15,7 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {
 
-  public enum PropertyRecordingType {
+  public enum RecordingTaskType {
     actAppliesToOtherRecordingAct,
     actNotApplyToProperty,
     actAppliesToDocument,
@@ -31,27 +31,27 @@ namespace Empiria.Land.Registration {
 
     public RecordingTask(int transactionId = -1, int documentId = -1,
                          int recordingActTypeCategoryId = -1, int recordingActTypeId = -1,
-                         PropertyRecordingType propertyType = PropertyRecordingType.actNotApplyToProperty,
+                         RecordingTaskType recordingTaskType = RecordingTaskType.actNotApplyToProperty,
                          int precedentRecordingBookId = -1,
                          int precedentRecordingId = -1, int precedentResourceId = -1,
                          int quickAddRecordingNumber = -1,
                          string resourceName = "", string cadastralKey = "",
                          string quickAddRecordingSubnumber = "",
                          string quickAddRecordingSuffixTag = "",
-                         PropertyPartition partition = null, RecordingActInfo targetActInfo = null) {
+                         RealEstatePartition partition = null, RecordingActInfo targetActInfo = null) {
       this.Transaction = LRSTransaction.Parse(transactionId);
       this.Document = RecordingDocument.Parse(documentId);
       //this.RecordingActTypeCategory = RecordingActTypeCategory.Parse(recordingActTypeCategoryId);
       this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
-      this.PropertyRecordingType = propertyType;
+      this.RecordingTaskType = recordingTaskType;
       this.ResourceName = EmpiriaString.TrimAll(resourceName);
       this.CadastralKey = cadastralKey;
       this.PrecedentRecordingBook = RecordingBook.Parse(precedentRecordingBookId);
       this.PrecedentRecording = Recording.Parse(precedentRecordingId);
       if (precedentResourceId == 0) {
-        this.PrecedentProperty = new Property(cadastralKey);
+        this.PrecedentProperty = new RealEstate(cadastralKey);
       } else if (precedentResourceId == -1) {
-        this.PrecedentProperty = Property.Empty;
+        this.PrecedentProperty = RealEstate.Empty;
       } else {
         this.PrecedentProperty = Resource.Parse(precedentResourceId);
       }
@@ -63,7 +63,7 @@ namespace Empiria.Land.Registration {
       if (partition != null) {
         this.PartitionInfo = partition;
       } else {
-        this.PartitionInfo = new PropertyPartition(cadastralKey);
+        this.PartitionInfo = new RealEstatePartition(cadastralKey);
       }
       if (targetActInfo != null) {
         this.TargetActInfo = targetActInfo;
@@ -101,7 +101,7 @@ namespace Empiria.Land.Registration {
       private set;
     } = decimal.One;
 
-    public PropertyRecordingType PropertyRecordingType {
+    public RecordingTaskType RecordingTaskType {
       get;
       private set;
     }
@@ -146,7 +146,7 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    public PropertyPartition PartitionInfo {
+    public RealEstatePartition PartitionInfo {
       get;
       private set;
     }

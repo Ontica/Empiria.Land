@@ -38,7 +38,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public Resource TryParseWithUID(string propertyUID) {
-      DataRow row = PropertyData.GetPropertyWithUID(propertyUID);
+      DataRow row = ResourceData.GetResourceWithUID(propertyUID);
 
       if (row != null) {
         return BaseObject.ParseDataRow<Resource>(row);
@@ -64,8 +64,8 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("PropertyKind")]
-    private string _propertyKind = PropertyKind.Empty;
-    public PropertyKind PropertyKind {
+    private string _propertyKind = RealEstateKind.Empty;
+    public RealEstateKind PropertyKind {
       get {
         return _propertyKind;
       }
@@ -220,7 +220,7 @@ namespace Empiria.Land.Registration {
 
       while (true) {
         string temp = CreatePropertyKey();
-        if (!PropertyData.ExistsPropertyUID(temp)) {
+        if (!ResourceData.ExistsResourceUID(temp)) {
           this.UID = temp;
           break;
         }
@@ -257,11 +257,11 @@ namespace Empiria.Land.Registration {
     }
 
     public FixedList<RecordingAct> GetRecordingActsTract() {
-      return RecordingActsData.GetPropertyRecordingActList(this);
+      return RecordingActsData.GetResourceRecordingActList(this);
     }
 
     public FixedList<RecordingAct> GetRecordingActsTractUntil(RecordingAct breakAct, bool includeBreakAct) {
-      return RecordingActsData.GetPropertyRecordingActListUntil(this, breakAct, includeBreakAct);
+      return RecordingActsData.GetResourceRecordingActListUntil(this, breakAct, includeBreakAct);
     }
 
     ///// <summary>TODO: OOJJOO To be deprecated ???</summary>

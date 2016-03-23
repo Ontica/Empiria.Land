@@ -32,8 +32,8 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<Association>(id);
     }
 
-    static public new Resource TryParseWithUID(string propertyUID) {
-      DataRow row = PropertyData.GetPropertyWithUID(propertyUID);
+    static public new Resource TryParseWithUID(string associationUID) {
+      DataRow row = ResourceData.GetResourceWithUID(associationUID);
 
       if (row != null) {
         return BaseObject.ParseDataRow<Resource>(row);
@@ -51,7 +51,7 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnSave() {
-      PropertyData.WriteAssociation(this);
+      ResourceData.WriteAssociation(this);
     }
 
     public RecordingAct GetIncorporationAct() {
