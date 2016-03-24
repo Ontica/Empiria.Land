@@ -171,38 +171,43 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public Recording CreateQuickRecording(int recordingNumber, string subNumber, string bisSuffixTag) {
-      return new Recording(this, this.BuildRecordingNumber(recordingNumber, subNumber, bisSuffixTag));
+    public Recording CreateQuickRecording(string recordingNumber) {
+      return new Recording(this, this.FormatRecordingNumber(recordingNumber));
     }
 
-    public string BuildRecordingNumber(int recordingNumber, string subNumber, string bisSuffixTag) {
-      string temp = recordingNumber.ToString("0000");
+    public string FormatRecordingNumber(string rawRecordingNumber) {
+      rawRecordingNumber = rawRecordingNumber.Replace(" ", String.Empty);
+      rawRecordingNumber = rawRecordingNumber.Replace("-", "/");
 
-      if (!String.IsNullOrWhiteSpace(subNumber)) {
-        temp += subNumber;
-      }
-      if (!String.IsNullOrWhiteSpace(bisSuffixTag)) {
-        temp += bisSuffixTag;
+      string[] parts = rawRecordingNumber.Split('/');
+      string temp = String.Empty;
+
+      if (parts.Length == 1) {
+        temp = int.Parse(parts[0]).ToString("0000");
+      } else if (parts.Length == 2 && EmpiriaString.IsInteger(parts[1])) {
+        temp = int.Parse(parts[0]).ToString("0000") + "/";
+        temp += int.Parse(parts[1]).ToString("000");       // e.g. 0003/007
+      } else if (parts.Length == 2 && !EmpiriaString.IsInteger(parts[1])) {
+        temp = int.Parse(parts[0]).ToString("0000") + "-";
+        temp += parts[1];                                  // e.g. 0003-Bis
+      } else if (parts.Length == 3) {
+        temp = int.Parse(parts[0]).ToString("0000") + "/";
+        temp += int.Parse(parts[1]).ToString("000") + "-";
+        temp += parts[2];                                  // e.g. 0003/007-Bis
+      } else {
+        throw new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingNumber, rawRecordingNumber);
       }
       return temp;
     }
 
-    //public int GetNextRecordingNumber() {
-    //  if (this.ReuseUnusedRecordingNumbers) {
-    //    return RecordingBooksData.GetNextRecordingNumberWithReuse(this);
-    //  } else {
-    //    return RecordingBooksData.GetNextRecordingNumberWithNoReuse(this);
-    //  }
-    //}
-
-    public bool ExistsRecording(int recordingNumber, string recordingSubNumber, string bisSuffixTag) {
-      string recordingNo = this.BuildRecordingNumber(recordingNumber, recordingSubNumber, bisSuffixTag);
+    public bool ExistsRecording(string rawRecordingNumber) {
+      string recordingNo = this.FormatRecordingNumber(rawRecordingNumber);
 
       return Recordings.Contains((x) => x.Number == recordingNo);
     }
 
-    public Recording FindRecording(int recordingNumber, string recordingSubNumber, string bisSuffixTag) {
-      string recordingNo = this.BuildRecordingNumber(recordingNumber, recordingSubNumber, bisSuffixTag);
+    public Recording FindRecording(string rawRecordingNumber) {
+      string recordingNo = this.FormatRecordingNumber(rawRecordingNumber);
 
       return Recordings.Find((x) => x.Number == recordingNo);
     }

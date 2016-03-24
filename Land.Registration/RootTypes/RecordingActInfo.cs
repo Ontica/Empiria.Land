@@ -13,16 +13,15 @@ namespace Empiria.Land.Registration {
     }
 
     public RecordingActInfo(int recordingActTypeId, int physicalBookId,
-                            int recordingId = -1, int recordingNo = -1,
-                            string recordingSubNo = "", string recordingSuffixTag = "") {
+                            int recordingId = -1, string recordingNumber = "") {
       Initialize();
       this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
       this.PhysicalBook = RecordingBook.Parse(physicalBookId);
 
       if (recordingId != -1) {
         this.PhysicalRecording = Recording.Parse(recordingId);
-      } else if (recordingNo != -1) {
-        this.PhysicalRecording = this.PhysicalBook.CreateQuickRecording(recordingNo, recordingSubNo, recordingSuffixTag);
+      } else if (recordingNumber != String.Empty) {
+        this.PhysicalRecording = this.PhysicalBook.CreateQuickRecording(recordingNumber);
       } else {
         this.PhysicalRecording = Recording.Empty;
       }

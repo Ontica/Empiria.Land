@@ -30,14 +30,12 @@ namespace Empiria.Land.Registration {
     #region Constructors and parsers
 
     public RecordingTask(int transactionId = -1, int documentId = -1,
-                         int recordingActTypeCategoryId = -1, int recordingActTypeId = -1,
+                         int recordingActTypeId = -1,
                          RecordingTaskType recordingTaskType = RecordingTaskType.actNotApplyToProperty,
                          int precedentRecordingBookId = -1,
                          int precedentRecordingId = -1, int precedentResourceId = -1,
-                         int quickAddRecordingNumber = -1,
+                         string quickAddRecordingNumber = "",
                          string resourceName = "", string cadastralKey = "",
-                         string quickAddRecordingSubnumber = "",
-                         string quickAddRecordingSuffixTag = "",
                          RealEstatePartition partition = null, RecordingActInfo targetActInfo = null) {
       this.Transaction = LRSTransaction.Parse(transactionId);
       this.Document = RecordingDocument.Parse(documentId);
@@ -57,8 +55,6 @@ namespace Empiria.Land.Registration {
       }
 
       this.QuickAddRecordingNumber = quickAddRecordingNumber;
-      this.QuickAddRecordingSubNumber = quickAddRecordingSubnumber;
-      this.QuickAddRecordingSuffixTag = quickAddRecordingSuffixTag;
 
       if (partition != null) {
         this.PartitionInfo = partition;
@@ -131,17 +127,7 @@ namespace Empiria.Land.Registration {
       internal set;
     }
 
-    public int QuickAddRecordingNumber {
-      get;
-      private set;
-    }
-
-    public string QuickAddRecordingSubNumber {
-      get;
-      private set;
-    }
-
-    public string QuickAddRecordingSuffixTag {
+    public string QuickAddRecordingNumber {
       get;
       private set;
     }

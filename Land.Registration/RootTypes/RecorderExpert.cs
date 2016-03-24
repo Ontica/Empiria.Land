@@ -53,7 +53,7 @@ namespace Empiria.Land.Registration {
         return ((Task.RecordingTaskType != RecordingTaskType.createProperty) &&
                 !Task.PrecedentRecordingBook.IsEmptyInstance &&
                 Task.PrecedentRecording.IsEmptyInstance &&
-                Task.QuickAddRecordingNumber != -1);
+                Task.QuickAddRecordingNumber != String.Empty);
       }
     }
 
@@ -81,9 +81,7 @@ namespace Empiria.Land.Registration {
         throw new NotImplementedException();
       }
       if (NeedCreateResourceOnNewPhysicalRecording &&
-          Task.PrecedentRecordingBook.ExistsRecording(Task.QuickAddRecordingNumber,
-                                                      Task.QuickAddRecordingSubNumber,
-                                                      Task.QuickAddRecordingSuffixTag)) {
+          Task.PrecedentRecordingBook.ExistsRecording(Task.QuickAddRecordingNumber)) {
           sMsg = "La partida indicada ya existe en el libro seleccionado,\n" +
                   "y ya no es posible generar más de un folio de predio\n" +
                   "en una misma partida o antecedente.\n\n" +
@@ -272,9 +270,7 @@ namespace Empiria.Land.Registration {
 
       var document = new RecordingDocument(RecordingDocumentType.Empty);
       Recording physicalRecording =
-            Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
-                                                             Task.QuickAddRecordingSubNumber,
-                                                             Task.QuickAddRecordingSuffixTag);
+            Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber);
       var precedentAct = new DomainAct(RecordingActType.Parse(2750), document,
                                        association, physicalRecording);
       precedentAct.Save();
@@ -290,9 +286,7 @@ namespace Empiria.Land.Registration {
 
       var document = new RecordingDocument(RecordingDocumentType.Empty);
       Recording physicalRecording =
-            Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber,
-                                                             Task.QuickAddRecordingSubNumber,
-                                                             Task.QuickAddRecordingSuffixTag);
+            Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber);
       var precedentAct = new DomainAct(RecordingActType.Empty, document,
                                        property, physicalRecording);
 
