@@ -155,7 +155,7 @@ namespace Empiria.Land.Registration {
 
     private DomainAct CreateDomainAct() {
       /// ToDo: Fist validate if the resource is compatible with the act
-      Resource resource = this.GetResource();
+      RealEstate resource = (RealEstate) this.GetResource();
 
       var domainAct = new DomainAct(this.Task.RecordingActType,
                                     this.Task.Document, resource, this.Task.RecordingActPercentage);
@@ -174,11 +174,13 @@ namespace Empiria.Land.Registration {
           informationAct = new InformationAct(this.Task.RecordingActType,
                                               this.Task.Document, resource);
           break;
-        //case RecordingRuleApplication.Document:
-        //  RecordingDocument targetDocument = this.GetTargetDocument();
-        //  informationAct = new InformationAct(this.Task.RecordingActType,
-        //                                      this.Task.Document, targetDocument);
-        //  break;
+        case RecordingRuleApplication.NoProperty:
+          resource = new NoPropertyResource();
+          informationAct = new InformationAct(this.Task.RecordingActType,
+                                              this.Task.Document, resource);
+          //RecordingDocument targetDocument = this.GetTargetDocument();
+
+          break;
         //case RecordingRuleApplication.RecordingAct:
         //  RecordingAct targetRecordingAct = this.GetTargetRecordingAct();
         //  informationAct = new InformationAct(this.Task.RecordingActType,
@@ -271,8 +273,8 @@ namespace Empiria.Land.Registration {
       var document = new RecordingDocument(RecordingDocumentType.Empty);
       Recording physicalRecording =
             Task.PrecedentRecordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber);
-      var precedentAct = new DomainAct(RecordingActType.Parse(2750), document,
-                                       association, physicalRecording);
+      var precedentAct = new InformationAct(RecordingActType.Empty, document,
+                                            association, physicalRecording);
       precedentAct.Save();
 
       return association;

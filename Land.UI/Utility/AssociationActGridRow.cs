@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Empiria.Land.Registration;
 
@@ -25,7 +22,7 @@ namespace Empiria.Land.UI.Utilities {
 
       row = row.Replace("{{STATUS}}", this.RecordingAct.StatusName);
       row = row.Replace("{{RECORDING.ACT.URL}}", this.RecordingAct.DisplayName);
-      row = row.Replace("{{RESOURCE.URL}}", tractItem.Resource.Name);
+      row = row.Replace("{{RESOURCE.URL}}", ((Association) tractItem.Resource).Name);
 
       row = row.Replace("{{ID}}", this.RecordingAct.Id.ToString());
       row = row.Replace("{{TARGET.ID}}", this.RecordingAct.Id.ToString());

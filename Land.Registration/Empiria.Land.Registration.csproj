@@ -130,6 +130,7 @@
     <Compile Include="Data\ResourceData.cs" />
     <Compile Include="Data\RecordingBooksData.cs" />
     <Compile Include="Empiria.Land.Registration.AssemblyInfo.cs" />
+    <Compile Include="RootTypes\NoPropertyResource.cs" />
     <Compile Include="RootTypes\RecordingCertificate.cs" />
     <Compile Include="RootTypes\CadastralInfo.cs" />
     <Compile Include="RootTypes\ModificationAct.cs" />

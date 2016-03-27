@@ -120,7 +120,7 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList<Contact>(operation, (x) => BaseObject.ParseList<Contact>(x)).ToFixedList();
     }
 
-    static public string GenerateAssociationKey() {
+    static public string GenerateAssociationUID() {
       string temp = ExecutionServer.LicenseName == "Zacatecas" ? "ZS-SC-" : "TL-SC-";
 
       temp += EmpiriaMath.GetRandomCharacter(temp);
@@ -140,7 +140,27 @@ namespace Empiria.Land.Registration.Data {
       return temp;
     }
 
-    static public string GeneratePropertyKey() {
+    static internal string GenerateNoPropertyResourceUID() {
+      string temp = ExecutionServer.LicenseName == "Zacatecas" ? "ZS-DOC-" : "TL-DOC-";
+
+      temp += EmpiriaMath.GetRandomDigit(temp);
+      temp += EmpiriaMath.GetRandomCharacter(temp);
+      temp += EmpiriaMath.GetRandomDigit(temp);
+      temp += EmpiriaMath.GetRandomCharacter(temp);
+      temp += EmpiriaMath.GetRandomDigit(temp);
+      temp += EmpiriaMath.GetRandomCharacter(temp);
+      temp += EmpiriaMath.GetRandomDigit(temp);
+
+      int hashCode = 0;
+      for (int i = 0; i < temp.Length; i++) {
+        hashCode += (Convert.ToInt32(temp[i]) + Convert.ToInt32(i == 0 ? 0 : temp[i - 1])) * (i + 1);
+      }
+      temp += GetChecksumCharacterCode(hashCode);
+
+      return temp;
+    }
+
+    static public string GeneratePropertyUID() {
       string temp = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);

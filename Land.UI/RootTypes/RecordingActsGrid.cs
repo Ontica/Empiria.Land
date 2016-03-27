@@ -76,7 +76,7 @@ namespace Empiria.Land.UI {
         case RecordingRuleApplication.RecordingAct:
           throw new NotImplementedException();
 
-        case RecordingRuleApplication.Document:
+        case RecordingRuleApplication.NoProperty:
           row = new DocumentActGridRow(document, recordingAct);
           return row.GetRecordingActRow(baseTarget);
 

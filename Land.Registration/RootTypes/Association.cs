@@ -24,34 +24,36 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework
     }
 
-    internal Association(string associationName) : base(associationName) {
-
+    internal Association(string name) {
+      this.Name = name;
     }
 
     static public new Association Parse(int id) {
       return BaseObject.ParseId<Association>(id);
     }
 
-    static public new Resource TryParseWithUID(string associationUID) {
-      DataRow row = ResourceData.GetResourceWithUID(associationUID);
+    #endregion Constructors and parsers
 
-      if (row != null) {
-        return BaseObject.ParseDataRow<Resource>(row);
-      } else {
-        return null;
+    #region Public properties
+
+    [DataField("PropertyName")]
+    public string Name {
+      get;
+      private set;
+    }
+
+    internal protected override string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(base.Keywords, this.Name);
       }
     }
 
-    #endregion Constructors and parsers
+    #endregion Public properties
 
     #region Public methods
 
-    protected override string CreatePropertyKey() {
-      return TransactionData.GenerateAssociationKey();
-    }
-
-    protected override void OnSave() {
-      ResourceData.WriteAssociation(this);
+    protected override string GenerateResourceUID() {
+      return TransactionData.GenerateAssociationUID();
     }
 
     public RecordingAct GetIncorporationAct() {
@@ -68,6 +70,10 @@ namespace Empiria.Land.Registration {
       } else {
         return RecordingAct.Empty;
       }
+    }
+
+    protected override void OnSave() {
+      ResourceData.WriteAssociation(this);
     }
 
     #endregion Public methods

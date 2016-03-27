@@ -35,7 +35,7 @@ namespace Empiria.Land.Registration {
     Undefined,
     RealEstate,
     Association,
-    Document,
+    NoProperty,
     RecordingAct,
     Structure,
     Party,

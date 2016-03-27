@@ -12,8 +12,6 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
-using Empiria.DataTypes;
-using Empiria.Geography;
 using Empiria.Json;
 using Empiria.Security;
 using Empiria.Land.Registration.Data;
@@ -27,10 +25,6 @@ namespace Empiria.Land.Registration {
 
     protected Resource() {
       // Required by Empiria Framework.
-    }
-
-    protected Resource(string name) {
-      this.Name = name;
     }
 
     static public Resource Parse(int id) {
@@ -57,23 +51,6 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    [DataField("PropertyName")]
-    public string Name {
-      get;
-      private set;
-    }
-
-    [DataField("PropertyKind")]
-    private string _propertyKind = RealEstateKind.Empty;
-    public RealEstateKind PropertyKind {
-      get {
-        return _propertyKind;
-      }
-      set {
-        _propertyKind = value;
-      }
-    }
-
     [DataField("PropertyNotes")]
     public string Notes {
       get;
@@ -94,7 +71,7 @@ namespace Empiria.Land.Registration {
 
     internal protected virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.UID, this.Name, this.PropertyKind.Value);
+        return EmpiriaString.BuildKeywords(this.UID);
       }
     }
 
@@ -219,7 +196,7 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(this.UID.Length == 0, "Property has already assigned a UniqueIdentifier.");
 
       while (true) {
-        string temp = CreatePropertyKey();
+        string temp = this.GenerateResourceUID();
         if (!ResourceData.ExistsResourceUID(temp)) {
           this.UID = temp;
           break;
@@ -228,7 +205,7 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(this.UID.Length != 0, "Property UniqueIdentifier has not been generated.");
     }
 
-    abstract protected string CreatePropertyKey();
+    abstract protected string GenerateResourceUID();
 
     public bool IsFirstRecordingAct(RecordingAct recordingAct) {
       if (recordingAct.IsAnnotation) {

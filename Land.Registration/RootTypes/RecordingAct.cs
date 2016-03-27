@@ -164,8 +164,9 @@ namespace Empiria.Land.Registration {
 
     internal string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName,
-                                           this.PhysicalRecording.FullNumber);
+        return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName , this.Document.UID,
+                                           !this.PhysicalRecording.IsEmptyInstance ? 
+                                                  this.PhysicalRecording.FullNumber : String.Empty);
       }
     }
 
@@ -341,7 +342,7 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnInitialize() {
-      this.ExtensionData = new RecordingActExtData();
+      this.ExtensionData = RecordingActExtData.Empty;
       this.tractIndex = new Lazy<List<TractItem>>(() => RecordingActsData.GetRecordingActTargets(this));
     }
 

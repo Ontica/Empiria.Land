@@ -52,6 +52,23 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
+    [DataField("PropertyName")]
+    public string Name {
+      get;
+      private set;
+    }
+
+    [DataField("PropertyKind")]
+    private string _propertyKind = RealEstateKind.Empty;
+    public RealEstateKind PropertyKind {
+      get {
+        return _propertyKind;
+      }
+      set {
+        _propertyKind = value;
+      }
+    }
+
     public Address Location {
       get;
       private set;
@@ -64,8 +81,7 @@ namespace Empiria.Land.Registration {
 
     internal protected override string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(base.Keywords, this.CadastralKey,
-                                           this.PartitionNo, this.Location.Keywords);
+        return EmpiriaString.BuildKeywords(base.Keywords, this.CadastralKey, this.Name, this.PropertyKind.Value);
       }
     }
 
@@ -115,8 +131,8 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    protected override string CreatePropertyKey() {
-      return TransactionData.GeneratePropertyKey();
+    protected override string GenerateResourceUID() {
+      return TransactionData.GeneratePropertyUID();
     }
 
     public RecordingAct GetDomainAntecedent() {

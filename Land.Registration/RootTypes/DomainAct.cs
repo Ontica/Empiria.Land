@@ -22,27 +22,18 @@ namespace Empiria.Land.Registration {
     }
 
     internal DomainAct(RecordingActType recordingActType, RecordingDocument document,
-                       Resource resource, decimal percentage = 1.0m) : base(recordingActType, document) {
-      Assertion.Assert(recordingActType.AppliesToResources,
-                       "{0} doesn't apply to resources (real estate or associations).",
-                       recordingActType.DisplayName);
+                       RealEstate property, decimal percentage = 1.0m) : base(recordingActType, document) {
+      Assertion.AssertObject(property, "property");
 
-      Assertion.AssertObject(resource, "resource");
-
-      this.AttachResource(resource, percentage);
+      this.AttachResource(property, percentage);
     }
 
     internal DomainAct(RecordingActType recordingActType, RecordingDocument document,
-                       Resource resource, Recording physicalRecording, decimal percentage = 1.0m)
+                       RealEstate property, Recording physicalRecording, decimal percentage = 1.0m)
                        : base(recordingActType, document, physicalRecording) {
-      Assertion.Assert(recordingActType.AppliesToResources ||
-                       recordingActType.Equals(RecordingActType.Empty),
-                       "{0} doesn't apply to resources (real estate or associations).",
-                       recordingActType.DisplayName);
+      Assertion.AssertObject(property, "property");
 
-      Assertion.AssertObject(resource, "resource");
-
-      this.AttachResource(resource, percentage);
+      this.AttachResource(property, percentage);
     }
 
     static public new DomainAct Parse(int id) {
@@ -53,7 +44,7 @@ namespace Empiria.Land.Registration {
 
     #region Private methods
 
-    private void AttachResource(Resource resource, decimal percentage) {
+    private void AttachResource(RealEstate resource, decimal percentage) {
       var tractItem = new TractItem(this, resource,
                                     recordingActPercentage:percentage);
 

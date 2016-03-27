@@ -26,6 +26,7 @@ namespace Empiria.Land.Registration {
     static readonly string autoRegisterVector = ConfigurationData.GetString("AutoRegister.RecordingActType");
     static readonly string blockAllFieldsVector = ConfigurationData.GetString("BlockAllFields.Vector");
     static readonly string blockFirstPropertyOwnerVector = ConfigurationData.GetString("BlockFirstPropertyOwner.Vector");
+
     static readonly string blockOperationAmountVector = ConfigurationData.GetString("BlockOperationAmount.Vector");
     static readonly string useCreditFieldsVector = ConfigurationData.GetString("UseCreditFields.Vector");
 
@@ -156,6 +157,31 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
+    internal void AssertIsAppliableResource(Resource resourceToApply) {
+      Assertion.AssertObject(resourceToApply, "resourceToApply");
+
+      switch (this.RecordingRule.AppliesTo) {
+        case RecordingRuleApplication.Association:
+          Assertion.Assert(resourceToApply is Association,
+            "This recording act is appliable only to real estate resources.");
+          return;
+        case RecordingRuleApplication.NoProperty:
+          Assertion.Assert(resourceToApply is NoPropertyResource,
+            "This recording act is appliable only to documents (no property resources).");
+          return;
+        case RecordingRuleApplication.RealEstate:
+          Assertion.Assert(resourceToApply is RealEstate,
+            "This recording act is appliable only to real estate resources.");
+          return;
+        case RecordingRuleApplication.Structure:
+          Assertion.Assert(resourceToApply is RealEstate,
+            "Structure acts are only appliable to real estate resources.");
+          return;
+        default:
+          throw Assertion.AssertNoReachThisCode();
+      }
+    }
+
     /// <summary>Factory method to create recording acts</summary>
     internal RecordingAct CreateInstance() {
       return base.CreateObject<RecordingAct>();
@@ -164,13 +190,6 @@ namespace Empiria.Land.Registration {
     public RecordingRuleApplication AppliesTo {
       get {
         return this.RecordingRule.AppliesTo;
-      }
-    }
-
-    public bool AppliesToResources {
-      get {
-        return (this.RecordingRule.AppliesTo == RecordingRuleApplication.Association ||
-                this.RecordingRule.AppliesTo == RecordingRuleApplication.RealEstate);
       }
     }
 
