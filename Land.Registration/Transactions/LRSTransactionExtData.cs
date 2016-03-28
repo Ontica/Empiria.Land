@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration.Transactions         Assembly : Empiria.Land.Registration           *
 *  Type      : LRSTransactionExtData                          Pattern  : IExtensibleData class               *
-*  Version   : 2.0                                            License  : Please read license.txt file        *
+*  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Contains extensible data for a land registration system transaction.                          *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 

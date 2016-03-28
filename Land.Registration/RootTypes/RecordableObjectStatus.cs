@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordableObjectStatus                         Pattern  : Enumeration Type                    *
-*  Version   : 2.0                                            License  : Please read license.txt file        *
+*  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Enumerates the statuses for recordable documents and objects in the Land Registration System. *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Land.Registration {

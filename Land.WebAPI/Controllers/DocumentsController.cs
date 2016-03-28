@@ -1,4 +1,14 @@
-﻿using System;
+﻿/* Empiria Land **********************************************************************************************
+*                                                                                                            *
+*  Solution  : Empiria Land                                     System   : Land Web API                      *
+*  Namespace : Empiria.Land.WebApi                              Assembly : Empiria.Land.WebApi.dll           *
+*  Type      : CertificatesController                           Pattern  : Web API                           *
+*  Version   : 2.1                                              License  : Please read license.txt file      *
+*                                                                                                            *
+*  Summary   : Contains services used to read and edit land recording documents.                             *
+*                                                                                                            *
+********************************* Copyright (c) 2014-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 using System.Web.Http;
 
 using Empiria.Data;
@@ -8,6 +18,7 @@ using Empiria.WebApi.Models;
 
 namespace Empiria.Land.WebApi {
 
+  /// <summary>Contains services used to read and edit land recording documents.</summary>
   public class DocumentsController : WebApiController {
 
     #region Public APIs

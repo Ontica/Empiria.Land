@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
 *  Type      : LRSTransactionTask                             Pattern  : Association Class                   *
-*  Version   : 2.0                                            License  : Please read license.txt file        *
+*  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Workflow item or task inside a LRSTransaction processing time window.                         *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 

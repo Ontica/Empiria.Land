@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\core\Data\Empiria.Data.csproj">
@@ -186,6 +187,9 @@
     <EmbeddedResource Include="RootTypes\LandDocumentationExceptionMsg.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

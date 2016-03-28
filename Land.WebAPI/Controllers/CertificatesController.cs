@@ -1,4 +1,14 @@
-﻿using System;
+﻿/* Empiria Land **********************************************************************************************
+*                                                                                                            *
+*  Solution  : Empiria Land                                     System   : Land Web API                      *
+*  Namespace : Empiria.Land.WebApi                              Assembly : Empiria.Land.WebApi.dll           *
+*  Type      : CertificatesController                           Pattern  : Web API                           *
+*  Version   : 2.1                                              License  : Please read license.txt file      *
+*                                                                                                            *
+*  Summary   : Contains services for land certificates emission.                                             *
+*                                                                                                            *
+********************************* Copyright (c) 2014-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 using System.Web.Http;
 
 using Empiria.WebApi;
@@ -8,6 +18,7 @@ using Empiria.Land.Certification;
 
 namespace Empiria.Land.WebApi {
 
+  /// <summary>Contains services for land certificates emission.</summary>
   public class CertificatesController : WebApiController {
 
     #region Public APIs
@@ -192,6 +203,6 @@ namespace Empiria.Land.WebApi {
 
     #endregion Private methods
 
-  }  // class RecordingBooksController
+  }  // class CertificatesController
 
 }  // namespace Empiria.Land.WebApi

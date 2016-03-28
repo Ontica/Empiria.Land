@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Certification Services              *
 *  Namespace : Empiria.Land.Certification                     Assembly : Empiria.Land.Certification.dll      *
 *  Type      : LandCertificateType                            Pattern  : Power type                          *
-*  Version   : 2.0                                            License  : Please read license.txt file        *
+*  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Power type that describes (non) ownership certificates types.                                 *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Ontology;

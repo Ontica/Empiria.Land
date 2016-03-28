@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Certification Services              *
 *  Namespace : Empiria.Land.Certification                     Assembly : Empiria.Land.Certification.dll      *
 *  Type      : CertificateAssembler (partial)                 Pattern  : Nested Assembler Type               *
-*  Version   : 2.0                                            License  : Please read license.txt file        *
+*  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Private class that assembles a Certificate instance from a CertificateDTO.                    *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Security;

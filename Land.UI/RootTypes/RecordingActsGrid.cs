@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                    System   : Land Registration System            *
 *  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land.UI                     *
 *  Type      : RecordingActsGrid                               Pattern  : Standard class                      *
-*  Version   : 2.0                                             License  : Please read license.txt file        *
+*  Version   : 2.1                                             License  : Please read license.txt file        *
 *                                                                                                             *
 *  Summary   : Generates the grid HTML content for a document's recording acts.                               *
 *                                                                                                             *
-********************************** Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************** Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections;
 using System.Web.UI.WebControls;
@@ -74,16 +74,22 @@ namespace Empiria.Land.UI {
           return row.GetRecordingActRow(baseTarget);
 
         case RecordingRuleApplication.RecordingAct:
-          throw new NotImplementedException();
+          row = new PropertyActGridRow(document, recordingAct);
+
+          return row.GetRecordingActRow(baseTarget);
 
         case RecordingRuleApplication.NoProperty:
           row = new DocumentActGridRow(document, recordingAct);
           return row.GetRecordingActRow(baseTarget);
 
         case RecordingRuleApplication.Structure:
-          throw new NotImplementedException();
+          row = new PropertyActGridRow(document, recordingAct);
+          return row.GetRecordingActRow(baseTarget);
 
         case RecordingRuleApplication.Party:
+          row = new PropertyActGridRow(document, recordingAct);
+          return row.GetRecordingActRow(baseTarget);
+
         //row = new PartyActGridRow(document, (DomainAct) recordingAct);
         //return row.GetRecordingActRow(recordingActTarget);
 

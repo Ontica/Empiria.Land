@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingSection                               Pattern  : Storage Item                        *
-*  Version   : 2.0                                            License  : Please read license.txt file        *
+*  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Describes a recording section under which all the books are legaly classified.                *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Land.Registration.Data;

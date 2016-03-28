@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                    System   : Land Registration System            *
 *  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land.UI                     *
 *  Type      : LRSGridControls                                 Pattern  : User Control                        *
-*  Version   : 2.0                                             License  : Please read license.txt file        *
+*  Version   : 2.1                                             License  : Please read license.txt file        *
 *                                                                                                             *
 *  Summary   : Static class that generates predefined grid content for Land Registration System data.         *
 *                                                                                                             *
-********************************** Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************** Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Presentation.Web;

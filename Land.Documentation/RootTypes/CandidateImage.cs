@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Documentation                     Assembly : Empiria.Land.Documentation          *
 *  Type      : DocumentImage                                  Pattern  : Empiria Object Type                 *
-*  Version   : 2.0                                            License  : Please read license.txt file        *
+*  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Represents a document image in Land Registration System.                                      *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.IO;
 using System.Text.RegularExpressions;

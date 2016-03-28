@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                     System   : Land Web API                      *
 *  Namespace : Empiria.Land.WebApi                              Assembly : Empiria.Land.WebApi.dll           *
 *  Type      : TransactionsController                           Pattern  : Web API                           *
-*  Version   : 1.0                                              License  : Please read license.txt file      *
+*  Version   : 2.1                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Contains services to integrate Empiria Land with third-party transaction systems.             *
 *                                                                                                            *
-********************************* Copyright (c) 2014-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2014-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Web.Http;
 
@@ -192,6 +192,6 @@ namespace Empiria.Land.WebApi {
 
     #endregion Private methods
 
-  }  // class CITySIntegrationController
+  }  // class TransactionsController
 
 }  // namespace Empiria.Land.WebApi

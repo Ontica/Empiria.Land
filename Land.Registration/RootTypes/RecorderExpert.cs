@@ -3,12 +3,12 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecorderExpert                                 Pattern  : Standard Class                      *
-*  Version   : 2.0                                            License  : Please read license.txt file        *
+*  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Performs the registry of recording acts based on a supplied recording task                    *
 *              and a set of rules defined for each recording act type.                                       *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Data;

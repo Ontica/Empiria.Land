@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Land Services                       *
 *  Namespace : Empiria.Land.WebApi.Models                     Assembly : Empiria.Land.WebApi.dll             *
 *  Type      : PendingNoteRequest                             Pattern  : External Interfacer                 *
-*  Version   : 2.0                                            License  : Please read license.txt file        *
+*  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Pending note request from an external transaction system.                                     *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Linq;
 

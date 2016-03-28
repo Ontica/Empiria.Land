@@ -3,12 +3,12 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
 *  Type      : LRSExternalTransaction                         Pattern  : External Interfacer                 *
-*  Version   : 2.0                                            License  : Please read license.txt file        *
+*  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Acts as an abstract class that holds data for an external transaction request, that may be    *
 *              integrated into an Empiria Land transaction.                                                  *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using Empiria.Contacts;
 using Empiria.Json;

@@ -231,6 +231,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\core\Data\Empiria.Data.csproj">
@@ -259,6 +260,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Edition\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

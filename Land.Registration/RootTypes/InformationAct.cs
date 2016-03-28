@@ -3,12 +3,12 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : InformationAct                                 Pattern  : Empiria Object Type                 *
-*  Version   : 2.0                                            License  : Please read license.txt file        *
+*  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Represents an information recording act that are not limitations and can be applied to        *
 *              properties, persons or neither.                                                               *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Land.Registration {
@@ -33,8 +33,7 @@ namespace Empiria.Land.Registration {
     internal InformationAct(RecordingActType recordingActType, RecordingDocument document,
                             Resource resource, Recording physicalRecording)
                                       : base(recordingActType, document, physicalRecording) {
-      recordingActType.AssertIsAppliableResource(resource);      
-
+      recordingActType.AssertIsAppliableResource(resource);
       this.AttachResource(resource);
     }
 
