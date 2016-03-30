@@ -157,25 +157,29 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    internal void AssertIsAppliableResource(Resource resourceToApply) {
+    internal void AssertIsApplicableResource(Resource resourceToApply) {
       Assertion.AssertObject(resourceToApply, "resourceToApply");
 
       switch (this.RecordingRule.AppliesTo) {
         case RecordingRuleApplication.Association:
           Assertion.Assert(resourceToApply is Association,
-            "This recording act is appliable only to real estate resources.");
+            "This recording act is applicable only to real estate resources.");
           return;
         case RecordingRuleApplication.NoProperty:
           Assertion.Assert(resourceToApply is NoPropertyResource,
-            "This recording act is appliable only to documents (no property resources).");
+            "This recording act is applicable only to documents (no property resources).");
           return;
         case RecordingRuleApplication.RealEstate:
           Assertion.Assert(resourceToApply is RealEstate,
-            "This recording act is appliable only to real estate resources.");
+            "This recording act is applicable only to real estate resources.");
           return;
         case RecordingRuleApplication.Structure:
           Assertion.Assert(resourceToApply is RealEstate,
-            "Structure acts are only appliable to real estate resources.");
+            "Structure acts are only applicable to real estate resources.");
+          return;
+        case RecordingRuleApplication.Undefined:
+          Assertion.Assert(this.Equals(InformationAct.Empty.RecordingActType),
+                  "RecordingRuleApplication.Undefined is only applicable to the empty information act.");
           return;
         default:
           throw Assertion.AssertNoReachThisCode();

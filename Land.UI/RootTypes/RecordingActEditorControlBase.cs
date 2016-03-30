@@ -45,7 +45,7 @@ namespace Empiria.Land.UI {
 
     #region Public methods
 
-    public abstract RecordingAct CreateRecordingAct();
+    public abstract RecordingAct[] CreateRecordingActs();
 
     public void Initialize(LRSTransaction transaction, RecordingDocument document) {
       Assertion.AssertObject(transaction, "transaction");

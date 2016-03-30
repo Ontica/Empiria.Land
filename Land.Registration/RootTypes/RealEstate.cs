@@ -208,86 +208,28 @@ namespace Empiria.Land.Registration {
       ResourceData.WriteRealEstate(this);
     }
 
-    internal RealEstate Subdivide(RealEstatePartition partitionInfo) {
+    internal RealEstate[] Subdivide(RealEstatePartition partitionInfo) {
       Assertion.Assert(!this.IsNew, "New properties can't be subdivided.");
 
-      switch (partitionInfo.PartitionType) {
-        case PropertyPartitionType.Partial:
-          return this.CreatePartition(partitionInfo);
-        case PropertyPartitionType.Last:
-          var partition = this.CreatePartition(partitionInfo);
-          this.MergedInto = partition;
-          this.Save();
-          return partition;
-        case PropertyPartitionType.Full:
-          return this.CreatePartition(partitionInfo);
-
-          //var partitions = this.CreateAllPartitions(partitionInfo);
-          //this.MergedInto = partitions[partitions.Length - 1];
-          //this.Save();
-          //return partitions[partitionInfo.PartitionNo - 1];
-        default:
-          throw Assertion.AssertNoReachThisCode();
+      string[] partitionNumbers = partitionInfo.GetPartitions();
+      RealEstate[] partitions = new RealEstate[partitionNumbers.Length];
+      for (int i = 0; i < partitionNumbers.Length; i++) {
+        partitions[i] = this.CreatePartition(partitionNumbers[i]);
       }
+      return partitions;
     }
 
     #endregion Public methods
 
     #region Private methods
 
-    private RealEstate CreatePartition(RealEstatePartition partitionInfo) {
-      //Property[] currentPartitions = this.GetPartitions();
-      //Assertion.Assert(currentPartitions.Length < lotNumber,
-      //                 "Current property partitions are greater or equal than the requested fraction number.");
-      //Assertion.Assert(this.MergedInto.IsEmptyInstance,
-      //                 "Current property already has been merged into one or more properties.");
-
-      string prefix = GetPartitionSubtypeName(partitionInfo);
-
-      var lot = new RealEstate(partitionInfo.CadastralKey);
+    private RealEstate CreatePartition(string partititionNo) {
+      var lot = new RealEstate();
       lot.IsPartitionOf = this;
-      if (partitionInfo.PartitionNo != 0) {
-        lot.PartitionNo = prefix + " " + partitionInfo.PartitionNo.ToString("00");
-      } else {
-        lot.PartitionNo = "sin número";
-      }
-      lot.LotSize = partitionInfo.Size.Amount;
-      lot.LotSizeUnit = partitionInfo.Size.Unit;
-      lot.ExtensionData.Add("Partition", partitionInfo.ToJson());
+      lot.PartitionNo = partititionNo;    //partitionInfo.PartitionNo.ToString("00");
       lot.Save();
 
       return lot;
-    }
-
-    private string GetPartitionSubtypeName(RealEstatePartition partitionInfo) {
-      if (partitionInfo.PartitionType != PropertyPartitionType.Full) {
-        return String.Empty;
-      }
-      switch (partitionInfo.PartitionSubtype) {
-        case PropertyPartitionSubtype.Apartment:
-          return "Departamento";
-        case PropertyPartitionSubtype.House:
-          return "Casa";
-        case PropertyPartitionSubtype.Lot:
-          return "Lote";
-        default:
-          throw Assertion.AssertNoReachThisCode();
-      }
-    }
-
-    private RealEstate[] CreateAllPartitions(RealEstatePartition partitionInfo) {
-      RealEstate[] currentPartitions = this.GetPartitions();
-      Assertion.Assert(currentPartitions.Length == 0, "Real estate already has partitions or lots.");
-
-      RealEstate[] partitions = new RealEstate[partitionInfo.TotalPartitions];
-      for (int i = 0; i < partitionInfo.TotalPartitions; i++) {
-        RealEstate lot = new RealEstate(partitionInfo.CadastralKey);
-        lot.IsPartitionOf = this;
-        lot.PartitionNo = (i + 1).ToString("00");
-        lot.Save();
-        partitions[i] = lot;
-      }
-      return partitions;
     }
 
     #endregion Private methods

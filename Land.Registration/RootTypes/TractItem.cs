@@ -181,9 +181,9 @@ namespace Empiria.Land.Registration {
 
     protected override void OnSave() {
       if (this.Resource.IsNew) {
-        this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);
         this.Resource.Save();
       }
+      this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);
       RecordingActsData.WriteTractItem(this);
     }
 

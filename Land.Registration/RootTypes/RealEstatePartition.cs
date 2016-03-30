@@ -39,56 +39,42 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public RealEstatePartition(string cadastralKey,
-                               PropertyPartitionType partitionType = PropertyPartitionType.None,
-                               PropertyPartitionSubtype partitionSubtype = PropertyPartitionSubtype.None,
-                               int partitionNo = 0, int totalPartitions = 0,
-                               decimal partitionSize = 0m, int partitionSizeUnitId = -1,
-                               decimal availableSize = 0m, int availableSizeUnitId = -1) {
-      this.CadastralKey = cadastralKey;
+    public RealEstatePartition(string partitionType,
+                               string partitionNumber,
+                               string partitionRepeatUntilNumber) {
       this.PartitionType = partitionType;
-      this.PartitionSubtype = partitionSubtype;
-      this.PartitionNo = partitionNo;
-      this.TotalPartitions = totalPartitions;
-      this.Size = Quantity.Parse(Unit.Parse(partitionSizeUnitId), partitionSize);
-      this.AvailableSize = Quantity.Parse(Unit.Parse(availableSizeUnitId), availableSize);
+      this.PartitionNumber = partitionNumber;
+      this.PartitionRepeatUntilNumber = partitionRepeatUntilNumber;
     }
+
+    public static RealEstatePartition Empty {
+      get {
+        return new RealEstatePartition(String.Empty, String.Empty, String.Empty);
+      }
+    }
+
 
     #endregion Constructors and parsers
 
     #region Properties
 
-    public PropertyPartitionType PartitionType {
+    public string PartitionType {
       get;
       private set;
     }
 
-    public PropertyPartitionSubtype PartitionSubtype {
+    public string PartitionNumber {
       get;
       private set;
     }
 
-    public string CadastralKey {
-      get;
-      private set;
+    public string PartitionName {
+      get {
+        return this.PartitionType + " " + this.PartitionNumber;
+      }
     }
 
-    public int PartitionNo {
-      get;
-      private set;
-    }
-
-    public int TotalPartitions {
-      get;
-      private set;
-    }
-
-    public Quantity Size {
-      get;
-      private set;
-    }
-
-    public Quantity AvailableSize {
+    public string PartitionRepeatUntilNumber {
       get;
       private set;
     }
@@ -97,22 +83,26 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public void AssertValid() {
-
-    }
-
-    public JsonObject ToJson() {
-      var json = new JsonObject();
-
-      json.Add(new JsonItem("type", this.PartitionType.ToString()));
-      json.Add(new JsonItem("subType", this.PartitionSubtype.ToString()));
-      json.Add(new JsonItem("partitionNo", this.PartitionNo.ToString()));
-      json.Add(new JsonItem("availableSize", this.AvailableSize.Amount));
-      json.Add(new JsonItem("availableSizeUnit", this.AvailableSize.Unit.Id));
-      if (this.TotalPartitions != 0) {
-        json.Add(new JsonItem("totalPartitions", this.TotalPartitions));
+    internal string[] GetPartitions() {
+      if (this.PartitionRepeatUntilNumber.Length == 0) {
+        return new string[] { this.PartitionName };
       }
-      return json;
+      if (!EmpiriaString.IsInteger(this.PartitionNumber) ||
+          !EmpiriaString.IsInteger(this.PartitionRepeatUntilNumber)) {
+        return new string[] { this.PartitionName };
+      }
+      int startPartition = int.Parse(this.PartitionNumber);
+      int endPartition = int.Parse(this.PartitionRepeatUntilNumber);
+
+      if (startPartition > endPartition) {
+        return new string[] { this.PartitionName };
+      }
+
+      string[] partitionNames = new string[endPartition - startPartition + 1];
+      for (int i = 0; i < partitionNames.Length; i++) {
+        partitionNames[i] = this.PartitionType + " " + (startPartition + i).ToString();
+      }
+      return partitionNames;
     }
 
     #endregion Public methods

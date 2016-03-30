@@ -20,6 +20,7 @@ namespace Empiria.Land.Registration {
     actNotApplyToProperty,
     actAppliesToDocument,
     createProperty,
+    createPartition,
     selectProperty,
   }
 
@@ -59,7 +60,7 @@ namespace Empiria.Land.Registration {
       if (partition != null) {
         this.PartitionInfo = partition;
       } else {
-        this.PartitionInfo = new RealEstatePartition(cadastralKey);
+        this.PartitionInfo = RealEstatePartition.Empty;
       }
       if (targetActInfo != null) {
         this.TargetActInfo = targetActInfo;
