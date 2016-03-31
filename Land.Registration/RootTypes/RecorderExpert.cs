@@ -45,9 +45,7 @@ namespace Empiria.Land.Registration {
 
     private bool CreateNewResource {
       get {
-        return ((Task.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.RealEstate ||
-                 Task.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Association) &&
-                 Task.RecordingTaskType == RecordingTaskType.createProperty &&
+        return ( Task.RecordingTaskType == RecordingTaskType.createProperty &&
                  Task.PrecedentProperty.IsEmptyInstance);
       }
     }
@@ -118,11 +116,10 @@ namespace Empiria.Land.Registration {
       } else if (recordingActType.IsInformationActType) {
         return this.CreateInformationAct();     // Testamento, Cap matrim, Anotación marginal
 
-      //} else if (recordingActType.IsCancelationActType) {
-      //  return this.CreateCancelationAct();
-
-      //} else if (recordingActType.IsModificationActType) {
-      //  return this.CreateInformationAct();
+      } else if (recordingActType.IsCancelationActType) {
+        return this.CreateCancelationAct();
+        //} else if (recordingActType.IsModificationActType) {
+        //  return this.CreateInformationAct();
       } else {
         throw new NotImplementedException("RecordingExpert.DoRecording: Recording act '" +
                                           Task.RecordingActType.DisplayName + "' has an undefined or wrong rule.");
@@ -168,51 +165,99 @@ namespace Empiria.Land.Registration {
       return recordingActs;
     }
 
-    //private RecordingAct CreateCancelationAct() {
-    //  if (this.CreateResourceOnNewPhysicalRecording) {
-    //    this.AttachResourceToNewPhysicalRecording();
-    //  } else if (this.NeedCreateAdditionalResourceOnPhysicalRecording) {
-    //    this.CreateAdditionalResourceOnPhysicalRecording();
-    //  }
-    //  Assertion.Assert(!this.Task.TargetActInfo.IsEmptyInstance,
-    //                   "The target recording act should not be the empty instance.");
-    //  Assertion.Assert(!this.Task.PrecedentProperty.IsEmptyInstance,
-    //                   "The target resource cannot be the Property.Empty instance.");
+    private CancelationAct[] CreateCancelationAct() {
+      Assertion.Assert(!this.Task.TargetActInfo.IsEmptyInstance,
+                       "The target recording act should not be the empty instance.");
 
-    //  RecordingAct amendmendOf;
-    //  if (this.Task.TargetActInfo.RecordingActId == -1) {
-    //    amendmendOf = this.CreateAmendmendOfRecordingAct(this.Task.PrecedentProperty);
-    //  } else {
-    //    amendmendOf = RecordingAct.Parse(this.Task.TargetActInfo.RecordingActId);
-    //  }
+      switch (this.Task.RecordingActType.AppliesTo) {
+        case RecordingRuleApplication.RecordingAct:
+          return CreateRecordingActCancelationAct();
+        case RecordingRuleApplication.Association:
+        case RecordingRuleApplication.NoProperty:
+        case RecordingRuleApplication.RealEstate:
+          return this.CreateResourceCancelationAct();
+        //case RecordingRuleApplication.Document:
+        //  return this.CreateDocumentCancelationAct();
+        case RecordingRuleApplication.Party:
+          return this.CreatePartyCancelationAct();
+        case RecordingRuleApplication.Structure:
+          return this.CreateStructureCancelationAct();
 
-    //  return this.Task.Document.AppendRecordingAct(this.Task.RecordingActType,
-    //                                               this.Task.PrecedentProperty, amendmendOf);
-    //}
+        default:
+          throw Assertion.AssertNoReachThisCode();
+      }
+    }
 
-    //private RecordingAct CreateAmendmendOfRecordingAct(Resource resource) {
-    //  var document = new RecordingDocument(RecordingDocumentType.Empty);
+    #endregion Recording methods
 
-    //  Recording recording = Task.TargetActInfo.PhysicalRecording;
+    #region Cancelation methods
 
-    //  return document.AppendRecordingAct(Task.TargetActInfo.RecordingActType,
-    //                                     resource, physicalRecording: recording);
-    //}
-
-    private RecordingAct GetTargetRecordingAct() {
+    private CancelationAct[] CreateDocumentCancelationAct() {
       throw new NotImplementedException();
+    }
+
+    private CancelationAct[] CreatePartyCancelationAct() {
+      throw new NotImplementedException();
+    }
+
+    private CancelationAct[] CreateRecordingActCancelationAct() {
+      var resource = this.GetOneResource();
+
+      RecordingAct targetAct = this.GetTargetRecordingAct(resource);
+
+      return new[] { new CancelationAct(this.Task.RecordingActType,
+                                        this.Task.Document, resource, targetAct) };
+    }
+
+    private CancelationAct[] CreateResourceCancelationAct() {
+      throw new NotImplementedException();
+    }
+
+    private CancelationAct[] CreateStructureCancelationAct() {
+      throw new NotImplementedException();
+    }
+
+    private RecordingAct CreateTargetRecordingAct(Resource resource) {
+      var document = new RecordingDocument(RecordingDocumentType.Empty);
+
+      Recording recording = Task.TargetActInfo.PhysicalRecording;
+
+      return document.AppendRecordingAct(Task.TargetActInfo.RecordingActType,
+                                         resource, physicalRecording: recording);
+    }
+
+    private RecordingAct GetTargetRecordingAct(Resource resource) {
+      if (this.Task.TargetActInfo.RecordingActId != -1) {
+        return RecordingAct.Parse(this.Task.TargetActInfo.RecordingActId);
+      } else {
+        return this.CreateTargetRecordingAct(resource);
+      }
     }
 
     private RecordingDocument GetTargetDocument() {
       throw new NotImplementedException();
     }
 
-    #endregion Recording methods
+    #endregion Cancelation methods
 
     #region Get resources methods
 
+    private Resource GetOneResource() {
+      var resources = this.GetResources();
+
+      Assertion.Assert(resources.Length == 1,
+                      "Operation failed, too many resources returned by GetOneResource().");
+
+      return resources[0];
+    }
+
     private Resource[] GetResources() {
-      switch (this.Task.RecordingActType.RecordingRule.AppliesTo) {
+      RecordingRuleApplication appliesTo = this.Task.RecordingActType.RecordingRule.AppliesTo;
+
+      if (appliesTo == RecordingRuleApplication.RecordingAct) {
+        appliesTo = Task.TargetActInfo.RecordingActType.RecordingRule.AppliesTo;
+      }
+        switch (appliesTo) {
         case RecordingRuleApplication.Association:
           return this.GetAssociations();
         case RecordingRuleApplication.RealEstate:
@@ -220,7 +265,7 @@ namespace Empiria.Land.Registration {
         case RecordingRuleApplication.NoProperty:
           return this.GetNoPropertyResources();
         default:
-          throw Assertion.AssertNoReachThisCode();
+          throw Assertion.AssertNoReachThisCode(appliesTo + " application for " + this.Task.RecordingActType.DisplayName);
       }
     }
 

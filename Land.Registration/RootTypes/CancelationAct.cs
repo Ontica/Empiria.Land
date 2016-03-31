@@ -21,11 +21,32 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
+    internal CancelationAct(RecordingActType recordingActType,
+                            RecordingDocument document, Resource resource,
+                            RecordingAct recordingActToCancel) : base(recordingActType, document) {
+      Assertion.AssertObject(resource, "resource");
+      Assertion.AssertObject(recordingActToCancel, "recordingActToCancel");
+
+      this.AttachResource(resource);
+
+      recordingActToCancel.Amend(this);
+    }
+
     static public new CancelationAct Parse(int id) {
       return BaseObject.ParseId<CancelationAct>(id);
     }
 
     #endregion Constructors and parsers
+
+    #region Methods
+
+    private void AttachResource(Resource targetResource) {
+      var tractItem = new TractItem(this, targetResource);
+
+      base.AddTractItem(tractItem);
+    }
+
+    #endregion Methods
 
   } // class CancelationAct
 

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Empiria.Land.Registration {
 
@@ -10,16 +7,17 @@ namespace Empiria.Land.Registration {
     public RecordingActInfo(int recordingActId) {
       Initialize();
       this.RecordingActId = recordingActId;
+      this.RecordingActType = RecordingAct.Parse(this.RecordingActId).RecordingActType;
     }
 
     public RecordingActInfo(int recordingActTypeId, int physicalBookId,
-                            int recordingId = -1, string recordingNumber = "") {
+                            int physicalRecordingId = -1, string recordingNumber = "") {
       Initialize();
       this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
       this.PhysicalBook = RecordingBook.Parse(physicalBookId);
 
-      if (recordingId != -1) {
-        this.PhysicalRecording = Recording.Parse(recordingId);
+      if (physicalRecordingId != -1) {
+        this.PhysicalRecording = Recording.Parse(physicalRecordingId);
       } else if (recordingNumber != String.Empty) {
         this.PhysicalRecording = this.PhysicalBook.CreateQuickRecording(recordingNumber);
       } else {

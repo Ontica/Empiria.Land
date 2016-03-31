@@ -306,6 +306,13 @@ namespace Empiria.Land.Registration {
       tractIndex.Value.Add(tractItem);
     }
 
+    internal void Amend(CancelationAct cancelationAct) {
+      cancelationAct.AmendmentOf = this;
+      this.AmendedBy = cancelationAct;
+      cancelationAct.Save();
+      this.Save();
+    }
+
     public void ChangeStatusTo(RecordableObjectStatus newStatus) {
       this.Status = newStatus;
       this.Save();

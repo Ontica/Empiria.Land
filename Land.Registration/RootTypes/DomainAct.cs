@@ -21,16 +21,17 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    internal DomainAct(RecordingActType recordingActType, RecordingDocument document,
-                       RealEstate property, decimal percentage = 1.0m) : base(recordingActType, document) {
+    internal DomainAct(RecordingActType recordingActType,
+                       RecordingDocument document, RealEstate property,
+                       decimal percentage = decimal.One) : base(recordingActType, document) {
       Assertion.AssertObject(property, "property");
 
       this.AttachResource(property, percentage);
     }
 
     internal DomainAct(RecordingActType recordingActType, RecordingDocument document,
-                       RealEstate property, Recording physicalRecording, decimal percentage = 1.0m)
-                       : base(recordingActType, document, physicalRecording) {
+                       RealEstate property, Recording physicalRecording,
+                       decimal percentage = decimal.One) : base(recordingActType, document, physicalRecording) {
       Assertion.AssertObject(property, "property");
 
       this.AttachResource(property, percentage);
