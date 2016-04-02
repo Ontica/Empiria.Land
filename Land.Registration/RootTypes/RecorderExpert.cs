@@ -45,7 +45,8 @@ namespace Empiria.Land.Registration {
 
     private bool CreateNewResource {
       get {
-        return ( Task.RecordingTaskType == RecordingTaskType.createProperty &&
+        return ((this.Task.RecordingTaskType == RecordingTaskType.actAppliesToDocument ||
+                 Task.RecordingTaskType == RecordingTaskType.createProperty) &&
                  Task.PrecedentProperty.IsEmptyInstance);
       }
     }
@@ -257,7 +258,7 @@ namespace Empiria.Land.Registration {
       if (appliesTo == RecordingRuleApplication.RecordingAct) {
         appliesTo = Task.TargetActInfo.RecordingActType.RecordingRule.AppliesTo;
       }
-        switch (appliesTo) {
+      switch (appliesTo) {
         case RecordingRuleApplication.Association:
           return this.GetAssociations();
         case RecordingRuleApplication.RealEstate:
