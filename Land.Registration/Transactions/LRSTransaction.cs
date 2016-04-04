@@ -533,6 +533,7 @@ namespace Empiria.Land.Registration.Transactions {
     public void AttachDocument(RecordingDocument document) {
       Assertion.AssertObject(document, "document");
 
+      document.PresentationTime = this.PresentationTime;
       document.Save();
       this.Document = document;
       this.Save();

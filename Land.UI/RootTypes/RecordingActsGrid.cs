@@ -9,12 +9,8 @@
 *                                                                                                             *
 ********************************** Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections;
-using System.Web.UI.WebControls;
 
 using Empiria.Land.Registration;
-using Empiria.Land.Registration.Data;
-using Empiria.Land.UI.Utilities;
 
 namespace Empiria.Land.UI {
 
@@ -61,41 +57,21 @@ namespace Empiria.Land.UI {
  	    throw new NotImplementedException();
     }
 
-    private string GetRecordingActRow(RecordingAct recordingAct, TractItem baseTarget) {
-      RecordingActGridRow row = null;
-      switch (recordingAct.RecordingActType.RecordingRule.AppliesTo) {
+    private string GetRecordingActRow(RecordingAct recordingAct, TractItem tractItem) {
+      string row = GetRowTemplate(recordingAct);
 
-        case RecordingRuleApplication.RealEstate:
-          row = new PropertyActGridRow(document, recordingAct);
-          return row.GetRecordingActRow(baseTarget);
+      row = row.Replace("{{STATUS}}", recordingAct.StatusName);
+      row = row.Replace("{{RECORDING.ACT.URL}}", recordingAct.DisplayName);
+      row = row.Replace("{{RESOURCE.URL}}", GetResourceCell(tractItem));
 
-        case RecordingRuleApplication.Association:
-          row = new AssociationActGridRow(document, recordingAct);
-          return row.GetRecordingActRow(baseTarget);
+      row = row.Replace("{{ANTECEDENT}}", GetAntecedentOrTargetCell(tractItem));
+      row = row.Replace("{{OPTIONS.COMBO}}", GetOptionsCombo(tractItem));
 
-        case RecordingRuleApplication.RecordingAct:
-          row = new PropertyActGridRow(document, recordingAct);
+      row = row.Replace("{{TARGET.ID}}", recordingAct.Id.ToString());
+      row = row.Replace("{{RESOURCE.ID}}", recordingAct.Id.ToString());
+      row = row.Replace("{{ID}}", recordingAct.Id.ToString());
 
-          return row.GetRecordingActRow(baseTarget);
-
-        case RecordingRuleApplication.NoProperty:
-          row = new DocumentActGridRow(document, recordingAct);
-          return row.GetRecordingActRow(baseTarget);
-
-        case RecordingRuleApplication.Structure:
-          row = new PropertyActGridRow(document, recordingAct);
-          return row.GetRecordingActRow(baseTarget);
-
-        case RecordingRuleApplication.Party:
-          row = new PropertyActGridRow(document, recordingAct);
-          return row.GetRecordingActRow(baseTarget);
-
-        //row = new PartyActGridRow(document, (DomainAct) recordingAct);
-        //return row.GetRecordingActRow(recordingActTarget);
-
-        default:
-          throw Assertion.AssertNoReachThisCode();
-      }
+      return row;
     }
 
     #endregion Constructors and parsers
@@ -106,236 +82,106 @@ namespace Empiria.Land.UI {
 
     #region Private auxiliar methods
 
-    static private string GetAdditionalPropertyOptionsCombo(TractItem tractItem) {
-      const string template =
-        "<select id='cboRecordingOptions_{{TARGET.ID}}' class='selectBox' style='width:148px'>" +
-        "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
-        "<option value='deleteRecordingActProperty'>Eliminar este predio</option>" +
-        "<option value='viewPropertyTract'>Ver la historia de este predio</option>" +
-        "</select><img class='comboExecuteImage' src='../themes/default/buttons/next.gif' " +
-        "alt='' title='Ejecuta la operación seleccionada' onclick='" +
-        "doOperation(getElement(\"cboRecordingOptions_{{TARGET.ID}}\").value, {{ID}}, {{RESOURCE.ID}});'/>";
+    static private string GetResourceCell(TractItem tractItem) {
+      if (tractItem.Resource is RealEstate) {
+        var realEstate = (RealEstate) tractItem.Resource;
+        if (!realEstate.IsPartitionOf.IsEmptyInstance &&
+             realEstate.FirstRecordingAct.Equals(tractItem.RecordingAct)) {
+          return realEstate.UID + "<br />" +
+                 "creado como <b>" + realEstate.PartitionNo + "</b> del<br />predio " +
+                 realEstate.IsPartitionOf.UID;
+        } else {
+          return realEstate.UID;
+        }
+      } else if (tractItem.Resource is Association) {
+        return tractItem.Resource.UID + "<br />" +
+               ((Association) tractItem.Resource).Name;
+      } else {
+        return "Referencia registral:<br />" + tractItem.Resource.UID;
+      }
+    }
 
-      string html = template.Replace("{{TARGET.ID}}", tractItem.Id.ToString());
+    static private string GetAntecedentOrTargetCell(TractItem tractItem) {
+      if (tractItem.RecordingAct.RecordingActType.IsAmendmentActType) {
+        return GetAmendedItemCell(tractItem);
+      }
+      var antecedent = tractItem.GetRecordingAntecedent();
+      if (antecedent.IsEmptyInstance) {
+        return "Sin antecedente registral";
+      } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {
+        return antecedent.PhysicalRecording.AsText + "<br />"+  
+               "Doc: "  + antecedent.Document.UID + "<br />" +
+               "Prel: " + GetDateAsText(antecedent.Document.PresentationTime) + " " +
+               "Reg: " + GetDateAsText(antecedent.Document.AuthorizationTime);
+      } else if (antecedent.Document.Equals(tractItem.RecordingAct.Document)) {
+        return "Este mismo documento";
+      } else {
+        return antecedent.Document.UID + "<br />" +
+               "Prel: " + GetDateAsText(antecedent.Document.PresentationTime) + " " +
+               "Reg: " + GetDateAsText(antecedent.Document.AuthorizationTime);
+      }
+    }
 
-      html = html.Replace("{{ID}}", tractItem.RecordingAct.Id.ToString());
-      html = html.Replace("{{RESOURCE.ID}}", tractItem.Resource.Id.ToString());
+    static private string GetAmendedItemCell(TractItem tractItem) {
+      var amendedAct = tractItem.RecordingAct.AmendmentOf;
+
+      if (!amendedAct.PhysicalRecording.IsEmptyInstance) {
+        return amendedAct.RecordingActType.DisplayName + " en<br/>" +
+               amendedAct.PhysicalRecording.AsText + "<br />" +
+               "Doc: " + amendedAct.Document.UID + "<br />" +
+               "Prel: " + GetDateAsText(amendedAct.Document.PresentationTime) + " " +
+               "Reg: " + GetDateAsText(amendedAct.Document.AuthorizationTime);
+      } else {
+        return amendedAct.RecordingActType.DisplayName + " en<br/>" +
+               "Doc: " + amendedAct.Document.UID + "<br />" +
+               "Prel: " + GetDateAsText(amendedAct.Document.PresentationTime) + " " +
+               "Reg: " + GetDateAsText(amendedAct.Document.AuthorizationTime);
+      }
+    }
+
+    static private string GetRowTemplate(RecordingAct recordingAct) {
+      const string template = "<tr class='{{CLASS}}'>" +
+                              "<td><b id='ancRecordingActIndex_{{ID}}'>{{INDEX}}</b><br/>" +
+                              "<td style='white-space:normal'>{{RECORDING.ACT.URL}}</td>" +
+                              "<td style='white-space:nowrap'>{{RESOURCE.URL}}</td>" +
+                              "<td style='white-space:normal'>{{ANTECEDENT}}</td>" +
+                              "<td>{{OPTIONS.COMBO}}</td></tr>";
+
+      int index = recordingAct.Index + 1;
+
+      string html = template.Replace("{{CLASS}}", (index % 2 == 0) ? "detailsItem" : "detailsOddItem");
+      html = html.Replace("{{INDEX}}", index.ToString("00"));
 
       return html;
     }
 
-    static private string GetPropertyOptionsCombo(TractItem tractItem,
-                                                  int recordingActsCount, int recordingActIndex) {
+    static private string GetOptionsCombo(TractItem tractItem) {
       const string template =
-        "<select id='cboRecordingOptions_{{TARGET.ID}}' class='selectBox' style='width:148px'>" +
+        "<select id='cboRecordingOptions_{{TRACT-ITEM.ID}}' class='selectBox' style='width:136px'>" +
         "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
-        "{{INCREMENT_INDEX}}" +
-        "{{DECREMENT_INDEX}}" +
-        "<option value='selectRecordingActOperation'></option>" +
-        "<option value='addPropertyToRecordingAct'>Agregar otro predio</option>" +
-        "<option value='addAnotherRecordingActToRecording'>Agregar otro acto</option>" +
         "<option value='modifyRecordingActType'>Modificar este acto</option>" +
         "<option value='deleteRecordingAct'>Eliminar este acto</option>" +
-        "<option value='viewPropertyTract'>Ver la historia de este predio</option>" +
+        "<option value='viewResourceTract'>Ver la historia</option>" +
         "</select><img class='comboExecuteImage' src='../themes/default/buttons/next.gif' " +
         "alt='' title='Ejecuta la operación seleccionada' onclick='" +
-        "doOperation(getElement(\"cboRecordingOptions_{{TARGET.ID}}\").value, {{ID}}, {{RESOURCE.ID}});'/>";
+        "doOperation(getElement(\"cboRecordingOptions_{{TRACT-ITEM.ID}}\").value, {{ID}}, {{RESOURCE.ID}});'/>";
 
-      string html = template.Replace("{{TARGET.ID}}", tractItem.Id.ToString());
-      if (recordingActsCount > 1) {
-        if (recordingActIndex != 0) {
-          html = html.Replace("{{INCREMENT_INDEX}}",
-                  "<option value='upwardRecordingAct'>Subir en la secuencia</option>");
-        } else {
-          html = html.Replace("{{INCREMENT_INDEX}}", String.Empty);
-        }
-        if (recordingActIndex != recordingActsCount - 1) {
-          html = html.Replace("{{DECREMENT_INDEX}}",
-                  "<option value='downwardRecordingAct'>Bajar en la secuencia</option>");
-        } else {
-          html = html.Replace("{{DECREMENT_INDEX}}", String.Empty);
-        }
-      } else { // recording.RecordingActs.Count <= 1
-        html = html.Replace("{{INCREMENT_INDEX}}", String.Empty);
-        html = html.Replace("{{DECREMENT_INDEX}}", String.Empty);
-      }
-      html = html.Replace("{{ID}}", tractItem.RecordingAct.Id.ToString());
+      string html = template.Replace("{{ID}}", tractItem.RecordingAct.Id.ToString());
       html = html.Replace("{{RESOURCE.ID}}", tractItem.Resource.Id.ToString());
+      html = html.Replace("{{TRACT-ITEM.ID}}", tractItem.Id.ToString());
 
       return html;
+    }
+
+    private static string GetDateAsText(DateTime date) {
+      if (date == ExecutionServer.DateMinValue || date == ExecutionServer.DateMaxValue) {
+        return "N/D";
+      } else {
+        return date.ToString("dd/MMM/yyyy");
+      }
     }
 
     #endregion Private auxiliar methods
-
-    #region OLD Private methods
-
-    static private string FillAssociationGridRow(RecordingAct recordingAct, Association association, string temp) {
-      RecordingAct antecedent = association.GetIncorporationAct();
-
-      if (recordingAct.IsAmendment && !recordingAct.AmendmentOf.PhysicalRecording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", recordingAct.AmendmentOf.PhysicalRecording.FullNumber);
-      } else if (recordingAct.IsAmendment && recordingAct.AmendmentOf.PhysicalRecording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + recordingAct.AmendmentOf.Document.UID);
-      } else if (association.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "&nbsp;");
-      } else if (antecedent.Equals(RecordingAct.Empty)) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Sin antecedente registral");
-      } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Entidad inscrita en: " +
-                             antecedent.PhysicalRecording.FullNumber);
-      } else if (antecedent.PhysicalRecording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + antecedent.Document.UID);
-      }
-      return temp;
-    }
-
-    static private string FillPropertyGridRow(RecordingAct recordingAct, RealEstate property, string temp) {
-      RecordingAct antecedent = property.GetDomainAntecedent(recordingAct);
-
-      if (recordingAct.IsAmendment && !recordingAct.AmendmentOf.PhysicalRecording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", recordingAct.AmendmentOf.PhysicalRecording.FullNumber);
-      } else if (recordingAct.IsAmendment && recordingAct.AmendmentOf.PhysicalRecording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + recordingAct.AmendmentOf.Document.UID);
-      } else if (property.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "&nbsp;");
-      } else if (!property.IsPartitionOf.IsEmptyInstance) {
-        var partitionAntecedent = property.IsPartitionOf.GetDomainAntecedent(recordingAct);
-        if (property.PartitionNo.StartsWith("Lote") ||
-            property.PartitionNo.StartsWith("Casa") ||
-            property.PartitionNo.StartsWith("Departamento")) {
-          temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", property.PartitionNo +
-                     (property.IsPartitionOf.MergedInto.Equals(property) ? " y última" : String.Empty)
-                     + " del predio inscrito en " + partitionAntecedent.PhysicalRecording.FullNumber);
-        } else {
-          temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Fracción " + property.PartitionNo +
-                     (property.IsPartitionOf.MergedInto.Equals(property) ? " y última" : String.Empty)
-                     + " del predio inscrito en " + partitionAntecedent.PhysicalRecording.FullNumber);
-        }
-      } else if (antecedent.Equals(RecordingAct.Empty)) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Sin antecedente registral");
-      } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Predio inscrito en: " +
-                             antecedent.PhysicalRecording.FullNumber);
-      } else if (antecedent.PhysicalRecording.IsEmptyInstance) {
-        temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", "Documento: " + antecedent.Document.UID);
-      }
-      return temp;
-    }
-
-    static private string GetRecordingActGridRow(RecordingAct recordingAct, TractItem tractItem, int counter,
-                                                 int recordingActIndex, int tractItemIndex, int recordingActsCount) {
-
-      const string row = "<tr class='{CLASS}'>" +
-          "<td><b id='ancRecordingActIndex_{ID}_{PROPERTY.ID}'>{RECORDING.ACT.INDEX}</b><br/>" +
-          "<td style='white-space:normal'>{RECORDING.ACT.URL}</td>" +
-          "<td style='white-space:nowrap'>{PROPERTY.URL}</td>" +
-          "<td style='white-space:normal'>{PHYSICAL.RECORDING.DATA}</td>" +
-          "<td>{RECORDING.ACT.STATUS}</td>" +
-          "<td>{OPTIONS.COMBO}<img class='comboExecuteImage' src='../themes/default/buttons/next.gif' " +
-          "alt='' title='Ejecuta la operación seleccionada' " +
-          "onclick='doOperation(getElement(\"cboRecordingOptions_{ID}_{PROPERTY.ID}\").value, {ID}, {PROPERTY.ID});'/>" +
-          "</td></tr>";
-      const string editableURL = "<a href='javascript:doOperation(\"editRecordingAct\", {RECORDING.BOOK.ID}, {RECORDING.ID})'>" +
-                                 "<b id='ancRecordingAct_{ID}'>{RECORDING.ACT.DISPLAY.NAME}</b></a>";
-      const string readonlyURL = "<b id='ancRecordingAct_{ID}'>{RECORDING.ACT.DISPLAY.NAME}</b>";
-
-      const string propertyURL = "<a href='javascript:doOperation(\"editProperty\", {ID}, {PROPERTY.ID})'>" +
-                                 "<b id='ancRecordingActProperty_{ID}_{PROPERTY.ID}'>{PROPERTY.TRACT}</b></a>";
-
-      const string optionsCombo =
-          "<select id='cboRecordingOptions_{ID}_{PROPERTY.ID}' class='selectBox' style='width:148px'>" +
-          "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
-          "{INCREMENT_INDEX}" +
-          "{DECREMENT_INDEX}" +
-          "<option value='selectRecordingActOperation'></option>" +
-          "<option value='addPropertyToRecordingAct'>Agregar otro predio</option>" +
-          "<option value='addAnotherRecordingActToRecording'>Agregar otro acto</option>" +
-          "<option value='modifyRecordingActType'>Modificar este acto</option>" +
-          "<option value='deleteRecordingAct'>Eliminar este acto</option>" +
-          "</select>";
-
-      const string propertyOptionsCombo =
-          "<select id='cboRecordingOptions_{ID}_{PROPERTY.ID}' class='selectBox' style='width:148px'>" +
-          "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
-          "<option value='deleteRecordingActProperty'>Eliminar este predio</option>" +
-          "<option value='viewPropertyTract'>Ver la historia de este predio</option>" +
-          "</select>";
-
-      string temp = row.Replace("{CLASS}", (counter % 2 == 0) ? "detailsItem" : "detailsOddItem");
-
-      if (tractItemIndex == 0) {
-        temp = temp.Replace("{RECORDING.ACT.INDEX}", counter.ToString("00"));
-        if (recordingAct.RecordingActType.Autoregister) {
-          temp = temp.Replace("{RECORDING.ACT.URL}", readonlyURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
-                                                                         recordingAct.DisplayName));
-        } else {
-          temp = temp.Replace("{RECORDING.ACT.URL}", editableURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
-                                                                         recordingAct.DisplayName));
-        }
-        temp = temp.Replace("{RECORDING.ACT.DISPLAY.NAME}", recordingAct.DisplayName);
-        temp = temp.Replace("{RECORDING.ACT.STATUS}", recordingAct.StatusName);
-      } else {
-        temp = temp.Replace("{RECORDING.ACT.INDEX}", "<i>" + counter.ToString("00") + "</i>");
-        temp = temp.Replace("{RECORDING.ACT.URL}", readonlyURL.Replace("{RECORDING.ACT.DISPLAY.NAME}",
-                                                                       "<i>ídem</i>"));
-        temp = temp.Replace("{RECORDING.ACT.STATUS}", @"&nbsp;");
-      }
-
-      if (tractItem.Resource is RealEstate && ((RealEstate) tractItem.Resource).CadastralKey.Length != 0) {
-        temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", tractItem.Resource.UID
-                                              + " <br />" + ((RealEstate) tractItem.Resource).CadastralKey));
-      } else {
-        temp = temp.Replace("{PROPERTY.URL}", propertyURL.Replace("{PROPERTY.TRACT}", tractItem.Resource.UID));
-      }
-      if (recordingAct.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.RealEstate ||
-          recordingAct.RecordingActType.RecordingRule.AppliesTo == RecordingRuleApplication.Structure) {
-        temp = temp.Replace("{PROPERTY.STATUS}", tractItem.StatusName);
-      } else {
-        temp = temp.Replace("{PROPERTY.STATUS}", "N/A");
-      }
-
-      if (tractItem.Resource is Association) {
-        temp = FillAssociationGridRow(recordingAct, (Association) tractItem.Resource, temp);
-      } else {
-        temp = FillPropertyGridRow(recordingAct, (RealEstate) tractItem.Resource, temp);
-      }
-
-      temp = temp.Replace("{PHYSICAL.RECORDING.DATA}", recordingAct.Id.ToString());
-
-      if (tractItemIndex == 0) {
-        temp = temp.Replace("{OPTIONS.COMBO}", optionsCombo);
-        if (recordingActsCount > 1) {
-          if (recordingActIndex != 0) {
-            temp = temp.Replace("{INCREMENT_INDEX}",
-                   "<option value='upwardRecordingAct'>Subir en la secuencia</option>");
-          } else {
-            temp = temp.Replace("{INCREMENT_INDEX}", String.Empty);
-          }
-          if (recordingActIndex != recordingActsCount - 1) {
-            temp = temp.Replace("{DECREMENT_INDEX}",
-                   "<option value='downwardRecordingAct'>Bajar en la secuencia</option>");
-          } else {
-            temp = temp.Replace("{DECREMENT_INDEX}", String.Empty);
-          }
-        } else { // recording.RecordingActs.Count <= 1
-          temp = temp.Replace("{INCREMENT_INDEX}", String.Empty);
-          temp = temp.Replace("{DECREMENT_INDEX}", String.Empty);
-        }
-      } else { // propertyEventIndex != 0
-        temp = temp.Replace("{OPTIONS.COMBO}", propertyOptionsCombo);
-      }
-
-      temp = temp.Replace("{ID}", recordingAct.Id.ToString());
-      temp = temp.Replace("{PROPERTY.ID}", tractItem.Resource.Id.ToString());
-      temp = temp.Replace("{RECORDING.ID}", recordingAct.PhysicalRecording.Id.ToString());
-      temp = temp.Replace("{RECORDING.BOOK}", recordingAct.PhysicalRecording.RecordingBook.AsText);
-      temp = temp.Replace("{RECORDING.BOOK.ID}", recordingAct.PhysicalRecording.RecordingBook.Id.ToString());
-      temp = temp.Replace("{RECORDING.NUMBER}", recordingAct.PhysicalRecording.Number);
-
-      return temp;
-    }
-
-    #endregion OLD Private methods
 
   } // class LRSGridControls
 

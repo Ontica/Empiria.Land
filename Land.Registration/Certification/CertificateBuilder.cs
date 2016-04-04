@@ -199,7 +199,7 @@ namespace Empiria.Land.Certification {
       var text = new StringBuilder(template);
 
       text.Replace("{{DOCUMENT}}", document.UID);
-      if (document.AuthorizationTime != ExecutionServer.DateMaxValue) {
+      if (document.AuthorizationTime != ExecutionServer.DateMinValue) {
         text.Replace("{{DATE}}", document.AuthorizationTime.ToString("dd \\de MMMM \\de yyyy"));
 
         return text.ToString();

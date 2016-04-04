@@ -66,6 +66,10 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+    public RecordingAct GetRecordingAntecedent() {
+      return this.Resource.GetRecordingAntecedent(this.RecordingAct);
+    }
+
     [DataField("ResourceRole", Default = ResourceRole.Informative)]
     public ResourceRole ResourceRole {
       get;

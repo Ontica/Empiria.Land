@@ -114,10 +114,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Empiria.Land.UI.AssemblyInfo.cs" />
-    <Compile Include="Utility\PropertyActGridRow.cs" />
-    <Compile Include="Utility\DocumentActGridRow.cs" />
-    <Compile Include="Utility\AssociationActGridRow.cs" />
-    <Compile Include="Utility\RecordingActGridRow.cs" />
     <Compile Include="RootTypes\RecordingActsGrid.cs" />
     <Compile Include="RootTypes\RecordingActEditorControlBase.cs">
       <SubType>ASPXCodeBehind</SubType>

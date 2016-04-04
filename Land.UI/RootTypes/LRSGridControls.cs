@@ -407,7 +407,7 @@ namespace Empiria.Land.UI {
           temp = temp.Replace("{RECORDING.IMAGES}", "De la " + recordings[i].StartImageIndex.ToString() +
                               " a la " + recordings[i].EndImageIndex);
         }
-        if (recordings[i].Document.PresentationTime == Empiria.ExecutionServer.DateMaxValue) {
+        if (recordings[i].Document.PresentationTime == ExecutionServer.DateMinValue) {
           temp = temp.Replace("{RECORDING.PRESENTATION.TIME}", "No consta");
         } else {
           temp = temp.Replace("{RECORDING.PRESENTATION.TIME}",

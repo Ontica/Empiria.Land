@@ -27,7 +27,8 @@ namespace Empiria.Land.Registration.Data {
       if (resource.IsEmptyInstance) {
         return new FixedList<RecordingAct>();
       }
-      var operation = DataOperation.Parse("qryLRSPropertyRecordingActs", resource.Id);
+
+      var operation = DataOperation.Parse("qryLRSResourceRecordingActs", resource.Id);
 
       return DataReader.GetList<RecordingAct>(operation,
                                               (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
@@ -35,7 +36,11 @@ namespace Empiria.Land.Registration.Data {
 
     static public FixedList<RecordingAct> GetResourceRecordingActListUntil(Resource resource, RecordingAct breakAct,
                                                                            bool includeBreakAct) {
-      var operation = DataOperation.Parse("qryLRSPropertyRecordingActs", resource.Id);
+      if (resource.IsEmptyInstance) {
+        return new FixedList<RecordingAct>();
+      }
+
+      var operation = DataOperation.Parse("qryLRSResourceRecordingActs", resource.Id);
       DataTable table = DataReader.GetDataTable(operation);
       List<RecordingAct> list = new List<RecordingAct>();
       foreach (DataRow row in table.Rows) {
@@ -83,7 +88,7 @@ namespace Empiria.Land.Registration.Data {
         return new List<TractItem>();
       }
 
-      var operation = DataOperation.Parse("qryLRSTractIndexByRecordingAct", recordingAct.Id);
+      var operation = DataOperation.Parse("qryLRSRecordingActTractIndex", recordingAct.Id);
 
       return DataReader.GetList<TractItem>(operation, (x) => BaseObject.ParseList<TractItem>(x));
     }

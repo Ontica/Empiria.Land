@@ -241,20 +241,49 @@ namespace Empiria.Land.Registration {
       return RecordingActsData.GetResourceRecordingActListUntil(this, breakAct, includeBreakAct);
     }
 
-    ///// <summary>TODO: OOJJOO To be deprecated ???</summary>
-    //public RecordingAct GetAntecedent(RecordingAct baseRecordingAct) {
-    //  FixedList<RecordingAct> tract = this.GetRecordingActsTract();
+    public RecordingAct GetRecordingAntecedentJustBefore(DateTime presentationTime) {
+      FixedList<RecordingAct> tract = this.GetRecordingActsTract();
 
-    //  int index = tract.IndexOf(baseRecordingAct);
+      var antecedent = tract.FindLast((x) => x.Document.PresentationTime <= presentationTime);
 
-    //  if (index == -1) {
-    //    return RecordingAct.Empty;
-    //  } else if ((index + 1) < tract.Count) {
-    //    return tract[index + 1];
-    //  } else {
-    //    return RecordingAct.Empty; // No Antecedent
-    //  }
-    //}
+      if (antecedent != null) {
+        return antecedent;
+      } else {
+        return RecordingAct.Empty;
+      }
+    }
+
+    public RecordingAct GetRecordingAntecedent(RecordingAct recordingAct) {
+      /// For amendment acts, this method returns the amendmentOf act
+      if (recordingAct.RecordingActType.IsAmendmentActType) {
+        return recordingAct.AmendmentOf;
+      }
+      var tract = this.GetRecordingActsTractUntil(recordingAct, false);
+
+      /// Returns the empty recording act if there are not antecedents.
+      if (tract.Count == 0) {
+        if (this is RealEstate) {
+          /// If no antecedent, then look if the real estate is a new partition.
+          /// If it is then return the antecedent of the partitioned or parent real estate.
+          var parentRealEstate = ((RealEstate) this).IsPartitionOf;
+          if (!parentRealEstate.IsEmptyInstance) {
+            return parentRealEstate.GetRecordingAntecedentJustBefore(recordingAct.Document.PresentationTime);
+          } else {
+            return RecordingAct.Empty;
+          }
+        } else {
+          return RecordingAct.Empty;
+        }
+      }
+      if (this is RealEstate) {
+        /// Returns the last domain act or the very first act if there are no domain acts.
+        return tract.FindLast((x) => x.RecordingActType.IsDomainActType) ?? tract[0];
+      } else {
+        /// For no real estate, return always the first act that is the creational act.
+        /// Resources different than real estates don't have domain acts.
+        return tract[0];
+      }
+    }
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {

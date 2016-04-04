@@ -26,7 +26,7 @@ namespace Empiria.Land.Registration.Data {
       if (property.IsNew || property.IsEmptyInstance) {
         return new RealEstate[0];
       }
-      DataOperation operation = DataOperation.Parse("qryLRSPropertyPartitions", property.Id);
+      DataOperation operation = DataOperation.Parse("qryLRSRealEstatePartitions", property.Id);
 
       return DataReader.GetList<RealEstate>(operation,
                                           (x) => BaseObject.ParseList<RealEstate>(x)).ToArray();

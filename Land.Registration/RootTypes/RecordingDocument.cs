@@ -86,13 +86,13 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    [DataField("PresentationTime", Default = "ExecutionServer.DateMaxValue")]
+    [DataField("PresentationTime", Default = "ExecutionServer.DateMinValue")]
     public DateTime PresentationTime {
       get;
       set;
     }
 
-    [DataField("AuthorizationTime", Default = "ExecutionServer.DateMaxValue")]
+    [DataField("AuthorizationTime", Default = "ExecutionServer.DateMinValue")]
     public DateTime AuthorizationTime {
       get;
       set;

@@ -86,6 +86,12 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public bool IsAmendmentActType {
+      get {
+        return (this.IsCancelationActType || this.IsModificationActType);
+      }
+    }
+
     public bool IsCancelationActType {
       get {
         return base.Name.StartsWith("ObjectType.RecordingAct.CancelationAct");
@@ -200,7 +206,7 @@ namespace Empiria.Land.Registration {
     public FixedList<RecordingActType> GetAppliesToRecordingActTypesList() {
       var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
 
-      var list = json.GetList<RecordingActType>("RecordingActTypes");
+      var list = json.GetList<RecordingActType>("RecordingActTypes", false);
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
       return list.ToFixedList();
