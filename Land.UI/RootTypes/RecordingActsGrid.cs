@@ -9,6 +9,7 @@
 *                                                                                                             *
 ********************************** Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Collections.Generic;
 
 using Empiria.Land.Registration;
 
@@ -57,6 +58,8 @@ namespace Empiria.Land.UI {
  	    throw new NotImplementedException();
     }
 
+    Dictionary<string, int> antecedentsDictionary = new Dictionary<string, int>();
+
     private string GetRecordingActRow(RecordingAct recordingAct, TractItem tractItem) {
       string row = GetRowTemplate(recordingAct);
 
@@ -64,7 +67,15 @@ namespace Empiria.Land.UI {
       row = row.Replace("{{RECORDING.ACT.URL}}", recordingAct.DisplayName);
       row = row.Replace("{{RESOURCE.URL}}", GetResourceCell(tractItem));
 
-      row = row.Replace("{{ANTECEDENT}}", GetAntecedentOrTargetCell(tractItem));
+      var antecedent = GetAntecedentOrTargetCell(tractItem);
+      if (antecedentsDictionary.ContainsKey(antecedent)) {
+        int recordingActIndex = antecedentsDictionary[antecedent];
+        row = row.Replace("{{ANTECEDENT}}", "Igual que el acto " +
+                                            recordingActIndex.ToString("00"));
+      } else {
+        antecedentsDictionary.Add(antecedent, tractItem.RecordingAct.Index + 1);
+        row = row.Replace("{{ANTECEDENT}}", antecedent);
+      }
       row = row.Replace("{{OPTIONS.COMBO}}", GetOptionsCombo(tractItem));
 
       row = row.Replace("{{TARGET.ID}}", recordingAct.Id.ToString());
@@ -88,16 +99,21 @@ namespace Empiria.Land.UI {
         if (!realEstate.IsPartitionOf.IsEmptyInstance &&
              realEstate.FirstRecordingAct.Equals(tractItem.RecordingAct)) {
           return realEstate.UID + "<br />" +
+                 (realEstate.CadastralKey.Length != 0 ?
+                 "<i>Catastro: " + realEstate.CadastralKey + "</i><br />" : String.Empty) +
                  "creado como <b>" + realEstate.PartitionNo + "</b> del<br />predio " +
                  realEstate.IsPartitionOf.UID;
         } else {
-          return realEstate.UID;
+          return realEstate.UID + "<br />" +
+                 (realEstate.CadastralKey.Length != 0 ?
+                 "<i>Catastro: " + realEstate.CadastralKey + "</i><br />" : String.Empty);
         }
       } else if (tractItem.Resource is Association) {
         return tractItem.Resource.UID + "<br />" +
                ((Association) tractItem.Resource).Name;
       } else {
-        return "Referencia registral:<br />" + tractItem.Resource.UID;
+        return "Referencia registral:<br />" +
+               tractItem.Resource.UID;
       }
     }
 
@@ -109,39 +125,43 @@ namespace Empiria.Land.UI {
       if (antecedent.IsEmptyInstance) {
         return "Sin antecedente registral";
       } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {
-        return antecedent.PhysicalRecording.AsText + "<br />"+  
-               "Doc: "  + antecedent.Document.UID + "<br />" +
-               "Prel: " + GetDateAsText(antecedent.Document.PresentationTime) + " " +
-               "Reg: " + GetDateAsText(antecedent.Document.AuthorizationTime);
+        return antecedent.PhysicalRecording.AsText + "<br />" +
+               GetRecordingDates(antecedent.Document);
       } else if (antecedent.Document.Equals(tractItem.RecordingAct.Document)) {
-        return "Este mismo documento";
+        return String.Format("Folio real creado en el acto {0}",
+                             (antecedent.Index + 1).ToString("00"));
       } else {
         return antecedent.Document.UID + "<br />" +
-               "Prel: " + GetDateAsText(antecedent.Document.PresentationTime) + " " +
-               "Reg: " + GetDateAsText(antecedent.Document.AuthorizationTime);
+               GetRecordingDates(antecedent.Document);
       }
+    }
+
+    private static string GetRecordingDates(RecordingDocument document) {
+      return "Present: " + GetDateAsText(document.PresentationTime) + " &nbsp; " +
+             "Reg: " + GetDateAsText(document.AuthorizationTime);
     }
 
     static private string GetAmendedItemCell(TractItem tractItem) {
       var amendedAct = tractItem.RecordingAct.AmendmentOf;
 
       if (!amendedAct.PhysicalRecording.IsEmptyInstance) {
-        return amendedAct.RecordingActType.DisplayName + " en<br/>" +
+        return amendedAct.RecordingActType.DisplayName +
+               (amendedAct.RecordingActType.FemaleGenre ?
+                                            " registrada en<br/>" : " registrado en<br/>") +
                amendedAct.PhysicalRecording.AsText + "<br />" +
-               "Doc: " + amendedAct.Document.UID + "<br />" +
-               "Prel: " + GetDateAsText(amendedAct.Document.PresentationTime) + " " +
-               "Reg: " + GetDateAsText(amendedAct.Document.AuthorizationTime);
+               GetRecordingDates(amendedAct.Document);
       } else {
-        return amendedAct.RecordingActType.DisplayName + " en<br/>" +
+        return amendedAct.RecordingActType.DisplayName +
+               (amendedAct.RecordingActType.FemaleGenre ?
+                                            " registrada en<br/>" : " registrado en<br/>") +
                "Doc: " + amendedAct.Document.UID + "<br />" +
-               "Prel: " + GetDateAsText(amendedAct.Document.PresentationTime) + " " +
-               "Reg: " + GetDateAsText(amendedAct.Document.AuthorizationTime);
+               GetRecordingDates(amendedAct.Document);
       }
     }
 
     static private string GetRowTemplate(RecordingAct recordingAct) {
       const string template = "<tr class='{{CLASS}}'>" +
-                              "<td><b id='ancRecordingActIndex_{{ID}}'>{{INDEX}}</b><br/>" +
+                              "<td><b id='ancRecordingActIndex_{{ID}}'>{{INDEX}}</b></td>" +
                               "<td style='white-space:normal'>{{RECORDING.ACT.URL}}</td>" +
                               "<td style='white-space:nowrap'>{{RESOURCE.URL}}</td>" +
                               "<td style='white-space:normal'>{{ANTECEDENT}}</td>" +
@@ -157,7 +177,7 @@ namespace Empiria.Land.UI {
 
     static private string GetOptionsCombo(TractItem tractItem) {
       const string template =
-        "<select id='cboRecordingOptions_{{TRACT-ITEM.ID}}' class='selectBox' style='width:136px'>" +
+        "<select id='cboRecordingOptions_{{TRACT-ITEM.ID}}' class='selectBox' style='width:130px'>" +
         "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
         "<option value='modifyRecordingActType'>Modificar este acto</option>" +
         "<option value='deleteRecordingAct'>Eliminar este acto</option>" +
