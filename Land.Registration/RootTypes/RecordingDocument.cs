@@ -293,6 +293,10 @@ namespace Empiria.Land.Registration {
       return recordingAct;
     }
 
+    public LRSTransaction GetTransaction() {
+      return DocumentsData.GetDocumentTransaction(this);
+    }
+
     public void RemoveRecordingAct(RecordingAct recordingAct) {
       Assertion.AssertObject(recordingAct, "recordingAct");
 
@@ -308,6 +312,16 @@ namespace Empiria.Land.Registration {
       if (this.RecordingActs.Count == 0 && this.IsEmptyDocument) {
         this.Delete();
       }
+    }
+
+    public void GenerateImagingControlID() {
+      Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance.");
+      Assertion.Assert(this.RecordingActs.Count > 0, "Document should have recording acts.");
+      Assertion.Assert(this.RecordingActs.CountAll((x) => !x.PhysicalRecording.IsEmptyInstance) == 0,
+                       "Document can't have any recording acts that are related to physical recordings.");
+
+      this.ImagingControlID = DocumentsData.GetNextImagingControlID(this);
+      DocumentsData.SaveImagingControlID(this);
     }
 
     public void ChangeDocumentType(RecordingDocumentType newRecordingDocumentType) {

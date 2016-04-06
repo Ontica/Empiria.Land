@@ -12,6 +12,7 @@ using System;
 using System.Data;
 
 using Empiria.Data;
+using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration.Data {
 
@@ -48,8 +49,46 @@ namespace Empiria.Land.Registration.Data {
       return temp;
     }
 
+    static internal LRSTransaction GetDocumentTransaction(RecordingDocument document) {
+      if (document.IsEmptyInstance) {
+        return LRSTransaction.Empty;
+      }
+
+      var sql = String.Format("SELECT * FROM LRSTransactions WHERE DocumentId = {0}", document.Id);
+
+      var dataRow = DataReader.GetDataRow(DataOperation.Parse(sql));
+      if (dataRow != null) {
+        return BaseObject.ParseDataRow<LRSTransaction>(dataRow);
+      } else {
+        return LRSTransaction.Empty;
+      }
+    }
+
+    internal static string GetNextImagingControlID(RecordingDocument document) {
+      string prefix = document.AuthorizationTime.ToString("yyyy-MM");
+
+      var sql = String.Format("SELECT MAX(ImagingControlID) " +
+                              "FROM LRSDocuments WHERE ImagingControlID LIKE '{0}-%'", prefix);
+
+      var imagingControlID = DataReader.GetScalar<String>(DataOperation.Parse(sql), String.Empty);
+
+      if (imagingControlID != String.Empty) {
+        var counter = int.Parse(imagingControlID.Split('-')[2]);
+        counter++;
+        return prefix + "-" + counter.ToString("00000");
+      } else {
+        return prefix + "-" + 1.ToString("00000");
+      }
+    }
+
     static internal DataRow GetRecordingMainDocument(Recording recording) {
       return DataReader.GetDataRow(DataOperation.Parse("getLRSRecordingMainDocument", recording.Id));
+    }
+
+    internal static int SaveImagingControlID(RecordingDocument document) {
+      var op = DataOperation.Parse("setLRSDocumentImagingControlID",
+                                   document.Id, document.ImagingControlID);
+      return DataWriter.Execute(op);
     }
 
     #endregion Public methods
