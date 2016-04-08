@@ -21,11 +21,32 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
+    internal ModificationAct(RecordingActType recordingActType,
+                             RecordingDocument document, Resource resource,
+                             RecordingAct recordingActToModify) : base(recordingActType, document) {
+      Assertion.AssertObject(resource, "resource");
+      Assertion.AssertObject(recordingActToModify, "recordingActToModify");
+
+      this.AttachResource(resource);
+
+      recordingActToModify.Amend(this);
+    }
+
     static public new ModificationAct Parse(int id) {
       return BaseObject.ParseId<ModificationAct>(id);
     }
 
     #endregion Constructors and parsers
+
+    #region Methods
+
+    private void AttachResource(Resource targetResource) {
+      var tractItem = new TractItem(this, targetResource);
+
+      base.AddTractItem(tractItem);
+    }
+
+    #endregion Methods
 
   } // class ModificationAct
 

@@ -119,8 +119,10 @@ namespace Empiria.Land.Registration {
 
       } else if (recordingActType.IsCancelationActType) {
         return this.CreateCancelationAct();
-        //} else if (recordingActType.IsModificationActType) {
-        //  return this.CreateInformationAct();
+
+      } else if (recordingActType.IsModificationActType) {
+        return this.CreateModificationAct();
+
       } else {
         throw new NotImplementedException("RecordingExpert.DoRecording: Recording act '" +
                                           Task.RecordingActType.DisplayName + "' has an undefined or wrong rule.");
@@ -189,6 +191,29 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    private ModificationAct[] CreateModificationAct() {
+      Assertion.Assert(!this.Task.TargetActInfo.IsEmptyInstance,
+                       "The target recording act should not be the empty instance.");
+
+      switch (this.Task.RecordingActType.AppliesTo) {
+        case RecordingRuleApplication.RecordingAct:
+          return CreateRecordingActModificationAct();
+        case RecordingRuleApplication.Association:
+        case RecordingRuleApplication.NoProperty:
+        case RecordingRuleApplication.RealEstate:
+          return this.CreateResourceModificationAct();
+        //case RecordingRuleApplication.Document:
+        //  return this.CreateDocumentModificationAct();
+        case RecordingRuleApplication.Party:
+          return this.CreatePartyModificationAct();
+        case RecordingRuleApplication.Structure:
+          return this.CreateStructureModificationAct();
+
+        default:
+          throw Assertion.AssertNoReachThisCode();
+      }
+    }
+
     #endregion Recording methods
 
     #region Cancelation methods
@@ -240,6 +265,32 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Cancelation methods
+
+    #region Modification methods
+
+    private ModificationAct[] CreatePartyModificationAct() {
+      throw new NotImplementedException();
+    }
+
+    private ModificationAct[] CreateRecordingActModificationAct() {
+      var resource = this.GetOneResource();
+
+      RecordingAct targetAct = this.GetTargetRecordingAct(resource);
+
+      return new[] { new ModificationAct(this.Task.RecordingActType,
+                                         this.Task.Document, resource, targetAct) };
+    }
+
+    private ModificationAct[] CreateResourceModificationAct() {
+      throw new NotImplementedException();
+    }
+
+    private ModificationAct[] CreateStructureModificationAct() {
+      throw new NotImplementedException();
+    }
+
+
+    #endregion Modification methods
 
     #region Get resources methods
 

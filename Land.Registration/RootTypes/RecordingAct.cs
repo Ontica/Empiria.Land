@@ -313,6 +313,13 @@ namespace Empiria.Land.Registration {
       this.Save();
     }
 
+    internal void Amend(ModificationAct modificationAct) {
+      modificationAct.AmendmentOf = this;
+      this.AmendedBy = modificationAct;
+      modificationAct.Save();
+      this.Save();
+    }
+
     public void ChangeStatusTo(RecordableObjectStatus newStatus) {
       this.Status = newStatus;
       this.Save();

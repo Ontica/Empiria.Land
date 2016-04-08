@@ -95,6 +95,7 @@ namespace Empiria.Land.Registration {
 
     private JsonObject ConvertToJson() {
       JsonObject json = new JsonObject();
+      json.Add(new JsonItem("IsModification", this.recordingActType.IsModificationActType));
       json.Add(new JsonItem("IsCancelation", this.recordingActType.IsCancelationActType));
       json.Add(new JsonItem("AllowsPartitions", this.AllowsPartitions));
       json.Add(new JsonItem("AppliesTo", this.AppliesTo.ToString()));
