@@ -18,34 +18,6 @@ using Empiria.Security;
 
 namespace Empiria.Land.Registration.Transactions {
 
-  public enum TransactionStatus {
-    Payment = 'Y',
-    Received = 'R',
-    Reentry = 'N',
-    Control = 'K',
-    Qualification = 'F',
-    Recording = 'G',
-    Elaboration = 'E',
-    Revision = 'V',
-
-    Juridic = 'J',
-
-    Process = 'P',
-    OnSign = 'S',
-
-    Safeguard = 'A',
-    ToDeliver = 'D',
-    Delivered = 'C',
-    ToReturn = 'L',
-    Returned = 'Q',
-    Deleted = 'X',
-
-    Finished = 'H',
-
-    Undefined = 'U',
-    EndPoint = 'Z',
-  }
-
   /// <summary>Represents a transaction or process on a land registration office.</summary>
   public class LRSTransaction : BaseObject, IExtensible<LRSTransactionExtData>, IProtected {
 
@@ -609,7 +581,7 @@ namespace Empiria.Land.Registration.Transactions {
           }
           list.Add(TransactionStatus.Revision);
           list.Add(TransactionStatus.OnSign);
-          if (ExecutionServer.LicenseName == "Tlaxcala" && LRSTransaction.IsRecordable(type, docType)) {
+          if (ExecutionServer.LicenseName == "Tlaxcala" && LRSTransaction.IsSafeguardable(type, docType)) {
             list.Add(TransactionStatus.Safeguard);
           }
           list.Add(TransactionStatus.ToReturn);
@@ -716,9 +688,9 @@ namespace Empiria.Land.Registration.Transactions {
             list.Add(TransactionStatus.Control);
             list.Add(TransactionStatus.ToReturn);
           } else if (ExecutionServer.LicenseName == "Tlaxcala") {
-            if (LRSTransaction.IsRecordable(type, docType)) {
+            if (LRSTransaction.IsSafeguardable(type, docType)) {
               list.Add(TransactionStatus.Safeguard);
-            } else if (LRSTransaction.IsCertificateIssue(type, docType)) {
+            } else {
               list.Add(TransactionStatus.ToDeliver);
             }
             list.Add(TransactionStatus.ToReturn);
@@ -733,7 +705,9 @@ namespace Empiria.Land.Registration.Transactions {
           break;
         case TransactionStatus.ToDeliver:
           list.Add(TransactionStatus.Delivered);
-          list.Add(TransactionStatus.Safeguard);
+          if (LRSTransaction.IsSafeguardable(type, docType)) {
+            list.Add(TransactionStatus.Safeguard);
+          }
           list.Add(TransactionStatus.Control);
           break;
         case TransactionStatus.ToReturn:
@@ -1004,6 +978,24 @@ namespace Empiria.Land.Registration.Transactions {
         }
       }
       return false;
+    }
+
+    static public bool IsSafeguardable(LRSTransactionType type, LRSDocumentType docType) {
+      if (!IsRecordable(type, docType)) {
+        return false;
+      }
+      if (IsCertificateIssue(type, docType)) {
+        return false;
+      }
+      if (ExecutionServer.LicenseName == "Tlaxcala") {
+        if (type.Id == 699 || type.Id == 702) {
+          return false;
+        } else if (EmpiriaMath.IsMemberOf(docType.Id, new int[] { 715, 724, 728, 734, 735, 739,
+                                                                  743, 744, 745, 747, 757 })) {
+          return false;
+        }
+      }
+      return true;
     }
 
     private void ResetTasksList() {

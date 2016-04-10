@@ -159,6 +159,7 @@
     <Compile Include="Transactions\LRSFee.cs" />
     <Compile Include="Transactions\LRSPayment.cs" />
     <Compile Include="Transactions\LRSPaymentList.cs" />
+    <Compile Include="Transactions\TransactionStatus.cs" />
     <Compile Include="Transactions\LRSTransactionTaskList.cs" />
     <Compile Include="Transactions\LRSTransactionTask.cs" />
     <Compile Include="Transactions\CalculationRule.cs" />
