@@ -24,18 +24,6 @@ namespace Empiria.Land.Registration.Data {
 
     #region Public methods
 
-    static public LRSTransactionTask GetTransactionLastTask(LRSTransaction transaction) {
-      DataRow row = DataReader.GetDataRow(DataOperation.Parse("getLRSLastTransactionTrack", transaction.Id));
-
-      return BaseObject.ParseDataRow<LRSTransactionTask>(row);
-    }
-
-    static public DataView GetLRSResponsibleTransactionInbox(Contacts.Contact contact, TrackStatus status,
-                                                         string filter, string sort) {
-      DataOperation op = DataOperation.Parse("qryLRSResponsibleTransactionInbox", contact.Id, (char) status);
-      return DataReader.GetDataView(op, filter, sort);
-    }
-
     static public DataView GetLRSTransactionsForUI(string filter, string sort) {
       string sql = "SELECT TOP 500 * FROM vwLRSTransactionsAndCurrentTrack";
       if (filter.Length != 0 && sort.Length != 0) {
@@ -101,23 +89,6 @@ namespace Empiria.Land.Registration.Data {
       var operation = DataOperation.Parse(String.Format(sql, externalTransactionNo));
 
       return (DataReader.Count(operation) > 0);
-    }
-
-    static public List<LRSTransactionTask> GetLRSTransactionTaskList(LRSTransaction transaction) {
-      var operation = DataOperation.Parse("qryLRSTransactionTrack", transaction.Id);
-
-      return DataReader.GetList<LRSTransactionTask>(operation,
-                                                    (x) => BaseObject.ParseList<LRSTransactionTask>(x));
-    }
-
-    static public DataView GetContactsWithActiveTransactions() {
-      return DataReader.GetDataView(DataOperation.Parse("SELECT * FROM vwLRSTransactionsTotals"));
-    }
-
-    static public FixedList<Contact> GetContactsWithOutboxDocuments() {
-      var operation = DataOperation.Parse("qryLRSContactsWithOutboxDocuments");
-
-      return DataReader.GetList<Contact>(operation, (x) => BaseObject.ParseList<Contact>(x)).ToFixedList();
     }
 
     static public string GenerateAssociationUID() {
@@ -250,7 +221,7 @@ namespace Empiria.Land.Registration.Data {
                   o.ExternalTransaction.ToString(), o.ExtensionData.ToString(),
                   o.Keywords, o.PresentationTime, o.ExpectedDelivery, o.LastReentryTime, o.ClosingTime,
                   o.LastDeliveryTime, o.NonWorkingTime, o.ComplexityIndex, o.IsArchived,
-                  (char) o.Status, o.Integrity.GetUpdatedHashCode());
+                  (char) o.Workflow.CurrentStatus, o.Integrity.GetUpdatedHashCode());
     }
 
     static internal int WriteTransactionItem(LRSTransactionItem o) {
@@ -262,16 +233,6 @@ namespace Empiria.Land.Registration.Data {
                                           o.Fee.ForeignRecordingFee, o.Fee.Discount.Amount,
                                           o.ExtensionData.ToString(), o.Status,
                                           o.Integrity.GetUpdatedHashCode());
-      return DataWriter.Execute(operation);
-    }
-
-    static internal int WriteTransactionTask(LRSTransactionTask o) {
-      var operation = DataOperation.Parse("writeLRSTransactionTrack", o.Id, o.Transaction.Id,
-                                          o.EventId, (char) o.Mode, o.AssignedBy.Id, o.Responsible.Id,
-                                          o.NextContact.Id, (char) o.CurrentStatus, (char) o.NextStatus,
-                                          o.CheckInTime, o.EndProcessTime, o.CheckOutTime, o.Notes,
-                                          o.PreviousTask.Id, o.NextTask.Id, (char) o.Status, String.Empty);
-
       return DataWriter.Execute(operation);
     }
 

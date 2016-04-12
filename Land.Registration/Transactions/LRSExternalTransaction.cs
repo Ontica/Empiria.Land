@@ -90,11 +90,24 @@ namespace Empiria.Land.Registration.Transactions {
     protected internal virtual Contact Agency {
       get;
       set;
-    } = LRSTransaction.InterestedContact;
+    } = LRSWorkflow.InterestedContact;
 
     #endregion Public properties
 
-    #region Public methods
+    #region Methods
+
+    private void ApplyItemsRuleToTransaction(LRSTransaction transaction) {
+      if (this.TransactionType.Id == 699 && this.DocumentType.Id == 708) {
+        transaction.AddItem(RecordingActType.Parse(2284), LRSLawArticle.Parse(874), 146.00m);
+        transaction.AddItem(RecordingActType.Parse(2114), LRSLawArticle.Parse(859), 146.00m);
+      } else if (this.TransactionType.Id == 702 && this.DocumentType.Id == 713) {
+        transaction.AddItem(RecordingActType.Parse(2114), LRSLawArticle.Parse(859), 146.00m);
+      } else if (this.TransactionType.Id == 702 && this.DocumentType.Id == 710) {
+        transaction.AddItem(RecordingActType.Parse(2111), LRSLawArticle.Parse(859), 146.00m);
+      } else if (this.TransactionType.Id == 702 && this.DocumentType.Id == 711) {
+        transaction.AddItem(RecordingActType.Parse(2112), LRSLawArticle.Parse(859), 146.00m);
+      }
+    }
 
     protected virtual void AssertIsValid() {
       this.ExternalTransactionNo = EmpiriaString.TrimAll(this.ExternalTransactionNo).ToUpperInvariant();
@@ -124,6 +137,27 @@ namespace Empiria.Land.Registration.Transactions {
 
     }
 
+    protected LRSTransaction CreateLRSTransaction() {
+      var transaction = new LRSTransaction(this.TransactionType);
+
+      transaction.DocumentType = this.DocumentType;
+      transaction.ExternalTransaction = this;
+      transaction.RequestedBy = this.RequestedBy;
+      transaction.Agency = this.Agency;
+      transaction.DocumentDescriptor = "CITyS-" + this.ExternalTransactionNo;
+      transaction.RecorderOffice = RecorderOffice.Parse(99);
+
+      transaction.Save();
+
+      this.ApplyItemsRuleToTransaction(transaction);
+
+      transaction.AddPayment(this.PaymentReceiptNo, this.PaymentAmount);
+
+      transaction.Workflow.Receive("Recibido automáticamente desde el sistema externo de trámites.");
+
+      return transaction;
+    }
+
     public virtual JsonObject ToJson() {
       var json = new JsonObject();
 
@@ -139,7 +173,7 @@ namespace Empiria.Land.Registration.Transactions {
       return this.ToJson().ToString();
     }
 
-    #endregion Public methods
+    #endregion Methods
 
   }  // class LRSExternalTransaction
 

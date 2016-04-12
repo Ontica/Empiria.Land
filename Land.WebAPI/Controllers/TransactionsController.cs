@@ -115,7 +115,7 @@ namespace Empiria.Land.WebApi {
         projectedActId = externalTransaction.ProjectedActId,
         projectedOwner = externalTransaction.ProjectedOwner,
         estimatedDueTime = o.EstimatedDueTime,
-        status = o.StatusName,
+        status = o.Workflow.CurrentStatusName,
       };
     }
 
@@ -127,7 +127,7 @@ namespace Empiria.Land.WebApi {
         presentationTime = o.PresentationTime,
         realPropertyUID = externalTransaction.RealPropertyUID,
         estimatedDueTime = o.EstimatedDueTime,
-        status = o.StatusName,
+        status = o.Workflow.CurrentStatusName,
       };
     }
 

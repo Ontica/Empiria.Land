@@ -2,14 +2,13 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSTransactionTask                             Pattern  : Association Class                   *
+*  Type      : LRSWorkflowTask                                Pattern  : Association Class                   *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Workflow item or task inside a LRSTransaction processing time window.                         *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Data;
 
 using Empiria.Contacts;
 using Empiria.Land.Registration.Data;
@@ -30,31 +29,30 @@ namespace Empiria.Land.Registration.Transactions {
   }
 
   /// <summary>Workflow item or task inside a LRSTransaction processing time window.</summary>
-  public class LRSTransactionTask : BaseObject {
+  public class LRSWorkflowTask : BaseObject {
 
     #region Constructors and parsers
 
-    private LRSTransactionTask() {
+    private LRSWorkflowTask() {
       // Required by Empiria Framework.
     }
 
-    internal LRSTransactionTask(LRSTransaction transaction) {
+    internal LRSWorkflowTask(LRSTransaction transaction) {
       this.Transaction = transaction;
     }
 
-    static public LRSTransactionTask Parse(int id) {
-      return BaseObject.ParseId<LRSTransactionTask>(id);
+    static public LRSWorkflowTask Parse(int id) {
+      return BaseObject.ParseId<LRSWorkflowTask>(id);
     }
 
-    static public LRSTransactionTask Empty {
-      get { return BaseObject.ParseEmpty<LRSTransactionTask>(); }
+    static public LRSWorkflowTask Empty {
+      get { return BaseObject.ParseEmpty<LRSWorkflowTask>(); }
     }
 
-    static internal LRSTransactionTask CreateFirst(LRSTransaction transaction) {
-      LRSTransactionTask track = new LRSTransactionTask(transaction);
+    static internal LRSWorkflowTask CreateFirst(LRSTransaction transaction) {
+      LRSWorkflowTask track = new LRSWorkflowTask(transaction);
 
-      track.AssignedBy = LRSTransaction.InterestedContact;
-      track.CurrentStatus = transaction.Status;
+      track.AssignedBy = LRSWorkflow.InterestedContact;
       track.EndProcessTime = track.CheckInTime;
       track.Responsible = Contact.Parse(ExecutionServer.CurrentUserId);
       track.Save();
@@ -109,7 +107,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public string CurrentStatusName {
-      get { return LRSTransaction.GetStatusName(this.CurrentStatus); }
+      get { return LRSWorkflow.GetStatusName(this.CurrentStatus); }
     }
 
     [DataField("NextTransactionStatus", Default = TransactionStatus.EndPoint)]
@@ -119,7 +117,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public string NextStatusName {
-      get { return LRSTransaction.GetStatusName(this.NextStatus); }
+      get { return LRSWorkflow.GetStatusName(this.NextStatus); }
     }
 
     [DataField("CheckInTime", Default = "DateTime.Now")]
@@ -152,7 +150,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public TimeSpan OfficeWorkElapsedTime {
       get {
-        if (LRSTransaction.StatusIsOfficeWork(this.CurrentStatus)) {
+        if (LRSWorkflow.StatusIsOfficeWork(this.CurrentStatus)) {
           return this.ElapsedTime;
         } else {
           return TimeSpan.Zero;
@@ -173,20 +171,20 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     [DataField("PreviousTrackId")]
-    private LazyInstance<LRSTransactionTask> _previousTask = LazyInstance<LRSTransactionTask>.Empty;
-    public LRSTransactionTask PreviousTask {
+    private LazyInstance<LRSWorkflowTask> _previousTask = LazyInstance<LRSWorkflowTask>.Empty;
+    public LRSWorkflowTask PreviousTask {
       get { return _previousTask.Value; }
       private set {
-        _previousTask = LazyInstance<LRSTransactionTask>.Parse(value);
+        _previousTask = LazyInstance<LRSWorkflowTask>.Parse(value);
       }
     }
 
     [DataField("NextTrackId")]
-    private LazyInstance<LRSTransactionTask> _nextTask = LazyInstance<LRSTransactionTask>.Empty;
-    public LRSTransactionTask NextTask {
+    private LazyInstance<LRSWorkflowTask> _nextTask = LazyInstance<LRSWorkflowTask>.Empty;
+    public LRSWorkflowTask NextTask {
       get { return _nextTask.Value; }
       private set {
-        _nextTask = LazyInstance<LRSTransactionTask>.Parse(value);
+        _nextTask = LazyInstance<LRSWorkflowTask>.Parse(value);
       }
     }
 
@@ -216,15 +214,15 @@ namespace Empiria.Land.Registration.Transactions {
         this.EndProcessTime = DateTime.Now;
       }
       this.CheckOutTime = DateTime.Now;
-      this.NextContact = LRSTransaction.InterestedContact;
+      this.NextContact = LRSWorkflow.InterestedContact;
       this.NextStatus = TransactionStatus.EndPoint;
-      this.NextTask = LRSTransactionTask.Empty;
+      this.NextTask = LRSWorkflowTask.Empty;
       this.Status = TrackStatus.Closed;
 
       this.Save();
     }
 
-    private void ExecuteSpecialCase(LRSTransactionTask nextTrack) {
+    private void ExecuteSpecialCase(LRSWorkflowTask nextTrack) {
       if (nextTrack.IsNew) {
         if (nextTrack.CurrentStatus == TransactionStatus.ToDeliver ||
             nextTrack.CurrentStatus == TransactionStatus.ToReturn) {
@@ -236,11 +234,11 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    internal LRSTransactionTask CreateNext(string notes) {
+    internal LRSWorkflowTask CreateNext(string notes) {
       // Create next track
-      LRSTransactionTask newTrack = new LRSTransactionTask(this.Transaction);
+      LRSWorkflowTask newTrack = new LRSWorkflowTask(this.Transaction);
       newTrack.PreviousTask = this;
-      newTrack.NextTask = LRSTransactionTask.Empty;
+      newTrack.NextTask = LRSWorkflowTask.Empty;
       newTrack.CurrentStatus = this.NextStatus;
       newTrack.AssignedBy = this.Responsible;
       newTrack.Responsible = Contact.Parse(ExecutionServer.CurrentUserId);
@@ -282,18 +280,18 @@ namespace Empiria.Land.Registration.Transactions {
       this.EndProcessTime = ExecutionServer.DateMaxValue;
       this.CheckOutTime = ExecutionServer.DateMaxValue;
       this.NextStatus = TransactionStatus.EndPoint;
-      this.NextTask = LRSTransactionTask.Empty;
+      this.NextTask = LRSWorkflowTask.Empty;
       this.NextContact = Person.Empty;
       this.Status = TrackStatus.Pending;
       this.Save();
     }
 
     protected override void OnSave() {
-      TransactionData.WriteTransactionTask(this);
+      WorkflowData.WriteLRSWorkflowTask(this);
     }
 
     #endregion Public methods
 
-  } // class LRSTransactionTask
+  } // class LRSWorkflowTask
 
 } // namespace Empiria.Land.Registration.Transactions

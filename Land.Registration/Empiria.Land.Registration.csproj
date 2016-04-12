@@ -126,6 +126,7 @@
     <Compile Include="Data\AnalyticsData.cs" />
     <Compile Include="Data\IndexesData.cs" />
     <Compile Include="Data\RecordingActsData.cs" />
+    <Compile Include="Data\WorkflowData.cs" />
     <Compile Include="Data\TransactionData.cs" />
     <Compile Include="Data\ResourceData.cs" />
     <Compile Include="Data\RecordingBooksData.cs" />
@@ -159,9 +160,10 @@
     <Compile Include="Transactions\LRSFee.cs" />
     <Compile Include="Transactions\LRSPayment.cs" />
     <Compile Include="Transactions\LRSPaymentList.cs" />
+    <Compile Include="Transactions\LRSWorkflow.cs" />
     <Compile Include="Transactions\TransactionStatus.cs" />
     <Compile Include="Transactions\LRSTransactionTaskList.cs" />
-    <Compile Include="Transactions\LRSTransactionTask.cs" />
+    <Compile Include="Transactions\LRSWorkflowTask.cs" />
     <Compile Include="Transactions\CalculationRule.cs" />
     <Compile Include="Transactions\LRSLawArticle.cs" />
     <Compile Include="Transactions\LRSTransactionItem.cs" />

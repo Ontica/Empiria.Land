@@ -75,7 +75,8 @@ namespace Empiria.Land.WebApi.Models {
     /// <returns>The Land Transaction created instance.</returns>
     internal LRSTransaction CreateTransaction() {
       AssertIsValid();
-      return new LRSTransaction(this);
+
+      return base.CreateLRSTransaction();
     }
 
     public override JsonObject ToJson() {
