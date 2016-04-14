@@ -38,12 +38,6 @@ namespace Empiria.Land.Registration.Transactions {
       this.TransactionType = transactionType;
     }
 
-    protected override void OnInitialize() {
-      recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
-      payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
-      workflow = new Lazy<LRSWorkflow>(() => LRSWorkflow.Parse(this));
-    }
-
     static public LRSTransaction Parse(int id) {
       return BaseObject.ParseId<LRSTransaction>(id);
     }
@@ -61,6 +55,22 @@ namespace Empiria.Land.Registration.Transactions {
 
       return listType.GetItems<Contact>();
     }
+
+    protected override void OnInitialize() {
+      recordingActs = new Lazy<LRSTransactionItemList>(() => new LRSTransactionItemList());
+      payments = new Lazy<LRSPaymentList>(() => new LRSPaymentList());
+      workflow = new Lazy<LRSWorkflow>(() => new LRSWorkflow(this));
+    }
+
+    protected override void OnLoadObjectData(System.Data.DataRow row) {
+      recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
+      payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
+      workflow = new Lazy<LRSWorkflow>(
+                            () => LRSWorkflow.Parse(this, (LRSTransactionStatus) Convert.ToChar(row["TransactionStatus"])));
+
+      this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
@@ -273,7 +283,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.AssertAddItem();
 
       var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
-                                        Money.Zero, Quantity.One, 
+                                        Money.Zero, Quantity.One,
                                         new LRSFee() { RecordingRights = recordingRights });
       this.Items.Add(item);
 
@@ -309,8 +319,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public bool IsFeeWaiverApplicable {
       get {
-        return (this.TransactionType.Id == 704 ||
-               (this.TransactionType.Id == 700 && this.DocumentType.Id == 722));
+        return LRSPaymentRules.IsFeeWaiverApplicable(this);
       }
     }
 
@@ -335,7 +344,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     private void AssertAddPayment() {
       Assertion.Assert(this.Workflow.CurrentStatus == LRSTransactionStatus.Payment,
-              "The transaction's status doesn't permit aggregate new payments.");
+                       "The transaction's status doesn't permit aggregate new payments.");
     }
 
     public void RemoveItem(LRSTransactionItem item) {
@@ -407,10 +416,6 @@ namespace Empiria.Land.Registration.Transactions {
       return temp;
     }
 
-    protected override void OnLoadObjectData(System.Data.DataRow row) {
-      this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);
-    }
-
     internal void OnRecordingActsUpdated() {
       recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
       this.UpdateComplexityIndex();
@@ -427,8 +432,8 @@ namespace Empiria.Land.Registration.Transactions {
                                                   this.RecorderOffice.Alias);
       TransactionData.WriteTransaction(this);
       if (base.IsNew) {
-        LRSWorkflow.Create(this);
-        workflow = new Lazy<LRSWorkflow>(() => LRSWorkflow.Parse(this));
+        var newWorkflow = LRSWorkflow.Create(this);
+        workflow = new Lazy<LRSWorkflow>(() => newWorkflow);
       }
     }
 

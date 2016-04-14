@@ -34,17 +34,44 @@ namespace Empiria.Land.Registration.Transactions {
       if (ExecutionServer.LicenseName == "Zacatecas") {
         return LRSTransactionStatus.Control;
       }
-      if (LRSWorkflowRules.IsRecordable(transaction.TransactionType, transaction.DocumentType)) {
+
+      if (LRSWorkflowRules.IsRecorderOfficerCase(transaction.TransactionType,
+                                                 transaction.RecorderOffice)) {
+        return LRSTransactionStatus.Revision;
+
+      } else if (LRSWorkflowRules.IsJuridicCase(transaction.TransactionType,
+                                                transaction.DocumentType)) {
+        return LRSTransactionStatus.Juridic;
+
+      } else if (LRSWorkflowRules.IsRecordingDocumentCase(transaction.TransactionType,
+                                                          transaction.DocumentType)) {
         return LRSTransactionStatus.Recording;
-      } else if (LRSWorkflowRules.IsCertificateIssue(transaction.TransactionType, transaction.DocumentType)) {
+
+      } else if (LRSWorkflowRules.IsCertificateIssueCase(transaction.TransactionType,
+                                                         transaction.DocumentType)) {
         return LRSTransactionStatus.Elaboration;
+
       } else {
         return LRSTransactionStatus.Control;
-      }      
+      }
     }
 
-    static public List<LRSTransactionStatus> GetNextStatusList(LRSTransactionType type, LRSDocumentType docType,
-                                                                LRSTransactionStatus currentStatus) {
+    private static bool IsRecorderOfficerCase(LRSTransactionType transactionType, RecorderOffice office) {
+      if (transactionType.Id == 706 && office.Id == 147) {
+        return true;
+      }
+      return false;
+    }
+
+    private static bool IsJuridicCase(LRSTransactionType transactionType, LRSDocumentType documentType) {
+      if (transactionType.Id == 706 && documentType.Id == 734) {
+        return true;
+      }
+      return false;
+    }
+
+    static public List<LRSTransactionStatus> GetNextStatusList(LRSTransactionType type,
+                                      LRSDocumentType docType, LRSTransactionStatus currentStatus) {
       List<LRSTransactionStatus> list = new List<LRSTransactionStatus>();
 
       switch (currentStatus) {
@@ -76,9 +103,9 @@ namespace Empiria.Land.Registration.Transactions {
               list.Add(LRSTransactionStatus.Elaboration);
             }
           } else if (ExecutionServer.LicenseName == "Tlaxcala") {
-            if (LRSWorkflowRules.IsRecordable(type, docType)) {
+            if (LRSWorkflowRules.IsRecordingDocumentCase(type, docType)) {
               list.Add(LRSTransactionStatus.Recording);
-            } else if (LRSWorkflowRules.IsCertificateIssue(type, docType)) {
+            } else if (LRSWorkflowRules.IsCertificateIssueCase(type, docType)) {
               list.Add(LRSTransactionStatus.Elaboration);
             } else {
               list.Add(LRSTransactionStatus.Elaboration);
@@ -95,7 +122,7 @@ namespace Empiria.Land.Registration.Transactions {
             list.Add(LRSTransactionStatus.Safeguard);
           }
           list.Add(LRSTransactionStatus.ToReturn);
-          if (ExecutionServer.LicenseName == "Zacatecas" || LRSWorkflowRules.IsCertificateIssue(type, docType)) {
+          if (ExecutionServer.LicenseName == "Zacatecas" || LRSWorkflowRules.IsCertificateIssueCase(type, docType)) {
             list.Add(LRSTransactionStatus.ToDeliver);
           }
           break;
@@ -140,6 +167,8 @@ namespace Empiria.Land.Registration.Transactions {
             if (type.Id == 704) {    // Trámite comercio
               list.Add(LRSTransactionStatus.ToDeliver);
               list.Add(LRSTransactionStatus.ToReturn);
+            } else if (ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.LawyerRegister")) {
+              list.Add(LRSTransactionStatus.ToReturn);
             }
           }
           break;
@@ -162,6 +191,9 @@ namespace Empiria.Land.Registration.Transactions {
             list.Add(LRSTransactionStatus.ToReturn);
           } else if (ExecutionServer.LicenseName == "Tlaxcala") {
             list.Add(LRSTransactionStatus.Juridic);
+            if (ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.LawyerRegister")) {
+              list.Add(LRSTransactionStatus.ToReturn);
+            }
           }
           break;
 
@@ -206,12 +238,11 @@ namespace Empiria.Land.Registration.Transactions {
           } else if (ExecutionServer.LicenseName == "Tlaxcala") {
             if (LRSWorkflowRules.IsSafeguardable(type, docType)) {
               list.Add(LRSTransactionStatus.Safeguard);
-            } else {
-              list.Add(LRSTransactionStatus.ToDeliver);
             }
             list.Add(LRSTransactionStatus.ToReturn);
             list.Add(LRSTransactionStatus.Control);
             list.Add(LRSTransactionStatus.Juridic);
+            list.Add(LRSTransactionStatus.ToDeliver);
           }
           break;
 
@@ -300,7 +331,7 @@ namespace Empiria.Land.Registration.Transactions {
       return false;
     }
 
-    static internal bool IsCertificateIssue(LRSTransactionType type, LRSDocumentType docType) {
+    static internal bool IsCertificateIssueCase(LRSTransactionType type, LRSDocumentType docType) {
       if (ExecutionServer.LicenseName == "Tlaxcala") {
         if (type.Id == 702) {    // Certificados
           return true;
@@ -352,7 +383,7 @@ namespace Empiria.Land.Registration.Transactions {
       return false;
     }
 
-    static public bool IsRecordable(LRSTransactionType type, LRSDocumentType docType) {
+    static public bool IsRecordingDocumentCase(LRSTransactionType type, LRSDocumentType docType) {
       if (ExecutionServer.LicenseName == "Tlaxcala") {
         if (type.Id == 699 || type.Id == 700 || type.Id == 704 || type.Id == 707) {
           return true;
@@ -365,10 +396,10 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public bool IsSafeguardable(LRSTransactionType type, LRSDocumentType docType) {
-      if (!IsRecordable(type, docType)) {
+      if (!IsRecordingDocumentCase(type, docType)) {
         return false;
       }
-      if (IsCertificateIssue(type, docType)) {
+      if (IsCertificateIssueCase(type, docType)) {
         return false;
       }
       if (ExecutionServer.LicenseName == "Tlaxcala") {
@@ -397,12 +428,12 @@ namespace Empiria.Land.Registration.Transactions {
           return "Este trámite todavía no tiene registrada una boleta de pago.";
         }
       }
-      if (IsRecordable(transaction.TransactionType, transaction.DocumentType)) {
+      if (IsRecordingDocumentCase(transaction.TransactionType, transaction.DocumentType)) {
         if (transaction.TransactionType.Id == 704 || transaction.DocumentType.Id == 721) {
           return String.Empty;
         }
       }
-      if (IsRecordable(transaction.TransactionType, transaction.DocumentType)) {
+      if (IsRecordingDocumentCase(transaction.TransactionType, transaction.DocumentType)) {
         if (newStatus == LRSTransactionStatus.Revision || newStatus == LRSTransactionStatus.OnSign ||
             newStatus == LRSTransactionStatus.Safeguard || newStatus == LRSTransactionStatus.ToDeliver) {
           if (transaction.Document.IsEmptyInstance) {

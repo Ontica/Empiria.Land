@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
-using Empiria.Contacts;
 using Empiria.Data;
 
 using Empiria.Land.Registration.Transactions;
@@ -78,6 +77,9 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal List<LRSPayment> GetLRSTransactionPayments(LRSTransaction transaction) {
+      if (transaction.IsEmptyInstance) {
+        return new List<LRSPayment>();
+      }
       var operation = DataOperation.Parse("qryLRSTransactionPayments", transaction.Id);
 
       return DataReader.GetList<LRSPayment>(operation, (x) => BaseObject.ParseList<LRSPayment>(x));

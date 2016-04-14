@@ -30,14 +30,8 @@ namespace Empiria.Land.Registration.Transactions {
 
     internal LRSWorkflow(LRSTransaction transaction) {
       _transaction = transaction;
-
-      if (_transaction.IsNew) {
-        this.taskList = new Lazy<LRSWorkflowTaskList>(() => new LRSWorkflowTaskList());
-        this.CurrentStatus = LRSTransactionStatus.Payment;
-      } else {
-        this.taskList = new Lazy<LRSWorkflowTaskList>(() => LRSWorkflowTaskList.Parse(_transaction));
-        this.CurrentStatus = this.GetCurrentTask().CurrentStatus;
-      }
+      this.CurrentStatus = LRSTransactionStatus.Payment;
+      this.taskList = new Lazy<LRSWorkflowTaskList>(() => new LRSWorkflowTaskList());
     }
 
     internal static LRSWorkflow Create(LRSTransaction transaction) {
@@ -48,11 +42,19 @@ namespace Empiria.Land.Registration.Transactions {
       return workflow;
     }
 
-    static internal LRSWorkflow Parse(LRSTransaction transaction) {
+    static internal LRSWorkflow Parse(LRSTransaction transaction,
+                                      LRSTransactionStatus onLoadStatus = LRSTransactionStatus.Undefined) {
       var workflow = new LRSWorkflow(transaction);
 
+      if (onLoadStatus != LRSTransactionStatus.Undefined) {
+        workflow.CurrentStatus = onLoadStatus;
+      } else {
+        workflow.CurrentStatus = workflow.GetCurrentTask().CurrentStatus;
+      }
+      workflow.taskList = new Lazy<LRSWorkflowTaskList>(() => LRSWorkflowTaskList.Parse(transaction));
+
       return workflow;
-    } 
+    }
 
     #endregion Constructors and parsers
 

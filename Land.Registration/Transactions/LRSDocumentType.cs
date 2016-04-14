@@ -10,7 +10,6 @@
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
-using Empiria.Collections;
 using Empiria.Contacts;
 
 namespace Empiria.Land.Registration.Transactions {

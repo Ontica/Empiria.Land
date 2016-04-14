@@ -10,7 +10,6 @@
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 using Empiria.Land.Registration.Data;
 
@@ -27,6 +26,10 @@ namespace Empiria.Land.Registration.Transactions {
     #endregion Fields
 
     #region Constructors and parsers
+
+    internal LRSPaymentList() {
+      this.CalculateTotals();
+    }
 
     internal LRSPaymentList(List<LRSPayment> list) : base(list) {
       this.CalculateTotals();
