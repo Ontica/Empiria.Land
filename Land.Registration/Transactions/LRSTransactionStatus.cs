@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : TransactionStatus                              Pattern  : Enumeration Type                    *
+*  Type      : LRSTransactionStatus                           Pattern  : Enumeration Type                    *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Represents a transaction status.                                                              *
@@ -12,7 +12,7 @@ using System;
 
 namespace Empiria.Land.Registration.Transactions {
 
-  public enum TransactionStatus {
+  public enum LRSTransactionStatus {
     Payment = 'Y',
     Received = 'R',
     Reentry = 'N',

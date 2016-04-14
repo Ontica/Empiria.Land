@@ -24,36 +24,36 @@ namespace Empiria.Land.Registration.Data {
 
     #region Public methods
 
-    static public DataView GetLRSResponsibleTransactionInbox(Contacts.Contact contact, TrackStatus status,
-                                                     string filter, string sort) {
-      DataOperation op = DataOperation.Parse("qryLRSResponsibleTransactionInbox", contact.Id, (char) status);
+    static public FixedList<Contact> GetContactsWithWorkflowOutboxTasks() {
+      var operation = DataOperation.Parse("qryLRSContactsWithWorkflowOutboxTasks");
+
+      return DataReader.GetList(operation, (x) => BaseObject.ParseList<Contact>(x)).ToFixedList();
+    }
+
+    static public DataView GetResponsibleWorkflowInbox(Contact contact, WorkflowTaskStatus status,
+                                                       string filter, string sort) {
+      DataOperation op = DataOperation.Parse("qryLRSResponsibleWorkflowInbox", contact.Id, (char) status);
       return DataReader.GetDataView(op, filter, sort);
     }
 
-    static public LRSWorkflowTask GetLRSWorkflowLastTask(LRSTransaction transaction) {
-      DataRow row = DataReader.GetDataRow(DataOperation.Parse("getLRSLastTransactionTrack", transaction.Id));
+    static public DataView GetWorkflowActiveTasksTotals() {
+      return DataReader.GetDataView(DataOperation.Parse("SELECT * FROM vwLRSWorkflowActiveTasksTotals"));
+    }
+
+    static public LRSWorkflowTask GetWorkflowLastTask(LRSTransaction transaction) {
+      DataRow row = DataReader.GetDataRow(DataOperation.Parse("getLRSWorkflowLastTask", transaction.Id));
 
       return BaseObject.ParseDataRow<LRSWorkflowTask>(row);
     }
 
-    static public List<LRSWorkflowTask> GetLRSWorkflowTrack(LRSTransaction transaction) {
+    static public List<LRSWorkflowTask> GetWorkflowTrack(LRSTransaction transaction) {
       var op = DataOperation.Parse("qryLRSWorkflowTrack", transaction.Id);
 
       return DataReader.GetList(op, (x) => BaseObject.ParseList<LRSWorkflowTask>(x));
     }
 
-    static public DataView GetContactsWithActiveTransactions() {
-      return DataReader.GetDataView(DataOperation.Parse("SELECT * FROM vwLRSTransactionsTotals"));
-    }
-
-    static public FixedList<Contact> GetContactsWithOutboxDocuments() {
-      var operation = DataOperation.Parse("qryLRSContactsWithOutboxDocuments");
-
-      return DataReader.GetList(operation, (x) => BaseObject.ParseList<Contact>(x)).ToFixedList();
-    }
-
     static internal int WriteLRSWorkflowTask(LRSWorkflowTask o) {
-      var operation = DataOperation.Parse("writeLRSWorkflowTrack", o.Id, o.Transaction.Id,
+      var operation = DataOperation.Parse("writeLRSWorkflowTask", o.Id, o.Transaction.Id,
                                           o.EventId, (char) o.Mode, o.AssignedBy.Id, o.Responsible.Id,
                                           o.NextContact.Id, (char) o.CurrentStatus, (char) o.NextStatus,
                                           o.CheckInTime, o.EndProcessTime, o.CheckOutTime, o.Notes,

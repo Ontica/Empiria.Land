@@ -22,7 +22,7 @@ namespace Empiria.Land.Registration.Transactions {
     #region Fields
 
     private LRSTransaction _transaction = null;
-    private Lazy<LRSTransactionTaskList> taskList = null;
+    private Lazy<LRSWorkflowTaskList> taskList = null;
 
     #endregion Fields
 
@@ -30,100 +30,61 @@ namespace Empiria.Land.Registration.Transactions {
 
     internal LRSWorkflow(LRSTransaction transaction) {
       _transaction = transaction;
-      this.taskList = 
-           new Lazy<LRSTransactionTaskList>(() => LRSTransactionTaskList.Parse(_transaction));
-      this.CurrentStatus = this.GetCurrentTask().CurrentStatus;
-    }
 
-    static public Contact InterestedContact {
-      get {
-        return Person.Parse(-6);
+      if (_transaction.IsNew) {
+        this.taskList = new Lazy<LRSWorkflowTaskList>(() => new LRSWorkflowTaskList());
+        this.CurrentStatus = LRSTransactionStatus.Payment;
+      } else {
+        this.taskList = new Lazy<LRSWorkflowTaskList>(() => LRSWorkflowTaskList.Parse(_transaction));
+        this.CurrentStatus = this.GetCurrentTask().CurrentStatus;
       }
     }
 
-    static public string GetStatusName(TransactionStatus status) {
-      switch (status) {
-        case TransactionStatus.Payment:
-          if (ExecutionServer.LicenseName == "Zacatecas") {
-            return "Precalificación";
-          } else {
-            return "Calificación";
-          }
-        case TransactionStatus.Received:
-          return "Trámite recibido";
-        case TransactionStatus.Reentry:
-          return "Trámite reingresado";
-        case TransactionStatus.Process:
-          return "En mesas de trabajo";
-        case TransactionStatus.Control:
-          return "En mesa de control";
-        case TransactionStatus.Qualification:
-          return "En calificación";
-        case TransactionStatus.Recording:
-          return "En registro en libros";
-        case TransactionStatus.Elaboration:
-          return "En elaboración";
-        case TransactionStatus.Revision:
-          return "En revisión";
-        case TransactionStatus.Juridic:
-          return "En área jurídica";
-        case TransactionStatus.OnSign:
-          return "En firma";
-        case TransactionStatus.Safeguard:
-          return "En digitalización y resguardo";
-        case TransactionStatus.ToDeliver:
-          return "En ventanilla de entregas";
-        case TransactionStatus.Delivered:
-          return "Entregado al interesado";
-        case TransactionStatus.ToReturn:
-          return "En ventanilla de devoluciones";
-        case TransactionStatus.Returned:
-          return "Devuelto al interesado";
-        case TransactionStatus.Deleted:
-          return "Trámite eliminado";
-        case TransactionStatus.Finished:
-          return "Archivar trámite / Terminado";
-        default:
-          return "No determinado";
-      }
+    internal static LRSWorkflow Create(LRSTransaction transaction) {
+      var workflow = new LRSWorkflow(transaction);
+      workflow.CurrentStatus = LRSTransactionStatus.Payment;
+      workflow.Tasks.Add(LRSWorkflowTask.CreateFirst(transaction));
+
+      return workflow;
     }
+
+    static internal LRSWorkflow Parse(LRSTransaction transaction) {
+      var workflow = new LRSWorkflow(transaction);
+
+      return workflow;
+    } 
 
     #endregion Constructors and parsers
 
     #region Properties
 
-    public bool IsEmptyItemsTransaction {
-      get {
-        if (_transaction.TransactionType.Id == 706) {
-          if (EmpiriaMath.IsMemberOf(_transaction.DocumentType.Id, new int[] { 733, 738, 734, 742, 756 })) {
-            return true;
-          }
-        }
-        return false;
-      }
-    }
-
-    public bool ReadyForReentry {
-      get {
-        var user = Empiria.ExecutionServer.CurrentPrincipal;
-        return ((this.CurrentStatus == TransactionStatus.Returned) ||
-                (this.CurrentStatus == TransactionStatus.Delivered &&
-                 user.IsInRole("LRSTransaction.ReentryByFails")));
-      }
-    }
-
-    public TransactionStatus CurrentStatus {
+    public LRSTransactionStatus CurrentStatus {
       get;
       private set;
-    } = TransactionStatus.Payment;
+    } = LRSTransactionStatus.Payment;
+
 
     public string CurrentStatusName {
       get {
-        return LRSWorkflow.GetStatusName(this.CurrentStatus);
+        return LRSWorkflowRules.GetStatusName(this.CurrentStatus);
       }
     }
 
-    public LRSTransactionTaskList Tasks {
+
+    public bool IsEmptyItemsTransaction {
+      get {
+        return LRSWorkflowRules.IsEmptyItemsTransaction(_transaction);
+      }
+    }
+
+
+    public bool IsReadyForReentry {
+      get {
+        return LRSWorkflowRules.IsReadyForReentry(_transaction);
+      }
+    }
+
+    public LRSWorkflowTaskList Tasks {
       get {
         return taskList.Value;
       }
@@ -133,17 +94,8 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Public methods
 
-    static public bool StatusIsOfficeWork(TransactionStatus currentStatus) {
-      if (currentStatus == TransactionStatus.Payment || currentStatus == TransactionStatus.ToDeliver ||
-          currentStatus == TransactionStatus.ToReturn || currentStatus == TransactionStatus.Delivered ||
-          currentStatus == TransactionStatus.Returned || currentStatus == TransactionStatus.Finished) {
-        return false;
-      }
-      return true;
-    }
-
     public void Receive(string notes) {
-      if (this.CurrentStatus != TransactionStatus.Payment) {
+      if (this.CurrentStatus != LRSTransactionStatus.Payment) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
                                             _transaction.UID);
       }
@@ -154,17 +106,17 @@ namespace Empiria.Land.Registration.Transactions {
       //    using (var context = StorageContext.Open()) {
       _transaction.PresentationTime = DateTime.Now;
       _transaction.ClosingTime = ExecutionServer.DateMaxValue;
-      this.CurrentStatus = TransactionStatus.Received;
+      this.CurrentStatus = LRSTransactionStatus.Received;
 
       LRSWorkflowTask currentTask = this.GetCurrentTask();
-      currentTask.NextStatus = TransactionStatus.Received;
-      currentTask.NextContact = LRSWorkflow.InterestedContact;
+      currentTask.NextStatus = LRSTransactionStatus.Received;
+      currentTask.NextContact = LRSWorkflowRules.InterestedContact;
 
       currentTask = currentTask.CreateNext(notes);
-      currentTask.NextStatus = this.GetAfterReceiveNextStatus();
-      currentTask.Status = TrackStatus.OnDelivery;
+      currentTask.NextStatus = LRSWorkflowRules.GetNextStatusAfterReceive(_transaction);
+      currentTask.Status = WorkflowTaskStatus.OnDelivery;
       currentTask.EndProcessTime = currentTask.CheckInTime;
-      currentTask.AssignedBy = LRSWorkflow.InterestedContact;
+      currentTask.AssignedBy = LRSWorkflowRules.InterestedContact;
       currentTask.Save();
 
       _transaction.Save();
@@ -175,7 +127,6 @@ namespace Empiria.Land.Registration.Transactions {
     public void ReturnToMe() {
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
-      TransactionStatus nextStatus = currentTask.NextStatus;
       currentTask.SetPending();
 
       _transaction.Save();
@@ -199,7 +150,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     internal Contact GetReceivedBy() {
-      var task = this.Tasks.Find((x) => x.CurrentStatus == TransactionStatus.Received);
+      var task = this.Tasks.Find((x) => x.CurrentStatus == LRSTransactionStatus.Received);
 
       if (task != null) {
         return task.Responsible;
@@ -208,9 +159,9 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public void SetNextStatus(TransactionStatus nextStatus, Contact nextContact, string notes) {
-      if (nextStatus == TransactionStatus.Returned || nextStatus == TransactionStatus.Delivered ||
-          nextStatus == TransactionStatus.Finished) {
+    public void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact, string notes) {
+      if (nextStatus == LRSTransactionStatus.Returned || nextStatus == LRSTransactionStatus.Delivered ||
+          nextStatus == LRSTransactionStatus.Finished) {
         this.Close(nextStatus, notes);
         return;
       }
@@ -218,10 +169,10 @@ namespace Empiria.Land.Registration.Transactions {
 
       currentTask.SetNextStatus(nextStatus, nextContact, notes);
 
-      if (nextStatus == TransactionStatus.OnSign || nextStatus == TransactionStatus.Revision) {
+      if (nextStatus == LRSTransactionStatus.OnSign || nextStatus == LRSTransactionStatus.Revision) {
         _transaction.Save();
-      } else if (this.CurrentStatus == TransactionStatus.OnSign &&
-                (nextStatus == TransactionStatus.ToDeliver || nextStatus == TransactionStatus.Finished)) {
+      } else if (this.CurrentStatus == LRSTransactionStatus.OnSign &&
+                (nextStatus == LRSTransactionStatus.ToDeliver || nextStatus == LRSTransactionStatus.Finished)) {
         _transaction.Save();
       }
     }
@@ -229,7 +180,7 @@ namespace Empiria.Land.Registration.Transactions {
     public void Take(string notes) {
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
-      if (currentTask.NextStatus == TransactionStatus.EndPoint) {
+      if (currentTask.NextStatus == LRSTransactionStatus.EndPoint) {
         throw new LandRegistrationException(LandRegistrationException.Msg.NextStatusCantBeEndPoint,
                                             currentTask.Id);
       }
@@ -237,8 +188,8 @@ namespace Empiria.Land.Registration.Transactions {
       currentTask.CreateNext(notes);
       ResetTasksList();
 
-      if (this.CurrentStatus == TransactionStatus.ToDeliver ||
-          this.CurrentStatus == TransactionStatus.ToReturn || this.CurrentStatus == TransactionStatus.Finished) {
+      if (this.CurrentStatus == LRSTransactionStatus.ToDeliver ||
+          this.CurrentStatus == LRSTransactionStatus.ToReturn || this.CurrentStatus == LRSTransactionStatus.Finished) {
         _transaction.ClosingTime = currentTask.EndProcessTime;
       }
       _transaction.Save();
@@ -247,281 +198,47 @@ namespace Empiria.Land.Registration.Transactions {
     public void Undelete() {
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
-      if (currentTask.Status == TrackStatus.OnDelivery) {
+      if (currentTask.Status == WorkflowTaskStatus.OnDelivery) {
         this.CurrentStatus = currentTask.CurrentStatus;
-      } else if (currentTask.Status == TrackStatus.Pending) {
+      } else if (currentTask.Status == WorkflowTaskStatus.Pending) {
         this.CurrentStatus = currentTask.CurrentStatus;
-      } else if (currentTask.Status == TrackStatus.Closed) {
+      } else if (currentTask.Status == WorkflowTaskStatus.Closed) {
         throw new LandRegistrationException(LandRegistrationException.Msg.NextStatusCantBeEndPoint,
                                             currentTask.Id);
       }
       _transaction.Save();
     }
 
-    public string ValidateStatusChange(TransactionStatus newStatus) {
-      if (newStatus == TransactionStatus.Received) {
-        if (_transaction.Payments.Count == 0) {
-          return "Este trámite todavía no tiene registrada una boleta de pago.";
-        }
-      }
-      if (IsRecordable(_transaction.TransactionType, _transaction.DocumentType)) {
-        if (_transaction.TransactionType.Id == 704 || _transaction.DocumentType.Id == 721) {
-          return String.Empty;
-        }
-      }
-      if (IsRecordable(_transaction.TransactionType, _transaction.DocumentType)) {
-        if (newStatus == TransactionStatus.Revision || newStatus == TransactionStatus.OnSign ||
-            newStatus == TransactionStatus.Safeguard || newStatus == TransactionStatus.ToDeliver) {
-          if (_transaction.Document.IsEmptyInstance) {
-            return "Necesito primero se ingrese la información del documento a inscribir.";
-          }
-        }
-      }
-      return String.Empty;
-    }
-
-    static public bool IsSafeguardable(LRSTransactionType type, LRSDocumentType docType) {
-      if (!IsRecordable(type, docType)) {
-        return false;
-      }
-      if (IsCertificateIssue(type, docType)) {
-        return false;
-      }
-      if (ExecutionServer.LicenseName == "Tlaxcala") {
-        if (type.Id == 699 || type.Id == 702) {
-          return false;
-        } else if (EmpiriaMath.IsMemberOf(docType.Id, new int[] { 715, 724, 728, 734, 735, 739,
-                                                                  743, 744, 745, 747, 757 })) {
-          return false;
-        }
-      }
-      return true;
-    }
-
     public void DoReentry(string notes) {
-      if (!this.ReadyForReentry) {
+      if (!this.IsReadyForReentry) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
                                             _transaction.UID);
       }
-      this.CurrentStatus = TransactionStatus.Reentry;
+      this.CurrentStatus = LRSTransactionStatus.Reentry;
       _transaction.ClosingTime = ExecutionServer.DateMaxValue;
       _transaction.LastReentryTime = DateTime.Now;
       LRSWorkflowTask currentTask = this.GetCurrentTask();
-      currentTask.NextStatus = TransactionStatus.Reentry;
+      currentTask.NextStatus = LRSTransactionStatus.Reentry;
 
       currentTask = currentTask.CreateNext(notes);
-      currentTask.NextStatus = TransactionStatus.Control;
-      currentTask.Status = TrackStatus.OnDelivery;
+      currentTask.NextStatus = LRSTransactionStatus.Control;
+      currentTask.Status = WorkflowTaskStatus.OnDelivery;
       currentTask.EndProcessTime = currentTask.CheckInTime;
-      currentTask.AssignedBy = LRSWorkflow.InterestedContact;
+      currentTask.AssignedBy = LRSWorkflowRules.InterestedContact;
       currentTask.Save();
       _transaction.Save();
       this.ResetTasksList();
     }
 
     public LRSWorkflowTask GetCurrentTask() {
-      return WorkflowData.GetLRSWorkflowLastTask(_transaction);
-    }
-
-    static public List<TransactionStatus> NextStatusList(LRSTransactionType type, LRSDocumentType docType,
-                                                         TransactionStatus status) {
-      List<TransactionStatus> list = new List<TransactionStatus>();
-
-      switch (status) {
-        case TransactionStatus.Payment:
-          list.Add(TransactionStatus.Received);
-          list.Add(TransactionStatus.Deleted);
-          break;
-        case TransactionStatus.Received:
-        case TransactionStatus.Reentry:
-          if (ExecutionServer.LicenseName == "Tlaxcala") {
-            if (type.Id == 699 || (type.Id == 706 && (docType.Id == 744))) {
-              list.Add(TransactionStatus.Recording);
-            }
-          }
-          list.Add(TransactionStatus.Control);
-          break;
-        case TransactionStatus.Process:
-        case TransactionStatus.Control:
-          if (ExecutionServer.LicenseName == "Zacatecas") {
-            // Certificado || Cancelación || Copia simple
-            if (type.Id == 701 || type.Id == 704 || docType.Id == 723 || docType.Id == 734) {
-              list.Add(TransactionStatus.Elaboration);
-            } else if (type.Id == 700 || type.Id == 702 || type.Id == 703) {
-              list.Add(TransactionStatus.Qualification);
-              list.Add(TransactionStatus.Recording);
-              list.Add(TransactionStatus.Elaboration);
-            }
-          } else if (ExecutionServer.LicenseName == "Tlaxcala") {
-            if (LRSWorkflow.IsRecordable(type, docType)) {
-              list.Add(TransactionStatus.Recording);
-            } else if (LRSWorkflow.IsCertificateIssue(type, docType)) {
-              list.Add(TransactionStatus.Elaboration);
-            } else {
-              list.Add(TransactionStatus.Elaboration);
-              list.Add(TransactionStatus.Recording);
-            }
-            if (LRSWorkflow.IsArchivable(type, docType)) {
-              list.Add(TransactionStatus.Finished);
-            }
-            list.Add(TransactionStatus.Juridic);
-          }
-          list.Add(TransactionStatus.Revision);
-          list.Add(TransactionStatus.OnSign);
-          if (ExecutionServer.LicenseName == "Tlaxcala" && LRSWorkflow.IsSafeguardable(type, docType)) {
-            list.Add(TransactionStatus.Safeguard);
-          }
-          list.Add(TransactionStatus.ToReturn);
-          if (ExecutionServer.LicenseName == "Zacatecas" || LRSWorkflow.IsCertificateIssue(type, docType)) {
-            list.Add(TransactionStatus.ToDeliver);
-          }
-          break;
-        case TransactionStatus.Juridic:           // Only used in Tlaxcala
-          if (ExecutionServer.LicenseName == "Tlaxcala") {
-            list.Add(TransactionStatus.Control);
-            list.Add(TransactionStatus.Revision);
-            list.Add(TransactionStatus.OnSign);
-            list.Add(TransactionStatus.ToReturn);
-            list.Add(TransactionStatus.Finished);
-          }
-          break;
-        case TransactionStatus.Qualification:       // Only used in Zacatecas
-          if (ExecutionServer.LicenseName == "Zacatecas") {
-            list.Add(TransactionStatus.Recording);
-            list.Add(TransactionStatus.Revision);
-            list.Add(TransactionStatus.Qualification);
-            list.Add(TransactionStatus.Control);
-            list.Add(TransactionStatus.ToReturn);
-          }
-          break;
-        case TransactionStatus.Recording:
-          list.Add(TransactionStatus.Revision);
-          list.Add(TransactionStatus.Recording);
-          list.Add(TransactionStatus.Control);
-          if (ExecutionServer.LicenseName == "Zacatecas") {
-            list.Add(TransactionStatus.ToReturn);
-            if (LRSWorkflow.IsArchivable(type, docType)) {
-              list.Add(TransactionStatus.Finished);
-            }
-            if (docType.Id == 728) {
-              list.Add(TransactionStatus.OnSign);
-            }
-          } else if (ExecutionServer.LicenseName == "Tlaxcala") {
-            list.Add(TransactionStatus.Juridic);
-            if (LRSWorkflow.IsArchivable(type, docType)) {
-              list.Add(TransactionStatus.Finished);
-            }
-            if (type.Id == 704) {    // Trámite comercio
-              list.Add(TransactionStatus.ToDeliver);
-              list.Add(TransactionStatus.ToReturn);
-            }
-          }
-          break;
-        case TransactionStatus.Elaboration:
-          if (ExecutionServer.LicenseName == "Zacatecas") {
-            if (docType.Id == 734) {
-              list.Add(TransactionStatus.ToDeliver);
-            } else if (type.Id == 704) {
-              list.Add(TransactionStatus.OnSign);
-            } else {
-              list.Add(TransactionStatus.Revision);
-            }
-          } else if (ExecutionServer.LicenseName == "Tlaxcala") {
-            list.Add(TransactionStatus.Revision);
-          }
-          list.Add(TransactionStatus.Elaboration);
-          list.Add(TransactionStatus.Control);
-          if (ExecutionServer.LicenseName == "Zacatecas") {
-            list.Add(TransactionStatus.ToReturn);
-          } else if (ExecutionServer.LicenseName == "Tlaxcala") {
-            list.Add(TransactionStatus.Juridic);
-          }
-          break;
-        case TransactionStatus.Revision:
-          if (ExecutionServer.LicenseName == "Zacatecas") {
-            list.Add(TransactionStatus.OnSign);
-            if (type.Id == 701 || docType.Id == 723) {
-              list.Add(TransactionStatus.Elaboration);
-            } else if (type.Id == 700 || type.Id == 702 || type.Id == 703) {
-              list.Add(TransactionStatus.Recording);
-            } else if (type.Id == 704) {
-              list.Add(TransactionStatus.Elaboration);
-            }
-            if (LRSWorkflow.IsArchivable(type, docType)) {
-              list.Add(TransactionStatus.Finished);
-            }
-            list.Add(TransactionStatus.Revision);
-            list.Add(TransactionStatus.Control);
-            list.Add(TransactionStatus.ToReturn);
-          } else if (ExecutionServer.LicenseName == "Tlaxcala") {
-            list.Add(TransactionStatus.OnSign);
-            list.Add(TransactionStatus.Control);
-            if (LRSWorkflow.IsArchivable(type, docType)) {
-              list.Add(TransactionStatus.Finished);
-            }
-          }
-          break;
-        case TransactionStatus.OnSign:
-          if (ExecutionServer.LicenseName == "Zacatecas") {
-            list.Add(TransactionStatus.ToDeliver);
-            list.Add(TransactionStatus.Revision);
-            if (type.Id == 701 || docType.Id == 723) {
-              list.Add(TransactionStatus.Elaboration);
-            } else if (type.Id == 700 || type.Id == 702 || type.Id == 703) {
-              list.Add(TransactionStatus.Recording);
-            } else if (type.Id == 704) {
-              list.Add(TransactionStatus.Elaboration);
-            }
-            list.Add(TransactionStatus.Control);
-            list.Add(TransactionStatus.ToReturn);
-          } else if (ExecutionServer.LicenseName == "Tlaxcala") {
-            if (LRSWorkflow.IsSafeguardable(type, docType)) {
-              list.Add(TransactionStatus.Safeguard);
-            } else {
-              list.Add(TransactionStatus.ToDeliver);
-            }
-            list.Add(TransactionStatus.ToReturn);
-            list.Add(TransactionStatus.Control);
-            list.Add(TransactionStatus.Juridic);
-          }
-          break;
-        case TransactionStatus.Safeguard:
-          list.Add(TransactionStatus.ToDeliver);
-          list.Add(TransactionStatus.ToReturn);
-          list.Add(TransactionStatus.Control);
-          break;
-        case TransactionStatus.ToDeliver:
-          list.Add(TransactionStatus.Delivered);
-          if (LRSWorkflow.IsSafeguardable(type, docType)) {
-            list.Add(TransactionStatus.Safeguard);
-          }
-          list.Add(TransactionStatus.Control);
-          break;
-        case TransactionStatus.ToReturn:
-          list.Add(TransactionStatus.Returned);
-          list.Add(TransactionStatus.Control);
-          break;
-      }
-      return list;
+      return WorkflowData.GetWorkflowLastTask(_transaction);
     }
 
     #endregion Public methods
 
     #region Private methods
 
-    private TransactionStatus GetAfterReceiveNextStatus() {
-      if (ExecutionServer.LicenseName == "Zacatecas") {
-        return TransactionStatus.Control;
-      }
-      if (LRSWorkflow.IsRecordable(_transaction.TransactionType, _transaction.DocumentType)) {
-        return TransactionStatus.Recording;
-      } else if (LRSWorkflow.IsCertificateIssue(_transaction.TransactionType, _transaction.DocumentType)) {
-        return TransactionStatus.Elaboration;
-      }
-      return TransactionStatus.Control;
-    }
-
-    private void Close(TransactionStatus closeStatus, string notes) {
+    private void Close(LRSTransactionStatus closeStatus, string notes) {
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
       currentTask.NextStatus = closeStatus;
@@ -537,47 +254,8 @@ namespace Empiria.Land.Registration.Transactions {
       _transaction.Save();
     }
 
-    static private bool IsArchivable(LRSTransactionType type, LRSDocumentType docType) {
-      if (ExecutionServer.LicenseName == "Zacatecas") {
-        if (docType.Id == 722 || docType.Id == 761) {
-          return true;
-        }
-      }
-      if (ExecutionServer.LicenseName == "Tlaxcala") {
-        if (type.Id == 699 || type.Id == 704 || (type.Id == 706 &&
-           EmpiriaMath.IsMemberOf(docType.Id, new int[] { 733, 734, 736, 737, 738, 739, 740,
-                                                          741, 742, 744, 755, 756 }))) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    static private bool IsCertificateIssue(LRSTransactionType type, LRSDocumentType docType) {
-      if (ExecutionServer.LicenseName == "Tlaxcala") {
-        if (type.Id == 702) {    // Certificados
-          return true;
-        } else if (EmpiriaMath.IsMemberOf(docType.Id, new int[] { 709, 735, 743, 745, 746, 747 })) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    static private bool IsRecordable(LRSTransactionType type, LRSDocumentType docType) {
-      if (ExecutionServer.LicenseName == "Tlaxcala") {
-        if (type.Id == 699 || type.Id == 700 || type.Id == 704 || type.Id == 707) {
-          return true;
-        } else if (EmpiriaMath.IsMemberOf(docType.Id, new int[] {719, 721, 728, 733, 736, 737, 738, 739,
-                                                                 740, 741, 742, 744, 755, 756 })) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    internal void ResetTasksList() {
-      taskList = new Lazy<LRSTransactionTaskList>(() => LRSTransactionTaskList.Parse(_transaction));
+    private void ResetTasksList() {
+      taskList = new Lazy<LRSWorkflowTaskList>(() => LRSWorkflowTaskList.Parse(_transaction));
     }
 
     #endregion Private methods

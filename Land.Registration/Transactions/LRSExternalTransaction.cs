@@ -90,7 +90,7 @@ namespace Empiria.Land.Registration.Transactions {
     protected internal virtual Contact Agency {
       get;
       set;
-    } = LRSWorkflow.InterestedContact;
+    } = LRSWorkflowRules.InterestedContact;
 
     #endregion Public properties
 

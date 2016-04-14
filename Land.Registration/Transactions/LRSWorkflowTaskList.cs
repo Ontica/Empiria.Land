@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSTransactionTaskList                         Pattern  : Empiria List Class                  *
+*  Type      : LRSWorkflowTaskList                            Pattern  : Empiria List Class                  *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : List of transaction tasks or workflow items.                                                  *
+*  Summary   : List of workflow items. Can be used to hold work items from one or many transactions.         *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -15,20 +15,23 @@ using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration.Transactions {
 
-  /// <summary>List of transaction items or lines. Can be used to hold
-  /// lines of one or many transactions.</summary>
-  public class LRSTransactionTaskList : FixedList<LRSWorkflowTask> {
+  /// <summary>List of workflow items. Can be used to hold work items from one or many transactions.</summary>
+  public class LRSWorkflowTaskList : FixedList<LRSWorkflowTask> {
 
     #region Constructors and parsers
 
-    private LRSTransactionTaskList(List<LRSWorkflowTask> list) : base(list) {
+    internal LRSWorkflowTaskList() {
+
+    }
+
+    private LRSWorkflowTaskList(List<LRSWorkflowTask> list) : base(list) {
       //no-op
     }
 
-    static public LRSTransactionTaskList Parse(LRSTransaction transaction) {
-      List<LRSWorkflowTask> list = WorkflowData.GetLRSWorkflowTrack(transaction);
+    static public LRSWorkflowTaskList Parse(LRSTransaction transaction) {
+      List<LRSWorkflowTask> list = WorkflowData.GetWorkflowTrack(transaction);
 
-      return new LRSTransactionTaskList(list);
+      return new LRSWorkflowTaskList(list);
     }
 
     #endregion Constructors and parsers
@@ -83,6 +86,6 @@ namespace Empiria.Land.Registration.Transactions {
 
     #endregion Public methods
 
-  } // class LRSTransactionTaskList
+  } // class LRSWorkflowTaskList
 
 } // namespace Empiria.Land.Registration.Transactions

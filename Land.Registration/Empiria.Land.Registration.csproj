@@ -160,9 +160,10 @@
     <Compile Include="Transactions\LRSFee.cs" />
     <Compile Include="Transactions\LRSPayment.cs" />
     <Compile Include="Transactions\LRSPaymentList.cs" />
+    <Compile Include="Transactions\LRSWorkflowRules.cs" />
     <Compile Include="Transactions\LRSWorkflow.cs" />
-    <Compile Include="Transactions\TransactionStatus.cs" />
-    <Compile Include="Transactions\LRSTransactionTaskList.cs" />
+    <Compile Include="Transactions\LRSTransactionStatus.cs" />
+    <Compile Include="Transactions\LRSWorkflowTaskList.cs" />
     <Compile Include="Transactions\LRSWorkflowTask.cs" />
     <Compile Include="Transactions\CalculationRule.cs" />
     <Compile Include="Transactions\LRSLawArticle.cs" />

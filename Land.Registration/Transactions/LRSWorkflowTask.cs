@@ -15,7 +15,7 @@ using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration.Transactions {
 
-  public enum TrackStatus {
+  public enum WorkflowTaskStatus {
     Pending = 'P',
     OnDelivery = 'D',
     Closed = 'C',
@@ -23,7 +23,7 @@ namespace Empiria.Land.Registration.Transactions {
     Historic = 'H',
   }
 
-  public enum TrackMode {
+  public enum WorkflowTrackMode {
     Automatic = 'A',
     Manual = 'M',
   }
@@ -50,14 +50,15 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static internal LRSWorkflowTask CreateFirst(LRSTransaction transaction) {
-      LRSWorkflowTask track = new LRSWorkflowTask(transaction);
+      LRSWorkflowTask task = new LRSWorkflowTask(transaction);
 
-      track.AssignedBy = LRSWorkflow.InterestedContact;
-      track.EndProcessTime = track.CheckInTime;
-      track.Responsible = Contact.Parse(ExecutionServer.CurrentUserId);
-      track.Save();
+      task.AssignedBy = LRSWorkflowRules.InterestedContact;
+      task.CurrentStatus = transaction.Workflow.CurrentStatus;
+      task.EndProcessTime = task.CheckInTime;
+      task.Responsible = Contact.Parse(ExecutionServer.CurrentUserId);
+      task.Save();
 
-      return track;
+      return task;
     }
 
     #endregion Constructors and parsers
@@ -76,8 +77,8 @@ namespace Empiria.Land.Registration.Transactions {
       set;
     }
 
-    [DataField("Mode", Default = TrackMode.Manual)]
-    public TrackMode Mode {
+    [DataField("Mode", Default = WorkflowTrackMode.Manual)]
+    public WorkflowTrackMode Mode {
       get;
       set;
     }
@@ -100,24 +101,24 @@ namespace Empiria.Land.Registration.Transactions {
       set;
     }
 
-    [DataField("CurrentTransactionStatus", Default = TransactionStatus.Undefined)]
-    public TransactionStatus CurrentStatus {
+    [DataField("CurrentTransactionStatus", Default = LRSTransactionStatus.Undefined)]
+    public LRSTransactionStatus CurrentStatus {
       get;
       set;
     }
 
     public string CurrentStatusName {
-      get { return LRSWorkflow.GetStatusName(this.CurrentStatus); }
+      get { return LRSWorkflowRules.GetStatusName(this.CurrentStatus); }
     }
 
-    [DataField("NextTransactionStatus", Default = TransactionStatus.EndPoint)]
-    public TransactionStatus NextStatus {
+    [DataField("NextTransactionStatus", Default = LRSTransactionStatus.EndPoint)]
+    public LRSTransactionStatus NextStatus {
       get;
       set;
     }
 
     public string NextStatusName {
-      get { return LRSWorkflow.GetStatusName(this.NextStatus); }
+      get { return LRSWorkflowRules.GetStatusName(this.NextStatus); }
     }
 
     [DataField("CheckInTime", Default = "DateTime.Now")]
@@ -150,7 +151,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public TimeSpan OfficeWorkElapsedTime {
       get {
-        if (LRSWorkflow.StatusIsOfficeWork(this.CurrentStatus)) {
+        if (LRSWorkflowRules.IsStatusOfficeWork(this.CurrentStatus)) {
           return this.ElapsedTime;
         } else {
           return TimeSpan.Zero;
@@ -164,8 +165,8 @@ namespace Empiria.Land.Registration.Transactions {
       set;
     }
 
-    [DataField("TrackStatus", Default = TrackStatus.Pending)]
-    public TrackStatus Status {
+    [DataField("TrackStatus", Default = WorkflowTaskStatus.Pending)]
+    public WorkflowTaskStatus Status {
       get;
       internal set;
     }
@@ -191,13 +192,13 @@ namespace Empiria.Land.Registration.Transactions {
     public string StatusName {
       get {
         switch (this.Status) {
-          case TrackStatus.Pending:
+          case WorkflowTaskStatus.Pending:
             return "Pendiente";
-          case TrackStatus.OnDelivery:
+          case WorkflowTaskStatus.OnDelivery:
             return "Por entregar";
-          case TrackStatus.Closed:
+          case WorkflowTaskStatus.Closed:
             return "Terminado";
-          case TrackStatus.Deleted:
+          case WorkflowTaskStatus.Deleted:
             return "Eliminado";
           default:
             return "No determinado";
@@ -214,22 +215,22 @@ namespace Empiria.Land.Registration.Transactions {
         this.EndProcessTime = DateTime.Now;
       }
       this.CheckOutTime = DateTime.Now;
-      this.NextContact = LRSWorkflow.InterestedContact;
-      this.NextStatus = TransactionStatus.EndPoint;
+      this.NextContact = LRSWorkflowRules.InterestedContact;
+      this.NextStatus = LRSTransactionStatus.EndPoint;
       this.NextTask = LRSWorkflowTask.Empty;
-      this.Status = TrackStatus.Closed;
+      this.Status = WorkflowTaskStatus.Closed;
 
       this.Save();
     }
 
     private void ExecuteSpecialCase(LRSWorkflowTask nextTrack) {
       if (nextTrack.IsNew) {
-        if (nextTrack.CurrentStatus == TransactionStatus.ToDeliver ||
-            nextTrack.CurrentStatus == TransactionStatus.ToReturn) {
-          nextTrack.NextStatus = (nextTrack.CurrentStatus == TransactionStatus.ToDeliver) ?
-                    TransactionStatus.Delivered : TransactionStatus.Returned;
+        if (nextTrack.CurrentStatus == LRSTransactionStatus.ToDeliver ||
+            nextTrack.CurrentStatus == LRSTransactionStatus.ToReturn) {
+          nextTrack.NextStatus = (nextTrack.CurrentStatus == LRSTransactionStatus.ToDeliver) ?
+                    LRSTransactionStatus.Delivered : LRSTransactionStatus.Returned;
           nextTrack.EndProcessTime = nextTrack.CheckInTime;
-          nextTrack.Status = TrackStatus.OnDelivery;
+          nextTrack.Status = WorkflowTaskStatus.OnDelivery;
         }
       }
     }
@@ -246,7 +247,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (notes.Length != 0) {
         newTrack.Notes = notes;
       }
-      newTrack.Status = TrackStatus.Pending;
+      newTrack.Status = WorkflowTaskStatus.Pending;
 
       ExecuteSpecialCase(newTrack);
 
@@ -260,29 +261,29 @@ namespace Empiria.Land.Registration.Transactions {
       if (this.NextContact.IsEmptyInstance) {
         this.NextContact = Contact.Parse(ExecutionServer.CurrentUserId);
       }
-      this.Status = TrackStatus.Closed;
+      this.Status = WorkflowTaskStatus.Closed;
       this.NextTask = newTrack;
       this.Save();
 
       return newTrack;
     }
 
-    internal void SetNextStatus(TransactionStatus nextStatus, Contact nextContact, string notes) {
+    internal void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact, string notes) {
       this.NextStatus = nextStatus;
       this.NextContact = nextContact;
       this.EndProcessTime = DateTime.Now;
       this.Notes = notes;
-      this.Status = TrackStatus.OnDelivery;
+      this.Status = WorkflowTaskStatus.OnDelivery;
       this.Save();
     }
 
     internal void SetPending() {
       this.EndProcessTime = ExecutionServer.DateMaxValue;
       this.CheckOutTime = ExecutionServer.DateMaxValue;
-      this.NextStatus = TransactionStatus.EndPoint;
+      this.NextStatus = LRSTransactionStatus.EndPoint;
       this.NextTask = LRSWorkflowTask.Empty;
       this.NextContact = Person.Empty;
-      this.Status = TrackStatus.Pending;
+      this.Status = WorkflowTaskStatus.Pending;
       this.Save();
     }
 

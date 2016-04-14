@@ -41,7 +41,7 @@ namespace Empiria.Land.Registration.Transactions {
     protected override void OnInitialize() {
       recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
       payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
-      workflow = new Lazy<LRSWorkflow>(() => new LRSWorkflow(this));
+      workflow = new Lazy<LRSWorkflow>(() => LRSWorkflow.Parse(this));
     }
 
     static public LRSTransaction Parse(int id) {
@@ -60,8 +60,7 @@ namespace Empiria.Land.Registration.Transactions {
       GeneralList listType = GeneralList.Parse("LRSTransaction.ManagementAgencies.List");
 
       return listType.GetItems<Contact>();
-    }  
-
+    }
     #endregion Constructors and parsers
 
     #region Public properties
@@ -195,18 +194,6 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
-    //[DataField("TransactionStatus", Default = TransactionStatus.Payment)]
-    //public TransactionStatus Status {
-    //  get;
-    //  private set;
-    //}
-
-    //public string StatusName {
-    //  get {
-    //    return LRSWorkflow.GetStatusName(this.Status);
-    //  }
-    //}
-
     public LRSTransactionItemList Items {
       get {
         return recordingActs.Value;
@@ -285,9 +272,8 @@ namespace Empiria.Land.Registration.Transactions {
                                       LRSLawArticle treasuryCode, decimal recordingRights) {
       this.AssertAddItem();
 
-
       var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
-                                        Money.Zero, Quantity.One,
+                                        Money.Zero, Quantity.One, 
                                         new LRSFee() { RecordingRights = recordingRights });
       this.Items.Add(item);
 
@@ -348,7 +334,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     private void AssertAddPayment() {
-      Assertion.Assert(this.Workflow.CurrentStatus == TransactionStatus.Payment,
+      Assertion.Assert(this.Workflow.CurrentStatus == LRSTransactionStatus.Payment,
               "The transaction's status doesn't permit aggregate new payments.");
     }
 
@@ -441,8 +427,8 @@ namespace Empiria.Land.Registration.Transactions {
                                                   this.RecorderOffice.Alias);
       TransactionData.WriteTransaction(this);
       if (base.IsNew) {
-        LRSWorkflowTask track = LRSWorkflowTask.CreateFirst(this);
-        this.Workflow.ResetTasksList();
+        LRSWorkflow.Create(this);
+        workflow = new Lazy<LRSWorkflow>(() => LRSWorkflow.Parse(this));
       }
     }
 
@@ -451,7 +437,7 @@ namespace Empiria.Land.Registration.Transactions {
     #region Private methods
 
     private void AssertAddItem() {
-      Assertion.Assert(this.Workflow.CurrentStatus == TransactionStatus.Payment,
+      Assertion.Assert(this.Workflow.CurrentStatus == LRSTransactionStatus.Payment,
               "The transaction's status doesn't permit aggregate new services or products.");
     }
 
