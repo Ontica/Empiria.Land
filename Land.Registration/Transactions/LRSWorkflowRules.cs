@@ -238,11 +238,12 @@ namespace Empiria.Land.Registration.Transactions {
           } else if (ExecutionServer.LicenseName == "Tlaxcala") {
             if (LRSWorkflowRules.IsSafeguardable(type, docType)) {
               list.Add(LRSTransactionStatus.Safeguard);
+            } else {
+              list.Add(LRSTransactionStatus.ToDeliver);
             }
             list.Add(LRSTransactionStatus.ToReturn);
             list.Add(LRSTransactionStatus.Control);
             list.Add(LRSTransactionStatus.Juridic);
-            list.Add(LRSTransactionStatus.ToDeliver);
           }
           break;
 

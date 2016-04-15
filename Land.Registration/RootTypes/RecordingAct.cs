@@ -212,9 +212,10 @@ namespace Empiria.Land.Registration {
 
     public string DisplayName {
       get {
-        if (!this.IsAmendment) {
+        if (!this.RecordingActType.RecordingRule.UseDynamicActNaming) {
           return this.RecordingActType.DisplayName;
-        } else if (this.RecordingActType.IsModificationActType) {
+        }
+        if (this.RecordingActType.IsModificationActType) {
           return "Modificación de " + this.AmendmentOf.RecordingActType.DisplayName.ToLowerInvariant();
         } else if (this.RecordingActType.IsCancelationActType) {
           return "Cancelación de " + this.AmendmentOf.RecordingActType.DisplayName.ToLowerInvariant();

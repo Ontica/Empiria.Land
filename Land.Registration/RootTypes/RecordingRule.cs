@@ -79,6 +79,7 @@ namespace Empiria.Land.Registration {
         this.AllowsPartitions = json.Get<bool>("AllowsPartitions", false);
         this.IsActive = json.Get<bool>("IsActive", false);
         this.AskForResourceName = json.Get<bool>("AskForResourceName", false);
+        this.UseDynamicActNaming = json.Get<bool>("UseDynamicActNaming", false);
       } catch (Exception e) {
         throw new LandRegistrationException(LandRegistrationException.Msg.MistakeInRecordingRuleConfig, e,
                                             this.recordingActType.Id);
@@ -189,6 +190,11 @@ namespace Empiria.Land.Registration {
     } = "None";
 
     public bool IsActive {
+      get;
+      private set;
+    } = false;
+
+    public bool UseDynamicActNaming {
       get;
       private set;
     } = false;

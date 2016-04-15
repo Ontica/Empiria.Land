@@ -32,6 +32,14 @@ namespace Empiria.Land.Registration {
       recordingActToModify.Amend(this);
     }
 
+    internal ModificationAct(RecordingActType recordingActType, RecordingDocument document,
+                             Resource resource) : base(recordingActType, document) {
+      Assertion.AssertObject(resource, "resource");
+      this.AttachResource(resource);
+
+      this.Save();
+    }
+
     static public new ModificationAct Parse(int id) {
       return BaseObject.ParseId<ModificationAct>(id);
     }

@@ -192,9 +192,6 @@ namespace Empiria.Land.Registration {
     }
 
     private ModificationAct[] CreateModificationAct() {
-      Assertion.Assert(!this.Task.TargetActInfo.IsEmptyInstance,
-                       "The target recording act should not be the empty instance.");
-
       switch (this.Task.RecordingActType.AppliesTo) {
         case RecordingRuleApplication.RecordingAct:
           return CreateRecordingActModificationAct();
@@ -282,7 +279,10 @@ namespace Empiria.Land.Registration {
     }
 
     private ModificationAct[] CreateResourceModificationAct() {
-      throw new NotImplementedException();
+      var resource = this.GetOneResource();
+
+      return new[] { new ModificationAct(this.Task.RecordingActType,
+                                         this.Task.Document, resource) };
     }
 
     private ModificationAct[] CreateStructureModificationAct() {
