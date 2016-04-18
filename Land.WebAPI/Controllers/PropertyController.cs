@@ -81,9 +81,9 @@ namespace Empiria.Land.WebApi {
         var fullTract = property.GetRecordingActsTractUntil(RecordingAct.Empty, false);
 
         var data = new {
-          domain = GetRecordingActModel(domainAntecedent),
-          provisional = GetRecordingActModel(provisionalAntecedent),
-          fullTract = fullTract.Select((x) => GetRecordingActModel(x)),
+          domain = this.GetRecordingActModel(domainAntecedent),
+          provisional = this.GetRecordingActModel(provisionalAntecedent),
+          fullTract = fullTract.Select((x) => this.GetRecordingActModel(x)),
         };
 
         return new SingleObjectModel(this.Request, data, "Empiria.Land.PropertyAntecedents");
@@ -114,7 +114,7 @@ namespace Empiria.Land.WebApi {
           return new SingleObjectModel(this.Request, data, "Empiria.Land.Property");
         } else {
           throw new ResourceNotFoundException("Property.CadastralKey",
-            "No tengo registrado ningún predio con la clave catastral '{0}'.", cadastralKey);
+                "No tengo registrado ningún predio con la clave catastral '{0}'.", cadastralKey);
         }
       } catch (Exception e) {
         throw base.CreateHttpException(e);
