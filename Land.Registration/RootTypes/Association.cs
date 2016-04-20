@@ -55,18 +55,42 @@ namespace Empiria.Land.Registration {
       return TransactionData.GenerateAssociationUID();
     }
 
+    public string GetAssociationTypeName() {
+      RecordingAct incorporationAct = this.GetIncorporationAct();
+
+      if (!incorporationAct.IsEmptyInstance) {
+        return incorporationAct.RecordingActType.RecordingRule.ResourceTypeName;
+      }
+
+      if (this.Name.EndsWith("S.C.") || this.Name.EndsWith("SC") || this.Name.Contains("sociedad civil")) {
+        return "sociedad civil";
+      } else if (this.Name.EndsWith("A.C.") || this.Name.EndsWith("AC") ||
+                 this.Name.Contains("asociacion civil") || this.Name.Contains("asociación civil")) {
+        return "asociación civil";
+      } else if (this.Name.EndsWith("A.R.") || this.Name.EndsWith("AR") ||
+                 this.Name.Contains("asociacion religiosa") || this.Name.Contains("asociación religiosa")) {
+        return "asociación religiosa";
+      } else {
+        return "sociedad";
+      }
+    }
+
     public RecordingAct GetIncorporationAct() {
       FixedList<RecordingAct> tract = this.GetRecordingActsTractUntil(RecordingAct.Empty, false);
 
-      if (tract.Count == 0) {         // Antecedent no registered
+      if (tract.Count == 0) {
         return RecordingAct.Empty;
       }
-      RecordingAct antecedent = tract.FindLast((x) => EmpiriaMath.IsMemberOf(x.Id, new int[] { 2750, 2709, 2710, 2711 }));    // Incorporation act
-      if (antecedent != null) {
-        return antecedent;
-      } else if (tract[0].RecordingActType.Equals(RecordingActType.Empty)) {
-        return tract[0];        // Incorporation act
-      } else {
+      RecordingAct incorporationAct = tract.Find((x) => EmpiriaMath.IsMemberOf(x.RecordingActType.Id,
+                                                 new int[] { 2750, 2709, 2710, 2711 }));    // Incorporation acts
+      if (incorporationAct != null) {
+        return incorporationAct;
+      } else if (!tract[0].PhysicalRecording.IsEmptyInstance) {
+        return tract[0];
+      }
+      if (incorporationAct != null) {
+          return incorporationAct;
+        } else {
         return RecordingAct.Empty;
       }
     }

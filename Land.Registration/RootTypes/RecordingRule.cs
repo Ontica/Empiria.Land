@@ -79,6 +79,7 @@ namespace Empiria.Land.Registration {
         this.AllowsPartitions = json.Get<bool>("AllowsPartitions", false);
         this.IsActive = json.Get<bool>("IsActive", false);
         this.AskForResourceName = json.Get<bool>("AskForResourceName", false);
+        this.ResourceTypeName = json.Get<string>("ResourceTypeName", String.Empty);
         this.UseDynamicActNaming = json.Get<bool>("UseDynamicActNaming", false);
       } catch (Exception e) {
         throw new LandRegistrationException(LandRegistrationException.Msg.MistakeInRecordingRuleConfig, e,
@@ -198,6 +199,11 @@ namespace Empiria.Land.Registration {
       get;
       private set;
     } = false;
+
+    public string ResourceTypeName {
+      get;
+      internal set;
+    } = String.Empty;
 
     #endregion Properties
 
