@@ -215,10 +215,18 @@ namespace Empiria.Land.Registration.Transactions {
             list.Add(LRSTransactionStatus.ToReturn);
           } else if (ExecutionServer.LicenseName == "Tlaxcala") {
             list.Add(LRSTransactionStatus.OnSign);
-            list.Add(LRSTransactionStatus.Control);
             if (LRSWorkflowRules.IsArchivable(type, docType)) {
               list.Add(LRSTransactionStatus.Finished);
             }
+            if (LRSWorkflowRules.IsRecordingDocumentCase(type, docType)) {
+              list.Add(LRSTransactionStatus.Recording);
+            } else if (LRSWorkflowRules.IsCertificateIssueCase(type, docType)) {
+              list.Add(LRSTransactionStatus.Elaboration);
+            } else {
+              list.Add(LRSTransactionStatus.Elaboration);
+              list.Add(LRSTransactionStatus.Recording);
+            }
+            list.Add(LRSTransactionStatus.Control);
           }
           break;
 
