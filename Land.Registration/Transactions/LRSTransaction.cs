@@ -240,6 +240,12 @@ namespace Empiria.Land.Registration.Transactions {
       } // get
     }
 
+    public bool IsReentry {
+      get {
+        return this.LastReentryTime <= DateTime.Now;
+      }
+    }
+
     int IProtected.CurrentDataIntegrityVersion {
       get {
         return 1;

@@ -58,20 +58,21 @@ namespace Empiria.Land.Registration {
     public string GetAssociationTypeName() {
       RecordingAct incorporationAct = this.GetIncorporationAct();
 
-      if (!incorporationAct.IsEmptyInstance) {
+      if (!incorporationAct.IsEmptyInstance &&
+          incorporationAct.RecordingActType.RecordingRule.ResourceTypeName.Length != 0) {
         return incorporationAct.RecordingActType.RecordingRule.ResourceTypeName;
       }
 
       if (this.Name.EndsWith("S.C.") || this.Name.EndsWith("SC") || this.Name.Contains("sociedad civil")) {
-        return "sociedad civil";
+        return "Sociedad civil";
       } else if (this.Name.EndsWith("A.C.") || this.Name.EndsWith("AC") ||
                  this.Name.Contains("asociacion civil") || this.Name.Contains("asociación civil")) {
-        return "asociación civil";
+        return "Asociación civil";
       } else if (this.Name.EndsWith("A.R.") || this.Name.EndsWith("AR") ||
                  this.Name.Contains("asociacion religiosa") || this.Name.Contains("asociación religiosa")) {
-        return "asociación religiosa";
+        return "Asociación religiosa";
       } else {
-        return "sociedad";
+        return "Sociedad";
       }
     }
 

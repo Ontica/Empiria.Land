@@ -214,13 +214,9 @@ namespace Empiria.Land.Registration {
       get {
         if (!this.RecordingActType.RecordingRule.UseDynamicActNaming) {
           return this.RecordingActType.DisplayName;
-        }
-        if (this.RecordingActType.IsModificationActType) {
-          return "Modificación de " + this.AmendmentOf.RecordingActType.DisplayName.ToLowerInvariant();
-        } else if (this.RecordingActType.IsCancelationActType) {
-          return "Cancelación de " + this.AmendmentOf.RecordingActType.DisplayName.ToLowerInvariant();
         } else {
-          return this.RecordingActType.DisplayName;
+          return this.RecordingActType.RecordingRule.DynamicActNamePattern + " de " +
+                 this.AmendmentOf.RecordingActType.DisplayName.ToLowerInvariant();
         }
       }
     }

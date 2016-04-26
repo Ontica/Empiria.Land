@@ -80,7 +80,7 @@ namespace Empiria.Land.Registration {
         this.IsActive = json.Get<bool>("IsActive", false);
         this.AskForResourceName = json.Get<bool>("AskForResourceName", false);
         this.ResourceTypeName = json.Get<string>("ResourceTypeName", String.Empty);
-        this.UseDynamicActNaming = json.Get<bool>("UseDynamicActNaming", false);
+        this.DynamicActNamePattern = json.Get<string>("DynamicActNamePattern", String.Empty);
       } catch (Exception e) {
         throw new LandRegistrationException(LandRegistrationException.Msg.MistakeInRecordingRuleConfig, e,
                                             this.recordingActType.Id);
@@ -195,15 +195,21 @@ namespace Empiria.Land.Registration {
       private set;
     } = false;
 
-    public bool UseDynamicActNaming {
+    public string DynamicActNamePattern {
       get;
       private set;
-    } = false;
+    } = String.Empty;
 
     public string ResourceTypeName {
       get;
       internal set;
     } = String.Empty;
+
+    public bool UseDynamicActNaming {
+      get {
+        return (this.DynamicActNamePattern.Length != 0);
+      }
+    }
 
     #endregion Properties
 
