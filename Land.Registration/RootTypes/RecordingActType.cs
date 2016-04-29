@@ -207,7 +207,7 @@ namespace Empiria.Land.Registration {
       var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
 
       var list = json.GetList<RecordingActType>("RecordingActTypes", false);
-      list.Sort((x, y) => x.Name.CompareTo(y.Name));
+      list.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
 
       return list.ToFixedList();
     }

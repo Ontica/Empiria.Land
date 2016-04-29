@@ -164,7 +164,7 @@ namespace Empiria.Land.Registration {
 
     /// <summary>Returns the temporary domain act if it exists, or RecordingAct.Empty otherwise.</summary>
     public RecordingAct GetProvisionalDomainAct() {
-      FixedList<RecordingAct> tract = this.GetRecordingActsTractUntil(RecordingAct.Empty, false);
+      FixedList<RecordingAct> tract = this.GetRecordingActsTract();
 
       if (tract.Count == 0) {         // Antecedent no registered
         return RecordingAct.Empty;

@@ -214,9 +214,13 @@ namespace Empiria.Land.Registration {
       get {
         if (!this.RecordingActType.RecordingRule.UseDynamicActNaming) {
           return this.RecordingActType.DisplayName;
-        } else {
+        } else if (this.RecordingActType.AppliesTo != RecordingRuleApplication.RecordingAct) {
+          return this.RecordingActType.DisplayName;
+        } else if (this.RecordingActType.AppliesTo == RecordingRuleApplication.RecordingAct) {
           return this.RecordingActType.RecordingRule.DynamicActNamePattern + " de " +
                  this.AmendmentOf.RecordingActType.DisplayName.ToLowerInvariant();
+        } else {
+          throw Assertion.AssertNoReachThisCode();
         }
       }
     }
@@ -442,23 +446,3 @@ namespace Empiria.Land.Registration {
   } // class RecordingAct
 
 } // namespace Empiria.Land.Registration
-
-
-
-//static internal RecordingAct Create(RecordingActType recordingActType,
-//                                RecordingDocument document, int index) {
-//  Assertion.AssertObject(recordingActType, "recordingActType");
-//  Assertion.AssertObject(document, "document");
-
-//  RecordingAct recordingAct = recordingActType.CreateInstance();
-//  recordingAct.Document = document;
-//  recordingAct.Index = index;
-//  if (recordingActType.Autoregister) {
-//    recordingAct.Status = RecordableObjectStatus.Registered;
-//  } else {
-//    recordingAct.Status = RecordableObjectStatus.Pending;
-//  }
-//  recordingAct.Save();
-
-//  return recordingAct;
-//}

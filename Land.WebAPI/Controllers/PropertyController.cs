@@ -78,7 +78,7 @@ namespace Empiria.Land.WebApi {
 
         var domainAntecedent = property.GetDomainAntecedent();
         var provisionalAntecedent = property.GetProvisionalDomainAct();
-        var fullTract = property.GetRecordingActsTractUntil(RecordingAct.Empty, false);
+        var fullTract = property.GetRecordingActsTract();
 
         var data = new {
           domain = this.GetRecordingActModel(domainAntecedent),

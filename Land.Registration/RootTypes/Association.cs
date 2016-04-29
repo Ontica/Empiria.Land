@@ -77,7 +77,7 @@ namespace Empiria.Land.Registration {
     }
 
     public RecordingAct GetIncorporationAct() {
-      FixedList<RecordingAct> tract = this.GetRecordingActsTractUntil(RecordingAct.Empty, false);
+      FixedList<RecordingAct> tract = this.GetRecordingActsTract();
 
       if (tract.Count == 0) {
         return RecordingAct.Empty;

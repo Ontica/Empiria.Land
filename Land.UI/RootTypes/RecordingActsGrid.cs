@@ -21,13 +21,13 @@ namespace Empiria.Land.UI {
     #region Fields
 
     private RecordingDocument document = null;
+    private Dictionary<string, int> antecedentsDictionary = new Dictionary<string, int>();
 
     #endregion Fields
 
     #region Constructors and parsers
 
     private RecordingActsGrid(RecordingDocument document) {
-      // TODO: Complete member initialization
       this.document = document;
     }
 
@@ -58,8 +58,6 @@ namespace Empiria.Land.UI {
  	    throw new NotImplementedException();
     }
 
-    Dictionary<string, int> antecedentsDictionary = new Dictionary<string, int>();
-
     private string GetRecordingActRow(RecordingAct recordingAct, TractItem tractItem) {
       string row = GetRowTemplate(recordingAct);
 
@@ -67,14 +65,16 @@ namespace Empiria.Land.UI {
       row = row.Replace("{{RECORDING.ACT.URL}}", recordingAct.DisplayName);
       row = row.Replace("{{RESOURCE.URL}}", GetResourceCell(tractItem));
 
-      var antecedent = GetAntecedentOrTargetCell(tractItem);
-      if (antecedentsDictionary.ContainsKey(antecedent)) {
-        int recordingActIndex = antecedentsDictionary[antecedent];
+      var antecedentText = GetAntecedentOrTargetCell(tractItem);
+      if (antecedentText.Length == 0) {
+        row = row.Replace("{{ANTECEDENT}}", "Sin antecedente registral");
+      } else if (antecedentsDictionary.ContainsKey(antecedentText)) {
+        int recordingActIndex = antecedentsDictionary[antecedentText];
         row = row.Replace("{{ANTECEDENT}}", "Igual que el acto " +
                                             recordingActIndex.ToString("00"));
       } else {
-        antecedentsDictionary.Add(antecedent, tractItem.RecordingAct.Index + 1);
-        row = row.Replace("{{ANTECEDENT}}", antecedent);
+        antecedentsDictionary.Add(antecedentText, tractItem.RecordingAct.Index + 1);
+        row = row.Replace("{{ANTECEDENT}}", antecedentText);
       }
       row = row.Replace("{{OPTIONS.COMBO}}", GetOptionsCombo(tractItem));
 
@@ -86,10 +86,6 @@ namespace Empiria.Land.UI {
     }
 
     #endregion Constructors and parsers
-
-    #region Public properties
-
-    #endregion Public properties
 
     #region Private auxiliar methods
 
@@ -108,12 +104,18 @@ namespace Empiria.Land.UI {
                  (realEstate.CadastralKey.Length != 0 ?
                  "<i>Catastro: " + realEstate.CadastralKey + "</i><br />" : String.Empty);
         }
+
       } else if (tractItem.Resource is Association) {
         return tractItem.Resource.UID + "<br />" +
                ((Association) tractItem.Resource).Name;
-      } else {
+
+      } else if (tractItem.Resource is NoPropertyResource) {
         return "Referencia registral:<br />" +
                tractItem.Resource.UID;
+
+      } else {
+        throw Assertion.AssertNoReachThisCode();
+
       }
     }
 
@@ -123,40 +125,47 @@ namespace Empiria.Land.UI {
       }
       var antecedent = tractItem.GetRecordingAntecedent();
       if (antecedent.IsEmptyInstance) {
-        return "Sin antecedente registral";
+        return String.Empty;
+
       } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {
         return antecedent.PhysicalRecording.AsText + "<br />" +
                GetRecordingDates(antecedent.Document);
+
       } else if (antecedent.Document.Equals(tractItem.RecordingAct.Document)) {
         return String.Format("Folio real creado en el acto {0}",
                              (antecedent.Index + 1).ToString("00"));
+
       } else {
         return antecedent.Document.UID + "<br />" +
                GetRecordingDates(antecedent.Document);
-      }
-    }
 
-    private static string GetRecordingDates(RecordingDocument document) {
-      return "Present: " + GetDateAsText(document.PresentationTime) + " &nbsp; " +
-             "Reg: " + GetDateAsText(document.AuthorizationTime);
+      }
     }
 
     static private string GetAmendedItemCell(TractItem tractItem) {
       var amendedAct = tractItem.RecordingAct.AmendmentOf;
 
-      if (!amendedAct.PhysicalRecording.IsEmptyInstance) {
-        return amendedAct.RecordingActType.DisplayName +
-               (amendedAct.RecordingActType.FemaleGenre ?
-                                            " registrada en<br/>" : " registrado en<br/>") +
-               amendedAct.PhysicalRecording.AsText + "<br />" +
-               GetRecordingDates(amendedAct.Document);
-      } else {
+      if (amendedAct.IsEmptyInstance) {
+        var a  = tractItem.GetRecordingAntecedent();
+        return a.Document.UID;
+      } else if (amendedAct.PhysicalRecording.IsEmptyInstance) {
         return amendedAct.RecordingActType.DisplayName +
                (amendedAct.RecordingActType.FemaleGenre ?
                                             " registrada en<br/>" : " registrado en<br/>") +
                "Doc: " + amendedAct.Document.UID + "<br />" +
                GetRecordingDates(amendedAct.Document);
+      } else {
+        return amendedAct.RecordingActType.DisplayName +
+               (amendedAct.RecordingActType.FemaleGenre ?
+                                            " registrada en<br/>" : " registrado en<br/>") +
+               amendedAct.PhysicalRecording.AsText + "<br />" +
+               GetRecordingDates(amendedAct.Document);
       }
+    }
+
+    static private string GetRecordingDates(RecordingDocument document) {
+      return "Presentación: " + GetDateAsText(document.PresentationTime) + " &nbsp; " +
+             "Registro: " + GetDateAsText(document.AuthorizationTime);
     }
 
     static private string GetRowTemplate(RecordingAct recordingAct) {
