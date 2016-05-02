@@ -37,9 +37,8 @@ namespace Empiria.Land.WebApi {
           return new SingleObjectModel(this.Request, data, "Empiria.Land.Property");
         } else {
           throw new ResourceNotFoundException("Document.UID",
-                      String.Format("Document with identifier '{0}' was not found.", documentUID));
+                    "Document with identifier '{0}' was not found.", documentUID);
         }
-
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }

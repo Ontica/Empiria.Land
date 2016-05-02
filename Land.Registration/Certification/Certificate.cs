@@ -9,6 +9,7 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Text;
 
 using Empiria.Contacts;
 using Empiria.Ontology;
@@ -242,6 +243,42 @@ namespace Empiria.Land.Certification {
       this.Status = CertificateStatus.Closed;
 
       this.Save();
+    }
+
+    public string GetDigitalSeal() {
+      if (this.Status == CertificateStatus.Pending) {
+        return "* * * * CERTIFICADO EN PROCESO DE ELABORACIÓN * * * *";
+      }
+
+      var seal = new StringBuilder("||1|" + this.UID +
+                                      "|" + this.Transaction.UID);
+      seal.Append("|" + this.Transaction.Payments.ReceiptNumbers);
+      if (!this.Property.IsEmptyInstance) {
+        seal.Append("|" + this.Property.UID);
+      } else if (this.OwnerName.Length != 0) {
+        seal.Append("|" + this.OwnerName.ToUpperInvariant());
+      }
+      if (this.ExtensionData.UseMarginalNotesAsFullBody) {
+        seal.Append("|" + "Manual");
+      }
+      seal.Append("|" + this.IssueTime.ToString("yyyyMMddTHH:mm"));
+      seal.Append("|" + this.SignedBy.Id + "|" + this.IssuedBy.Id);
+      seal.Append("|" +
+            this.Integrity.GetUpdatedHashCode().Substring(0, 12).ToUpperInvariant() + "||");
+
+      return EmpiriaString.DivideLongString(seal.ToString(), 72, "&#8203;");
+    }
+
+    public string GetDigitalSignature() {
+      if (this.Status == CertificateStatus.Pending) {
+        return "SIN VALOR LEGAL * * * * * SIN VALOR LEGAL";
+      }
+
+      string s = Cryptographer.CreateDigitalSign(this.GetDigitalSeal());
+
+      int removeThisCharacters = 72;
+
+      return s.Substring(s.Length - removeThisCharacters);
     }
 
     public void Open() {

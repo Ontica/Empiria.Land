@@ -110,34 +110,19 @@ namespace Empiria.Land.Certification {
     }
 
     protected string GetDigitalSeal() {
-      if (this.Certificate.Status == CertificateStatus.Pending) {
+      if (this.Certificate.Status != CertificateStatus.Pending) {
+        return this.Certificate.GetDigitalSeal();
+      } else {
         return AsWarning("SIN VALOR LEGAL * * * * * SIN VALOR LEGAL");
       }
-      var seal = new StringBuilder("||1|" + this.Certificate.UID +
-                                      "|" + this.Certificate.Transaction.UID);
-      seal.Append("|" + this.Certificate.Transaction.Payments.ReceiptNumbers);
-      if (!this.Certificate.Property.IsEmptyInstance) {
-        seal.Append("|" + this.Certificate.Property.UID);
-      } else if (this.Certificate.OwnerName.Length != 0) {
-        seal.Append("|" + this.Certificate.OwnerName.ToUpperInvariant());
-      }
-      if (this.Certificate.ExtensionData.UseMarginalNotesAsFullBody) {
-        seal.Append("|" + "Manual");
-      }
-      seal.Append("|" + this.Certificate.IssueTime.ToString("yyyyMMddTHH:mm"));
-      seal.Append("|" + this.Certificate.SignedBy.Id + "|" + this.Certificate.IssuedBy.Id);
-      seal.Append("|" +
-            this.Certificate.Integrity.GetUpdatedHashCode().Substring(0, 12).ToUpperInvariant() + "||");
-
-      return EmpiriaString.DivideLongString(seal.ToString(), 72, "&#8203;");
     }
 
     protected string GetDigitalSignature() {
-      if (this.Certificate.Status == CertificateStatus.Pending) {
+      if (this.Certificate.Status != CertificateStatus.Pending) {
+        return this.Certificate.GetDigitalSignature();
+      } else {
         return AsWarning("SIN VALOR LEGAL * * * * * SIN VALOR LEGAL");
       }
-      string s = Empiria.Security.Cryptographer.CreateDigitalSign(this.GetDigitalSeal());
-      return s.Substring(s.Length - 72);
     }
 
     private string GetTemplate() {
