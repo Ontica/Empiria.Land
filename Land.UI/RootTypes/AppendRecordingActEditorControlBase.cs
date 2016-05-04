@@ -20,11 +20,11 @@ namespace Empiria.Land.UI {
 
   /// <summary>User control to collect recording act information. This type should be derived in a
   /// concrete aspx user control.</summary>
-  public abstract class RecordingActEditorControlBase : WebUserControl {
+  public abstract class AppendRecordingActEditorControlBase : WebUserControl {
 
     #region Public properties
 
-    static private string _virtualPath = ConfigurationData.GetString("RecordingAct.EditorControl");
+    static private string _virtualPath = ConfigurationData.GetString("UIControls.AppendRecordingActEditorControl");
     static public string ControlVirtualPath {
       get {
         return _virtualPath;

@@ -10,6 +10,7 @@
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
+using System.Linq;
 
 using Empiria.DataTypes;
 using Empiria.Geography;
@@ -131,6 +132,18 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
+    public bool IsFirstDomainAct(RecordingAct recordingAct) {
+      var list = this.GetRecordingActsTract();
+
+      var firstDomainAct = list.Find((x) => x.RecordingActType.IsDomainActType);
+
+      if (firstDomainAct != null) {
+        return firstDomainAct.Equals(recordingAct);
+      } else {
+        return false;
+      }
+    }
+
     protected override string GenerateResourceUID() {
       return TransactionData.GeneratePropertyUID();
     }
@@ -180,9 +193,24 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public bool IsProvisional() {
-      return (this.GetDomainAntecedent() == RecordingAct.Empty &&
-              this.GetProvisionalDomainAct() != RecordingAct.Empty);
+    public bool IsInTheRankOfTheFirstDomainAct(RecordingAct recordingAct) {
+      FixedList<RecordingAct> recordingActs = this.GetRecordingActsTractUntil(recordingAct, true);
+
+      int recordingActIndex = recordingActs.IndexOf(recordingAct);
+
+      if (recordingActIndex == -1) {
+        return false;
+      }
+
+      int[] otherActsConsideredDomainActs = { 2200, 2218, 2784 };   // unknown, fusions
+
+      for (int i = 0; i < recordingActIndex; i++) {
+        if (recordingActs[i] is DomainAct ||
+            otherActsConsideredDomainActs.Contains(recordingActs[i].RecordingActType.Id) ) {
+          return false;
+        }
+      }
+      return true;
     }
 
     protected override void OnInitialize() {

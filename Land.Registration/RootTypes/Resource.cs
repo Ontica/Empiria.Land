@@ -289,14 +289,6 @@ namespace Empiria.Land.Registration {
       return this.FirstRecordingAct.Equals(recordingAct);
     }
 
-    public bool IsFirstDomainAct(RecordingAct recordingAct) {
-      var list = this.GetRecordingActsTract();
-
-      var firstDomainAct = list.Find((x) => x.RecordingActType.IsDomainActType);
-
-      return firstDomainAct.Equals(recordingAct);
-    }
-
     protected override void OnBeforeSave() {
       if (this.IsNew) {
         this.AssignUID();

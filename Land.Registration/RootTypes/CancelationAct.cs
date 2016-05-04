@@ -21,6 +21,13 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
+    internal CancelationAct(RecordingActType recordingActType, RecordingDocument document,
+                            Resource resource) : base(recordingActType, document) {
+      Assertion.AssertObject(resource, "resource");
+
+      this.AttachResource(resource);
+    }
+
     internal CancelationAct(RecordingActType recordingActType,
                             RecordingDocument document, Resource resource,
                             RecordingAct recordingActToCancel) : base(recordingActType, document) {

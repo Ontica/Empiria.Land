@@ -19,7 +19,7 @@ namespace Empiria.Land.UI {
 
     #region Public properties
 
-    static private string _virtualPath = ConfigurationData.GetString("RecordingDocument.EditorControl");
+    static private string _virtualPath = ConfigurationData.GetString("UIControls.RecordingDocumentEditorControl");
     static public string ControlVirtualPath {
       get {
         return _virtualPath;

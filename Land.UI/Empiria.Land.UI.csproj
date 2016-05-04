@@ -115,7 +115,7 @@
   <ItemGroup>
     <Compile Include="Empiria.Land.UI.AssemblyInfo.cs" />
     <Compile Include="RootTypes\RecordingActsGrid.cs" />
-    <Compile Include="RootTypes\RecordingActEditorControlBase.cs">
+    <Compile Include="RootTypes\AppendRecordingActEditorControlBase.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="RootTypes\LRSDocumentEditorControl.cs">
