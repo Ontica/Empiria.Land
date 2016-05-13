@@ -93,69 +93,12 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList<TractItem>(operation, (x) => BaseObject.ParseList<TractItem>(x));
     }
 
-    static internal FixedList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
-      throw new NotImplementedException("OOJJOO");
-
-      //string sql = String.Empty;
-      //if (!recordingAct.IsAnnotation) {
-      //  sql = "SELECT * FROM LRSRecordingActParties " +
-      //        "WHERE RecordingActId = " + recordingAct.Id + " " +
-      //        "AND PartyRoleId <> -1 AND LinkStatus <> 'X'";
-      //} else {
-      //  string ids = String.Empty;
-      //  for (int i = 0; i < recordingAct.Targets.Count; i++) {
-      //    FixedList<RecordingAct> acts = recordingAct.Targets[i].Resource.GetRecordingActsTract();
-
-      //    for (int j = 0; j < acts.Count; j++) {
-      //      if (ids.Length != 0) {
-      //        ids += ",";
-      //      }
-      //      ids += acts[j].Id.ToString();
-      //    }
-      //  }
-      //  sql = "SELECT DISTINCT * " +
-      //        "FROM LRSRecordingActParties " +
-      //        "WHERE (RecordingActId IN (" + ids + ") AND PartyRoleId <> -1) " +
-      //        "AND (LinkStatus <> 'X')";
-      //}
-
-      //return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
-      //                                            (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
-    }
-
-    static internal FixedList<RecordingActParty> GetRecordingActPartiesList(RecordingAct recordingAct) {
-      string sql = "SELECT * FROM LRSRecordingActParties " +
-                   "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
-                   "AND LinkStatus <> 'X'";
-
-      return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
-                                                   (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
-    }
-
-    static internal FixedList<RecordingActParty> GetDomainPartyList(RecordingAct recordingAct) {
-      string sql = "SELECT * FROM LRSRecordingActParties " +
-                   "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
-                   "AND PartyRoleId <> -1 AND LinkStatus <> 'X'";
-
-      return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
-                                                  (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
-    }
-
     static internal FixedList<RealEstate> GetRecordingActPropertiesList(RecordingAct recordingAct) {
       var operation = DataOperation.Parse("qryLRSRecordingActProperties", recordingAct.Id);
 
 
       return DataReader.GetList<RealEstate>(operation,
                                          (x) => BaseObject.ParseList<RealEstate>(x)).ToFixedList();
-    }
-
-    static internal FixedList<RecordingActParty> GetSecondaryPartiesList(RecordingAct recordingAct) {
-      string sql = "SELECT * FROM LRSRecordingActParties " +
-                   "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
-                   "AND SecondaryPartyRoleId <> -1 AND LinkStatus <> 'X'";
-
-      return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
-                                                  (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
     static internal int WriteRecordingAct(RecordingAct o) {
@@ -168,19 +111,18 @@ namespace Empiria.Land.Registration.Data {
                                           o.Keywords, o.AmendmentOf.Id, o.AmendedBy.Id, o.PhysicalRecording.Id,
                                           o.RegisteredBy.Id, o.RegistrationTime,
                                           (char) o.Status, o.Integrity.GetUpdatedHashCode());
+
       return DataWriter.Execute(operation);
     }
 
     static internal int WriteRecordingActParty(RecordingActParty o) {
-      var dataOperation = DataOperation.Parse("writeLRSRecordingActParty", o.Id, o.RecordingAct.Id,
-                                               o.Party.Id, o.PartyRole.Id, o.SecondaryParty.Id,
-                                               o.SecondaryPartyRole.Id, o.Notes, (char) o.OwnershipMode,
-                                               o.OwnershipPart.Amount, o.OwnershipPart.Unit.Id,
-                                               (char) o.UsufructMode, o.UsufructTerm,
-                                               o.PartyOccupation.Id, o.PartyMarriageStatus.Id,
-                                               o.PartyAddress, o.PartyAddressPlace.Id, o.PostedBy.Id,
-                                               o.PostingTime, (char) o.Status, o.IntegrityHashCode);
-      return DataWriter.Execute(dataOperation);
+      var op = DataOperation.Parse("writeLRSRecordingActParty", o.Id,
+                    o.RecordingAct.Id, o.Party.Id, o.PartyRole.Id, o.PartyOf.Id,
+                    o.OwnershipPart.Amount, o.OwnershipPart.Unit.Id, o.IsOwnershipStillActive,
+                    o.Notes, o.AsText, o.ExtendedData, o.PostedBy.Id,
+                    (char) o.Status, o.IntegrityHashCode);
+
+      return DataWriter.Execute(op);
     }
 
     static internal int WriteTractItem(TractItem o) {
@@ -193,6 +135,7 @@ namespace Empiria.Land.Registration.Data {
                       -1, String.Empty, o.RecordingActPercentage,
                       -1, -1, -1, o.LastAmendedBy.Id, o.ExtensionData.ToJson(),
                       o.RegisteredBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
+
       return DataWriter.Execute(operation);
     }
 

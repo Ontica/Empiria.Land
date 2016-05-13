@@ -171,7 +171,9 @@ namespace Empiria.Land.UI {
     static private string GetRowTemplate(RecordingAct recordingAct) {
       const string template = "<tr class='{{CLASS}}'>" +
                               "<td><b id='ancRecordingActIndex_{{ID}}'>{{INDEX}}</b></td>" +
-                              "<td style='white-space:normal'>{{RECORDING.ACT.URL}}</td>" +
+                              "<td style='white-space:normal'>" +
+                                "<a {{RECORDING.ACT.CLASS}} href='javascript:doOperation(\"editRecordingAct\", {{ID}});'>" +
+                                  "{{RECORDING.ACT.URL}}</a></td>" +
                               "<td style='white-space:nowrap'>{{RESOURCE.URL}}</td>" +
                               "<td style='white-space:normal'>{{ANTECEDENT}}</td>" +
                               "<td>{{OPTIONS.COMBO}}</td></tr>";
@@ -180,6 +182,10 @@ namespace Empiria.Land.UI {
 
       string html = template.Replace("{{CLASS}}", (index % 2 == 0) ? "detailsItem" : "detailsOddItem");
       html = html.Replace("{{INDEX}}", index.ToString("00"));
+
+      if (!recordingAct.IsCompleted) {
+        html = html.Replace("{{RECORDING.ACT.CLASS}}", "class='pending-edition'");
+      }
 
       return html;
     }

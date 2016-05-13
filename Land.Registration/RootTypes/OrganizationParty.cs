@@ -9,11 +9,6 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Data;
-
-using Empiria.Contacts;
-using Empiria.Land.Registration.Data;
-using Empiria.Ontology;
 
 namespace Empiria.Land.Registration {
 
@@ -26,7 +21,7 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    public OrganizationParty(string UID, string fullName) : base(UID, fullName) {
+    public OrganizationParty(string fullName) : base(fullName) {
 
     }
 
@@ -35,15 +30,6 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Constructors and parsers
-
-    #region Public methods
-
-    protected override void OnSave() {
-      base.OnSave();
-      ResourceData.WriteOrganizationParty(this);
-    }
-
-    #endregion Public methods
 
   } // class OrganizationParty
 

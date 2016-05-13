@@ -2,43 +2,39 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : Occupation                                     Pattern  : Storage Item                        *
+*  Type      : BasePartyRole                                  Pattern  : Storage Item                        *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Describes a person occupation or main activity.                                               *
+*  Summary   : Base party role. DomainPartyRole and SecondaryPartyRole are subclasses of this type.          *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Describes a person occupation or main activity.</summary>
-  public class Occupation : GeneralObject {
+  /// <summary>Base party role. DomainPartyRole and SecondaryPartyRole are subclasses of this type.</summary>
+  public class BasePartyRole : GeneralObject {
 
     #region Constructors and parsers
 
-    private Occupation() {
+    protected BasePartyRole() {
       // Required by Empiria Framework.
     }
 
-    static public Occupation Empty {
-      get { return BaseObject.ParseEmpty<Occupation>(); }
+    static public BasePartyRole Empty {
+      get { return BaseObject.ParseEmpty<DomainActPartyRole>(); }
     }
 
-    static public Occupation Unknown {
-      get { return BaseObject.ParseUnknown<Occupation>(); }
+    static public BasePartyRole Unknown {
+      get { return BaseObject.ParseUnknown<DomainActPartyRole>(); }
     }
 
-    static public Occupation Parse(int id) {
-      return BaseObject.ParseId<Occupation>(id);
-    }
-
-    static public FixedList<Occupation> GetList() {
-      return GeneralObject.ParseList<Occupation>();
+    static public BasePartyRole Parse(int id) {
+      return BaseObject.ParseId<BasePartyRole>(id);
     }
 
     #endregion Constructors and parsers
 
-  } // class Occupation
+  } // class BasePartyRole
 
 } // namespace Empiria.Land.Registration

@@ -12,7 +12,6 @@ using System;
 using System.Data;
 
 using Empiria.Data;
-using Empiria.Ontology;
 
 namespace Empiria.Land.Registration.Data {
 
@@ -44,119 +43,11 @@ namespace Empiria.Land.Registration.Data {
       return (DataReader.Count(operation) != 0);
     }
 
-    static public RecordingActParty TryGetLastRecordingActParty(Party party, DateTime searchStartDate) {
-      var operation = DataOperation.Parse("qryLRSRecordingActPartyWithParty", party.Id);
-      DataRow row = DataReader.GetDataRow(operation);
-      if (row != null) {
-        return BaseObject.ParseDataRow<RecordingActParty>(row);
-      } else {
-        return null;
-      }
-    }
-
-    static private string GetPartyTypeInfoFilter(ObjectTypeInfo partyType) {
-      if (partyType == null) {
-        return "(PartyTypeId <> 0)";
-      }
-      if (partyType.IsAbstract) {
-        return "(PartyTypeId IN (" + partyType.GetSubclassesFilter() + "))";
-      } else {
-        return "(PartyTypeId = " + partyType.Id.ToString() + ")";
-      }
-    }
-
-    static public DataTable GetParties(ObjectTypeInfo partyType, string keywords) {
-      string filter = SearchExpression.ParseAndLikeWithNoiseWords("PartyKeywords", keywords);
-      if (filter.Length != 0) {
-        filter += " AND ";
-      }
-      filter += GetPartyTypeInfoFilter(partyType);
-      if (filter.Length != 0) {
-        filter += " AND ";
-      }
-      filter += "(PartyStatus <> 'X')";
-
-      return GeneralDataOperations.GetEntities("LRSParties", filter, "PartyFullName");
-    }
-
-    //static public DataTable GetPartiesOnRecording(ObjectTypeInfo partyType,
-    //                                              Recording recording, string keywords) {
-    //  var operation = DataOperation.Parse("qryLRSPartiesOnRecording", recording.Id);
-
-    //  string filter = SearchExpression.ParseAndLikeWithNoiseWords("PartyKeywords", keywords);
-    //  if (filter.Length != 0) {
-    //    filter += " AND ";
-    //  }
-    //  filter += GetPartyTypeInfoFilter(partyType);
-
-    //  DataView view = DataReader.GetDataView(operation, filter, "PartyFullName");
-
-    //  return view.ToTable();
-    //}
-
-    static public DataTable GetInvolvedParties(ObjectTypeInfo partyType, RecordingAct recordingAct,
-                                               string keywords) {
-      DataTable table = new DataTable();
-
-      return new DataTable();
-    }
-
-    static public DataTable GetParties(PartyFilterType partyFilterType, ObjectTypeInfo partyType,
-                                       RecordingAct recordingAct, string keywords) {
-      switch (partyFilterType) {
-        case PartyFilterType.ByKeywords:
-          return GetParties(partyType, keywords);
-        //case PartyFilterType.OnInscription:
-        //  return GetPartiesOnRecording(partyType, recordingAct.PhysicalRecording, keywords);
-        case PartyFilterType.Involved:
-          return GetInvolvedParties(partyType, recordingAct, keywords);
-        default:
-          throw new Empiria.Reflection.ReflectionException(Empiria.Reflection.ReflectionException.Msg.ConditionalOptionNotDefined,
-                                                           partyFilterType.ToString());
-      }
-    }
-
-    static public DataTable GetSecondaryParties(Party party, RecordingAct exceptRecordingAct) {
-      var operation = DataOperation.Parse("qryLRSSecondaryParties", exceptRecordingAct.Id, party.Id);
-
-      return DataReader.GetDataTable(operation);
-    }
-
-    static internal FixedList<RecordingActParty> GetRecordingPartiesList(Recording recording, Party party) {
-      string sql = "SELECT LRSRecordingActParties.* " +
-            "FROM LRSRecordingActParties INNER JOIN LRSRecordingActs " +
-            "ON LRSRecordingActParties.RecordingActId = LRSRecordingActs.RecordingActId " +
-            "WHERE (LRSRecordingActs.RecordingId = " + recording.Id.ToString() + ") " +
-            "AND (LRSRecordingActParties.LinkStatus <> 'X') " +
-            "AND (LRSRecordingActParties.PartyId = " + party.Id.ToString() +
-            " OR LRSRecordingActParties.SecondaryPartyId = " + party.Id.ToString() + ")";
-
-      var operation = DataOperation.Parse(sql);
-      return DataReader.GetList<RecordingActParty>(operation, (x) =>
-                                                   BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
-    }
-
     static internal FixedList<Resource> GetPhysicalRecordingResources(Recording recording) {
       var operation = DataOperation.Parse("qryLRSPhysicalRecordingProperties", recording.Id);
 
       return DataReader.GetList<Resource>(operation,
                                           (x) => BaseObject.ParseList<Resource>(x)).ToFixedList();
-    }
-
-
-    static internal int WriteHumanParty(HumanParty o) {
-      var dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.GetEmpiriaType().Id, o.FullName,
-                                               o.FirstName, o.LastName, o.LastName2, o.UID, o.ExtendedData,
-                                               o.Keywords, o.Status, String.Empty);
-
-      return DataWriter.Execute(dataOperation);
-    }
-
-    static internal int WriteOrganizationParty(OrganizationParty o) {
-      var dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.GetEmpiriaType().Id, o.FullName,
-                                               String.Empty, String.Empty, String.Empty, o.UID, o.ExtendedData,
-                                               o.Keywords, o.Status, String.Empty);
-      return DataWriter.Execute(dataOperation);
     }
 
     static internal int WriteAssociation(Association o) {

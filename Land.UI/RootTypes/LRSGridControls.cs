@@ -35,11 +35,11 @@ namespace Empiria.Land.UI {
 
     static public string GetRecordingActPartiesGrid(RecordingAct recordingAct, bool readOnly) {
       if (!recordingAct.IsAnnotation) {
-        FixedList<RecordingActParty> primaryParties = RecordingActParty.GetDomainPartyList(recordingAct);
+        FixedList<RecordingActParty> primaryParties = PartyData.GetInvolvedDomainParties(recordingAct);
 
         return GetDomainActPartiesGrid(recordingAct, primaryParties, readOnly);
       } else {
-        FixedList<RecordingActParty> annotationParties = RecordingActParty.GetList(recordingAct);
+        FixedList<RecordingActParty> annotationParties = PartyData.GetRecordingPartyList(recordingAct);
 
         return GetAnnotationPartiesGrid(recordingAct, annotationParties, readOnly);
       }
@@ -67,9 +67,7 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{PARTY.ID}", recordingActParty.Party.Id.ToString());
         temp = temp.Replace("{NAME}", recordingActParty.Party.FullName);
         temp = temp.Replace("{DATE.ID}", recordingActParty.Party.UID);
-        temp = temp.Replace("{ROLE}", recordingActParty.SecondaryPartyRole.InverseRoleName);
-        temp = temp.Replace("{DOMAIN}", recordingActParty.DomainName);
-        temp = temp.Replace("{DOMAIN.PART}", recordingActParty.DomainPartName);
+        temp = temp.Replace("{DOMAIN.PART}", recordingActParty.AsText);
         temp = temp.Replace("{SECONDARY.TABLE}", GetRecordingActSecondaryPartiesTable(recordingAct, recordingActParty));
         html += temp;
       }
@@ -92,8 +90,7 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{NAME}", recordingActParty.Party.FullName);
         temp = temp.Replace("{DATE.ID}", recordingActParty.Party.UID);
         temp = temp.Replace("{ROLE}", recordingActParty.PartyRole.Name);
-        temp = temp.Replace("{DOMAIN}", recordingActParty.DomainName);
-        temp = temp.Replace("{DOMAIN.PART}", recordingActParty.DomainPartName);
+        temp = temp.Replace("{DOMAIN.PART}", recordingActParty.AsText);
         temp = temp.Replace("{SECONDARY.TABLE}", GetRecordingActSecondaryPartiesTable(recordingAct, recordingActParty));
         html += temp;
       }
@@ -108,7 +105,7 @@ namespace Empiria.Land.UI {
         html += GetSecondaryPartyRow(baseRecordingActParty);
       }
 
-      FixedList<RecordingActParty> secondaryParties = RecordingActParty.GetSecondaryPartiesList(recordingAct);
+      FixedList<RecordingActParty> secondaryParties = PartyData.GetSecondaryPartiesList(recordingAct);
       for (int i = 0; i < secondaryParties.Count; i++) {
         if (!secondaryParties[i].Party.Equals(baseRecordingActParty.Party)) {
           continue;
@@ -128,13 +125,13 @@ namespace Empiria.Land.UI {
 
       string html = row.Replace("{ID}", secondaryParty.Id.ToString());
 
-      html = html.Replace("{PARTY.ID}", secondaryParty.SecondaryParty.Id.ToString());
-      html = html.Replace("{NAME}", secondaryParty.SecondaryParty.FullName);
+      html = html.Replace("{PARTY.ID}", secondaryParty.PartyOf.Id.ToString());
+      html = html.Replace("{NAME}", secondaryParty.PartyOf.FullName);
 
       if (secondaryParty.PartyRole == DomainActPartyRole.Usufructuary) {
         return html.Replace("{ROLE}", "Nudo propietario");
       } else {
-        return html.Replace("{ROLE}", secondaryParty.SecondaryPartyRole.Name);
+        return html.Replace("{ROLE}", "secondaryParty.SecondaryPartyRole.Name");
       }
     }
 

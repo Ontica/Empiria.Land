@@ -21,6 +21,15 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
+    internal ModificationAct(RecordingActType recordingActType, RecordingDocument document,
+                         Resource resource) : base(recordingActType, document) {
+      Assertion.AssertObject(resource, "resource");
+
+      this.AttachResource(resource);
+
+      this.Save();
+    }
+
     internal ModificationAct(RecordingActType recordingActType,
                              RecordingDocument document, Resource resource,
                              RecordingAct recordingActToModify) : base(recordingActType, document) {
@@ -30,14 +39,6 @@ namespace Empiria.Land.Registration {
       this.AttachResource(resource);
 
       recordingActToModify.Amend(this);
-    }
-
-    internal ModificationAct(RecordingActType recordingActType, RecordingDocument document,
-                             Resource resource) : base(recordingActType, document) {
-      Assertion.AssertObject(resource, "resource");
-      this.AttachResource(resource);
-
-      this.Save();
     }
 
     static public new ModificationAct Parse(int id) {

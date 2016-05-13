@@ -224,7 +224,7 @@ namespace Empiria.Land.Registration {
     public FixedList<DomainActPartyRole> GetRoles() {
       var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
 
-      var list = json.GetList<DomainActPartyRole>("Roles");
+      var list = json.GetList<DomainActPartyRole>("Roles", false);
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
       return list.ToFixedList();

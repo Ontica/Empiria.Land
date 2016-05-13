@@ -96,15 +96,15 @@ namespace Empiria.Land.Registration {
         return null;
       }
       if (!recordingAct.IsAnnotation) {
-        FixedList<RecordingActParty> parties = RecordingActParty.GetDomainPartyList(recordingAct);
+        FixedList<RecordingActParty> parties = PartyData.GetInvolvedDomainParties(recordingAct);
         if (parties.Count == 0) {
           return new LandRegistrationException(LandRegistrationException.Msg.RecordingActWithoutOwnerParties);
         }
-        if (parties.CountAll((x) => x.OwnershipMode == OwnershipMode.Coowner) == 1) {
+        if (parties.CountAll((x) => x.ZOwnershipMode == OwnershipMode.Coowner) == 1) {
           return new LandRegistrationException(LandRegistrationException.Msg.RecordingActWithOnlyOneOwnerParty);
         }
       } else {
-        FixedList<RecordingActParty> parties = RecordingActParty.GetList(recordingAct);
+        FixedList<RecordingActParty> parties = PartyData.GetRecordingPartyList(recordingAct);
         if (parties.Count == 0) {
           return new LandRegistrationException(LandRegistrationException.Msg.RecordingActWithoutOwnerParties);
         }

@@ -18,13 +18,13 @@ namespace Empiria.Land.WebApi.Models {
     /// <summary>Used to initialize variables of this type.</summary>
     Undefined = -1,
 
-    /// <summary>/// Aka as Certificado de Propiedad.</summary>
+    /// <summary>Aka as Certificado de Propiedad.</summary>
     Property = 1,
 
-    /// <summary>/// Aka as Certificado de Inscripción.</summary>
+    /// <summary>Aka as Certificado de Inscripción.</summary>
     Registration = 2,
 
-    /// <summary>/// Aka as Certificado de Libertad de gravamen/gravamen.</summary>
+    /// <summary>Aka as Certificado de Libertad de gravamen/gravamen.</summary>
     NoEncumbrance = 4,
 
   }  // enum ExternalCertificateType

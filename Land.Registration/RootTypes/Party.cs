@@ -11,8 +11,6 @@
 using System;
 using System.Data;
 
-using Empiria.Contacts;
-using Empiria.Geography;
 using Empiria.Land.Registration.Data;
 using Empiria.Ontology;
 
@@ -27,7 +25,7 @@ namespace Empiria.Land.Registration {
 
   public enum PartyFilterType {
     ByKeywords = 1,
-    //OnInscription = 2,
+    OnInscription = 2,
     Involved = 4,
   }
 
@@ -40,8 +38,7 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    protected Party(string UID, string fullName) {
-      this.UID = UID;
+    protected Party(string fullName) {
       this.FullName = fullName;
     }
 
@@ -49,15 +46,21 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<Party>(id);
     }
 
+    static public Party Empty {
+      get {
+        return BaseObject.ParseEmpty<HumanParty>();
+      }
+    }
+
     static public FixedList<Party> GetList(ObjectTypeInfo partyType, string keywords) {
-      DataTable table = ResourceData.GetParties(partyType, keywords);
+      DataTable table = PartyData.GetParties(partyType, keywords);
 
       return BaseObject.ParseList<Party>(table).ToFixedList();
     }
 
     static public FixedList<Party> GetList(PartyFilterType partyFilterType, ObjectTypeInfo partyType,
                                            RecordingAct recordingAct, string keywords) {
-      DataTable table = ResourceData.GetParties(partyFilterType, partyType, recordingAct, keywords);
+      DataTable table = PartyData.GetParties(partyFilterType, partyType, recordingAct, keywords);
 
       return BaseObject.ParseList<Party>(table).ToFixedList();
     }
@@ -77,23 +80,33 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     [DataField("PartyFullName")]
     public string FullName {
       get;
       private set;
-    }
+    } = String.Empty;
 
-    [DataField("PartyUID")]
-    public string UID {
+
+    [DataField("PartyNotes")]
+    public string Notes {
       get;
       private set;
-    }
+    } = String.Empty;
+
 
     [DataField("PartyExtData")]
     public string ExtendedData {
       get;
       private set;
-    }
+    } = String.Empty;
+
+
+    public string UID {
+      get;
+      private set;
+    } = String.Empty;
+
 
     protected internal virtual string Keywords {
       get {
@@ -101,11 +114,13 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     [DataField("PartyStatus", Default = PartyStatus.Pending)]
     public PartyStatus Status {
       get;
       private set;
-    }
+    } = PartyStatus.Pending;
+
 
     public string StatusName {
       get {
@@ -133,8 +148,12 @@ namespace Empiria.Land.Registration {
       this.Save();
     }
 
-    public RecordingActParty GetLastRecordingActParty(DateTime searchStartDate) {
-      return ResourceData.TryGetLastRecordingActParty(this, searchStartDate);
+    public RecordingActParty TryGetLastRecordingActParty(DateTime searchStartDate) {
+      return PartyData.TryGetLastRecordingActParty(this, searchStartDate);
+    }
+
+    protected override void OnSave() {
+      PartyData.WriteParty(this);
     }
 
     #endregion Public methods

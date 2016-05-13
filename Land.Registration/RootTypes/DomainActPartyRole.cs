@@ -13,7 +13,7 @@ using System;
 namespace Empiria.Land.Registration {
 
   /// <summary>Describes the role that plays a party with respect a recording act.</summary>
-  public class DomainActPartyRole : GeneralObject {
+  public class DomainActPartyRole : BasePartyRole {
 
     #region Constructors and parsers
 
@@ -21,20 +21,8 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    static public DomainActPartyRole Parse(int id) {
-      return BaseObject.ParseId<DomainActPartyRole>(id);
-    }
-
     static public FixedList<DomainActPartyRole> GetList() {
       return GeneralObject.ParseList<DomainActPartyRole>();
-    }
-
-    static public DomainActPartyRole Empty {
-      get { return BaseObject.ParseEmpty<DomainActPartyRole>(); }
-    }
-
-    static public DomainActPartyRole Unknown {
-      get { return BaseObject.ParseUnknown<DomainActPartyRole>(); }
     }
 
     static public DomainActPartyRole Usufructuary {

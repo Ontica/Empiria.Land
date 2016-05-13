@@ -26,6 +26,8 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(resource, "resource");
 
       this.AttachResource(resource);
+
+      this.Save();
     }
 
     internal CancelationAct(RecordingActType recordingActType,

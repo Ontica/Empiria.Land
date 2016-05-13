@@ -237,6 +237,14 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public bool IsCompleted {
+      get {
+        return (this.Status == RecordableObjectStatus.Registered ||
+                this.Status == RecordableObjectStatus.Closed ||
+                this.HasCompleteInformation());
+      }
+    }
+
     public string StatusName {
       get {
         switch (this.Status) {
@@ -282,6 +290,10 @@ namespace Empiria.Land.Registration {
         };
       }
       throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
+    }
+
+    public bool HasCompleteInformation() {
+      return false;
     }
 
     private IntegrityValidator _validator = null;
