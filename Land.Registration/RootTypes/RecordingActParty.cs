@@ -26,16 +26,6 @@ namespace Empiria.Land.Registration {
     Undefined = 'U',
   }
 
-  public enum UsufructMode {
-    None = 'N',
-    LifeTime = 'L',
-    Time = 'T',
-    Date = 'D',
-    Payment = 'P',
-    Condition = 'C',
-    Undefined = 'U',
-  }
-
   /// <summary>Represents a roled association between a recording act and a party.</summary>
   public class RecordingActParty : BaseObject {
 
@@ -51,6 +41,10 @@ namespace Empiria.Land.Registration {
       this.Party = party;
       this.PartyRole = role;
       this.PartyOf = partyOf;
+
+      if (this.PartyRole is DomainActPartyRole) {
+        this.IsOwnershipStillActive = true;
+      }
     }
 
     static public RecordingActParty Parse(int id) {
@@ -113,8 +107,6 @@ namespace Empiria.Land.Registration {
       set;
     } = Quantity.Zero;
 
-
-
     [DataField("IsOwnershipStillActive")]
     public bool IsOwnershipStillActive {
       get;
@@ -131,6 +123,8 @@ namespace Empiria.Land.Registration {
     public string AsText {
       get;
     } = String.Empty;
+
+
     [DataField("RecActPartyExtData")]
     public string ExtendedData {
       get;
@@ -183,18 +177,26 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public void Delete() {
-      FixedList<RecordingActParty> secondaries = PartyData.GetSecondaryPartiesList(this.RecordingAct);
-      for (int i = 0; i < secondaries.Count; i++) {
-        secondaries[i].Status = RecordableObjectStatus.Deleted;
-        secondaries[i].Save();
-        if (secondaries[i].PartyOf.TryGetLastRecordingActParty(ExecutionServer.DateMinValue) == null) {
-          secondaries[i].PartyOf.Delete();
-        }
-      }
       this.Status = RecordableObjectStatus.Deleted;
       base.Save();
-      if (this.Party.TryGetLastRecordingActParty(ExecutionServer.DateMinValue) == null) {
-        this.Party.Delete();
+    }
+
+    public string GetOwnershipPartAsText() {
+      if (this.OwnershipPart.Unit.IsEmptyInstance) {
+        return String.Empty;
+      }
+      if (this.OwnershipPart.Unit == Unit.UndividedUnit) {
+        return "Proindiviso";
+      } else if (this.OwnershipPart.Unit == Unit.FullUnit) {
+        return "Totalidad";
+      } else if (this.OwnershipPart.Unit == Unit.Percentage) {
+        return (this.OwnershipPart.Amount / 100).ToString("P2");
+      } else if (this.OwnershipPart.Unit == Unit.SquareMeters) {
+        return (this.OwnershipPart.Amount).ToString("N2") + " m2";
+      } else if (this.OwnershipPart.Unit.Id == 624) {
+        return (this.OwnershipPart.Amount).ToString("N2") + " ha";
+      } else {
+        throw Assertion.AssertNoReachThisCode("Invalid ownership part unit.");
       }
     }
 
@@ -211,22 +213,6 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Public methods
-
-    public string ZUsufructTerm {
-      get;
-      set;
-    } = String.Empty;
-
-    public UsufructMode ZUsufructMode {
-      get;
-      set;
-    } = UsufructMode.None;
-
-    public OwnershipMode ZOwnershipMode {
-      get;
-      set;
-    } = OwnershipMode.None;
-
 
   } // class RecordingActParty
 

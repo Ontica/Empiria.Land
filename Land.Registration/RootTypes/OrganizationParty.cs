@@ -21,8 +21,8 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    public OrganizationParty(string fullName) : base(fullName) {
-
+    public OrganizationParty(int typeId, string fullName) : base(fullName) {
+      base.ReclassifyAs(Ontology.ObjectTypeInfo.Parse(typeId));
     }
 
     static public new OrganizationParty Parse(int id) {

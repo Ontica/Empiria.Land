@@ -34,25 +34,61 @@ namespace Empiria.Land.UI {
     }
 
     static public string GetRecordingActPartiesGrid(RecordingAct recordingAct, bool readOnly) {
-      if (!recordingAct.IsAnnotation) {
-        FixedList<RecordingActParty> primaryParties = PartyData.GetInvolvedDomainParties(recordingAct);
+      FixedList<RecordingActParty> allInvolvedParties = PartyData.GetRecordingPartyList(recordingAct);
 
-        return GetDomainActPartiesGrid(recordingAct, primaryParties, readOnly);
-      } else {
-        FixedList<RecordingActParty> annotationParties = PartyData.GetRecordingPartyList(recordingAct);
+      var primaryParties = allInvolvedParties.FindAll((x) => x.PartyOf.IsEmptyInstance);
 
-        return GetAnnotationPartiesGrid(recordingAct, annotationParties, readOnly);
-      }
+      string html = GetPrimaryPartiesGridItems(recordingAct, primaryParties.ToFixedList(), readOnly);
+
+      var secondaryAdditionalParties =
+                allInvolvedParties.FindAll((x) => !x.PartyOf.IsEmptyInstance &&
+                                                  !primaryParties.Exists((y) => y.Party.Equals(x.PartyOf)));
+
+      html += GetSecondaryPartiesGridItems(recordingAct, secondaryAdditionalParties.ToFixedList(), readOnly);
+
+      return html;
     }
 
-    static private string GetAnnotationPartiesGrid(RecordingAct recordingAct,
-                                                   FixedList<RecordingActParty> annotationParties, bool readOnly) {
+    static private string GetPrimaryPartiesGridItems(RecordingAct recordingAct,
+                                                     FixedList<RecordingActParty> primaryParties,
+                                                     bool readOnly) {
+      string html = String.Empty;
+      string temp = String.Empty;
+      for (int i = 0; i < primaryParties.Count; i++) {
+        RecordingActParty primaryPartyItem = primaryParties[i];
+        if (i % 2 == 0) {
+          temp = GetRecordingActPartyRowTemplate(readOnly).Replace("{CLASS}", "detailsItem");
+        } else {
+          temp = GetRecordingActPartyRowTemplate(readOnly).Replace("{CLASS}", "detailsOddItem");
+        }
+        temp = temp.Replace("{ID}", primaryPartyItem.Id.ToString());
+        temp = temp.Replace("{PARTY.ID}", primaryPartyItem.Party.Id.ToString());
+        temp = temp.Replace("{NAME}", primaryPartyItem.Party.FullName);
+        temp = temp.Replace("{DATE.ID}", primaryPartyItem.Party.UID);
+        temp = temp.Replace("{ROLE}", primaryPartyItem.PartyRole.Name);
+        temp = temp.Replace("{DOMAIN.PART}", primaryPartyItem.GetOwnershipPartAsText());
+
+        FixedList<RecordingActParty> relatedParties = PartyData.GetSecondaryPartiesList(recordingAct);
+        relatedParties = relatedParties.FindAll((x) => x.PartyOf.Equals(primaryPartyItem.Party)).ToFixedList();
+
+
+        temp = temp.Replace("{SECONDARY.TABLE}", GetRecordingActRelatedPartiesTable(recordingAct,
+                                                                                    primaryPartyItem,
+                                                                                    relatedParties));
+        html += temp;
+      }
+      return html;
+    }
+
+    static private string GetSecondaryPartiesGridItems(RecordingAct recordingAct,
+                                                       FixedList<RecordingActParty> secondaryParties,
+                                                       bool readOnly) {
       string html = String.Empty;
       string temp = String.Empty;
 
       string processed = String.Empty;
-      for (int i = 0; i < annotationParties.Count; i++) {
-        RecordingActParty recordingActParty = annotationParties[i];
+      for (int i = 0; i < secondaryParties.Count; i++) {
+        RecordingActParty recordingActParty = secondaryParties[i];
         if (processed.Contains("|" + recordingActParty.Party.Id.ToString())) {
           continue;
         } else {
@@ -67,55 +103,33 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{PARTY.ID}", recordingActParty.Party.Id.ToString());
         temp = temp.Replace("{NAME}", recordingActParty.Party.FullName);
         temp = temp.Replace("{DATE.ID}", recordingActParty.Party.UID);
-        temp = temp.Replace("{DOMAIN.PART}", recordingActParty.AsText);
-        temp = temp.Replace("{SECONDARY.TABLE}", GetRecordingActSecondaryPartiesTable(recordingAct, recordingActParty));
+        temp = temp.Replace("{ROLE}", String.Empty);
+        temp = temp.Replace("{DOMAIN.PART}", String.Empty);
+
+        FixedList<RecordingActParty> relatedParties = PartyData.GetSecondaryPartiesList(recordingAct);
+        relatedParties = relatedParties.FindAll((x) => x.Party.Equals(recordingActParty.Party)).ToFixedList();
+
+        temp = temp.Replace("{SECONDARY.TABLE}", GetRecordingActRelatedPartiesTable(recordingAct,
+                                                                                    recordingActParty,
+                                                                                    relatedParties, true));
         html += temp;
       }
       return html;
     }
 
-    static private string GetDomainActPartiesGrid(RecordingAct recordingAct,
-                                                  FixedList<RecordingActParty> domainParties, bool readOnly) {
+    static private string GetRecordingActRelatedPartiesTable(RecordingAct recordingAct,
+                                                             RecordingActParty baseRecordingActParty,
+                                                             FixedList<RecordingActParty> secondaryParties,
+                                                             bool displayPartyOf = false) {
       string html = String.Empty;
-      string temp = String.Empty;
-      for (int i = 0; i < domainParties.Count; i++) {
-        RecordingActParty recordingActParty = domainParties[i];
-        if (i % 2 == 0) {
-          temp = GetRecordingActPartyRowTemplate(readOnly).Replace("{CLASS}", "detailsItem");
-        } else {
-          temp = GetRecordingActPartyRowTemplate(readOnly).Replace("{CLASS}", "detailsOddItem");
-        }
-        temp = temp.Replace("{ID}", recordingActParty.Id.ToString());
-        temp = temp.Replace("{PARTY.ID}", recordingActParty.Party.Id.ToString());
-        temp = temp.Replace("{NAME}", recordingActParty.Party.FullName);
-        temp = temp.Replace("{DATE.ID}", recordingActParty.Party.UID);
-        temp = temp.Replace("{ROLE}", recordingActParty.PartyRole.Name);
-        temp = temp.Replace("{DOMAIN.PART}", recordingActParty.AsText);
-        temp = temp.Replace("{SECONDARY.TABLE}", GetRecordingActSecondaryPartiesTable(recordingAct, recordingActParty));
-        html += temp;
+
+      foreach (var recordingActPartyItem in secondaryParties) {
+        html += GetRelatedPartyOnRoleRow(recordingActPartyItem, displayPartyOf);
       }
       return html;
     }
 
-    static private string GetRecordingActSecondaryPartiesTable(RecordingAct recordingAct,
-                                                               RecordingActParty baseRecordingActParty) {
-      string html = String.Empty;
-
-      if (baseRecordingActParty.PartyRole == DomainActPartyRole.Usufructuary) {
-        html += GetSecondaryPartyRow(baseRecordingActParty);
-      }
-
-      FixedList<RecordingActParty> secondaryParties = PartyData.GetSecondaryPartiesList(recordingAct);
-      for (int i = 0; i < secondaryParties.Count; i++) {
-        if (!secondaryParties[i].Party.Equals(baseRecordingActParty.Party)) {
-          continue;
-        }
-        html += GetSecondaryPartyRow(secondaryParties[i]);
-      }
-      return html;
-    }
-
-    static private string GetSecondaryPartyRow(RecordingActParty secondaryParty) {
+    static private string GetRelatedPartyOnRoleRow(RecordingActParty recordingActParty, bool displayPartyOf) {
       const string row = "<table class='ghostTable' style='margin:8px;'>" +
                          "<tr><td>{ROLE}:&nbsp;&nbsp;</td><td style='white-space:normal'>" +
                          "<a href='javascript:doOperation(\"selectParty\", {PARTY.ID})'><i>{NAME}</i></a>" +
@@ -123,16 +137,24 @@ namespace Empiria.Land.UI {
                          "</td></tr>" +
                          "</table>";
 
-      string html = row.Replace("{ID}", secondaryParty.Id.ToString());
+      string html = row.Replace("{ID}", recordingActParty.Id.ToString());
 
-      html = html.Replace("{PARTY.ID}", secondaryParty.PartyOf.Id.ToString());
-      html = html.Replace("{NAME}", secondaryParty.PartyOf.FullName);
-
-      if (secondaryParty.PartyRole == DomainActPartyRole.Usufructuary) {
-        return html.Replace("{ROLE}", "Nudo propietario");
+      if (displayPartyOf) {
+        html = html.Replace("{PARTY.ID}", recordingActParty.PartyOf.Id.ToString());
+        html = html.Replace("{NAME}", recordingActParty.PartyOf.FullName);
+        html = html.Replace("{ROLE}", recordingActParty.PartyRole.Name + " de");
       } else {
-        return html.Replace("{ROLE}", "secondaryParty.SecondaryPartyRole.Name");
+        html = html.Replace("{PARTY.ID}", recordingActParty.Party.Id.ToString());
+        html = html.Replace("{NAME}", recordingActParty.Party.FullName);
+        html = html.Replace("{ROLE}", recordingActParty.PartyRole.Name);
       }
+      return html;
+
+      //if (role == DomainActPartyRole.Usufructuary) {
+      //  return html.Replace("{ROLE}", "Nudo propietario");
+      //} else {
+      //  return html.Replace("{ROLE}", role.Name);
+      //}
     }
 
     static public string GetRecordingsSummaryTable(RecordingBook recordingBook, int pageSize, int pageIndex) {
@@ -436,7 +458,7 @@ namespace Empiria.Land.UI {
             "<a href='javascript:doOperation(\"{ON.CLICK.EVENT}\", {PARTY.ID})'><b id='ancRecordingAct_{ID}'>{NAME}</b></a><br />{SECONDARY.TABLE}</td>" +
             "<td>{DATE.ID}</td>" +
             "<td style='white-space:normal'>{ROLE}</td>" +
-            "<td style='white-space:normal'>{DOMAIN}<br>{DOMAIN.PART}</td>";
+            "<td style='white-space:normal'>{DOMAIN.PART}</td>";
       const string deleteCell =
             "<td><img class='comboExecuteImage' src='../themes/default/buttons/trash.gif' alt='' title='Elimina a la persona del acto jurídico' " +
             "onclick='doOperation(\"deleteParty\", {ID});'/></td>";

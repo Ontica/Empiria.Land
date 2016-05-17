@@ -76,17 +76,6 @@ namespace Empiria.Land.Registration.Data {
       return secondaries.Find((x) => x.Party.Equals(party));
     }
 
-
-    static public RecordingActParty TryGetLastRecordingActParty(Party party, DateTime searchStartDate) {
-      var operation = DataOperation.Parse("qryLRSRecordingActPartyWithParty", party.Id);
-      DataRow row = DataReader.GetDataRow(operation);
-      if (row != null) {
-        return BaseObject.ParseDataRow<RecordingActParty>(row);
-      } else {
-        return null;
-      }
-    }
-
     static private string GetPartyTypeInfoFilter(ObjectTypeInfo partyType) {
       if (partyType == null) {
         return "(PartyTypeId <> 0)";

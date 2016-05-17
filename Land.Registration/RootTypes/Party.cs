@@ -148,10 +148,6 @@ namespace Empiria.Land.Registration {
       this.Save();
     }
 
-    public RecordingActParty TryGetLastRecordingActParty(DateTime searchStartDate) {
-      return PartyData.TryGetLastRecordingActParty(this, searchStartDate);
-    }
-
     protected override void OnSave() {
       PartyData.WriteParty(this);
     }

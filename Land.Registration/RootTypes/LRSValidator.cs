@@ -100,9 +100,6 @@ namespace Empiria.Land.Registration {
         if (parties.Count == 0) {
           return new LandRegistrationException(LandRegistrationException.Msg.RecordingActWithoutOwnerParties);
         }
-        if (parties.CountAll((x) => x.ZOwnershipMode == OwnershipMode.Coowner) == 1) {
-          return new LandRegistrationException(LandRegistrationException.Msg.RecordingActWithOnlyOneOwnerParty);
-        }
       } else {
         FixedList<RecordingActParty> parties = PartyData.GetRecordingPartyList(recordingAct);
         if (parties.Count == 0) {

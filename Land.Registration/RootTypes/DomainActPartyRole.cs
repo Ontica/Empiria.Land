@@ -25,10 +25,6 @@ namespace Empiria.Land.Registration {
       return GeneralObject.ParseList<DomainActPartyRole>();
     }
 
-    static public DomainActPartyRole Usufructuary {
-      get { return BaseObject.ParseKey<DomainActPartyRole>("DomainActPartyRole.Usufructuary"); }
-    }
-
     #endregion Constructors and parsers
 
   } // class DomainActPartyRole
