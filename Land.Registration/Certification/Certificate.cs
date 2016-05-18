@@ -203,9 +203,6 @@ namespace Empiria.Land.Certification {
 
     public bool CanCancel() {
       return this.Status == CertificateStatus.Closed;
-
-      //return this.Status == CertificateStatus.Closed &&
-      //      EmpiriaUser.Current.Id == 19;
     }
 
     public bool CanDelete() {
@@ -214,14 +211,9 @@ namespace Empiria.Land.Certification {
 
     public bool CanOpen() {
       return this.Status == CertificateStatus.Closed;
-
-      //return this.Status == CertificateStatus.Closed &&
-      //      EmpiriaUser.Current.Id == 19;
     }
 
     public void Cancel() {
-      //Assertion.Assert(EmpiriaUser.Current.Id == 19,
-      //                 "The certificate can be canceled only by an authorized user.");
       Assertion.Assert(this.Status == CertificateStatus.Closed,
                       "The certificate is not closed so it can't be canceled. Use delete instead.");
 
@@ -282,8 +274,6 @@ namespace Empiria.Land.Certification {
     }
 
     public void Open() {
-      //Assertion.Assert(EmpiriaUser.Current.Id == 19,
-      //                 "The certificate can be opened only by an authorized user.");
       Assertion.Assert(this.Status == CertificateStatus.Closed ||
                        this.Status == CertificateStatus.Canceled ||
                        this.Status == CertificateStatus.Deleted,

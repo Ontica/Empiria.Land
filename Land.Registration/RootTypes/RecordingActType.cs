@@ -100,7 +100,8 @@ namespace Empiria.Land.Registration {
 
     public bool IsDomainActType {
       get {
-        return base.Name.StartsWith("ObjectType.RecordingAct.DomainAct");
+        return base.Name.StartsWith("ObjectType.RecordingAct.DomainAct") ||
+               this.Id == 2200;
       }
     }
 
@@ -124,7 +125,8 @@ namespace Empiria.Land.Registration {
 
     public bool IsStructureActType {
       get {
-        return base.Name.StartsWith("ObjectType.RecordingAct.StructureAct");
+        return base.Name.StartsWith("ObjectType.RecordingAct.StructureAct") ||
+          EmpiriaMath.IsMemberOf(this.Id, new int[] { 2335, 2784 , 2786, 2787, 2788 });
       }
     }
 

@@ -241,46 +241,73 @@ namespace Empiria.Land.Registration {
       return RecordingActsData.GetResourceRecordingActListUntil(this, breakAct, includeBreakAct);
     }
 
-    public RecordingAct GetRecordingAntecedentJustBefore(DateTime presentationTime) {
+
+    public RecordingAct GetRecordingAntecedent() {
+      return this.GetRecordingAntecedent(RecordingAct.Empty, false);
+    }
+
+    public RecordingAct GetRecordingAntecedent(DateTime presentationTime) {
       FixedList<RecordingAct> tract = this.GetRecordingActsTract();
 
-      var antecedent = tract.FindLast((x) => x.Document.PresentationTime <= presentationTime);
+      if (tract.Count == 0) {
+        return RecordingAct.Empty;
+      }
+
+      /// For no real estate, return always the first act that is the creational act.
+      /// Resources different than real estates don't have domain or structure acts.
+      if (!(this is RealEstate)) {
+        return tract[0];
+      }
+
+      /// Returns the last domain or structure act if founded, otherwise
+      /// return the very first act of the real estate.
+      var antecedent = tract.FindLast((x) => x.Document.PresentationTime <= presentationTime &&
+                                      (x.RecordingActType.IsDomainActType || x.RecordingActType.IsStructureActType));
 
       if (antecedent != null) {
         return antecedent;
       } else {
-        return RecordingAct.Empty;
+        return tract[0];
       }
     }
 
-    public RecordingAct GetRecordingAntecedent(RecordingAct recordingAct) {
+    public RecordingAct GetRecordingAntecedent(RecordingAct beforeRecordingAct,
+                                               bool returnAmendmentActs = false) {
       /// For amendment acts, this method returns the amendmentOf act
-      if (recordingAct.RecordingActType.IsAmendmentActType) {
-        return recordingAct.AmendmentOf;
+      /// when returnAmendmentActs flag is true
+      if (returnAmendmentActs && beforeRecordingAct.RecordingActType.IsAmendmentActType) {
+        return beforeRecordingAct.AmendmentOf;
       }
-      var tract = this.GetRecordingActsTractUntil(recordingAct, false);
+
+      var tract = this.GetRecordingActsTractUntil(beforeRecordingAct, false);
 
       /// Returns the empty recording act if there are not antecedents.
       if (tract.Count == 0) {
-        if (this is RealEstate) {
-          /// If no antecedent, then look if the real estate is a new partition.
-          /// If it is then return the antecedent of the partitioned or parent real estate.
-          var parentRealEstate = ((RealEstate) this).IsPartitionOf;
-          if (!parentRealEstate.IsEmptyInstance) {
-            return parentRealEstate.GetRecordingAntecedentJustBefore(recordingAct.Document.PresentationTime);
-          } else {
-            return RecordingAct.Empty;
-          }
+
+        if (!(this is RealEstate)) {
+          return RecordingAct.Empty;
+        }
+
+        /// If no antecedent, then look if the real estate is a new partition.
+        /// If it is then return the antecedent of the partitioned or parent real estate.
+        var parentRealEstate = ((RealEstate) this).IsPartitionOf;
+        if (!parentRealEstate.IsEmptyInstance) {
+          return parentRealEstate.GetRecordingAntecedent(beforeRecordingAct.Document.PresentationTime);
         } else {
           return RecordingAct.Empty;
         }
+
       }
+
       if (this is RealEstate) {
-        /// Returns the last domain act or the very first act if there are no domain acts.
-        return tract.FindLast((x) => x.RecordingActType.IsDomainActType) ?? tract[0];
+        /// Returns the last domain or structure act if founded, otherwise
+        /// return the very first act of the real estate.
+
+        return tract.FindLast((x) => x.RecordingActType.IsDomainActType ||
+                                     x.RecordingActType.IsStructureActType) ?? tract[0];
       } else {
         /// For no real estate, return always the first act that is the creational act.
-        /// Resources different than real estates don't have domain acts.
+        /// Resources different than real estates don't have domain or structure acts.
         return tract[0];
       }
     }

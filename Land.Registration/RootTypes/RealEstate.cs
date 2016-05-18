@@ -148,49 +148,8 @@ namespace Empiria.Land.Registration {
       return TransactionData.GeneratePropertyUID();
     }
 
-    public RecordingAct GetDomainAntecedent() {
-      return this.GetDomainAntecedent(RecordingAct.Empty);
-    }
-
-    public RecordingAct GetDomainAntecedent(RecordingAct baseRecordingAct) {
-      FixedList<RecordingAct> tract = this.GetRecordingActsTractUntil(baseRecordingAct, false);
-
-      if (tract.Count == 0) {         // Antecedent no registered. OOJJOO Should throw an error?
-        return RecordingAct.Empty;
-      }
-      // Get last domain act or undeterminated act
-      RecordingAct antecedent = tract.FindLast((x) => x is DomainAct || x.RecordingActType.Id == 2200);
-      if (antecedent != null) {
-        return antecedent;
-      } else if (tract[0].RecordingActType.Equals(RecordingActType.Empty)) {  // No registered act
-        return tract[0];
-      } else if (EmpiriaMath.IsMemberOf(tract[0].RecordingActType.Id, new int[]{ 2371, 2218, 2784 })) {  // Denuncia de erección || Fusión
-        return tract[0];
-      } else {
-        return RecordingAct.Empty;
-      }
-    }
-
     public RealEstate[] GetPartitions() {
       return ResourceData.GetRealEstatePartitions(this);
-    }
-
-    /// <summary>Returns the temporary domain act if it exists, or RecordingAct.Empty otherwise.</summary>
-    public RecordingAct GetProvisionalDomainAct() {
-      FixedList<RecordingAct> tract = this.GetRecordingActsTract();
-
-      if (tract.Count == 0) {         // Antecedent no registered
-        return RecordingAct.Empty;
-      }
-      // Avisos preventivos primero o segundo, o denuncia de erección
-      var provisional = tract.FindLast((x) => x.RecordingActType.Id == 2284 ||
-                                              x.RecordingActType.Id == 2257 ||
-                                              x.RecordingActType.Id == 2371);
-      if (provisional != null) {
-        return provisional;
-      } else {
-        return RecordingAct.Empty;
-      }
     }
 
     public bool IsInTheRankOfTheFirstDomainAct(RecordingAct recordingAct) {
@@ -202,11 +161,9 @@ namespace Empiria.Land.Registration {
         return false;
       }
 
-      int[] otherActsConsideredDomainActs = { 2200, 2218, 2784 };   // unknown, fusions
-
       for (int i = 0; i < recordingActIndex; i++) {
-        if (recordingActs[i] is DomainAct ||
-            otherActsConsideredDomainActs.Contains(recordingActs[i].RecordingActType.Id) ) {
+        if (recordingActs[i].RecordingActType.IsDomainActType ||
+            recordingActs[i].RecordingActType.IsStructureActType) {
           return false;
         }
       }

@@ -39,6 +39,10 @@ namespace Empiria.Land.Registration {
     }
 
     protected Party(string fullName) {
+      fullName = EmpiriaString.TrimAll(fullName);
+
+      Assertion.AssertObject(fullName, "fullName");
+
       this.FullName = fullName;
     }
 
