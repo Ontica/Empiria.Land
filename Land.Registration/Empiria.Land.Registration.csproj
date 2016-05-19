@@ -133,6 +133,7 @@
     <Compile Include="Data\RecordingBooksData.cs" />
     <Compile Include="Empiria.Land.Registration.AssemblyInfo.cs" />
     <Compile Include="RootTypes\NoPropertyResource.cs" />
+    <Compile Include="RootTypes\RecordBookDirectory.cs" />
     <Compile Include="RootTypes\RecordingCertificate.cs" />
     <Compile Include="RootTypes\CadastralInfo.cs" />
     <Compile Include="RootTypes\ModificationAct.cs" />
@@ -146,7 +147,6 @@
     <Compile Include="RootTypes\RecordingActInfo.cs" />
     <Compile Include="RootTypes\RecordingDocumentExtData.cs" />
     <Compile Include="RootTypes\RecordingExtData.cs" />
-    <Compile Include="RootTypes\RealEstateKind.cs" />
     <Compile Include="RootTypes\RealEstatePartition.cs" />
     <Compile Include="RootTypes\TractItem.cs" />
     <Compile Include="RootTypes\TractItemExtData.cs" />
@@ -180,7 +180,6 @@
     <Compile Include="RootTypes\OrganizationParty.cs" />
     <Compile Include="RootTypes\HumanParty.cs" />
     <Compile Include="RootTypes\Party.cs" />
-    <Compile Include="RootTypes\RecordBookDirectory.cs" />
     <Compile Include="RootTypes\CancelationAct.cs" />
     <Compile Include="RootTypes\JudicialOffice.cs" />
     <Compile Include="RootTypes\NotaryOffice.cs" />

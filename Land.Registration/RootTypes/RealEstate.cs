@@ -10,7 +10,6 @@
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
-using System.Linq;
 
 using Empiria.DataTypes;
 using Empiria.Geography;
@@ -60,15 +59,10 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("PropertyKind")]
-    private string _propertyKind = RealEstateKind.Empty;
-    public RealEstateKind PropertyKind {
-      get {
-        return _propertyKind;
-      }
-      set {
-        _propertyKind = value;
-      }
-    }
+    public string PropertyKind {
+      get;
+      set;
+    } = "No determinado";
 
     public Address Location {
       get;
@@ -82,7 +76,7 @@ namespace Empiria.Land.Registration {
 
     internal protected override string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(base.Keywords, this.CadastralKey, this.Name, this.PropertyKind.Value);
+        return EmpiriaString.BuildKeywords(base.Keywords, this.CadastralKey, this.Name, this.PropertyKind);
       }
     }
 

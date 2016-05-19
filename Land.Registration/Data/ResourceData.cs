@@ -72,7 +72,7 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteRealEstate(RealEstate o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
-                                          o.CadastralKey, o.Name, o.PropertyKind.Value, o.Notes,
+                                          o.CadastralKey, o.Name, o.PropertyKind, o.Notes,
                                           o.AntecedentNotes, o.AsText, o.Location.ToSearchVector(),
                                           o.ExtensionData.ToString(), o.Keywords, o.LotSize,
                                           o.LotSizeUnit.Id, o.IsPartitionOf.Id, o.PartitionNo,
