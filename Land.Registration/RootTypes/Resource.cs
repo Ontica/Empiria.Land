@@ -144,9 +144,9 @@ namespace Empiria.Land.Registration {
 
     public RecordingAct FirstRecordingAct {
       get {
-        FixedList<RecordingAct> domainActs = this.GetRecordingActsTract();
-        if (domainActs.Count != 0) {
-          return domainActs[0];
+        FixedList<RecordingAct> recordingActs = this.GetRecordingActsTract();
+        if (recordingActs.Count != 0) {
+          return recordingActs[0];
         } else {
           throw new LandRegistrationException(LandRegistrationException.Msg.PropertyDoesNotHaveAnyRecordingActs,
                                               this.UID);
@@ -186,6 +186,14 @@ namespace Empiria.Land.Registration {
             return "No determinado";
         }
       } // get
+    }
+
+    public bool IsCompleted {
+      get {
+        return (this.Status == RecordableObjectStatus.Registered ||
+                this.Status == RecordableObjectStatus.Closed ||
+                this.HasCompleteInformation());
+      }
     }
 
     #endregion Public properties
@@ -231,6 +239,10 @@ namespace Empiria.Land.Registration {
       } else {
         return true;
       }
+    }
+
+    public FixedList<TractItem> GetTractIndex() {
+      return RecordingActsData.GetResourceTractIndex(this);
     }
 
     public FixedList<RecordingAct> GetRecordingActsTract() {
@@ -338,6 +350,14 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Public methods
+
+    #region Private methods
+
+    private bool HasCompleteInformation() {
+      return false;
+    }
+
+    #endregion Private methods
 
   }  // abstract class Resource
 

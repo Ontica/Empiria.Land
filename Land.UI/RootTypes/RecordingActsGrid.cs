@@ -43,23 +43,14 @@ namespace Empiria.Land.UI {
       for (int i = 0; i < document.RecordingActs.Count; i++) {
         var recordingAct = document.RecordingActs[i];
 
-        for (int j = 0; j < recordingAct.TractIndex.Count; j++) {
-          if (j == 0) {
-            html += this.GetRecordingActRow(recordingAct, recordingAct.TractIndex[j]);
-          } else {
-            html += this.GetAdditionalTargetRow(recordingAct, recordingAct.TractIndex[j]);
-          }
-        } // for int i
-      } // for int j
+        html += this.GetRecordingActRow(recordingAct, recordingAct.TractIndex[0]);
+
+      }
       return html;
     }
 
-    private string GetAdditionalTargetRow(RecordingAct recordingAct, TractItem baseTarget) {
- 	    throw new NotImplementedException();
-    }
-
     private string GetRecordingActRow(RecordingAct recordingAct, TractItem tractItem) {
-      string row = GetRowTemplate(recordingAct);
+      string row = GetRowTemplate(recordingAct, tractItem.Resource);
 
       row = row.Replace("{{STATUS}}", recordingAct.StatusName);
       row = row.Replace("{{RECORDING.ACT.URL}}", recordingAct.DisplayName);
@@ -77,9 +68,7 @@ namespace Empiria.Land.UI {
         row = row.Replace("{{ANTECEDENT}}", antecedentText);
       }
       row = row.Replace("{{OPTIONS.COMBO}}", GetOptionsCombo(tractItem));
-
-      row = row.Replace("{{TARGET.ID}}", recordingAct.Id.ToString());
-      row = row.Replace("{{RESOURCE.ID}}", recordingAct.Id.ToString());
+      row = row.Replace("{{RESOURCE.ID}}", recordingAct.TractIndex[0].Resource.Id.ToString());
       row = row.Replace("{{ID}}", recordingAct.Id.ToString());
 
       return row;
@@ -170,15 +159,18 @@ namespace Empiria.Land.UI {
              "Registro: " + GetDateAsText(document.AuthorizationTime);
     }
 
-    static private string GetRowTemplate(RecordingAct recordingAct) {
-      const string template = "<tr class='{{CLASS}}'>" +
-                              "<td><b id='ancRecordingActIndex_{{ID}}'>{{INDEX}}</b></td>" +
-                              "<td style='white-space:normal'>" +
-                                "<a {{RECORDING.ACT.CLASS}} href='javascript:doOperation(\"editRecordingAct\", {{ID}});'>" +
-                                  "{{RECORDING.ACT.URL}}</a></td>" +
-                              "<td style='white-space:nowrap'>{{RESOURCE.URL}}</td>" +
-                              "<td style='white-space:normal'>{{ANTECEDENT}}</td>" +
-                              "<td>{{OPTIONS.COMBO}}</td></tr>";
+    static private string GetRowTemplate(RecordingAct recordingAct, Resource resource) {
+      const string template =
+          "<tr class='{{CLASS}}'>" +
+            "<td><b id='ancRecordingActIndex_{{ID}}'>{{INDEX}}</b></td>" +
+            "<td style='white-space:normal'>" +
+              "<a {{RECORDING.ACT.CLASS}} href='javascript:doOperation(\"editRecordingAct\", {{ID}});'>" +
+                "{{RECORDING.ACT.URL}}</a></td>" +
+            "<td style='white-space:nowrap'>" +
+            "<a {{RESOURCE.CLASS}} href='javascript:doOperation(\"editResource\", {{RESOURCE.ID}}, {{ID}});'>" +
+                "{{RESOURCE.URL}}</a></td>" +
+            "<td style='white-space:normal'>{{ANTECEDENT}}</td>" +
+            "<td>{{OPTIONS.COMBO}}</td></tr>";
 
       int index = recordingAct.Index + 1;
 
@@ -188,7 +180,9 @@ namespace Empiria.Land.UI {
       if (!recordingAct.IsCompleted) {
         html = html.Replace("{{RECORDING.ACT.CLASS}}", "class='pending-edition'");
       }
-
+      if (!resource.IsCompleted) {
+        html = html.Replace("{{RESOURCE.CLASS}}", "class='pending-edition'");
+      }
       return html;
     }
 

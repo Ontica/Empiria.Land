@@ -13,8 +13,6 @@ using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Data;
-using Empiria.Land.Registration.Transactions;
-
 
 namespace Empiria.Land.Registration.Data {
 
@@ -101,6 +99,16 @@ namespace Empiria.Land.Registration.Data {
                                          (x) => BaseObject.ParseList<RealEstate>(x)).ToFixedList();
     }
 
+    internal static FixedList<TractItem> GetResourceTractIndex(Resource resource) {
+      if (resource.IsEmptyInstance) {
+        return new FixedList<TractItem>();
+      }
+
+      var operation = DataOperation.Parse("qryLRSResourceTractIndex", resource.Id);
+
+      return DataReader.GetList<TractItem>(operation, (x) => BaseObject.ParseList<TractItem>(x)).ToFixedList();
+    }
+
     static internal int WriteRecordingAct(RecordingAct o) {
       Assertion.Assert(o.Id != 0, "RecordingAct.Id can't be zero");
       Assertion.Assert(!o.Document.IsEmptyInstance, "Document can't be the empty instance.");
@@ -139,18 +147,18 @@ namespace Empiria.Land.Registration.Data {
       return DataWriter.Execute(operation);
     }
 
-    static internal int WriteStructureTractItem(StructureTractItem o) {
-      Assertion.Assert(o.Id != 0, "TractItem.Id can't be zero");
-      Assertion.Assert(o.Resource.Id > 0, "Resource Id must be positive.");
-      Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
+    //static internal int WriteStructureTractItem(StructureTractItemA o) {
+    //  Assertion.Assert(o.Id != 0, "TractItem.Id can't be zero");
+    //  Assertion.Assert(o.Resource.Id > 0, "Resource Id must be positive.");
+    //  Assertion.Assert(o.RecordingAct.Id > 0, "Recording act Id must be positive.");
 
-      var operation = DataOperation.Parse("writeLRSTractItem", o.Id, o.GetEmpiriaType().Id,
-                      o.RecordingAct.Id, o.Resource.Id, (char) o.ResourceRole,
-                      o.RelatedRealEstate.Id, o.PartitionName, o.RecordingActPercentage,
-                      -1, -1, -1, o.LastAmendedBy.Id, o.ExtensionData.ToJson(),
-                      o.RegisteredBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
-      return DataWriter.Execute(operation);
-    }
+    //  var operation = DataOperation.Parse("writeLRSTractItem", o.Id, o.GetEmpiriaType().Id,
+    //                  o.RecordingAct.Id, o.Resource.Id, (char) o.ResourceRole,
+    //                  o.RelatedRealEstate.Id, o.PartitionName, o.RecordingActPercentage,
+    //                  -1, -1, -1, o.LastAmendedBy.Id, o.ExtensionData.ToJson(),
+    //                  o.RegisteredBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
+    //  return DataWriter.Execute(operation);
+    //}
 
     #endregion Public methods
 

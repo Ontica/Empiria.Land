@@ -279,42 +279,6 @@ namespace Empiria.Land.Registration {
       this.recordings = null;
     }
 
-    static internal RecordingBook Create(RecordBookDirectory directory, RecordingSection recordingSection,
-                                         int recordingsControlCount, TimeFrame recordingsControlTimePeriod) {
-      throw new NotImplementedException();
-      //RecordingBook recordingBook = new RecordingBook();
-
-      //FixedList<RecordingBook> recordingBookList = directory.RecorderOffice.GetRootRecordingBooks();
-      //string tag = directory.GetRecordingBookTag(RecordingBookType.Section);
-      //RecordingBook currentParent = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
-      //if (currentParent == null) {
-      //  currentParent = directory.RecorderOffice.AddRootRecordingBook(tag);
-      //}
-      //if (RecordingBook.UseBookLevel) {
-      //  recordingBookList = currentParent.GetChildBooks();
-      //  tag = directory.GetRecordingBookTag(RecordingBookType.Book);
-      //  recordingBook = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
-      //  if (recordingBook == null) {
-      //    recordingBook = new RecordingBook(currentParent, tag);
-      //    recordingBook.Save();
-      //  }
-      //  currentParent = recordingBook;
-      //}
-      //recordingBookList = currentParent.GetChildBooks();
-      //tag = directory.GetRecordingBookTag(RecordingBookType.Volume);
-      //recordingBook = recordingBookList.Find((x) => x.BookNumber.Equals(tag));
-      //if (recordingBook == null) {
-      //  recordingBook = new RecordingBook(currentParent, directory, tag);
-      //  recordingBook.RecordingSection = recordingSection;
-      //  recordingBook.StartRecordingIndex = 1;
-      //  recordingBook.EndRecordingIndex = recordingsControlCount;
-      //  recordingBook.RecordingsControlTimePeriod = recordingsControlTimePeriod;
-
-      //  recordingBook.Save();
-      //}
-      //return recordingBook;
-    }
-
     protected override void OnSave() {
       if (this.IsNew) {
         this.CreationDate = DateTime.Now;

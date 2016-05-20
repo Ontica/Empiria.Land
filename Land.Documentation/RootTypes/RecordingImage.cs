@@ -9,8 +9,6 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.IO;
-using System.Text.RegularExpressions;
 
 using Empiria.Land.Registration;
 

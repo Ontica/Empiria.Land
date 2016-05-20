@@ -292,7 +292,7 @@ namespace Empiria.Land.Registration {
       throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
     }
 
-    public bool HasCompleteInformation() {
+    private bool HasCompleteInformation() {
       return false;
     }
 
@@ -397,63 +397,6 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Public methods
-
-    #region Resource methods to refactor
-
-    //public IList<Property> GetProperties() {
-    //  var tract = targets.Value;
-    //  var list = new List<Property>(tract.Count);
-    //  foreach (var item in tract) {
-    //    if (!list.Contains((Property) item.Resource)) {
-    //      list.Add((Property) item.Resource);
-    //    }
-    //  }
-    //  return list;
-    //}
-
-    //public RecordingActTarget GetPropertyEvent(Property property) {
-    //  var propertyEvent = this.Targets.Find((x) => x.Resource.Equals(property));
-    //  if (propertyEvent != null) {
-    //    return propertyEvent;
-    //  } else {
-    //    throw new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
-    //                                        property.UID, this.Id);
-    //  }
-    //}
-
-    //public bool IsFirstRecordingAct() {
-    //  if (this.Targets.Count == 0) {
-    //    return false;
-    //  }
-    //  Resource resource = this.Targets[0].Resource;
-
-    //  return resource.IsFirstRecordingAct(this);
-    //}
-
-    //public void RemoveProperty(Property property) {
-    //  RecordingActTarget propertyEvent = this.Targets.Find((x) => x.Resource.Equals(property));
-
-    //  Assertion.AssertObject(propertyEvent,
-    //            new LandRegistrationException(LandRegistrationException.Msg.PropertyNotBelongsToRecordingAct,
-    //                                          property.Id, this.Id));
-
-    //  propertyEvent.Delete();
-    //  if (property.GetRecordingActsTract().Count == 0) {
-    //    property.Status = RecordableObjectStatus.Deleted;
-    //    property.Save();
-    //  }
-
-    //  //_propertyList.Reset();
-    //  if (this.Targets.Count == 0) {
-    //    this.Status = RecordableObjectStatus.Deleted;
-    //    this.Save();
-    //  }
-
-    //  Assertion.Assert(property.Status == RecordableObjectStatus.Deleted &&
-    //                   this.Status == RecordableObjectStatus.Deleted, "fail");
-    //}
-
-    #endregion
 
   } // class RecordingAct
 

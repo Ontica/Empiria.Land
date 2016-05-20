@@ -124,12 +124,14 @@ namespace Empiria.Land.Registration {
       this.ReviewedBy = imagesReviewedBy;
       this.Status = FilesFolderStatus.Opened;
 
-      RecordingBook recordingBook = RecordingBook.Create(this, recordingSectionType, recordingsControlCount,
-                                                         recordingsControlTimePeriod);
-      this.RecordingBook = recordingBook;
-      this.Save();
+      throw new NotImplementedException();
 
-      return recordingBook;
+      ////RecordingBook recordingBook = RecordingBook.Create(this, recordingSectionType, recordingsControlCount,
+      ////                                                   recordingsControlTimePeriod);
+      //this.RecordingBook = recordingBook;
+      //this.Save();
+
+      //return recordingBook;
     }
 
     internal void DeleteImageAtIndex(int imageIndex) {
