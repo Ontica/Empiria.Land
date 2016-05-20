@@ -29,7 +29,7 @@ namespace Empiria.Land.Registration {
 
       Assertion.AssertObject(property, "property");
 
-      this.AttachProperty(property, percentage);
+      base.AttachResource(property, percentage);
     }
 
     static public new LimitationAct Parse(int id) {
@@ -37,16 +37,6 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Constructors and parsers
-
-    #region Private methods
-
-    private void AttachProperty(RealEstate property, decimal percentage) {
-      var tractItem = new TractItem(this, property, recordingActPercentage: percentage);
-
-      base.AddTractItem(tractItem);
-    }
-
-    #endregion Private methods
 
   } // class LimitationAct
 

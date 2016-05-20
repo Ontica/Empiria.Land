@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(resource, "resource");
       Assertion.AssertObject(recordingActToModify, "recordingActToModify");
 
-      this.AttachResource(resource);
+      base.AttachResource(resource);
 
       recordingActToModify.Amend(this);
     }
@@ -46,16 +46,6 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Constructors and parsers
-
-    #region Methods
-
-    private void AttachResource(Resource targetResource) {
-      var tractItem = new TractItem(this, targetResource);
-
-      base.AddTractItem(tractItem);
-    }
-
-    #endregion Methods
 
   } // class ModificationAct
 

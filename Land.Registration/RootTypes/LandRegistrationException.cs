@@ -51,7 +51,6 @@ namespace Empiria.Land.Registration {
       PropertyNotBelongsToRecordingAct,
       RecorderOfficeRootRecordingBookAlreadyExists,
       RecorderOfficialOutOfPeriod,
-      RecordingActHasTwoOrMoreProperties,
       RecordingActNotBelongsToRecording,
       RecordingActWithOnlyOneOwnerParty,
       RecordingActWithoutOwnerParties,

@@ -26,7 +26,7 @@ namespace Empiria.Land.Registration {
                        decimal percentage = decimal.One) : base(recordingActType, document) {
       Assertion.AssertObject(property, "property");
 
-      this.AttachResource(property, percentage);
+      base.AttachResource(property, percentage);
     }
 
     internal DomainAct(RecordingActType recordingActType, RecordingDocument document,
@@ -34,7 +34,7 @@ namespace Empiria.Land.Registration {
                        decimal percentage = decimal.One) : base(recordingActType, document, physicalRecording) {
       Assertion.AssertObject(property, "property");
 
-      this.AttachResource(property, percentage);
+      base.AttachResource(property, percentage);
     }
 
     static public new DomainAct Parse(int id) {
@@ -42,17 +42,6 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Constructors and parsers
-
-    #region Private methods
-
-    private void AttachResource(RealEstate resource, decimal percentage) {
-      var tractItem = new TractItem(this, resource,
-                                    recordingActPercentage:percentage);
-
-      base.AddTractItem(tractItem);
-    }
-
-    #endregion Private methods
 
   } // class DomainAct
 

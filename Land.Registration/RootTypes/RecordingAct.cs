@@ -25,12 +25,6 @@ namespace Empiria.Land.Registration {
   [PartitionedType(typeof(RecordingActType))]
   public abstract class RecordingAct : BaseObject, IExtensible<RecordingActExtData>, IProtected {
 
-    #region Fields
-
-    private Lazy<List<TractItem>> tractIndex = null;
-
-    #endregion Fields
-
     #region Constructors and parsers
 
     protected RecordingAct(RecordingActType powertype) : base(powertype) {
@@ -80,20 +74,21 @@ namespace Empiria.Land.Registration {
       recordingAct.Document = document;
       recordingAct.AmendmentOf = amendmentOf;
 
+      if (resource.IsNew) {
+        resource.Save();
+      }
+      recordingAct.Resource = resource;
+
       if (recordingActType.Autoregister) {
         recordingAct.Status = RecordableObjectStatus.Registered;
       } else {
         recordingAct.Status = RecordableObjectStatus.Pending;
       }
+
       if (physicalRecording.IsNew) {
         physicalRecording.Save();
       }
       recordingAct.Save();
-      if (resource.IsNew) {
-        resource.Save();
-      }
-      var resourceTarget = new TractItem(recordingAct, resource);
-      recordingAct.AddTractItem(resourceTarget);
 
       if (!recordingAct.AmendmentOf.IsEmptyInstance) {
         recordingAct.AmendmentOf.AmendedBy = recordingAct;
@@ -151,6 +146,31 @@ namespace Empiria.Land.Registration {
       internal set;
     }
 
+    [DataField("ResourceId", Default = "Empiria.Land.Registration.RealEstate.Empty")]
+    public Resource Resource {
+      get;
+      private set;
+    }
+
+    [DataField("ResourceRole", Default = ResourceRole.Informative)]
+    public ResourceRole ResourceRole {
+      get;
+      private set;
+    }
+
+    [DataField("RelatedResourceId", Default = "Empiria.Land.Registration.RealEstate.Empty")]
+    public Resource RelatedResource {
+      get;
+      private set;
+    }
+
+    [DataField("RecordingActPercentage", Default = 1.0)]
+    public decimal Percentage {
+      get;
+      private set;
+    }
+
+
     [DataField("RecordingActNotes")]
     public string Notes {
       get;
@@ -164,9 +184,10 @@ namespace Empiria.Land.Registration {
 
     internal string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName , this.Document.UID,
+        return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName, this.Document.UID,
+                                           this.Resource.UID, this.RelatedResource.UID,
                                            !this.PhysicalRecording.IsEmptyInstance ?
-                                                  this.PhysicalRecording.FullNumber : String.Empty);
+                                           this.PhysicalRecording.FullNumber : String.Empty);
       }
     }
 
@@ -266,12 +287,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public FixedList<TractItem> TractIndex {
-      get {
-        return tractIndex.Value.ToFixedList();
-      }
-    }
-
     int IProtected.CurrentDataIntegrityVersion {
       get {
         return 1;
@@ -310,15 +325,6 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    protected void AddTractItem(TractItem tractItem) {
-      Assertion.Assert(!this.IsEmptyInstance, "Recording act can't be the empty instance.");
-      Assertion.AssertObject(tractItem, "tractItem");
-      Assertion.Assert(tractItem.RecordingAct.Equals(this),
-                       "TractItem recording act is different to this instance.");
-
-      tractIndex.Value.Add(tractItem);
-    }
-
     internal void Amend(CancelationAct cancelationAct) {
       cancelationAct.AmendmentOf = this;
       this.AmendedBy = cancelationAct;
@@ -331,6 +337,11 @@ namespace Empiria.Land.Registration {
       this.AmendedBy = modificationAct;
       modificationAct.Save();
       this.Save();
+    }
+
+    protected void AttachResource(Resource resource, decimal percentage = 1m) {
+      this.Resource = resource;
+      this.Percentage = percentage;
     }
 
     public void ChangeStatusTo(RecordableObjectStatus newStatus) {
@@ -348,10 +359,6 @@ namespace Empiria.Land.Registration {
       if (this.IsEmptyInstance) {
         return;
       }
-      var tractIndex = this.TractIndex;
-      for (int i = 0; i < tractIndex.Count; i++) {
-        tractIndex[i].Delete();
-      }
 
       this.Status = RecordableObjectStatus.Deleted;
       this.Save();
@@ -363,6 +370,10 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public RecordingAct GetRecordingAntecedent() {
+      return this.Resource.GetRecordingAntecedent(this, true);
+    }
+
     private void RemoveAmendment() {
       this.AmendmentOf = RecordingAct.Empty;
       this.Save();
@@ -370,7 +381,6 @@ namespace Empiria.Land.Registration {
 
     protected override void OnInitialize() {
       this.ExtensionData = RecordingActExtData.Empty;
-      this.tractIndex = new Lazy<List<TractItem>>(() => RecordingActsData.GetRecordingActTargets(this));
     }
 
     protected override void OnLoadObjectData(DataRow row) {
@@ -389,11 +399,6 @@ namespace Empiria.Land.Registration {
         this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
       RecordingActsData.WriteRecordingAct(this);
-
-      // writes each recording at target
-      foreach (TractItem target in this.TractIndex) {
-        target.Save();
-      }
     }
 
     #endregion Public methods

@@ -141,15 +141,12 @@
     <Compile Include="RootTypes\Association.cs" />
     <Compile Include="RootTypes\ResourceRole.cs" />
     <Compile Include="RootTypes\BasePartyRole.cs" />
-    <Compile Include="RootTypes\StructureTractItem.cs" />
     <Compile Include="RootTypes\Resource.cs" />
     <Compile Include="RootTypes\RecordableObjectStatus.cs" />
     <Compile Include="RootTypes\RecordingActInfo.cs" />
     <Compile Include="RootTypes\RecordingDocumentExtData.cs" />
     <Compile Include="RootTypes\RecordingExtData.cs" />
     <Compile Include="RootTypes\RealEstatePartition.cs" />
-    <Compile Include="RootTypes\TractItem.cs" />
-    <Compile Include="RootTypes\TractItemExtData.cs" />
     <Compile Include="RootTypes\RecordingActExtData.cs" />
     <Compile Include="RootTypes\ContractData.cs" />
     <Compile Include="RootTypes\RealEstateRule.cs" />

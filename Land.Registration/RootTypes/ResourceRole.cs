@@ -53,10 +53,10 @@ namespace Empiria.Land.Registration {
     /// or more role additional entries with the 'Created' role value.</summary>
     Partitioned = 'P',
 
-    ///// <summary>The recording act cancels this resource as a consequence of a
-    ///// recording mistake but not as a result of a merging or division.
-    ///// The resource won't be longer available.</summary>
-    //Canceled = 'X',
+    /// <summary>The recording act cancels this resource as a consequence of a
+    /// recording mistake but not as a result of a merging or division.
+    /// The resource won't be longer available.</summary>
+    Canceled = 'X',
 
     ///// <summary>The act doesn't apply to resources (real estates or associations).</summary>
     //NotApply = 'N',

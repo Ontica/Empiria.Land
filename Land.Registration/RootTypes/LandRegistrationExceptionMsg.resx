@@ -212,9 +212,6 @@
   <data name="RecorderOfficialOutOfPeriod" xml:space="preserve">
     <value>El Oficial Registrador Lic. {0}, no estaba suscrito al Distrito Judicial {1} el día {2}</value>
   </data>
-  <data name="RecordingActHasTwoOrMoreProperties" xml:space="preserve">
-    <value>El acto jurídico seleccionado hace referencia a más de una propiedad.\n\nPara cancelar el acto jurídico, es necesario que primero se eliminen todas las referencias a propiedades que tenga registradas.</value>
-  </data>
   <data name="RecordingActNotBelongsToRecording" xml:space="preserve">
     <value>El acto jurídico con identificador {0} no pertenece a la inscripción {1}.</value>
   </data>

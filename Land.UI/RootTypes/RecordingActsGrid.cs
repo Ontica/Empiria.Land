@@ -43,20 +43,20 @@ namespace Empiria.Land.UI {
       for (int i = 0; i < document.RecordingActs.Count; i++) {
         var recordingAct = document.RecordingActs[i];
 
-        html += this.GetRecordingActRow(recordingAct, recordingAct.TractIndex[0]);
+        html += this.GetRecordingActRow(recordingAct);
 
       }
       return html;
     }
 
-    private string GetRecordingActRow(RecordingAct recordingAct, TractItem tractItem) {
-      string row = GetRowTemplate(recordingAct, tractItem.Resource);
+    private string GetRecordingActRow(RecordingAct recordingAct) {
+      string row = GetRowTemplate(recordingAct);
 
       row = row.Replace("{{STATUS}}", recordingAct.StatusName);
       row = row.Replace("{{RECORDING.ACT.URL}}", recordingAct.DisplayName);
-      row = row.Replace("{{RESOURCE.URL}}", GetResourceCell(tractItem));
+      row = row.Replace("{{RESOURCE.URL}}", GetResourceCell(recordingAct));
 
-      var antecedentText = GetAntecedentOrTargetCell(tractItem);
+      var antecedentText = GetAntecedentOrTargetCell(recordingAct);
       if (antecedentText.Length == 0) {
         row = row.Replace("{{ANTECEDENT}}", "Sin antecedente registral");
       } else if (antecedentsDictionary.ContainsKey(antecedentText)) {
@@ -64,11 +64,11 @@ namespace Empiria.Land.UI {
         row = row.Replace("{{ANTECEDENT}}", "Igual que el acto " +
                                             recordingActIndex.ToString("00"));
       } else {
-        antecedentsDictionary.Add(antecedentText, tractItem.RecordingAct.Index + 1);
+        antecedentsDictionary.Add(antecedentText, recordingAct.Index + 1);
         row = row.Replace("{{ANTECEDENT}}", antecedentText);
       }
-      row = row.Replace("{{OPTIONS.COMBO}}", GetOptionsCombo(tractItem));
-      row = row.Replace("{{RESOURCE.ID}}", recordingAct.TractIndex[0].Resource.Id.ToString());
+      row = row.Replace("{{OPTIONS.COMBO}}", GetOptionsCombo(recordingAct));
+      row = row.Replace("{{RESOURCE.ID}}", recordingAct.Resource.Id.ToString());
       row = row.Replace("{{ID}}", recordingAct.Id.ToString());
 
       return row;
@@ -78,11 +78,11 @@ namespace Empiria.Land.UI {
 
     #region Private auxiliar methods
 
-    static private string GetResourceCell(TractItem tractItem) {
-      if (tractItem.Resource is RealEstate) {
-        var realEstate = (RealEstate) tractItem.Resource;
+    static private string GetResourceCell(RecordingAct recordingAct) {
+      if (recordingAct.Resource is RealEstate) {
+        var realEstate = (RealEstate) recordingAct.Resource;
         if (!realEstate.IsPartitionOf.IsEmptyInstance &&
-             realEstate.FirstRecordingAct.Equals(tractItem.RecordingAct)) {
+             realEstate.FirstRecordingAct.Equals(recordingAct)) {
           return realEstate.UID + "<br />" +
                  (realEstate.CadastralKey.Length != 0 ?
                  "<i>Catastro: " + realEstate.CadastralKey + "</i><br />" : String.Empty) +
@@ -94,13 +94,13 @@ namespace Empiria.Land.UI {
                  "<i>Catastro: " + realEstate.CadastralKey + "</i><br />" : String.Empty);
         }
 
-      } else if (tractItem.Resource is Association) {
-        return tractItem.Resource.UID + "<br />" +
-               ((Association) tractItem.Resource).Name;
+      } else if (recordingAct.Resource is Association) {
+        return recordingAct.Resource.UID + "<br />" +
+               ((Association) recordingAct.Resource).Name;
 
-      } else if (tractItem.Resource is NoPropertyResource) {
+      } else if (recordingAct.Resource is NoPropertyResource) {
         return "Referencia registral:<br />" +
-               tractItem.Resource.UID;
+               recordingAct.Resource.UID;
 
       } else {
         throw Assertion.AssertNoReachThisCode();
@@ -108,11 +108,11 @@ namespace Empiria.Land.UI {
       }
     }
 
-    static private string GetAntecedentOrTargetCell(TractItem tractItem) {
-      if (tractItem.RecordingAct.RecordingActType.IsAmendmentActType) {
-        return GetAmendedItemCell(tractItem);
+    static private string GetAntecedentOrTargetCell(RecordingAct recordingAct) {
+      if (recordingAct.RecordingActType.IsAmendmentActType) {
+        return GetAmendedItemCell(recordingAct);
       }
-      var antecedent = tractItem.GetRecordingAntecedent();
+      var antecedent = recordingAct.GetRecordingAntecedent();
       if (antecedent.IsEmptyInstance) {
         return String.Empty;
 
@@ -120,7 +120,7 @@ namespace Empiria.Land.UI {
         return antecedent.PhysicalRecording.AsText + "<br />" +
                GetRecordingDates(antecedent.Document);
 
-      } else if (antecedent.Document.Equals(tractItem.RecordingAct.Document)) {
+      } else if (antecedent.Document.Equals(recordingAct.Document)) {
         return String.Format("Folio real creado en el acto {0}",
                              (antecedent.Index + 1).ToString("00"));
 
@@ -131,11 +131,11 @@ namespace Empiria.Land.UI {
       }
     }
 
-    static private string GetAmendedItemCell(TractItem tractItem) {
-      var amendedAct = tractItem.RecordingAct.AmendmentOf;
+    static private string GetAmendedItemCell(RecordingAct recordingAct) {
+      var amendedAct = recordingAct.AmendmentOf;
 
       if (amendedAct.IsEmptyInstance) {
-        return tractItem.GetRecordingAntecedent().Document.UID;
+        return recordingAct.GetRecordingAntecedent().Document.UID;
 
       } else if (amendedAct.PhysicalRecording.IsEmptyInstance) {
         return amendedAct.RecordingActType.DisplayName +
@@ -159,7 +159,7 @@ namespace Empiria.Land.UI {
              "Registro: " + GetDateAsText(document.AuthorizationTime);
     }
 
-    static private string GetRowTemplate(RecordingAct recordingAct, Resource resource) {
+    static private string GetRowTemplate(RecordingAct recordingAct) {
       const string template =
           "<tr class='{{CLASS}}'>" +
             "<td><b id='ancRecordingActIndex_{{ID}}'>{{INDEX}}</b></td>" +
@@ -180,26 +180,25 @@ namespace Empiria.Land.UI {
       if (!recordingAct.IsCompleted) {
         html = html.Replace("{{RECORDING.ACT.CLASS}}", "class='pending-edition'");
       }
-      if (!resource.IsCompleted) {
+      if (!recordingAct.Resource.IsCompleted) {
         html = html.Replace("{{RESOURCE.CLASS}}", "class='pending-edition'");
       }
       return html;
     }
 
-    static private string GetOptionsCombo(TractItem tractItem) {
+    static private string GetOptionsCombo(RecordingAct recordingAct) {
       const string template =
-        "<select id='cboRecordingOptions_{{TRACT-ITEM.ID}}' class='selectBox' style='width:130px'>" +
+        "<select id='cboRecordingOptions_{{ID}}' class='selectBox' style='width:130px'>" +
         "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
         "<option value='modifyRecordingActType'>Modificar este acto</option>" +
         "<option value='deleteRecordingAct'>Eliminar este acto</option>" +
         "<option value='viewResourceTract'>Ver la historia</option>" +
         "</select><img class='comboExecuteImage' src='../themes/default/buttons/next.gif' " +
         "alt='' title='Ejecuta la operación seleccionada' onclick='" +
-        "doOperation(getElement(\"cboRecordingOptions_{{TRACT-ITEM.ID}}\").value, {{ID}}, {{RESOURCE.ID}});'/>";
+        "doOperation(getElement(\"cboRecordingOptions_{{ID}}\").value, {{ID}}, {{RESOURCE.ID}});'/>";
 
-      string html = template.Replace("{{ID}}", tractItem.RecordingAct.Id.ToString());
-      html = html.Replace("{{RESOURCE.ID}}", tractItem.Resource.Id.ToString());
-      html = html.Replace("{{TRACT-ITEM.ID}}", tractItem.Id.ToString());
+      string html = template.Replace("{{ID}}", recordingAct.Id.ToString());
+      html = html.Replace("{{RESOURCE.ID}}", recordingAct.Resource.Id.ToString());
 
       return html;
     }

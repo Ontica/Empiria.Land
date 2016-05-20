@@ -27,14 +27,14 @@ namespace Empiria.Land.Registration {
                             Resource resource) : base(recordingActType, document) {
       recordingActType.AssertIsApplicableResource(resource);
 
-      this.AttachResource(resource);
+      base.AttachResource(resource);
     }
 
     internal InformationAct(RecordingActType recordingActType, RecordingDocument document,
                             Resource resource, Recording physicalRecording)
                                       : base(recordingActType, document, physicalRecording) {
       recordingActType.AssertIsApplicableResource(resource);
-      this.AttachResource(resource);
+      base.AttachResource(resource);
     }
 
     static public new InformationAct Parse(int id) {
@@ -42,16 +42,6 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Constructors and parsers
-
-    #region Private methods
-
-    private void AttachResource(Resource targetResource) {
-      var target = new TractItem(this, targetResource);
-
-      base.AddTractItem(target);
-    }
-
-    #endregion Private methods
 
   } // class InformationAct
 

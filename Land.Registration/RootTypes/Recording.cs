@@ -304,10 +304,6 @@ namespace Empiria.Land.Registration {
     //  this.RecordingBook.Refresh();
     //}
 
-    public IList<Resource> GetResources() {
-      return ResourceData.GetPhysicalRecordingResources(this);
-    }
-
     public void SortRecordingActs() {
       this.recordingActList = null;
       for (int i = 0; i < this.RecordingActs.Count; i++) {

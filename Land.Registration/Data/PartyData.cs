@@ -46,19 +46,10 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static public FixedList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
-      var list = new List<RecordingActParty>();
-      foreach (var tractItem in recordingAct.TractIndex) {
-        var op = DataOperation.Parse("qryLRSResourceActiveOwnershipRecordingActParties", tractItem.Resource.Id);
+      var op = DataOperation.Parse("qryLRSResourceActiveOwnershipRecordingActParties",
+                                   recordingAct.Resource.Id);
 
-        var temp = DataReader.GetList<RecordingActParty>(op, (x) => BaseObject.ParseList<RecordingActParty>(x));
-
-        if (list.Count == 0) {
-          list.AddRange(temp);
-        } else {
-          list.AddRange(temp.FindAll((x) => !list.Contains(x)));
-        }
-      }
-      return list.ToFixedList();
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
 
     static public FixedList<RecordingActParty> GetSecondaryPartiesList(RecordingAct recordingAct) {
@@ -137,14 +128,6 @@ namespace Empiria.Land.Registration.Data {
                                                            partyFilterType.ToString());
       }
     }
-
-    static internal FixedList<Resource> GetPhysicalRecordingResources(Recording recording) {
-      var operation = DataOperation.Parse("qryLRSPhysicalRecordingProperties", recording.Id);
-
-      return DataReader.GetList<Resource>(operation,
-                                          (x) => BaseObject.ParseList<Resource>(x)).ToFixedList();
-    }
-
 
     static internal int WriteParty(Party o) {
       var dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.GetEmpiriaType().Id,

@@ -43,13 +43,6 @@ namespace Empiria.Land.Registration.Data {
       return (DataReader.Count(operation) != 0);
     }
 
-    static internal FixedList<Resource> GetPhysicalRecordingResources(Recording recording) {
-      var operation = DataOperation.Parse("qryLRSPhysicalRecordingProperties", recording.Id);
-
-      return DataReader.GetList<Resource>(operation,
-                                          (x) => BaseObject.ParseList<Resource>(x)).ToFixedList();
-    }
-
     static internal int WriteAssociation(Association o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
                                           String.Empty, o.Name, String.Empty, o.Notes,

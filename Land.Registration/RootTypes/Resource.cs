@@ -241,8 +241,8 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public FixedList<TractItem> GetTractIndex() {
-      return RecordingActsData.GetResourceTractIndex(this);
+    public FixedList<RecordingAct> GetFullRecordingActsTract() {
+      return RecordingActsData.GetResourceFullTractIndex(this);
     }
 
     public FixedList<RecordingAct> GetRecordingActsTract() {

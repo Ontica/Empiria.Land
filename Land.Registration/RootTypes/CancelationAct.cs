@@ -25,7 +25,7 @@ namespace Empiria.Land.Registration {
                             Resource resource) : base(recordingActType, document) {
       Assertion.AssertObject(resource, "resource");
 
-      this.AttachResource(resource);
+      base.AttachResource(resource);
 
       this.Save();
     }
@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(resource, "resource");
       Assertion.AssertObject(recordingActToCancel, "recordingActToCancel");
 
-      this.AttachResource(resource);
+      base.AttachResource(resource);
 
       recordingActToCancel.Amend(this);
     }
@@ -46,16 +46,6 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Constructors and parsers
-
-    #region Methods
-
-    private void AttachResource(Resource targetResource) {
-      var tractItem = new TractItem(this, targetResource);
-
-      base.AddTractItem(tractItem);
-    }
-
-    #endregion Methods
 
   } // class CancelationAct
 
