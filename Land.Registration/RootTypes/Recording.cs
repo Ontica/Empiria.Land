@@ -323,6 +323,11 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
+    public FixedList<Resource> GetResources() {
+      return ResourceData.GetPhysicalRecordingResources(this);
+    }
+
     public FixedList<RecordingAct> GetAnnotationActs() {
       return new FixedList<RecordingAct>(this.RecordingActs.FindAll((x) => x.IsAnnotation));
     }

@@ -83,7 +83,7 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    internal string[] GetPartitions() {
+    internal string[] GetPartitionNames() {
       if (this.PartitionRepeatUntilNumber.Length == 0) {
         return new string[] { this.PartitionName };
       }

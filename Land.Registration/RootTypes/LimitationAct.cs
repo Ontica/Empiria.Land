@@ -29,7 +29,7 @@ namespace Empiria.Land.Registration {
 
       Assertion.AssertObject(property, "property");
 
-      base.AttachResource(property, percentage);
+      base.SetResource(property, percentage: percentage);
     }
 
     static public new LimitationAct Parse(int id) {

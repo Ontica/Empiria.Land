@@ -41,6 +41,28 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    static public bool IsCancelationRole(ResourceRole resourceRole) {
+      return (resourceRole == ResourceRole.Canceled ||
+              resourceRole == ResourceRole.MergedInto ||
+              resourceRole == ResourceRole.Split);
+    }
+
+    static public bool IsCreationalRole(ResourceRole resourceRole) {
+      return (resourceRole == ResourceRole.Created ||
+              resourceRole == ResourceRole.DivisionOf ||
+              resourceRole == ResourceRole.Extended ||
+              resourceRole == ResourceRole.PartitionOf);
+    }
+
+    static public bool IsInformativeRole(ResourceRole resourceRole) {
+      return (resourceRole == ResourceRole.Edited ||
+              resourceRole == ResourceRole.Informative);
+    }
+
+    static public bool IsResourceEditingRole(ResourceRole resourceRole) {
+      return (IsCreationalRole(resourceRole) || resourceRole == ResourceRole.Edited);
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
@@ -200,17 +222,21 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    private void AssignUID() {
-      Assertion.Assert(this.UID.Length == 0, "Property has already assigned a UniqueIdentifier.");
+    public bool AllowHistoricChanges() {
+      return (!this.FirstRecordingAct.PhysicalRecording.IsEmptyInstance);
+    }
 
-      while (true) {
-        string temp = this.GenerateResourceUID();
-        if (!ResourceData.ExistsResourceUID(temp)) {
-          this.UID = temp;
-          break;
-        }
-      } // while
-      Assertion.Assert(this.UID.Length != 0, "Property UniqueIdentifier has not been generated.");
+    internal void AssertIsStillAlive() {
+      Assertion.Assert(this.Status != RecordableObjectStatus.Deleted,
+                       "Resource is marked as deleted.");
+
+      var tract = this.GetRecordingActsTract();
+
+      if (0 != tract.CountAll((x) => Resource.IsCancelationRole(x.ResourceRole))) {
+        Assertion.AssertFail("Resource '{0}' was already canceled, merged or divided. " +
+                             "It's not possible to append more acts on it.", this.UID);
+      }
+
     }
 
     abstract protected string GenerateResourceUID();
@@ -352,6 +378,19 @@ namespace Empiria.Land.Registration {
     #endregion Public methods
 
     #region Private methods
+
+    private void AssignUID() {
+      Assertion.Assert(this.UID.Length == 0, "Property has already assigned a UniqueIdentifier.");
+
+      while (true) {
+        string temp = this.GenerateResourceUID();
+        if (!ResourceData.ExistsResourceUID(temp)) {
+          this.UID = temp;
+          break;
+        }
+      } // while
+      Assertion.Assert(this.UID.Length != 0, "Property UniqueIdentifier has not been generated.");
+    }
 
     private bool HasCompleteInformation() {
       return false;

@@ -25,7 +25,7 @@ namespace Empiria.Land.Registration {
                          Resource resource) : base(recordingActType, document) {
       Assertion.AssertObject(resource, "resource");
 
-      this.AttachResource(resource);
+      this.SetResource(resource);
 
       this.Save();
     }
@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(resource, "resource");
       Assertion.AssertObject(recordingActToModify, "recordingActToModify");
 
-      base.AttachResource(resource);
+      base.SetResource(resource);
 
       recordingActToModify.Amend(this);
     }

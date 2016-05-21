@@ -86,16 +86,25 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+    public bool IsHistoricDocument {
+      get {
+        if (this.RecordingActs.Count == 0) {
+          return false;
+        }
+        return (!this.RecordingActs[0].PhysicalRecording.IsEmptyInstance);
+      }
+    }
+
     [DataField("PresentationTime", Default = "ExecutionServer.DateMinValue")]
     public DateTime PresentationTime {
       get;
-      set;
+      internal set;
     }
 
     [DataField("AuthorizationTime", Default = "ExecutionServer.DateMinValue")]
     public DateTime AuthorizationTime {
       get;
-      set;
+      private set;
     }
 
     [DataField("IssuePlaceId")]
@@ -257,7 +266,7 @@ namespace Empiria.Land.Registration {
       recordingActList.Value.Add(recordingAct);
 
       // updates the authorization time of the document each time it's modified
-      this.AuthorizationTime = DateTime.Now;
+      this.SetAuthorizationTime();
 
       /// returns the collection's index of the recording act
       return recordingActList.Value.Count - 1;
@@ -287,7 +296,8 @@ namespace Empiria.Land.Registration {
                                              this.RecordingActs.Count, physicalRecording);
       recordingActList.Value.Add(recordingAct);
 
-      this.AuthorizationTime = DateTime.Now;
+      this.SetAuthorizationTime();
+
       this.Save();
 
       return recordingAct;
@@ -371,6 +381,15 @@ namespace Empiria.Land.Registration {
     #endregion Public methods
 
     #region Private methods
+
+    private void SetAuthorizationTime() {
+      // ToDo: ASAP call SetAuthorizationTime() ONLY when the document is closed
+      if (this.IsHistoricDocument) {
+        this.AuthorizationTime = ExecutionServer.DateMinValue;
+      } else {
+        this.AuthorizationTime = DateTime.Now;
+      }
+    }
 
     private void Delete() {
       this.Status = RecordableObjectStatus.Deleted;

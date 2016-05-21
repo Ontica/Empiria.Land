@@ -21,6 +21,19 @@ namespace Empiria.Land.Registration.Data {
 
     #region Internal methods
 
+    static internal bool ExistsResourceUID(string uniqueID) {
+      DataOperation operation = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
+
+      return (DataReader.Count(operation) != 0);
+    }
+
+    static internal FixedList<Resource> GetPhysicalRecordingResources(Recording recording) {
+      var operation = DataOperation.Parse("qryLRSPhysicalRecordingResources", recording.Id);
+
+      return DataReader.GetList<Resource>(operation,
+                                          (x) => BaseObject.ParseList<Resource>(x)).ToFixedList();
+    }
+
     internal static RealEstate[] GetRealEstatePartitions(RealEstate property) {
       if (property.IsNew || property.IsEmptyInstance) {
         return new RealEstate[0];
@@ -35,12 +48,6 @@ namespace Empiria.Land.Registration.Data {
       DataOperation operation = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
 
       return DataReader.GetDataRow(operation);
-    }
-
-    static internal bool ExistsResourceUID(string uniqueID) {
-      DataOperation operation = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
-
-      return (DataReader.Count(operation) != 0);
     }
 
     static internal int WriteAssociation(Association o) {

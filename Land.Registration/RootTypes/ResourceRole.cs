@@ -5,61 +5,93 @@
 *  Type      : ResourceRole                                   Pattern  : Enumeration Type                    *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Describes the role that plays a resource in the context of a recording act.                   *
+*  Summary   : Describes the role that a resource plays in the context of a recording act.                   *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Describes the role that plays a resource in the context of a recording act.</summary>
+  /// <summary>Describes the role that a resource plays in the context of a recording act.</summary>
   public enum ResourceRole {
 
-    /// <summary>The recording act created this resource, because is the first time
-    /// registration or because it was created as a consequence of a partition or division,
-    /// or it was created as a merge of two or more existing resources.
-    /// Old registered resources could not have a 'Created' role entry.
-    /// 'Created' always denotes the very first act in the recording tract.</summary>
+    /// <summary>The recording act created this resource, because it is its first
+    /// time registration. There are not related resource.
+    /// 'Created' always denotes the first act in the recording tract.</summary>
+    //   Example:
+    //   Act 1    P  Created  Empty      -- P is a new resource
     Created = 'C',
 
-    /// <summary>The act modifies data about the resource but not it structure.
-    /// The edited resource remains alive.</summary>
+
+    /// <summary>The recording act creates this resource as a partition of
+    /// the RelatedResource. RelatedResource remains alive.
+    /// 'Partition' always denotes the first act in the recording tract.</summary>
+    //   Example:
+    //   Act 1  P1  PartitionOf  P      -- P1 is a new resource. P remains alive.
+    PartitionOf = 'P',
+
+
+    /// <summary>The act creates the resource as a division of the RelatedResource.
+    /// The document must have one or more additional acts with 'DivisionOf'.
+    /// At the end, the document must have an act applied to the RelatedResource
+    /// with a 'Split' role. 'DivisionOf' denotes the first act in the resource's tract.</summary>
+    //  Please see 'Split' for an example.
+    DivisionOf = 'D',
+
+
+    /// <summary>The act splits the resource into two or more resources and ends
+    /// the life of that resource. Prior, the document must have two or more
+    /// additional acts with role 'DivisionOf' applied to new resources using this
+    /// resource as a RelatedResource on them.</summary>
+    //   Example:
+    //   Act 1  D1  DivisionOf  P      -- D1 is a kind of partition of P
+    //   Act 2  D2  DivisionOf  P      -- D2 is a kind of partition of P
+    //   Act 3  P   Split       Empty  -- P is no longer available
+    Split = 'S',
+
+
+    /// <summary>The recording act creates a new resource as a consequence of a merge
+    /// of two or more resources. The RelatedResource is empty, but the document should have
+    /// two or more acts with 'MergedInto' roles using as their RelatedResource the new resource
+    /// created in this act. 'Extended' denotes the first act in the resource's tract.</summary>
+    //  Please see 'MergedInto' for an example.
+    Extended = 'T',
+
+
+    /// <summary>The recording act merges the resource into the RelatedResource.
+    /// The resource won't be longer available. The document must have one or more
+    /// addditional acts with role 'MergedInto' with the same RelatedResource.
+    /// At the begining, a recording act with role 'Extended' must appear in
+    /// the document applied to this act RelatedResource.</summary>
+    //   Example:
+    //   Act 1  Resource P  Extended   Empty     -- P is a new resource
+    //   Act 2  Resource M1 MergedInto P         -- M1 is no longer available
+    //   Act 3  Resource M2 MergedInto P         -- M2 is no longer available
+    MergedInto = 'M',
+
+
+    /// <summary>The act is a kind of 'Informative' act but, -like creational roles does-,
+    /// allows data modification over the resource (e.g, its metes and bounds) but not
+    /// over its structure. The edited resource remains alive.
+    /// RelatedResource is always empty.</summary>
     Edited = 'E',
 
-    /// <summary>The act divides the resource into two or more new resources.
-    /// The resource won't be longer available. The recording act must have two
-    /// or more role additional entries with 'Created' role value.</summary>
-    Divided = 'D',
 
     /// <summary>The resource appear as a reference of the recording act by itself,
-    /// but never is used to denote structure change. Informative roles can be used
-    /// as a initial recording tract act in those cases when there are not complete
+    /// but not is used to denote structure change or resource data changes.
+    /// RelatedResource is always empty. Informative roles can be used as a initial
+    /// recording tract act in those cases when there are not complete
     /// historical information.</summary>
     Informative = 'I',
 
-    /// <summary>The recording act merges the resource into another resource.
-    /// The merged resource is no longer available. The recording act must have an
-    /// additional role entry with the 'Extended' role value.</summary>
-    Merged = 'M',
-
-    /// <summary>The recording act merges one or more resources into this
-    /// already created resource. This resource is extended but the merged ones
-    /// are not longer available. The recording act must have one or more role
-    /// additional entries with 'Merged' value.</summary>
-    Extended = 'T',
-
-    /// <summary>The recording act partitions this resource and creates a new resource.
-    /// This resource is modified but remains alive. The recording act must have one
-    /// or more role additional entries with the 'Created' role value.</summary>
-    Partitioned = 'P',
 
     /// <summary>The recording act cancels this resource as a consequence of a
-    /// recording mistake but not as a result of a merging or division.
-    /// The resource won't be longer available.</summary>
+    /// recording mistake, or when it cancels the unique domain act of a resource.
+    /// Other cancelation acts must be recorded with 'Informative' role.
+    /// Don't use this role for merging or divisions. The resource won't be longer
+    /// available and RelatedResource must be empty.</summary>
     Canceled = 'X',
 
-    ///// <summary>The act doesn't apply to resources (real estates or associations).</summary>
-    //NotApply = 'N',
 
   }  // enum ResourceRole
 

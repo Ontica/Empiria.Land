@@ -164,7 +164,7 @@ namespace Empiria.Land.UI {
           "<tr class='{{CLASS}}'>" +
             "<td><b id='ancRecordingActIndex_{{ID}}'>{{INDEX}}</b></td>" +
             "<td style='white-space:normal'>" +
-              "<a {{RECORDING.ACT.CLASS}} href='javascript:doOperation(\"editRecordingAct\", {{ID}});'>" +
+              "<a {{RECORDING.ACT.CLASS}} href='javascript:doOperation(\"editResource\", {{RESOURCE.ID}}, {{ID}});'>" +
                 "{{RECORDING.ACT.URL}}</a></td>" +
             "<td style='white-space:nowrap'>" +
             "<a {{RESOURCE.CLASS}} href='javascript:doOperation(\"editResource\", {{RESOURCE.ID}}, {{ID}});'>" +

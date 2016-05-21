@@ -27,14 +27,14 @@ namespace Empiria.Land.Registration {
                             Resource resource) : base(recordingActType, document) {
       recordingActType.AssertIsApplicableResource(resource);
 
-      base.AttachResource(resource);
+      base.SetResource(resource);
     }
 
     internal InformationAct(RecordingActType recordingActType, RecordingDocument document,
                             Resource resource, Recording physicalRecording)
                                       : base(recordingActType, document, physicalRecording) {
       recordingActType.AssertIsApplicableResource(resource);
-      base.AttachResource(resource);
+      base.SetResource(resource);
     }
 
     static public new InformationAct Parse(int id) {

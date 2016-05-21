@@ -98,6 +98,12 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+    public bool IsPartition {
+      get {
+        return !this.IsPartitionOf.IsEmptyInstance;
+      }
+    }
+
     [DataField("PartitionOfId")]
     private LazyInstance<RealEstate> _isPartitionOf = LazyInstance<RealEstate>.Empty;
     public RealEstate IsPartitionOf {
@@ -183,10 +189,10 @@ namespace Empiria.Land.Registration {
     internal RealEstate[] Subdivide(RealEstatePartition partitionInfo) {
       Assertion.Assert(!this.IsNew, "New properties can't be subdivided.");
 
-      string[] partitionNumbers = partitionInfo.GetPartitions();
-      RealEstate[] partitions = new RealEstate[partitionNumbers.Length];
-      for (int i = 0; i < partitionNumbers.Length; i++) {
-        partitions[i] = this.CreatePartition(partitionNumbers[i]);
+      string[] partitionNames = partitionInfo.GetPartitionNames();
+      RealEstate[] partitions = new RealEstate[partitionNames.Length];
+      for (int i = 0; i < partitionNames.Length; i++) {
+        partitions[i] = this.CreatePartition(partitionNames[i]);
       }
       return partitions;
     }

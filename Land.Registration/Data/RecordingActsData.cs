@@ -98,6 +98,9 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteRecordingAct(RecordingAct o) {
       Assertion.Assert(o.Id != 0, "RecordingAct.Id can't be zero");
+      Assertion.Assert(!o.Resource.IsEmptyInstance && !o.Resource.IsNew,
+                       "Resource can't be new or the empty instance.");
+      Assertion.Assert(!o.RelatedResource.IsNew, "Related resource was not saved.");
       Assertion.Assert(!o.Document.IsEmptyInstance, "Document can't be the empty instance.");
       Assertion.Assert(!o.Document.IsNew, "Document should be saved before add recording acts to it.");
 

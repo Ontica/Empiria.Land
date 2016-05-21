@@ -339,11 +339,6 @@ namespace Empiria.Land.Registration {
       this.Save();
     }
 
-    protected void AttachResource(Resource resource, decimal percentage = 1m) {
-      this.Resource = resource;
-      this.Percentage = percentage;
-    }
-
     public void ChangeStatusTo(RecordableObjectStatus newStatus) {
       this.Status = newStatus;
       this.Save();
@@ -368,6 +363,7 @@ namespace Empiria.Land.Registration {
       } else if (this.IsAmendment && !this.AmendmentOf.Document.IsEmptyDocument) {
         this.AmendmentOf.RemoveAmendment();
       }
+      this.Resource.TryDelete();
     }
 
     public RecordingAct GetRecordingAntecedent() {
@@ -377,6 +373,21 @@ namespace Empiria.Land.Registration {
     private void RemoveAmendment() {
       this.AmendmentOf = RecordingAct.Empty;
       this.Save();
+    }
+
+    protected void SetResource(Resource resource, ResourceRole role = ResourceRole.Informative,
+                               Resource relatedResource = null, decimal percentage = 1m) {
+      Assertion.Assert(resource != null  && !resource.IsEmptyInstance,
+                       "resource can't be null  or the empty instance.");
+      Assertion.Assert(decimal.Zero < percentage && percentage <= decimal.One,
+                       "percentage should be set between zero and one inclusive.");
+
+      resource.AssertIsStillAlive();
+
+      this.Resource = resource;
+      this.ResourceRole = role;
+      this.RelatedResource = relatedResource ?? RealEstate.Empty;
+      this.Percentage = percentage;
     }
 
     protected override void OnInitialize() {
@@ -392,6 +403,9 @@ namespace Empiria.Land.Registration {
       this.Document.Save();
       if (this.PhysicalRecording.IsNew) {
         this.PhysicalRecording.Save();
+      }
+      if (this.Resource.IsNew) {
+        this.Resource.Save();
       }
       // writes the recording act
       if (base.IsNew) {

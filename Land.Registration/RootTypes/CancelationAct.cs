@@ -21,22 +21,40 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
+    /// <summary>Marks a resource as canceled. The resource won't be longer available.</summary>
     internal CancelationAct(RecordingActType recordingActType, RecordingDocument document,
                             Resource resource) : base(recordingActType, document) {
       Assertion.AssertObject(resource, "resource");
 
-      base.AttachResource(resource);
+      base.SetResource(resource, ResourceRole.Canceled);
 
       this.Save();
     }
 
+    /// <summary>Cancels a recording act. If it's a domain act and the unique one,
+    /// then the resource will be canceled too.</summary>
     internal CancelationAct(RecordingActType recordingActType,
                             RecordingDocument document, Resource resource,
                             RecordingAct recordingActToCancel) : base(recordingActType, document) {
       Assertion.AssertObject(resource, "resource");
       Assertion.AssertObject(recordingActToCancel, "recordingActToCancel");
 
-      base.AttachResource(resource);
+      ResourceRole role = ResourceRole.Informative;
+
+      if (recordingActToCancel.RecordingActType.IsDomainActType) {
+        var tract = resource.GetRecordingActsTract();
+
+        if (0 == tract.CountAll((x) => x.RecordingActType.IsDomainActType &&
+                                       !x.Equals(recordingActToCancel))) {
+          role = ResourceRole.Canceled;
+        } else {
+          Assertion.Assert(resource.LastRecordingAct.Equals(recordingActToCancel),
+                           "Cancelation of domain acts must be applied only to the " +
+                           "latest domain act and that act also must be the last " +
+                           "recording act in the resource tract.");
+        }
+      }
+      base.SetResource(resource, role);
 
       recordingActToCancel.Amend(this);
     }
