@@ -30,7 +30,7 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public RecordingTask(int transactionId = -1, int documentId = -1,
+    public RecordingTask(int documentId = -1,
                          int recordingActTypeId = -1,
                          RecordingTaskType recordingTaskType = RecordingTaskType.actNotApplyToProperty,
                          int precedentRecordingBookId = -1,
@@ -38,7 +38,6 @@ namespace Empiria.Land.Registration {
                          string quickAddRecordingNumber = "",
                          string resourceName = "", string cadastralKey = "",
                          RealEstatePartition partition = null, RecordingActInfo targetActInfo = null) {
-      this.Transaction = LRSTransaction.Parse(transactionId);
       this.Document = RecordingDocument.Parse(documentId);
       //this.RecordingActTypeCategory = RecordingActTypeCategory.Parse(recordingActTypeCategoryId);
       this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
@@ -72,11 +71,6 @@ namespace Empiria.Land.Registration {
     #endregion Constructors and parsers
 
     #region Properties
-
-    public LRSTransaction Transaction {
-      get;
-      private set;
-    }
 
     public RecordingDocument Document {
       get;

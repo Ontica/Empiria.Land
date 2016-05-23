@@ -37,8 +37,8 @@ namespace Empiria.Land.Registration {
 
       Assertion.AssertObject(document, "document");
 
-      Assertion.Assert(!document.IsEmptyInstance,
-                       "document can't be the empty instance.");
+      Assertion.Assert(!document.IsNew && !document.IsEmptyInstance,
+                       "document can't be new or the empty instance.");
 
       this.Document = document;
       this.Index = this.Document.AddRecordingAct(this);
@@ -48,8 +48,8 @@ namespace Empiria.Land.Registration {
                            Recording physicalRecording) : this(recordingActType, document) {
       Assertion.AssertObject(physicalRecording, "physicalRecording");
 
-      Assertion.Assert(!physicalRecording.IsEmptyInstance,
-                       "physicalRecording can't be the empty instance");
+      Assertion.Assert(!physicalRecording.IsEmptyInstance && !physicalRecording.IsNew,
+                       "physicalRecording can't be new or the empty instance");
 
       this.PhysicalRecording = physicalRecording;
     }

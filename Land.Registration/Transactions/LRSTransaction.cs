@@ -382,7 +382,10 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public void AttachDocument(RecordingDocument document) {
+      Assertion.Assert(!this.IsEmptyInstance && !this.IsNew,
+                       "Document can't be attached to a new or empty transaction.");
       Assertion.AssertObject(document, "document");
+      Assertion.Assert(document.IsNew, "document should be a new instance.");
 
       document.PresentationTime = this.PresentationTime;
       document.Save();

@@ -88,11 +88,23 @@ namespace Empiria.Land.Registration {
 
     public bool IsHistoricDocument {
       get {
-        if (this.RecordingActs.Count == 0) {
+        if (this.IsNew || this.IsEmptyInstance || this.RecordingActs.Count == 0) {
           return false;
         }
         return (!this.RecordingActs[0].PhysicalRecording.IsEmptyInstance);
       }
+    }
+
+    public Recording TryGetHistoricRecording() {
+      if (!this.IsHistoricDocument) {
+        return null;
+      }
+      Recording historicRecording = this.RecordingActs[0].PhysicalRecording;
+
+      Assertion.Assert(!historicRecording.IsNew && historicRecording.IsEmptyInstance,
+                      "historicRecording can't be new or the empty instance.");
+
+      return historicRecording;
     }
 
     [DataField("PresentationTime", Default = "ExecutionServer.DateMinValue")]
@@ -278,15 +290,15 @@ namespace Empiria.Land.Registration {
       amendmentOf = (amendmentOf != null) ? amendmentOf : RecordingAct.Empty;
       physicalRecording = (physicalRecording != null) ? physicalRecording : Recording.Empty;
 
+      Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance.");
+      Assertion.Assert(this.Status == RecordableObjectStatus.Incomplete,
+                       "Recording acts can be appended to 'Incomplete' documents only.");
+
       Assertion.AssertObject(recordingActType, "recordingActType");
       Assertion.AssertObject(resource, "resource");
       Assertion.AssertObject(amendmentOf, "amendmentOf");
-      Assertion.AssertObject(physicalRecording, "physicalRecording");
-
-      Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance.");
-      Assertion.Assert(this.Status != RecordableObjectStatus.Closed,
-                       "Recording acts can't be appended to closed documents.");
       Assertion.AssertObject(!resource.IsEmptyInstance, "Resource can't be an empty instance.");
+      physicalRecording = ObtainPhysicalRecording(physicalRecording);
 
       if (this.IsNew) {
         this.Save();
@@ -301,6 +313,20 @@ namespace Empiria.Land.Registration {
       this.Save();
 
       return recordingAct;
+    }
+
+    private Recording ObtainPhysicalRecording(Recording physicalRecording) {
+      Assertion.AssertObject(physicalRecording, "physicalRecording");
+
+      if (this.IsHistoricDocument) {
+        Recording historicRecording = TryGetHistoricRecording();
+        if (!physicalRecording.IsEmptyInstance) {
+          Assertion.Assert(physicalRecording.Equals(historicRecording),
+                           "physicalRecording is not equal to the document's historic recording.");
+        }
+        return historicRecording;
+      }
+      return physicalRecording;
     }
 
     public void ChangeDocumentType(RecordingDocumentType newRecordingDocumentType) {

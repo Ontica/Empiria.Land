@@ -275,10 +275,10 @@ namespace Empiria.Land.Registration {
       return RecordingActsData.GetResourceRecordingActList(this);
     }
 
-    public FixedList<RecordingAct> GetRecordingActsTractUntil(RecordingAct breakAct, bool includeBreakAct) {
+    public FixedList<RecordingAct> GetRecordingActsTractUntil(RecordingAct breakAct,
+                                                              bool includeBreakAct) {
       return RecordingActsData.GetResourceRecordingActListUntil(this, breakAct, includeBreakAct);
     }
-
 
     public RecordingAct GetRecordingAntecedent() {
       return this.GetRecordingAntecedent(RecordingAct.Empty, false);

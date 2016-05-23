@@ -41,35 +41,67 @@ namespace Empiria.Land.UI {
       private set;
     }
 
+    public bool IsHistoricEdition {
+      get;
+      private set;
+    }
+
+    public Recording HistoricRecording {
+      get;
+      private set;
+    }
+
+
     #endregion Public properties
 
     #region Public methods
 
     public abstract RecordingAct[] CreateRecordingActs();
 
-    public void Initialize(LRSTransaction transaction, RecordingDocument document) {
-      Assertion.AssertObject(transaction, "transaction");
+    public void Initialize(RecordingDocument document) {
       Assertion.AssertObject(document, "document");
 
-      this.Transaction = transaction;
       this.Document = document;
+      this.Transaction = document.GetTransaction();
+
+      this.IsHistoricEdition = this.Document.IsHistoricDocument;
+
+      if (this.IsHistoricEdition) {
+        this.HistoricRecording = this.Document.TryGetHistoricRecording();
+      } else {
+        this.HistoricRecording = Recording.Empty;
+      }
+
+      if (this.IsHistoricEdition) {
+        Assertion.Assert(this.Transaction.IsEmptyInstance, "For historic documents, transaction should be the empty instance.");
+      }
     }
 
     public bool IsReadyForEdition() {
-      if (this.Transaction.IsEmptyInstance) {
+      if (this.Document.IsEmptyInstance) {
         return false;
       }
-      if (this.Transaction.Document.IsEmptyInstance) {
+      if (!(ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Register") ||
+            ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Certificates"))) {
         return false;
       }
-      if (!ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Register")) {
+      if (!this.IsHistoricEdition) {
+        if (this.Transaction.IsEmptyInstance) {
+          return false;
+        }
+        if (!IsInValidTransactionStatusForEdition()) {
+          return false;
+        }
+      }
+      if (this.Document.Status != RecordableObjectStatus.Incomplete) {
         return false;
       }
+      return true;
+    }
+
+    private bool IsInValidTransactionStatusForEdition() {
       if (!(this.Transaction.Workflow.CurrentStatus == LRSTransactionStatus.Recording ||
-            this.Transaction.Workflow.CurrentStatus == LRSTransactionStatus.Elaboration)) {
-        return false;
-      }
-      if (this.Transaction.Document.Status != RecordableObjectStatus.Incomplete) {
+          this.Transaction.Workflow.CurrentStatus == LRSTransactionStatus.Elaboration)) {
         return false;
       }
       return true;
