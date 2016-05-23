@@ -24,7 +24,7 @@ namespace Empiria.Land.Registration.Data {
     #region Public methods
 
     static public DataView GetLRSTransactionsForUI(string filter, string sort) {
-      string sql = "SELECT TOP 500 * FROM vwLRSTransactionsAndCurrentTrack";
+      string sql = "SELECT TOP 250 * FROM vwLRSTransactionsAndCurrentTrack";
       if (filter.Length != 0 && sort.Length != 0) {
         sql += " WHERE " + filter + " ORDER BY " + sort;
       } else if (filter.Length != 0 && sort.Length == 0) {

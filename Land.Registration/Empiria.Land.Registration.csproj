@@ -124,7 +124,6 @@
     <Compile Include="Certification\CertificateType.cs" />
     <Compile Include="Data\DocumentsData.cs" />
     <Compile Include="Data\AnalyticsData.cs" />
-    <Compile Include="Data\IndexesData.cs" />
     <Compile Include="Data\RecordingActsData.cs" />
     <Compile Include="Data\PartyData.cs" />
     <Compile Include="Data\WorkflowData.cs" />
@@ -132,6 +131,7 @@
     <Compile Include="Data\ResourceData.cs" />
     <Compile Include="Data\RecordingBooksData.cs" />
     <Compile Include="Empiria.Land.Registration.AssemblyInfo.cs" />
+    <Compile Include="RootTypes\SearchService.cs" />
     <Compile Include="RootTypes\NoPropertyResource.cs" />
     <Compile Include="RootTypes\RecordBookDirectory.cs" />
     <Compile Include="RootTypes\RecordingCertificate.cs" />
