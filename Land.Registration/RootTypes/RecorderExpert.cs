@@ -398,12 +398,12 @@ namespace Empiria.Land.Registration {
 
       RecordingBook recordingBook = Task.PrecedentRecordingBook;
 
-      Recording physicalRecording = recordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber);
+      Recording newPhysicalRecording = recordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber);
       var precedentAct = new InformationAct(RecordingActType.Empty, document,
-                                            resource, physicalRecording);
+                                            resource, newPhysicalRecording);
       precedentAct.Save();
 
-      return physicalRecording;
+      return newPhysicalRecording;
     }
 
     #endregion Physical recording methods

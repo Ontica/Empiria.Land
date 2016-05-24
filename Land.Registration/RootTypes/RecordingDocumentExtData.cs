@@ -9,12 +9,9 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
 
 using Empiria.Contacts;
-using Empiria.DataTypes;
 using Empiria.Json;
-using Empiria.Ontology;
 
 namespace Empiria.Land.Registration {
 
@@ -76,21 +73,6 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    public RoleType MainWitnessPosition {
-      get;
-      set;
-    }
-
-    public Contact SecondaryWitness {
-      get;
-      set;
-    }
-
-    public RoleType SecondaryWitnessPosition {
-      get;
-      set;
-    }
-
     public string StartSheet {
       get;
       set;
@@ -126,9 +108,6 @@ namespace Empiria.Land.Registration {
         BookNo = this.BookNo,
         IssuedByPosition = this.IssuedByPosition,
         MainWitness = this.MainWitness,
-        MainWitnessPosition = this.MainWitnessPosition,
-        SecondaryWitness = this.SecondaryWitness,
-        SecondaryWitnessPosition = this.SecondaryWitnessPosition,
         StartSheet = this.StartSheet,
         EndSheet = this.EndSheet,
       };
@@ -143,7 +122,6 @@ namespace Empiria.Land.Registration {
       this.ExpedientNo = json.Get<String>("CaseRecordNo", String.Empty);
 
       this.MainWitness = json.Get<Contact>("WitnessId", Person.Empty);
-      this.MainWitnessPosition = json.Get<RoleType>("WitnessRoleId", RoleType.Empty);
     }
 
     public JsonObject GetJson(RecordingDocument document) {
@@ -168,9 +146,6 @@ namespace Empiria.Land.Registration {
           json.AddIfValue(new JsonItem("DocumentNo", document.Number));
           if (this.MainWitness != null) {
             json.AddIfValue(new JsonItem("WitnessId", this.MainWitness.Id));
-          }
-          if (this.MainWitnessPosition != null) {
-            json.AddIfValue(new JsonItem("WitnessRoleId", this.MainWitnessPosition.Id));
           }
           break;
         case 2414:

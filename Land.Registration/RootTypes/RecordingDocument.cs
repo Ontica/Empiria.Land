@@ -88,7 +88,7 @@ namespace Empiria.Land.Registration {
 
     public bool IsHistoricDocument {
       get {
-        if (this.IsNew || this.IsEmptyInstance || this.RecordingActs.Count == 0) {
+        if (this.IsEmptyInstance || this.RecordingActs.Count == 0) {
           return false;
         }
         return (!this.RecordingActs[0].PhysicalRecording.IsEmptyInstance);
@@ -101,8 +101,8 @@ namespace Empiria.Land.Registration {
       }
       Recording historicRecording = this.RecordingActs[0].PhysicalRecording;
 
-      Assertion.Assert(!historicRecording.IsNew && historicRecording.IsEmptyInstance,
-                      "historicRecording can't be new or the empty instance.");
+      Assertion.Assert(!historicRecording.IsEmptyInstance,
+                      "historicRecording can't be the empty instance.");
 
       return historicRecording;
     }
@@ -410,7 +410,7 @@ namespace Empiria.Land.Registration {
 
     private void SetAuthorizationTime() {
       // ToDo: ASAP call SetAuthorizationTime() ONLY when the document is closed
-      if (this.IsHistoricDocument) {
+      if (this.RecordingActs.Count == 0 || this.IsHistoricDocument) {
         this.AuthorizationTime = ExecutionServer.DateMinValue;
       } else {
         this.AuthorizationTime = DateTime.Now;

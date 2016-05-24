@@ -39,22 +39,11 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(resource, "resource");
       Assertion.AssertObject(recordingActToCancel, "recordingActToCancel");
 
-      ResourceRole role = ResourceRole.Informative;
-
       if (recordingActToCancel.RecordingActType.IsDomainActType) {
-        var tract = resource.GetRecordingActsTract();
-
-        if (0 == tract.CountAll((x) => x.RecordingActType.IsDomainActType &&
-                                       !x.Equals(recordingActToCancel))) {
-          role = ResourceRole.Canceled;
-        } else {
-          Assertion.Assert(resource.LastRecordingAct.Equals(recordingActToCancel),
-                           "Cancelation of domain acts must be applied only to the " +
-                           "latest domain act and that act also must be the last " +
-                           "recording act in the resource tract.");
-        }
+        AssertIsValidCancelationForDomainAct(resource, recordingActToCancel);
       }
-      base.SetResource(resource, role);
+
+      base.SetResource(resource, ResourceRole.Informative);
 
       recordingActToCancel.Amend(this);
     }
@@ -64,6 +53,24 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Constructors and parsers
+
+    #region Private methods
+
+    private void AssertIsValidCancelationForDomainAct(Resource resource,
+                                                      RecordingAct recordingActToCancel) {
+      //var tract = resource.GetRecordingActsTract();
+
+      //if (0 != tract.CountAll((x) => x.RecordingActType.IsDomainActType &&
+      //                               !x.Equals(recordingActToCancel))) {
+
+      //  Assertion.Assert(resource.LastRecordingAct.Equals(recordingActToCancel),
+      //                   "Cancelation of domain acts must be applied only to the " +
+      //                   "latest domain act and that act also must be the last " +
+      //                   "recording act in the resource tract.");
+      //}
+    }
+
+    #endregion Private methods
 
   } // class CancelationAct
 

@@ -34,24 +34,24 @@ namespace Empiria.Land.Registration {
     protected RecordingAct(RecordingActType recordingActType,
                            RecordingDocument document) : base(recordingActType) {
       Assertion.AssertObject(recordingActType, "recordingActType");
-
       Assertion.AssertObject(document, "document");
-
-      Assertion.Assert(!document.IsNew && !document.IsEmptyInstance,
-                       "document can't be new or the empty instance.");
+      Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance.");
 
       this.Document = document;
-      this.Index = this.Document.AddRecordingAct(this);
     }
 
     protected RecordingAct(RecordingActType recordingActType, RecordingDocument document,
-                           Recording physicalRecording) : this(recordingActType, document) {
-      Assertion.AssertObject(physicalRecording, "physicalRecording");
+                           Recording physicalRecording) : base(recordingActType) {
+      Assertion.AssertObject(recordingActType, "recordingActType");
+      Assertion.AssertObject(document, "document");
+      Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance.");
 
-      Assertion.Assert(!physicalRecording.IsEmptyInstance && !physicalRecording.IsNew,
-                       "physicalRecording can't be new or the empty instance");
+      Assertion.AssertObject(physicalRecording, "physicalRecording");
+      Assertion.Assert(!physicalRecording.IsEmptyInstance,
+                       "physicalRecording can't be the empty instance");
 
       this.PhysicalRecording = physicalRecording;
+      this.Document = document;
     }
 
     static internal RecordingAct Create(RecordingActType recordingActType,
@@ -266,6 +266,12 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public bool IsHistoric {
+      get {
+        return !this.PhysicalRecording.IsEmptyInstance;
+      }
+    }
+
     public string StatusName {
       get {
         switch (this.Status) {
@@ -388,6 +394,8 @@ namespace Empiria.Land.Registration {
       this.ResourceRole = role;
       this.RelatedResource = relatedResource ?? RealEstate.Empty;
       this.Percentage = percentage;
+
+      this.Index = this.Document.AddRecordingAct(this);
     }
 
     protected override void OnInitialize() {
@@ -399,7 +407,7 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnSave() {
-      // writes any chang to the document and the related physical recording
+      // Writes any change to the document and to the related physical recording
       this.Document.Save();
       if (this.PhysicalRecording.IsNew) {
         this.PhysicalRecording.Save();
@@ -407,7 +415,7 @@ namespace Empiria.Land.Registration {
       if (this.Resource.IsNew) {
         this.Resource.Save();
       }
-      // writes the recording act
+      // Writes the recording act
       if (base.IsNew) {
         this.RegistrationTime = DateTime.Now;
         this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);
