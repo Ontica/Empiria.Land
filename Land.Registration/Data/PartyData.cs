@@ -10,7 +10,6 @@
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
-using System.Collections.Generic;
 
 using Empiria.Data;
 using Empiria.Ontology;

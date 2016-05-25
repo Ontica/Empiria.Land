@@ -11,7 +11,6 @@
 using System;
 using System.Web.Http;
 
-using Empiria.Data;
 using Empiria.Land.Certification;
 using Empiria.WebApi;
 using Empiria.WebApi.Models;
