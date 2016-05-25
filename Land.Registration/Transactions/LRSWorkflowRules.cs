@@ -103,14 +103,7 @@ namespace Empiria.Land.Registration.Transactions {
               list.Add(LRSTransactionStatus.Elaboration);
             }
           } else if (ExecutionServer.LicenseName == "Tlaxcala") {
-            if (LRSWorkflowRules.IsRecordingDocumentCase(type, docType)) {
-              list.Add(LRSTransactionStatus.Recording);
-            } else if (LRSWorkflowRules.IsCertificateIssueCase(type, docType)) {
-              list.Add(LRSTransactionStatus.Elaboration);
-            } else {
-              list.Add(LRSTransactionStatus.Elaboration);
-              list.Add(LRSTransactionStatus.Recording);
-            }
+            AddRecordingOrElaborationStatus(list, type, docType);
             if (LRSWorkflowRules.IsArchivable(type, docType)) {
               list.Add(LRSTransactionStatus.Finished);
             }
@@ -129,11 +122,12 @@ namespace Empiria.Land.Registration.Transactions {
 
         case LRSTransactionStatus.Juridic:           // Only used in Tlaxcala
           if (ExecutionServer.LicenseName == "Tlaxcala") {
-            list.Add(LRSTransactionStatus.Control);
+            AddRecordingOrElaborationStatus(list, type, docType);
             list.Add(LRSTransactionStatus.Revision);
             list.Add(LRSTransactionStatus.OnSign);
             list.Add(LRSTransactionStatus.ToReturn);
             list.Add(LRSTransactionStatus.Finished);
+            list.Add(LRSTransactionStatus.Control);
           }
           break;
 
@@ -142,8 +136,8 @@ namespace Empiria.Land.Registration.Transactions {
             list.Add(LRSTransactionStatus.Recording);
             list.Add(LRSTransactionStatus.Revision);
             list.Add(LRSTransactionStatus.Qualification);
-            list.Add(LRSTransactionStatus.Control);
             list.Add(LRSTransactionStatus.ToReturn);
+            list.Add(LRSTransactionStatus.Control);
           }
           break;
 
@@ -218,14 +212,7 @@ namespace Empiria.Land.Registration.Transactions {
             if (LRSWorkflowRules.IsArchivable(type, docType)) {
               list.Add(LRSTransactionStatus.Finished);
             }
-            if (LRSWorkflowRules.IsRecordingDocumentCase(type, docType)) {
-              list.Add(LRSTransactionStatus.Recording);
-            } else if (LRSWorkflowRules.IsCertificateIssueCase(type, docType)) {
-              list.Add(LRSTransactionStatus.Elaboration);
-            } else {
-              list.Add(LRSTransactionStatus.Elaboration);
-              list.Add(LRSTransactionStatus.Recording);
-            }
+            AddRecordingOrElaborationStatus(list, type, docType);
             list.Add(LRSTransactionStatus.Control);
           }
           break;
@@ -275,6 +262,19 @@ namespace Empiria.Land.Registration.Transactions {
           break;
       }
       return list;
+    }
+
+    private static void AddRecordingOrElaborationStatus(List<LRSTransactionStatus> list,
+                                                        LRSTransactionType type,
+                                                        LRSDocumentType docType) {
+      if (LRSWorkflowRules.IsRecordingDocumentCase(type, docType)) {
+        list.Add(LRSTransactionStatus.Recording);
+      } else if (LRSWorkflowRules.IsCertificateIssueCase(type, docType)) {
+        list.Add(LRSTransactionStatus.Elaboration);
+      } else {
+        list.Add(LRSTransactionStatus.Elaboration);
+        list.Add(LRSTransactionStatus.Recording);
+      }
     }
 
     static public string GetStatusName(LRSTransactionStatus status) {
