@@ -381,15 +381,18 @@ namespace Empiria.Land.Registration.Transactions {
       return copy;
     }
 
-    public void AttachDocument(RecordingDocument document) {
+    public void AttachDocument(RecordingDocument documentToAttach) {
       Assertion.Assert(!this.IsEmptyInstance && !this.IsNew,
                        "Document can't be attached to a new or empty transaction.");
-      Assertion.AssertObject(document, "document");
-      Assertion.Assert(document.IsNew, "document should be a new instance.");
+      Assertion.Assert(!documentToAttach.IsEmptyInstance, "Attached documents can't be the empty instance.");
+      Assertion.Assert(this.Document.IsEmptyInstance ||
+                       documentToAttach.Equals(this.Document),
+                       "Transaction's document should be empty in order to be changed.");
 
-      document.PresentationTime = this.PresentationTime;
-      document.Save();
-      this.Document = document;
+      /// ToDo: Should be a DB transactional op
+      documentToAttach.PresentationTime = this.PresentationTime;
+      documentToAttach.Save();
+      this.Document = documentToAttach;
       this.Save();
     }
 
