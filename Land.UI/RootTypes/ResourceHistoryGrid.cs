@@ -63,11 +63,11 @@ namespace Empiria.Land.UI {
     private string GetHeader() {
       string template =
             "<tr class='detailsHeader'>" +
-              "<td>Presentado el</td>" +
-              "<td style='width:160px'> Acto jurídico</td>" +
-              "<td style='white-space:nowrap'> Antecedente / Fracción </td>" +
-              "<td style='width:200px'> Registrado en</td>" +
-              "<td style ='width:160px'> Registró </ td >" +
+              "<td>Present/Registro</td>" +
+              "<td style='width:160px'>Acto jurídico</td>" +
+              "<td style='white-space:nowrap'>Antecedente / Fracción</td>" +
+              "<td style='width:200px'>Registrado en</td>" +
+              "<td style ='width:160px'>Registró</ td >" +
             "</tr>";
       return template;
     }
@@ -75,7 +75,7 @@ namespace Empiria.Land.UI {
     private string GetRow(RecordingAct recordingAct, int index) {
       const string template =
            "<tr class='{{CLASS}}'>" +
-             "<td>{{PRESENTATION.DATE}}</td>" +
+             "<td>{{PRESENTATION.DATE}}<br/>{{AUTHORIZATION.DATE}}</td>" +
              "<td style='white-space:normal'>{{RECORDING.ACT}}</td>" +
              "<td style='white-space:normal;'>{{PARTITION}}</td>" +
              "<td style='white-space:{{WHITE-SPACE}};'>" +
@@ -100,6 +100,7 @@ namespace Empiria.Land.UI {
       }
 
       row = row.Replace("{{PRESENTATION.DATE}}", GetDateAsText(recordingAct.Document.PresentationTime));
+      row = row.Replace("{{AUTHORIZATION.DATE}}", GetDateAsText(recordingAct.Document.AuthorizationTime));
       row = row.Replace("{{RECORDED.BY}}", recordingAct.RegisteredBy.Nickname);
 
       row = row.Replace("{{DOCUMENT.ID}}", recordingAct.Document.Id.ToString());
