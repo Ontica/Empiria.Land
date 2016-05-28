@@ -12,18 +12,17 @@
 using System;
 using System.Collections.Generic;
 using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
 
 using Empiria.Contacts;
 using Empiria.DataTypes;
 using Empiria.Geography;
 
-using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
-
 using Empiria.Presentation;
 using Empiria.Presentation.Web;
 using Empiria.Presentation.Web.Content;
+
+using Empiria.Land.Registration;
+using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.UI {
 

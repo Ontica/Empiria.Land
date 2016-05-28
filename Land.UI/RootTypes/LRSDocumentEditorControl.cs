@@ -2,10 +2,10 @@
 *                                                                                                             *
 *  Solution  : Empiria Land                                    System   : Land Registration System            *
 *  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land.UI                     *
-*  Type      : LRSGridControls                                 Pattern  : User Control                        *
+*  Type      : LRSDocumentEditorControl                        Pattern  : User Control                        *
 *  Version   : 2.1                                             License  : Please read license.txt file        *
 *                                                                                                             *
-*  Summary   : Static class that generates predefined grid content for Land Registration System data.         *
+*  Summary   : Base class for the document editor control.                                                    *
 *                                                                                                             *
 ********************************** Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -15,11 +15,14 @@ using Empiria.Land.Registration;
 
 namespace Empiria.Land.UI {
 
+  /// <summary>Base class for the document editor control.</summary>
   public abstract class LRSDocumentEditorControl : WebUserControl {
 
     #region Public properties
 
-    static private string _virtualPath = ConfigurationData.GetString("UIControls.RecordingDocumentEditorControl");
+    static private string _virtualPath =
+                          ConfigurationData.GetString("UIControls.RecordingDocumentEditorControl");
+
     static public string ControlVirtualPath {
       get {
         return _virtualPath;

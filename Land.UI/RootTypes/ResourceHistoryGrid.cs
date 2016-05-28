@@ -48,7 +48,7 @@ namespace Empiria.Land.UI {
 
         html += this.GetRow(recordingAct, i);
       }
-      return html;
+      return HtmlFormatters.TableWrapper(html);
     }
 
     private string GetTitle() {
@@ -98,9 +98,7 @@ namespace Empiria.Land.UI {
         row = row.Replace("{{TRANSACTION}}", "Trámite:" + recordingAct.Document.GetTransaction().UID);
         row = row.Replace("{{WHITE-SPACE}}", "nowrap");
       }
-
-      row = row.Replace("{{PRESENTATION.DATE}}", GetDateAsText(recordingAct.Document.PresentationTime));
-      row = row.Replace("{{AUTHORIZATION.DATE}}", GetDateAsText(recordingAct.Document.AuthorizationTime));
+      row = HtmlFormatters.SetPresentationAndAuthorizationDates(row, recordingAct.Document);
       row = row.Replace("{{RECORDED.BY}}", recordingAct.RegisteredBy.Nickname);
 
       row = row.Replace("{{DOCUMENT.ID}}", recordingAct.Document.Id.ToString());
@@ -110,6 +108,10 @@ namespace Empiria.Land.UI {
     }
 
     private string GetPartitionOrAntecedentCell(RecordingAct recordingAct) {
+      if (!(this._resource is RealEstate)) {
+        return "&nbsp;";
+      }
+
       if (Resource.IsCreationalRole(recordingAct.ResourceRole)) {
 
         var realEstate = (RealEstate) recordingAct.Resource;
@@ -118,9 +120,10 @@ namespace Empiria.Land.UI {
           return "Sin antecedente registral";
         } else if (realEstate.Equals(this._resource)) {
           return "Creado como <b>" + realEstate.PartitionNo +
-                 "</b> del predio " + NoWrap(recordingAct.RelatedResource.UID);
+                  "</b> del predio " + HtmlFormatters.NoWrap(recordingAct.RelatedResource.UID);
         } else {
-          return "Sobre <b>" + realEstate.PartitionNo + "</b> con folio real " + NoWrap(realEstate.UID);
+          return "Sobre <b>" + realEstate.PartitionNo +
+                  "</b> con folio real " + HtmlFormatters.NoWrap(realEstate.UID);
         }
       }
       return "&nbsp;";
@@ -141,22 +144,6 @@ namespace Empiria.Land.UI {
     }
 
     #endregion Private methods
-
-    #region Auxiliar methods
-
-    private string GetDateAsText(DateTime date) {
-      if (date == ExecutionServer.DateMinValue || date == ExecutionServer.DateMaxValue) {
-        return "No consta";
-      } else {
-        return date.ToString(@"dd/MMM/yyyy");
-      }
-    }
-
-    private string NoWrap(string text) {
-      return "<span style='white-space:nowrap;'>" + text + "</span>";
-    }
-
-    #endregion Auxiliar methods
 
   } // class ResourceHistoryGrid
 

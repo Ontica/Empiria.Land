@@ -5,7 +5,7 @@
 *  Type      : RecordingActsGrid                               Pattern  : Standard class                      *
 *  Version   : 2.1                                             License  : Please read license.txt file        *
 *                                                                                                             *
-*  Summary   : Generates the grid HTML content for a document's recording acts.                               *
+*  Summary   : Generates an HTML grid with the recording acts of a given document.                            *
 *                                                                                                             *
 ********************************** Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -15,7 +15,7 @@ using Empiria.Land.Registration;
 
 namespace Empiria.Land.UI {
 
-  /// <summary>Generates the grid HTML content for a document's recording acts.</summary>
+  /// <summary>Generates an HTML grid with the recording acts of a given document.</summary>
   public class RecordingActsGrid {
 
     #region Fields
@@ -44,9 +44,8 @@ namespace Empiria.Land.UI {
         var recordingAct = document.RecordingActs[i];
 
         html += this.GetRecordingActRow(recordingAct);
-
       }
-      return html;
+      return HtmlFormatters.TableWrapper(html);
     }
 
     private string GetRecordingActRow(RecordingAct recordingAct) {
@@ -155,8 +154,8 @@ namespace Empiria.Land.UI {
     }
 
     static private string GetRecordingDates(RecordingDocument document) {
-      return "Presentación: " + GetDateAsText(document.PresentationTime) + " &nbsp; " +
-             "Registro: " + GetDateAsText(document.AuthorizationTime);
+      return "Presentación: " + HtmlFormatters.GetDateAsText(document.PresentationTime) + " &nbsp; " +
+             "Registro: " + HtmlFormatters.GetDateAsText(document.AuthorizationTime);
     }
 
     static private string GetRowTemplate(RecordingAct recordingAct) {
@@ -201,14 +200,6 @@ namespace Empiria.Land.UI {
       html = html.Replace("{{RESOURCE.ID}}", recordingAct.Resource.Id.ToString());
 
       return html;
-    }
-
-    private static string GetDateAsText(DateTime date) {
-      if (date == ExecutionServer.DateMinValue || date == ExecutionServer.DateMaxValue) {
-        return "N/D";
-      } else {
-        return date.ToString("dd/MMM/yyyy");
-      }
     }
 
     #endregion Private auxiliar methods

@@ -48,7 +48,7 @@ namespace Empiria.Land.UI {
 
         html += this.GetRow(physicalRecording, i);
       }
-      return html;
+      return HtmlFormatters.TableWrapper(html);
     }
 
     private string GetTitle() {
@@ -94,8 +94,7 @@ namespace Empiria.Land.UI {
       string row = template.Replace("{{CLASS}}", (index % 2 == 0) ? "detailsItem" : "detailsOddItem");
       row = row.Replace("{{RECORDING.NUMBER}}", physicalRecording.Number);
       row = row.Replace("{{DOCUMENT.ID}}", physicalRecording.Document.Id.ToString());
-      row = row.Replace("{{PRESENTATION.DATE}}", GetDateAsText(physicalRecording.Document.PresentationTime));
-      row = row.Replace("{{AUTHORIZATION.DATE}}", GetDateAsText(physicalRecording.Document.AuthorizationTime));
+      row = HtmlFormatters.SetPresentationAndAuthorizationDates(row, physicalRecording.Document);
 
       for (int i = 0; i < recordingActs.Count; i++) {
         var recordingAct = recordingActs[i];
@@ -139,18 +138,6 @@ namespace Empiria.Land.UI {
       row = row.Replace("{{REGISTERED.BY}}", recordingAct.RegisteredBy.Nickname);
 
       return row;
-    }
-
-    private string GetDateAsText(DateTime date) {
-      if (date == ExecutionServer.DateMinValue || date == ExecutionServer.DateMaxValue) {
-        return "No consta";
-      } else {
-        return date.ToString(@"dd/MMM/yyyy");
-      }
-    }
-
-    private string NoWrap(string text) {
-      return "<span style='white-space:nowrap;'>" + text + "</span>";
     }
 
     #endregion Auxiliar methods

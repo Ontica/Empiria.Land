@@ -132,11 +132,15 @@ namespace Empiria.Land.Registration {
 
       string filter = String.Empty;
 
-      keywords = EmpiriaString.RemovePunctuation(keywords);
-      if (searchAsIs || !keywords.Contains(" ")) {
+      if (searchAsIs) {
         filter = SearchExpression.ParseLike(fieldName, keywords, true);
       } else {
-        filter = SearchExpression.ParseAndLike(fieldName, keywords);
+        keywords = EmpiriaString.RemovePunctuation(keywords);
+        if (!keywords.Contains(" ")) {
+          filter = SearchExpression.ParseLike(fieldName, keywords, true);
+        } else {
+          filter = SearchExpression.ParseAndLike(fieldName, keywords);
+        }
       }
 
       if (filter.Length != 0) {
