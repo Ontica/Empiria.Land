@@ -23,7 +23,8 @@ namespace Empiria.Land.Registration {
   /// <summary>Partitioned type that represents a recording act. All recording acts types must be
   /// descendents of this type.</summary>
   [PartitionedType(typeof(RecordingActType))]
-  public abstract class RecordingAct : BaseObject, IExtensible<RecordingActExtData>, IProtected {
+  public abstract class RecordingAct : BaseObject, IResourceTractItem,
+                                       IExtensible<RecordingActExtData>, IProtected {
 
     #region Constructors and parsers
 
@@ -327,6 +328,14 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    string IResourceTractItem.TractPrelationStamp {
+      get {
+        return this.Document.PresentationTime.ToString("yyyyMMddTHH:mm@") +
+               this.Document.AuthorizationTime.ToString("yyyyMMddTHH:mm@") +
+               this.RegistrationTime.ToString("yyyyMMddTHH:mm");
+      }
+    }
+
     #endregion Public properties
 
     #region Public methods
@@ -352,10 +361,12 @@ namespace Empiria.Land.Registration {
 
     internal void Delete() {
       if (this.PhysicalRecording.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
+        throw new LandRegistrationException(
+                      LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
       }
       if (this.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, this.Id);
+        throw new LandRegistrationException(
+                      LandRegistrationException.Msg.CantAlterClosedRecordingAct, this.Id);
       }
       if (this.IsEmptyInstance) {
         return;

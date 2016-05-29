@@ -122,6 +122,8 @@
     <Compile Include="Certification\CertificateDTO.cs" />
     <Compile Include="Certification\CertificateExtData.cs" />
     <Compile Include="Certification\CertificateType.cs" />
+    <Compile Include="Data\CertificatesData.cs" />
+    <Compile Include="RootTypes\IResourceTractItem.cs" />
     <Compile Include="Data\DocumentsData.cs" />
     <Compile Include="Data\AnalyticsData.cs" />
     <Compile Include="Data\RecordingActsData.cs" />

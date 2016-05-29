@@ -14,6 +14,8 @@ using System.Data;
 
 using Empiria.Data;
 
+using Empiria.Land.Data;
+
 namespace Empiria.Land.Registration.Data {
 
   /// <summary>Provides database read and write methods for recording acts.</summary>
@@ -45,6 +47,19 @@ namespace Empiria.Land.Registration.Data {
 
       return DataReader.GetList<RecordingAct>(operation,
                                               (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
+    }
+
+    static internal FixedList<IResourceTractItem> GetResourceFullTractIndexWithCertificates(Resource resource) {
+      var list = new List<IResourceTractItem>();
+
+      var recordingActs = RecordingActsData.GetResourceFullTractIndex(resource);
+      var certificates = CertificatesData.ResourceEmittedCertificates(resource);
+
+      list.AddRange(recordingActs);
+      list.AddRange(certificates);
+      list.Sort((x, y) => x.TractPrelationStamp.CompareTo(y.TractPrelationStamp));
+
+      return list.ToFixedList();
     }
 
     static public FixedList<RecordingAct> GetResourceRecordingActListUntil(Resource resource, RecordingAct breakAct,

@@ -271,6 +271,10 @@ namespace Empiria.Land.Registration {
       return RecordingActsData.GetResourceFullTractIndex(this);
     }
 
+    public FixedList<IResourceTractItem> GetFullRecordingActsTractWithCertificates() {
+      return RecordingActsData.GetResourceFullTractIndexWithCertificates(this);
+    }
+
     public FixedList<RecordingAct> GetRecordingActsTract() {
       return RecordingActsData.GetResourceRecordingActList(this);
     }

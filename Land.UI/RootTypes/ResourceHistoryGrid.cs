@@ -11,6 +11,7 @@
 using System;
 
 using Empiria.Land.Registration;
+using Empiria.Land.Certification;
 
 namespace Empiria.Land.UI {
 
@@ -40,13 +41,19 @@ namespace Empiria.Land.UI {
     #region Private methods
 
     private string GetHtml() {
-      FixedList<RecordingAct> resourceHistory = _resource.GetFullRecordingActsTract();
+      FixedList<IResourceTractItem> resourceHistory = _resource.GetFullRecordingActsTractWithCertificates();
 
       string html = this.GetTitle() + this.GetHeader();
       for (int i = resourceHistory.Count - 1; 0 <= i; i--) {
-        var recordingAct = resourceHistory[i];
+        IResourceTractItem item = resourceHistory[i];
 
-        html += this.GetRow(recordingAct, i);
+        if (item is RecordingAct) {
+          html += this.GetRecordingActRow((RecordingAct) item, i);
+        } else if (item is Certificate) {
+          html += this.GetCertificateRow((Certificate) item, i);
+        } else {
+          Assertion.AssertNoReachThisCode("Invalid resource history tract item type.");
+        }
       }
       return HtmlFormatters.TableWrapper(html);
     }
@@ -54,7 +61,7 @@ namespace Empiria.Land.UI {
     private string GetTitle() {
       string template =
             "<tr class='detailsTitle'>" +
-              "<td colspan='5'>Historia del predio {{RESOURCE.UID}}</td>" +
+              "<td colspan='5'>Historia del predio <b>{{RESOURCE.UID}}</b></td>" +
             "</tr>";
 
       return template.Replace("{{RESOURCE.UID}}", this._resource.UID);
@@ -72,7 +79,35 @@ namespace Empiria.Land.UI {
       return template;
     }
 
-    private string GetRow(RecordingAct recordingAct, int index) {
+    private string GetCertificateRow(Certificate certificate, int index) {
+      const string template =
+         "<tr class='{{CLASS}}'>" +
+           "<td>{{PRESENTATION.DATE}}<br/>{{ISSUE.DATE}}</td>" +
+           "<td style='white-space:normal'>Emisión de certificado</td>" +
+           "<td>{{CERTIFICATE.TYPE}}</td>" +
+           "<td style='white-space:nowrap;'>" +
+             "<a href='javascript:doOperation(\"onSelectCertificate\", {{CERTIFICATE.ID}});'>" +
+                 "{{CERTIFICATE.UID}}</a>" +
+             "<br>{{TRANSACTION}}</td>" +
+           "<td>{{ISSUED.BY}}</td>" +
+         "</tr>";
+
+      string row = template.Replace("{{CLASS}}", (index % 2 == 0) ? "detailsItem" : "detailsOddItem");
+
+      row = row.Replace("{{PRESENTATION.DATE}}",
+                        HtmlFormatters.GetDateAsText(certificate.Transaction.PresentationTime));
+      row = row.Replace("{{ISSUE.DATE}}",
+                        HtmlFormatters.GetDateAsText(certificate.IssueTime));
+      row = row.Replace("{{CERTIFICATE.TYPE}}", certificate.CertificateType.DisplayName);
+      row = row.Replace("{{CERTIFICATE.ID}}", certificate.Id.ToString());
+      row = row.Replace("{{CERTIFICATE.UID}}", certificate.UID);
+      row = row.Replace("{{TRANSACTION}}", "Trámite:" + certificate.Transaction.UID);
+      row = row.Replace("{{ISSUED.BY}}", certificate.IssuedBy.Nickname);
+
+      return row;
+    }
+
+    private string GetRecordingActRow(RecordingAct recordingAct, int index) {
       const string template =
            "<tr class='{{CLASS}}'>" +
              "<td>{{PRESENTATION.DATE}}<br/>{{AUTHORIZATION.DATE}}</td>" +
@@ -119,11 +154,23 @@ namespace Empiria.Land.UI {
         if (recordingAct.ResourceRole == ResourceRole.Created) {
           return "Sin antecedente registral";
         } else if (realEstate.Equals(this._resource)) {
-          return "Creado como <b>" + realEstate.PartitionNo +
-                  "</b> del predio " + HtmlFormatters.NoWrap(recordingAct.RelatedResource.UID);
+          var temp = "Creado como <b>" + realEstate.PartitionNo + "</b> del predio " +
+                      "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
+                      "{{RESOURCE.UID}}</a>";
+          temp = temp.Replace("{{RESOURCE.ID}}", recordingAct.RelatedResource.Id.ToString());
+          temp = temp.Replace("{{RECORDING.ACT.ID}}", recordingAct.Id.ToString());
+          temp = temp.Replace("{{RESOURCE.UID}}", HtmlFormatters.NoWrap(recordingAct.RelatedResource.UID));
+
+          return temp;
         } else {
-          return "Sobre <b>" + realEstate.PartitionNo +
-                  "</b> con folio real " + HtmlFormatters.NoWrap(realEstate.UID);
+          var temp = "Sobre <b>" + realEstate.PartitionNo + "</b> con folio real " +
+                      "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
+                      "{{RESOURCE.UID}}</a>";
+          temp = temp.Replace("{{RESOURCE.ID}}", realEstate.Id.ToString());
+          temp = temp.Replace("{{RECORDING.ACT.ID}}", recordingAct.Id.ToString());
+          temp = temp.Replace("{{RESOURCE.UID}}", HtmlFormatters.NoWrap(realEstate.UID));
+
+          return temp;
         }
       }
       return "&nbsp;";

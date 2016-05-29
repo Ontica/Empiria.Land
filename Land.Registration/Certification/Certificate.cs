@@ -15,6 +15,7 @@ using Empiria.Contacts;
 using Empiria.Ontology;
 using Empiria.Security;
 
+using Empiria.Land.Data;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
@@ -22,7 +23,7 @@ namespace Empiria.Land.Certification {
 
   /// <summary>Represents a certificate for property ownership or non ownership.</summary>
   [PartitionedType(typeof(CertificateType))]
-  public partial class Certificate : BaseObject, IProtected {
+  public partial class Certificate : BaseObject, IResourceTractItem, IProtected {
 
     #region Constructors and parsers
 
@@ -89,7 +90,7 @@ namespace Empiria.Land.Certification {
       private set;
     }
 
-    private string Keywords {
+    internal string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.UID, this.Property.UID,
                                            this.OwnerName, this.Transaction.UID,
@@ -129,27 +130,35 @@ namespace Empiria.Land.Certification {
     }
 
     [DataField("IssueMode", Default = CertificateIssueMode.Manual)]
-    private CertificateIssueMode IssueMode {
+    internal CertificateIssueMode IssueMode {
       get;
-      set;
+      private set;
     }
 
     [DataField("PostedById")]
-    private Contact PostedBy {
+    internal Contact PostedBy {
       get;
-      set;
+      private set;
     }
 
     [DataField("PostingTime", Default = "DateTime.Now")]
-    private DateTime PostingTime {
+    internal DateTime PostingTime {
       get;
-      set;
+      private set;
     }
 
     [DataField("CertificateStatus", Default = CertificateStatus.Pending)]
     public CertificateStatus Status {
       get;
       private set;
+    }
+
+    string IResourceTractItem.TractPrelationStamp {
+      get {
+        return this.Transaction.PresentationTime.ToString("yyyyMMddTHH:mm@") +
+               this.IssueTime.ToString("yyyyMMddTHH:mm@") +
+               this.PostingTime.ToString("yyyyMMddTHH:mm");
+      }
     }
 
     #endregion Properties
@@ -319,56 +328,16 @@ namespace Empiria.Land.Certification {
       if (this.IsNew) {
         this.PostingTime = DateTime.Now;
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-        this.UID = Certificate.BuildCertificateUID();
+        this.UID = CertificatesData.BuildCertificateUID();
       }
       if (this.Status != CertificateStatus.Deleted ||
           this.Status != CertificateStatus.Canceled) {
         this.AsText = CertificateBuilder.Build(this);
       }
-      this.Write();
+      CertificatesData.WriteCertificate(this);
     }
 
     #endregion Protected methods
-
-    #region Private methods
-
-    static private string BuildCertificateUID() {
-      string temp = String.Empty;
-      int hashCode = 0;
-      bool useLetters = false;
-      for (int i = 0; i < 7; i++) {
-        if (useLetters) {
-          temp += EmpiriaMath.GetRandomCharacter(temp);
-          temp += EmpiriaMath.GetRandomCharacter(temp);
-        } else {
-          temp += EmpiriaMath.GetRandomDigit(temp);
-          temp += EmpiriaMath.GetRandomDigit(temp);
-        }
-        hashCode += ((Convert.ToInt32(temp[temp.Length - 2]) +
-                      Convert.ToInt32(temp[temp.Length - 1])) % ((int) Math.Pow(i + 1, 2)));
-        useLetters = !useLetters;
-      }
-      string prefix = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
-      temp = "CE" + temp.Substring(0, 4) + "-" + temp.Substring(4, 6) + "-" + temp.Substring(10, 4);
-
-      temp += "ABCDEFHJKMNPRTWXYZ".Substring((hashCode * Convert.ToInt32(prefix[0])) % 17, 1);
-      temp += "9A8B7CD5E4F2".Substring((hashCode * Convert.ToInt32(prefix[1])) % 11, 1);
-
-      return temp;
-    }
-
-    private void Write() {
-      var op = Empiria.Data.DataOperation.Parse("writeLRSCertificate",
-                            Id, CertificateType.Id, UID,
-                            Transaction.Id, RecorderOffice.Id, Property.Id, OwnerName,
-                            UserNotes, ExtensionData.ToJson(), AsText, Keywords,
-                            IssueTime, IssuedBy.Id, SignedBy.Id, (char) IssueMode, PostedBy.Id,
-                            PostingTime, (char) Status, Integrity.GetUpdatedHashCode());
-
-      Empiria.Data.DataWriter.Execute(op);
-    }
-
-    #endregion Private methods
 
   } // class Certificate
 

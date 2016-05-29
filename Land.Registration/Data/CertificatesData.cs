@@ -12,6 +12,8 @@ using System;
 using System.Data;
 
 using Empiria.Data;
+
+using Empiria.Land.Registration;
 using Empiria.Land.Certification;
 
 namespace Empiria.Land.Data {
@@ -21,7 +23,7 @@ namespace Empiria.Land.Data {
 
     #region Public methods
 
-    static internal string GenerateCertificateUID() {
+    static internal string BuildCertificateUID() {
       string temp = String.Empty;
       int hashCode = 0;
       bool useLetters = false;
@@ -44,6 +46,28 @@ namespace Empiria.Land.Data {
       temp += "9A8B7CD5E4F2".Substring((hashCode * Convert.ToInt32(prefix[1])) % 11, 1);
 
       return temp;
+    }
+
+    static internal FixedList<Certificate> ResourceEmittedCertificates(Resource resource) {
+      if (resource.IsEmptyInstance) {
+        return new FixedList<Certificate>();
+      }
+
+      var operation = DataOperation.Parse("qryLRSResourceEmittedCertificates", resource.Id);
+
+      return DataReader.GetList<Certificate>(operation,
+                                             (x) => BaseObject.ParseList<Certificate>(x)).ToFixedList();
+    }
+
+    internal static void WriteCertificate(Certificate o) {
+      var op = DataOperation.Parse("writeLRSCertificate",
+                          o.Id, o.CertificateType.Id, o.UID,
+                          o.Transaction.Id, o.RecorderOffice.Id, o.Property.Id, o.OwnerName,
+                          o.UserNotes, o.ExtensionData.ToJson(), o.AsText, o.Keywords,
+                          o.IssueTime, o.IssuedBy.Id, o.SignedBy.Id, (char) o.IssueMode,
+                          o.PostedBy.Id, o.PostingTime, (char) o.Status, o.Integrity.GetUpdatedHashCode());
+
+      DataWriter.Execute(op);
     }
 
     #endregion Public methods
