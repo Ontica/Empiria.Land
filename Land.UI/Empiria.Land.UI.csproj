@@ -116,6 +116,7 @@
     <Compile Include="Empiria.Land.UI.AssemblyInfo.cs" />
     <Compile Include="RootTypes\PhysicalRecordingsWithRecordingActsGrid.cs" />
     <Compile Include="RootTypes\HtmlFormatters.cs" />
+    <Compile Include="RootTypes\CertificatesGrid.cs" />
     <Compile Include="RootTypes\ResourceHistoryGrid.cs" />
     <Compile Include="RootTypes\RecordingActsGrid.cs" />
     <Compile Include="RootTypes\AppendRecordingActEditorControlBase.cs">
