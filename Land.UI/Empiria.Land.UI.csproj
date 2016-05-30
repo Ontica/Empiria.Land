@@ -114,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Empiria.Land.UI.AssemblyInfo.cs" />
+    <Compile Include="RootTypes\DocumentRecordingActsGrid.cs" />
     <Compile Include="RootTypes\PhysicalRecordingsWithRecordingActsGrid.cs" />
     <Compile Include="RootTypes\HtmlFormatters.cs" />
     <Compile Include="RootTypes\CertificatesGrid.cs" />
