@@ -12,6 +12,7 @@ using System;
 
 using Empiria.Contacts;
 using Empiria.DataTypes;
+using Empiria.Land.Certification;
 using Empiria.Land.Registration.Data;
 using Empiria.Security;
 
@@ -397,7 +398,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public string GetDigitalSign() {
-      return Empiria.Security.Cryptographer.CreateDigitalSign(GetDigitalString());
+      return Cryptographer.CreateDigitalSign(GetDigitalString());
     }
 
     public string GetDigitalString() {
@@ -426,6 +427,10 @@ namespace Empiria.Land.Registration.Transactions {
       temp += "||";
 
       return temp;
+    }
+
+    public FixedList<Certificate> GetIssuedCertificates() {
+      return Empiria.Land.Data.CertificatesData.GetTransactionIssuedCertificates(this);
     }
 
     internal void OnRecordingActsUpdated() {

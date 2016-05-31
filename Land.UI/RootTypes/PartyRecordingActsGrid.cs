@@ -11,7 +11,6 @@
 using System;
 
 using Empiria.Land.Registration;
-using Empiria.Land.Certification;
 
 namespace Empiria.Land.UI {
 

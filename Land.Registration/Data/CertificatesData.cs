@@ -15,6 +15,7 @@ using Empiria.Data;
 
 using Empiria.Land.Registration;
 using Empiria.Land.Certification;
+using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Data {
 
@@ -48,18 +49,27 @@ namespace Empiria.Land.Data {
       return temp;
     }
 
+    static internal FixedList<Certificate> GetTransactionIssuedCertificates(LRSTransaction transaction) {
+      if (transaction.IsEmptyInstance) {
+        return new FixedList<Certificate>();
+      }
+
+      var op = DataOperation.Parse("qryLRSCertificatesByTransaction", transaction.Id);
+
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<Certificate>(x)).ToFixedList();
+    }
+
     static internal FixedList<Certificate> ResourceEmittedCertificates(Resource resource) {
       if (resource.IsEmptyInstance) {
         return new FixedList<Certificate>();
       }
 
-      var operation = DataOperation.Parse("qryLRSResourceEmittedCertificates", resource.Id);
+      var op = DataOperation.Parse("qryLRSResourceEmittedCertificates", resource.Id);
 
-      return DataReader.GetList<Certificate>(operation,
-                                             (x) => BaseObject.ParseList<Certificate>(x)).ToFixedList();
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<Certificate>(x)).ToFixedList();
     }
 
-    internal static void WriteCertificate(Certificate o) {
+    static internal void WriteCertificate(Certificate o) {
       var op = DataOperation.Parse("writeLRSCertificate",
                           o.Id, o.CertificateType.Id, o.UID,
                           o.Transaction.Id, o.RecorderOffice.Id, o.Property.Id, o.OwnerName,
