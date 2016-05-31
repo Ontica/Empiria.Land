@@ -106,6 +106,21 @@ namespace Empiria.Land.Registration.Data {
       return view.ToTable();
     }
 
+
+    internal static FixedList<RecordingActParty> GetRecordingActs(Party party) {
+      string sql = "SELECT * FROM LRSRecordingActParties " +
+                   "WHERE (PartyId = {0} OR PartyOfId = {0}) AND " +
+                   "RecActPartyStatus <> 'X'";
+
+      sql = String.Format(sql, party.Id);
+
+      var list = DataReader.GetList(DataOperation.Parse(sql), (x) => BaseObject.ParseList<RecordingActParty>(x));
+
+      list.Sort((x, y) => (((IResourceTractItem) x.RecordingAct).TractPrelationStamp).CompareTo(
+                                                      ((IResourceTractItem) y.RecordingAct).TractPrelationStamp));
+      return list.ToFixedList();
+    }
+
     static public DataTable GetInvolvedParties(ObjectTypeInfo partyType, RecordingAct recordingAct,
                                                string keywords) {
       DataTable table = new DataTable();

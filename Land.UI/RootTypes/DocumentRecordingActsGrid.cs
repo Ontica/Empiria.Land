@@ -72,7 +72,7 @@ namespace Empiria.Land.UI {
     private string GetHeader() {
       string template =
             "<tr class='detailsHeader'>" +
-              "<td style='width:160px'>Acto jurídico</td>" +
+              "<td style='width:260px'>Acto jurídico</td>" +
               "<td style='white-space:nowrap'>Folio real</td>" +
               "<td style ='width:160px'>Registró</td>" +
             "</tr>";
@@ -82,7 +82,7 @@ namespace Empiria.Land.UI {
     private string GetRow(RecordingAct recordingAct, int index) {
       const string template =
           "<tr class='{{CLASS}}'>" +
-             "<td style='white-space:normal'>{{RECORDING.ACT}}</td>" +
+             "<td style='white-space:normal;width:260px'>{{RECORDING.ACT}}</td>" +
              "<td style='white-space:nowrap;'>" +
                 "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{RESOURCE.UID}}</a></td>" +

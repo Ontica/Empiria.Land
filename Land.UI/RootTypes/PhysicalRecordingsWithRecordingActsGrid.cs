@@ -64,7 +64,7 @@ namespace Empiria.Land.UI {
       string template =
             "<tr class='detailsHeader'>" +
               "<td>Partida</td>" +
-              "<td style='width:160px'>Acto jurídico</td>" +
+              "<td style='width:260px'>Acto jurídico</td>" +
               "<td style='white-space:nowrap'>Folio real</td>" +
               "<td style='width:200px'>Present/Registro</td>" +
               "<td style ='width:160px'>Registró</td>" +
@@ -78,7 +78,7 @@ namespace Empiria.Land.UI {
              "<td style='white-space:nowrap'>" +
                 "<a href='javascript:doOperation(\"onSelectDocument\", {{DOCUMENT.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{RECORDING.NUMBER}}</a></td>" +
-             "<td style='white-space:normal'>{{RECORDING.ACT}}</td>" +
+             "<td style='white-space:normal;width:260px;'>{{RECORDING.ACT}}</td>" +
              "<td style='white-space:nowrap;'>" +
                 "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{RESOURCE.UID}}</a></td>" +

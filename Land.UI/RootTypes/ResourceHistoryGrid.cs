@@ -111,7 +111,7 @@ namespace Empiria.Land.UI {
       const string template =
            "<tr class='{{CLASS}}'>" +
              "<td>{{PRESENTATION.DATE}}<br/>{{AUTHORIZATION.DATE}}</td>" +
-             "<td style='white-space:normal'>{{RECORDING.ACT}}</td>" +
+             "<td style='white-space:normal;width:260px'>{{RECORDING.ACT}}</td>" +
              "<td style='white-space:normal;'>{{PARTITION}}</td>" +
              "<td style='white-space:{{WHITE-SPACE}};'>" +
                "<a href='javascript:doOperation(\"onSelectDocument\", {{DOCUMENT.ID}}, {{RECORDING.ACT.ID}});'>" +
