@@ -11,6 +11,7 @@
 using System;
 using System.Data;
 
+using Empiria.Json;
 using Empiria.Land.Registration.Data;
 using Empiria.Ontology;
 
@@ -38,12 +39,16 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    protected Party(string fullName) {
+    protected Party(string fullName, string uid, string uidType) {
       fullName = EmpiriaString.TrimAll(fullName);
+      uid = EmpiriaString.TrimAll(uid);
 
       Assertion.AssertObject(fullName, "fullName");
+      Assertion.Assert(uidType == "None" || uid.Length != 0, "Party unique ID can't be empty.");
 
       this.FullName = fullName;
+      this.UID = uid;
+      this.UIDType = uidType;
     }
 
     static public Party Parse(int id) {
@@ -69,6 +74,10 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseList<Party>(table).ToFixedList();
     }
 
+    protected override void OnLoadObjectData(DataRow row) {
+      this.ReadUIDFromJson((string) row["PartyExtData"]);
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
@@ -77,8 +86,8 @@ namespace Empiria.Land.Registration {
       get {
         string temp = this.FullName;
 
-        if (this.UID.Length != 0) {
-          temp += " (" + this.UID + ")";
+        if (this.FullUID.Length != 0) {
+          temp += " (" + this.FullUID + ")";
         }
         return temp;
       }
@@ -95,16 +104,15 @@ namespace Empiria.Land.Registration {
     [DataField("PartyNotes")]
     public string Notes {
       get;
-      private set;
+      set;
     } = String.Empty;
 
 
-    [DataField("PartyExtData")]
-    public string ExtendedData {
-      get;
-      private set;
-    } = String.Empty;
-
+    internal string ExtendedData {
+      get {
+        return this.GetUIDAsJsonString();
+      }
+    }
 
     public string UID {
       get;
@@ -112,9 +120,24 @@ namespace Empiria.Land.Registration {
     } = String.Empty;
 
 
+    public string UIDType {
+      get;
+      private set;
+    } = String.Empty;
+
+
+    public string FullUID {
+      get {
+        if (this.UID.Length == 0) {
+          return String.Empty;
+        }
+        return this.UIDType + ": " + this.UID;
+      }
+    }
+
     protected internal virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.UID, this.FullName);
+        return EmpiriaString.BuildKeywords(this.FullName, this.UID);
       }
     }
 
@@ -157,6 +180,30 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Public methods
+
+    #region Private methods
+
+    private void ReadUIDFromJson(string jsonString) {
+      var json = JsonObject.Parse(jsonString);
+
+      this.UID = json.Get<string>("UID", String.Empty);
+      this.UIDType = json.Get<string>("UIDType", "None");
+    }
+
+    private string GetUIDAsJsonString() {
+      if (this.UID.Length == 0) {
+        return String.Empty;
+      }
+
+      var json = new JsonObject();
+
+      json.Add(new JsonItem("UID", this.UID));
+      json.Add(new JsonItem("UIDType", this.UIDType));
+
+      return json.ToString();
+    }
+
+    #endregion Private methods
 
   } // class Party
 

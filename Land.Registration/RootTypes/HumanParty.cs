@@ -22,7 +22,7 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    public HumanParty(string fullName): base(fullName) {
+    public HumanParty(string fullName, string uid, string uidType) : base(fullName, uid, uidType) {
 
     }
 

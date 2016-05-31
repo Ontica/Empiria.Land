@@ -64,7 +64,7 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{ID}", primaryPartyItem.Id.ToString());
         temp = temp.Replace("{PARTY.ID}", primaryPartyItem.Party.Id.ToString());
         temp = temp.Replace("{NAME}", primaryPartyItem.Party.FullName);
-        temp = temp.Replace("{DATE.ID}", primaryPartyItem.Party.UID);
+        temp = temp.Replace("{UNIQUE.ID}", primaryPartyItem.Party.FullUID);
         temp = temp.Replace("{ROLE}", primaryPartyItem.PartyRole.Name);
         temp = temp.Replace("{DOMAIN.PART}", primaryPartyItem.GetOwnershipPartAsText());
 
@@ -102,7 +102,7 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{ID}", recordingActParty.Id.ToString());
         temp = temp.Replace("{PARTY.ID}", recordingActParty.Party.Id.ToString());
         temp = temp.Replace("{NAME}", recordingActParty.Party.FullName);
-        temp = temp.Replace("{DATE.ID}", recordingActParty.Party.UID);
+        temp = temp.Replace("{UNIQUE.ID}", recordingActParty.Party.FullUID);
         temp = temp.Replace("{ROLE}", String.Empty);
         temp = temp.Replace("{DOMAIN.PART}", String.Empty);
 
@@ -302,8 +302,9 @@ namespace Empiria.Land.UI {
     static private string GetRecordingActPartyRowTemplate(bool readOnly) {
       const string recordingActPartyRow =
             "<tr class='{CLASS}'><td style='white-space:normal'>" +
-            "<a href='javascript:doOperation(\"{ON.CLICK.EVENT}\", {PARTY.ID})'><b id='ancRecordingAct_{ID}'>{NAME}</b></a><br />{SECONDARY.TABLE}</td>" +
-            "<td>{DATE.ID}</td>" +
+              "<a href='javascript:doOperation(\"{ON.CLICK.EVENT}\", {PARTY.ID})'>" +
+              "<b id='ancRecordingAct_{ID}'>{NAME}</b></a><br />{SECONDARY.TABLE}</td>" +
+            "<td style='white-space:normal'>{UNIQUE.ID}</td>" +
             "<td style='white-space:normal'>{ROLE}</td>" +
             "<td style='white-space:normal'>{DOMAIN.PART}</td>";
       const string deleteCell =

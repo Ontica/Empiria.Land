@@ -10,9 +10,6 @@
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
-using Empiria.DataTypes;
-using Empiria.Json;
-
 namespace Empiria.Land.Registration {
 
   public enum PropertyPartitionType {
