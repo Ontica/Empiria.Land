@@ -186,7 +186,7 @@ namespace Empiria.Land.Registration {
       ResourceData.WriteRealEstate(this);
     }
 
-    internal RealEstate[] Subdivide(RealEstatePartition partitionInfo) {
+    internal RealEstate[] Subdivide(RealEstatePartitionDTO partitionInfo) {
       Assertion.Assert(!this.IsNew, "New properties can't be subdivided.");
 
       string[] partitionNames = partitionInfo.GetPartitionNames();

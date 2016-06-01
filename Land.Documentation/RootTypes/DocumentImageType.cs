@@ -1,24 +1,23 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : RecordingExtData                               Pattern  : IExtensibleData class               *
+*  Namespace : Empiria.Land.Documentation                     Assembly : Empiria.Land.Documentation          *
+*  Type      : DocumentImageType                              Pattern  : Enumeration type                    *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Power type that describes recording document types.                                           *
+*  Summary   : Enumeration that describes the type of an imaging document.                                   *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
-namespace Empiria.Land.Registration {
+namespace Empiria.Land.Documentation {
 
-  /// <summary>In the future, use this type to hold extended data for physical recordings.</summary>
-  public class RecordingExtData : IExtensibleData {
+  /// <summary>Enumeration that describes the type of an imaging document.</summary>
+  public enum DocumentImageType {
+    Unknown = 'U',
+    MainDocument = 'E',
+    Appendix = 'A',
+    Folder = 'F'
+  }
 
-    public string ToJson() {
-      return String.Empty;
-    }
-
-  }  // class RecordingExtData
-
-}  // namespace Empiria.Land.Registration
+ }  // namespace Empiria.Land.Documentation

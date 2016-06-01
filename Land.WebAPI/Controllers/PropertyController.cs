@@ -20,6 +20,7 @@ using Empiria.Land.Registration;
 
 namespace Empiria.Land.WebApi {
 
+  /// <summary>Contains services used to get real estate and other resources data.</summary>
   public class PropertyController : WebApiController {
 
     #region Public APIs

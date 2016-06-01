@@ -5,7 +5,7 @@
 *  Type      : DocumentImage                                  Pattern  : Empiria Object Type                 *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Represents a document image in Land Registration System.                                      *
+*  Summary   : Represents a processed and ready to use document image.                                       *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -16,14 +16,7 @@ using Empiria.Land.Registration;
 
 namespace Empiria.Land.Documentation {
 
-  public enum DocumentImageType {
-    Unknown = 'U',
-    MainDocument = 'E',
-    Appendix = 'A',
-    Folder = 'F'
-  }
-
-  /// <summary>Represents a document image in Land Registration System.</summary>
+  /// <summary>Represents a processed and ready to use document image.</summary>
   public class DocumentImage : ImagingItem {
 
     #region Constructors and parsers

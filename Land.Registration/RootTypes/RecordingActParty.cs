@@ -18,14 +18,6 @@ using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration {
 
-  public enum OwnershipMode {
-    None = 'N',
-    Bare = 'B',
-    Coowner = 'C',
-    Owner = 'O',
-    Undefined = 'U',
-  }
-
   /// <summary>Represents a roled association between a recording act and a party.</summary>
   public class RecordingActParty : BaseObject {
 

@@ -5,7 +5,7 @@
 *  Type      : ImageProcessor                                 Pattern  : Domain Service                      *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Document imaging processing service for Empiria Land System.                                  *
+*  Summary   : It is the responsible of the image processing service.                                        *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -19,7 +19,7 @@ using Empiria.Json;
 
 namespace Empiria.Land.Documentation {
 
-  /// <summary>Document maging processing service for Empiria Land System.</summary>
+  /// <summary>It is the responsible of the image processing service.</summary>
   static public class ImageProcessor {
 
     #region Fields

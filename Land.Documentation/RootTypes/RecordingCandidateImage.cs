@@ -5,19 +5,19 @@
 *  Type      : RecordingCandidateImage                        Pattern  : Empiria Object Type                 *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Represents a recording book/recording document image.                                         *
+*  Summary   : Candidate image version used to process physical book/recording images.                       *
+*              This class derives from CandidateImage.                                                       *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
 
-using Empiria.Documents;
 using Empiria.Land.Registration;
 
 namespace Empiria.Land.Documentation {
 
-  /// <summary>Represents a recording book/recording document image.</summary>
+  /// <summary>CandidateImage version used to process physical book/recording images.
+  /// This class derives from CandidateImage.</summary>
   public class RecordingCandidateImage : CandidateImage {
 
     #region Fields

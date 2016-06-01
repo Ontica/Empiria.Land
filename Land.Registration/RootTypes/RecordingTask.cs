@@ -11,10 +11,10 @@
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
-using Empiria.Land.Registration.Transactions;
-
 namespace Empiria.Land.Registration {
 
+
+  /// <summary>Used to control the user interface. Describes how the recording act applies to resources.</summary>
   public enum RecordingTaskType {
     actAppliesToOtherRecordingAct,
     actNotApplyToProperty,
@@ -37,7 +37,7 @@ namespace Empiria.Land.Registration {
                          int precedentRecordingId = -1, int precedentResourceId = -1,
                          string quickAddRecordingNumber = "",
                          string resourceName = "", string cadastralKey = "",
-                         RealEstatePartition partition = null, RecordingActInfo targetActInfo = null) {
+                         RealEstatePartitionDTO partition = null, RecordingActInfoDTO targetActInfo = null) {
       this.Document = RecordingDocument.Parse(documentId);
       //this.RecordingActTypeCategory = RecordingActTypeCategory.Parse(recordingActTypeCategoryId);
       this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
@@ -59,12 +59,12 @@ namespace Empiria.Land.Registration {
       if (partition != null) {
         this.PartitionInfo = partition;
       } else {
-        this.PartitionInfo = RealEstatePartition.Empty;
+        this.PartitionInfo = RealEstatePartitionDTO.Empty;
       }
       if (targetActInfo != null) {
         this.TargetActInfo = targetActInfo;
       } else {
-        this.TargetActInfo = RecordingActInfo.Empty;
+        this.TargetActInfo = RecordingActInfoDTO.Empty;
       }
     }
 
@@ -127,12 +127,12 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    public RealEstatePartition PartitionInfo {
+    public RealEstatePartitionDTO PartitionInfo {
       get;
       private set;
     }
 
-    public RecordingActInfo TargetActInfo {
+    internal RecordingActInfoDTO TargetActInfo {
       get;
       private set;
     }

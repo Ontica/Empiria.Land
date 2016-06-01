@@ -5,7 +5,7 @@
 *  Type      : ResourceData                                 Pattern  : Data Services                         *
 *  Version   : 2.1                                          License  : Please read license.txt file          *
 *                                                                                                            *
-*  Summary   : Provides db read and write methods for recordable resources: real estate and associations.    *
+*  Summary   : Provides database methods for recordable resources: real estate and associations.             *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -15,8 +15,7 @@ using Empiria.Data;
 
 namespace Empiria.Land.Registration.Data {
 
-  /// <summary>Provides db read and write methods for recordable
-  /// resources: real estate and associations.</summary>
+  /// <summary>Provides database methods for recordable resources: real estate and associations.</summary>
   static public class ResourceData {
 
     #region Internal methods

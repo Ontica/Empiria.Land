@@ -12,6 +12,7 @@ using System;
 
 namespace Empiria.Land.Certification {
 
+  /// <summary>Certificate status enumeration.</summary>
   public enum CertificateStatus {
     Pending = 'P',
     Closed = 'C',

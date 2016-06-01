@@ -6,13 +6,15 @@
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Describes the role that plays a party with respect to another party.                          *
+*              Secondary roles are of the form: 'X plays the role R with respect of Y'.                      *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Describes the role that plays a party with respect to another party.</summary>
+  /// <summary>Describes the role that plays a party with respect to another party.
+  /// Secondary roles are of the form: 'X plays the role R with respect of Y'.</summary>
   public class SecondaryPartyRole : BasePartyRole {
 
     #region Constructors and parsers

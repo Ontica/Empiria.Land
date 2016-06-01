@@ -5,7 +5,7 @@
 *  Type      : CertificateRequest                             Pattern  : External Interfacer                 *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Certificate request from an external transaction system.                                      *
+*  Summary   : Model that holds information about a certificate request from an external transaction system. *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -16,7 +16,8 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.WebApi.Models {
 
-  /// <summary>Certificate request from an external transaction system.</summary>
+  /// <summary>Model that holds information about a certificate request
+  /// from an external transaction system.</summary>
   public class CertificateRequest : LRSExternalTransaction {
 
     #region Public properties

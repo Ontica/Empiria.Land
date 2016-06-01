@@ -5,7 +5,7 @@
 *  Type      : PartyData                                    Pattern  : Data Services                         *
 *  Version   : 2.1                                          License  : Please read license.txt file          *
 *                                                                                                            *
-*  Summary   : Provides db read and write methods for parties: human and organizations.                      *
+*  Summary   : Provides database read and write methods for parties: people and organizations.               *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -16,7 +16,7 @@ using Empiria.Ontology;
 
 namespace Empiria.Land.Registration.Data {
 
-  /// <summary>Provides db read and write methods for parties: human and organizations.</summary>
+  /// <summary>Provides database read and write methods for parties: people and organizations.</summary>
   static public class PartyData {
 
     #region Public methods

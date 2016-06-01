@@ -5,7 +5,7 @@
 *  Type      : CertificateAssembler (partial)                 Pattern  : Nested Assembler Type               *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Private class that assembles a Certificate instance from a CertificateDTO.                    *
+*  Summary   : Partial class that assembles a Certificate instance from a CertificateDTO.                    *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -17,6 +17,7 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Certification {
 
+  /// <summary>Partial class that assembles a Certificate instance from a CertificateDTO.</summary>
   public partial class Certificate : BaseObject, IProtected {
 
     #region Certificate public methods related with CertificateDTO

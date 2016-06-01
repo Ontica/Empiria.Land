@@ -5,8 +5,7 @@
 *  Type      : RecordingBook                                  Pattern  : Empiria Object Type                 *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Represents a physical recording book. A recording book can have a parent recording book and   *
-*              belongs to a recorder of deeds office. Instances of this type have a recording book type.     *
+*  Summary   : Indicates the status of a recording book according to it use in historic capture.             *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -19,6 +18,7 @@ using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration {
 
+  /// <summary>Indicates the status of a recording book according to it use in historic capture.</summary>
   public enum RecordingBookStatus {
     Pending = 'P',
     Assigned = 'A',

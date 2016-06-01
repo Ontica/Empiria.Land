@@ -2,41 +2,22 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : RealEstatePartition                            Pattern  : Standard Class                      *
+*  Type      : RealEstatePartitionDTO                         Pattern  : Data Transfer Object                *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Contains data about a property partition or subdivision.                                      *
+*  Summary   : Data transfer object that holds data about a real estate partition or subdivision.            *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Land.Registration {
 
-  public enum PropertyPartitionType {
-    None = 'N',
-    Partial = 'P',
-    Last = 'L',
-    Full = 'F'
-  }
-
-  public enum PropertyPartitionSubtype {
-    None = 'N',
-    Whole = 'W',
-    Lot = 'L',
-    Apartment = 'A',
-    House = 'H',
-    Partial = 'P',
-    PartialUnknown = 'Q',
-    Last = 'S',
-    LastUnknown = 'T',
-  }
-
-  /// <summary>Contains data about a real estate partition or subdivision.</summary>
-  public class RealEstatePartition {
+  /// <summary>Data transfer object that holds data about a real estate partition or subdivision.</summary>
+  public class RealEstatePartitionDTO {
 
     #region Constructors and parsers
 
-    public RealEstatePartition(string partitionType,
+    public RealEstatePartitionDTO(string partitionType,
                                string partitionNumber,
                                string partitionRepeatUntilNumber) {
       this.PartitionType = partitionType;
@@ -44,9 +25,9 @@ namespace Empiria.Land.Registration {
       this.PartitionRepeatUntilNumber = partitionRepeatUntilNumber;
     }
 
-    public static RealEstatePartition Empty {
+    public static RealEstatePartitionDTO Empty {
       get {
-        return new RealEstatePartition(String.Empty, String.Empty, String.Empty);
+        return new RealEstatePartitionDTO(String.Empty, String.Empty, String.Empty);
       }
     }
 
@@ -104,6 +85,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Public methods
 
-  }  // class RealEstatePartition
+  }  // class RealEstatePartitionDTO
 
 }  // namespace Empiria.Land.Registration

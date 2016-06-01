@@ -5,7 +5,7 @@
 *  Type      : Certificate                                    Pattern  : Empiria Object Type                 *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Certificate emission and information search acts.                                             *
+*  Summary   : Holds information about a land certificate.                                                   *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -21,7 +21,7 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Certification {
 
-  /// <summary>Represents a certificate for property ownership or non ownership.</summary>
+  /// <summary>Holds information about a land certificate.</summary>
   [PartitionedType(typeof(CertificateType))]
   public partial class Certificate : BaseObject, IResourceTractItem, IProtected {
 

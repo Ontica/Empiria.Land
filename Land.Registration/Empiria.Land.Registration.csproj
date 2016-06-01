@@ -131,6 +131,7 @@
     <Compile Include="Data\ResourceData.cs" />
     <Compile Include="Data\RecordingBooksData.cs" />
     <Compile Include="Empiria.Land.Registration.AssemblyInfo.cs" />
+    <Compile Include="RootTypes\OwnershipMode.cs" />
     <Compile Include="RootTypes\SearchService.cs" />
     <Compile Include="RootTypes\NoPropertyResource.cs" />
     <Compile Include="RootTypes\RecordBookDirectory.cs" />
@@ -143,10 +144,10 @@
     <Compile Include="RootTypes\BasePartyRole.cs" />
     <Compile Include="RootTypes\Resource.cs" />
     <Compile Include="RootTypes\RecordableObjectStatus.cs" />
-    <Compile Include="RootTypes\RecordingActInfo.cs" />
+    <Compile Include="RootTypes\RecordingActInfoDTO.cs" />
     <Compile Include="RootTypes\RecordingDocumentExtData.cs" />
     <Compile Include="RootTypes\RecordingExtData.cs" />
-    <Compile Include="RootTypes\RealEstatePartition.cs" />
+    <Compile Include="RootTypes\RealEstatePartitionDTO.cs" />
     <Compile Include="RootTypes\RecordingActExtData.cs" />
     <Compile Include="RootTypes\ContractData.cs" />
     <Compile Include="RootTypes\RealEstateRule.cs" />

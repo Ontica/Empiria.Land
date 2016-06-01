@@ -15,6 +15,7 @@ using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration.Transactions {
 
+  /// <summary>Enumerates the different workflow statuses that a workflow task can have.</summary>
   public enum WorkflowTaskStatus {
     Pending = 'P',
     OnDelivery = 'D',
@@ -23,6 +24,7 @@ namespace Empiria.Land.Registration.Transactions {
     Historic = 'H',
   }
 
+  /// <summary>Indicates if the workflow task assignment is automatic or assigned manually.</summary>
   public enum WorkflowTrackMode {
     Automatic = 'A',
     Manual = 'M',

@@ -5,13 +5,14 @@
 *  Type      : LRSTransactionStatus                           Pattern  : Enumeration Type                    *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Represents a transaction status.                                                              *
+*  Summary   : Enumerates the possible statuses of a transaction with respect of the office workflow.        *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Land.Registration.Transactions {
 
+  /// <summary>Enumerates the possible statuses of a transaction with respect of the office workflow.</summary>
   public enum LRSTransactionStatus {
     Payment = 'Y',
     Received = 'R',

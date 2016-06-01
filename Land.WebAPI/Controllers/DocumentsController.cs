@@ -5,7 +5,7 @@
 *  Type      : CertificatesController                           Pattern  : Web API                           *
 *  Version   : 2.1                                              License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Contains services used to read and edit land recording documents.                             *
+*  Summary   : Web API used to read and edit land recording documents.                                       *
 *                                                                                                            *
 ********************************* Copyright (c) 2014-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -18,7 +18,7 @@ using Empiria.WebApi.Models;
 
 namespace Empiria.Land.WebApi {
 
-  /// <summary>Contains services used to read and edit land recording documents.</summary>
+  /// <summary>Web API used to read and edit land recording documents.</summary>
   public class DocumentsController : WebApiController {
 
     #region Public APIs

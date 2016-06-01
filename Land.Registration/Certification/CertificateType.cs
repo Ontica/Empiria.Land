@@ -5,7 +5,7 @@
 *  Type      : LandCertificateType                            Pattern  : Power type                          *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Power type that describes (non) ownership certificates types.                                 *
+*  Summary   : Power type that describes certificates types.                                                 *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -14,7 +14,7 @@ using Empiria.Ontology;
 
 namespace Empiria.Land.Certification {
 
-  ///<summary>Power type that describes (non) ownership certificates types.</summary>
+  ///<summary>Power type that describes certificates types.</summary>
   [Powertype(typeof(Certificate))]
   public sealed class CertificateType : Powertype {
 

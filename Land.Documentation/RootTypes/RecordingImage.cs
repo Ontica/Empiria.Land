@@ -5,7 +5,8 @@
 *  Type      : RecordingImage                                 Pattern  : Empiria Object Type                 *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Represents a recording book/recording document image.                                         *
+*  Summary   : DocumentImage version used to describe physical book/recording recording images.              *
+*              Derives from DocumentImage.                                                                   *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -14,7 +15,8 @@ using Empiria.Land.Registration;
 
 namespace Empiria.Land.Documentation {
 
-  /// <summary>Represents a recording book/recording document image.</summary>
+  /// <summary>DocumentImage version used to describe physical book/recording recording images.
+  /// Derives from DocumentImage.</summary>
   public class RecordingImage : DocumentImage {
 
     #region Constructors and parsers

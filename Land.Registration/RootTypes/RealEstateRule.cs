@@ -24,7 +24,6 @@ namespace Empiria.Land.Registration {
       this.Expire = false;
       this.IsInternalDivision = false;
       this.Name = String.Empty;
-      this.ResourceCount = Land.Registration.ResourceCount.Undefined;
       this.RecordableObjectStatus = ResourceRecordingStatus.Undefined;
       this.UseNumbering = false;
     }
@@ -35,7 +34,6 @@ namespace Empiria.Land.Registration {
       rule.Expire = json.Get<bool>("Expire", false);
       rule.IsInternalDivision = json.Get<bool>("IsInternalDivision", false);
       rule.Name = json.Get<string>("Name", String.Empty);
-      rule.ResourceCount = RecordingRule.ParseResourceCount(json.Get<string>("ResourceCount", String.Empty));
       rule.RecordableObjectStatus = json.Get<ResourceRecordingStatus>("RecordableObjectStatus",
                                                                       ResourceRecordingStatus.Undefined);
       rule.UseNumbering = json.Get<bool>("UseNumbering", false);
@@ -58,11 +56,6 @@ namespace Empiria.Land.Registration {
     }
 
     public string Name {
-      get;
-      internal set;
-    }
-
-    public ResourceCount ResourceCount {
       get;
       internal set;
     }

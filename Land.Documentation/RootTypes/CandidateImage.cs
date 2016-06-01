@@ -5,7 +5,8 @@
 *  Type      : DocumentImage                                  Pattern  : Empiria Object Type                 *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Represents a document image in Land Registration System.                                      *
+*  Summary   : Candidate images are processed images that not necessarily will become to a recording image,  *
+*              because sometimes some of them are unreadable and must be replaced.                           *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -19,7 +20,8 @@ using Empiria.Land.Registration;
 
 namespace Empiria.Land.Documentation {
 
-  /// <summary>Represents a document image in Land Registration System.</summary>
+  /// <summary>Candidate images are processed images that not necessarily will become to a recording image,
+  /// because sometimes some of them are unreadable and must be replaced.</summary>
   public class CandidateImage {
 
     #region Fields

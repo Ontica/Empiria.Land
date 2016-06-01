@@ -5,7 +5,7 @@
 *  Type      : ResourceHistoryGrid                             Pattern  : Standard class                      *
 *  Version   : 2.1                                             License  : Please read license.txt file        *
 *                                                                                                             *
-*  Summary   : Generates a grid HTML content that display the resource's history.                             *
+*  Summary   : Generates a grid HTML content that displays the full resource's history.                       *
 *                                                                                                             *
 ********************************** Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -15,7 +15,7 @@ using Empiria.Land.Certification;
 
 namespace Empiria.Land.UI {
 
-  /// <summary>Generates a grid HTML content that display the resource's history.</summary>
+  /// <summary>Generates a grid HTML content that displays the full resource's history.</summary>
   public class ResourceHistoryGrid {
 
     #region Fields

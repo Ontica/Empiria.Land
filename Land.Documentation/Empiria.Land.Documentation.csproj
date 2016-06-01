@@ -118,12 +118,13 @@
   <ItemGroup>
     <Compile Include="Empiria.Land.Documentation.AssemblyInfo.cs" />
     <Compile Include="RootTypes\CandidateImage.cs" />
+    <Compile Include="RootTypes\DocumentImage.cs" />
     <Compile Include="RootTypes\RecordingCandidateImage.cs" />
     <Compile Include="RootTypes\RecordingImage.cs" />
     <Compile Include="RootTypes\DataServices.cs" />
     <Compile Include="RootTypes\ImageProcessor.cs" />
     <Compile Include="RootTypes\LandDocumentationException.cs" />
-    <Compile Include="RootTypes\DocumentImage.cs" />
+    <Compile Include="RootTypes\DocumentImageType.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

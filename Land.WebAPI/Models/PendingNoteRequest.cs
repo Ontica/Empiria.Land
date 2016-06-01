@@ -5,7 +5,8 @@
 *  Type      : PendingNoteRequest                             Pattern  : External Interfacer                 *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Pending note request from an external transaction system.                                     *
+*  Summary   : Data transfer object that holds information about a Pending note request from                 *
+*              an external transaction system.                                                               *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -19,7 +20,8 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.WebApi.Models {
 
-  /// <summary>Pending note request from an external transaction system.</summary>
+  /// <summary>Data transfer object that holds information about a Pending note request from
+  /// an external transaction system.</summary>
   public class PendingNoteRequest : LRSExternalTransaction {
 
     #region Public properties
@@ -48,48 +50,58 @@ namespace Empiria.Land.WebApi.Models {
       set;
     } = String.Empty;
 
+    /// <summary>Indicates if the Pending note is over a new projected partition.</summary>
     public bool IsPartition {
       get;
       set;
     } = false;
 
+    /// <summary>Optionally indicates the name of the partition when IsPartition is true.</summary>
     public string PartitionName {
       get;
       set;
     } = String.Empty;
 
+
+    /// <summary>Optionally indicates the partition's size when IsPartition is true.</summary>
     public decimal PartitionSize {
       get;
       set;
     } = 0m;
 
+    /// <summary>Optionally indicates the partition's location when IsPartition is true.</summary>
     public string PartitionLocation {
       get;
       set;
     } = String.Empty;
 
+    /// <summary>Optionally indicates the partition's metes and bounds when IsPartition is true.</summary>
     public string PartitionMetesAndBounds {
       get;
       set;
     } = String.Empty;
 
+    /// <summary>A note about the recording conditions or notary's needs.</summary>
     public string RecordingObservations {
       get;
       set;
     } = String.Empty;
 
+    /// <summary>Returns the transaction type used for all pending note requests.</summary>
     protected override LRSTransactionType TransactionType {
       get {
         return LRSTransactionType.Parse(699);
       }
     }
 
+    /// <summary>Returns the document type used for all pending note requests.</summary>
     protected override LRSDocumentType DocumentType {
       get {
         return LRSDocumentType.Parse(708);
       }
     }
 
+    /// <summary>Returns agency or notary information responsible of the request.</summary>
     protected override Contact Agency {
       get {
         // TODO: Convert to notary.NotaryOffice

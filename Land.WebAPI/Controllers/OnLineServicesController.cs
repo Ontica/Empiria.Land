@@ -5,7 +5,7 @@
 *  Type      : OnLineServicesController                         Pattern  : Web API                           *
 *  Version   : 2.1                                              License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Contains general web methods for Empiria Land online services.                                *
+*  Summary   : Contains general web methods for the Empiria Land Online Services system.                     *
 *                                                                                                            *
 ********************************* Copyright (c) 2014-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -17,6 +17,7 @@ using Empiria.WebApi.Models;
 
 namespace Empiria.Land.WebApi {
 
+  /// <summary>The type of the requested document. Allow one simple call to retrive multiple document types.</summary>
   internal enum DocumentItemType {
     LandTransaction,
     LandCertificate,
@@ -24,7 +25,7 @@ namespace Empiria.Land.WebApi {
     Empty
   }
 
-  /// <summary>Contains general web methods for Empiria Land online services.</summary>
+  /// <summary>Contains general web methods forthe Empiria Land Online Services system.</summary>
   public class OnLineServicesController : WebApiController {
 
     #region Public APIs

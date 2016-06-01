@@ -5,7 +5,7 @@
 *  Type      : CertificatesGrid                                Pattern  : Standard class                      *
 *  Version   : 2.1                                             License  : Please read license.txt file        *
 *                                                                                                             *
-*  Summary   : Generates a grid HTML content that display a list of certificates.                             *
+*  Summary   : Generates a grid HTML content that displays a list of certificates.                            *
 *                                                                                                             *
 ********************************** Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -14,7 +14,7 @@ using Empiria.Land.Certification;
 
 namespace Empiria.Land.UI {
 
-  /// <summary>Generates a grid HTML content that display a list of certificates.</summary>
+  /// <summary>Generates a grid HTML content that displays a list of certificates.</summary>
   public class CertificatesGrid {
 
     #region Fields

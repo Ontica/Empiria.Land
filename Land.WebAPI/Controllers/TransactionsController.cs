@@ -5,7 +5,7 @@
 *  Type      : TransactionsController                           Pattern  : Web API                           *
 *  Version   : 2.1                                              License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Contains services to integrate Empiria Land with third-party transaction systems.             *
+*  Summary   : Contains services to integrate Empiria Land with third-party transaction systems (CITyS).     *
 *                                                                                                            *
 ********************************* Copyright (c) 2014-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -21,7 +21,7 @@ using Empiria.Land.WebApi.Models;
 
 namespace Empiria.Land.WebApi {
 
-  /// <summary>Contains services to integrate Empiria Land with third-party transaction systems.</summary>
+  /// <summary>Contains services to integrate Empiria Land with third-party transaction systems (CITyS).</summary>
   //[WebApiAuthorizationFilter(WebApiClaimType.ClientApp_Controller, "ThirdPartyTransactionController")]
   public class TransactionsController : WebApiController {
 

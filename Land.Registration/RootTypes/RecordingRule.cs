@@ -15,14 +15,7 @@ using Empiria.Json;
 
 namespace Empiria.Land.Registration {
 
-  public enum ResourceCount {
-    Undefined,
-    One,
-    OneOrMore,
-    Two,
-    TwoOrMore,
-  }
-
+  /// <summary>Indicates the legal recording status of a resource in order to apply the recording act.</summary>
   public enum ResourceRecordingStatus {
     Undefined,
     NotApply,
@@ -31,6 +24,7 @@ namespace Empiria.Land.Registration {
     Unregistered,
   }
 
+  /// <summary>Indicates the resource type of which is applicable the recording act.</summary>
   public enum RecordingRuleApplication {
     Undefined,
     RealEstate,
@@ -70,7 +64,6 @@ namespace Empiria.Land.Registration {
 
         this.NewResource = RealEstateRule.Parse(json.Slice("NewResource", false));
 
-        this.ResourceCount = ParseResourceCount(json.Get<string>("ResourceCount", String.Empty));
         this.ResourceRecordingStatus = json.Get<ResourceRecordingStatus>("ResourceStatus",
                                                                          ResourceRecordingStatus.Undefined);
         this.RecordingSection = json.Get<RecordingSection>("RecordingSectionId", RecordingSection.Empty);
@@ -103,7 +96,6 @@ namespace Empiria.Land.Registration {
       json.Add(new JsonItem("AppliesTo", this.AppliesTo.ToString()));
       json.Add(new JsonItem("AutoCancel", this.AutoCancel));
       json.Add(new JsonItem("AskForResourceName", this.AskForResourceName));
-      json.Add(new JsonItem("ResourceCount", this.ResourceCount.ToString()));
       json.Add(new JsonItem("ResourceRecordingStatus", this.ResourceRecordingStatus.ToString()));
       json.Add(new JsonItem("SpecialCase", this.SpecialCase));
       json.Add(new JsonItem("IsActive", this.IsActive));
@@ -117,20 +109,6 @@ namespace Empiria.Land.Registration {
       return new RecordingRule(recordingActType);
     }
 
-    static public ResourceCount ParseResourceCount(string resourceCount) {
-      switch (resourceCount) {
-        case "1":
-          return ResourceCount.One;
-        case "1+":
-          return ResourceCount.OneOrMore;
-        case "2":
-          return ResourceCount.Two;
-        case "2+":
-          return ResourceCount.TwoOrMore;
-      }
-      return ResourceCount.Undefined;
-    }
-
     #endregion Constructors and parsers
 
     #region Properties
@@ -140,70 +118,78 @@ namespace Empiria.Land.Registration {
       private set;
     } = false;
 
+
     public RecordingRuleApplication AppliesTo {
       get;
       private set;
     } = RecordingRuleApplication.Undefined;
+
 
     public bool AskForResourceName {
       get;
       private set;
     } = false;
 
+
     public int AutoCancel {
       get;
       private set;
     } = 0;
+
 
     public RealEstateRule[] InputResources {
       get;
       private set;
     } = new RealEstateRule[0];
 
+
     public RealEstateRule NewResource {
       get;
       private set;
     } = new RealEstateRule();
 
-    public ResourceCount ResourceCount {
-      get;
-      private set;
-    } = ResourceCount.Undefined;
 
     public ResourceRecordingStatus ResourceRecordingStatus {
       get;
       private set;
     } = ResourceRecordingStatus.Undefined;
 
+
     public RecordingSection RecordingSection {
       get;
       private set;
     } = RecordingSection.Empty;
+
 
     public RecordingActType[] RecordingActTypes {
       get;
       private set;
     } = new RecordingActType[0];
 
+
     public string SpecialCase {
       get;
       private set;
     } = "None";
+
 
     public bool IsActive {
       get;
       private set;
     } = false;
 
+
     public string DynamicActNamePattern {
       get;
       private set;
     } = String.Empty;
 
+
     public string ResourceTypeName {
       get;
       internal set;
     } = String.Empty;
+
 
     public bool UseDynamicActNaming {
       get {

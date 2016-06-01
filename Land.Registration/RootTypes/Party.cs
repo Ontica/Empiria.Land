@@ -17,6 +17,7 @@ using Empiria.Ontology;
 
 namespace Empiria.Land.Registration {
 
+  /// <summary>Describes the recording status of a party's data.</summary>
   public enum PartyStatus {
     Pending = 'P',
     Registered = 'R',
@@ -24,6 +25,7 @@ namespace Empiria.Land.Registration {
     Deleted = 'X'
   }
 
+  /// <summary>Used to describe the filtering mode to use on parties searching.</summary>
   public enum PartyFilterType {
     ByKeywords = 1,
     OnInscription = 2,
