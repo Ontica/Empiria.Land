@@ -33,7 +33,7 @@ Empiria Land includes the following software components:
 5. **User Interface Services**  
    Provides Html parsing services especially tailored to display and reuse Empiria Land user interfaces.
 
-6. **Web API (HTTP/REST-based) **  
+6. **Web API (HTTP/REST-based)**  
    Http/Json RESTful type web services used to comunicate with third party systems, to emit certificates and perform data searching operations.
 
 7. **XML Web Services (to be deprecated)**  
@@ -43,15 +43,16 @@ Empiria Land includes the following software components:
 
 Folder [**docs**](https://github.com/Ontica/Empiria.Land/tree/master/docs) contains a web site with the full code documentation. It can be downloaded and installed in the web server of your preference.
 
-[**docs/files/database.scripts.sql**](https://github.com/Ontica/Empiria.Land/tree/master/docs/files/database.scripts.sql) file contains the full database script for SQL Server 2014, and it includes the full set of tables, views, functions and stored procedures.
+There, **database.scripts.sql** file contains the full database script for SQL Server 2014, and it includes the full set of tables, views, functions and stored procedures.
 
-[**docs/files/database.structure.pdf**](https://github.com/Ontica/Empiria.Land/tree/master/docs/files/database.structure.pdf) file contains a general view map of the database.
+**database.structure.pdf** contains a general view map of the database.
 
-[**docs/files/components.pdf**](https://github.com/Ontica/Empiria.Land/tree/master/docs/files/components.pdf) file contains a general view map of the system.
+**components.pdf** file presents a general view map of the system.
 
 # License
 
-GNU AFFERO GENERAL PUBLIC LICENSE
+This system is distributed by the GNU AFFERO GENERAL PUBLIC LICENSE.
+
 
 # Version
 

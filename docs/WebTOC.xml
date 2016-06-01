@@ -1,0 +1,1499 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<HelpTOC>
+
+  <HelpTOCNode Id="253ddd96-0af8-4343-a3b5-52f5f660124a" Title="Empiria.Land" Url="html/75cd4561-d75d-e617-c314-ebb9453a9bfc.htm">
+    <HelpTOCNode Id="ae591b94-aa2f-4ede-ac91-de214a22471d" Title="IResourceTractItem Interface" Url="html/f7a35225-da13-a642-d12c-2b2cd30a17e2.htm">
+      <HelpTOCNode Id="e7db0564-69d0-40e0-b738-b3eea90dcd5f" Title="IResourceTractItem Properties" Url="html/277dccc3-a444-3701-5388-11774444fa03.htm">
+        <HelpTOCNode Title="TractPrelationStamp Property " Url="html/57cfb51c-e307-1ad3-95d2-50df04835f9e.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+  <HelpTOCNode Id="986f8ad5-4654-4546-821f-5ea973e3e5dd" Title="Empiria.Land.Certification" Url="html/0a4f1931-ab06-3b05-384b-5832aa3089a0.htm">
+    <HelpTOCNode Id="59f27f4a-3e4d-4a73-ad2a-4f829c7bed18" Title="Certificate Class" Url="html/53f4dd00-638f-5adf-29cb-e2ef7d2d497e.htm">
+      <HelpTOCNode Id="b7eb1ea6-091b-4542-898d-3c30a7618168" Title="Certificate Properties" Url="html/5cc78423-ee93-9556-5cc0-26763ab5fa21.htm">
+        <HelpTOCNode Title="AsText Property " Url="html/5c2eb85a-c1e2-f028-9c71-27bc87c515a1.htm" />
+        <HelpTOCNode Title="CertificateType Property " Url="html/7a732085-a498-5d7a-2a2d-56c88bd5906b.htm" />
+        <HelpTOCNode Title="ExtensionData Property " Url="html/8d970160-fa45-6dc6-315e-fc4c7fe13b57.htm" />
+        <HelpTOCNode Title="Integrity Property " Url="html/10b5e152-d683-03a9-5c62-2979fb254f00.htm" />
+        <HelpTOCNode Title="IsSigned Property " Url="html/c447369c-edf9-c4ce-46a0-9c8090a458ef.htm" />
+        <HelpTOCNode Title="IssuedBy Property " Url="html/cd106fb2-4fb4-fc83-0180-cd07637ecad6.htm" />
+        <HelpTOCNode Title="IssueTime Property " Url="html/3fe5ac67-2c6b-d4d1-4b46-79b5dc0f0b1d.htm" />
+        <HelpTOCNode Title="OwnerName Property " Url="html/d0b48bb7-657d-afee-a1b9-88684b83caa4.htm" />
+        <HelpTOCNode Title="Property Property " Url="html/79b34c91-330d-582d-a091-1d48a465f11f.htm" />
+        <HelpTOCNode Title="RecorderOffice Property " Url="html/962f46b6-e3ed-0b0f-bf69-c75b1b8a43d3.htm" />
+        <HelpTOCNode Title="SignedBy Property " Url="html/aed4eae0-9f9a-81e8-b768-6fbbb8a3face.htm" />
+        <HelpTOCNode Title="Status Property " Url="html/7b23413d-5b74-3578-3765-7d7d538ea145.htm" />
+        <HelpTOCNode Title="Transaction Property " Url="html/22247927-42f3-a381-d91d-1333cb5bb29b.htm" />
+        <HelpTOCNode Title="UID Property " Url="html/2b2b3429-1f2e-3dbf-b102-035e74570ab6.htm" />
+        <HelpTOCNode Title="UserNotes Property " Url="html/962c2e72-9887-f2d4-207e-b52374105b00.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="6cfc7be5-4195-4411-b894-f480606e79a6" Title="Certificate Methods" Url="html/9381e5f4-b1ff-eb14-6325-5596249d126e.htm">
+        <HelpTOCNode Title="CanCancel Method " Url="html/4e0ace00-cf2f-167f-eb58-8b312e49b063.htm" />
+        <HelpTOCNode Title="Cancel Method " Url="html/aae61f72-743e-020f-e4ab-ad7fd40884d8.htm" />
+        <HelpTOCNode Title="CanDelete Method " Url="html/8a296e9b-ace4-0bf5-9511-e482404986f9.htm" />
+        <HelpTOCNode Title="CanOpen Method " Url="html/4f88651b-66b3-3a02-e6b7-88e345d00570.htm" />
+        <HelpTOCNode Title="Close Method " Url="html/7268d71a-86c6-d1b8-8fa8-8f61c1996bc0.htm" />
+        <HelpTOCNode Title="Create Method " Url="html/58d4da9e-c1f0-2d40-d49c-b06ef1027dda.htm" />
+        <HelpTOCNode Title="Delete Method " Url="html/d864fdb1-3ac0-f9ec-569f-27a523b1ee85.htm" />
+        <HelpTOCNode Title="GetDigitalSeal Method " Url="html/4d3b55ff-fa2c-cc91-9ff0-99ebb3bbd5b7.htm" />
+        <HelpTOCNode Title="GetDigitalSignature Method " Url="html/04384343-3546-10eb-e40b-9c6a79fc5718.htm" />
+        <HelpTOCNode Title="OnInitialize Method " Url="html/25ba12b8-d424-5ee2-27b1-12c24b4c7e05.htm" />
+        <HelpTOCNode Title="OnLoadObjectData Method " Url="html/e959b3be-cb37-3d8b-8e91-ebf4d5a845b3.htm" />
+        <HelpTOCNode Title="OnSave Method " Url="html/01c3bd5b-c49b-6e22-52f1-7f09cf3cc3bd.htm" />
+        <HelpTOCNode Title="Open Method " Url="html/b21097c1-d3ea-4714-97c8-168e133989ad.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/d8a26f3a-d3fe-3cbe-25d8-b967c510d6bf.htm" />
+        <HelpTOCNode Title="TryParse Method " Url="html/76fba2f7-e6c9-952d-a40b-58b958d4fffd.htm" />
+        <HelpTOCNode Title="Update Method " Url="html/d9727a3d-137e-3ddf-f5f7-7006226a7de4.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="583d35fb-808d-440f-88b4-61b3bfccab93" Title="CertificateDTO Class" Url="html/0c08e91f-cf01-0d98-3f88-fc5ffb147f9b.htm">
+      <HelpTOCNode Title="CertificateDTO Constructor " Url="html/35a9c8ca-c318-7168-e2de-6898d45775f0.htm" />
+      <HelpTOCNode Id="2cb4ccb4-a0fd-450e-9534-bf4825894896" Title="CertificateDTO Properties" Url="html/e28fbf04-367a-7693-8181-1ab45199463f.htm">
+        <HelpTOCNode Title="CertificateTypeUID Property " Url="html/23317b0d-b7f6-9bde-c851-a3e0646686c3.htm" />
+        <HelpTOCNode Title="FromOwnerName Property " Url="html/bcb35dbc-89a9-05bf-a659-3e6ce4682ce9.htm" />
+        <HelpTOCNode Title="MarginalNotes Property " Url="html/5768fa15-2768-6175-5c4e-3e89a5a9a020.htm" />
+        <HelpTOCNode Title="Operation Property " Url="html/161c2d43-e372-dcef-b073-6e17404322f7.htm" />
+        <HelpTOCNode Title="OperationDate Property " Url="html/81579288-c91b-cf74-10c3-521d96a27585.htm" />
+        <HelpTOCNode Title="PropertyCommonName Property " Url="html/59fc40ad-f47a-b90d-f703-0933a9ed08bb.htm" />
+        <HelpTOCNode Title="PropertyLocation Property " Url="html/f9147d1d-6542-ecb5-e3a1-928a512fda3f.htm" />
+        <HelpTOCNode Title="PropertyMetesAndBounds Property " Url="html/6b639690-b880-3600-bd86-855338be5561.htm" />
+        <HelpTOCNode Title="PropertyUID Property " Url="html/304f7bbb-9916-9bf0-19e2-49122d4008ef.htm" />
+        <HelpTOCNode Title="RecorderOfficeId Property " Url="html/b240cfcf-aeba-c8b7-0fce-ed148edf421a.htm" />
+        <HelpTOCNode Title="SeekForName Property " Url="html/da2ff6e4-f026-7e6f-5fba-cacf13f8de91.htm" />
+        <HelpTOCNode Title="StartingYear Property " Url="html/2df477bc-7c60-a95d-b63d-92fad4a3f2ee.htm" />
+        <HelpTOCNode Title="ToOwnerName Property " Url="html/e7bfaf91-a12a-75e3-9c02-4e2a2bf0a2f2.htm" />
+        <HelpTOCNode Title="TransactionUID Property " Url="html/27ed4e1d-2e47-a2eb-6633-423ee182c483.htm" />
+        <HelpTOCNode Title="UseMarginalNotesAsFullBody Property " Url="html/06f7023b-4c04-96f2-26a6-fb8436be2203.htm" />
+        <HelpTOCNode Title="UserNotes Property " Url="html/6af95448-b240-05f6-5c75-234852c47a32.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="9c289260-d2a2-473b-88cd-278be567fbff" Title="CertificateExtData Class" Url="html/97f61c77-abb4-36c1-bcd0-7ba7a07a96c6.htm">
+      <HelpTOCNode Id="2eb71403-9688-481d-8e4e-799f410cadd4" Title="CertificateExtData Properties" Url="html/c4a527a7-b680-ea7a-90b5-e36a11a8686b.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/a8dde0a7-e5b1-552f-31c2-f9124c9421fc.htm" />
+        <HelpTOCNode Title="FromOwnerName Property " Url="html/cd357cc7-2353-3ec7-2549-35a85e6ebb31.htm" />
+        <HelpTOCNode Title="IsEmptyInstance Property " Url="html/ae6ce0ed-8caf-f5eb-6c0f-5dd628169c68.htm" />
+        <HelpTOCNode Title="MarginalNotes Property " Url="html/812e3ff9-d654-52ba-7f8b-75be68eda443.htm" />
+        <HelpTOCNode Title="Operation Property " Url="html/6ea231da-dbda-e312-4dfd-1380b332c70d.htm" />
+        <HelpTOCNode Title="OperationDate Property " Url="html/b3078e8c-c9fa-883d-d9a2-9afadee4f0ef.htm" />
+        <HelpTOCNode Title="PropertyCommonName Property " Url="html/654cdc4c-d1e1-5369-96d3-7c86b0c69718.htm" />
+        <HelpTOCNode Title="PropertyLocation Property " Url="html/6329d43c-28ee-0b4b-b520-4adf10a8b6a6.htm" />
+        <HelpTOCNode Title="PropertyMetesAndBounds Property " Url="html/0874e354-1ef1-c473-029f-e8f7dbb6792d.htm" />
+        <HelpTOCNode Title="SeekForName Property " Url="html/3869f229-e005-0911-3d4c-09ee1271b0ee.htm" />
+        <HelpTOCNode Title="StartingYear Property " Url="html/0be2ceab-1e55-eda8-3c4f-2444c8b639ad.htm" />
+        <HelpTOCNode Title="UseMarginalNotesAsFullBody Property " Url="html/521aefec-c90b-273a-4c71-87e45f190a35.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="57956b11-7baa-4605-a67b-7248fe9b0bc2" Title="CertificateExtData Methods" Url="html/24925eb0-f796-74fb-e655-8de5d3d0c336.htm">
+        <HelpTOCNode Title="ToJson Method " Url="html/02300f38-4f2c-04bb-d6f2-d05377037584.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="CertificateIssueMode Enumeration" Url="html/578c5f1b-99b7-ae52-4819-863155b5a5bc.htm" />
+    <HelpTOCNode Title="CertificateStatus Enumeration" Url="html/40bfd3cd-47ba-56c5-8874-66ab5568370d.htm" />
+    <HelpTOCNode Id="b379fb98-767b-4933-a49a-7683536ec7a7" Title="CertificateType Class" Url="html/b2ccf083-4f75-87fd-28ba-e25db11ab291.htm">
+      <HelpTOCNode Id="8d8f1bde-876e-4156-a79f-3449e87c8942" Title="CertificateType Properties" Url="html/8597826b-72c5-c887-38c8-6d4e5aa18263.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/f68bff50-d7f5-fd24-499a-d112210aded8.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="a2c479cb-f1e9-4169-9dc7-e74da722aa54" Title="CertificateType Methods" Url="html/42143adc-b2d6-7aac-7650-3d5e11109ff2.htm">
+        <HelpTOCNode Title="GetHtmlTemplateFileName Method " Url="html/16ec2030-72be-9052-bc89-a8f2b7d744f2.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/4bb2c9c7-a906-0b88-7f03-d9071b2a4c4b.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+  <HelpTOCNode Id="3b793862-db4e-4eac-b006-a58a1c9766e0" Title="Empiria.Land.Documentation" Url="html/576ac5e5-188a-8617-1343-37199d002959.htm">
+    <HelpTOCNode Id="18c8390a-86a8-4c3b-8d70-c45b5a057b72" Title="CandidateImage Class" Url="html/e36851ef-0e59-3561-bc3f-047633c2dbf0.htm">
+      <HelpTOCNode Title="CandidateImage Constructor " Url="html/329d5884-0c62-78e4-55eb-0ca658ba628e.htm" />
+      <HelpTOCNode Id="50b6aa03-e975-4119-9b96-3b5dc87dcea7" Title="CandidateImage Properties" Url="html/167be865-a6ce-c764-63c1-c7fe63a951c6.htm">
+        <HelpTOCNode Title="BaseFolder Property " Url="html/a4b796da-19bb-428b-bb05-15e1ee4d48b5.htm" />
+        <HelpTOCNode Title="Document Property " Url="html/e6c17d66-a903-6504-01a9-6622d245f96d.htm" />
+        <HelpTOCNode Title="DocumentImageType Property " Url="html/79223978-dd64-3bb8-5248-1e4facc356ae.htm" />
+        <HelpTOCNode Title="FileName Property " Url="html/ab501d78-ccfd-1036-be53-f25b60a6a968.htm" />
+        <HelpTOCNode Title="FolderName Property " Url="html/3ccb46de-1258-0e6e-05bd-5af4aab76d58.htm" />
+        <HelpTOCNode Title="SourceFile Property " Url="html/5d84ec44-3ede-233f-f911-ccd66c019734.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="da3d8f51-3e35-4c4f-a64a-e44136ce363a" Title="CandidateImage Methods" Url="html/ad7a96b7-238f-d91c-106b-7735953391c0.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/a7a6b550-df08-57c8-9b08-e1aad3103124.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="c2f8f6bb-30b2-4cfc-84f7-3fe3f617ce19" Title="DocumentImage Class" Url="html/68755204-9910-a1d2-8db9-770bc43b9aa1.htm">
+      <HelpTOCNode Id="ec38799b-daa3-48b1-908d-85eea5494744" Title="DocumentImage Properties" Url="html/7fd9831c-3c8d-cd1c-4ca9-e8471f4b7a82.htm">
+        <HelpTOCNode Title="BaseFolder Property " Url="html/68c05fd1-52d8-3f4e-87bb-eb213a7fda71.htm" />
+        <HelpTOCNode Title="Document Property " Url="html/b901a1da-2f70-ec7b-0237-9b6bcba06e47.htm" />
+        <HelpTOCNode Title="DocumentImageType Property " Url="html/add6b9ee-19e9-9004-6673-07760da8f29a.htm" />
+        <HelpTOCNode Title="ImagingItemExtData Property " Url="html/0595156f-6895-279c-f853-be48d763bf02.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="a850fb13-2a93-49d5-8ce1-ba9d8dc4722d" Title="DocumentImage Methods" Url="html/f0de539e-173c-0e54-b9ce-cda6c13e6632.htm">
+        <HelpTOCNode Title="GetFilesCounters Method " Url="html/2eb5cb27-6b22-3768-ec8e-0842ed46156d.htm" />
+        <HelpTOCNode Title="OnSave Method " Url="html/dad5d5bb-2263-6ec6-28a1-bc99fdf21c17.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="DocumentImageType Enumeration" Url="html/eb6ea659-78db-9ac6-a60c-a340f41cdb32.htm" />
+    <HelpTOCNode Id="68688ea1-4d31-4c18-bfd9-035046284ba2" Title="ImageProcessor Class" Url="html/c2a9e917-c2fd-96ee-fc28-21f9bda6db4f.htm">
+      <HelpTOCNode Id="dba33661-41c6-4866-808a-f511c299b7a7" Title="ImageProcessor Properties" Url="html/4d5ad486-a650-7815-da8f-d54fef4db88e.htm">
+        <HelpTOCNode Title="ErrorsFolderPath Property " Url="html/dcdea8e4-6ae6-10c6-6a76-29e75fbf4a7b.htm" />
+        <HelpTOCNode Title="MainFolderPath Property " Url="html/59b7d187-2f90-e7bf-a450-574bcc81c520.htm" />
+        <HelpTOCNode Title="MainFolderPathByBook Property " Url="html/2f2622a6-9e88-c815-1f79-6bc3f1e23bfb.htm" />
+        <HelpTOCNode Title="SubstitutionsFolderPath Property " Url="html/573a13fa-aa28-0062-e405-82cd5c0b3a38.htm" />
+        <HelpTOCNode Title="SubstitutionsFolderPathByBook Property " Url="html/ad7499cb-394f-6a46-7a7a-8df209755f92.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="aa95ca31-7267-4950-b8fe-fa31caec8837" Title="ImageProcessor Methods" Url="html/22029da9-9407-4625-88b3-40423efaf326.htm">
+        <HelpTOCNode Title="GetImagesToProcess Method " Url="html/5bd0e395-abb9-96ca-ae80-1a0194b8cd89.htm" />
+        <HelpTOCNode Title="ProcessTiffImage Method " Url="html/b2b680bb-9d15-c292-665a-735f97573399.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="6267fa32-0c8e-490f-b77a-2a78d4b70c59" Title="LandDocumentationException Class" Url="html/379503af-0237-97a2-739f-2f1627def93d.htm">
+      <HelpTOCNode Id="5b399f3d-d140-4521-9f0d-59f546d9596b" Title="LandDocumentationException Constructor " Url="html/9f9979fa-53f2-dd76-4efe-3c03439dd3ef.htm">
+        <HelpTOCNode Title="LandDocumentationException Constructor (LandDocumentationException.Msg, Object[])" Url="html/199a4a3e-4629-739f-84d0-40ba04b81de2.htm" />
+        <HelpTOCNode Title="LandDocumentationException Constructor (LandDocumentationException.Msg, Exception, Object[])" Url="html/b20ba628-7a22-8515-04dc-7b5a3c9d3142.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Title="LandDocumentationException Properties" Url="html/ce42b7cb-aaae-3e6f-45a1-9549700e9edd.htm" />
+      <HelpTOCNode Title="LandDocumentationException Methods" Url="html/0b853527-04fe-11cd-0571-924778664300.htm" />
+    </HelpTOCNode>
+    <HelpTOCNode Title="LandDocumentationException.Msg Enumeration" Url="html/94a8e655-5624-be07-5887-ed0f83357910.htm" />
+    <HelpTOCNode Id="56ebb4bf-556d-481b-8385-0f1f2bff63cf" Title="RecordingCandidateImage Class" Url="html/81175c8c-d9cf-be19-80a7-e95c1ff98785.htm">
+      <HelpTOCNode Id="97fd77e4-76da-4023-b9d1-aad8573f2a70" Title="RecordingCandidateImage Properties" Url="html/fae42b07-9b53-0f8b-96b0-e271c96e888b.htm">
+        <HelpTOCNode Title="Recording Property " Url="html/62889852-c690-20e7-57bc-9e7aadb2f461.htm" />
+        <HelpTOCNode Title="RecordingBook Property " Url="html/7118bd4d-5ffa-851c-d5a1-810d81c27bb6.htm" />
+        <HelpTOCNode Title="RecordingNo Property " Url="html/9ac55e70-a3ee-e3de-795b-d8d36459a339.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="460b74f7-d221-4bc2-b1db-a00dbf455adb" Title="RecordingCandidateImage Methods" Url="html/6c615d84-29de-d477-c4ea-26c34794e171.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/73d22077-b82d-211b-3dc1-cfdf55e29887.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="fe5ddba5-4345-4ef6-a2c7-114a4fd8e07a" Title="RecordingImage Class" Url="html/8d05256b-b2fc-e940-f1ac-e0117c7d7d91.htm">
+      <HelpTOCNode Id="09cc2ae6-62ab-48e5-974e-fe1ae378f756" Title="RecordingImage Properties" Url="html/d378e63b-0d66-4873-5c98-a5311c47e1b6.htm">
+        <HelpTOCNode Title="PhysicalBook Property " Url="html/7233468f-841a-82f7-e160-c019f9bbdaae.htm" />
+        <HelpTOCNode Title="PhysicalRecording Property " Url="html/a192a41a-d9f3-e405-3792-3de062c689f9.htm" />
+        <HelpTOCNode Title="RecordingNo Property " Url="html/fcc8cad3-4a81-b37c-04ff-61ede8323ea8.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="05ecde9d-7a99-47f0-85ff-401273eba6f7" Title="RecordingImage Methods" Url="html/01cba6a0-33ce-2495-0c43-185673a2b797.htm">
+        <HelpTOCNode Title="OnSave Method " Url="html/e0a96b61-af2f-dc65-e36a-8b3855da5184.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+  <HelpTOCNode Id="a4ea3478-b1cf-4b6b-9569-da8f172e7bbc" Title="Empiria.Land.Registration" Url="html/19117763-0ca3-4dd5-8ef4-16136f96e38b.htm">
+    <HelpTOCNode Id="f0b48d4d-3cb8-46d5-b336-de756b895e4d" Title="Association Class" Url="html/c6ef2514-5303-f24a-5669-a5d35de48cf6.htm">
+      <HelpTOCNode Id="93d23781-ae9a-401a-9f44-72734ec95d98" Title="Association Properties" Url="html/75585078-2455-f9cc-b3bc-986ac746e752.htm">
+        <HelpTOCNode Title="Keywords Property " Url="html/c10aa93a-ace4-eaf3-6c04-085e625cc896.htm" />
+        <HelpTOCNode Title="Name Property " Url="html/1ab8a3ae-5590-d691-da66-25696e646eab.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="2a0827d0-3ca1-484a-aaee-7a828b7df80e" Title="Association Methods" Url="html/6d731a42-8332-bf9d-4d6f-6d25908c9d70.htm">
+        <HelpTOCNode Title="GenerateResourceUID Method " Url="html/43972d76-0777-0992-8e61-aa99928d339a.htm" />
+        <HelpTOCNode Title="GetAssociationTypeName Method " Url="html/8c583c02-fd55-000d-2424-77d05ed1a4ce.htm" />
+        <HelpTOCNode Title="GetIncorporationAct Method " Url="html/17b82190-d356-8650-db5d-61467bf2564d.htm" />
+        <HelpTOCNode Title="OnSave Method " Url="html/2fe489d1-d289-5464-040f-2b3ad4f7afa4.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/4cdd5798-7526-cb6a-09e7-fca7085a6384.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="ad5c3cce-ba2e-45e5-b2f3-b1be98cf30c0" Title="BasePartyRole Class" Url="html/6ab2c685-2ac7-26a5-bf4a-246f4a063915.htm">
+      <HelpTOCNode Title="BasePartyRole Constructor " Url="html/7c47f429-a69e-2e3f-745f-5830853cd089.htm" />
+      <HelpTOCNode Id="2b955b96-8d6c-4e9f-bc04-28966bdbcbe7" Title="BasePartyRole Properties" Url="html/592a3064-2166-f4e7-f409-96d448bde1a4.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/5927c0c1-9ace-f498-e4b7-01a260643079.htm" />
+        <HelpTOCNode Title="Unknown Property " Url="html/175a329d-bd81-2fa4-71da-4a4695268c11.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="25478b5b-faa4-45c0-a090-6c204c8f8534" Title="BasePartyRole Methods" Url="html/16119f59-b296-a792-1317-c237b4c22539.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/5e5affac-277c-6ff6-e283-680fe12011e9.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="1c014e67-47cb-4e68-a893-100fe43509d6" Title="CadastralInfo Class" Url="html/31ca6b3c-de24-97e9-21a3-4cdd100dfd4d.htm">
+      <HelpTOCNode Title="CadastralInfo Constructor " Url="html/5cd9f735-44d2-c716-7468-796fba332b76.htm" />
+      <HelpTOCNode Id="78b4894d-aeba-4d56-9236-f7e4e17bff17" Title="CadastralInfo Properties" Url="html/9bdf3e06-26ee-e26b-d824-668ed3af0090.htm">
+        <HelpTOCNode Title="BlockNo Property " Url="html/48285d9e-f937-ee62-8a99-76dbfef7876b.htm" />
+        <HelpTOCNode Title="CadastralCode Property " Url="html/a8f5c083-d766-3d9b-92ad-0471d6989117.htm" />
+        <HelpTOCNode Title="CadastralSysLinkId Property " Url="html/51ef02de-b2d9-e733-e5df-b95ba61371af.htm" />
+        <HelpTOCNode Title="CommonArea Property " Url="html/cc7b0f0a-e307-a6f8-0a06-8137540c075a.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/21ea4fc8-26dc-05cf-9289-20b2343be76e.htm" />
+        <HelpTOCNode Title="FloorArea Property " Url="html/509b2097-c205-f982-aadb-5eda254e766d.htm" />
+        <HelpTOCNode Title="IsEmptyInstance Property " Url="html/1ab72a00-d638-c4f8-4f8f-96b106253282.htm" />
+        <HelpTOCNode Title="LotNo Property " Url="html/9cb569b6-fd2e-ff51-beb3-ea22207277a1.htm" />
+        <HelpTOCNode Title="MetesAndBounds Property " Url="html/eec4872b-bd08-ae27-9252-fdb8c580692c.htm" />
+        <HelpTOCNode Title="RegionNo Property " Url="html/4c4c7419-6fa7-618f-a33f-c5c5d939e17f.htm" />
+        <HelpTOCNode Title="SectionNo Property " Url="html/e9f7b34f-add2-7062-db64-246613d2759f.htm" />
+        <HelpTOCNode Title="TotalArea Property " Url="html/aeaeb42e-8fc0-3e3e-b705-346415df8a0b.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="7785807f-a44f-479a-a9f2-f3f0cd4464bd" Title="CadastralInfo Methods" Url="html/e2d56fe8-ed42-4b49-6880-9c541e04dfed.htm">
+        <HelpTOCNode Title="ToJson Method " Url="html/fb80ecdb-f04f-bf7d-b0b6-5accd124af73.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="b7e96040-2fa1-4ad4-b9d0-a2f4df6cebb1" Title="CancelationAct Class" Url="html/5d9e65f2-f175-8d81-ec2b-b9bd37801237.htm">
+      <HelpTOCNode Title="CancelationAct Properties" Url="html/22fd2291-23c3-14dd-158e-9c5ba6beead6.htm" />
+      <HelpTOCNode Id="47487744-699c-46e2-a31f-f1e108215775" Title="CancelationAct Methods" Url="html/1b467474-f312-be88-46a4-af5170a6b992.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/842dea5a-fb50-1e70-2e49-99504dacfa27.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="afb4fe61-f495-448a-95bd-65307c2fbe10" Title="ContractData Class" Url="html/e2981b2c-7fd2-793d-5544-219b2785dc69.htm">
+      <HelpTOCNode Title="ContractData Constructor " Url="html/06c1d0c8-34ac-47d9-7a02-b3ebd0986af3.htm" />
+      <HelpTOCNode Id="1e0c8b9e-0f45-4681-bbd9-cb24ce28f169" Title="ContractData Properties" Url="html/de1d3494-a73b-01cb-dc29-5004d1cc2fee.htm">
+        <HelpTOCNode Title="Date Property " Url="html/09d0377c-a4e6-b829-1e23-8a1b21713591.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/efd370d4-8f44-945e-bcc2-2ff0cc9fb98f.htm" />
+        <HelpTOCNode Title="Interest Property " Url="html/383380ce-f3fd-e2b0-466e-6676211c5d53.htm" />
+        <HelpTOCNode Title="IsEmptyInstance Property " Url="html/d8cbd871-1ce4-472f-d415-b7193832fc71.htm" />
+        <HelpTOCNode Title="Number Property " Url="html/e4beef53-dcc5-8d67-7a22-c17034f521b4.htm" />
+        <HelpTOCNode Title="Place Property " Url="html/302b9382-da69-3382-52f4-ce53629935d0.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="ca8aedbe-5c2f-42eb-8f97-ea6bba145a21" Title="ContractData Methods" Url="html/5e23113c-5c2c-af72-e702-14ff2fc95cb2.htm">
+        <HelpTOCNode Title="ToJson Method " Url="html/63c63f7d-9372-40a2-3b2f-c2cb5842c5d7.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="0a808b74-ae8f-43ec-a52d-7a0820a64e0d" Title="DomainAct Class" Url="html/5c00e78b-3aa0-1e9d-995e-1ea4b6e2545e.htm">
+      <HelpTOCNode Title="DomainAct Properties" Url="html/1c573dc8-4b3e-d58a-224e-694f02f8e97f.htm" />
+      <HelpTOCNode Id="b0a56bd0-68ab-4bfd-9dfa-135e6684cd02" Title="DomainAct Methods" Url="html/fd8fbadb-88cb-17b8-6689-ee179836c8c3.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/80085bb7-028a-26ec-1ef6-46bc7ea7ee09.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="29cf3c15-769d-4015-af80-ec440c0576e6" Title="DomainActPartyRole Class" Url="html/d66a5e2f-19ca-3687-74b9-ca2d92fa2958.htm">
+      <HelpTOCNode Title="DomainActPartyRole Properties" Url="html/d2dd5b0a-a5df-287d-d237-a1c2049da9cf.htm" />
+      <HelpTOCNode Id="ee6f7aa4-30ca-40b7-bbff-c585d5b3471e" Title="DomainActPartyRole Methods" Url="html/3bf81ec0-747a-b39e-76d9-3521aafa618f.htm">
+        <HelpTOCNode Title="GetList Method " Url="html/5802262f-9560-0ccf-c6ef-ef7f96fbd975.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="e624fcec-3742-466e-8667-76de6dd01468" Title="HumanParty Class" Url="html/8c9eb5b5-6b63-e97a-4185-d89c6b878be2.htm">
+      <HelpTOCNode Title="HumanParty Constructor " Url="html/e529a5e3-6874-f705-3b38-aca8a28a250d.htm" />
+      <HelpTOCNode Title="HumanParty Properties" Url="html/5bdbd0d6-4320-a9a0-3e40-80c1ddd17f93.htm" />
+      <HelpTOCNode Id="446c381e-d672-4549-839b-cfb4c656a3ce" Title="HumanParty Methods" Url="html/1d5c66fd-4307-095b-f944-5342ebc94fe1.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/35914318-02c6-681e-6bd8-d89ed31ff1eb.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="ca124a38-c1e4-4c25-b1b2-3288355470b9" Title="InformationAct Class" Url="html/04bc8c1d-2c9b-0598-8090-67ea4e41b897.htm">
+      <HelpTOCNode Title="InformationAct Properties" Url="html/e97cb5a7-aae1-eff4-0d02-ab308cc01ed7.htm" />
+      <HelpTOCNode Id="6fa7d37d-2272-4c29-a8b5-f9d755cbca75" Title="InformationAct Methods" Url="html/0f44ca76-a361-1689-4455-dc0445188e1a.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/4123799b-ded8-88b7-a31d-ad35b21abfd5.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="a8735f53-8773-4e4e-9155-1fabc07b8f40" Title="JudicialOffice Class" Url="html/20277a8c-57df-0897-e1c4-045f7a067b45.htm">
+      <HelpTOCNode Id="0980825c-5db7-4de4-a5fc-547f5d03ede4" Title="JudicialOffice Properties" Url="html/33835b0a-7394-f8fa-c74c-0d570165acea.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/0566ee09-cf71-2621-b214-544be2b5d07f.htm" />
+        <HelpTOCNode Title="Number Property " Url="html/88677d32-d4e0-12fb-4aea-1a1617ad0eb5.htm" />
+        <HelpTOCNode Title="Unknown Property " Url="html/9f656d34-ecf7-9566-9f21-f190e08fb7b8.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="41cbff32-61e9-4f01-aa5c-455d494995a2" Title="JudicialOffice Methods" Url="html/e6a8a8d9-dcf1-4b93-a5e4-6f3e3557e685.htm">
+        <HelpTOCNode Id="ebe7d702-3a82-4954-aa72-1a1da631f2a4" Title="GetJudges Method " Url="html/90a48f92-ccf1-9af9-6302-d5c730435949.htm">
+          <HelpTOCNode Title="GetJudges Method " Url="html/1e6e5171-60e1-49b7-bdae-2c3face150af.htm" />
+          <HelpTOCNode Title="GetJudges Method (TimeFrame)" Url="html/84549408-4a03-d6f9-d581-ecbf07c39bb6.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="GetList Method " Url="html/b6b1f9f9-397b-a810-fdf3-cea65789d6c2.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/191606cb-6d76-fba9-5e06-e284729c852a.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="2853d911-723e-4f8a-80ee-a72dcd0e962b" Title="LandRegistrationException Class" Url="html/58c7dcee-4200-b6af-ca63-9cc73372e848.htm">
+      <HelpTOCNode Id="9d50a10e-81a7-4ca9-969f-1a35a012f808" Title="LandRegistrationException Constructor " Url="html/44bb43e6-aa4f-68e6-6386-c53e0195db4d.htm">
+        <HelpTOCNode Title="LandRegistrationException Constructor (LandRegistrationException.Msg, Object[])" Url="html/53cefb02-0c23-9786-41c8-ba68215aa676.htm" />
+        <HelpTOCNode Title="LandRegistrationException Constructor (LandRegistrationException.Msg, Exception, Object[])" Url="html/f7307444-7fa2-c5c0-be76-be293735d7ea.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Title="LandRegistrationException Properties" Url="html/2626b786-e55a-4a41-fe27-33084e1935f9.htm" />
+      <HelpTOCNode Title="LandRegistrationException Methods" Url="html/d247c7b2-2fca-7f19-b7be-b29455aa818b.htm" />
+    </HelpTOCNode>
+    <HelpTOCNode Title="LandRegistrationException.Msg Enumeration" Url="html/66c8107f-76b1-ca33-f4b8-2b0a2f7bde26.htm" />
+    <HelpTOCNode Id="5b74b22f-2fc9-46bd-863b-91da4fc0a6b9" Title="LimitationAct Class" Url="html/43bbfe9d-5dbb-adb7-e137-3f46822583c2.htm">
+      <HelpTOCNode Title="LimitationAct Properties" Url="html/b2095515-c281-cc7e-a869-8af990c3ad19.htm" />
+      <HelpTOCNode Id="f8f1d777-483b-44ed-8f56-2427120557ae" Title="LimitationAct Methods" Url="html/8bd56eee-e545-b660-fb1a-6b214e738605.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/8564d692-4732-452c-b9df-6e15f9f57aae.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="91981c89-a1a9-4ccd-bb74-b166b0f64e4b" Title="LRSValidator Class" Url="html/6f6f1038-ff0f-ca21-6be9-dd68c3ce4ff7.htm">
+      <HelpTOCNode Id="588905a3-9fb8-438c-8316-d3229491cb20" Title="LRSValidator Methods" Url="html/a9f85545-52b9-9328-37ee-5f6027ba3386.htm">
+        <HelpTOCNode Title="GetOverlappingRecordingsCount Method " Url="html/6f1fbac0-f0b8-2d9a-1dbb-c7088f5b1cfd.htm" />
+        <HelpTOCNode Title="ValidateDeleteRecordingAct Method " Url="html/111d05cb-5a29-ed2f-c0ed-d8f87c5ddb1d.htm" />
+        <HelpTOCNode Title="ValidateDeleteRecordingActProperty Method " Url="html/95da69fb-9a0d-7d59-ee83-7182fd286928.htm" />
+        <HelpTOCNode Title="ValidateRecordingActAsComplete Method " Url="html/13356471-2444-02a4-ea87-b633c1a0e74f.htm" />
+        <HelpTOCNode Title="ValidateRecordingAuthorizer Method " Url="html/abcc18f3-a48a-8c47-bae7-a0d821bf3037.htm" />
+        <HelpTOCNode Title="ValidateRecordingDates Method " Url="html/e055adaa-2e55-f5a1-2621-fb6fd04815b4.htm" />
+        <HelpTOCNode Title="ValidateRecordingNumber Method " Url="html/e0f395cc-f4b0-150c-f4f3-c44ed46e425e.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="33ba0160-ceab-4769-b408-afdb1607cfc9" Title="ModificationAct Class" Url="html/93e5211c-701b-1f05-28f4-0e8d68d0fc55.htm">
+      <HelpTOCNode Title="ModificationAct Properties" Url="html/9cc57172-a4dd-fcd9-822a-fbf8b42fde61.htm" />
+      <HelpTOCNode Id="752d3202-26f0-4613-8cd9-83bcfbc56f05" Title="ModificationAct Methods" Url="html/6158b3d9-8f65-9470-6cd4-0c2dbe9307a8.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/11e11088-9fe9-5910-ce92-480b0ab84a6b.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="652d6206-7c0c-4b5b-84b3-cd29a0cd8bae" Title="NoPropertyResource Class" Url="html/fa03a576-63e9-464c-0d1c-f65a3064e1d8.htm">
+      <HelpTOCNode Title="NoPropertyResource Properties" Url="html/b8d8ae87-96b7-4b08-51da-9ae943c2b081.htm" />
+      <HelpTOCNode Id="5a92ca98-43da-4b67-9899-7e01039c9003" Title="NoPropertyResource Methods" Url="html/cbed0d2e-f14c-1797-76bf-d6c78e3dfb6c.htm">
+        <HelpTOCNode Title="GenerateResourceUID Method " Url="html/8061321f-8149-0de6-5b1c-df335dac0bfd.htm" />
+        <HelpTOCNode Title="OnSave Method " Url="html/ec89ffd3-8e1b-56f9-b47d-486b141ae6e7.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/48f3ac78-fc18-705d-dc52-70bd3e7ad294.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="a38f0576-9175-49c7-a668-6ab0fbc5ac2a" Title="NotaryOffice Class" Url="html/fbcf03a8-5325-2466-52c4-b323067bb958.htm">
+      <HelpTOCNode Id="c9128ff1-0255-43d1-95d4-91d3fc024b20" Title="NotaryOffice Properties" Url="html/06ff3b23-7270-ebb2-570e-ab1c76ad308b.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/adcbec99-1e2c-370d-808a-871c3a83ba5f.htm" />
+        <HelpTOCNode Title="Number Property " Url="html/710edf49-a557-771e-a008-37d28adeefb4.htm" />
+        <HelpTOCNode Title="Region Property " Url="html/c0664216-5adf-7620-a907-6ae58686a246.htm" />
+        <HelpTOCNode Title="Unknown Property " Url="html/d032ab40-e1ee-5a9b-fd74-8da9e259f394.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="d5acf52c-4e07-408b-9b13-294e98ab6a5d" Title="NotaryOffice Methods" Url="html/239112cb-b05d-3e56-c124-e52f1bfb627e.htm">
+        <HelpTOCNode Title="GetList Method " Url="html/29ec21e1-3ff6-b5fc-4cf1-c5a1aeccdbec.htm" />
+        <HelpTOCNode Id="ed673642-3ae4-499a-8d46-94cea8ae166b" Title="GetNotaries Method " Url="html/923f9e33-b708-5df1-7598-404a662eb13b.htm">
+          <HelpTOCNode Title="GetNotaries Method " Url="html/4b7487e0-ac86-0485-9fdc-c50ab5084fba.htm" />
+          <HelpTOCNode Title="GetNotaries Method (TimeFrame)" Url="html/90c4a004-5c05-3ec8-76c3-0d2cf47b5fc5.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="Parse Method " Url="html/56c40e56-52a1-129c-2de3-ab89b1185297.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="bbd88adf-1424-429d-a291-1f7b5edf192c" Title="OrganizationParty Class" Url="html/dc2b298e-8d4b-e988-3afd-fef9d58dd279.htm">
+      <HelpTOCNode Title="OrganizationParty Constructor " Url="html/2ce7615a-3918-adf8-ce05-cb78a54f21d0.htm" />
+      <HelpTOCNode Title="OrganizationParty Properties" Url="html/15222184-04d3-a074-97a4-cf16e500447f.htm" />
+      <HelpTOCNode Id="c50110ca-047d-4f94-b7b7-974e275fc480" Title="OrganizationParty Methods" Url="html/a1a05c64-469f-6d84-5cb1-9f7e9017e22c.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/daa263f6-f42a-44a3-bd2f-611db2d5d77e.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="OwnershipMode Enumeration" Url="html/a64f789c-9637-cd47-ba8f-9293f80a4f1a.htm" />
+    <HelpTOCNode Id="4b6ca0b3-4d29-4026-8ccf-2a9bbd7e44ac" Title="Party Class" Url="html/f09a3dca-c99f-ddbe-9841-5dfd6fd97a86.htm">
+      <HelpTOCNode Id="a08499b2-08e8-4864-8619-efb2fbf284de" Title="Party Constructor " Url="html/243984a1-eee9-0010-d362-6351c1145219.htm">
+        <HelpTOCNode Title="Party Constructor " Url="html/73ab8cc5-9300-922e-5899-5748553a183c.htm" />
+        <HelpTOCNode Title="Party Constructor (String, String, String)" Url="html/9150134b-1805-ac08-295a-0cfddf3a432f.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="50afe9dc-e6d1-4341-b653-516bc1df8166" Title="Party Properties" Url="html/308c2455-2ae7-45ef-57f5-1b90ef639922.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/03f304ca-563c-cc60-c886-f2a48137a827.htm" />
+        <HelpTOCNode Title="ExtendedName Property " Url="html/679cb9ae-bb40-d616-f792-0d3ae61c12d8.htm" />
+        <HelpTOCNode Title="FullName Property " Url="html/8f7d7979-8651-5ce6-e340-27b0d55d74f3.htm" />
+        <HelpTOCNode Title="FullUID Property " Url="html/3429d4b1-56d1-f7a5-4553-dbdc3a1f8153.htm" />
+        <HelpTOCNode Title="Keywords Property " Url="html/e349a931-cc2d-1796-8d13-de30cd1fa823.htm" />
+        <HelpTOCNode Title="Notes Property " Url="html/c77bdd3f-18e2-1d4a-3e26-ff37492d3404.htm" />
+        <HelpTOCNode Title="Status Property " Url="html/f72fb28b-6c64-a9fc-a872-31635c2563a3.htm" />
+        <HelpTOCNode Title="StatusName Property " Url="html/ce712c6b-1837-8a44-2f80-672020aa7735.htm" />
+        <HelpTOCNode Title="UID Property " Url="html/8bdb5fdd-344d-31ce-47e7-be38688202be.htm" />
+        <HelpTOCNode Title="UIDType Property " Url="html/52d3021d-16ed-de2f-ca1c-11cdb7e0af29.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="f05dd38c-cbf6-47dd-9974-690d4f1560d3" Title="Party Methods" Url="html/5505a77d-130e-ffc6-b6db-004c627675d3.htm">
+        <HelpTOCNode Id="f14fb84a-b4bf-4783-9e13-b0645cb899cf" Title="GetList Method " Url="html/14d3ec0d-1472-6cf0-d293-7664eb2a7fc0.htm">
+          <HelpTOCNode Title="GetList Method (ObjectTypeInfo, String)" Url="html/f3c024fe-f361-9c11-38ff-7ae65a3f876b.htm" />
+          <HelpTOCNode Title="GetList Method (PartyFilterType, ObjectTypeInfo, RecordingAct, String)" Url="html/38947a8a-9bd9-5730-bc03-c55c423ff34e.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="GetRecordingActs Method " Url="html/6a65bc94-e900-1cab-99c6-5bfe19678d7f.htm" />
+        <HelpTOCNode Title="OnLoadObjectData Method " Url="html/5a3afe03-2570-1415-8be6-43da6bcaa456.htm" />
+        <HelpTOCNode Title="OnSave Method " Url="html/5ddc0299-35d7-909f-55d5-741d55e3a17d.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/4ef54f85-d0f2-2c27-d348-034b2eed762d.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="PartyFilterType Enumeration" Url="html/351a0794-bda0-7947-9399-c5eb7390151d.htm" />
+    <HelpTOCNode Title="PartyStatus Enumeration" Url="html/f9ffe51e-6974-be51-ffa5-80aef9c3df0d.htm" />
+    <HelpTOCNode Title="PropertyPartitionSubtype Enumeration" Url="html/7930c2f5-46b4-8592-2823-51d7eca4b921.htm" />
+    <HelpTOCNode Title="PropertyPartitionType Enumeration" Url="html/9d3be35f-7248-643d-0006-db86ac25aa2f.htm" />
+    <HelpTOCNode Id="b0872190-c597-41c5-bb6f-9a03e1464fbd" Title="RealEstate Class" Url="html/b009d475-2f35-5283-ae04-22d8a28096f8.htm">
+      <HelpTOCNode Id="edcae72e-25d6-486c-84b0-1ae8d10e9122" Title="RealEstate Properties" Url="html/cc0cff18-6f04-cab5-237b-3d3d2ce8dabc.htm">
+        <HelpTOCNode Title="CadastralData Property " Url="html/262ae42c-8c98-190b-7e96-6238c9f9758f.htm" />
+        <HelpTOCNode Title="CadastralKey Property " Url="html/224e91e0-3bf0-f859-2a57-5d4f250af95f.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/9a4a7c02-5cd7-1f16-e233-04eda3f5f260.htm" />
+        <HelpTOCNode Title="IsPartition Property " Url="html/b4642498-f64e-2e0d-27a3-e3797e07ef26.htm" />
+        <HelpTOCNode Title="IsPartitionOf Property " Url="html/53ac6cfd-809c-0547-ba5d-ff860adc121d.htm" />
+        <HelpTOCNode Title="Keywords Property " Url="html/72e9aa0c-ba08-122c-48e2-585483815d7c.htm" />
+        <HelpTOCNode Title="Location Property " Url="html/b05f26db-9cee-a7db-981f-b660b124e7f0.htm" />
+        <HelpTOCNode Title="LotSize Property " Url="html/2a94059b-8e7e-100f-f2f1-46971fb2f1d2.htm" />
+        <HelpTOCNode Title="LotSizeUnit Property " Url="html/4b363352-c2c2-fb50-fb20-7d9c35515e01.htm" />
+        <HelpTOCNode Title="MergedInto Property " Url="html/bb611991-5c1c-48fd-c3d1-f6d2b2baf957.htm" />
+        <HelpTOCNode Title="Name Property " Url="html/93b1f949-7249-ef08-be8c-1733113f35dc.htm" />
+        <HelpTOCNode Title="PartitionNo Property " Url="html/2a474068-c69d-9c53-e070-1b901ee4ab19.htm" />
+        <HelpTOCNode Title="PropertyKind Property " Url="html/de3c3930-9e37-0f82-87db-bee267cc2cd2.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="2fbee524-e691-451d-a4b6-cc2edabbcdcb" Title="RealEstate Methods" Url="html/133c75bc-e9ca-3d22-923d-277dc4be8aa2.htm">
+        <HelpTOCNode Title="GenerateResourceUID Method " Url="html/87ddb9c7-23ea-19d7-dfc0-800a7102b51f.htm" />
+        <HelpTOCNode Title="GetPartitions Method " Url="html/d5246f95-1ceb-5da5-a085-9381d4095b78.htm" />
+        <HelpTOCNode Title="IsFirstDomainAct Method " Url="html/6f097830-e48f-17c9-cbc5-9a4396ebbaef.htm" />
+        <HelpTOCNode Title="IsInTheRankOfTheFirstDomainAct Method " Url="html/56321a54-6ea6-c536-fa5d-9c9d82184f7f.htm" />
+        <HelpTOCNode Title="OnInitialize Method " Url="html/f2e090a1-54bd-6833-b1a6-86ace76af634.htm" />
+        <HelpTOCNode Title="OnLoadObjectData Method " Url="html/9488527d-897c-20d0-cfde-c9bb5b335bf2.htm" />
+        <HelpTOCNode Title="OnSave Method " Url="html/50b2d537-7585-6d75-8a98-073d9064e623.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/1916ff6a-0942-37e6-a94b-f216ed70ca03.htm" />
+        <HelpTOCNode Title="TryParseWithUID Method " Url="html/94e8ed5f-80cb-2464-7aed-40bfcd31df9a.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="2b70547e-1a14-41b8-9f42-e6dbfd7626cc" Title="RealEstatePartition Class" Url="html/6290066e-4e5e-74ba-3f94-8e2dca780b59.htm">
+      <HelpTOCNode Title="RealEstatePartition Constructor " Url="html/e1946266-d4eb-1a4f-a758-993461ff0732.htm" />
+      <HelpTOCNode Id="d9c89a1a-db6e-4fcc-9e94-068d95920aaf" Title="RealEstatePartition Properties" Url="html/30ccb0cc-99da-11f6-6168-ba2f7a48eb62.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/709b821d-86e3-6c3c-9419-cb888c694fff.htm" />
+        <HelpTOCNode Title="PartitionName Property " Url="html/94841bd5-6c22-2ad5-499d-b5710327f213.htm" />
+        <HelpTOCNode Title="PartitionNumber Property " Url="html/b81b60e8-1713-aa31-d978-474851b055be.htm" />
+        <HelpTOCNode Title="PartitionRepeatUntilNumber Property " Url="html/c8d698f5-a899-e90a-889a-9e7beeabcae4.htm" />
+        <HelpTOCNode Title="PartitionType Property " Url="html/80e2fb65-76b0-95b5-9b71-bbf0ddd98d02.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="17ba2b1d-d982-454f-bfff-453696fe9262" Title="RealEstateRule Class" Url="html/51c67d63-76d4-802b-f22d-95d70d75166c.htm">
+      <HelpTOCNode Id="bf531776-1721-479f-b21e-114583c2c802" Title="RealEstateRule Properties" Url="html/9a368168-0f90-5d47-2ff0-af869351ddbd.htm">
+        <HelpTOCNode Title="Expire Property " Url="html/12c9d603-3e75-75e5-9dd8-7e29d7a4f06e.htm" />
+        <HelpTOCNode Title="IsInternalDivision Property " Url="html/a63fb14f-fd03-45a1-1466-3e7fd0f8cda1.htm" />
+        <HelpTOCNode Title="Name Property " Url="html/ceac3fe0-ca2d-d6ab-2be5-3b7b35165f1c.htm" />
+        <HelpTOCNode Title="RecordableObjectStatus Property " Url="html/4f96e51a-9572-5511-930a-0e2010699538.htm" />
+        <HelpTOCNode Title="ResourceCount Property " Url="html/8aee251e-ac7e-6e56-e49f-cdeeabc677ee.htm" />
+        <HelpTOCNode Title="UseNumbering Property " Url="html/08515b59-f905-8e6a-535c-6ea799e3b0f2.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="RecordableObjectStatus Enumeration" Url="html/8ba6901e-b39a-6e6d-8dab-91b0a3091447.htm" />
+    <HelpTOCNode Id="4dde2734-6166-44cf-881c-ba9c46befc64" Title="RecordBookDirectory Class" Url="html/4cca5da2-60c1-a224-608d-27a76f669e3c.htm">
+      <HelpTOCNode Id="3062760c-b9e6-4d98-abac-612c65d9dbc6" Title="RecordBookDirectory Properties" Url="html/8ee42ddd-72ec-6599-5806-0e08365f427f.htm">
+        <HelpTOCNode Title="DirectoryType Property " Url="html/e41cea6a-3f05-327f-5078-8dacdc10f7ab.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/f6d2d8e1-6221-cda5-5e23-3a6d125f7306.htm" />
+        <HelpTOCNode Title="RecorderOffice Property " Url="html/bb4663be-33b8-2cf8-1288-808df688db1f.htm" />
+        <HelpTOCNode Title="RecordingBook Property " Url="html/ce641013-6002-7724-2d2c-5563cf8510d9.htm" />
+        <HelpTOCNode Title="Reference Property " Url="html/e1694c71-30bd-405d-087b-0152c526145d.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="5c39c32c-698f-41a6-a253-541cd06c8cd4" Title="RecordBookDirectory Methods" Url="html/b3149ea3-f25f-7c17-4b81-1e62244b319c.htm">
+        <HelpTOCNode Title="CreateRecordingBook Method " Url="html/827f5bee-1795-41ab-7d3a-9d3ef387ff15.htm" />
+        <HelpTOCNode Title="GetImageURL Method " Url="html/8157a553-216d-0402-a3b0-8037bb77d53f.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/ab788d5c-c2e9-26e1-2178-c8df400d9485.htm" />
+        <HelpTOCNode Title="ProcessDirectories Method " Url="html/669ea92c-e2f0-c9ca-3518-301244c1e577.htm" />
+        <HelpTOCNode Title="RenameDirectoryImages Method " Url="html/0227bbc4-a8c6-29e8-a292-d171c3d7510f.htm" />
+        <HelpTOCNode Id="8475de1d-ce2e-43f2-891f-a2d7257a8730" Title="UpdateStatistics Method " Url="html/1b770321-daa5-8a1a-9073-af2be576313f.htm">
+          <HelpTOCNode Title="UpdateStatistics Method (RecorderOffice)" Url="html/e971a4ab-8b51-bdbf-fae1-9e15b1a00796.htm" />
+        </HelpTOCNode>
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="6afd4c3b-9b40-42a1-96db-7568856680d8" Title="RecorderExpert Class" Url="html/564c336d-10dd-a1ac-2340-23c084b1b60d.htm">
+      <HelpTOCNode Title="RecorderExpert Constructor " Url="html/835680a1-a2b1-bc73-ea6e-89c8ca6157d8.htm" />
+      <HelpTOCNode Id="13f11978-722e-42c5-aab5-bbda3f9cefdc" Title="RecorderExpert Properties" Url="html/ff676fb8-c31c-4e7e-9fbc-db239d6bc9e7.htm">
+        <HelpTOCNode Title="Task Property " Url="html/c9c6e40b-80cc-65ea-3620-d5f4847f0a34.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="77c3902f-0020-455d-a4f1-2b22a78cba66" Title="RecorderExpert Methods" Url="html/fd9c5cea-26aa-2e40-df6b-cfc48b36a338.htm">
+        <HelpTOCNode Title="AssertValidTask Method " Url="html/cda36a88-648f-a2b0-fcc2-97e66b09c6ca.htm" />
+        <HelpTOCNode Title="Execute Method " Url="html/15bf49e6-71f8-d983-da78-f87933acd5dc.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="e620ef8c-9a12-4d64-961a-b2f11e081922" Title="RecorderOffice Class" Url="html/c53c4b91-67dc-157d-ad50-a6f7b1136e99.htm">
+      <HelpTOCNode Id="6675a2c2-ebee-438b-99ba-f7b151a929bb" Title="RecorderOffice Properties" Url="html/377cd749-11bc-7640-3893-4d04b496e09e.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/ede8c7e3-f4a1-2f22-5613-bb263eee9c0f.htm" />
+        <HelpTOCNode Title="MainRecorderOffice Property " Url="html/b7677932-1690-6926-e193-37b1fa6a6996.htm" />
+        <HelpTOCNode Title="Number Property " Url="html/0c528c50-0277-8c01-4c28-422980dd7ada.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="6809cba5-791d-4ab3-8cfb-5b57687cd1b3" Title="RecorderOffice Methods" Url="html/8af108c8-4f14-a373-3034-a8631fabd0a0.htm">
+        <HelpTOCNode Title="AddRootRecordingBook Method " Url="html/36fac12e-3c8b-e382-420c-4822aa8c2a36.htm" />
+        <HelpTOCNode Title="GetJudicialDocumentIssuePlaces Method " Url="html/747eb5c9-eef9-d0cf-3f1a-633721ddf8ea.htm" />
+        <HelpTOCNode Title="GetList Method " Url="html/dbcc0d4c-cee1-182d-7dac-7f8126c5654a.htm" />
+        <HelpTOCNode Title="GetMunicipalities Method " Url="html/bd8aacc5-9db7-845d-6ccd-3bd2b1e56952.htm" />
+        <HelpTOCNode Title="GetNotaryOfficePlaces Method " Url="html/51b7a5bb-0e59-1b0c-ed73-59c0530889b8.htm" />
+        <HelpTOCNode Title="GetPrivateDocumentIssuePlaces Method " Url="html/c873b6bc-5ba6-1fa4-ab6b-28b9f09a036a.htm" />
+        <HelpTOCNode Title="GetPropertyTitleOffices Method " Url="html/1e2ff7fb-10bf-aee6-9166-544e4c75e577.htm" />
+        <HelpTOCNode Title="GetPropertyTitleSigners Method " Url="html/5ca067c7-2933-9f14-7c9f-0e865ae84cc6.htm" />
+        <HelpTOCNode Id="94acfb5f-1b9c-4fb8-992a-17e3b77f8107" Title="GetRecorderOfficials Method " Url="html/8f7120f5-2283-1c19-609a-9fe5155efe93.htm">
+          <HelpTOCNode Title="GetRecorderOfficials Method " Url="html/5c38f8b3-8dda-aabb-162d-e50578294183.htm" />
+          <HelpTOCNode Title="GetRecorderOfficials Method (TimeFrame)" Url="html/a5cda7fa-0d81-28dd-dedc-6d7153d9c8c0.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="GetRecordingBooks Method " Url="html/4f34cbbe-551c-0206-ceae-e610a1b8d316.htm" />
+        <HelpTOCNode Title="GetRootRecordingBooks Method " Url="html/63d31303-90fd-8446-4613-6f29d1028617.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/eb7683c3-0b40-c204-6584-21f05108317c.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="4ee35955-8858-49ed-ac4d-751ae137e637" Title="Recording Class" Url="html/139872c0-690f-5115-bf94-141cc8a9855e.htm">
+      <HelpTOCNode Id="17d2a586-3bc7-47c0-bb13-eb230268eedf" Title="Recording Properties" Url="html/5b8b387e-2db1-0f09-f8d4-e7832b2db89a.htm">
+        <HelpTOCNode Title="AsText Property " Url="html/a4efa0c6-f468-31fd-3c46-c1e00e7049b7.htm" />
+        <HelpTOCNode Title="AuthorizationTime Property " Url="html/ba0fff64-1cd0-49fa-2fe4-bbc79a508016.htm" />
+        <HelpTOCNode Title="AuthorizedBy Property " Url="html/01d70e97-29d2-2793-ea5d-a844a17d1e65.htm" />
+        <HelpTOCNode Title="Document Property " Url="html/3caac354-5903-6b3e-0dc1-0f9c7e7f77c8.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/b29d516d-be4b-7d32-0309-9e1f94952cf8.htm" />
+        <HelpTOCNode Title="EndImageIndex Property " Url="html/54987678-e38a-121a-a5ce-04958dac7a38.htm" />
+        <HelpTOCNode Title="ExtendedData Property " Url="html/6f81b568-51bd-337a-9791-06cace6ab2a2.htm" />
+        <HelpTOCNode Title="FullNumber Property " Url="html/a366f4ea-2921-a63e-33b6-9466839c319e.htm" />
+        <HelpTOCNode Title="Integrity Property " Url="html/5374b549-9015-e6c8-d330-8c62a447d8e7.htm" />
+        <HelpTOCNode Title="Keywords Property " Url="html/38eccfce-7115-7dca-5130-f141f7ff8fd6.htm" />
+        <HelpTOCNode Title="Notes Property " Url="html/960d0add-d337-d934-ea2d-3a4c962f017c.htm" />
+        <HelpTOCNode Title="Number Property " Url="html/54cd8cd7-517f-4776-f51d-e020788919fa.htm" />
+        <HelpTOCNode Title="Payments Property " Url="html/963e49ca-5ea9-b66c-0719-f30037d45cf5.htm" />
+        <HelpTOCNode Title="RecordedBy Property " Url="html/816226a8-4a8c-1882-049f-3f520d03a8ff.htm" />
+        <HelpTOCNode Title="RecordingActs Property " Url="html/68516cb8-78da-b0a7-358f-11fc784559e7.htm" />
+        <HelpTOCNode Title="RecordingBook Property " Url="html/c9670877-4691-10d3-bca0-f740244ad961.htm" />
+        <HelpTOCNode Title="RecordingTime Property " Url="html/38581d71-d7fb-2697-43df-48550f65a8e5.htm" />
+        <HelpTOCNode Title="ReviewedBy Property " Url="html/a47061f5-276c-b0bb-62bd-96a1d4b4da8b.htm" />
+        <HelpTOCNode Title="StartImageIndex Property " Url="html/24f24b4b-45e6-2be2-e006-8341e4db6417.htm" />
+        <HelpTOCNode Title="Status Property " Url="html/2d25693b-c5cb-789d-9b7d-2ca48a7b0273.htm" />
+        <HelpTOCNode Title="StatusName Property " Url="html/d45d371f-6da7-6103-1fd9-86cc9c0e8810.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="a6c31e35-185f-4727-9dea-ebabd9d21a20" Title="Recording Methods" Url="html/2f369f2f-ae78-891d-51fa-1e8f95f13b38.htm">
+        <HelpTOCNode Title="Delete Method " Url="html/7d5658d3-1509-bf3b-bd62-76ab99a60460.htm" />
+        <HelpTOCNode Title="GetAnnotationActs Method " Url="html/dee6ee85-af5c-8a67-9509-4c598cfbd9ad.htm" />
+        <HelpTOCNode Title="GetNoAnnotationActs Method " Url="html/91d93aaa-0e8c-745e-0b2b-ff43be1690cc.htm" />
+        <HelpTOCNode Title="GetRecordingAct Method " Url="html/9cda23ed-5e1d-5cc2-5d7e-562e8ce518b6.htm" />
+        <HelpTOCNode Title="GetResources Method " Url="html/cc03760a-f6bf-03a4-c083-470a57dff876.htm" />
+        <HelpTOCNode Title="OnInitialize Method " Url="html/0c210a47-d8ce-5d89-3553-ef45637f19fc.htm" />
+        <HelpTOCNode Title="OnSave Method " Url="html/973beaf7-1384-7d4d-bc52-91f094be8be1.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/33a4e7e6-f741-1e0b-414f-b99f1d75040d.htm" />
+        <HelpTOCNode Title="Refresh Method " Url="html/642923f0-5d85-dca3-21e0-b65db9f6b5f5.htm" />
+        <HelpTOCNode Title="SortRecordingActs Method " Url="html/69e283cc-e033-1b5b-4e84-bfb38ed4c492.htm" />
+        <HelpTOCNode Title="SplitRecordingNumber Method " Url="html/2a0bc0df-2361-1ca4-f2d8-5f2cc00517a2.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="cac9debe-29f8-431e-ae50-ef22f28f75b1" Title="RecordingAct Class" Url="html/18ccfdeb-abb5-01f2-a280-1a3bb2c68a46.htm">
+      <HelpTOCNode Id="ea670d48-f2bc-40fb-a111-a0a6cd763b1b" Title="RecordingAct Constructor " Url="html/65f1d68b-6cdf-6e83-4565-b96ac48e5c2f.htm">
+        <HelpTOCNode Title="RecordingAct Constructor (RecordingActType)" Url="html/693e8f6e-7a42-b7d9-0269-2665afc56a85.htm" />
+        <HelpTOCNode Title="RecordingAct Constructor (RecordingActType, RecordingDocument)" Url="html/84a04ab0-1a01-9b9d-fde3-3697da4c46da.htm" />
+        <HelpTOCNode Title="RecordingAct Constructor (RecordingActType, RecordingDocument, Recording)" Url="html/40569185-2ced-fad8-d35b-9c386d0a670f.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="07e6e122-7a9e-4bf8-ad39-e46ce493ebee" Title="RecordingAct Properties" Url="html/367cc077-7d57-8c40-9de4-607d136558ac.htm">
+        <HelpTOCNode Title="AmendedBy Property " Url="html/282a4be5-e66b-d17a-54b1-1617fe50ee4e.htm" />
+        <HelpTOCNode Title="AmendmentOf Property " Url="html/14f4ef1c-bf75-7b68-0944-562d7a95f494.htm" />
+        <HelpTOCNode Title="DisplayName Property " Url="html/e4ceca49-9b3d-a395-c4a3-7f5fcb7c6c3a.htm" />
+        <HelpTOCNode Title="Document Property " Url="html/8b53d3df-f8a6-0a45-2365-2d72e0a9bb77.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/aee414d2-8c29-99ad-f989-73b28a0bcfcf.htm" />
+        <HelpTOCNode Title="ExtensionData Property " Url="html/474a95a3-1102-b475-ca3b-9d2d66760929.htm" />
+        <HelpTOCNode Title="Index Property " Url="html/52aba44e-d3eb-afef-a581-7faa2193bc83.htm" />
+        <HelpTOCNode Title="Integrity Property " Url="html/67b87466-800c-71d5-6a52-89a33aeb38af.htm" />
+        <HelpTOCNode Title="IsAmendment Property " Url="html/bd74d975-c717-1717-4bff-84008a186af5.htm" />
+        <HelpTOCNode Title="IsAnnotation Property " Url="html/037acbb4-ee70-a581-11a3-b44652b4840b.htm" />
+        <HelpTOCNode Title="IsCompleted Property " Url="html/5053594e-c675-0f31-397e-03efc6f93471.htm" />
+        <HelpTOCNode Title="IsHistoric Property " Url="html/a6ad51c8-f874-ff74-69cf-81fbe07f2a08.htm" />
+        <HelpTOCNode Title="Notes Property " Url="html/3ed0170f-ee3d-0381-d434-15a76fae3353.htm" />
+        <HelpTOCNode Title="Percentage Property " Url="html/92d3555f-b306-9990-eab3-1c3b2f5f04c4.htm" />
+        <HelpTOCNode Title="PhysicalRecording Property " Url="html/751d6800-b921-c9f8-66fd-8c36ca95772d.htm" />
+        <HelpTOCNode Title="RecordingActType Property " Url="html/76d07d36-a497-da57-7f84-5106fcd1bef4.htm" />
+        <HelpTOCNode Title="RegisteredBy Property " Url="html/21d56783-47ee-f657-38e5-442456041dee.htm" />
+        <HelpTOCNode Title="RegistrationTime Property " Url="html/64b71f3e-42a1-fe44-aad9-78048766d7db.htm" />
+        <HelpTOCNode Title="RelatedResource Property " Url="html/9792cafd-42db-9f0f-e9f8-758a0b639e48.htm" />
+        <HelpTOCNode Title="Resource Property " Url="html/c5498ace-0afb-74c7-11a4-0f46c93aad5c.htm" />
+        <HelpTOCNode Title="ResourceRole Property " Url="html/8aebd5f6-d808-fc29-75d8-681a9e1566bc.htm" />
+        <HelpTOCNode Title="Status Property " Url="html/c40ed78c-dbd2-f2b4-b7a4-6a7fb70e9085.htm" />
+        <HelpTOCNode Title="StatusName Property " Url="html/a27e71c9-cbb7-3f5b-5de3-0877a80864df.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="21bce3a5-0c14-4b3a-b714-ce165efc6722" Title="RecordingAct Methods" Url="html/e4730c9d-abd1-5018-f879-bf2506fe21c3.htm">
+        <HelpTOCNode Title="ChangeStatusTo Method " Url="html/b09fa6fe-43a4-59c3-fb2f-91818e296071.htm" />
+        <HelpTOCNode Title="GetList Method " Url="html/d9f91aff-bbff-521b-9c71-a7495ab81714.htm" />
+        <HelpTOCNode Title="GetRecordingAntecedent Method " Url="html/237a8c10-d74e-68e7-1932-f3678db88c87.htm" />
+        <HelpTOCNode Title="OnInitialize Method " Url="html/bef833c0-b78b-c9c0-388c-1b28a9411a1a.htm" />
+        <HelpTOCNode Title="OnLoadObjectData Method " Url="html/5dd48232-5a2b-3810-6a3d-33e87fac6fea.htm" />
+        <HelpTOCNode Title="OnSave Method " Url="html/e38b9ad4-3f70-3b48-00b8-6eb795262da8.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/8c9e9fb1-b12c-1abc-c88d-ef9578a61085.htm" />
+        <HelpTOCNode Title="SetResource Method " Url="html/85e62169-dddf-9205-dd19-94a67b56ae2e.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="b3fd81f7-34f7-4df1-bf8e-957665879ac1" Title="RecordingActExtData Class" Url="html/6da78a4a-261e-eb82-1715-9c03ed87d8dc.htm">
+      <HelpTOCNode Title="RecordingActExtData Constructor " Url="html/b260c4a5-ea88-220a-9025-b348e715c383.htm" />
+      <HelpTOCNode Id="eb17cd85-b2af-4936-b220-23a9d7e330bd" Title="RecordingActExtData Properties" Url="html/87fb4a39-8851-18b3-f67c-9a1829d6764e.htm">
+        <HelpTOCNode Title="AppraisalAmount Property " Url="html/0f28c97c-8482-283e-375c-b3a5fa9c59e6.htm" />
+        <HelpTOCNode Title="Contract Property " Url="html/cb2eb1b0-ff67-396d-bf62-bc60ac139429.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/5be67833-6388-076a-01cf-81674f94f239.htm" />
+        <HelpTOCNode Title="IsEmptyInstance Property " Url="html/835c10fa-8964-0411-d03e-bc04963d5c2d.htm" />
+        <HelpTOCNode Title="OperationAmount Property " Url="html/91a95636-492a-6b48-f84d-2d70141b172a.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="49d9de39-e542-4e06-9a3b-656da02b9735" Title="RecordingActExtData Methods" Url="html/1217af88-c76a-17e2-6ec2-d12c6bd405b6.htm">
+        <HelpTOCNode Title="ToJson Method " Url="html/11abdd6b-3180-bc42-ac62-4988c6c62614.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="6b58a4bb-1349-4bb1-a200-ffe69c91a109" Title="RecordingActInfo Class" Url="html/dd29d30c-3699-2dfe-c64a-1b6f73d9a0ab.htm">
+      <HelpTOCNode Id="26fc460d-a022-465b-af7d-685db1d818cb" Title="RecordingActInfo Constructor " Url="html/904738a9-955c-a2e8-9196-17b89ead9e6b.htm">
+        <HelpTOCNode Title="RecordingActInfo Constructor (Int32)" Url="html/596247df-739b-136c-f3a5-0c12e3897133.htm" />
+        <HelpTOCNode Title="RecordingActInfo Constructor (Int32, Int32, Int32, String)" Url="html/12a5abc6-7c05-5e3b-4d08-601b2faee6a4.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="f50a8fae-e5b9-4d03-8904-916eba8d786d" Title="RecordingActInfo Properties" Url="html/dca84c16-76da-a5dc-4feb-667d48180206.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/983d2525-a5fc-4506-72f2-ffbcfd45f84a.htm" />
+        <HelpTOCNode Title="IsEmptyInstance Property " Url="html/615f2bc6-36a0-fd96-a772-9a990592d811.htm" />
+        <HelpTOCNode Title="PhysicalBook Property " Url="html/fec9c295-a1d5-ac2d-2ca7-dff034343f56.htm" />
+        <HelpTOCNode Title="PhysicalRecording Property " Url="html/ae5d5505-92b4-2280-f5cd-ddb7a1f2a68a.htm" />
+        <HelpTOCNode Title="RecordingActId Property " Url="html/4e36262d-cfda-ce85-e999-ac8674257e00.htm" />
+        <HelpTOCNode Title="RecordingActType Property " Url="html/f7a3ad11-b545-f532-cd13-4e256d0532e1.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="9c92be31-fbb7-44f5-b7dc-2724f65e4492" Title="RecordingActParty Class" Url="html/46456af4-6d3c-2f69-53ca-8cca175da452.htm">
+      <HelpTOCNode Id="06a754ef-4f3f-41bb-816d-ec4e2dcf453f" Title="RecordingActParty Properties" Url="html/6dd1c70f-a111-78e7-d189-03e2de1ce5fe.htm">
+        <HelpTOCNode Title="AsText Property " Url="html/3c241ebb-81ff-6fff-9735-bfd2136c30c6.htm" />
+        <HelpTOCNode Title="ExtendedData Property " Url="html/39da63d5-930e-39bc-fae4-27a8f30280bc.htm" />
+        <HelpTOCNode Title="IntegrityHashCode Property " Url="html/84142f6c-8fa1-fd9e-0057-6a6ceb2a21ac.htm" />
+        <HelpTOCNode Title="IsOwnershipStillActive Property " Url="html/5256105d-d189-462b-cf04-8583a312ae80.htm" />
+        <HelpTOCNode Title="Notes Property " Url="html/0ae8fbb8-86da-6316-6e68-5a6ecd8054b3.htm" />
+        <HelpTOCNode Title="OwnershipPart Property " Url="html/b3e5502e-a768-282f-a5a6-a373509e3664.htm" />
+        <HelpTOCNode Title="Party Property " Url="html/b156f6fa-2f0f-d557-ad73-aeccd4424075.htm" />
+        <HelpTOCNode Title="PartyOf Property " Url="html/c8bc4950-c16a-12ab-7a5c-d7518a2a6cfa.htm" />
+        <HelpTOCNode Title="PartyRole Property " Url="html/a39b959b-a352-ddad-851d-64b4e32cb89c.htm" />
+        <HelpTOCNode Title="PostedBy Property " Url="html/d7d7f03e-14a4-d27a-a457-1c750a6cb122.htm" />
+        <HelpTOCNode Title="RecordingAct Property " Url="html/a51ea71c-3dcc-646a-256b-0a615c36cab2.htm" />
+        <HelpTOCNode Title="Status Property " Url="html/0c75e690-0ad7-7766-6307-adecfbf15b6c.htm" />
+        <HelpTOCNode Title="StatusName Property " Url="html/c30a6610-d048-19e1-bd18-74b197295141.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="52083c9a-2abe-478f-8a51-a87cf6d74876" Title="RecordingActParty Methods" Url="html/e8b05193-bae3-5a0a-eec6-fda27c171ff9.htm">
+        <HelpTOCNode Id="08d61083-d138-47f7-bce2-f39ba3007aa9" Title="Create Method " Url="html/c436264a-effc-4a54-687d-defb9eab959b.htm">
+          <HelpTOCNode Title="Create Method (RecordingAct, Party, DomainActPartyRole)" Url="html/b25a909e-28c3-d95e-f45d-305072da9b97.htm" />
+          <HelpTOCNode Title="Create Method (RecordingAct, Party, SecondaryPartyRole, Party)" Url="html/92555221-7c10-91b1-c89f-71aaabbc7496.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="Delete Method " Url="html/39409dcc-7d36-0e72-d5c1-9a5dbde57b45.htm" />
+        <HelpTOCNode Title="GetOwnershipPartAsText Method " Url="html/c22097f1-f282-18f1-e9ff-7a441dc4c7de.htm" />
+        <HelpTOCNode Title="OnLoadObjectData Method " Url="html/632fdd7a-daf0-9584-a015-bf001e16dc7e.htm" />
+        <HelpTOCNode Title="OnSave Method " Url="html/0d9c2185-bd6d-9a11-d9be-e5580e919d02.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/86433433-b27a-a14b-87a8-449322a35824.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="378f40dd-98b0-4ece-9b6f-c494374d3998" Title="RecordingActType Class" Url="html/21eb3fe2-414c-e2f9-0e43-b6f41d2eefcf.htm">
+      <HelpTOCNode Id="373a2c5f-8890-4ad0-bdcf-b15eaedf0874" Title="RecordingActType Properties" Url="html/39a350da-611c-ace8-d2bf-1e086627ea92.htm">
+        <HelpTOCNode Title="AllowsEmptyParties Property " Url="html/c2a56dbe-ce1a-e225-86aa-9e201fa0921f.htm" />
+        <HelpTOCNode Title="AppliesTo Property " Url="html/140ad75d-ff54-49d4-f345-e6ce0e32ac96.htm" />
+        <HelpTOCNode Title="Autoregister Property " Url="html/ec32cd67-7b34-3290-4543-9d2536367ed2.htm" />
+        <HelpTOCNode Title="BlockAllFields Property " Url="html/1cbe4b5d-b855-fa4c-adf2-e2507aa2e1ae.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/4132cb5b-e9e7-d2af-e6f0-e0542c84e547.htm" />
+        <HelpTOCNode Title="IsAmendmentActType Property " Url="html/7a629597-f2a5-a3ec-709a-fc449a0b22e2.htm" />
+        <HelpTOCNode Title="IsCancelationActType Property " Url="html/1d0885e8-5531-7622-8d52-7fb2a81d0db0.htm" />
+        <HelpTOCNode Title="IsDomainActType Property " Url="html/cf39f5a9-4cc1-fd72-1372-d166f3563df4.htm" />
+        <HelpTOCNode Title="IsInformationActType Property " Url="html/bc101f15-6745-6c60-ad76-e58f32cb48eb.htm" />
+        <HelpTOCNode Title="IsLimitationActType Property " Url="html/24feea2c-b4ba-67b4-ab5c-a676a53a5b0d.htm" />
+        <HelpTOCNode Title="IsModificationActType Property " Url="html/41f46414-94ac-1f8c-2e2d-fdc139cd8c3b.htm" />
+        <HelpTOCNode Title="IsStructureActType Property " Url="html/42e8a2cf-20d6-fb35-34c1-7bd3dbac1740.htm" />
+        <HelpTOCNode Title="RecordingRule Property " Url="html/af2b51b6-7947-f211-0ebf-07181e1b9c62.htm" />
+        <HelpTOCNode Title="ResourceRole Property " Url="html/161d67be-9cf3-b0aa-5216-024e7a7f712e.htm" />
+        <HelpTOCNode Title="UseCreditFields Property " Url="html/ffa27c32-3ec6-0fee-b8ce-b867c5224314.htm" />
+        <HelpTOCNode Title="UseOperationAmount Property " Url="html/1cc8d858-7aad-96fc-e70f-2d326d73882a.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="95300402-8cc4-48f3-a6c1-66f457e0d1ea" Title="RecordingActType Methods" Url="html/4fceedd9-89ca-ae59-d0d3-969d6de76235.htm">
+        <HelpTOCNode Title="GetAppliesToRecordingActTypesList Method " Url="html/108edb09-ff28-c515-2f0d-366bbf2c2cd1.htm" />
+        <HelpTOCNode Title="GetFinancialLawArticles Method " Url="html/891f707b-2289-b8d8-eeb9-11666fd5206e.htm" />
+        <HelpTOCNode Title="GetRoles Method " Url="html/6048672f-fe8f-ad8b-6a11-dbfac7f0ffd5.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/573e2727-a553-9ac3-f39e-e91fa22ce576.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="f14bfd23-e5a0-4395-ae03-f45b732a095b" Title="RecordingActTypeCategory Class" Url="html/4650979a-53dc-d001-fac2-413739612899.htm">
+      <HelpTOCNode Id="19fee7ad-4386-4bd1-a53a-576bc2c85037" Title="RecordingActTypeCategory Properties" Url="html/2f17ced8-2c5b-da7d-3e49-9ddcf00e99dd.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/04242dc1-21f0-70a0-4c71-50504d3adcde.htm" />
+        <HelpTOCNode Title="RecordingActTypes Property " Url="html/9b8feb25-c08a-8052-5fb4-551f61010692.htm" />
+        <HelpTOCNode Title="UniqueKey Property " Url="html/15136c70-3326-80d9-b95b-cf19312e227a.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="deee1633-3b15-4596-afb0-32a257884582" Title="RecordingActTypeCategory Methods" Url="html/b213a9d3-312f-8277-2d8c-8853c4d209a5.htm">
+        <HelpTOCNode Title="GetList Method " Url="html/a481ee04-9e30-9cdb-360e-49f8b3c7df15.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/7e2a2bd9-207a-7df0-e873-fce9744e3c85.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="9027bd44-8114-46a5-9f17-387e4bf1089f" Title="RecordingBook Class" Url="html/2cd85177-10a5-8422-7c6f-ccb3d236955c.htm">
+      <HelpTOCNode Id="9b7550ad-10bd-44a1-b1e5-94c185fb39e1" Title="RecordingBook Properties" Url="html/cd7ff7e2-4ddb-a21c-b52f-8e3db96550f7.htm">
+        <HelpTOCNode Title="ApprovedBy Property " Url="html/741ef8aa-b240-c244-1d3a-8d0b4318c7b0.htm" />
+        <HelpTOCNode Title="AssignedTo Property " Url="html/975e9c58-25f9-905c-709f-29b3b8436e51.htm" />
+        <HelpTOCNode Title="AsText Property " Url="html/d0271ad3-51db-1f67-4843-84140128bd8f.htm" />
+        <HelpTOCNode Title="BookNumber Property " Url="html/23e8c0a5-6198-9707-0bd6-cce388eb55f7.htm" />
+        <HelpTOCNode Title="ClosingDate Property " Url="html/2eeee654-5a8d-d382-5df4-78d0cf01a96e.htm" />
+        <HelpTOCNode Title="CreatedBy Property " Url="html/4501b3de-2548-aa35-78b4-fc556e5bf03c.htm" />
+        <HelpTOCNode Title="CreationDate Property " Url="html/58c6bc9f-3565-2f81-524b-d7caa155102c.htm" />
+        <HelpTOCNode Title="Description Property " Url="html/79912f82-7b1e-398f-69d1-8f63172e9129.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/572fff49-fb5e-6ee2-dbf7-bc35680163d7.htm" />
+        <HelpTOCNode Title="EndRecordingIndex Property " Url="html/64bbee3c-9835-2abf-6415-30255788f10b.htm" />
+        <HelpTOCNode Title="ExtendedData Property " Url="html/9ade7548-3d1e-eb25-16eb-6d32a121950d.htm" />
+        <HelpTOCNode Title="IsAvailableForManualEditing Property " Url="html/c38e2181-8f3e-d924-d1da-5c9f572adb2a.htm" />
+        <HelpTOCNode Title="RecorderOffice Property " Url="html/8a181cbd-3dbf-b917-4669-014681e8cd02.htm" />
+        <HelpTOCNode Title="Recordings Property " Url="html/c4aae382-e279-9da8-187c-558491004d2b.htm" />
+        <HelpTOCNode Title="RecordingsControlTimePeriod Property " Url="html/058dd76c-84bf-e4cd-57cc-4ab7b2201d85.htm" />
+        <HelpTOCNode Title="RecordingSection Property " Url="html/6b545837-b54a-0416-53a3-7afcd55ba2d5.htm" />
+        <HelpTOCNode Title="RecordIntegrityHashCode Property " Url="html/3c3ca9e2-7c7f-04cb-f9f7-c0e718924b15.htm" />
+        <HelpTOCNode Title="ReuseUnusedRecordingNumbers Property " Url="html/a9aeca23-b648-30a8-a4c0-c105cb9f3b62.htm" />
+        <HelpTOCNode Title="ReviewedBy Property " Url="html/dffbaad8-fcf0-5f32-d534-1e5528789b57.htm" />
+        <HelpTOCNode Title="StartRecordingIndex Property " Url="html/bd3118b0-9dea-cf46-fe05-c0775f9f45b8.htm" />
+        <HelpTOCNode Title="Status Property " Url="html/afa9313f-a545-7778-217c-e8668373a17c.htm" />
+        <HelpTOCNode Title="UsePerpetualNumbering Property " Url="html/49c81f22-093a-dd47-b40f-c87dcc6557da.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="27861747-622f-4384-ac9c-e46be1450804" Title="RecordingBook Methods" Url="html/bbc4430e-6d60-6a11-39dd-6fd84308cd11.htm">
+        <HelpTOCNode Title="Assign Method " Url="html/7f82bece-dde1-3321-812b-dee184dd73ae.htm" />
+        <HelpTOCNode Title="Close Method " Url="html/26e6e220-c682-9ecd-0e3b-ed3ad9831046.htm" />
+        <HelpTOCNode Title="CreateQuickRecording Method " Url="html/44aba0e8-970e-c79c-d09f-4e658d244734.htm" />
+        <HelpTOCNode Title="ExistsRecording Method " Url="html/7d4d9d1c-4202-342f-8763-18ecb5bdeef5.htm" />
+        <HelpTOCNode Title="FindRecording Method " Url="html/b6e4986f-b709-0df7-16c8-94c3e0bbf57c.htm" />
+        <HelpTOCNode Title="FormatRecordingNumber Method " Url="html/99b033f5-cf9f-051f-c7e9-64a7b4284089.htm" />
+        <HelpTOCNode Title="GetAssignedBookForRecording Method " Url="html/07d794e6-0b4c-143a-57ad-450c035fa6e3.htm" />
+        <HelpTOCNode Title="GetFirstRecording Method " Url="html/c2271ffd-ae4b-21f5-5b6a-27542c6c5985.htm" />
+        <HelpTOCNode Title="GetLastRecording Method " Url="html/affdd12c-fd79-d7bd-39cb-32454e7e5bf4.htm" />
+        <HelpTOCNode Title="GetList Method " Url="html/bfe38d86-fb28-dc57-74fd-c4639b454b85.htm" />
+        <HelpTOCNode Title="GetNextRecording Method " Url="html/e80cb3e6-5687-685d-ab77-d6aa0b070480.htm" />
+        <HelpTOCNode Title="GetPreviousRecording Method " Url="html/7e3b40ca-c92b-7930-491a-e3d53ecad8e0.htm" />
+        <HelpTOCNode Title="GetRecording Method " Url="html/99fc494a-d805-24da-c7af-13daa42853ab.htm" />
+        <HelpTOCNode Title="GetRecordings Method " Url="html/0cbca204-1268-efd0-5c01-79e0774130ec.htm" />
+        <HelpTOCNode Title="OnSave Method " Url="html/864c588c-3cd3-a18a-e805-3513757d6fb8.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/51c75762-0104-dbd7-8bac-4ff406742aab.htm" />
+        <HelpTOCNode Title="Refresh Method " Url="html/694fa233-5d7e-d663-1038-208070d7a0c8.htm" />
+        <HelpTOCNode Title="SendToRevision Method " Url="html/3fb3799d-5c71-455b-502a-90df070bc533.htm" />
+        <HelpTOCNode Title="Unassign Method " Url="html/881dfc08-18b6-cfb5-2a48-d5c43ca50865.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="e18c3900-a505-4daa-9f8c-8684a3d60388" Title="RecordingBook Fields" Url="html/b29062d3-b239-4dd1-4a9c-de88dbb46bf6.htm">
+        <HelpTOCNode Title="UseBookAttachments Field" Url="html/8e0cf6cc-9b4f-716f-4846-606b61ec2bc6.htm" />
+        <HelpTOCNode Title="UseBookLevel Field" Url="html/56d0e2df-29f0-fe39-ce0b-8420f6b7eeae.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="RecordingBookStatus Enumeration" Url="html/c9795857-4fd4-4c1d-3f0a-b49c12686d22.htm" />
+    <HelpTOCNode Id="d2b93b01-d2ca-4b5d-9149-3243c83a9b2d" Title="RecordingCertificate Class" Url="html/b5e6aa38-f987-3108-e81f-615aadc1294f.htm">
+      <HelpTOCNode Title="RecordingCertificate Properties" Url="html/bb07bb29-5dd8-b115-54ad-09dc7d645176.htm" />
+      <HelpTOCNode Id="0549c7e7-630e-4ae9-95cf-a95fee9adc2c" Title="RecordingCertificate Methods" Url="html/4609e437-a8a5-e40e-3925-49cf17d45de7.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/f471d260-32a3-f5eb-b2de-9343ea9ce61b.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="485eef79-35f8-41bc-840e-6735e87a8f56" Title="RecordingDocument Class" Url="html/430ad27f-220b-62a6-58f2-4cb5c68bafd3.htm">
+      <HelpTOCNode Title="RecordingDocument Constructor " Url="html/7b789768-4091-c28f-bd07-0ce5991a0a53.htm" />
+      <HelpTOCNode Id="ebead342-8c17-44ac-92c8-2e4aaea46594" Title="RecordingDocument Properties" Url="html/2a2e568b-5511-b966-4e4c-62f7640a94d1.htm">
+        <HelpTOCNode Title="AsText Property " Url="html/6b563980-865a-0395-2558-522cd1f59ae6.htm" />
+        <HelpTOCNode Title="AuthorizationTime Property " Url="html/d0d0cfaf-ba43-45e5-df0b-f3f8211de4ef.htm" />
+        <HelpTOCNode Title="DocumentType Property " Url="html/c4549c6e-217c-1065-f3ec-51f095ce27d1.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/5c5e2d1a-cb86-07bb-369e-6107fb2d2de6.htm" />
+        <HelpTOCNode Title="ExpedientNo Property " Url="html/1fdae90a-df01-d099-9f52-835c73162c45.htm" />
+        <HelpTOCNode Title="ExtensionData Property " Url="html/8f35bfda-6688-2fa9-45d8-67970b763614.htm" />
+        <HelpTOCNode Title="ImagingControlID Property " Url="html/67211ef5-3f63-4dc2-e42d-70472272ebd6.htm" />
+        <HelpTOCNode Title="Integrity Property " Url="html/ec6cffff-3848-8c59-bf47-68e2752c0437.htm" />
+        <HelpTOCNode Title="IsEmptyDocument Property " Url="html/901c6403-fc40-5f02-a5ae-81abdb95cdd0.htm" />
+        <HelpTOCNode Title="IsHistoricDocument Property " Url="html/b342f391-4553-b599-e5f5-a6c34261f7ee.htm" />
+        <HelpTOCNode Title="IssueDate Property " Url="html/2d092615-d80a-597b-535e-a9dbc5ed26dd.htm" />
+        <HelpTOCNode Title="IssuedBy Property " Url="html/fe1c1e62-cfe3-4c45-59fb-a90d1cca9a33.htm" />
+        <HelpTOCNode Title="IssueOffice Property " Url="html/d49426c3-05a7-2864-cfbe-c6ee0d88f6b6.htm" />
+        <HelpTOCNode Title="IssuePlace Property " Url="html/f83c92a8-38e7-62a3-a412-7bf259f04b89.htm" />
+        <HelpTOCNode Title="Keywords Property " Url="html/f569d9a2-f3bd-0a3d-5f5e-2e59f0e3a4d2.htm" />
+        <HelpTOCNode Title="Notes Property " Url="html/8bf66d01-35d9-d694-ae34-1de5c7703994.htm" />
+        <HelpTOCNode Title="Number Property " Url="html/927907a4-a937-1314-9637-348916444330.htm" />
+        <HelpTOCNode Title="PostedBy Property " Url="html/c0fd2bce-83f8-2abd-89ad-5443a361b053.htm" />
+        <HelpTOCNode Title="PostingTime Property " Url="html/7944a712-7104-8e5d-7b77-6b33719e3957.htm" />
+        <HelpTOCNode Title="PresentationTime Property " Url="html/a7ce8c44-7a0b-3196-51c3-9a3ed9f12678.htm" />
+        <HelpTOCNode Title="RecordingActs Property " Url="html/a2ff8c4c-bd72-d850-20a6-ba3152c79208.htm" />
+        <HelpTOCNode Title="SheetsCount Property " Url="html/5fff35d3-1236-4e15-219c-8051e5cb1e8b.htm" />
+        <HelpTOCNode Title="Status Property " Url="html/7b115d68-6245-319b-10c4-70d898378beb.htm" />
+        <HelpTOCNode Title="Subtype Property " Url="html/0eaac7ec-a96e-633e-90a8-a1a7aa2c2629.htm" />
+        <HelpTOCNode Title="UID Property " Url="html/193c353e-0b12-a0cc-a568-a31b293b5644.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="75f59f1d-31cf-4c20-b2ef-3f26f1e76837" Title="RecordingDocument Methods" Url="html/fe99bdb8-275d-6ef7-50aa-55a3fd793daa.htm">
+        <HelpTOCNode Title="AppendRecordingAct Method " Url="html/f859ed0c-dcda-ccee-28b1-9860ba7f08ac.htm" />
+        <HelpTOCNode Title="ChangeDocumentType Method " Url="html/166b4312-1401-8288-545a-ec30896aa42d.htm" />
+        <HelpTOCNode Title="GenerateImagingControlID Method " Url="html/f4fde466-4977-0f45-4677-fc686d9b56dd.htm" />
+        <HelpTOCNode Title="GetRecordingOfficials Method " Url="html/9f06450d-acfe-0d73-2bc2-28eabc16b1df.htm" />
+        <HelpTOCNode Title="GetTransaction Method " Url="html/361b221d-dcc7-2d23-0ac3-0684243f175c.htm" />
+        <HelpTOCNode Title="OnInitialize Method " Url="html/c4b9a9e6-b6fa-9238-bb20-7d56a9d4d4f3.htm" />
+        <HelpTOCNode Title="OnLoadObjectData Method " Url="html/a17847ab-42d8-85a5-56bd-6ee65fbf420b.htm" />
+        <HelpTOCNode Title="OnSave Method " Url="html/1eea754f-05a4-18f9-b876-9a16c9e21b4d.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/dacc3caa-380b-341e-caee-2f4f907210c6.htm" />
+        <HelpTOCNode Title="RemoveRecordingAct Method " Url="html/adf8cbb4-7d76-d0f3-c572-e53f0f86510b.htm" />
+        <HelpTOCNode Title="TryGetHistoricRecording Method " Url="html/da14a33c-8ce1-bb74-a7a7-f84451e303ce.htm" />
+        <HelpTOCNode Title="TryParse Method " Url="html/61d2e625-0b8b-030f-8c89-edf2352f7bdd.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="a6a0c80e-afc7-4458-9eb9-0ee15b879989" Title="RecordingDocumentExtData Class" Url="html/0aed31e0-43f3-0e4e-08fe-c21686cb9550.htm">
+      <HelpTOCNode Title="RecordingDocumentExtData Constructor " Url="html/06a0ddd9-a65e-1787-d4f2-8cfba84fd121.htm" />
+      <HelpTOCNode Id="92139c23-4c38-4065-9cba-f615ae1f3a89" Title="RecordingDocumentExtData Properties" Url="html/dd0116da-2843-13f2-107b-7f09e7eebbc5.htm">
+        <HelpTOCNode Title="BookNo Property " Url="html/cbe06dd6-7053-9cc8-c4c8-e6b6a30c46d7.htm" />
+        <HelpTOCNode Title="DocumentNo Property " Url="html/e98c9ec8-1aaa-90e0-4a61-443819fdd688.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/5c0f128c-7e17-0e66-583c-f2ac53f2b8c9.htm" />
+        <HelpTOCNode Title="EndSheet Property " Url="html/ca9d1bc0-c5d6-8bfd-e906-96633781dba1.htm" />
+        <HelpTOCNode Title="ExpedientNo Property " Url="html/6800f4d9-5a07-28fb-0c2d-8e53ad9f6f0f.htm" />
+        <HelpTOCNode Title="IsEmptyInstance Property " Url="html/e78bb0a9-5f66-b5af-5d2a-cf5dbdbb7cf4.htm" />
+        <HelpTOCNode Title="IssuedByPosition Property " Url="html/4e0f14b9-3d08-002b-fe3e-62b93af9878e.htm" />
+        <HelpTOCNode Title="MainWitness Property " Url="html/6aeba21c-2867-05ba-0e0a-d329ad397dfa.htm" />
+        <HelpTOCNode Title="StartSheet Property " Url="html/fb557753-300d-bf6c-98b5-a5aceed930f6.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="41157c40-93eb-4fad-9a66-076100533e55" Title="RecordingDocumentExtData Methods" Url="html/8ff8c446-d437-413e-da45-287383d7cfa9.htm">
+        <HelpTOCNode Title="GetJson Method " Url="html/9daf33ee-0d1b-aad5-e906-e1cb20427814.htm" />
+        <HelpTOCNode Title="ToJson Method " Url="html/a930d1bf-8662-a603-3fb5-1e8fd3986cb0.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="53a68218-ae50-4461-b7c6-0cbbac137cee" Title="RecordingDocumentType Class" Url="html/25b1c3eb-cb9c-4ea6-5680-5d88d5de8456.htm">
+      <HelpTOCNode Id="a403445c-9a2b-4c9c-9cd4-dec1ae11e58d" Title="RecordingDocumentType Properties" Url="html/1e31a4bf-d097-d3da-a8f2-3c4aae7d2377.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/c6311a80-814d-190f-734a-82829533201c.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="bc2760d8-f922-46ba-9233-84ebb6f1a55d" Title="RecordingDocumentType Methods" Url="html/fe3ba972-fa5a-db0c-7346-881ad8c34865.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/25b264a9-93a7-9485-3116-9ab8f7a5d47b.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="b4938f3e-e895-499c-90b4-31e385bc43f2" Title="RecordingExtData Class" Url="html/33e18f28-58cd-57a4-3f14-cbd779ef0021.htm">
+      <HelpTOCNode Title="RecordingExtData Constructor " Url="html/c5ab5585-4bd8-15b7-5022-c4cfeaf90bde.htm" />
+      <HelpTOCNode Id="248ec4b8-9ac8-435d-843f-02983a2e8c40" Title="RecordingExtData Methods" Url="html/bfad3022-00b7-2fe6-83fb-fa084a93f0d1.htm">
+        <HelpTOCNode Title="ToJson Method " Url="html/f4488ce6-18d0-5ac2-7836-2c0522dabe11.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="a0ea104f-7959-4cfa-88c0-c64368d1de98" Title="RecordingRule Class" Url="html/808342da-0623-e57f-e7ff-5db28f97c00a.htm">
+      <HelpTOCNode Id="13fbe1ba-46b4-4bdf-8a49-958db24e6202" Title="RecordingRule Properties" Url="html/1140aad1-0b2d-d8a2-f70c-8f8805b35265.htm">
+        <HelpTOCNode Title="AllowsPartitions Property " Url="html/180bc277-7e53-73e2-bcbd-1b9511916046.htm" />
+        <HelpTOCNode Title="AppliesTo Property " Url="html/870a3ec9-3b27-a724-a08e-1e0ced07ef02.htm" />
+        <HelpTOCNode Title="AskForResourceName Property " Url="html/952eaf3f-f2ff-bfb1-4770-4b0b581d03de.htm" />
+        <HelpTOCNode Title="AutoCancel Property " Url="html/322a51a1-56bb-dabd-2310-47abb2dbc1a8.htm" />
+        <HelpTOCNode Title="DynamicActNamePattern Property " Url="html/358d2f45-a219-3953-aa1c-fe2fa2fa78bd.htm" />
+        <HelpTOCNode Title="InputResources Property " Url="html/cfc7b6a7-e6c9-4b97-193a-f388b8f15b3f.htm" />
+        <HelpTOCNode Title="IsActive Property " Url="html/415e8565-f78f-e965-6a0d-45c6bced18f4.htm" />
+        <HelpTOCNode Title="NewResource Property " Url="html/e9c05c99-4d84-3f55-6eb2-441712326fdd.htm" />
+        <HelpTOCNode Title="RecordingActTypes Property " Url="html/5ac0d9cd-f13b-cbe5-0bee-ef7c29031241.htm" />
+        <HelpTOCNode Title="RecordingSection Property " Url="html/b1c33f57-99e2-7cc2-604c-f25b28655d54.htm" />
+        <HelpTOCNode Title="ResourceCount Property " Url="html/f40683fc-6948-fef2-ffa1-2167f0ee22f3.htm" />
+        <HelpTOCNode Title="ResourceRecordingStatus Property " Url="html/465026ea-0d05-29ac-17a2-0c7f10b539b6.htm" />
+        <HelpTOCNode Title="ResourceTypeName Property " Url="html/f8bd9e1d-db11-e6b0-8195-685fbdfae288.htm" />
+        <HelpTOCNode Title="SpecialCase Property " Url="html/162cbd81-69f3-9b82-df3c-671b3af06935.htm" />
+        <HelpTOCNode Title="UseDynamicActNaming Property " Url="html/251baa17-0b5d-24ae-1a07-7eeb9b9933f5.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="0118c631-7c5b-453c-ab4d-f0cc1d5b7a3a" Title="RecordingRule Methods" Url="html/a3d545c3-1dba-931a-c3bc-83084489e001.htm">
+        <HelpTOCNode Title="ParseResourceCount Method " Url="html/a0628d3d-f2f6-34a4-b1ee-0f5fa5941c42.htm" />
+        <HelpTOCNode Title="ToJson Method " Url="html/c3d8bb40-91c8-f104-881d-888dc62b3606.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="RecordingRuleApplication Enumeration" Url="html/24749bc7-aa4c-42ad-d97b-bf3a3431dcfc.htm" />
+    <HelpTOCNode Id="5f503cc6-7048-4e03-9fb6-3f4eddad220c" Title="RecordingSection Class" Url="html/3b8fdba3-d445-b537-6a65-827501b5aaba.htm">
+      <HelpTOCNode Id="f0bf7618-4639-4b0e-bb61-bbe55a449bac" Title="RecordingSection Properties" Url="html/a5d672cd-da76-087e-2ccb-4f6948a48569.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/1e20d8ed-a212-8bda-08c2-74aa7a90426f.htm" />
+        <HelpTOCNode Title="UsePerpetualNumbering Property " Url="html/1790e713-026f-8c81-c74f-53b3fccdf56f.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="d18abee1-1498-47f6-af16-12d9fe59880d" Title="RecordingSection Methods" Url="html/7fc31087-f77f-f5fb-d86c-cda7dbf14f59.htm">
+        <HelpTOCNode Title="GetList Method " Url="html/52575ac0-90f3-804a-3d70-b9d588a5b072.htm" />
+        <HelpTOCNode Title="GetRecorderOffices Method " Url="html/9869f885-0ef0-7458-6cbe-3940c567fc17.htm" />
+        <HelpTOCNode Title="GetRecordingBooks Method " Url="html/8ebf0bb8-2106-409a-bde1-d74d15c54d06.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/9d2f0402-b6fa-5954-a932-3f9bb0f5e02f.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="b5d967a3-e303-4985-9fe5-4871751a57f8" Title="RecordingTask Class" Url="html/f4729a28-8b88-a423-5127-53c901c12737.htm">
+      <HelpTOCNode Title="RecordingTask Constructor " Url="html/158c0edb-5f28-179f-64f1-e2c9194c78b1.htm" />
+      <HelpTOCNode Id="a7230298-e8cb-42d2-a65f-08ca61dbb838" Title="RecordingTask Properties" Url="html/cb84e8f5-e6ad-911e-83ca-8eaad3b9270d.htm">
+        <HelpTOCNode Title="CadastralKey Property " Url="html/76fda684-86eb-5f7b-0df0-afe0bda48f20.htm" />
+        <HelpTOCNode Title="Document Property " Url="html/a41650a0-48fa-0656-bc1d-70c0c9dec8e8.htm" />
+        <HelpTOCNode Title="PartitionInfo Property " Url="html/67bcb830-3b12-57d1-31cc-a9698ef586fc.htm" />
+        <HelpTOCNode Title="PrecedentProperty Property " Url="html/2eb809bb-bb4f-b6fc-73a2-f5e3428fd128.htm" />
+        <HelpTOCNode Title="PrecedentRecording Property " Url="html/bf20d7c4-b083-14f5-5f1d-5bd8e2063237.htm" />
+        <HelpTOCNode Title="PrecedentRecordingBook Property " Url="html/f047a561-0caa-83bc-eed4-ccdf4d78da1b.htm" />
+        <HelpTOCNode Title="QuickAddRecordingNumber Property " Url="html/817ab95e-98ad-6b80-4bae-4d6f5da7fb55.htm" />
+        <HelpTOCNode Title="RecordingActPercentage Property " Url="html/dc371af8-4965-671e-e955-70e4c66c7448.htm" />
+        <HelpTOCNode Title="RecordingActType Property " Url="html/f0071bfb-d665-d9d4-5ce4-b738146a9b44.htm" />
+        <HelpTOCNode Title="RecordingTaskType Property " Url="html/2a793aa0-740c-7925-f607-26d52725cde7.htm" />
+        <HelpTOCNode Title="ResourceName Property " Url="html/6859b8d2-a00f-539c-25cb-88171ee202d9.htm" />
+        <HelpTOCNode Title="TargetActInfo Property " Url="html/c0c39e00-0e68-32ab-e3e8-07ff4d437bf9.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="7073e9d8-0a2e-4f46-92b2-97ba8b7e2bbc" Title="RecordingTask Methods" Url="html/a77e55e7-58e3-722d-58d0-cd81b16d596b.htm">
+        <HelpTOCNode Title="AssertValid Method " Url="html/7ea32a1d-340c-8360-3a84-0735e2ab14ee.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="RecordingTaskType Enumeration" Url="html/2946806e-1c30-4a30-95b6-9093ec4dcfb2.htm" />
+    <HelpTOCNode Id="446bafff-2072-4609-a72b-4888f9da9604" Title="Resource Class" Url="html/2dc7b081-fc4d-e966-67b4-80cd8282e2ed.htm">
+      <HelpTOCNode Title="Resource Constructor " Url="html/b9e4d145-77d5-b31f-0656-57903504a7c5.htm" />
+      <HelpTOCNode Id="23a011c7-4ff2-4358-8fa4-83e64121a587" Title="Resource Properties" Url="html/6efd65a8-b5d8-b8d9-b13c-dc477a4a5f99.htm">
+        <HelpTOCNode Title="Annotations Property " Url="html/2a9f19e3-f348-232d-d403-60b70085f8b7.htm" />
+        <HelpTOCNode Title="AntecedentNotes Property " Url="html/f9de159c-b355-779e-4471-cde080e170a4.htm" />
+        <HelpTOCNode Title="AsText Property " Url="html/c3bb06a8-3c80-959f-64e1-d0fab7707a27.htm" />
+        <HelpTOCNode Title="ExtensionData Property " Url="html/7fc321c8-f049-e544-955f-6ace62e95212.htm" />
+        <HelpTOCNode Title="FirstRecordingAct Property " Url="html/ba0da7cc-3c9f-7b68-56a9-26f8ab3cecb8.htm" />
+        <HelpTOCNode Title="Integrity Property " Url="html/79e78109-4f57-6b1d-7822-1f8e2818cc8c.htm" />
+        <HelpTOCNode Title="IsCompleted Property " Url="html/25b91aa8-ba1f-5bea-8131-f87ec0e1b8e1.htm" />
+        <HelpTOCNode Title="Keywords Property " Url="html/5543a712-71cd-a35c-d0a3-3e01bfb3d733.htm" />
+        <HelpTOCNode Title="LastRecordingAct Property " Url="html/fcee58d3-b70c-78af-299f-4f37b374dcef.htm" />
+        <HelpTOCNode Title="Notes Property " Url="html/f66d9ce5-7395-4391-d827-cb3a30ece6ae.htm" />
+        <HelpTOCNode Title="PostedBy Property " Url="html/9b2c441b-266a-5e4b-feee-9c922ef713a2.htm" />
+        <HelpTOCNode Title="PostingTime Property " Url="html/9d7c3430-a547-12ba-9c2a-ddcb8139a82a.htm" />
+        <HelpTOCNode Title="Status Property " Url="html/2e639bd2-49f4-a29d-4b3d-9a7b7f5d1105.htm" />
+        <HelpTOCNode Title="StatusName Property " Url="html/a2b9dbd2-f50e-f299-8e0a-d9eb53127e0c.htm" />
+        <HelpTOCNode Title="UID Property " Url="html/6622dd21-7e25-888c-9b10-df643751ff13.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="d124a5dc-40a7-4ac2-be32-39c77ce87178" Title="Resource Methods" Url="html/fa5b05dc-1b4e-f989-d46c-2959747e34ee.htm">
+        <HelpTOCNode Title="AllowHistoricChanges Method " Url="html/77df21d3-eb2f-a5d8-8f70-ce67cf655f75.htm" />
+        <HelpTOCNode Title="GenerateResourceUID Method " Url="html/13bb9296-1a5f-c5f4-ab3f-6698b4e835dd.htm" />
+        <HelpTOCNode Title="GetFullRecordingActsTract Method " Url="html/16ed936a-4378-61a2-a801-37e7928b1419.htm" />
+        <HelpTOCNode Title="GetFullRecordingActsTractWithCertificates Method " Url="html/460485a8-9584-19b7-7008-197ef81114e6.htm" />
+        <HelpTOCNode Title="GetRecordingActsTract Method " Url="html/e1af0faa-6f3e-0624-a1c0-ecfb4cdcee37.htm" />
+        <HelpTOCNode Title="GetRecordingActsTractUntil Method " Url="html/7a9079ed-c660-6f95-d2e4-b14619b099fc.htm" />
+        <HelpTOCNode Id="8a17c511-c551-465e-a24d-6e23963423b4" Title="GetRecordingAntecedent Method " Url="html/56bd18ba-67ff-e5e7-db2e-91a81aeae96b.htm">
+          <HelpTOCNode Title="GetRecordingAntecedent Method " Url="html/1730b3f2-a281-0b9a-9fa7-321b5c06b3cd.htm" />
+          <HelpTOCNode Title="GetRecordingAntecedent Method (DateTime)" Url="html/ca77747f-1e82-d4fb-c688-72d1c2bc910d.htm" />
+          <HelpTOCNode Title="GetRecordingAntecedent Method (RecordingAct, Boolean)" Url="html/65f3abbc-7299-20c7-748b-614e388ddfa8.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="IsCancelationRole Method " Url="html/dad839cc-dcca-0898-aad7-e2cdc436a4ee.htm" />
+        <HelpTOCNode Title="IsCreationalRole Method " Url="html/a67a6ccc-7791-c39b-2891-01caf8237241.htm" />
+        <HelpTOCNode Title="IsFirstAct Method " Url="html/6df2c658-832a-5c8a-abae-f832ec30bef6.htm" />
+        <HelpTOCNode Title="IsFirstRecordingAct Method " Url="html/1f5a584a-1448-eab2-433c-6cfef1cc109e.htm" />
+        <HelpTOCNode Title="IsInformativeRole Method " Url="html/59946fb5-fcb3-2633-85dc-1500817b1e33.htm" />
+        <HelpTOCNode Title="IsLastRecordingAct Method " Url="html/b3fdb45a-63b5-9caf-35fc-9d9c83fb0332.htm" />
+        <HelpTOCNode Title="IsResourceEditingRole Method " Url="html/3697901e-6b77-b4f9-867d-b50b7dabe636.htm" />
+        <HelpTOCNode Title="OnBeforeSave Method " Url="html/f0a8be17-b47f-84e4-4807-44189c9ceabb.htm" />
+        <HelpTOCNode Title="OnSave Method " Url="html/014dbf01-fc7c-f253-5fc3-a1ffbd04579b.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/8c292d90-1219-43df-f00a-fba15574c42e.htm" />
+        <HelpTOCNode Title="TryParseWithUID Method " Url="html/d28b88e0-0479-5411-5607-4da2b9672228.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="ResourceCount Enumeration" Url="html/44b968ef-9325-e051-e427-6e6859266e23.htm" />
+    <HelpTOCNode Title="ResourceRecordingStatus Enumeration" Url="html/2fda80ef-1c43-982e-7686-9d86014d0fb4.htm" />
+    <HelpTOCNode Title="ResourceRole Enumeration" Url="html/8d2286ed-5698-20b3-e324-a8e4b589ec5c.htm" />
+    <HelpTOCNode Id="a2ad619c-fab6-4398-893b-bcb90608be57" Title="SearchService Class" Url="html/a640a739-c6ac-75ac-2eb8-5f700d7974fc.htm">
+      <HelpTOCNode Id="eac8266d-a1f7-4ddc-967f-655d7d7e44e9" Title="SearchService Methods" Url="html/87b3c8d6-47ed-0172-f927-265d303c7936.htm">
+        <HelpTOCNode Title="Certificates Method " Url="html/9af10275-95f0-65f6-dc5d-b8c181daf41b.htm" />
+        <HelpTOCNode Title="Documents Method " Url="html/2cccbc6d-205f-c616-12d8-23023c1821b7.htm" />
+        <HelpTOCNode Title="ImagingControlIDs Method " Url="html/b08e876b-f563-b008-d7d8-4e52cc85f83f.htm" />
+        <HelpTOCNode Title="Parties Method " Url="html/ef7db573-32cc-b8cb-37b9-ac7c7f59b70a.htm" />
+        <HelpTOCNode Title="PhysicalRecordings Method " Url="html/edb8b18c-6fdf-dbe2-a674-20a1ad959802.htm" />
+        <HelpTOCNode Title="RecordingBooks Method " Url="html/a10ebef6-c28a-adc9-8a9e-e1eb668f90fa.htm" />
+        <HelpTOCNode Title="Resources Method " Url="html/99386d9a-4307-a3b0-a1ca-f09fd8123f5e.htm" />
+        <HelpTOCNode Title="Transactions Method " Url="html/e151f45f-022a-03d7-0a33-1cf47589aee1.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="e4041085-2bc3-4748-ad18-f5528f972838" Title="SecondaryPartyRole Class" Url="html/e69c1380-254b-0688-bbe5-8e38a0a55897.htm">
+      <HelpTOCNode Id="83e247c8-db8e-45e4-a9ce-fe382bf5bd63" Title="SecondaryPartyRole Properties" Url="html/aea1d161-dfee-4304-8e7d-ab602a531a85.htm">
+        <HelpTOCNode Title="InverseRoleName Property " Url="html/5cec8b10-c42b-4f54-b28b-ce7f8c1db408.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="ad3e8862-97c6-4389-899d-8b5d3c3fb06a" Title="SecondaryPartyRole Methods" Url="html/a3f290c1-3df0-e6c4-025c-d5a2ed35cb2b.htm">
+        <HelpTOCNode Title="GetList Method " Url="html/a28d9c45-b531-6f7b-cd0f-8a5eef519678.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="a86ef9a3-2a2e-4e0d-a5a6-a463d2977a09" Title="StructureAct Class" Url="html/91c2cdcc-9366-8357-1693-145166c891fe.htm">
+      <HelpTOCNode Title="StructureAct Properties" Url="html/d1afd252-4901-ac4a-78da-e47deac01b2d.htm" />
+      <HelpTOCNode Id="226da00b-e4c0-41d3-8010-77b825085b80" Title="StructureAct Methods" Url="html/fb4941e6-c975-dfb3-e75c-e2f7c627fb43.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/f097f50b-e9b7-07df-9529-657dce0c6ce6.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="1ef09234-2cc7-4914-bb1e-d1d4d4bacb63" Title="TransactionAct Class" Url="html/85ff5157-57f1-96ee-e5df-3002435a9e3a.htm">
+      <HelpTOCNode Title="TransactionAct Constructor " Url="html/6d143558-1ba7-7fa6-de3b-d58ca0408139.htm" />
+      <HelpTOCNode Title="TransactionAct Properties" Url="html/e44e761b-1476-efa1-37d6-5aa8ec30989c.htm" />
+      <HelpTOCNode Id="ec3302ec-e050-4035-8f04-ad1123ac929a" Title="TransactionAct Methods" Url="html/7d134654-9962-35a1-318e-3c2b11786b1f.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/16d05a43-dd4f-b957-99b6-ca4b455550fb.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+  <HelpTOCNode Id="ea470d16-c161-4a18-b2db-89f17eac129d" Title="Empiria.Land.Registration.Data" Url="html/a4ed05cd-e535-95c6-c4b5-cb18c94912d1.htm">
+    <HelpTOCNode Id="1a243bc2-d837-4083-8921-dfb2cd6b6d95" Title="AnalyticsData Class" Url="html/2fd5f169-0dbe-f1e7-a734-d2d77b64c92d.htm">
+      <HelpTOCNode Id="8747d668-2dc6-43fb-9d1f-11c7bddf81e9" Title="AnalyticsData Methods" Url="html/111f6178-385c-f500-121f-614963a084a7.htm">
+        <HelpTOCNode Title="PerformanceByAnalyst Method " Url="html/43b7c512-3c22-e255-972f-cb0c19ce0259.htm" />
+        <HelpTOCNode Title="RecorderOfficesStats Method " Url="html/fb9ea442-21ca-e67c-71c1-4039ee621f6a.htm" />
+        <HelpTOCNode Title="RecordingActTypeIncidence Method " Url="html/47915b5d-5f4b-8f2e-4299-08e139100d4f.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="51a55b4d-7a40-465d-93d8-1a81491bccf5" Title="PartyData Class" Url="html/5c5e3159-a68d-1202-1da7-12c848e9a496.htm">
+      <HelpTOCNode Id="f5a45dd9-3b2d-494a-8606-ff7848f38e5e" Title="PartyData Methods" Url="html/71c82be4-99df-fa55-61b4-2b6815c22e2c.htm">
+        <HelpTOCNode Title="GetInvolvedDomainParties Method " Url="html/29744b06-9bcf-ad87-1f26-c2adaba7aaa5.htm" />
+        <HelpTOCNode Title="GetInvolvedParties Method " Url="html/f865f7f2-6635-1196-81d4-55d68c5f532e.htm" />
+        <HelpTOCNode Id="b551d369-27fe-4f97-bc9b-2022c2f4cd59" Title="GetParties Method " Url="html/ca39b13a-1956-eed7-6f3e-3f8eb26971df.htm">
+          <HelpTOCNode Title="GetParties Method (ObjectTypeInfo, String)" Url="html/43916328-0154-b9ce-8743-e585b9916ce6.htm" />
+          <HelpTOCNode Title="GetParties Method (PartyFilterType, ObjectTypeInfo, RecordingAct, String)" Url="html/f80fe038-1d45-5c2d-dd01-7c232b3cf838.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="GetPartiesOnRecording Method " Url="html/d72b851a-de06-e9e0-1c9f-60ac3f246772.htm" />
+        <HelpTOCNode Id="ed690ae5-9aa6-4742-be45-cf2a89e10c16" Title="GetRecordingPartyList Method " Url="html/b0178981-ab5d-3671-90cf-db48ec7e26ed.htm">
+          <HelpTOCNode Title="GetRecordingPartyList Method (RecordingAct)" Url="html/7b7e5c98-9008-be96-722e-2650d27c3f48.htm" />
+          <HelpTOCNode Title="GetRecordingPartyList Method (RecordingDocument, Party)" Url="html/cbedb104-b296-1528-4203-840edfe7a93c.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="GetSecondaryPartiesList Method " Url="html/fd275cb6-8179-0f6b-375b-84f2d977bab6.htm" />
+        <HelpTOCNode Title="GetSecondaryParty Method " Url="html/e749eefe-8807-eac9-706d-3cfd21b0ae97.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="36a26f8b-00f7-497a-bd98-cdf58da5568c" Title="RecordingActsData Class" Url="html/6241f80d-1d99-a332-e1b7-b05196f62c52.htm">
+      <HelpTOCNode Id="9ebc3bf8-50fb-4c62-9042-9f40699a6349" Title="RecordingActsData Methods" Url="html/c8b361af-4f48-2791-27df-215b156be7e8.htm">
+        <HelpTOCNode Title="GetRecordingActs Method " Url="html/80972420-e9b7-6f8a-a3fd-004f8e8f524f.htm" />
+        <HelpTOCNode Title="GetResourceRecordingActList Method " Url="html/9a1805d7-7855-6cf5-7ce6-f2bed17c77f5.htm" />
+        <HelpTOCNode Title="GetResourceRecordingActListUntil Method " Url="html/ff33db94-5aea-f8cc-f286-4df1b9f0d5e0.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="e466ccea-87e3-4cf8-afef-2f4ad0bae341" Title="RecordingBooksData Class" Url="html/5a19c3ee-1550-4590-6600-fd7627fdc804.htm">
+      <HelpTOCNode Id="a8db0eb3-6a5a-4d7e-a296-09b23f61839e" Title="RecordingBooksData Methods" Url="html/9188a6d2-392a-077e-5d86-14737c49ada0.htm">
+        <HelpTOCNode Title="GetRecorderOffices Method " Url="html/48a8fe71-f4ac-0886-0045-7f5376cfee0f.htm" />
+        <HelpTOCNode Id="c0c26e8e-643b-44bb-a4d6-6b5d29b2755d" Title="GetRecordingBooks Method " Url="html/3a046ac7-f4dc-b41b-a604-57765a5a3583.htm">
+          <HelpTOCNode Title="GetRecordingBooks Method (RecorderOffice)" Url="html/16d38030-0502-8d3b-d002-9b1b5cf458c6.htm" />
+          <HelpTOCNode Title="GetRecordingBooks Method (String, String)" Url="html/aea86898-8f27-fad3-3ff3-bdae7e7eac2a.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="GetRecordingBooksInSection Method " Url="html/1fe251e0-88a9-58de-01f9-71b442e64ed2.htm" />
+        <HelpTOCNode Title="GetRecordings Method " Url="html/878e4be6-b040-3b1b-a5ed-0df5f85e46d3.htm" />
+        <HelpTOCNode Title="GetRecordingsOnImageRangeList Method " Url="html/26203404-8b2b-fef9-6171-c1433994923b.htm" />
+        <HelpTOCNode Title="GetRecordingWithRecordingNumber Method " Url="html/1055ae68-986b-f6cd-c096-ddd7932b1334.htm" />
+        <HelpTOCNode Title="GetRootRecordingBooks Method " Url="html/9f24b14d-a8ca-f0bd-4fe8-366895a7d587.htm" />
+        <HelpTOCNode Title="GetVolumeRecordingBooks Method " Url="html/84d71c8e-cc4f-5f7d-cb3c-ba8d2c0bda84.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="ResourceData Class" Url="html/10cb3de8-c7ba-f2c9-934c-2fa5398bb5b9.htm" />
+    <HelpTOCNode Id="4095f188-d2d1-481d-b798-29f53b009206" Title="TransactionData Class" Url="html/79fae481-0c1d-9d90-abd8-7bd28630dfe2.htm">
+      <HelpTOCNode Id="24af54ff-6ac5-4279-a625-69f7b5fe793f" Title="TransactionData Methods" Url="html/7f3d8ff6-5de2-3599-10d3-b1755845c2cf.htm">
+        <HelpTOCNode Title="GenerateAssociationUID Method " Url="html/3f4a48d2-9343-8574-5a73-7a2b6db248c0.htm" />
+        <HelpTOCNode Title="GeneratePropertyUID Method " Url="html/2a463f16-2fd3-4637-4e6b-7a2fdebf9f5b.htm" />
+        <HelpTOCNode Title="GetLRSTransactionItemsList Method " Url="html/4c7128a8-76d0-c7f4-a05d-64f0590c0b3c.htm" />
+        <HelpTOCNode Title="GetLRSTransactionsForUI Method " Url="html/5fed13ff-ca9a-cc14-daf2-9a8d1438c9cd.htm" />
+        <HelpTOCNode Title="GetLRSTransactionWithKey Method " Url="html/d5fe5e7c-63b7-9933-06ba-22f096b4d966.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="deb90029-bb6c-45ae-ae83-9f6307225a89" Title="WorkflowData Class" Url="html/5d189cc3-aa14-049f-dba2-1d058f329089.htm">
+      <HelpTOCNode Id="315e61d6-a97b-4b75-b673-dd9970026600" Title="WorkflowData Methods" Url="html/2b7fbb12-2d98-bcfc-924b-7671ea303795.htm">
+        <HelpTOCNode Title="GetContactsWithWorkflowOutboxTasks Method " Url="html/7de2bb94-7dfe-6549-de0d-9d1276bb04a4.htm" />
+        <HelpTOCNode Title="GetResponsibleWorkflowInbox Method " Url="html/97f45955-5249-d22f-96ba-774da777967a.htm" />
+        <HelpTOCNode Title="GetWorkflowActiveTasksTotals Method " Url="html/f9908068-2251-5347-d2bb-3bfdf4916b27.htm" />
+        <HelpTOCNode Title="GetWorkflowLastTask Method " Url="html/8ab6aaa6-2f33-bc8e-22ad-7588c7d83d99.htm" />
+        <HelpTOCNode Title="GetWorkflowTrack Method " Url="html/305d2f78-4a48-1bee-9da3-cfb976b83b89.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+  <HelpTOCNode Id="ce446035-45c4-4601-94d6-36f2cb60adf8" Title="Empiria.Land.Registration.Transactions" Url="html/375e5953-d482-a862-6833-5fafdfc3b2ea.htm">
+    <HelpTOCNode Id="366e2745-4ac4-4e60-a952-ab43c913dece" Title="CalculationRule Class" Url="html/4829e614-cc43-0bde-5a5a-5f8cb82727eb.htm">
+      <HelpTOCNode Id="ed437f0f-d6d2-4585-aa3f-5d93dbd50703" Title="CalculationRule Properties" Url="html/740c3afa-a009-8302-be85-b7585c6ad064.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/d5d4d42c-b0d7-0c00-d6b8-d7d1c97087b6.htm" />
+        <HelpTOCNode Title="Unknown Property " Url="html/396d9b40-c8ef-11e9-ab56-b435d685410a.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="69765e4d-4ab4-4b5a-9a40-579dd24860e6" Title="CalculationRule Methods" Url="html/9d2b9b98-14e2-dc15-b533-60ad7577480f.htm">
+        <HelpTOCNode Title="GetList Method " Url="html/109d861f-f8cc-89ff-7524-133182e59787.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/9bf4819a-76ba-52db-a877-bb18c0758ee9.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="c5f12893-85d9-4b10-9adf-475a375b0a02" Title="LRSDocumentType Class" Url="html/c1ac3ac3-4537-bc9d-e7ad-f801a2fd3a8f.htm">
+      <HelpTOCNode Id="b636a988-43f6-480e-a64a-def24fce16ac" Title="LRSDocumentType Properties" Url="html/fad432f6-8e94-f25e-ce72-b9434df4b1a4.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/f7ba8484-4256-8abd-5958-ce128a15043d.htm" />
+        <HelpTOCNode Title="IssuedByEntities Property " Url="html/8b6478df-f91f-0518-79aa-fff944ec5f0c.htm" />
+        <HelpTOCNode Title="LArt Property " Url="html/fd40f576-1122-9525-e7de-523e4fd32eab.htm" />
+        <HelpTOCNode Title="Unknown Property " Url="html/2fb3f473-c935-0dc4-71b3-f52a62f2de57.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="8ec5057d-6f7d-40ad-9817-4f8815ea38f6" Title="LRSDocumentType Methods" Url="html/c246ec69-4ed1-cc44-edf5-02d4450dc9b3.htm">
+        <HelpTOCNode Title="GetList Method " Url="html/7204a428-5d16-f797-d150-ec68b4ef0335.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/3946f045-ecef-8f78-9a48-73b253cbb015.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="e4e62e62-0ca5-48fb-b68c-d5b8f9f73215" Title="LRSExternalTransaction Class" Url="html/8aa2bcdb-a704-bdfc-4660-ffa3c1755b17.htm">
+      <HelpTOCNode Title="LRSExternalTransaction Constructor " Url="html/9019289d-e9fa-a85b-4e0a-9513a08d7870.htm" />
+      <HelpTOCNode Id="b0a8103b-9c5e-427e-a3dd-b0e208b498f2" Title="LRSExternalTransaction Properties" Url="html/59bb67c4-0f26-a440-7448-75613a9599e5.htm">
+        <HelpTOCNode Title="Agency Property " Url="html/1964a3de-578d-5028-e315-038959f09f88.htm" />
+        <HelpTOCNode Title="DocumentType Property " Url="html/3b2c46d5-2a98-270e-ee16-0a6af202c7fa.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/8181dae4-230a-5bab-5acc-447460a1b252.htm" />
+        <HelpTOCNode Title="ExternalTransactionNo Property " Url="html/6fb06d0d-493c-ebac-f57d-2e19c7d6fa99.htm" />
+        <HelpTOCNode Title="ExternalTransactionTime Property " Url="html/a1697680-085a-951f-07c2-613b79e9efa5.htm" />
+        <HelpTOCNode Title="IsEmptyInstance Property " Url="html/737fb8cd-f0a4-6327-784e-804a7e8a08a0.htm" />
+        <HelpTOCNode Title="PaymentAmount Property " Url="html/8163feff-a295-2dd8-acb3-94898d664acb.htm" />
+        <HelpTOCNode Title="PaymentReceiptNo Property " Url="html/4de8a5d9-d863-432c-ff77-c3e423b4a56f.htm" />
+        <HelpTOCNode Title="RequestedBy Property " Url="html/3983fe95-8b56-ac3b-19e8-933085dcebd1.htm" />
+        <HelpTOCNode Title="TransactionType Property " Url="html/4ccfef39-fdd2-cf13-c4bd-9839a3c13ed9.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="69440e0a-3948-4c50-8b94-6f66ade390ef" Title="LRSExternalTransaction Methods" Url="html/ade4637e-4d9e-be72-9faa-2e7e674a4d07.htm">
+        <HelpTOCNode Title="AssertIsValid Method " Url="html/f11730a0-7ffd-c53b-fc5b-60d3bb3c6fae.htm" />
+        <HelpTOCNode Title="CreateLRSTransaction Method " Url="html/73a738bc-83eb-e6b3-c536-122531859fbe.htm" />
+        <HelpTOCNode Title="ToJson Method " Url="html/fdb764f6-22e0-05b2-bcd2-3f72d4608531.htm" />
+        <HelpTOCNode Title="ToString Method " Url="html/dfc35d11-f513-d947-faba-d341cd92a0df.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="eb43913f-f9f5-47ca-926b-655d10163712" Title="LRSFee Class" Url="html/93ed91e9-ac12-edad-b60d-5a8d97cde981.htm">
+      <HelpTOCNode Title="LRSFee Constructor " Url="html/531187da-1f0b-ddf0-bf14-dda3780e29ed.htm" />
+      <HelpTOCNode Id="fac37fda-2f41-43d3-86e7-762e45976ffc" Title="LRSFee Properties" Url="html/f0488eb0-d617-7b29-628d-13cb77591a55.htm">
+        <HelpTOCNode Title="Discount Property " Url="html/386b14e4-b44a-32bd-1b52-edfa585b7335.htm" />
+        <HelpTOCNode Title="ForeignRecordingFee Property " Url="html/b03671d1-48e0-89d0-0d4e-7e538c54b0c1.htm" />
+        <HelpTOCNode Title="RecordingRights Property " Url="html/ae85b569-c00d-e99f-a551-43e2c379a866.htm" />
+        <HelpTOCNode Title="SheetsRevision Property " Url="html/717927cb-a0b2-0ba0-0ee9-6e5c981728e4.htm" />
+        <HelpTOCNode Title="SubTotal Property " Url="html/3e289b1d-6e07-bc9a-ec6f-47c14936d5be.htm" />
+        <HelpTOCNode Title="Total Property " Url="html/00cf5dc3-80d2-e7f4-f37f-3ccaa0cf7141.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="ef71f0b3-33ac-4a54-b9cd-76384e147a3e" Title="LRSLawArticle Class" Url="html/d1ccb626-1fff-f673-cbbe-f716a31d9fc8.htm">
+      <HelpTOCNode Id="73d455ef-cf38-45d6-9177-bea7bfe43630" Title="LRSLawArticle Properties" Url="html/d768b715-8277-ffa0-996c-44e8b600456b.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/c4358cf1-77e3-66b9-a4a3-5e7b8efd6b32.htm" />
+        <HelpTOCNode Title="FinancialConceptCode Property " Url="html/33409b69-8f16-33b7-3c6f-01db532166c0.htm" />
+        <HelpTOCNode Title="Unknown Property " Url="html/60bb5173-6521-f4a1-4347-f5cf69d3e1d1.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="91c5520a-776f-4332-bff4-cf3bca1164cc" Title="LRSLawArticle Methods" Url="html/f0f8caaf-a608-eb40-ba06-a5467fadb412.htm">
+        <HelpTOCNode Title="GetList Method " Url="html/404cfbed-ff4c-36f5-7dda-a059578de608.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/37a4caf7-6ff7-5025-7364-c1145ebde5c8.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="b5b0a521-5647-4dbf-bf6c-a2d9ee280957" Title="LRSPayment Class" Url="html/6bb61f2e-f7ba-6f6d-3cd5-e2f87b3dd1c5.htm">
+      <HelpTOCNode Id="26954a22-5d07-46dc-b758-4020a8a9a390" Title="LRSPayment Properties" Url="html/73b77a7b-4598-3f47-a595-6b6f9465952f.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/d5b7433a-301f-e279-c61c-d39faa8a8717.htm" />
+        <HelpTOCNode Title="FeeWaiver Property " Url="html/971455fe-f914-4da8-49bd-cd653cb4dc7c.htm" />
+        <HelpTOCNode Title="Integrity Property " Url="html/fb698e9f-4940-0380-06ca-ce3862e459fd.htm" />
+        <HelpTOCNode Title="Notes Property " Url="html/e0148490-91b2-d9ac-23a0-58c2e7a997e1.htm" />
+        <HelpTOCNode Title="PaymentExternalID Property " Url="html/30780bef-66a3-2fd1-8c9e-32a3639de37f.htm" />
+        <HelpTOCNode Title="PaymentOffice Property " Url="html/b6b5a208-d035-0415-9594-af1fcacc67b1.htm" />
+        <HelpTOCNode Title="PostedBy Property " Url="html/4fdc81ab-fd5a-e78c-3bd3-182689912dc8.htm" />
+        <HelpTOCNode Title="PostingTime Property " Url="html/ccfe3f9d-e141-e384-0361-136ad9881e73.htm" />
+        <HelpTOCNode Title="ReceiptIssuedTime Property " Url="html/a0181ac5-e550-725a-448a-71d96c00bdd4.htm" />
+        <HelpTOCNode Title="ReceiptNo Property " Url="html/1aed6d8a-19fa-881b-cec0-f0d1d54a82a8.htm" />
+        <HelpTOCNode Title="ReceiptTotal Property " Url="html/3a964db5-f787-7b1d-c6f3-561a116f9155.htm" />
+        <HelpTOCNode Title="Recording Property " Url="html/1408c966-fbb1-a2d3-9ba3-bbbe97ec454a.htm" />
+        <HelpTOCNode Title="Transaction Property " Url="html/eaf7b409-b598-15b5-0788-6d4abf4d33b8.htm" />
+        <HelpTOCNode Title="VerificationTime Property " Url="html/4c171df1-3cc6-1f33-3123-5d526fb9f1d0.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="99bb7793-c05d-4352-858f-df237bee9ae5" Title="LRSPayment Methods" Url="html/824a3e3d-a9de-4aca-fefe-9a2809e10f48.htm">
+        <HelpTOCNode Title="OnSave Method " Url="html/c5e10563-13fc-8652-be69-926ac2aebb73.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/8e952586-bcfe-2e3f-16bd-c5c5f809c374.htm" />
+        <HelpTOCNode Title="Verify Method " Url="html/6e4856ef-ad3d-9a90-bae8-a3113a9e3e0e.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="9ac55082-307a-428e-8028-c9725d625c4f" Title="LRSPaymentList Class" Url="html/04b95fe3-0c87-2070-1f9e-614a185454b3.htm">
+      <HelpTOCNode Id="c939da26-30f1-4f75-8595-7dc4d9a6f067" Title="LRSPaymentList Properties" Url="html/e8e531ec-516f-0666-7337-a481f1a2a9ea.htm">
+        <HelpTOCNode Title="Item Property " Url="html/515c9b7d-d84b-2624-d2b1-199c9a8175a8.htm" />
+        <HelpTOCNode Title="ReceiptNumbers Property " Url="html/22a19f26-5419-e120-bf24-020cff68e0fe.htm" />
+        <HelpTOCNode Title="Total Property " Url="html/18f9c771-fed0-ee3e-9e7e-c0a10173014c.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="3705ebfb-ab57-4aa5-b1e4-b584fd1121c9" Title="LRSPaymentList Methods" Url="html/19a64a04-7f73-08c5-8111-a9a8a71955c4.htm">
+        <HelpTOCNode Title="Add Method " Url="html/2f870d4b-af12-0f43-75c3-3eb890d36a4f.htm" />
+        <HelpTOCNode Id="e15d00d0-f7ab-46c5-9e64-7057c35be620" Title="Contains Method " Url="html/f722e0f4-1de2-c355-4e6e-3b1c2b14f340.htm">
+          <HelpTOCNode Title="Contains Method (LRSPayment)" Url="html/1a824068-dc2a-436a-7cfc-7166d6c731d5.htm" />
+          <HelpTOCNode Title="Contains Method (Predicate(LRSPayment))" Url="html/8fc8bddf-ebac-0461-7266-f78cc91e1e3a.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="cf4e9f23-ed82-44f6-be3a-c2c197d2098a" Title="CopyTo Method " Url="html/fea2ba2c-bba6-342d-62f5-fdb21217e18e.htm">
+          <HelpTOCNode Title="CopyTo Method (LRSPayment[], Int32)" Url="html/fc4e8398-f180-c3b8-c275-d8ce986a5e3d.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="Find Method " Url="html/29a94f90-7251-13e5-c366-94564ab05e66.htm" />
+        <HelpTOCNode Title="FindAll Method " Url="html/b8502a23-2ee3-4f79-60e6-dca52c090a08.htm" />
+        <HelpTOCNode Title="Remove Method " Url="html/3fb63895-236d-c19b-23c1-b81067f52e39.htm" />
+        <HelpTOCNode Title="Sort Method " Url="html/32d4171c-061a-cb63-89ec-8b64b2be74e9.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="LRSPaymentRules Class" Url="html/6c0fab95-1b13-78b1-d147-eac5cb682cb8.htm" />
+    <HelpTOCNode Id="bc3b0bfe-6d39-49fa-b10e-a395cf7655ac" Title="LRSTransaction Class" Url="html/15f4179d-6ac6-ed72-478f-d29fa6b09dbc.htm">
+      <HelpTOCNode Title="LRSTransaction Constructor " Url="html/524283c8-67cf-9673-452b-5a251076c232.htm" />
+      <HelpTOCNode Id="dcfe385c-431d-4421-a64b-8b69e16f5a9d" Title="LRSTransaction Properties" Url="html/4ba85927-08ad-588c-107f-6bd27863b407.htm">
+        <HelpTOCNode Title="Agency Property " Url="html/6cd66d4f-ddac-7186-b65d-ec6c51bc7d1b.htm" />
+        <HelpTOCNode Title="ClosingTime Property " Url="html/27a3e953-17dc-2041-a9ed-646f97f1a40c.htm" />
+        <HelpTOCNode Title="ComplexityIndex Property " Url="html/b723c8a7-712d-36d2-6a5e-85b89a25886d.htm" />
+        <HelpTOCNode Title="Document Property " Url="html/38ca7120-35e6-5dff-4cd1-d5c204c6d825.htm" />
+        <HelpTOCNode Title="DocumentDescriptor Property " Url="html/3e3186de-1f71-da5b-9c69-356d5a11d75c.htm" />
+        <HelpTOCNode Title="DocumentType Property " Url="html/25c68d31-8cf7-0b8f-7666-988492377e5c.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/cd21fcdf-59eb-cc15-139d-d1f9a8392642.htm" />
+        <HelpTOCNode Title="EstimatedDueTime Property " Url="html/6c11d689-3166-db00-4873-92e044e1bc51.htm" />
+        <HelpTOCNode Title="ExpectedDelivery Property " Url="html/8daf8c94-e200-1ccb-b07a-dea643650ffc.htm" />
+        <HelpTOCNode Title="ExtensionData Property " Url="html/5ec03c90-c0c0-3487-7c52-c5526776a3c7.htm" />
+        <HelpTOCNode Title="ExternalTransaction Property " Url="html/d22d1b3a-f014-7edc-670b-e5b34fbfa4b7.htm" />
+        <HelpTOCNode Title="Integrity Property " Url="html/f4a65dd2-9036-a81e-51f2-d2b76c0b66a0.htm" />
+        <HelpTOCNode Title="IsArchived Property " Url="html/851d5d4a-c932-c7cb-dd3a-ada52f42b246.htm" />
+        <HelpTOCNode Title="IsExternalTransaction Property " Url="html/61a1ea8e-4f99-fe0e-8dbd-99bf46172f7a.htm" />
+        <HelpTOCNode Title="IsFeeWaiverApplicable Property " Url="html/570988b4-3483-e274-76dc-cf645a173f80.htm" />
+        <HelpTOCNode Title="IsReentry Property " Url="html/5021fd54-855f-eb49-0ee0-df57e050d19f.htm" />
+        <HelpTOCNode Title="Items Property " Url="html/39be628d-ad7c-85b8-b5fe-ddc86479f504.htm" />
+        <HelpTOCNode Title="Keywords Property " Url="html/8dcc8220-47a8-2b8b-fad1-ba3015bf5107.htm" />
+        <HelpTOCNode Title="LastDeliveryTime Property " Url="html/5e93d76f-d3b6-892c-69ab-168f69a3583c.htm" />
+        <HelpTOCNode Title="LastReentryTime Property " Url="html/b6ce3ff2-16b1-57c8-d693-9cacf63c062a.htm" />
+        <HelpTOCNode Title="NonWorkingTime Property " Url="html/bc299668-baeb-43c1-8544-6bd467b331b2.htm" />
+        <HelpTOCNode Title="Payments Property " Url="html/8474a2c4-e1a8-58b8-02d5-70487b39eac2.htm" />
+        <HelpTOCNode Title="PostedBy Property " Url="html/bad9de3e-d09a-b89a-0b71-cbd03319a4dc.htm" />
+        <HelpTOCNode Title="PostingTime Property " Url="html/9c86dd79-d5c1-f0f7-ec32-c96df043908c.htm" />
+        <HelpTOCNode Title="PresentationTime Property " Url="html/6312d52a-b4c3-0907-139b-521e2af50f1b.htm" />
+        <HelpTOCNode Title="ReceivedBy Property " Url="html/2fd3eba5-d964-cf1e-8af7-1b092979edbb.htm" />
+        <HelpTOCNode Title="RecorderOffice Property " Url="html/1b0ef4c9-6e98-3d8f-d96b-c0a8d84d6e26.htm" />
+        <HelpTOCNode Title="RequestedBy Property " Url="html/f0fc3620-d2d9-272c-1133-7ced80a9e98a.htm" />
+        <HelpTOCNode Title="TransactionType Property " Url="html/c280e8d3-56f1-3a2b-4aa4-83ce5aac67a8.htm" />
+        <HelpTOCNode Title="UID Property " Url="html/7f10d5c0-952f-9252-37aa-9e78aae0d80a.htm" />
+        <HelpTOCNode Title="Workflow Property " Url="html/ae4aa7c9-2d1e-2a00-bfe6-1dcb450fc3f7.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="38a9b607-795e-4ca6-bd2e-b1b5f21c6586" Title="LRSTransaction Methods" Url="html/997d4888-4e79-8228-179b-9f3a672bec9b.htm">
+        <HelpTOCNode Id="4fe1f23e-eb10-405b-9e21-a5b0107e722f" Title="AddItem Method " Url="html/9ba9900a-1147-4fba-03b1-be15b77f939c.htm">
+          <HelpTOCNode Title="AddItem Method (RecordingActType, LRSLawArticle, Decimal)" Url="html/3b83b800-a365-a08b-19e1-691eedaae204.htm" />
+          <HelpTOCNode Title="AddItem Method (RecordingActType, LRSLawArticle, Quantity, Money)" Url="html/13b289ce-2873-9c0e-c717-9bcbc9d0ebfa.htm" />
+          <HelpTOCNode Title="AddItem Method (RecordingActType, LRSLawArticle, Money, Quantity, LRSFee)" Url="html/cfd485eb-afd7-ec2d-6dcd-4de9725802ed.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="AddPayment Method " Url="html/6c0bb988-7137-3397-8ae8-92d3556f1579.htm" />
+        <HelpTOCNode Title="ApplyFeeWaiver Method " Url="html/d3ceb6d3-1d35-d785-856c-e74a9b822444.htm" />
+        <HelpTOCNode Title="AttachDocument Method " Url="html/4f97dd9d-1e4b-fedc-1958-8ef7fa4c28c2.htm" />
+        <HelpTOCNode Title="GetAgenciesList Method " Url="html/7050c85f-a356-72ff-17d6-e9c19fb2552a.htm" />
+        <HelpTOCNode Title="GetDigitalSign Method " Url="html/34fc3492-62ec-0ac4-f90d-a524bf8bdabe.htm" />
+        <HelpTOCNode Title="GetDigitalString Method " Url="html/349c44ff-ccaa-2e55-e61e-a2bbc3a829cf.htm" />
+        <HelpTOCNode Title="GetIssuedCertificates Method " Url="html/fbcf1e91-9884-988e-2b08-af42ef56c1eb.htm" />
+        <HelpTOCNode Title="MakeCopy Method " Url="html/a05d34ce-3134-5360-a186-ca4647afa3ee.htm" />
+        <HelpTOCNode Title="OnInitialize Method " Url="html/163ea27c-2358-5a8d-a358-af9360e34903.htm" />
+        <HelpTOCNode Title="OnLoadObjectData Method " Url="html/e3bb630b-02a4-5a45-d6a3-a58317c493a6.htm" />
+        <HelpTOCNode Title="OnSave Method " Url="html/d599002b-7501-5862-72d5-9ddc0549b1dd.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/01930da4-6752-1e69-3aa9-178741200159.htm" />
+        <HelpTOCNode Title="RemoveItem Method " Url="html/6f5b8620-50fe-78aa-7f14-94c1f959629d.htm" />
+        <HelpTOCNode Title="TryParse Method " Url="html/c9d51268-307b-7420-44f4-b3a44bb00501.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="9bd630aa-abe1-4197-9d98-6af329274f8b" Title="LRSTransactionExtData Class" Url="html/efc42489-b20e-dff8-2c0f-30b498813b7f.htm">
+      <HelpTOCNode Title="LRSTransactionExtData Constructor " Url="html/0e9582b1-eb21-534a-8387-f39fcda36761.htm" />
+      <HelpTOCNode Id="a6ce82f5-e967-4850-9fbb-98bd54bc33eb" Title="LRSTransactionExtData Properties" Url="html/2adfc9a9-5827-f75a-04a4-21934b421dee.htm">
+        <HelpTOCNode Title="ClosingNotes Property " Url="html/3c89aa84-726c-ea53-a171-9938f2773fa2.htm" />
+        <HelpTOCNode Title="DeliveryNotes Property " Url="html/85ad2f6d-3df6-1d97-a149-10352bfc1dfe.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/399fdda8-9056-f039-011b-213dd9a785ef.htm" />
+        <HelpTOCNode Title="IsEmptyInstance Property " Url="html/4887f25f-2571-335f-db56-91e32b020c9f.htm" />
+        <HelpTOCNode Title="OfficeNotes Property " Url="html/978f0b21-1876-8fc6-ee8b-640f0435aefb.htm" />
+        <HelpTOCNode Title="RequesterEmail Property " Url="html/8c317206-4b56-156c-df98-f14c5d8b414c.htm" />
+        <HelpTOCNode Title="RequesterNotes Property " Url="html/3950d1d4-d807-85ce-7a9c-6703d31dabfa.htm" />
+        <HelpTOCNode Title="RequesterPhone Property " Url="html/c580ce2a-6dda-6f2b-119a-452e6d0fdda2.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="18fada61-1549-48d6-954e-e5015bb4389f" Title="LRSTransactionExtData Methods" Url="html/2f777078-741c-2cce-0870-a17aab51ec67.htm">
+        <HelpTOCNode Title="GetObject(T) Method " Url="html/b19b02df-047b-fb17-288c-7de604a20236.htm" />
+        <HelpTOCNode Title="ToJson Method " Url="html/af5cc2af-c3ea-9d4e-c1cb-80494128b29d.htm" />
+        <HelpTOCNode Title="ToString Method " Url="html/87d10e4c-3e1c-7983-9caa-f3540678d89b.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="290ad3b3-26e8-4cbe-bcf7-b40e6c0e6f90" Title="LRSTransactionItem Class" Url="html/496ccda0-67b1-c3cd-9027-bc3e7842df1e.htm">
+      <HelpTOCNode Id="5f2ec171-908a-4b14-a2a4-a9a2e771151d" Title="LRSTransactionItem Properties" Url="html/e606e520-69e9-5062-70da-11aab96f58c6.htm">
+        <HelpTOCNode Title="CalculationRule Property " Url="html/a165c502-9332-6f6c-eb70-616ea696d5f2.htm" />
+        <HelpTOCNode Title="ComplexityIndex Property " Url="html/e2c1ec54-99bd-9d2e-32c3-a79f4ee55bb6.htm" />
+        <HelpTOCNode Title="Fee Property " Url="html/57ff5119-ebe6-a46e-0914-dfe53b263ff5.htm" />
+        <HelpTOCNode Title="Integrity Property " Url="html/38297fce-0889-b3f3-2d2a-0ff5082ac1bf.htm" />
+        <HelpTOCNode Title="Notes Property " Url="html/9fe2c867-e30d-af93-906d-52837451286c.htm" />
+        <HelpTOCNode Title="OperationValue Property " Url="html/d02c486f-86c3-4941-dfc5-3db2e0ea280a.htm" />
+        <HelpTOCNode Title="Payment Property " Url="html/a4e88a41-7eb6-54da-8935-65f05e1b946b.htm" />
+        <HelpTOCNode Title="PostedBy Property " Url="html/f754a5de-3361-7f45-870e-35b15ca5e52a.htm" />
+        <HelpTOCNode Title="PostingTime Property " Url="html/4d5f647d-90e3-f527-3fb6-34e01dab492a.htm" />
+        <HelpTOCNode Title="Quantity Property " Url="html/ffd38de9-aaff-d3c9-c0c9-ffa35beed8bd.htm" />
+        <HelpTOCNode Title="Status Property " Url="html/dc9625c9-dcf1-ee84-7dba-a38065040d0e.htm" />
+        <HelpTOCNode Title="Transaction Property " Url="html/bff7d413-3332-73e5-90cc-e260ffdc1fa2.htm" />
+        <HelpTOCNode Title="TransactionItemType Property " Url="html/4424b1e7-6c75-c4ab-ce55-e00511721cf1.htm" />
+        <HelpTOCNode Title="TreasuryCode Property " Url="html/66c94862-6a0d-15d0-196d-4f643b47aad7.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="5ec47b04-6387-44e1-b91e-a3ecbdd6a502" Title="LRSTransactionItem Methods" Url="html/76fc3044-3a94-8308-7c2f-c7e2b22f1af2.htm">
+        <HelpTOCNode Title="OnLoadObjectData Method " Url="html/c595320f-59db-b895-b3e0-53c8309c71d8.htm" />
+        <HelpTOCNode Title="OnSave Method " Url="html/f67a8839-a47e-d72c-b8f2-7f60ae551c26.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="bcfd09b7-3654-4eb6-9a39-3d787178838f" Title="LRSTransactionItemList Class" Url="html/5be2e137-96b5-6142-bcbd-10d260bc1495.htm">
+      <HelpTOCNode Id="725e9766-f4f1-4123-85a4-b494c137d4b4" Title="LRSTransactionItemList Properties" Url="html/b7c8d2be-666e-4b4c-9b0c-412563bd002d.htm">
+        <HelpTOCNode Title="Item Property " Url="html/9f5cce6d-ed9b-6ccf-10c7-ee318f103a3b.htm" />
+        <HelpTOCNode Title="TotalFee Property " Url="html/082c7a69-f392-7ab9-e3fb-fd18a91eda12.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="06b812d5-3b3b-46bc-a5fa-c9d0cf6ecd54" Title="LRSTransactionItemList Methods" Url="html/60171086-bfea-6d06-531b-b76b18bd93f0.htm">
+        <HelpTOCNode Title="Add Method " Url="html/6185ff8d-e9a3-6983-9f29-909f1c33926c.htm" />
+        <HelpTOCNode Id="730b9924-bdfa-455b-b81e-d139ebebb0b2" Title="Contains Method " Url="html/64afca08-fd5e-5fd5-ad84-ec95ec7db1e1.htm">
+          <HelpTOCNode Title="Contains Method (LRSTransactionItem)" Url="html/3953569a-d145-df1a-bd10-54884fc0d34c.htm" />
+          <HelpTOCNode Title="Contains Method (Predicate(LRSTransactionItem))" Url="html/d09b5358-8d21-f19f-4b98-7a56c421e24e.htm" />
+          <HelpTOCNode Title="Contains Method (RecordingActType)" Url="html/3dbc43ed-e49f-b2b0-dc96-a74f4c474528.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="f2202457-70f5-42fd-82ba-198b610c34c8" Title="CopyTo Method " Url="html/c00b9a1d-e906-a538-0dcf-95508f797feb.htm">
+          <HelpTOCNode Title="CopyTo Method (LRSTransactionItem[], Int32)" Url="html/944aeaaf-baff-ea29-0ffc-e5c17f505489.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="b99bb65c-aadd-4160-9d18-2bb8394f4a55" Title="Find Method " Url="html/5f218043-5099-d84f-f6f5-cb85d6dd060d.htm">
+          <HelpTOCNode Title="Find Method (Predicate(LRSTransactionItem))" Url="html/b0c759b2-fb97-f010-278a-4bfabe4bf59f.htm" />
+          <HelpTOCNode Title="Find Method (RecordingActType)" Url="html/6cafc42e-e6be-59d3-b1ff-6964b014b0c0.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="FindAll Method " Url="html/1510e95b-590c-7c19-d4a8-e662a74c7a4a.htm" />
+        <HelpTOCNode Title="Remove Method " Url="html/2449feb0-9423-2602-c603-3f5508a17628.htm" />
+        <HelpTOCNode Title="Sort Method " Url="html/6efd3a60-69c1-a707-4162-886a32ce2952.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="LRSTransactionStatus Enumeration" Url="html/8709892b-16e6-1989-15cf-aef18391244d.htm" />
+    <HelpTOCNode Id="eaffd459-a231-4da6-acd2-0983a81c6383" Title="LRSTransactionType Class" Url="html/d032a3e4-b145-d964-b044-e2045e0e0ee6.htm">
+      <HelpTOCNode Id="95c9953b-8518-4ff7-81ae-7be085f1e468" Title="LRSTransactionType Properties" Url="html/c92cec4d-6eff-d518-3327-956f105acba8.htm">
+        <HelpTOCNode Title="Empty Property " Url="html/e6582663-3bb5-7a1d-f62b-f88786e7af68.htm" />
+        <HelpTOCNode Title="Unknown Property " Url="html/eec27a1c-c209-6b6c-7440-37026880a742.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="08d78f3a-e984-4ede-9a6a-055c885f98f1" Title="LRSTransactionType Methods" Url="html/ac07a3d6-7697-a25a-42f3-817a7d36e140.htm">
+        <HelpTOCNode Title="GetDocumentTypes Method " Url="html/9b400dc9-5150-ccbf-f472-028c06eb173f.htm" />
+        <HelpTOCNode Title="GetList Method " Url="html/d90a730b-96ea-a93e-0458-5dc67e16a976.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/68e4d4db-0586-847b-186a-dbfedad7b384.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="c87d4c3f-788b-4d46-bbc7-d83aa739f529" Title="LRSWorkflow Class" Url="html/950446aa-fd83-556f-8ac9-59153c8323c6.htm">
+      <HelpTOCNode Id="703d25f6-121b-4fcf-ae34-45dff77d800c" Title="LRSWorkflow Properties" Url="html/a1e95cb2-b72c-d46d-d56f-32b9f44feb82.htm">
+        <HelpTOCNode Title="CurrentStatus Property " Url="html/c12d5fdb-bf9a-27d2-847f-b7dd57b30bd2.htm" />
+        <HelpTOCNode Title="CurrentStatusName Property " Url="html/32e5facc-fe84-0064-85b3-52e9d8d616d3.htm" />
+        <HelpTOCNode Title="IsEmptyItemsTransaction Property " Url="html/a8afe092-07e4-a2b7-7e86-38de40609e58.htm" />
+        <HelpTOCNode Title="IsReadyForReentry Property " Url="html/a6c4f7fa-e3f3-ab90-e832-914f89209a34.htm" />
+        <HelpTOCNode Title="Tasks Property " Url="html/ffc09f86-5f1e-3612-8452-8122ab897a47.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="34cd5ad0-27e1-44f7-8983-ef4a18bd435e" Title="LRSWorkflow Methods" Url="html/15e2199d-aeee-ff09-5193-441850bcea58.htm">
+        <HelpTOCNode Title="DoReentry Method " Url="html/efee46a0-038b-0ef9-38de-c2d6bc8b7e47.htm" />
+        <HelpTOCNode Title="GetCurrentTask Method " Url="html/0eb3fc81-5e6f-7968-0736-062ee74c1cf4.htm" />
+        <HelpTOCNode Title="Receive Method " Url="html/60757114-ce84-2e85-be26-108a206224cc.htm" />
+        <HelpTOCNode Title="ReturnToMe Method " Url="html/cda0ef05-904a-e448-9f15-e2317ca9de57.htm" />
+        <HelpTOCNode Title="SetNextStatus Method " Url="html/f876ac02-2862-0720-f532-3f16ddf52045.htm" />
+        <HelpTOCNode Title="Take Method " Url="html/0554b5b1-1fa3-9201-42e8-705b85ccec67.htm" />
+        <HelpTOCNode Title="Undelete Method " Url="html/66353bf3-d9f1-ddd1-346c-31f7305517c9.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="9209828e-f2ba-4918-a15f-d900569ab029" Title="LRSWorkflowRules Class" Url="html/7d9d2fe5-73d0-09b7-f177-80db540c0dcd.htm">
+      <HelpTOCNode Id="88f28ba7-2cea-417f-b864-cf542681fb38" Title="LRSWorkflowRules Methods" Url="html/97dda05b-b474-8533-4326-89ccfd0de257.htm">
+        <HelpTOCNode Title="GetNextStatusList Method " Url="html/3a9fe94f-bbf0-37fe-5a6c-112ea48fb97a.htm" />
+        <HelpTOCNode Title="GetStatusName Method " Url="html/2066c621-99f1-9bea-18e3-080fbe551bd3.htm" />
+        <HelpTOCNode Title="IsEmptyItemsTransaction Method " Url="html/0eda48fe-c9a8-da7f-0c44-6aa6ea4317ea.htm" />
+        <HelpTOCNode Title="IsReadyForGenerateImagingControlID Method " Url="html/aa6a31ab-082d-0c4a-0350-7b680d37fe3e.htm" />
+        <HelpTOCNode Title="IsReadyForReentry Method " Url="html/b297948a-564e-ba31-3a48-4f0041bf4e7e.htm" />
+        <HelpTOCNode Title="IsRecordingDocumentCase Method " Url="html/80f02c2c-822d-6a34-57ca-3ce84caec973.htm" />
+        <HelpTOCNode Title="IsSafeguardable Method " Url="html/d73bb68a-5317-0fef-79d0-ce3502ce5eb0.htm" />
+        <HelpTOCNode Title="IsStatusOfficeWork Method " Url="html/5cbab052-ff80-09ef-a5ab-fd017e12e48a.htm" />
+        <HelpTOCNode Title="ValidateStatusChange Method " Url="html/79993aa9-9be4-f2a1-1544-4d9a93939e31.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="d84eba03-5f49-4428-8129-1ce5dee92421" Title="LRSWorkflowTask Class" Url="html/20fb0cdc-bb8e-32d3-fa6d-e97f81a49a1d.htm">
+      <HelpTOCNode Id="7a9e8a56-1f8b-4e0b-90e3-3de80bf5bd0f" Title="LRSWorkflowTask Properties" Url="html/9f74e0d9-f9f1-793f-2a9b-cdc699cee20e.htm">
+        <HelpTOCNode Title="AssignedBy Property " Url="html/3f16cddf-6e91-4133-2379-92c5a6f53c9c.htm" />
+        <HelpTOCNode Title="CheckInTime Property " Url="html/c3316df2-3420-2c0c-4b20-f1667dd31941.htm" />
+        <HelpTOCNode Title="CheckOutTime Property " Url="html/1c26098b-55d4-16c8-0c22-b15fe5149fdb.htm" />
+        <HelpTOCNode Title="CurrentStatus Property " Url="html/b7e4fec9-4efa-a8a9-f778-70d18f183040.htm" />
+        <HelpTOCNode Title="CurrentStatusName Property " Url="html/e8f63779-f1f6-c77c-babf-b82f780f2ef1.htm" />
+        <HelpTOCNode Title="ElapsedTime Property " Url="html/2ab91566-0454-f6ac-6e53-e21a031f9571.htm" />
+        <HelpTOCNode Title="Empty Property " Url="html/c05ca366-399f-aab4-31b1-ea6aa901a904.htm" />
+        <HelpTOCNode Title="EndProcessTime Property " Url="html/cbb86d69-d0d3-6d95-ea62-34f645cb0b18.htm" />
+        <HelpTOCNode Title="EventId Property " Url="html/0fcb8909-8340-07a4-f744-f1c7b9d2c58d.htm" />
+        <HelpTOCNode Title="Mode Property " Url="html/7d713212-9a1c-000a-8a06-850d74ac0717.htm" />
+        <HelpTOCNode Title="NextContact Property " Url="html/b027dab1-12b6-2743-d002-d7bc7e34f4e7.htm" />
+        <HelpTOCNode Title="NextStatus Property " Url="html/a16e7b92-310c-a053-e1af-41f58adab6da.htm" />
+        <HelpTOCNode Title="NextStatusName Property " Url="html/5ba687f8-5eb8-edb8-4d19-06ca5730cbb7.htm" />
+        <HelpTOCNode Title="NextTask Property " Url="html/46e48f10-7324-30d9-d43a-b1d31465cb01.htm" />
+        <HelpTOCNode Title="Notes Property " Url="html/bff5feae-9dca-9815-9032-6599f4b58b96.htm" />
+        <HelpTOCNode Title="OfficeWorkElapsedTime Property " Url="html/c4e60541-4315-008a-454e-e7241b0b2557.htm" />
+        <HelpTOCNode Title="PreviousTask Property " Url="html/111c7613-a812-215f-c375-601f2372ef75.htm" />
+        <HelpTOCNode Title="Responsible Property " Url="html/de3cf430-3fff-981c-d789-7d9ccedef311.htm" />
+        <HelpTOCNode Title="Status Property " Url="html/f9e2050f-eff1-5524-c681-39deff522cb5.htm" />
+        <HelpTOCNode Title="StatusName Property " Url="html/09a63605-6620-58e9-8d45-4519cdc91ec2.htm" />
+        <HelpTOCNode Title="Transaction Property " Url="html/4bf649e0-b479-91a7-1776-b8cde9aa207e.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="32367c29-b2b5-4fae-af86-d776e7f0c9e0" Title="LRSWorkflowTask Methods" Url="html/21529b34-e29c-d050-b3da-8ad590b1712d.htm">
+        <HelpTOCNode Title="OnSave Method " Url="html/e7d195ec-2aa3-ee4a-e41f-e7dd127c87c5.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/34e22481-1a18-ec16-66a5-7c9a71254ae5.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="eaaa1430-53b2-43dc-bef1-32f51e4f0cff" Title="LRSWorkflowTaskList Class" Url="html/7f2cf7ca-a17d-eb62-b721-74054fe069ed.htm">
+      <HelpTOCNode Id="1f40f0ec-846f-4912-9ab2-61438b7fb9db" Title="LRSWorkflowTaskList Properties" Url="html/ad69d895-539b-e9d0-a26f-669e9c838ea2.htm">
+        <HelpTOCNode Title="Item Property " Url="html/575f679e-a964-8aa4-7f26-6cbd2525cabb.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="16832ee4-ee1d-4dfb-8c30-b56a3e201e78" Title="LRSWorkflowTaskList Methods" Url="html/aebf290c-e8c8-d2ea-fe98-195362862d1b.htm">
+        <HelpTOCNode Title="Add Method " Url="html/43c16595-8391-8c35-eec7-31c70dc42ef5.htm" />
+        <HelpTOCNode Id="2fe5416d-caa1-4bbb-b16c-e61694abe403" Title="Contains Method " Url="html/1c54f0a4-79ad-f4fc-fbeb-a50cd7312b3f.htm">
+          <HelpTOCNode Title="Contains Method (LRSWorkflowTask)" Url="html/e4ac252d-cfc3-e6f2-b9ec-bedbdd730782.htm" />
+          <HelpTOCNode Title="Contains Method (Predicate(LRSWorkflowTask))" Url="html/35ceb364-afb7-e58a-e674-7123491a66ef.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="69b5306b-454b-43af-9ac1-4b84c1b0be1b" Title="CopyTo Method " Url="html/7873c24a-baa8-34e2-da8a-065a9111d48c.htm">
+          <HelpTOCNode Title="CopyTo Method (LRSWorkflowTask[], Int32)" Url="html/010f425e-60db-635a-c948-7baff9046617.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="Find Method " Url="html/d3b35d45-997f-fb37-efb0-6e1e475d26de.htm" />
+        <HelpTOCNode Title="FindAll Method " Url="html/3705d6b1-80fb-15aa-404e-e79062621d34.htm" />
+        <HelpTOCNode Title="Parse Method " Url="html/8ec2ef7f-c6df-3abb-e1a4-1f9c3beeff96.htm" />
+        <HelpTOCNode Title="Remove Method " Url="html/2309f5c2-1dfb-4f5d-de94-f8011de9fd49.htm" />
+        <HelpTOCNode Title="Sort Method " Url="html/46da7354-2282-6d32-c054-cebff831f416.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="WorkflowTaskStatus Enumeration" Url="html/cedb193e-86ce-0128-36a7-00026ca841f8.htm" />
+    <HelpTOCNode Title="WorkflowTrackMode Enumeration" Url="html/e82ee678-f9d0-8318-694e-dc9a290da63a.htm" />
+  </HelpTOCNode>
+  <HelpTOCNode Id="aed59f27-dd1e-498b-a2b7-57ef4a62fabb" Title="Empiria.Land.UI" Url="html/1a950642-b8d8-543f-9c05-6291a624eba1.htm">
+    <HelpTOCNode Id="33c919ce-9868-4fdd-b6c3-33cbf4ed3df3" Title="AppendRecordingActEditorControlBase Class" Url="html/e22861de-a316-d302-d129-aa14cebb352c.htm">
+      <HelpTOCNode Title="AppendRecordingActEditorControlBase Constructor " Url="html/5cf7c1a8-9899-75ae-236f-c73571956a9b.htm" />
+      <HelpTOCNode Id="d4fb7377-a750-4468-9c1b-a98851574425" Title="AppendRecordingActEditorControlBase Properties" Url="html/836bae8e-d80f-e569-577d-22b1f856a270.htm">
+        <HelpTOCNode Title="ControlVirtualPath Property " Url="html/3e537aa2-dfe4-49be-eefe-7aed21716f09.htm" />
+        <HelpTOCNode Title="Document Property " Url="html/eaebb688-7abd-8e87-71e7-16d80901268b.htm" />
+        <HelpTOCNode Title="HistoricRecording Property " Url="html/7c7180fc-5863-6ce9-8d1b-06d4356e0111.htm" />
+        <HelpTOCNode Title="IsHistoricEdition Property " Url="html/7f02847e-d3d6-c37a-e968-b454f80f1c14.htm" />
+        <HelpTOCNode Title="Transaction Property " Url="html/685de493-ead7-db03-6028-9cf1e96aa516.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="34ae7b40-2bf7-4c1d-b024-05cf17f9164e" Title="AppendRecordingActEditorControlBase Methods" Url="html/ec59be08-b82d-ab2a-087c-8101f38a8422.htm">
+        <HelpTOCNode Title="CreateRecordingActs Method " Url="html/18f47d35-7667-ab2f-104c-c70308192166.htm" />
+        <HelpTOCNode Title="Initialize Method " Url="html/0e10264a-d654-3339-f665-a3a5292901e9.htm" />
+        <HelpTOCNode Title="IsReadyForEdition Method " Url="html/815b7263-48c6-e472-4b99-23a4b3a62ca9.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="e6eff8ee-2227-4ab1-b6f2-18c77cb84365" Title="CertificatesGrid Class" Url="html/1a190477-cc7a-461a-bd96-754b7ae95175.htm">
+      <HelpTOCNode Id="1b5bc847-2318-4a60-9f4e-70e612888a9c" Title="CertificatesGrid Methods" Url="html/285b1b52-a14b-c32f-7822-eb548b1d352f.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/b4f8df0e-aaae-8f18-30fb-09e3daa06bb6.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="2d21e157-9e29-44e3-b2cd-cc9726ded600" Title="DocumentRecordingActsGrid Class" Url="html/cd43e1e8-deca-3cbc-718e-55210d7d1523.htm">
+      <HelpTOCNode Id="fbe248ea-be9d-4be5-9b76-09260d0075f1" Title="DocumentRecordingActsGrid Methods" Url="html/ce4208e6-9020-77e0-ff77-eb188b6e5178.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/e9070237-1be1-2dc4-0636-c21ee463fc4f.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="5da6e675-0ed3-4ec3-9f1f-05efe85d4262" Title="LRSDocumentEditorControl Class" Url="html/072f3d7f-1750-4d61-d0e2-6b9338f362da.htm">
+      <HelpTOCNode Title="LRSDocumentEditorControl Constructor " Url="html/3c5d078a-5218-4350-c39d-f7002e2fd5bc.htm" />
+      <HelpTOCNode Id="57db9564-607a-48d0-9638-243af8af02c1" Title="LRSDocumentEditorControl Properties" Url="html/18967a8c-6f37-03f5-ce8e-678254aa6fd5.htm">
+        <HelpTOCNode Title="ControlVirtualPath Property " Url="html/6584b27a-14b4-6ef7-bb0b-f2ae1368eca6.htm" />
+        <HelpTOCNode Title="Document Property " Url="html/1203a2be-e38e-eb8f-9bcb-55ca7106b572.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="46e91e6b-eca5-46a2-93d1-ce512f595015" Title="LRSDocumentEditorControl Methods" Url="html/608ec8f6-6977-9fa0-3ec3-f6cf5bbaa63a.htm">
+        <HelpTOCNode Title="FillRecordingDocument Method " Url="html/10b7e25c-81bb-be52-35fd-7852b73e7693.htm" />
+        <HelpTOCNode Title="ImplementsFillRecordingDocument Method " Url="html/2ab8e513-9b48-a769-c243-8fcb5ef0d982.htm" />
+        <HelpTOCNode Title="ImplementsLoadRecordingDocument Method " Url="html/e04cd352-24f5-2ec2-cea3-fcf32f88f1a6.htm" />
+        <HelpTOCNode Title="LoadRecordingDocument Method " Url="html/a1473461-ce17-480e-e835-e38bd5f3394f.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="cf1a48c7-1c21-4a78-b5d1-9ec97613b0f6" Title="LRSGridControls Class" Url="html/d2fffb0f-0607-3f42-70f9-88ec7eea6ec6.htm">
+      <HelpTOCNode Id="7e5a7923-86de-4371-903e-4cc187f20b5a" Title="LRSGridControls Methods" Url="html/c15460cb-963c-5b27-87c4-55f3fd3b11d0.htm">
+        <HelpTOCNode Title="GetBatchCaptureRecordingActsGrid Method " Url="html/88b5c628-bbf5-4c54-ceb2-f2018c1c4262.htm" />
+        <HelpTOCNode Title="GetPagedDataSource Method " Url="html/8dbc7d3d-89a8-7b3c-5990-c0cb536e4fb0.htm" />
+        <HelpTOCNode Title="GetRecordingActPartiesGrid Method " Url="html/f4117a2c-de50-1866-7314-8036711c7227.htm" />
+        <HelpTOCNode Id="f5e52009-d0fb-4562-9edf-ce206dc60939" Title="GetRecordingsSummaryTable Method " Url="html/f4768b3f-4364-1cc9-4a9e-20299283f815.htm">
+          <HelpTOCNode Title="GetRecordingsSummaryTable Method (FixedList`1(Recording), Int32, Int32)" Url="html/93e20781-925c-08a5-87bf-94ef00dd56e3.htm" />
+          <HelpTOCNode Title="GetRecordingsSummaryTable Method (RecordingBook, Int32, Int32)" Url="html/10d0dc58-d155-58f7-472f-b62fa625359b.htm" />
+        </HelpTOCNode>
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="6380098b-e1b6-49ec-8d86-64b97c4a96cb" Title="LRSHtmlSelectControls Class" Url="html/356329cf-5bd2-dc89-b1f8-58ce7053dbe3.htm">
+      <HelpTOCNode Id="4897b538-a818-44e9-9833-f4b3e4ce0de1" Title="LRSHtmlSelectControls Methods" Url="html/154dd627-2cc4-7ea7-7654-8db88c7092b1.htm">
+        <HelpTOCNode Title="GetBookImageClippersComboItems Method " Url="html/8e081f84-6abf-021a-1f60-5e1d9f956285.htm" />
+        <HelpTOCNode Title="GetBookImageDigitalizersComboItems Method " Url="html/0dad15c9-17a6-fa19-ab87-5d5115395e88.htm" />
+        <HelpTOCNode Title="GetRecordingBookClassesComboItems Method " Url="html/2a7b8228-dec0-1aba-2d12-e5decfe39cb5.htm" />
+        <HelpTOCNode Title="GetRecordingsBatchAnalystComboItems Method " Url="html/1ee1009c-7712-8338-593c-3e4b4997d3be.htm" />
+        <HelpTOCNode Title="GetTransactionNewStatusComboItems Method " Url="html/febc1e3d-fd0f-7626-a434-6c4463f97345.htm" />
+        <HelpTOCNode Title="LoadDomainRecordingSections Method " Url="html/c9b42a8b-31e3-7d82-267b-dc17a1c25487.htm" />
+        <HelpTOCNode Title="LoadLegacyAnnotationActTypesCategoriesCombo Method " Url="html/30de530a-57f1-c16d-21ed-2aab493eabd3.htm" />
+        <HelpTOCNode Title="LoadLegacyTraslativeActTypesCategoriesCombo Method " Url="html/2b3006b3-316a-e90e-979a-cbc383ec3824.htm" />
+        <HelpTOCNode Title="LoadRecorderOfficeCombo Method " Url="html/ec744bec-f9bc-c0d2-828c-2aaf16c1bda1.htm" />
+        <HelpTOCNode Title="LoadRecorderOfficeMunicipalitiesCombo Method " Url="html/ba35a595-bd88-d854-e333-60674ef85dcb.htm" />
+        <HelpTOCNode Title="LoadRecorderOfficersCombo Method " Url="html/ce05f9dc-6710-3856-5ffd-2fa7b0de229e.htm" />
+        <HelpTOCNode Title="LoadRecordingActTypesCategoriesCombo Method " Url="html/6446cb8b-5731-9ebc-e2a5-76f51d591f72.htm" />
+        <HelpTOCNode Title="LoadRecordingActTypesCombo Method " Url="html/9d257945-8875-da48-ea1b-d368978e904b.htm" />
+        <HelpTOCNode Title="LoadRecordingBookClassesCombo Method " Url="html/bd1672df-a958-5ad4-eb1f-b9972932b637.htm" />
+        <HelpTOCNode Title="LoadTransactionActTypesCategoriesCombo Method " Url="html/ddbbe96e-d2a0-1744-aa6c-ca0372eca54f.htm" />
+        <HelpTOCNode Title="ParseRecorderOffice Method " Url="html/bfaf2381-2d67-dab2-62c0-3c9790b08017.htm" />
+        <HelpTOCNode Title="ParseRecordingActTypeCategory Method " Url="html/67b51cc9-b2c3-6d1a-06e3-2f5ef7bda168.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="bb157414-1d11-4c86-9866-b37ebe021b94" Title="PartyRecordingActsGrid Class" Url="html/40b933c0-2447-1551-d01f-1a0010fa8586.htm">
+      <HelpTOCNode Id="7befd223-71ec-439d-ac76-009174938f82" Title="PartyRecordingActsGrid Methods" Url="html/ee0a4d7f-c687-e4b2-0929-459c384bd9e5.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/8e0bafaf-a321-38cc-67fa-9e98c9fc4aff.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="b9ff336e-30f6-46b0-9c39-ec977c22065c" Title="PhysicalRecordingsWithRecordingActsGrid Class" Url="html/510484b5-d7c5-43de-4c74-dbf15bd01f05.htm">
+      <HelpTOCNode Id="cdbbdbc1-4285-4c34-8f2b-0f35de7fb28c" Title="PhysicalRecordingsWithRecordingActsGrid Methods" Url="html/3e75be91-d1a9-88b1-6f62-37025af4f6a0.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/3c8d78a7-7546-b0be-64ad-89c8c6725500.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="611af150-1e85-4e38-959b-8f2416993361" Title="RecordingActsGrid Class" Url="html/d25e9ad2-c43a-0834-0ea6-fd5fa4cec761.htm">
+      <HelpTOCNode Id="7500ff9b-254a-4371-b9ad-effa00700cdd" Title="RecordingActsGrid Methods" Url="html/4a4c4c0c-50c4-3d22-e078-492e8ee6cfba.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/505d74fd-e65b-231d-8bc6-88e1f8123a52.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="6753664f-0ca5-445a-b360-64ddc8606cb3" Title="ResourceHistoryGrid Class" Url="html/56f347df-6151-2270-8f60-e323bae75f9e.htm">
+      <HelpTOCNode Id="1d524908-d813-48ad-8042-f77c4ed8794d" Title="ResourceHistoryGrid Methods" Url="html/a2b67b4a-116a-1266-5319-83532507c40a.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/79b06db0-ae2a-d9e8-71a2-82010631463b.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="a72355f2-10d5-4827-9231-4706b6924279" Title="TransactionDocumentAndCertificatesGrid Class" Url="html/6c4bb43a-e350-8a9c-579e-510d68954774.htm">
+      <HelpTOCNode Id="a872bd9d-4d8a-4f2b-88ac-c012b64f245b" Title="TransactionDocumentAndCertificatesGrid Methods" Url="html/ee47deeb-81c9-bdde-5ea4-139c6cadc978.htm">
+        <HelpTOCNode Title="Parse Method " Url="html/ee5814ed-d315-8205-433f-9b9b0b592332.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+  <HelpTOCNode Id="2b48c354-f555-4177-a7af-37e7a94a8b35" Title="Empiria.Land.WebApi" Url="html/7cb3b3f9-d24c-bccb-04ca-4d51719a499e.htm">
+    <HelpTOCNode Id="652fd860-4361-436f-a7e7-adbe44db23c3" Title="CertificatesController Class" Url="html/e8d3e8fd-06f4-4cc1-2ed2-fa21357e2b3f.htm">
+      <HelpTOCNode Title="CertificatesController Constructor " Url="html/892687b4-7b1d-3680-7e4d-e65fb0323031.htm" />
+      <HelpTOCNode Id="8cf92ef7-ea11-4251-a93a-c15e6fd98a93" Title="CertificatesController Methods" Url="html/88e6bd2b-9720-a106-44e3-ae8f13d4b0c9.htm">
+        <HelpTOCNode Title="CloseCertificate Method " Url="html/d6284ad2-c034-8ec6-95f9-603eb3bf00bc.htm" />
+        <HelpTOCNode Title="CreateCertificate Method " Url="html/e4328dae-3713-39a2-cb33-bcfb693aff1e.htm" />
+        <HelpTOCNode Title="DeleteOrCancelCertificate Method " Url="html/6b8b6914-9fc1-56e7-2631-2263955b5c93.htm" />
+        <HelpTOCNode Title="GetCertificate Method " Url="html/1ad5b6ff-c8ea-a611-cd2a-5c567e9bb1ef.htm" />
+        <HelpTOCNode Title="GetCertificateAsText Method " Url="html/2751e13a-cf7e-2a32-ae7b-e1aa3d581703.htm" />
+        <HelpTOCNode Title="OpenCertificate Method " Url="html/cb7e4279-f8e3-7b2e-f760-cae850f00bbb.htm" />
+        <HelpTOCNode Title="UpdateCertificate Method " Url="html/c291eb29-7aa3-faaa-b18d-34092388ec72.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="9fc95a57-9f7f-474a-b5a5-958a8c282080" Title="DocumentsController Class" Url="html/36d93a4b-6bac-82bd-43c3-2f1d7841dc80.htm">
+      <HelpTOCNode Title="DocumentsController Constructor " Url="html/705da651-4fa8-ad64-5fbf-df9c49766a7f.htm" />
+      <HelpTOCNode Id="dee64c5a-0e4e-4418-8429-fc274e8774a3" Title="DocumentsController Methods" Url="html/fedeacf8-c286-28f5-7fb1-2c455e27ef17.htm">
+        <HelpTOCNode Title="GetDocument Method " Url="html/23634f3d-c083-ba2b-5789-635a58ffbf75.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="f2ed49e9-4a67-498a-9fd8-f8ca0534113c" Title="OnLineServicesController Class" Url="html/e93b9987-7a18-77d2-295d-30ce1bb99a03.htm">
+      <HelpTOCNode Title="OnLineServicesController Constructor " Url="html/9fe2ee21-76ac-5157-6203-53c9cce9352e.htm" />
+      <HelpTOCNode Id="00b3bf3e-f5db-42f2-9a36-fa716b16248c" Title="OnLineServicesController Methods" Url="html/d7d4b7a5-1256-98d4-eab9-b7c9f06652cc.htm">
+        <HelpTOCNode Title="GetDocumentItem Method " Url="html/5e8c1423-e214-6c0d-7d2e-68c6052cf6a7.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="80e19b8e-8887-4cd3-8233-5f9a702eef84" Title="PropertyController Class" Url="html/06f94326-5307-86ba-6646-1fd21d68aad0.htm">
+      <HelpTOCNode Title="PropertyController Constructor " Url="html/01ec69de-636d-9756-b7cf-19087e6ff706.htm" />
+      <HelpTOCNode Id="92f31f69-3218-4a4a-b137-cf6d492f3161" Title="PropertyController Methods" Url="html/c0064e1d-944e-b411-e836-4ebbf4916a92.htm">
+        <HelpTOCNode Title="GetProperty Method " Url="html/653f664b-292f-a285-6f83-a77d3b399052.htm" />
+        <HelpTOCNode Title="GetPropertyAntecedent Method " Url="html/ca5bf476-8f1f-2ea9-ac9e-99cf2f9d5cd1.htm" />
+        <HelpTOCNode Title="GetPropertyTextInfo Method " Url="html/4ba2f8df-5bee-d152-fe05-aca5a3487859.htm" />
+        <HelpTOCNode Title="GetPropertyWithCadastralKey Method " Url="html/4a726872-1ff8-0ae3-457a-cdd078430ec9.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="4074f182-298b-4c01-a233-cdf855787bfb" Title="RecordingBooksController Class" Url="html/7c82c4fa-033f-191f-ba46-1c21e5e4cadd.htm">
+      <HelpTOCNode Title="RecordingBooksController Constructor " Url="html/f3624979-1451-c6da-28ec-2a10a18b1510.htm" />
+      <HelpTOCNode Id="d181d275-95c4-4798-b835-145a89282c0f" Title="RecordingBooksController Methods" Url="html/a9d025d9-4cd5-e693-5b35-6a4a57ac1d44.htm">
+        <HelpTOCNode Title="GetRecordingBook Method " Url="html/710835bf-59aa-c11c-7972-176d74ae1e14.htm" />
+        <HelpTOCNode Title="GetRecordingBooks Method " Url="html/12d79df1-af20-194f-db28-291e1149e502.htm" />
+        <HelpTOCNode Title="GetRecordingSection Method " Url="html/9c591262-7bc5-5aa9-1abc-9b972c4616b6.htm" />
+        <HelpTOCNode Title="GetRecordingSections Method " Url="html/b2b65e06-3126-be91-081a-c46dd8f2a6c9.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="ea432ea5-defa-4f05-a051-7885990f56ed" Title="TransactionsController Class" Url="html/bdad528d-0a61-0397-2737-70a7efcab0ce.htm">
+      <HelpTOCNode Title="TransactionsController Constructor " Url="html/1962f809-a67d-5760-6c71-e5c98f35bb2f.htm" />
+      <HelpTOCNode Id="efe06756-ae93-422b-9540-4910c405ad13" Title="TransactionsController Methods" Url="html/4bb54a51-58d9-171c-9ea7-2a08b6203fa5.htm">
+        <HelpTOCNode Title="GetTransaction Method " Url="html/89634270-e441-20a7-ef00-42ff7fa27082.htm" />
+        <HelpTOCNode Title="RequestCertificate Method " Url="html/01cfb9fe-4e95-5a54-9ec2-37c36f3774f1.htm" />
+        <HelpTOCNode Title="RequestPendingNoteRecording Method " Url="html/a1f8aeab-20ed-d6e8-0eb0-28e0a28dddd5.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+  <HelpTOCNode Id="7bb87610-484b-4a0b-b0ba-e80864ea58e9" Title="Empiria.Land.WebApi.Models" Url="html/fee82f10-2573-b1fa-ec7d-970e6fe40ebd.htm">
+    <HelpTOCNode Id="acfbd305-7f45-4c81-b999-fbe15940b5d7" Title="CertificateRequest Class" Url="html/65fc3bb9-5849-b329-f365-a04c11e5b45c.htm">
+      <HelpTOCNode Title="CertificateRequest Constructor " Url="html/2a996e2e-4da5-ae06-de9c-cfeb9f052e94.htm" />
+      <HelpTOCNode Id="0d9f1fbc-0fe2-4de9-a6ed-35ad579ea924" Title="CertificateRequest Properties" Url="html/e3f73333-4e23-cd61-9a18-698d73873cfe.htm">
+        <HelpTOCNode Title="CertificateType Property " Url="html/bbcddc4b-2832-2d9f-9b5d-b973f86feabc.htm" />
+        <HelpTOCNode Title="DocumentType Property " Url="html/3a976c5f-83a8-b4d4-089f-9cc2e1523ed8.htm" />
+        <HelpTOCNode Title="RealPropertyUID Property " Url="html/6be7eed7-8d01-05f7-1aa0-9aa988aba0cc.htm" />
+        <HelpTOCNode Title="TransactionType Property " Url="html/21a039d1-6e6e-deed-f92e-2bfe4faa3dcb.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="414b515d-cfe4-4ab7-85aa-7645f723588a" Title="CertificateRequest Methods" Url="html/4ca330fe-60cb-e68f-c9b3-82c90722533e.htm">
+        <HelpTOCNode Title="AssertIsValid Method " Url="html/128f3c08-489a-2a77-2f03-06218189813a.htm" />
+        <HelpTOCNode Title="ToJson Method " Url="html/55ae23d6-fd8a-928b-4868-17a2e3999334.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="ExternalCertificateType Enumeration" Url="html/a6424dbe-d9e7-c8f0-a5f3-555fd2018a9f.htm" />
+    <HelpTOCNode Id="6d35be0d-4f1e-49c1-9762-caf2af4cb531" Title="PendingNoteRequest Class" Url="html/4999345c-7fbd-3cfd-2357-cccfc0fd7c63.htm">
+      <HelpTOCNode Title="PendingNoteRequest Constructor " Url="html/36b6d01c-23fd-a448-d2e9-fb71f5bfa5eb.htm" />
+      <HelpTOCNode Id="fbe6a4af-0e86-45c1-b4f7-bcdff7424e0e" Title="PendingNoteRequest Properties" Url="html/727f59e9-9bff-8feb-14e9-319a9b0e1891.htm">
+        <HelpTOCNode Title="Agency Property " Url="html/ce87dfe0-cf7d-6bd6-002a-cf41170956be.htm" />
+        <HelpTOCNode Title="DocumentType Property " Url="html/84226ef1-c311-2dc5-1e0b-74bb6cb62475.htm" />
+        <HelpTOCNode Title="IsPartition Property " Url="html/733b7bf8-fee2-a824-a4ec-16c297852d6c.htm" />
+        <HelpTOCNode Title="NotaryId Property " Url="html/15b60e4e-9311-50f4-b691-dd1e1d3e09d5.htm" />
+        <HelpTOCNode Title="PartitionLocation Property " Url="html/7d5dcadc-23b8-26f3-dc77-3ab4a1c290de.htm" />
+        <HelpTOCNode Title="PartitionMetesAndBounds Property " Url="html/12cb9af1-ec5b-7fbc-25c2-0c8f28cc076e.htm" />
+        <HelpTOCNode Title="PartitionName Property " Url="html/e5eac7d9-6d90-e409-47bf-a71596b95ad5.htm" />
+        <HelpTOCNode Title="PartitionSize Property " Url="html/494092d3-3463-038d-4829-f3baf444d2f2.htm" />
+        <HelpTOCNode Title="ProjectedActId Property " Url="html/6e28f509-4db9-197b-2fd8-c56994c5b94e.htm" />
+        <HelpTOCNode Title="ProjectedOwner Property " Url="html/6b0d1926-4487-515b-a112-701caf9ae39f.htm" />
+        <HelpTOCNode Title="RealPropertyUID Property " Url="html/802650c0-8ce7-0786-d951-567ced975ed4.htm" />
+        <HelpTOCNode Title="RecordingObservations Property " Url="html/f5ae47c9-d18a-b951-4c21-0dfd72a990a6.htm" />
+        <HelpTOCNode Title="TransactionType Property " Url="html/123d685b-0bfc-64ec-79d5-042f230cc998.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="34b6c230-f2b2-4df4-94eb-cb4de8bfdc84" Title="PendingNoteRequest Methods" Url="html/fdf42655-50cb-184e-e81d-7acf32fd0251.htm">
+        <HelpTOCNode Title="AssertIsValid Method " Url="html/a8e21944-559d-9b21-e59e-ebe47de2fdd9.htm" />
+        <HelpTOCNode Title="ToJson Method " Url="html/e3f987e4-afb6-1283-239b-79ce5ac83d1e.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+</HelpTOC>
