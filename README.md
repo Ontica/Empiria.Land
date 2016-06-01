@@ -1,12 +1,62 @@
-﻿Empiria Land
-============
+﻿# About Empiria Land
+
+[Empiria Land](http://www.ontica.org/land/) is a suite of powerful solutions to provide information services
+for land recording offices, cadastral departments and other land management government organizations.
+
+This repository coresponds to the system's backend just for the Land Recording System.
+
+The project is based on C# 6.0 and .NET Framework 4.6 and the web API is tailored on ASP .NET Web API 2.1.
+
+As other Empiria products, this backend runs over [Empiria Framework](https://github.com/Ontica/Empiria.Core)
+components and, as usual, needs some of the [Empiria Extensions](https://github.com/Ontica/Empiria.Extensions).
+
+The project can be compiled using Visual Studio 2015 starting with the Community Edition.
+
+
+# Contents
 
 Empiria Land includes the following software components:
 
-* A) Empiria Land Registration Services
-* B) Empiria Land Documentation Services
-* C) Empiria Land Transaction Services
-* D) Empiria Land UI (User interface services)
-* E) Empiria Land Web API (HTTP/REST-based)
 
-* F) Empiria Land Web Services (SOAP/XML-based) [To be deprecated]
+1. **Registration Services**  
+   Classes and other types used for document and recording acts registration.
+
+2. **Certification Services**  
+   Contains types to manage and emit official certificates related to land ownership.
+
+3. **Transaction Services**  
+   Services to manage customer's front-desk and external system transactions.
+
+4. **Documentation Services**  
+   Code to control imaging processing for recording books and scanned documents.
+
+5. **User Interface Services**  
+   Provides Html parsing services especially tailored to display and reuse Empiria Land user interfaces.
+
+6. **Web API (HTTP/REST-based) **  
+   Http/Json RESTful type web services used to comunicate with third party systems, to emit certificates and perform data searching operations.
+
+7. **XML Web Services (to be deprecated)**  
+   Old fashioned XML/SOAP web services that are still in use by some external systems (government treasury).
+
+# Documentation
+
+Folder [**docs**](https://github.com/Ontica/Empiria.Land/tree/master/docs) contains a web site with the full code documentation. It can be downloaded and installed in the web server of your preference.
+
+[**docs/files/database.scripts.sql**](https://github.com/Ontica/Empiria.Land/tree/master/docs/files/database.scripts.sql) file contains the full database script for SQL Server 2014, and it includes the full set of tables, views, functions and stored procedures.
+
+[**docs/files/database.structure.pdf**](https://github.com/Ontica/Empiria.Land/tree/master/docs/files/database.structure.pdf) file contains a general view map of the database.
+
+[**docs/files/components.pdf**](https://github.com/Ontica/Empiria.Land/tree/master/docs/files/components.pdf) file contains a general view map of the system.
+
+# License
+
+GNU AFFERO GENERAL PUBLIC LICENSE
+
+# Version
+
+Most updated version of this product that can run in production is Empiria Land 3.0 Beta 1.
+
+# Copyright
+
+Copyright © 2009-2016. La Vía Óntica SC, Ontica LLC and colaborators.

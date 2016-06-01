@@ -30,6 +30,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>CS1591</NoWarn>
+    <DocumentationFile>..\..\..\empiria.assemblies\Empiria.Land.WebApi.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -145,7 +147,7 @@
       <Project>{42b7d25b-356f-4e93-9f17-a2f9422c368d}</Project>
       <Name>Empiria.WebApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\empiria\land\Land.Registration\Empiria.Land.Registration.csproj">
+    <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj">
       <Project>{ea85313c-bbbb-4f31-b6b9-05bb79addff1}</Project>
       <Name>Empiria.Land.Registration</Name>
     </ProjectReference>
