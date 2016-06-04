@@ -26,6 +26,7 @@ namespace Empiria.Land.WebApi {
     #region Public APIs
 
     [HttpGet]
+    [AllowAnonymous]
     [Route("v1/properties/{propertyUID}")]
     public SingleObjectModel GetProperty(string propertyUID) {
       try {

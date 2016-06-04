@@ -163,7 +163,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact, string notes) {
       if (nextStatus == LRSTransactionStatus.Returned || nextStatus == LRSTransactionStatus.Delivered ||
-          nextStatus == LRSTransactionStatus.Finished) {
+          nextStatus == LRSTransactionStatus.Archived) {
         this.Close(nextStatus, notes);
         return;
       }
@@ -174,7 +174,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (nextStatus == LRSTransactionStatus.OnSign || nextStatus == LRSTransactionStatus.Revision) {
         _transaction.Save();
       } else if (this.CurrentStatus == LRSTransactionStatus.OnSign &&
-                (nextStatus == LRSTransactionStatus.ToDeliver || nextStatus == LRSTransactionStatus.Finished)) {
+                (nextStatus == LRSTransactionStatus.ToDeliver || nextStatus == LRSTransactionStatus.Archived)) {
         _transaction.Save();
       }
     }
@@ -191,7 +191,7 @@ namespace Empiria.Land.Registration.Transactions {
       ResetTasksList();
 
       if (this.CurrentStatus == LRSTransactionStatus.ToDeliver ||
-          this.CurrentStatus == LRSTransactionStatus.ToReturn || this.CurrentStatus == LRSTransactionStatus.Finished) {
+          this.CurrentStatus == LRSTransactionStatus.ToReturn || this.CurrentStatus == LRSTransactionStatus.Archived) {
         _transaction.ClosingTime = currentTask.EndProcessTime;
       }
       _transaction.Save();

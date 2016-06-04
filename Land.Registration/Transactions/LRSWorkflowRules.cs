@@ -105,14 +105,14 @@ namespace Empiria.Land.Registration.Transactions {
           } else if (ExecutionServer.LicenseName == "Tlaxcala") {
             AddRecordingOrElaborationStatus(list, type, docType);
             if (LRSWorkflowRules.IsArchivable(type, docType)) {
-              list.Add(LRSTransactionStatus.Finished);
+              list.Add(LRSTransactionStatus.Archived);
             }
             list.Add(LRSTransactionStatus.Juridic);
           }
           list.Add(LRSTransactionStatus.Revision);
           list.Add(LRSTransactionStatus.OnSign);
           if (ExecutionServer.LicenseName == "Tlaxcala" && LRSWorkflowRules.IsSafeguardable(type, docType)) {
-            list.Add(LRSTransactionStatus.Safeguard);
+            list.Add(LRSTransactionStatus.Digitalization);
           }
           list.Add(LRSTransactionStatus.ToReturn);
           if (ExecutionServer.LicenseName == "Zacatecas" || LRSWorkflowRules.IsCertificateIssueCase(type, docType)) {
@@ -126,7 +126,7 @@ namespace Empiria.Land.Registration.Transactions {
             list.Add(LRSTransactionStatus.Revision);
             list.Add(LRSTransactionStatus.OnSign);
             list.Add(LRSTransactionStatus.ToReturn);
-            list.Add(LRSTransactionStatus.Finished);
+            list.Add(LRSTransactionStatus.Archived);
             list.Add(LRSTransactionStatus.Control);
           }
           break;
@@ -148,7 +148,7 @@ namespace Empiria.Land.Registration.Transactions {
           if (ExecutionServer.LicenseName == "Zacatecas") {
             list.Add(LRSTransactionStatus.ToReturn);
             if (LRSWorkflowRules.IsArchivable(type, docType)) {
-              list.Add(LRSTransactionStatus.Finished);
+              list.Add(LRSTransactionStatus.Archived);
             }
             if (docType.Id == 728) {
               list.Add(LRSTransactionStatus.OnSign);
@@ -156,7 +156,7 @@ namespace Empiria.Land.Registration.Transactions {
           } else if (ExecutionServer.LicenseName == "Tlaxcala") {
             list.Add(LRSTransactionStatus.Juridic);
             if (LRSWorkflowRules.IsArchivable(type, docType)) {
-              list.Add(LRSTransactionStatus.Finished);
+              list.Add(LRSTransactionStatus.Archived);
             }
             if (type.Id == 704) {    // Trámite comercio
               list.Add(LRSTransactionStatus.ToDeliver);
@@ -202,7 +202,7 @@ namespace Empiria.Land.Registration.Transactions {
               list.Add(LRSTransactionStatus.Elaboration);
             }
             if (LRSWorkflowRules.IsArchivable(type, docType)) {
-              list.Add(LRSTransactionStatus.Finished);
+              list.Add(LRSTransactionStatus.Archived);
             }
             list.Add(LRSTransactionStatus.Revision);
             list.Add(LRSTransactionStatus.Control);
@@ -210,7 +210,7 @@ namespace Empiria.Land.Registration.Transactions {
           } else if (ExecutionServer.LicenseName == "Tlaxcala") {
             list.Add(LRSTransactionStatus.OnSign);
             if (LRSWorkflowRules.IsArchivable(type, docType)) {
-              list.Add(LRSTransactionStatus.Finished);
+              list.Add(LRSTransactionStatus.Archived);
             }
             AddRecordingOrElaborationStatus(list, type, docType);
             list.Add(LRSTransactionStatus.Control);
@@ -232,7 +232,7 @@ namespace Empiria.Land.Registration.Transactions {
             list.Add(LRSTransactionStatus.ToReturn);
           } else if (ExecutionServer.LicenseName == "Tlaxcala") {
             if (LRSWorkflowRules.IsSafeguardable(type, docType)) {
-              list.Add(LRSTransactionStatus.Safeguard);
+              list.Add(LRSTransactionStatus.Digitalization);
             } else {
               list.Add(LRSTransactionStatus.ToDeliver);
             }
@@ -242,7 +242,7 @@ namespace Empiria.Land.Registration.Transactions {
           }
           break;
 
-        case LRSTransactionStatus.Safeguard:
+        case LRSTransactionStatus.Digitalization:
           list.Add(LRSTransactionStatus.ToDeliver);
           list.Add(LRSTransactionStatus.ToReturn);
           list.Add(LRSTransactionStatus.Control);
@@ -251,8 +251,12 @@ namespace Empiria.Land.Registration.Transactions {
         case LRSTransactionStatus.ToDeliver:
           list.Add(LRSTransactionStatus.Delivered);
           if (LRSWorkflowRules.IsSafeguardable(type, docType)) {
-            list.Add(LRSTransactionStatus.Safeguard);
+            list.Add(LRSTransactionStatus.Digitalization);
           }
+          list.Add(LRSTransactionStatus.Control);
+          break;
+
+        case LRSTransactionStatus.Archived:
           list.Add(LRSTransactionStatus.Control);
           break;
 
@@ -305,7 +309,7 @@ namespace Empiria.Land.Registration.Transactions {
           return "En área jurídica";
         case LRSTransactionStatus.OnSign:
           return "En firma";
-        case LRSTransactionStatus.Safeguard:
+        case LRSTransactionStatus.Digitalization:
           return "En digitalización y resguardo";
         case LRSTransactionStatus.ToDeliver:
           return "En ventanilla de entregas";
@@ -317,8 +321,8 @@ namespace Empiria.Land.Registration.Transactions {
           return "Devuelto al interesado";
         case LRSTransactionStatus.Deleted:
           return "Trámite eliminado";
-        case LRSTransactionStatus.Finished:
-          return "Archivar trámite / Terminado";
+        case LRSTransactionStatus.Archived:
+          return "Archivado";
         default:
           return "No determinado";
       }
@@ -384,7 +388,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (!LRSWorkflowRules.IsSafeguardable(transaction.TransactionType, transaction.DocumentType)) {
         return false;
       }
-      if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Safeguard ||
+      if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Digitalization ||
           transaction.Workflow.CurrentStatus == LRSTransactionStatus.ToDeliver ||
           transaction.Workflow.CurrentStatus == LRSTransactionStatus.Delivered) {
         return true;
@@ -425,7 +429,7 @@ namespace Empiria.Land.Registration.Transactions {
     static public bool IsStatusOfficeWork(LRSTransactionStatus currentStatus) {
       if (currentStatus == LRSTransactionStatus.Payment || currentStatus == LRSTransactionStatus.ToDeliver ||
           currentStatus == LRSTransactionStatus.ToReturn || currentStatus == LRSTransactionStatus.Delivered ||
-          currentStatus == LRSTransactionStatus.Returned || currentStatus == LRSTransactionStatus.Finished) {
+          currentStatus == LRSTransactionStatus.Returned || currentStatus == LRSTransactionStatus.Archived) {
         return false;
       }
       return true;
@@ -444,9 +448,9 @@ namespace Empiria.Land.Registration.Transactions {
       }
       if (IsRecordingDocumentCase(transaction.TransactionType, transaction.DocumentType)) {
         if (newStatus == LRSTransactionStatus.Revision || newStatus == LRSTransactionStatus.OnSign ||
-            newStatus == LRSTransactionStatus.Safeguard || newStatus == LRSTransactionStatus.ToDeliver) {
+            newStatus == LRSTransactionStatus.Digitalization || newStatus == LRSTransactionStatus.ToDeliver) {
           if (transaction.Document.IsEmptyInstance) {
-            return "Necesito primero se ingrese la información del documento a inscribir.";
+            return "Este trámite no tiene inscrito un documento. No es posible realizar esta operación.";
           }
         }
       }

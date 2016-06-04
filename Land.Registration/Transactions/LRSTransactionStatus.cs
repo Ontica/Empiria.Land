@@ -28,14 +28,14 @@ namespace Empiria.Land.Registration.Transactions {
     Process = 'P',
     OnSign = 'S',
 
-    Safeguard = 'A',
+    Digitalization = 'A',
     ToDeliver = 'D',
     Delivered = 'C',
     ToReturn = 'L',
     Returned = 'Q',
     Deleted = 'X',
 
-    Finished = 'H',
+    Archived = 'H',
 
     Undefined = 'U',
     EndPoint = 'Z',
