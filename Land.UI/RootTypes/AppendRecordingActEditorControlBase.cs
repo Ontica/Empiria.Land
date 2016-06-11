@@ -73,7 +73,8 @@ namespace Empiria.Land.UI {
       }
 
       if (this.IsHistoricEdition) {
-        Assertion.Assert(this.Transaction.IsEmptyInstance, "For historic documents, transaction should be the empty instance.");
+        Assertion.Assert(this.Transaction.IsEmptyInstance,
+                        "For historic documents, transaction should be the empty instance.");
       }
     }
 
@@ -81,30 +82,7 @@ namespace Empiria.Land.UI {
       if (this.Document.IsEmptyInstance) {
         return false;
       }
-      if (!(ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Register") ||
-            ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Certificates"))) {
-        return false;
-      }
-      if (!this.IsHistoricEdition) {
-        if (this.Transaction.IsEmptyInstance) {
-          return false;
-        }
-        if (!IsInValidTransactionStatusForEdition()) {
-          return false;
-        }
-      }
-      if (this.Document.Status != RecordableObjectStatus.Incomplete) {
-        return false;
-      }
-      return true;
-    }
-
-    private bool IsInValidTransactionStatusForEdition() {
-      if (!(this.Transaction.Workflow.CurrentStatus == LRSTransactionStatus.Recording ||
-          this.Transaction.Workflow.CurrentStatus == LRSTransactionStatus.Elaboration)) {
-        return false;
-      }
-      return true;
+      return LRSWorkflowRules.IsDocumentReadyForEdition(this.Document);
     }
 
     #endregion Public methods

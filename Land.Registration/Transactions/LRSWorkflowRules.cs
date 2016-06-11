@@ -111,7 +111,7 @@ namespace Empiria.Land.Registration.Transactions {
           }
           list.Add(LRSTransactionStatus.Revision);
           list.Add(LRSTransactionStatus.OnSign);
-          if (ExecutionServer.LicenseName == "Tlaxcala" && LRSWorkflowRules.IsSafeguardable(type, docType)) {
+          if (ExecutionServer.LicenseName == "Tlaxcala" && LRSWorkflowRules.IsDigitalizable(type, docType)) {
             list.Add(LRSTransactionStatus.Digitalization);
           }
           list.Add(LRSTransactionStatus.ToReturn);
@@ -231,7 +231,7 @@ namespace Empiria.Land.Registration.Transactions {
             list.Add(LRSTransactionStatus.Control);
             list.Add(LRSTransactionStatus.ToReturn);
           } else if (ExecutionServer.LicenseName == "Tlaxcala") {
-            if (LRSWorkflowRules.IsSafeguardable(type, docType)) {
+            if (LRSWorkflowRules.IsDigitalizable(type, docType)) {
               list.Add(LRSTransactionStatus.Digitalization);
             } else {
               list.Add(LRSTransactionStatus.ToDeliver);
@@ -250,7 +250,7 @@ namespace Empiria.Land.Registration.Transactions {
 
         case LRSTransactionStatus.ToDeliver:
           list.Add(LRSTransactionStatus.Delivered);
-          if (LRSWorkflowRules.IsSafeguardable(type, docType)) {
+          if (LRSWorkflowRules.IsDigitalizable(type, docType)) {
             list.Add(LRSTransactionStatus.Digitalization);
           }
           list.Add(LRSTransactionStatus.Control);
@@ -348,7 +348,8 @@ namespace Empiria.Land.Registration.Transactions {
       if (ExecutionServer.LicenseName == "Tlaxcala") {
         if (type.Id == 702) {    // Certificados
           return true;
-        } else if (EmpiriaMath.IsMemberOf(docType.Id, new int[] { 709, 735, 743, 745, 746, 747 })) {
+        } else if (type.Id == 706 &&
+                   EmpiriaMath.IsMemberOf(docType.Id, new int[] { 709, 735, 743, 745, 746, 747 })) {
           return true;
         }
       }
@@ -357,7 +358,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     static public bool IsEmptyItemsTransaction(LRSTransaction transaction) {
       if (transaction.TransactionType.Id == 706) {
-        if (EmpiriaMath.IsMemberOf(transaction.DocumentType.Id, new int[] { 733, 738, 734, 742, 756 })) {
+        if (EmpiriaMath.IsMemberOf(transaction.DocumentType.Id, new int[] { 733, 738, 734, 742 })) {
           return true;
         }
       }
@@ -385,7 +386,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (transaction.Document.RecordingActs.Count == 0) {
         return false;
       }
-      if (!LRSWorkflowRules.IsSafeguardable(transaction.TransactionType, transaction.DocumentType)) {
+      if (!LRSWorkflowRules.IsDigitalizable(transaction.TransactionType, transaction.DocumentType)) {
         return false;
       }
       if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Digitalization ||
@@ -400,15 +401,18 @@ namespace Empiria.Land.Registration.Transactions {
       if (ExecutionServer.LicenseName == "Tlaxcala") {
         if (type.Id == 699 || type.Id == 700 || type.Id == 704 || type.Id == 707) {
           return true;
-        } else if (EmpiriaMath.IsMemberOf(docType.Id, new int[] {719, 721, 728, 733, 736, 737, 738, 739,
-                                                                 740, 741, 742, 744, 755, 756 })) {
+        } else if (type.Id == 706 && !NotRecordableDocumentType(docType)) {
           return true;
         }
       }
       return false;
     }
 
-    static public bool IsSafeguardable(LRSTransactionType type, LRSDocumentType docType) {
+    private static bool NotRecordableDocumentType(LRSDocumentType docType) {
+      return EmpiriaMath.IsMemberOf(docType.Id, new int[] { 709, 733, 734, 735, 742, 743, 745, 746, 747 });
+    }
+
+    static public bool IsDigitalizable(LRSTransactionType type, LRSDocumentType docType) {
       if (!IsRecordingDocumentCase(type, docType)) {
         return false;
       }
@@ -418,8 +422,9 @@ namespace Empiria.Land.Registration.Transactions {
       if (ExecutionServer.LicenseName == "Tlaxcala") {
         if (type.Id == 699 || type.Id == 702) {
           return false;
-        } else if (EmpiriaMath.IsMemberOf(docType.Id, new int[] { 715, 724, 728, 734, 735, 739,
-                                                                  743, 744, 745, 747, 757 })) {
+        } else if (NotRecordableDocumentType(docType)) {
+          return false;
+        } else if (EmpiriaMath.IsMemberOf(docType.Id, new int[] { 715, 724, 728, 739, 744, 757 } )) {
           return false;
         }
       }
@@ -458,6 +463,56 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     #endregion Methods
+
+    static public bool IsDocumentReadyForEdition(RecordingDocument document) {
+      if (!(ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Register") ||
+            ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Certificates") ||
+            ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Juridic"))) {
+        return false;
+      }
+      if (document.Status != RecordableObjectStatus.Incomplete) {
+        return false;
+      }
+
+      if (document.IsHistoricDocument) {
+        return true;
+      }
+
+      var transaction = document.GetTransaction();
+
+      Assertion.Assert(!transaction.IsEmptyInstance,
+                       "Transaction can't be the empty instance, because the document is not historic.");
+
+      if (!(transaction.Workflow.CurrentStatus == LRSTransactionStatus.Recording ||
+            transaction.Workflow.CurrentStatus == LRSTransactionStatus.Elaboration ||
+            transaction.Workflow.CurrentStatus == LRSTransactionStatus.Juridic)) {
+        return false;
+      }
+
+      return true;
+    }
+
+    static public bool IsTransactionDocumentReadyForEdition(LRSTransaction transaction) {
+      if (!(ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Register") ||
+            ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Certificates") ||
+            ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Juridic"))) {
+        return false;
+      }
+      if (!(transaction.Workflow.CurrentStatus == LRSTransactionStatus.Recording ||
+            transaction.Workflow.CurrentStatus == LRSTransactionStatus.Elaboration ||
+            transaction.Workflow.CurrentStatus == LRSTransactionStatus.Juridic)) {
+        return false;
+      }
+      if (!IsRecordingDocumentCase(transaction.TransactionType, transaction.DocumentType)) {
+        return false;
+      }
+      if (transaction.Document.IsEmptyInstance) {
+        return true;
+      } else if (transaction.Document.Status != RecordableObjectStatus.Incomplete) {
+        return false;
+      }
+      return true;
+    }
 
   }  // class LRSWorkflowRules
 

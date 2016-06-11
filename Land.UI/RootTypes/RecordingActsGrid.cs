@@ -45,7 +45,7 @@ namespace Empiria.Land.UI {
 
         html += this.GetRecordingActRow(recordingAct);
       }
-      return HtmlFormatters.TableWrapper(html);
+      return html;
     }
 
     private string GetRecordingActRow(RecordingAct recordingAct) {

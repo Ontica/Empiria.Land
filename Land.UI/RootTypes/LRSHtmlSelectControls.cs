@@ -66,15 +66,41 @@ namespace Empiria.Land.UI {
       }
     }
 
-    static public string GetTransactionNewStatusComboItems(int typeId, int docTypeId, LRSTransactionStatus status) {
+    static public string GetTransactionNewStatusComboItems(int typeId, int docTypeId,
+                                                          LRSTransactionStatus currentStatus) {
       List<LRSTransactionStatus> list = LRSWorkflowRules.GetNextStatusList(LRSTransactionType.Parse(typeId),
-                                                                           LRSDocumentType.Parse(docTypeId), status);
+                                                                           LRSDocumentType.Parse(docTypeId),
+                                                                           currentStatus);
       string html = String.Empty;
       for (int i = 0; i < list.Count; i++) {
         html += HtmlSelectContent.GetComboHtmlItem(Convert.ToString((char) list[i]),
                                                    LRSWorkflowRules.GetStatusName(list[i]));
       }
       return html;
+    }
+
+    static public string GetControlDeskTransactionNewStatusComboItems(int typeId, int docTypeId,
+                                                                      LRSTransactionStatus currentStatus,
+                                                                      LRSTransactionStatus nextStatus) {
+      if (currentStatus == LRSTransactionStatus.Archived) {
+        return HtmlSelectContent.GetComboHtmlItem("Unarchive", "Desarchivarlo y ponerlo en la mesa de control");
+      } else if (currentStatus == LRSTransactionStatus.Payment || currentStatus == LRSTransactionStatus.Returned ||
+                 currentStatus == LRSTransactionStatus.Delivered || currentStatus == LRSTransactionStatus.Deleted ||
+                 currentStatus == LRSTransactionStatus.ToDeliver || currentStatus == LRSTransactionStatus.ToReturn ||
+                 currentStatus == LRSTransactionStatus.Digitalization) {
+        return HtmlSelectContent.GetComboHtmlItem("Nothing", "No hay nada qué hacer con este trámite");
+      } else if (currentStatus == LRSTransactionStatus.Control && nextStatus == LRSTransactionStatus.EndPoint) {
+        return GetTransactionNewStatusComboItems(typeId, docTypeId, currentStatus);
+      } else if (currentStatus == LRSTransactionStatus.Control && nextStatus != LRSTransactionStatus.EndPoint) {
+        return HtmlSelectContent.GetComboHtmlItem("ReturnToMe", "Dejar pendiente el 'Siguiente estado'");
+      } else if (currentStatus != LRSTransactionStatus.Control && nextStatus == LRSTransactionStatus.Control) {
+        return HtmlSelectContent.GetComboHtmlItem(String.Empty, "Listo para recibirse en mesa de control");
+      } else if (currentStatus != LRSTransactionStatus.Control && nextStatus != LRSTransactionStatus.Control) {
+        return HtmlSelectContent.GetComboHtmlItem(Convert.ToString((char) LRSTransactionStatus.Control),
+                                                  "Traerlo a la mesa de control");
+      } else {
+        return HtmlSelectContent.GetComboHtmlItem("Undefined", "Opción no definida. Informar a soporte.");
+      }
     }
 
     static public string GetRecordingBookClassesComboItems(string headerItemText) {

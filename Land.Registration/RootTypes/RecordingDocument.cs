@@ -139,6 +139,7 @@ namespace Empiria.Land.Registration {
 
     [DataField("IssuedById")]
     private LazyInstance<Contact> _issuedBy = LazyInstance<Contact>.Empty;
+
     public Contact IssuedBy {
       get { return _issuedBy.Value; }
       set {

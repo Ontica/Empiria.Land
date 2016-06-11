@@ -32,8 +32,16 @@ namespace Empiria.Land.Registration.Data {
 
     static public DataView GetResponsibleWorkflowInbox(Contact contact, WorkflowTaskStatus status,
                                                        string filter, string sort) {
-      DataOperation op = DataOperation.Parse("qryLRSResponsibleWorkflowInbox", contact.Id, (char) status);
-      return DataReader.GetDataView(op, filter, sort);
+      if (filter.Length == 0) {
+        filter = "(1 = 1)";
+      }
+      if (sort.Length == 0) {
+        sort = "PresentationTime, CheckInTime, TrackId";
+      }
+      var op = DataOperation.Parse("@qryLRSResponsibleWorkflowInbox",
+                                   contact.Id, (char) status, filter, sort);
+
+      return DataReader.GetDataView(op);
     }
 
     static public DataView GetWorkflowActiveTasksTotals() {
