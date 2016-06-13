@@ -92,12 +92,11 @@ namespace Empiria.Land.UI {
       } else if (currentStatus == LRSTransactionStatus.Control && nextStatus == LRSTransactionStatus.EndPoint) {
         return GetTransactionNewStatusComboItems(typeId, docTypeId, currentStatus);
       } else if (currentStatus == LRSTransactionStatus.Control && nextStatus != LRSTransactionStatus.EndPoint) {
-        return HtmlSelectContent.GetComboHtmlItem("ReturnToMe", "Dejar pendiente el 'Siguiente estado'");
+        return HtmlSelectContent.GetComboHtmlItem("ReturnToControlDesk", "Dejar pendiente el 'Siguiente estado'");
       } else if (currentStatus != LRSTransactionStatus.Control && nextStatus == LRSTransactionStatus.Control) {
-        return HtmlSelectContent.GetComboHtmlItem(String.Empty, "Listo para recibirse en mesa de control");
+        return HtmlSelectContent.GetComboHtmlItem("ReceiveInControlDesk", "Listo para recibirse en mesa de control");
       } else if (currentStatus != LRSTransactionStatus.Control && nextStatus != LRSTransactionStatus.Control) {
-        return HtmlSelectContent.GetComboHtmlItem(Convert.ToString((char) LRSTransactionStatus.Control),
-                                                  "Traerlo a la mesa de control");
+        return HtmlSelectContent.GetComboHtmlItem("PullToControlDesk", "Traerlo a la mesa de control");
       } else {
         return HtmlSelectContent.GetComboHtmlItem("Undefined", "Opción no definida. Informar a soporte.");
       }

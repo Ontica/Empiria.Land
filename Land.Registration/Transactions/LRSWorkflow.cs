@@ -236,6 +236,21 @@ namespace Empiria.Land.Registration.Transactions {
       return WorkflowData.GetWorkflowLastTask(_transaction);
     }
 
+    public void PullToControlDesk(string notes) {
+      if (notes.Length == 0) {
+        notes = "Se jaló a la mesa de control";
+      }
+      this.SetNextStatus(LRSTransactionStatus.Control, Person.Empty, notes);
+      this.Take(String.Empty);
+    }
+
+    public void Unarchive(string notes) {
+      Assertion.Assert(this.CurrentStatus == LRSTransactionStatus.Archived,
+                       "Transaction current status should be Archived.");
+      this.SetNextStatus(LRSTransactionStatus.Control, Person.Empty, notes);
+      this.Take(String.Empty);
+    }
+
     #endregion Public methods
 
     #region Private methods

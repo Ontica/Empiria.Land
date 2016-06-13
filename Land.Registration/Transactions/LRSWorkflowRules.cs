@@ -368,9 +368,9 @@ namespace Empiria.Land.Registration.Transactions {
     static public bool IsReadyForReentry(LRSTransaction transaction) {
       var user = ExecutionServer.CurrentPrincipal;
 
-      return ((transaction.Workflow.CurrentStatus == LRSTransactionStatus.Returned) ||
-              (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Delivered &&
-               user.IsInRole("LRSTransaction.ReentryByFails")));
+      return ((transaction.Workflow.CurrentStatus == LRSTransactionStatus.Returned ||
+              (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Delivered)) &&
+               user.IsInRole("LRSTransaction.ReentryByFails"));
     }
 
     static public bool IsReadyForGenerateImagingControlID(LRSTransaction transaction) {

@@ -45,7 +45,9 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static public DataView GetWorkflowActiveTasksTotals() {
-      return DataReader.GetDataView(DataOperation.Parse("SELECT * FROM vwLRSWorkflowActiveTasksTotals"));
+      string sql = "SELECT * FROM vwLRSWorkflowActiveTasksTotals ORDER BY Responsible";
+
+      return DataReader.GetDataView(DataOperation.Parse(sql));
     }
 
     static public LRSWorkflowTask GetWorkflowLastTask(LRSTransaction transaction) {

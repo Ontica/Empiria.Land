@@ -64,13 +64,16 @@ namespace Empiria.Land.Registration {
       }
 
       if (this.Name.EndsWith("S.C.") || this.Name.EndsWith("SC") || this.Name.Contains("sociedad civil")) {
-        return "Sociedad civil";
+        return "Sociedad Civil";
       } else if (this.Name.EndsWith("A.C.") || this.Name.EndsWith("AC") ||
                  this.Name.Contains("asociacion civil") || this.Name.Contains("asociación civil")) {
-        return "Asociación civil";
+        return "Asociación Civil";
       } else if (this.Name.EndsWith("A.R.") || this.Name.EndsWith("AR") ||
                  this.Name.Contains("asociacion religiosa") || this.Name.Contains("asociación religiosa")) {
-        return "Asociación religiosa";
+        return "Asociación Religiosa";
+      } else if (this.Name.EndsWith("S.S.") || this.Name.EndsWith("S:S.") ||
+                 this.Name.Contains("solidaridad social"))  {
+        return "Sociedad de Solidaridad Social";
       } else {
         return "Sociedad";
       }
@@ -83,7 +86,7 @@ namespace Empiria.Land.Registration {
         return RecordingAct.Empty;
       }
       RecordingAct incorporationAct = tract.Find((x) => EmpiriaMath.IsMemberOf(x.RecordingActType.Id,
-                                                 new int[] { 2750, 2709, 2710, 2711 }));    // Incorporation acts
+                                                 new int[] { 2750, 2709, 2710, 2711, 2712 }));    // Incorporation acts
       if (incorporationAct != null) {
         return incorporationAct;
       } else if (!tract[0].PhysicalRecording.IsEmptyInstance) {
