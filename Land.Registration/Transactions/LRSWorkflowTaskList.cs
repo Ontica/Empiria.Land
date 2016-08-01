@@ -70,7 +70,7 @@ namespace Empiria.Land.Registration.Transactions {
       return base.Find(match);
     }
 
-    public new List<LRSWorkflowTask> FindAll(Predicate<LRSWorkflowTask> match) {
+    public new FixedList<LRSWorkflowTask> FindAll(Predicate<LRSWorkflowTask> match) {
       return base.FindAll(match);
     }
 

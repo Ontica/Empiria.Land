@@ -93,7 +93,7 @@ namespace Empiria.Land.Registration.Transactions {
       return base.Find(match);
     }
 
-    public new List<LRSTransactionItem> FindAll(Predicate<LRSTransactionItem> match) {
+    public new FixedList<LRSTransactionItem> FindAll(Predicate<LRSTransactionItem> match) {
       return base.FindAll(match);
     }
 

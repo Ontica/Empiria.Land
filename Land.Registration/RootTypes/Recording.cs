@@ -329,11 +329,11 @@ namespace Empiria.Land.Registration {
     }
 
     public FixedList<RecordingAct> GetAnnotationActs() {
-      return new FixedList<RecordingAct>(this.RecordingActs.FindAll((x) => x.IsAnnotation));
+      return this.RecordingActs.FindAll((x) => x.IsAnnotation);
     }
 
     public FixedList<RecordingAct> GetNoAnnotationActs() {
-      return new FixedList<RecordingAct>(this.RecordingActs.FindAll((x) => !x.IsAnnotation));
+      return this.RecordingActs.FindAll((x) => !x.IsAnnotation);
     }
 
     protected override void OnSave() {

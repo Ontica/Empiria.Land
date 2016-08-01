@@ -38,13 +38,13 @@ namespace Empiria.Land.UI {
 
       var primaryParties = allInvolvedParties.FindAll((x) => x.PartyOf.IsEmptyInstance);
 
-      string html = GetPrimaryPartiesGridItems(recordingAct, primaryParties.ToFixedList(), readOnly);
+      string html = GetPrimaryPartiesGridItems(recordingAct, primaryParties, readOnly);
 
       var secondaryAdditionalParties =
                 allInvolvedParties.FindAll((x) => !x.PartyOf.IsEmptyInstance &&
                                                   !primaryParties.Exists((y) => y.Party.Equals(x.PartyOf)));
 
-      html += GetSecondaryPartiesGridItems(recordingAct, secondaryAdditionalParties.ToFixedList(), readOnly);
+      html += GetSecondaryPartiesGridItems(recordingAct, secondaryAdditionalParties, readOnly);
 
       return html;
     }
@@ -69,7 +69,7 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{DOMAIN.PART}", primaryPartyItem.GetOwnershipPartAsText());
 
         FixedList<RecordingActParty> relatedParties = PartyData.GetSecondaryPartiesList(recordingAct);
-        relatedParties = relatedParties.FindAll((x) => x.PartyOf.Equals(primaryPartyItem.Party)).ToFixedList();
+        relatedParties = relatedParties.FindAll((x) => x.PartyOf.Equals(primaryPartyItem.Party));
 
 
         temp = temp.Replace("{SECONDARY.TABLE}", GetRecordingActRelatedPartiesTable(recordingAct,
@@ -107,7 +107,7 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{DOMAIN.PART}", String.Empty);
 
         FixedList<RecordingActParty> relatedParties = PartyData.GetSecondaryPartiesList(recordingAct);
-        relatedParties = relatedParties.FindAll((x) => x.Party.Equals(recordingActParty.Party)).ToFixedList();
+        relatedParties = relatedParties.FindAll((x) => x.Party.Equals(recordingActParty.Party));
 
         temp = temp.Replace("{SECONDARY.TABLE}", GetRecordingActRelatedPartiesTable(recordingAct,
                                                                                     recordingActParty,
