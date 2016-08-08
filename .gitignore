@@ -1,6 +1,7 @@
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
 [Bb]in/
 [Oo]bj/
+[Oo]bj/
 
 # mstest test results
 TestResults
@@ -18,6 +19,11 @@ TestResults
 *.snk
 *.cd
 ZZ*.*
+
+# Sensitive and application data
+App_Data/
+*.pubxml
+*.pubxml.user
 
 # Build results
 [Dd]ebug/
