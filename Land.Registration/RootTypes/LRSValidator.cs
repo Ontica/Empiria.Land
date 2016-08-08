@@ -24,29 +24,29 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    static public int GetOverlappingRecordingsCount(RecordingBook recordingBook, Recording recording,
-                                                    int imageStartIndex, int imageEndIndex) {
-      FixedList<Recording> list = RecordingBooksData.GetRecordingsOnImageRangeList(recordingBook,
-                                                                                   imageStartIndex, imageEndIndex);
-      if (list.Count == 0) {
-        return 0;
-      }
-      int counter = 0;
-      for (int i = 0; i < list.Count; i++) {
-        if (list[i].Equals(recording)) {
-          continue;
-        } else if ((list[i].StartImageIndex == imageStartIndex) &&
-                   (list[i].EndImageIndex == imageEndIndex) &&
-                   (imageStartIndex == imageEndIndex)) {
-          continue;
-        } else if (list[i].EndImageIndex == imageStartIndex) {
-          continue;
-        } else {
-          counter++;
-        }
-      }
-      return counter;
-    }
+    //static public int GetOverlappingRecordingsCount(RecordingBook recordingBook, Recording recording,
+    //                                                int imageStartIndex, int imageEndIndex) {
+    //  FixedList<Recording> list = RecordingBooksData.GetRecordingsOnImageRangeList(recordingBook,
+    //                                                                               imageStartIndex, imageEndIndex);
+    //  if (list.Count == 0) {
+    //    return 0;
+    //  }
+    //  int counter = 0;
+    //  for (int i = 0; i < list.Count; i++) {
+    //    if (list[i].Equals(recording)) {
+    //      continue;
+    //    } else if ((list[i].StartImageIndex == imageStartIndex) &&
+    //               (list[i].EndImageIndex == imageEndIndex) &&
+    //               (imageStartIndex == imageEndIndex)) {
+    //      continue;
+    //    } else if (list[i].EndImageIndex == imageStartIndex) {
+    //      continue;
+    //    } else {
+    //      counter++;
+    //    }
+    //  }
+    //  return counter;
+    //}
 
     static public LandRegistrationException ValidateDeleteRecordingAct(RecordingAct recordingAct) {
       Resource resource = recordingAct.Resource;

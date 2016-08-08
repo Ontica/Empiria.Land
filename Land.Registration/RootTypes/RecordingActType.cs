@@ -126,7 +126,7 @@ namespace Empiria.Land.Registration {
     public bool IsStructureActType {
       get {
         return base.Name.StartsWith("ObjectType.RecordingAct.StructureAct") ||
-          EmpiriaMath.IsMemberOf(this.Id, new int[] { 2335, 2784 , 2786, 2787, 2788 });
+                                    EmpiriaMath.IsMemberOf(this.Id, new int[] { 2335, 2784 , 2786, 2787, 2788 });
       }
     }
 

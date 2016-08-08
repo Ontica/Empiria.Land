@@ -20,28 +20,28 @@ namespace Empiria.Land.Registration.Data {
 
     #region Public methods
 
-    static public DataView PerformanceByAnalyst(RecorderOffice recorderOffice, DateTime fromDate, DateTime toDate) {
-      DataOperation dataOperation = DataOperation.Parse("rptLRSPerformanceByAnalyst", recorderOffice.Id, fromDate, toDate);
+    //static public DataView PerformanceByAnalyst(RecorderOffice recorderOffice, DateTime fromDate, DateTime toDate) {
+    //  DataOperation dataOperation = DataOperation.Parse("rptLRSPerformanceByAnalyst", recorderOffice.Id, fromDate, toDate);
 
-      dataOperation.ExecutionTimeout = 30;
+    //  dataOperation.ExecutionTimeout = 30;
 
-      return DataReader.GetDataView(dataOperation);
-    }
+    //  return DataReader.GetDataView(dataOperation);
+    //}
 
-    static public DataView RecorderOfficesStats() {
-      DataOperation dataOperation = DataOperation.Parse("SELECT * FROM vwLRSRecordingOfficeStats");
+    //static public DataView RecorderOfficesStats() {
+    //  DataOperation dataOperation = DataOperation.Parse("SELECT * FROM vwLRSRecordingOfficeStats");
 
-      //dataOperation.ExecutionTimeout = 30;
+    //  //dataOperation.ExecutionTimeout = 30;
 
-      return DataReader.GetDataView(dataOperation);
-    }
+    //  return DataReader.GetDataView(dataOperation);
+    //}
 
-    static public DataView RecordingActTypeIncidence(RecorderOffice recorderOffice, DateTime fromDate, DateTime toDate) {
-      DataOperation dataOperation = DataOperation.Parse("rptLRSRecordingActsIncidence", recorderOffice.Id, fromDate, toDate);
-      //dataOperation.ExecutionTimeout = 90;
+    //static public DataView RecordingActTypeIncidence(RecorderOffice recorderOffice, DateTime fromDate, DateTime toDate) {
+    //  DataOperation dataOperation = DataOperation.Parse("rptLRSRecordingActsIncidence", recorderOffice.Id, fromDate, toDate);
+    //  //dataOperation.ExecutionTimeout = 90;
 
-      return DataReader.GetDataView(dataOperation);
-    }
+    //  return DataReader.GetDataView(dataOperation);
+    //}
 
     #endregion Public methods
 

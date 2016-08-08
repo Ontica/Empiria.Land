@@ -152,14 +152,14 @@ namespace Empiria.Land.Registration.Data {
                                           (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
     }
 
-    static public FixedList<Recording> GetRecordingsOnImageRangeList(RecordingBook recordingBook,
-                                                              int imageStartIndex, int imageEndIndex) {
-      var operation = DataOperation.Parse("qryLRSRecordingsOnImageRange", recordingBook.Id,
-                                          imageStartIndex, imageEndIndex);
+    //static public FixedList<Recording> GetRecordingsOnImageRangeList(RecordingBook recordingBook,
+    //                                                          int imageStartIndex, int imageEndIndex) {
+    //  var operation = DataOperation.Parse("qryLRSRecordingsOnImageRange", recordingBook.Id,
+    //                                      imageStartIndex, imageEndIndex);
 
-      return DataReader.GetList<Recording>(operation,
-                                          (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
-    }
+    //  return DataReader.GetList<Recording>(operation,
+    //                                      (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
+    //}
 
     static public DataRow GetRecordingWithRecordingNumber(RecordingBook recordingBook, string recordingNumber) {
       return DataReader.GetDataRow(DataOperation.Parse("getLRSRecordingWithRecordingNumber",
