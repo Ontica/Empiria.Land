@@ -14,6 +14,7 @@ using System.Collections.Generic;
 
 using Empiria.Contacts;
 using Empiria.Geography;
+using Empiria.Documents;
 using Empiria.Land.Registration.Data;
 using Empiria.Land.Registration.Transactions;
 using Empiria.Ontology;
@@ -402,6 +403,36 @@ namespace Empiria.Land.Registration {
 
       if (this.RecordingActs.Count == 0 && this.IsEmptyDocument) {
         this.Delete();
+      }
+    }
+
+    public void SetAuxiliarImage(ImagingItem image) {
+      Assertion.AssertObject(image, "image");
+
+      this.ExtensionData.AuxiliarImageId = image.Id;
+      this.Save();
+    }
+
+    public void SetImage(ImagingItem image) {
+      Assertion.AssertObject(image, "image");
+
+      this.ExtensionData.DocumentImageId = image.Id;
+      this.Save();
+    }
+
+    public ImagingItem TryGetAuxiliarImage() {
+      if (this.ExtensionData.AuxiliarImageId != -1) {
+        return ImagingItem.Parse(this.ExtensionData.AuxiliarImageId);
+      } else {
+        return null;
+      }
+    }
+
+    public ImagingItem TryGetImage() {
+      if (this.ExtensionData.DocumentImageId != -1) {
+        return ImagingItem.Parse(this.ExtensionData.DocumentImageId);
+      } else {
+        return null;
       }
     }
 

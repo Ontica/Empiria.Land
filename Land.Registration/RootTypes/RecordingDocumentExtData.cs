@@ -37,7 +37,9 @@ namespace Empiria.Land.Registration {
       return data;
     }
 
-    static private readonly RecordingDocumentExtData _empty = new RecordingDocumentExtData() { IsEmptyInstance = true };
+    static private readonly RecordingDocumentExtData _empty =
+                              new RecordingDocumentExtData() { IsEmptyInstance = true };
+
     static public RecordingDocumentExtData Empty {
       get {
         return _empty;
@@ -88,15 +90,22 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+    internal int DocumentImageId {
+      get;
+      set;
+    }
+
+    internal int AuxiliarImageId {
+      get;
+      set;
+    }
+
     #endregion Properties
 
     #region Methods
 
     public string ToJson() {
-
       if (!this.IsEmptyInstance) {
-
-
         return JsonConverter.ToJson(this.GetObject());
       } else {
         return String.Empty;
@@ -110,6 +119,9 @@ namespace Empiria.Land.Registration {
         MainWitness = this.MainWitness,
         StartSheet = this.StartSheet,
         EndSheet = this.EndSheet,
+
+        DocumentImageId = this.DocumentImageId,
+        AuxiliarImageId = this.AuxiliarImageId
       };
     }
 
@@ -122,6 +134,9 @@ namespace Empiria.Land.Registration {
       this.ExpedientNo = json.Get<String>("CaseRecordNo", String.Empty);
 
       this.MainWitness = json.Get<Contact>("WitnessId", Person.Empty);
+
+      this.DocumentImageId = json.Get<Int32>("DocumentImageId", -1);
+      this.AuxiliarImageId = json.Get<Int32>("AuxiliarImageId", -1);
     }
 
     public JsonObject GetJson(RecordingDocument document) {
@@ -134,30 +149,44 @@ namespace Empiria.Land.Registration {
           json.AddIfValue(new JsonItem("StartSheet", this.StartSheet));
           json.AddIfValue(new JsonItem("EndSheet", this.EndSheet));
           break;
+
         case 2411:
           json.AddIfValue(new JsonItem("DocumentNo", document.Number));
           json.AddIfValue(new JsonItem("CaseRecordNo", document.ExpedientNo));
           break;
+
         case 2412:
           json.AddIfValue(new JsonItem("DocumentNo", document.Number));
           json.AddIfValue(new JsonItem("CaseRecordNo", document.ExpedientNo));
           break;
+
         case 2413:
           json.AddIfValue(new JsonItem("DocumentNo", document.Number));
           if (this.MainWitness != null) {
             json.AddIfValue(new JsonItem("WitnessId", this.MainWitness.Id));
           }
           break;
+
         case 2414:
           json.AddIfValue(new JsonItem("DocumentNo", document.Number));
           break;
+
         default:
           json.AddIfValue(new JsonItem("DocumentNo", document.Number));
           json.AddIfValue(new JsonItem("NotaryBook", this.BookNo));
           json.AddIfValue(new JsonItem("StartSheet", this.StartSheet));
           json.AddIfValue(new JsonItem("EndSheet", this.EndSheet));
           break;
+
       }
+
+      if (this.DocumentImageId != -1) {
+        json.Add(new JsonItem("DocumentImageId", this.DocumentImageId));
+      }
+      if (this.AuxiliarImageId != -1) {
+        json.Add(new JsonItem("AuxiliarImageId", this.AuxiliarImageId));
+      }
+
       return json;
     }
 

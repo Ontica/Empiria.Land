@@ -162,6 +162,12 @@ namespace Empiria.Land.Documentation {
       }
       documentImage.Save();
 
+      if (documentImage.DocumentImageType == DocumentImageType.MainDocument) {
+        documentImage.Document.SetImage(documentImage);
+      } else if (documentImage.DocumentImageType == DocumentImageType.Appendix) {
+        documentImage.Document.SetAuxiliarImage(documentImage);
+      }
+
       return documentImage;
     }
 

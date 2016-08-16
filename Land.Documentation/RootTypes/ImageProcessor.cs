@@ -85,7 +85,7 @@ namespace Empiria.Land.Documentation {
 
     #region Public methods
 
-    static public CandidateImage[] GetImagesToProcess() {
+    static internal CandidateImage[] GetImagesToProcess() {
       CandidateImage[] files = ImageProcessor.GetImagesToProcess(ImageProcessor.SubstitutionsFolderPath, true);
       if (files.Length != 0) {
         return files;
@@ -113,33 +113,18 @@ namespace Empiria.Land.Documentation {
     static public void ProcessTiffImage(CandidateImage candidateImage) {
       string resourceFolder = candidateImage.SourceFile.Directory.FullName;
 
-      //// Open a Stream and decode a TIFF image
-      //Stream imageStreamSource = new FileStream("tulipfarm.tif", FileMode.Open, FileAccess.Read, FileShare.Read);
-      //TiffBitmapDecoder decoder = new TiffBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-      //BitmapSource bitmapSource = decoder.Frames[0];
-      //Bitmap myImage = new Bitmap(bitmapSource);
-      //myImage.Source = bitmapSource;
-      //myImage.Stretch = Stretch.None;
-      //myImage.Margin = new Thickness(20);
-
       try {
         using (Image tiffImage = Image.FromFile(candidateImage.SourceFile.FullName)) {
-          Empiria.Messaging.Publisher.Publish("ProcessTiffImage B");
           var frameDimensions = new FrameDimension(tiffImage.FrameDimensionsList[0]);
-          Empiria.Messaging.Publisher.Publish("ProcessTiffImage C");
           // Gets the number of pages (frames) from the tiff image
           int totalFrames = tiffImage.GetFrameCount(frameDimensions);
-          Empiria.Messaging.Publisher.Publish("ProcessTiffImage D");
           for (int frameIndex = 0; frameIndex < totalFrames; frameIndex++) {
             // Selects one frame at a time and save the bitmap as a gif but with png name
             tiffImage.SelectActiveFrame(frameDimensions, frameIndex);
-            Empiria.Messaging.Publisher.Publish("ProcessTiffImage E");
             using (Bitmap bmp = new Bitmap(tiffImage)) {
-              Empiria.Messaging.Publisher.Publish("ProcessTiffImage F");
               string pngImageFileName = candidateImage.GetTargetPngFileName(frameIndex, totalFrames);
               FileServices.AssureDirectoryForFile(pngImageFileName);
               bmp.Save(pngImageFileName, ImageFormat.Gif);
-              Empiria.Messaging.Publisher.Publish("ProcessTiffImage G");
             }
           }  // for
         }   //using Image
@@ -214,11 +199,13 @@ namespace Empiria.Land.Documentation {
       string path = ConfigurationData.GetString(folderName);
 
       path = path.TrimEnd('\\');
-      if (Directory.Exists(path)) {
-        return path;
+
+      if (!Directory.Exists(path)) {
+        Directory.CreateDirectory(path);
+        FileAuditTrail.WriteOperation("GetImagingFolder", "CreateDirectory",
+                                      new JsonObject() { new JsonItem("folder", path) });
       }
-      throw new LandDocumentationException(LandDocumentationException.Msg.ImagingFolderNotExists,
-                                           folderName, path);
+      return path;
     }
 
     static private string ReplaceImagingFolder(string folderPath, string replacedPath) {
