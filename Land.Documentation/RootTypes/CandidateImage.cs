@@ -154,12 +154,7 @@ namespace Empiria.Land.Documentation {
                                                        new JsonItem("Destination", destinationFileName) } );
       this.ReadyToCreate = true;
 
-      DocumentImage documentImage;
-      if (this is RecordingCandidateImage) {
-        documentImage = new RecordingImage((RecordingCandidateImage) this);
-      } else {
-        documentImage = new DocumentImage(this);
-      }
+      DocumentImage documentImage = new DocumentImage(this);
       documentImage.Save();
 
       if (documentImage.DocumentImageType == DocumentImageType.MainDocument) {

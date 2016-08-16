@@ -77,15 +77,6 @@ namespace Empiria.Land.Documentation {
       return DataWriter.Execute(operation);
     }
 
-    static internal int WriteImagingItem(RecordingImage o) {
-      var operation = DataOperation.Parse("writeLRSImagingItem", o.Id, o.GetEmpiriaType().Id, o.Document.Id,
-                                          o.PhysicalBook.Id, o.RecordingNo, o.PhysicalRecording.Id,
-                                          (char) o.DocumentImageType, o.BaseFolder.Id, o.ItemPath,
-                                          o.ImagingItemExtData.ToString(), o.FilesCount, o.FilesTotalSize,
-                                          String.Empty);
-      return DataWriter.Execute(operation);
-    }
-
     #endregion Public methods
 
   } // class DataServices

@@ -51,16 +51,6 @@ namespace Empiria.Land.Documentation {
       }
     }
 
-    static private string _mainFolderPathByBook = null;
-    static public string MainFolderPathByBook {
-      get {
-        if (_mainFolderPathByBook == null) {
-          _mainFolderPathByBook = GetImagingFolder("ImageProcessor.MainFolderPathByBook");
-        }
-        return _mainFolderPathByBook;
-      }
-    }
-
     static private string _substitutionsFolderPath = null;
     static public string SubstitutionsFolderPath {
       get {
@@ -68,16 +58,6 @@ namespace Empiria.Land.Documentation {
           _substitutionsFolderPath = GetImagingFolder("ImageProcessor.SubstitutionsFolderPath");
         }
         return _substitutionsFolderPath;
-      }
-    }
-
-    static private string _substitutionsFolderPathByBook = null;
-    static public string SubstitutionsFolderPathByBook {
-      get {
-        if (_substitutionsFolderPathByBook == null) {
-          _substitutionsFolderPathByBook = GetImagingFolder("ImageProcessor.SubstitutionsFolderPathByBook");
-        }
-        return _substitutionsFolderPathByBook;
       }
     }
 
@@ -91,19 +71,7 @@ namespace Empiria.Land.Documentation {
         return files;
       }
 
-      ImageProcessor.CleanFolders(ImageProcessor.SubstitutionsFolderPathByBook);
-      files = ImageProcessor.GetImagesToProcessUsingBookFolder(ImageProcessor.SubstitutionsFolderPathByBook, true);
-      if (files.Length != 0) {
-        return files;
-      }
-
-      files = ImageProcessor.GetImagesToProcess(ImageProcessor.MainFolderPath, false);
-      if (files.Length != 0) {
-        return files;
-      }
-
-      ImageProcessor.CleanFolders(ImageProcessor.MainFolderPathByBook);
-      return ImageProcessor.GetImagesToProcessUsingBookFolder(ImageProcessor.MainFolderPathByBook, false);
+      return ImageProcessor.GetImagesToProcess(ImageProcessor.MainFolderPath, false);
     }
 
     private static void CleanFolders(string rootPath) {
@@ -168,34 +136,7 @@ namespace Empiria.Land.Documentation {
       return candidateImages.ToArray();
     }
 
-    static private CandidateImage[] GetImagesToProcessUsingBookFolder(string rootFolderPath,
-                                                                      bool replaceDuplicated) {
-      DirectoryInfo root = new DirectoryInfo(rootFolderPath);
-
-      DirectoryInfo[] subdirectories = root.GetDirectories();
-      var candidateImages = new List<CandidateImage>(maxFilesToProcess);
-      foreach (DirectoryInfo subdirectory in subdirectories) {
-
-        FileInfo[] filesInDirectory = FileServices.GetFiles(subdirectory.FullName, imageFileExtensions);
-        foreach (FileInfo file in filesInDirectory) {
-          var candidate = RecordingCandidateImage.Parse(file);
-          try {
-            candidate.AssertCanBeProcessed(replaceDuplicated);
-            candidateImages.Add(candidate);
-            if (candidateImages.Count > maxFilesToProcess) {
-              break;
-            }
-          } catch (Exception exception) {
-            SendCandidateImageToErrorsBin(candidate, exception);
-          }
-        } // foreach file;
-
-      }  // foreach directory;
-
-      return candidateImages.ToArray();
-    }
-
-    static private string GetImagingFolder(string folderName) {
+     static private string GetImagingFolder(string folderName) {
       string path = ConfigurationData.GetString(folderName);
 
       path = path.TrimEnd('\\');
@@ -212,18 +153,15 @@ namespace Empiria.Land.Documentation {
       if (folderPath.StartsWith(ImageProcessor.ErrorsFolderPath)) {
         return folderPath.Replace(ImageProcessor.ErrorsFolderPath, replacedPath);
       }
+
       if (folderPath.StartsWith(ImageProcessor.MainFolderPath)) {
         return folderPath.Replace(ImageProcessor.MainFolderPath, replacedPath);
-      }
-      if (folderPath.StartsWith(ImageProcessor.MainFolderPathByBook)) {
-        return folderPath.Replace(ImageProcessor.MainFolderPathByBook, replacedPath);
-      }
+      }   
+
       if (folderPath.StartsWith(ImageProcessor.SubstitutionsFolderPath)) {
         return folderPath.Replace(ImageProcessor.SubstitutionsFolderPath, replacedPath);
       }
-      if (folderPath.StartsWith(ImageProcessor.SubstitutionsFolderPathByBook)) {
-        return folderPath.Replace(ImageProcessor.SubstitutionsFolderPathByBook, replacedPath);
-      }
+
       throw Assertion.AssertNoReachThisCode();
     }
 
