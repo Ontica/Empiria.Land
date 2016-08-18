@@ -27,9 +27,6 @@ namespace Empiria.Land.Documentation {
 
     static private readonly ImageProcessingEngine instance = new ImageProcessingEngine();  // singleton element
 
-    static private string logText = String.Empty;
-    static private string errorLogText = String.Empty;
-
     private readonly string logFilePath = ConfigurationData.GetString("ImageProcessor.LogFilesPath");
 
     private IAsyncResult asyncResult = null;
@@ -37,6 +34,7 @@ namespace Empiria.Land.Documentation {
     private bool isRunning = false;   // semaphore
     private int totalJobs = 0;        // total jobs count;
     private int completedJobs = 0;    // completed jobs count;
+    private string logText = String.Empty;
 
     #endregion Fields
 
@@ -104,57 +102,45 @@ namespace Empiria.Land.Documentation {
       processImagesDelegate.EndInvoke(asyncResult);
 
       WriteLog(String.Empty);
-      WriteLog("Terminado a las: " + DateTime.Now.ToLongTimeString());
+      WriteLog("Proceso terminado a las: " + DateTime.Now.ToLongTimeString());
       isRunning = false;
       WriteLogToDisk();
     }
 
     private int DoProcessImages() {
+      var auditTrail = FileAuditTrail.GetInstance();
       try {
-        var auditTrail = FileAuditTrail.GetInstance();
         auditTrail.Start();
         var imagesToProcess = ImageProcessor.GetImagesToProcess();
         this.totalJobs = imagesToProcess.Length;
 
-        WriteLog(String.Empty);
-        WriteLog("Se encontraron " + this.TotalJobs.ToString("N0") + " imágenes para procesar.");
+        FileAuditTrail.LogText(String.Empty);
+
+        FileAuditTrail.LogText("Se procesarán en total " + this.TotalJobs.ToString("N0") + " imágenes ... \n");
 
         foreach (var image in imagesToProcess) {
           ImageProcessor.ProcessTiffImage(image);
         }
-        WriteDataErrorLog("Proceso terminado a las : " + DateTime.Now.ToLongTimeString());
 
-        auditTrail.End();
         WriteLog(auditTrail.GetLogs());
 
-        var exceptions = auditTrail.GetExceptions();
-        if (exceptions.Length != 0) {
-          WriteLog("NOTA: Ver el detalle con los errores encontrados en la conversión al final de este archivo.");
-          WriteDataErrorLog(String.Empty);
-          WriteDataErrorLog(exceptions);
-        }
         auditTrail.Clean();
+        auditTrail.End();
 
         return imagesToProcess.Length;
       } catch (Exception exception) {
         isRunning = false;
-        WriteLog("NOTA: Ver el detalle con los errores encontrados en la conversión al final de este archivo.");
-        WriteDataErrorLog(String.Empty);
-        WriteDataErrorLog("Ocurrió un problema en la conversión y procesamiento de imágenes:");
-        WriteDataErrorLog(exception.ToString());
-        WriteDataErrorLog(String.Empty);
-        WriteDataErrorLog(String.Empty);
-        WriteDataErrorLog("Proceso terminado a las : " + DateTime.Now.ToLongTimeString());
+        string msg = auditTrail.GetLogs() + "\n\n" +
+                      "Ocurrió un problema en la conversión y procesamiento de imágenes:\n" +
+                      exception.ToString() + "\n\n" +
+                      "Proceso terminado a las : " + DateTime.Now.ToLongTimeString();
+
         return -1;
       }
     }
 
     private void WriteLog(string text) {
       logText += text + System.Environment.NewLine;
-    }
-
-    private void WriteDataErrorLog(string text) {
-      errorLogText += text + System.Environment.NewLine;
     }
 
     private void WriteLogToDisk() {
@@ -164,23 +150,11 @@ namespace Empiria.Land.Documentation {
       message += logText;
 
       message += System.Environment.NewLine;
-      message += System.Environment.NewLine;
-
-      if (errorLogText.Length == 0) {
-        message += "No se detectaron problemas en la conversión";
-      } else {
-        message += "***************************************************" + System.Environment.NewLine;
-        message += "   Problemas encontrados en la conversión y procesamiento" + System.Environment.NewLine;
-        message += "***************************************************" + System.Environment.NewLine;
-        message += System.Environment.NewLine;
-        message += errorLogText;
-      }
 
       System.IO.File.WriteAllText(logFilePath + @"\imaging.processing." +
                                   DateTime.Now.ToString("yyyy-MM-dd-HH.mm.ss.ffff") + ".log",
                                   message);
 
-      errorLogText = String.Empty;
       logText = String.Empty;
     }
 

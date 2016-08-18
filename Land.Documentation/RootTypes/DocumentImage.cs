@@ -60,6 +60,19 @@ namespace Empiria.Land.Documentation {
       set;
     }
 
+    public string ImageFileName {
+      get {
+        return base.ItemPath.Substring(base.ItemPath.LastIndexOf('\\') + 1);
+      }
+    }
+
+    public string ImageFilePath {
+      get {
+        return base.ItemPath.Substring(0, base.ItemPath.LastIndexOf('\\'))
+                            .Replace("~", this.BaseFolder.FullPath);
+      }
+    }
+
     #endregion Public properties
 
     #region Public methods

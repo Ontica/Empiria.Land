@@ -21,60 +21,39 @@ namespace Empiria.Land.Documentation {
     #region Public methods
 
     static internal bool DocumentWasDigitalized(RecordingDocument document, DocumentImageType imageType) {
-      string sql = "SELECT * FROM vwLRSImagingItems " +
-                   "WHERE DocumentUID = '{0}' AND ImageType = '{1}'";
+      string sql = "SELECT * FROM LRSImagingItems " +
+                   "WHERE DocumentId = {0} AND ImageType = '{1}'";
 
-      sql = String.Format(sql, document.UID, (char) imageType);
-
-      return (DataReader.Count(DataOperation.Parse(sql)) > 0);
-    }
-
-    static internal bool DocumentWasDigitalized(RecordingDocument document, RecordingBook recordingBook,
-                                                string recordingNo, DocumentImageType imageType) {
-      string sql = "SELECT * FROM vwLRSImagingItems " +
-                   "WHERE DocumentUID = '{0}' AND PhysicalBookId = {1} " +
-                   "AND RecordingNo = '{2}' AND ImageType = '{3}'";
-
-      sql = String.Format(sql, document.UID, recordingBook.Id, recordingNo, (char) imageType);
+      sql = String.Format(sql, document.Id, (char) imageType);
 
       return (DataReader.Count(DataOperation.Parse(sql)) > 0);
-    }
-
-    static internal RecordingBook TryGetRecordingBook(string recorderOfficeName,
-                                                      string sectionNo, string bookNo) {
-                    string sql = "SELECT PhysicalBookId FROM OldRecordingModelData " +
-                   "WHERE RecorderOffice = '{0}' AND SectionNo = '{1}' AND " +
-                   "PhysicalBookNo = '{2}'";
-      sql = String.Format(sql, recorderOfficeName, sectionNo, bookNo);
-
-      var row = DataReader.GetDataRow(DataOperation.Parse(sql));
-      if (row != null) {
-        return RecordingBook.Parse((int) row["PhysicalBookId"]);
-      } else {
-        return RecordingBook.Empty;
-      }
-    }
-
-    static internal string TryGetOldRecordingNo(RecordingBook recordingBook, RecordingDocument document) {
-      string sql = "SELECT OldRecordingId, PhysicalRecordingNo FROM OldRecordingModelData " +
-                   "WHERE PhysicalBookId = {0} AND DocumentId = {1}";
-      sql = String.Format(sql, recordingBook.Id, document.Id);
-
-      var row = DataReader.GetDataRow(DataOperation.Parse(sql));
-      if (row != null) {
-        return (string) row["PhysicalRecordingNo"];
-      } else {
-        return null;
-      }
     }
 
     static internal int WriteImagingItem(DocumentImage o) {
       var operation = DataOperation.Parse("writeLRSImagingItem", o.Id, o.GetEmpiriaType().Id, o.Document.Id,
-                                          RecordingBook.Empty.Id, String.Empty, Recording.Empty.Id,
-                                          (char) o.DocumentImageType, o.BaseFolder.Id, o.ItemPath,
-                                          o.ImagingItemExtData.ToString(), o.FilesCount, o.FilesTotalSize,
-                                          String.Empty);
+                                          RecordingBook.Empty.Id, (char) o.DocumentImageType,
+                                          o.BaseFolder.Id, o.ItemPath, o.ImagingItemExtData.ToString(),
+                                          o.FilesCount, o.FilesTotalSize, String.Empty);
       return DataWriter.Execute(operation);
+    }
+
+    static internal void WriteImageProcessingLog(DocumentImage o, string message) {
+      var op = DataOperation.Parse("apdLRSImageProcessingTrail",
+                                   o.ImageFileName, (char) o.DocumentImageType,
+                                   DateTime.Now, message, o.Document.Id, o.Id,
+                                   o.ImageFilePath, 'A', String.Empty);
+
+      DataWriter.Execute(op);
+    }
+
+    static internal void WriteImageProcessingLogException(CandidateImage o, string message,
+                                                          Exception exception) {
+      var op = DataOperation.Parse("apdLRSImageProcessingTrail",
+                                   o.FileName, (char) o.DocumentImageType,
+                                   DateTime.Now, message, o.Document.Id, -1,
+                                   o.SourceFile.DirectoryName, 'E', exception.ToString());
+
+      DataWriter.Execute(op);
     }
 
     #endregion Public methods

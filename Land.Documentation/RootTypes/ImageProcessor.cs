@@ -25,7 +25,6 @@ namespace Empiria.Land.Documentation {
     #region Fields
 
     static readonly int maxFilesToProcess = ConfigurationData.GetInteger("ImageProcessor.MaxFilesToProcess");
-    static readonly string imageFileExtensions = "*.tif";
 
     #endregion Fields
 
@@ -79,26 +78,44 @@ namespace Empiria.Land.Documentation {
     }
 
     static public void ProcessTiffImage(CandidateImage candidateImage) {
-      string resourceFolder = candidateImage.SourceFile.Directory.FullName;
-
       try {
         using (Image tiffImage = Image.FromFile(candidateImage.SourceFile.FullName)) {
+
           var frameDimensions = new FrameDimension(tiffImage.FrameDimensionsList[0]);
+
           // Gets the number of pages (frames) from the tiff image
           int totalFrames = tiffImage.GetFrameCount(frameDimensions);
+
           for (int frameIndex = 0; frameIndex < totalFrames; frameIndex++) {
             // Selects one frame at a time and save the bitmap as a gif but with png name
             tiffImage.SelectActiveFrame(frameDimensions, frameIndex);
+
             using (Bitmap bmp = new Bitmap(tiffImage)) {
               string pngImageFileName = candidateImage.GetTargetPngFileName(frameIndex, totalFrames);
               FileServices.AssureDirectoryForFile(pngImageFileName);
               bmp.Save(pngImageFileName, ImageFormat.Gif);
             }
+
           }  // for
+
         }   //using Image
-        candidateImage.ConvertToDocumentImage();
+
+        string sourceFolderPath = candidateImage.SourceFile.DirectoryName;
+
+        candidateImage.MoveToDestinationFolder();
+
+        DocumentImage documentImage = candidateImage.ConvertToDocumentImage();
+
+        FileAuditTrail.LogOperation(documentImage, "Procesada correctamente",
+                                    "OK:  " + candidateImage.SourceFile.Name + " se procesó correctamente.\n\t" +
+                                    "Origen:  " + sourceFolderPath + "\n\t" +
+                                    "Destino: " + documentImage.ImageFilePath);
+
+        FileServices.DeleteWhenIsEmpty(sourceFolderPath);
+
       } catch (OutOfMemoryException exception) {
         ImageProcessor.SendCandidateImageToOutOfMemoryErrorsBin(candidateImage, exception);
+
       } catch (Exception exception) {
         ImageProcessor.SendCandidateImageToErrorsBin(candidateImage, exception);
       }
@@ -116,8 +133,11 @@ namespace Empiria.Land.Documentation {
     }
 
     static private CandidateImage[] GetImagesToProcess(string rootFolderPath, bool replaceDuplicated) {
-      FileInfo[] filesInDirectory = FileServices.GetFiles(rootFolderPath, imageFileExtensions);
+      FileInfo[] filesInDirectory = FileServices.GetFiles(rootFolderPath);
 
+      FileAuditTrail.LogText("Se leyeron " + filesInDirectory.Length +
+                             " archivos del directorio " + rootFolderPath);
+      FileAuditTrail.LogText("Revisando y descartando archivos previo al procesamiento ...\n");
       var candidateImages =
                   new List<CandidateImage>(Math.Min(filesInDirectory.Length, maxFilesToProcess));
       foreach (FileInfo file in filesInDirectory) {
@@ -136,15 +156,14 @@ namespace Empiria.Land.Documentation {
       return candidateImages.ToArray();
     }
 
-     static private string GetImagingFolder(string folderName) {
+    static private string GetImagingFolder(string folderName) {
       string path = ConfigurationData.GetString(folderName);
 
       path = path.TrimEnd('\\');
 
       if (!Directory.Exists(path)) {
         Directory.CreateDirectory(path);
-        FileAuditTrail.WriteOperation("GetImagingFolder", "CreateDirectory",
-                                      new JsonObject() { new JsonItem("folder", path) });
+        FileAuditTrail.LogText("MSG: Se creó el directorio '" + path + "'");
       }
       return path;
     }
@@ -156,58 +175,94 @@ namespace Empiria.Land.Documentation {
 
       if (folderPath.StartsWith(ImageProcessor.MainFolderPath)) {
         return folderPath.Replace(ImageProcessor.MainFolderPath, replacedPath);
-      }   
+      }
 
       if (folderPath.StartsWith(ImageProcessor.SubstitutionsFolderPath)) {
         return folderPath.Replace(ImageProcessor.SubstitutionsFolderPath, replacedPath);
       }
 
-      throw Assertion.AssertNoReachThisCode();
+      throw Assertion.AssertNoReachThisCode(folderPath + " doesn't start with a recognized path pattern.");
     }
 
     static private void SendCandidateImageToErrorsBin(CandidateImage image, Exception exception) {
-      Assertion.AssertObject(image, "imageFile");
-      Assertion.AssertObject(exception, "exception");
-
-      string destinationFileName = String.Empty;
-      string sourceFile = image.SourceFile.FullName;
+      string sourceFolderPath = image.SourceFile.DirectoryName;
       try {
-        var destinationFolder = ReplaceImagingFolder(image.SourceFile.Directory.FullName,
-                                                     ImageProcessor.ErrorsFolderPath);
-        destinationFileName = FileServices.MoveFileTo(image.SourceFile, destinationFolder);
-        FileAuditTrail.WriteOperation("SendImageToErrorsBin", "MoveFile",
-                                      new JsonObject() { new JsonItem("Source", sourceFile),
-                                                     new JsonItem("Destination", destinationFileName),
-                                                     new JsonItem("Reason", exception)});
+        var destinationFolder = ReplaceImagingFolder(sourceFolderPath,
+                                                     ImageProcessor.ErrorsFolderPath + GetSpecialErrorFolder(exception));
+
+        FileServices.MoveFileTo(image.SourceFile, destinationFolder);
+
+        FileAuditTrail.LogException(image, exception, GetShortExceptionMessage(exception),
+                                    "ERR: " + image.SourceFile.Name +
+                                    " se envió a la bandeja de errores debido a:\n\t" + exception.Message + "\n\t" +
+                                    "Origen:  " + sourceFolderPath + "\n\t" +
+                                    "Destino: " + destinationFolder);
+
+        FileServices.DeleteWhenIsEmpty(sourceFolderPath);
       } catch (Exception e) {
-        FileAuditTrail.WriteException("SendImageToErrorsBin", "MoveFile",
-                                      new JsonObject() { new JsonItem("Source", sourceFile),
-                                                     new JsonItem("Destination", destinationFileName),
-                                                     new JsonItem("Reason", exception),
-                                                     new JsonItem("OperationException", e)});
+        FileAuditTrail.LogException(image, exception, GetShortExceptionMessage(exception),
+                                    "ERR: " + image.SourceFile.Name + " no se pudo procesar debido a:\n\t" +
+                                    exception.Message + "\n\t" +
+                                    "Tampoco se pudo enviar a la bandeja de errores por:\n\t" + e.Message + "\n\t" +
+                                    "Origen: " + sourceFolderPath);
       }
     }
 
     static private void SendCandidateImageToOutOfMemoryErrorsBin(CandidateImage image, OutOfMemoryException exception) {
-      Assertion.AssertObject(image, "image");
-      Assertion.AssertObject(exception, "exception");
-
-      string destinationFileName = String.Empty;
-      string sourceFile = image.SourceFile.FullName;
+      string sourceFolderPath = image.SourceFile.DirectoryName;
       try {
-        var destinationFolder = ReplaceImagingFolder(image.SourceFile.Directory.FullName,
+        var destinationFolder = ReplaceImagingFolder(sourceFolderPath,
                                                      ImageProcessor.ErrorsFolderPath + @"\\out.of.memory");
-        destinationFileName = FileServices.MoveFileTo(image.SourceFile, destinationFolder);
-        FileAuditTrail.WriteOperation("SendImageToOutOfMemoryErrorsBin", "MoveFile",
-                                      new JsonObject() { new JsonItem("Source", sourceFile),
-                                                         new JsonItem("Destination", destinationFileName),
-                                                         new JsonItem("Reason", exception)});
+
+        FileServices.MoveFileTo(image.SourceFile, destinationFolder);
+
+        FileAuditTrail.LogException(image, exception, "Problema de memoria",
+                                    "ERR: " + image.SourceFile.Name +
+                                    " se envió a la bandeja de errores de memoria para su procesamiento posterior.\n\t" +
+                                    "Origen:  " + sourceFolderPath + "\n\t" +
+                                    "Destino: " + destinationFolder);
+
+        FileServices.DeleteWhenIsEmpty(sourceFolderPath);
       } catch (Exception e) {
-        FileAuditTrail.WriteException("SendImageToOutOfMemoryErrorsBin", "MoveFile",
-                                      new JsonObject() { new JsonItem("Source", sourceFile),
-                                                         new JsonItem("Destination", destinationFileName),
-                                                         new JsonItem("Reason", exception),
-                                                         new JsonItem("OperationException", e)});
+        FileAuditTrail.LogException(image, e, "Problema de memoria. No se pudo enviar a la bandeja de errores.",
+                                    "ERR: " + image.SourceFile.Name +
+                                    " no se pudo procesar debido a problemas de memoria, pero no se pudo enviar a" +
+                                    " la bandeja de problemas de memoria debido a:\n\t" + e.Message + "\n\t" +
+                                    "Origen: " + sourceFolderPath);
+      }
+    }
+
+    private static string GetShortExceptionMessage(Exception exception) {
+      if (!(exception is LandDocumentationException)) {
+        return exception.Message;
+      }
+      string exceptionTag = ((LandDocumentationException) exception).ExceptionTag;
+
+      if (exceptionTag == LandDocumentationException.Msg.FileNameBadFormed.ToString()) {
+        return "Archivo mal nombrado";
+      } else if (exceptionTag == LandDocumentationException.Msg.DocumentAlreadyDigitalized.ToString()) {
+        return "Ya fue digitalizado";
+      } else if (exceptionTag == LandDocumentationException.Msg.DocumentForFileNameNotFound.ToString()) {
+        return "El documento registral no existe";
+      } else {
+        return exception.Message;
+      }
+    }
+
+    private static string GetSpecialErrorFolder(Exception exception) {
+      if (!(exception is LandDocumentationException)) {
+        return @"\otros.errores";
+      }
+      string exceptionTag = ((LandDocumentationException) exception).ExceptionTag;
+
+      if (exceptionTag == LandDocumentationException.Msg.FileNameBadFormed.ToString()) {
+        return @"\mal.nombrados";
+      } else if (exceptionTag == LandDocumentationException.Msg.DocumentAlreadyDigitalized.ToString()) {
+        return @"\duplicados";
+      } else if (exceptionTag == LandDocumentationException.Msg.DocumentForFileNameNotFound.ToString()) {
+        return @"\sin.documento";
+      } else {
+        return @"\otros.errores";
       }
     }
 

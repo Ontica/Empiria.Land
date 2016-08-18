@@ -145,15 +145,15 @@ namespace Empiria.Land.Documentation {
       return DataServices.DocumentWasDigitalized(this.Document, this.DocumentImageType);
     }
 
-    internal DocumentImage ConvertToDocumentImage() {
+    internal void MoveToDestinationFolder() {
       string destinationFolder = this.GetTargetFolderName();
-      string destinationFileName = FileServices.MoveFileTo(this.SourceFile, destinationFolder);
 
-      FileAuditTrail.WriteOperation("SendImageToFinished", "MoveTiffFile",
-                                    new JsonObject() { new JsonItem("Source", this.SourceFile.FullName),
-                                                       new JsonItem("Destination", destinationFileName) } );
+      FileServices.MoveFileTo(this.SourceFile, destinationFolder);
+
       this.ReadyToCreate = true;
+    }
 
+    internal DocumentImage ConvertToDocumentImage() {
       DocumentImage documentImage = new DocumentImage(this);
       documentImage.Save();
 

@@ -123,7 +123,7 @@
     <value>La imagen {0} corresponde a un documento que ya fue digitalizado.</value>
   </data>
   <data name="DocumentForFileNameNotFound" xml:space="preserve">
-    <value>La imagen {0} corresponde a un documento que no está registado. Debe existir un error en el número de documento contenido en el nombre del archivo.</value>
+    <value>La imagen {0} corresponde a un documento que no está registado. Es posible que el nombre del archivo sea incorrecto.</value>
   </data>
   <data name="FileNameBadFormed" xml:space="preserve">
     <value>La imagen {0} tiene un nombre incorrecto o mal formado.</value>
