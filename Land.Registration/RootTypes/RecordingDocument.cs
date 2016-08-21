@@ -406,31 +406,56 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public void SetAuxiliarImage(ImagingItem image) {
+    public void SetAuxiliarImageSet(ImagingItem image) {
       Assertion.AssertObject(image, "image");
 
-      this.ExtensionData.AuxiliarImageId = image.Id;
+      this.ExtensionData.AuxiliarImageSetId = image.Id;
       this.Save();
     }
 
-    public void SetImage(ImagingItem image) {
+    public void SetImageSet(ImagingItem image) {
       Assertion.AssertObject(image, "image");
 
-      this.ExtensionData.DocumentImageId = image.Id;
+      this.ExtensionData.DocumentImageSetId = image.Id;
       this.Save();
     }
 
-    public ImagingItem TryGetAuxiliarImage() {
-      if (this.ExtensionData.AuxiliarImageId != -1) {
-        return ImagingItem.Parse(this.ExtensionData.AuxiliarImageId);
+    public bool HasAuxiliarImageSet {
+      get {
+        return (this.ExtensionData.AuxiliarImageSetId != -1);
+      }
+    }
+
+    public bool HasImageSet {
+      get {
+        return (this.ExtensionData.DocumentImageSetId != -1);
+      }
+    }
+
+    public int ImageSetId {
+      get {
+        return this.ExtensionData.DocumentImageSetId;
+      }
+    }
+
+    public int AuxiliarImageSetId {
+      get {
+        return this.ExtensionData.AuxiliarImageSetId;
+      }
+    }
+
+
+    public ImagingItem TryGetAuxiliarImageSet() {
+      if (this.ExtensionData.AuxiliarImageSetId != -1) {
+        return ImagingItem.Parse(this.ExtensionData.AuxiliarImageSetId);
       } else {
         return null;
       }
     }
 
-    public ImagingItem TryGetImage() {
-      if (this.ExtensionData.DocumentImageId != -1) {
-        return ImagingItem.Parse(this.ExtensionData.DocumentImageId);
+    public ImagingItem TryGetImageSet() {
+      if (this.ExtensionData.DocumentImageSetId != -1) {
+        return ImagingItem.Parse(this.ExtensionData.DocumentImageSetId);
       } else {
         return null;
       }

@@ -90,12 +90,12 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    internal int DocumentImageId {
+    internal int DocumentImageSetId {
       get;
       set;
     }
 
-    internal int AuxiliarImageId {
+    internal int AuxiliarImageSetId {
       get;
       set;
     }
@@ -120,8 +120,8 @@ namespace Empiria.Land.Registration {
         StartSheet = this.StartSheet,
         EndSheet = this.EndSheet,
 
-        DocumentImageId = this.DocumentImageId,
-        AuxiliarImageId = this.AuxiliarImageId
+        DocumentImageSetId = this.DocumentImageSetId,
+        AuxiliarImageSetId = this.AuxiliarImageSetId
       };
     }
 
@@ -135,8 +135,8 @@ namespace Empiria.Land.Registration {
 
       this.MainWitness = json.Get<Contact>("WitnessId", Person.Empty);
 
-      this.DocumentImageId = json.Get<Int32>("DocumentImageId", -1);
-      this.AuxiliarImageId = json.Get<Int32>("AuxiliarImageId", -1);
+      this.DocumentImageSetId = json.Get<Int32>("DocumentImageSetId", -1);
+      this.AuxiliarImageSetId = json.Get<Int32>("AuxiliarImageSetId", -1);
     }
 
     public JsonObject GetJson(RecordingDocument document) {
@@ -180,11 +180,11 @@ namespace Empiria.Land.Registration {
 
       }
 
-      if (this.DocumentImageId != -1) {
-        json.Add(new JsonItem("DocumentImageId", this.DocumentImageId));
+      if (this.DocumentImageSetId != -1) {
+        json.Add(new JsonItem("DocumentImageSetId", this.DocumentImageSetId));
       }
-      if (this.AuxiliarImageId != -1) {
-        json.Add(new JsonItem("AuxiliarImageId", this.AuxiliarImageId));
+      if (this.AuxiliarImageSetId != -1) {
+        json.Add(new JsonItem("AuxiliarImageSetId", this.AuxiliarImageSetId));
       }
 
       return json;

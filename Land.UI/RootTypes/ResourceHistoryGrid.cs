@@ -61,7 +61,7 @@ namespace Empiria.Land.UI {
     private string GetTitle() {
       string template =
             "<tr class='detailsTitle'>" +
-              "<td colspan='5'>Historia del predio <b>{{RESOURCE.UID}}</b></td>" +
+              "<td colspan='6'>Historia del predio <b>{{RESOURCE.UID}}</b></td>" +
             "</tr>";
 
       return template.Replace("{{RESOURCE.UID}}", this._resource.UID);
@@ -74,6 +74,7 @@ namespace Empiria.Land.UI {
               "<td style='width:160px'>Acto jurídico</td>" +
               "<td style='white-space:nowrap'>Antecedente / Fracción</td>" +
               "<td style='width:200px'>Registrado en</td>" +
+              "<td style='white-space:nowrap'>Img</td>" +
               "<td style ='width:160px'>Registró</ td >" +
             "</tr>";
       return template;
@@ -89,6 +90,7 @@ namespace Empiria.Land.UI {
              "<a href='javascript:doOperation(\"onSelectCertificate\", {{CERTIFICATE.ID}});'>" +
                  "{{CERTIFICATE.UID}}</a>" +
              "<br>{{TRANSACTION}}</td>" +
+           "<td>&nbsp;</td>" +
            "<td>{{ISSUED.BY}}</td>" +
          "</tr>";
 
@@ -109,16 +111,17 @@ namespace Empiria.Land.UI {
 
     private string GetRecordingActRow(RecordingAct recordingAct, int index) {
       const string template =
-           "<tr class='{{CLASS}}'>" +
-             "<td>{{PRESENTATION.DATE}}<br/>{{AUTHORIZATION.DATE}}</td>" +
-             "<td style='white-space:normal;width:260px'>{{RECORDING.ACT}}</td>" +
-             "<td style='white-space:normal;'>{{PARTITION}}</td>" +
-             "<td style='white-space:{{WHITE-SPACE}};'>" +
-               "<a href='javascript:doOperation(\"onSelectDocument\", {{DOCUMENT.ID}}, {{RECORDING.ACT.ID}});'>" +
-                   "{{DOCUMENT.OR.RECORDING}}</a>" +
-               "<br>{{TRANSACTION}}</td>" +
-             "<td>{{RECORDED.BY}}</td>" +
-           "</tr>";
+        "<tr class='{{CLASS}}'>" +
+          "<td>{{PRESENTATION.DATE}}<br/>{{AUTHORIZATION.DATE}}</td>" +
+          "<td style='white-space:normal;width:260px'>{{RECORDING.ACT}}</td>" +
+          "<td style='white-space:normal;'>{{PARTITION}}</td>" +
+          "<td style='white-space:{{WHITE-SPACE}};'>" +
+            "<a href='javascript:doOperation(\"onSelectDocument\", {{DOCUMENT.ID}}, {{RECORDING.ACT.ID}});'>" +
+                "{{DOCUMENT.OR.RECORDING}}</a>" +
+            "<br>{{TRANSACTION}}</td>" +
+          "<td style='white-space:nowrap'>{{DOCUMENT.IMAGE.URL}}</td>" +
+          "<td>{{RECORDED.BY}}</td>" +
+        "</tr>";
 
       string row = template.Replace("{{CLASS}}", (index % 2 == 0) ? "detailsItem" : "detailsOddItem");
 
@@ -137,9 +140,32 @@ namespace Empiria.Land.UI {
       row = row.Replace("{{RECORDED.BY}}", recordingAct.RegisteredBy.Nickname);
 
       row = row.Replace("{{DOCUMENT.ID}}", recordingAct.Document.Id.ToString());
+
+      row = row.Replace("{{DOCUMENT.IMAGE.URL}}", GetDocumentImageLinks(recordingAct.Document));
+
       row = row.Replace("{{RECORDING.ACT.ID}}", recordingAct.Id.ToString());
 
       return row;
+    }
+
+    private string GetDocumentImageLinks(RecordingDocument document) {
+      if (!document.HasImageSet && !document.HasAuxiliarImageSet) {
+        return "&nbsp";
+      }
+      string html = String.Empty;
+
+      if (document.HasImageSet) {
+        html = "<a href='javascript:doOperation(\"onSelectImageSet\", {{DOCUMENT.IMAGE.SET.ID}});'>" +
+                  "<img src='../themes/default/bullets/scribble_doc_sm.gif' title='Documento digitalizado'></a>";
+        html = html.Replace("{{DOCUMENT.IMAGE.SET.ID}}", document.ImageSetId.ToString());
+      }
+      if (document.HasAuxiliarImageSet) {
+        html += "<a href='javascript:doOperation(\"onSelectImageSet\", {{AUXILIAR.IMAGE.SET.ID}});'>" +
+                   "<img src='../themes/default/bullets/clip.gif' title='Documentos auxiliares'></a>";
+        html = html.Replace("{{AUXILIAR.IMAGE.SET.ID}}", document.AuxiliarImageSetId.ToString());
+      }
+
+      return html;
     }
 
     private string GetPartitionOrAntecedentCell(RecordingAct recordingAct) {
