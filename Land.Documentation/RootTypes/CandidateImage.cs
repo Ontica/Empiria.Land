@@ -22,7 +22,7 @@ namespace Empiria.Land.Documentation {
 
   /// <summary>Candidate images are processed images that not necessarily will become to a recording image,
   /// because sometimes some of them are unreadable and must be replaced.</summary>
-  public class CandidateImage {
+  internal class CandidateImage {
 
     #region Fields
 
@@ -153,14 +153,14 @@ namespace Empiria.Land.Documentation {
       this.ReadyToCreate = true;
     }
 
-    internal DocumentImage ConvertToDocumentImage() {
-      DocumentImage documentImage = new DocumentImage(this);
+    internal DocumentImage ConvertToDocumentImage(string[] imagesHashCodes) {
+      DocumentImage documentImage = new DocumentImage(this, imagesHashCodes);
       documentImage.Save();
 
       if (documentImage.DocumentImageType == DocumentImageType.MainDocument) {
-        documentImage.Document.SetImage(documentImage);
+        documentImage.Document.SetImageSet(documentImage);
       } else if (documentImage.DocumentImageType == DocumentImageType.Appendix) {
-        documentImage.Document.SetAuxiliarImage(documentImage);
+        documentImage.Document.SetAuxiliarImageSet(documentImage);
       }
 
       return documentImage;

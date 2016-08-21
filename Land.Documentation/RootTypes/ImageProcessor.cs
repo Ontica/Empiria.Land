@@ -15,7 +15,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 
 using Empiria.Documents.IO;
-using Empiria.Json;
+using Empiria.Security;
 
 namespace Empiria.Land.Documentation {
 
@@ -77,14 +77,18 @@ namespace Empiria.Land.Documentation {
       FileServices.DeleteEmptyDirectories(rootPath);
     }
 
-    static public void ProcessTiffImage(CandidateImage candidateImage) {
+    static internal void ProcessTiffImage(CandidateImage candidateImage) {
+      int totalFrames = 0;
+      string[] securityHashCodes = new string[0];
+
       try {
         using (Image tiffImage = Image.FromFile(candidateImage.SourceFile.FullName)) {
 
           var frameDimensions = new FrameDimension(tiffImage.FrameDimensionsList[0]);
 
           // Gets the number of pages (frames) from the tiff image
-          int totalFrames = tiffImage.GetFrameCount(frameDimensions);
+          totalFrames = tiffImage.GetFrameCount(frameDimensions);
+          securityHashCodes = new string[totalFrames];
 
           for (int frameIndex = 0; frameIndex < totalFrames; frameIndex++) {
             // Selects one frame at a time and save the bitmap as a gif but with png name
@@ -94,6 +98,10 @@ namespace Empiria.Land.Documentation {
               string pngImageFileName = candidateImage.GetTargetPngFileName(frameIndex, totalFrames);
               FileServices.AssureDirectoryForFile(pngImageFileName);
               bmp.Save(pngImageFileName, ImageFormat.Gif);
+              string hashCode = Cryptographer.CreateHashCode(File.ReadAllBytes(pngImageFileName),
+                                                             pngImageFileName);
+              securityHashCodes[frameIndex] =
+                         hashCode.Substring(0, totalFrames <= 20 ? 32 : (totalFrames <= 100 ? 16 : 8));
             }
 
           }  // for
@@ -104,15 +112,14 @@ namespace Empiria.Land.Documentation {
 
         candidateImage.MoveToDestinationFolder();
 
-        DocumentImage documentImage = candidateImage.ConvertToDocumentImage();
+        DocumentImage documentImage = candidateImage.ConvertToDocumentImage(securityHashCodes);
 
         FileAuditTrail.LogOperation(documentImage, "Procesada correctamente",
                                     "OK:  " + candidateImage.SourceFile.Name + " se procesó correctamente.\n\t" +
                                     "Origen:  " + sourceFolderPath + "\n\t" +
-                                    "Destino: " + documentImage.ImageFilePath);
+                                    "Destino: " + documentImage.MainImageFilePath);
 
-        FileServices.DeleteWhenIsEmpty(sourceFolderPath);
-
+        DeleteSourceFolderIfEmpty(sourceFolderPath);
       } catch (OutOfMemoryException exception) {
         ImageProcessor.SendCandidateImageToOutOfMemoryErrorsBin(candidateImage, exception);
 
@@ -131,6 +138,14 @@ namespace Empiria.Land.Documentation {
                                                             sourceFileName));
       }
     }
+
+
+    static void DeleteSourceFolderIfEmpty(string sourceFolderToDelete) {
+      if (sourceFolderToDelete != MainFolderPath) {
+        FileServices.DeleteWhenIsEmpty(sourceFolderToDelete);
+      }
+    }
+
 
     static private CandidateImage[] GetImagesToProcess(string rootFolderPath, bool replaceDuplicated) {
       FileInfo[] filesInDirectory = FileServices.GetFiles(rootFolderPath);
@@ -198,7 +213,7 @@ namespace Empiria.Land.Documentation {
                                     "Origen:  " + sourceFolderPath + "\n\t" +
                                     "Destino: " + destinationFolder);
 
-        FileServices.DeleteWhenIsEmpty(sourceFolderPath);
+        DeleteSourceFolderIfEmpty(sourceFolderPath);
       } catch (Exception e) {
         FileAuditTrail.LogException(image, exception, GetShortExceptionMessage(exception),
                                     "ERR: " + image.SourceFile.Name + " no se pudo procesar debido a:\n\t" +
@@ -222,7 +237,7 @@ namespace Empiria.Land.Documentation {
                                     "Origen:  " + sourceFolderPath + "\n\t" +
                                     "Destino: " + destinationFolder);
 
-        FileServices.DeleteWhenIsEmpty(sourceFolderPath);
+        DeleteSourceFolderIfEmpty(sourceFolderPath);
       } catch (Exception e) {
         FileAuditTrail.LogException(image, e, "Problema de memoria. No se pudo enviar a la bandeja de errores.",
                                     "ERR: " + image.SourceFile.Name +

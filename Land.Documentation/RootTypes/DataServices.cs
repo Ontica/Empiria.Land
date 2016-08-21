@@ -33,15 +33,15 @@ namespace Empiria.Land.Documentation {
       var operation = DataOperation.Parse("writeLRSImagingItem", o.Id, o.GetEmpiriaType().Id, o.Document.Id,
                                           RecordingBook.Empty.Id, (char) o.DocumentImageType,
                                           o.BaseFolder.Id, o.ItemPath, o.ImagingItemExtData.ToString(),
-                                          o.FilesCount, o.FilesTotalSize, String.Empty);
+                                          o.FilesCount, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 
     static internal void WriteImageProcessingLog(DocumentImage o, string message) {
       var op = DataOperation.Parse("apdLRSImageProcessingTrail",
-                                   o.ImageFileName, (char) o.DocumentImageType,
+                                   o.MainImageFileName, (char) o.DocumentImageType,
                                    DateTime.Now, message, o.Document.Id, o.Id,
-                                   o.ImageFilePath, 'A', String.Empty);
+                                   o.MainImageFilePath, 'A', String.Empty);
 
       DataWriter.Execute(op);
     }
