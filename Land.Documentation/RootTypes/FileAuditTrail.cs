@@ -72,7 +72,7 @@ namespace Empiria.Land.Documentation {
     }
 
     /// <summary>Adds the text to the text log.</summary>
-    public static void LogOperation(DocumentImage image, string message, string fullTextToLog) {
+    public static void LogOperation(DocumentImageSet image, string message, string fullTextToLog) {
       var auditTrail = FileAuditTrail.GetInstance();
 
       Assertion.Assert(auditTrail.isRunning, "FileAuditTrail is not running. Please start it first.");

@@ -112,7 +112,7 @@ namespace Empiria.Land.Documentation {
 
         candidateImage.MoveToDestinationFolder();
 
-        DocumentImage documentImage = candidateImage.ConvertToDocumentImage(securityHashCodes);
+        DocumentImageSet documentImage = candidateImage.ConvertToDocumentImage(securityHashCodes);
 
         FileAuditTrail.LogOperation(documentImage, "Procesada correctamente",
                                     "OK:  " + candidateImage.SourceFile.Name + " se procesó correctamente.\n\t" +

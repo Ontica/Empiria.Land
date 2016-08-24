@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Documentation                     Assembly : Empiria.Land.Documentation          *
-*  Type      : DocumentImage                                  Pattern  : Empiria Object Type                 *
+*  Type      : DocumentImageSet                               Pattern  : Empiria Object Type                 *
 *  Version   : 2.1                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Represents a processed and ready to use document image.                                       *
+*  Summary   : Represents a processed and ready to use document image set.                                   *
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -18,12 +18,16 @@ using Empiria.Land.Registration;
 
 namespace Empiria.Land.Documentation {
 
-  /// <summary>Represents a processed and ready to use document image.</summary>
-  public class DocumentImage : ImagingItem, IProtected {
+  /// <summary>Represents a processed and ready to use document image set.</summary>
+  public class DocumentImageSet : ImageSet, IProtected {
 
     #region Constructors and parsers
 
-    internal DocumentImage(CandidateImage candidateImage, string[] imagesHashCodes) {
+    private DocumentImageSet() {
+      // Required by Empiria Framework
+    }
+
+    internal DocumentImageSet(CandidateImage candidateImage, string[] imagesHashCodes) {
       Assertion.AssertObject(candidateImage, "candidateImage");
       Assertion.AssertObject(imagesHashCodes, "imagesHashCodes");
 
@@ -33,22 +37,20 @@ namespace Empiria.Land.Documentation {
                        "CandidateImage has no inner images.");
       this.Document = candidateImage.Document;
       this.DocumentImageType = candidateImage.DocumentImageType;
-      this.BaseFolder = candidateImage.BaseFolder;
+      base.BaseFolder = candidateImage.BaseFolder;
       base.ItemPath = this.GetRelativePath(candidateImage.SourceFile.FullName);
       base.FilesCount = imagesHashCodes.Length;
 
       this.SetImagesHashCodes(imagesHashCodes);
     }
 
+    static public new DocumentImageSet Parse(int id) {
+      return BaseObject.ParseId<DocumentImageSet>(id);
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
-
-    [DataField("BaseFolderId")]
-    public ImagingFolder BaseFolder {
-      get;
-      private set;
-    }
 
     [DataField("DocumentId")]
     public RecordingDocument Document {
@@ -127,7 +129,6 @@ namespace Empiria.Land.Documentation {
       return absolutePath.Replace(baseFolder, "~");
     }
 
-
     private void SetImagesHashCodes(string[] imagesHashCodes) {
       var json = new JsonObject();
 
@@ -138,6 +139,6 @@ namespace Empiria.Land.Documentation {
 
     #endregion Private methods
 
-  }  // class DocumentImage
+  }  // class DocumentImageSet
 
 }  // namespace Empiria.Land.Documentation

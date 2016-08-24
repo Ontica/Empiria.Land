@@ -153,8 +153,8 @@ namespace Empiria.Land.Documentation {
       this.ReadyToCreate = true;
     }
 
-    internal DocumentImage ConvertToDocumentImage(string[] imagesHashCodes) {
-      DocumentImage documentImage = new DocumentImage(this, imagesHashCodes);
+    internal DocumentImageSet ConvertToDocumentImage(string[] imagesHashCodes) {
+      DocumentImageSet documentImage = new DocumentImageSet(this, imagesHashCodes);
       documentImage.Save();
 
       if (documentImage.DocumentImageType == DocumentImageType.MainDocument) {

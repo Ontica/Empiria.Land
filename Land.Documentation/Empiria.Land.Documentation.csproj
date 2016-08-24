@@ -120,7 +120,7 @@
     <Compile Include="RootTypes\CandidateImage.cs" />
     <Compile Include="RootTypes\FileAuditTrail.cs" />
     <Compile Include="RootTypes\ImageProcessingEngine.cs" />
-    <Compile Include="RootTypes\DocumentImage.cs" />
+    <Compile Include="RootTypes\DocumentImageSet.cs" />
     <Compile Include="RootTypes\DataServices.cs" />
     <Compile Include="RootTypes\ImageProcessor.cs" />
     <Compile Include="RootTypes\LandDocumentationException.cs" />
