@@ -21,7 +21,7 @@ namespace Empiria.Land.Registration {
     #region Constructors and parsers
 
     public RecordingDocumentExtData() {
-      this.IssuedByPosition = RoleType.Empty;
+
     }
 
     static internal RecordingDocumentExtData Parse(string jsonString) {
@@ -53,52 +53,52 @@ namespace Empiria.Land.Registration {
     public string DocumentNo {
       get;
       set;
-    }
+    } = String.Empty;
 
     public string ExpedientNo {
       get;
       set;
-    }
+    } = String.Empty;
 
     public string BookNo {
       get;
       set;
-    }
+    } = String.Empty;
 
     public RoleType IssuedByPosition {
       get;
       set;
-    }
+    } = RoleType.Empty;
 
     public Contact MainWitness {
       get;
       set;
-    }
+    } = Person.Empty;
 
     public string StartSheet {
       get;
       set;
-    }
+    } = String.Empty;
 
     public string EndSheet {
       get;
       set;
-    }
+    } = String.Empty;
 
     public bool IsEmptyInstance {
       get;
       private set;
-    }
+    } = false;
 
     internal int DocumentImageSetId {
       get;
       set;
-    }
+    } = -1;
 
     internal int AuxiliarImageSetId {
       get;
       set;
-    }
+    } = -1;
 
     #endregion Properties
 

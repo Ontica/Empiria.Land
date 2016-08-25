@@ -58,16 +58,10 @@ namespace Empiria.Land.Documentation {
       private set;
     }
 
-    [DataField("DocumentImageType", Default = DocumentImageType.Unknown)]
+    [DataField("ImageType", Default = DocumentImageType.Unknown)]
     public DocumentImageType DocumentImageType {
       get;
       private set;
-    }
-
-    [DataField("ImagingItemExtData")]
-    protected internal JsonObject ImagingItemExtData {
-      get;
-      set;
     }
 
     internal string MainImageFileName {
@@ -80,6 +74,24 @@ namespace Empiria.Land.Documentation {
       get {
         return base.ItemPath.Substring(0, base.ItemPath.LastIndexOf('\\'))
                             .Replace("~", this.BaseFolder.FullPath);
+      }
+    }
+
+    public string UrlRelativePath {
+      get {
+        return base.ItemPath.Substring(0, base.ItemPath.LastIndexOf('\\') + 1)
+                            .Replace("~", this.BaseFolder.UrlRelativePath).Replace('\\', '/');
+      }
+    }
+
+
+    private string[] _imagesFileNamesArray = null;
+    public string[] ImagesNamesArray {
+      get {
+        if (_imagesFileNamesArray == null) {
+          _imagesFileNamesArray = this.GetImagesFileNamesArray();
+        }
+        return _imagesFileNamesArray;
       }
     }
 
@@ -127,6 +139,23 @@ namespace Empiria.Land.Documentation {
       string baseFolder = this.BaseFolder.ItemPath.Trim('\\');
 
       return absolutePath.Replace(baseFolder, "~");
+    }
+
+    private string[] GetImagesFileNamesArray() {
+      string[] array = new string[base.FilesCount];
+
+      string baseFileName = MainImageFileName.Replace(".tif", String.Empty);
+
+      for (int i = 0; i < base.FilesCount; i++) {
+        if (base.FilesCount < 100) {
+          array[i] = String.Concat(baseFileName, ".", (i + 1).ToString("00"),
+                                   "_of_" + base.FilesCount.ToString("00") + ".png");
+        } else {
+          array[i] = String.Concat(baseFileName, ".", (i + 1).ToString("000"),
+                                   "_of_" + base.FilesCount.ToString("000") + ".png");
+        }
+      }
+      return array;
     }
 
     private void SetImagesHashCodes(string[] imagesHashCodes) {
