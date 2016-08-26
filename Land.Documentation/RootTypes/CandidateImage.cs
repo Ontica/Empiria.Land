@@ -35,6 +35,7 @@ namespace Empiria.Land.Documentation {
     protected CandidateImage(FileInfo sourceFile) {
       Initialize();
       this.SourceFile = sourceFile;
+      this.ChangeFileNameIfPossible();
       if (this.IsFileNameValid()) {
         LoadDocumentData();
       }
@@ -191,6 +192,38 @@ namespace Empiria.Land.Documentation {
       this.Document = RecordingDocument.Empty;
       this.DocumentImageType = DocumentImageType.Unknown;
       this.BaseFolder = ImagingFolder.Empty;
+    }
+
+    private void ChangeFileNameIfPossible() {
+      if (this.IsFileNameValid()) {
+        return;
+      }
+      string currentFileName = this.FileName.ToUpperInvariant();
+      string renamedFileName = String.Empty;
+
+      string regex = "^RP\\d{2}[A-Z]{2}-\\d{2}[A-Z]{2}\\d{2}-[A-Z]{2}\\d{2}[A-Z|0-9]{2}-[AE].TIF$";
+      if (Regex.IsMatch(currentFileName, regex)) {
+        if (currentFileName.EndsWith("-A.TIF")) {
+          renamedFileName = currentFileName.Replace("-A.TIF", "_A.TIF");
+        } else if (currentFileName.EndsWith("-E.TIF")) {
+          renamedFileName = currentFileName.Replace("-E.TIF", "_E.TIF");
+        }
+      }
+      regex = "^RP\\d{2}[A-Z]{2}-\\d{2}[A-Z]{2}\\d{2}-[A-Z]{2}\\d{2}[A-Z|0-9]{2}.TIF$";
+      if (Regex.IsMatch(currentFileName, regex)) {
+        renamedFileName = currentFileName.Replace(".TIF", "_E.TIF");
+      }
+
+      if (renamedFileName.Length == 0) {
+        return;
+      }
+
+      var newFileFullPath =
+              this.SourceFile.FullName.ToUpperInvariant().Replace(currentFileName, renamedFileName);
+
+      if (!File.Exists(newFileFullPath)) {
+        this.SourceFile.MoveTo(newFileFullPath);
+      }
     }
 
     private bool IsFileNameValid() {
