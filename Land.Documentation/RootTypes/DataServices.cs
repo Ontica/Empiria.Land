@@ -41,7 +41,7 @@ namespace Empiria.Land.Documentation {
       var op = DataOperation.Parse("apdLRSImageProcessingTrail",
                                    o.MainImageFileName, (char) o.DocumentImageType,
                                    DateTime.Now, message, o.Document.Id, o.Id,
-                                   o.MainImageFilePath, 'A', String.Empty);
+                                   o.FullPath, 'A', String.Empty);
 
       DataWriter.Execute(op);
     }

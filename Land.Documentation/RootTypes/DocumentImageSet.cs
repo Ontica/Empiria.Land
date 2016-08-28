@@ -64,34 +64,25 @@ namespace Empiria.Land.Documentation {
       private set;
     }
 
-    internal string MainImageFileName {
-      get {
-        return base.ItemPath.Substring(base.ItemPath.LastIndexOf('\\') + 1);
-      }
-    }
-
-    internal string MainImageFilePath {
+    public override string FullPath {
       get {
         return base.ItemPath.Substring(0, base.ItemPath.LastIndexOf('\\'))
-                            .Replace("~", this.BaseFolder.FullPath);
+                            .Replace("~", this.BaseFolder.FullPath)
+                            .ToUpperInvariant();
       }
     }
 
-    public string UrlRelativePath {
+    internal string MainImageFileName {
+      get {
+        return base.ItemPath.Substring(base.ItemPath.LastIndexOf('\\') + 1)
+                             .ToUpperInvariant();
+      }
+    }
+
+    public override string UrlRelativePath {
       get {
         return base.ItemPath.Substring(0, base.ItemPath.LastIndexOf('\\') + 1)
                             .Replace("~", this.BaseFolder.UrlRelativePath).Replace('\\', '/');
-      }
-    }
-
-
-    private string[] _imagesFileNamesArray = null;
-    public string[] ImagesNamesArray {
-      get {
-        if (_imagesFileNamesArray == null) {
-          _imagesFileNamesArray = this.GetImagesFileNamesArray();
-        }
-        return _imagesFileNamesArray;
       }
     }
 
@@ -124,14 +115,6 @@ namespace Empiria.Land.Documentation {
 
     #endregion Public properties
 
-    #region Public methods
-
-    protected override void OnSave() {
-      DataServices.WriteImagingItem(this);
-    }
-
-    #endregion Public methods
-
     #region Private methods
 
     ///<summary>Builds the relative path from the BaseFolder given an absolute path.</summary>
@@ -141,10 +124,10 @@ namespace Empiria.Land.Documentation {
       return absolutePath.Replace(baseFolder, "~");
     }
 
-    private string[] GetImagesFileNamesArray() {
+    protected override string[] GetImagesFileNamesArray() {
       string[] array = new string[base.FilesCount];
 
-      string baseFileName = MainImageFileName.Replace(".tif", String.Empty);
+      string baseFileName = MainImageFileName.Replace(".TIF", String.Empty);
 
       for (int i = 0; i < base.FilesCount; i++) {
         if (base.FilesCount < 100) {
@@ -156,6 +139,10 @@ namespace Empiria.Land.Documentation {
         }
       }
       return array;
+    }
+
+    protected override void OnSave() {
+      DataServices.WriteImagingItem(this);
     }
 
     private void SetImagesHashCodes(string[] imagesHashCodes) {

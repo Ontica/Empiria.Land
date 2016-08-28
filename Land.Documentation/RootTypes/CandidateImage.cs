@@ -155,16 +155,16 @@ namespace Empiria.Land.Documentation {
     }
 
     internal DocumentImageSet ConvertToDocumentImage(string[] imagesHashCodes) {
-      DocumentImageSet documentImage = new DocumentImageSet(this, imagesHashCodes);
-      documentImage.Save();
+      var imageSet = new DocumentImageSet(this, imagesHashCodes);
+      imageSet.Save();
 
-      if (documentImage.DocumentImageType == DocumentImageType.MainDocument) {
-        documentImage.Document.SetImageSet(documentImage);
-      } else if (documentImage.DocumentImageType == DocumentImageType.Appendix) {
-        documentImage.Document.SetAuxiliarImageSet(documentImage);
+      if (imageSet.DocumentImageType == DocumentImageType.MainDocument) {
+        imageSet.Document.SetImageSet(imageSet);
+      } else if (imageSet.DocumentImageType == DocumentImageType.Appendix) {
+        imageSet.Document.SetAuxiliarImageSet(imageSet);
       }
 
-      return documentImage;
+      return imageSet;
     }
 
     #endregion Public methods

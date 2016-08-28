@@ -112,12 +112,12 @@ namespace Empiria.Land.Documentation {
 
         candidateImage.MoveToDestinationFolder();
 
-        DocumentImageSet documentImage = candidateImage.ConvertToDocumentImage(securityHashCodes);
+        DocumentImageSet documentImageSet = candidateImage.ConvertToDocumentImage(securityHashCodes);
 
-        FileAuditTrail.LogOperation(documentImage, "Procesada correctamente",
+        FileAuditTrail.LogOperation(documentImageSet, "Procesada correctamente",
                                     "OK:  " + candidateImage.SourceFile.Name + " se procesó correctamente.\n\t" +
                                     "Origen:  " + sourceFolderPath + "\n\t" +
-                                    "Destino: " + documentImage.MainImageFilePath);
+                                    "Destino: " + documentImageSet.FullPath);
 
         DeleteSourceFolderIfEmpty(sourceFolderPath);
       } catch (OutOfMemoryException exception) {
