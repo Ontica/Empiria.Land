@@ -119,7 +119,7 @@ namespace Empiria.Land.UI {
             "<a href='javascript:doOperation(\"onSelectDocument\", {{DOCUMENT.ID}}, {{RECORDING.ACT.ID}});'>" +
                 "{{DOCUMENT.OR.RECORDING}}</a>" +
             "<br>{{TRANSACTION}}</td>" +
-          "<td style='white-space:nowrap'>{{DOCUMENT.IMAGE.URL}}</td>" +
+          "<td style='white-space:nowrap'>{{IMAGING.LINKS}}</td>" +
           "<td>{{RECORDED.BY}}</td>" +
         "</tr>";
 
@@ -141,28 +141,40 @@ namespace Empiria.Land.UI {
 
       row = row.Replace("{{DOCUMENT.ID}}", recordingAct.Document.Id.ToString());
 
-      row = row.Replace("{{DOCUMENT.IMAGE.URL}}", GetDocumentImageLinks(recordingAct.Document));
+      row = row.Replace("{{IMAGING.LINKS}}", GetImagingLinks(recordingAct));
 
       row = row.Replace("{{RECORDING.ACT.ID}}", recordingAct.Id.ToString());
 
       return row;
     }
 
-    private string GetDocumentImageLinks(RecordingDocument document) {
-      if (!document.HasImageSet && !document.HasAuxiliarImageSet) {
+    private string GetImagingLinks(RecordingAct recordingAct) {
+      RecordingDocument document = recordingAct.Document;
+
+      if (!document.HasImageSet && !document.HasAuxiliarImageSet &&
+           recordingAct.PhysicalRecording.IsEmptyInstance) {
         return "&nbsp";
       }
       string html = String.Empty;
 
       if (document.HasImageSet) {
         html = "<a href='javascript:doOperation(\"onSelectImageSet\", {{DOCUMENT.IMAGE.SET.ID}});'>" +
-                  "<img src='../themes/default/bullets/scribble_doc_sm.gif' title='Documento digitalizado'></a>";
+                  "<img src='../themes/default/bullets/scribble_doc_sm.gif' title='Instrumento registral'></a>";
         html = html.Replace("{{DOCUMENT.IMAGE.SET.ID}}", document.ImageSetId.ToString());
       }
+
       if (document.HasAuxiliarImageSet) {
         html += "<a href='javascript:doOperation(\"onSelectImageSet\", {{AUXILIAR.IMAGE.SET.ID}});'>" +
-                   "<img src='../themes/default/bullets/clip.gif' title='Documentos auxiliares'></a>";
+                   "<img src='../themes/default/bullets/clip.gif' title='Anexos al instrumento registral'></a>";
         html = html.Replace("{{AUXILIAR.IMAGE.SET.ID}}", document.AuxiliarImageSetId.ToString());
+      }
+
+      if (!recordingAct.PhysicalRecording.IsEmptyInstance &&
+           recordingAct.PhysicalRecording.RecordingBook.HasImageSet) {
+        html += "<a href='javascript:doOperation(\"onSelectImageSet\", {{RECORDING.BOOK.IMAGE.SET.ID}});'>" +
+                   "<img src='../themes/default/bullets/book.gif' title='Libro registral'></a>";
+        html = html.Replace("{{RECORDING.BOOK.IMAGE.SET.ID}}",
+                            recordingAct.PhysicalRecording.RecordingBook.ImageSetId.ToString());
       }
 
       return html;

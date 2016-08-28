@@ -118,6 +118,7 @@
   <ItemGroup>
     <Compile Include="Empiria.Land.Documentation.AssemblyInfo.cs" />
     <Compile Include="RootTypes\CandidateImage.cs" />
+    <Compile Include="RootTypes\RecordingBookImageSet.cs" />
     <Compile Include="RootTypes\FileAuditTrail.cs" />
     <Compile Include="RootTypes\ImageProcessingEngine.cs" />
     <Compile Include="RootTypes\DocumentImageSet.cs" />

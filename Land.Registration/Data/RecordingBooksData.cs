@@ -209,7 +209,7 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteRecordingBook(RecordingBook o) {
       var operation = DataOperation.Parse("writeLRSPhysicalBook", o.Id, o.RecorderOffice.Id, o.RecordingSection.Id,
-                                           o.BookNumber, o.AsText, o.ExtendedData.ToString(), o.Keywords,
+                                           o.BookNumber, o.AsText, o.ExtensionData.ToString(), o.Keywords,
                                            o.StartRecordingIndex, o.EndRecordingIndex, (char) o.Status,
                                            o.RecordIntegrityHashCode);
       return DataWriter.Execute(operation);

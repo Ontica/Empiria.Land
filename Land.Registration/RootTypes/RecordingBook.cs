@@ -111,8 +111,24 @@ namespace Empiria.Land.Registration {
       set;
     }
 
+    public bool HasImageSet {
+      get {
+        return (this.ImageSetId != -1);
+      }
+    }
+
+    private int _imageSetId = 0;
+    public int ImageSetId {
+      get {
+        if (_imageSetId == 0) {
+          _imageSetId = this.ExtensionData.Get<int>("ImageSetId", -1);
+        }
+        return _imageSetId;
+      }
+    }
+
     [DataField("BookExtData")]
-    public JsonObject ExtendedData {
+    internal JsonObject ExtensionData {
       get;
       private set;
     }
