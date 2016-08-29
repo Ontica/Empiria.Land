@@ -50,6 +50,7 @@ namespace Empiria.Land.UI {
              "<a href='javascript:doOperation(\"onSelectDocument\", {{DOCUMENT.ID}});'>" +
                  "{{DOCUMENT.UID}}</a></td>" +
            "<td>{{DOCUMENT.TYPE}}</td>" +
+           "<td style='white-space:nowrap'>{{IMAGING.LINKS}}</td>" +
            "<td>&nbsp;</td>" +
            "<td>{{RECORDING.DATE}}</td>" +
            "<td>{{ISSUED.BY}}</td>" +
@@ -60,6 +61,9 @@ namespace Empiria.Land.UI {
 
       row = row.Replace("{{DOCUMENT.TYPE}}", document.DocumentType.DisplayName);
       row = row.Replace("{{DOCUMENT.ID}}", document.Id.ToString());
+
+      row = row.Replace("{{IMAGING.LINKS}}", HtmlFormatters.GetImagingLinks(document));
+
       row = row.Replace("{{DOCUMENT.UID}}", document.UID);
       row = row.Replace("{{ISSUED.BY}}", document.PostedBy.Nickname);
       row = row.Replace("{{RECORDING.DATE}}", HtmlFormatters.GetDateAsText(document.AuthorizationTime));
@@ -76,6 +80,7 @@ namespace Empiria.Land.UI {
            "<td>{{CERTIFICATE.TYPE}}<br/>" +
               "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{CERTIFICATE.ID}});'>" +
                   "{{RESOURCE.UID}}</a></td>" +
+           "<td style='white-space:nowrap'>&nbsp;</td>" +
            "<td style='width:300px;white-space:normal;'>{{OWNER.NAME}}</td>" +
            "<td>{{RECORDING.DATE}}</td>" +
            "<td>{{ISSUED.BY}}</td>" +
@@ -96,6 +101,7 @@ namespace Empiria.Land.UI {
         row = row.Replace("{{RESOURCE.ID}}", "-1");
       }
       row = row.Replace("{{RECORDING.DATE}}", HtmlFormatters.GetDateAsText(certificate.IssueTime));
+
       row = row.Replace("{{ISSUED.BY}}", certificate.IssuedBy.Nickname +
                                          (certificate.Status == CertificateStatus.Pending ?
                                           " Pendiente" : String.Empty));
@@ -109,9 +115,10 @@ namespace Empiria.Land.UI {
             "<tr class='detailsHeader'>" +
               "<td style='width:200px'>Documento/Certificado</td>" +
               "<td style='width:200px'>Tipo / Folio real</td>" +
+              "<td style='white-space:nowrap'>Img</td>" +
               "<td style='white-space:nowrap'>Personas</td>" +
               "<td style='width:160px'>Fecha</td>" +
-              "<td style ='width:160px'>Registró</ td >" +
+              "<td style ='width:160px'>Registró</td>" +
             "</tr>";
       return template;
     }
@@ -140,7 +147,7 @@ namespace Empiria.Land.UI {
     private string GetTitle() {
       string template =
             "<tr class='detailsTitle'>" +
-              "<td colspan='5'>Documento y certificados del trámite <b>{{TRANSACTION.UID}}</b></td>" +
+              "<td colspan='6'>Documento y certificados del trámite <b>{{TRANSACTION.UID}}</b></td>" +
             "</tr>";
 
       return template.Replace("{{TRANSACTION.UID}}", _transaction.UID);
@@ -150,7 +157,7 @@ namespace Empiria.Land.UI {
     private string NoRecordsFoundRow() {
       const string template =
         "<tr class='detailsItem'>" +
-          "<td colspan='5'>Este trámite no tiene un documento registrado ni certificados emitidos</td>" +
+          "<td colspan='6'>Este trámite no tiene un documento registrado ni certificados emitidos</td>" +
         "<tr>";
 
       return template;

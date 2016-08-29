@@ -56,7 +56,7 @@ namespace Empiria.Land.UI {
     private string GetTitle() {
       string template =
             "<tr class='detailsTitle'>" +
-              "<td colspan='5' style='white-space:normal'>Historial de movimientos <b>{{PARTY}}</b></td>" +
+              "<td colspan='6' style='white-space:normal'>Historial de movimientos <b>{{PARTY}}</b></td>" +
             "</tr>";
 
       return template.Replace("{{PARTY}}", this._party.ExtendedName);
@@ -69,6 +69,7 @@ namespace Empiria.Land.UI {
               "<td style='width:160px'>Acto jurídico</td>" +
               "<td style='white-space:nowrap'>Rol</td>" +
               "<td style='width:200px'>Registrado en</td>" +
+              "<td style='white-space:nowrap'>Img</td>" +
               "<td style ='width:160px'>Registró</ td >" +
             "</tr>";
       return template;
@@ -86,6 +87,7 @@ namespace Empiria.Land.UI {
                "<a href='javascript:doOperation(\"onSelectDocument\", {{DOCUMENT.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{DOCUMENT.OR.RECORDING}}</a>" +
                "<br>{{TRANSACTION}}</td>" +
+             "<td style='white-space:nowrap'>{{IMAGING.LINKS}}</td>" +
              "<td>{{RECORDED.BY}}</td>" +
            "</tr>";
 
@@ -117,6 +119,7 @@ namespace Empiria.Land.UI {
       row = row.Replace("{{RESOURCE.ID}}", recordingAct.Resource.Id.ToString());
       row = row.Replace("{{RESOURCE.UID}}", HtmlFormatters.NoWrap(recordingAct.Resource.UID));
       row = row.Replace("{{RECORDED.BY}}", recordingAct.RegisteredBy.Nickname);
+      row = row.Replace("{{IMAGING.LINKS}}", HtmlFormatters.GetImagingLinks(recordingAct));
       row = row.Replace("{{DOCUMENT.ID}}", document.Id.ToString());
 
       return row;
