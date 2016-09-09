@@ -26,8 +26,10 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    internal RealEstate(string cadastralKey) {
-      this.CadastralKey = cadastralKey;
+    internal RealEstate(RealEstateExtData data) {
+      Assertion.AssertObject(data, "data");
+
+      this.RealEstateExtData = data;
     }
 
     static public new RealEstate Parse(int id) {
@@ -52,50 +54,70 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField("PropertyName")]
+    public string CadastralKey {
+      get {
+        return this.RealEstateExtData.CadastralKey;
+      }
+    }
+
+    internal RealEstateExtData RealEstateExtData {
+      get;
+      private set;
+    } = RealEstateExtData.Empty;
+
+
     public string Name {
-      get;
-      private set;
+      get {
+        return this.RealEstateExtData.Name;
+      }
     }
 
-    [DataField("PropertyKind")]
-    public string PropertyKind {
-      get;
-      set;
-    } = "No determinado";
-
-    public Address Location {
-      get;
-      private set;
+    public RealEstateType RealEstateType {
+      get {
+        return this.RealEstateExtData.RealEstateType;
+      }
     }
 
-    public CadastralInfo CadastralData {
-      get;
-      private set;
+    public string MetesAndBounds {
+      get {
+        return this.RealEstateExtData.MetesAndBounds;
+      }
+    }
+
+    public RecorderOffice District {
+      get {
+        return this.RealEstateExtData.District;
+      }
+    }
+
+    public Municipality Municipality {
+      get {
+        return this.RealEstateExtData.Municipality;
+      }
+    }
+
+    public string LocationReference {
+      get {
+        return this.RealEstateExtData.LocationReference;
+      }
+    }
+
+    public Quantity LotSize {
+      get {
+        return this.RealEstateExtData.LotSize;
+      }
+    }
+
+    public string Notes {
+      get {
+        return this.RealEstateExtData.Notes;
+      }
     }
 
     internal protected override string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(base.Keywords, this.CadastralKey, this.Name, this.PropertyKind);
+        return EmpiriaString.BuildKeywords(base.Keywords, this.CadastralKey, this.Name, this.RealEstateType.Name);
       }
-    }
-
-    [DataField("CadastralKey")]
-    public string CadastralKey {
-      get;
-      private set;
-    }
-
-    [DataField("LotSize")]
-    public decimal LotSize {
-      get;
-      private set;
-    }
-
-    [DataField("LotSizeUnitId")]
-    public Unit LotSizeUnit {
-      get;
-      private set;
     }
 
     public bool IsPartition {
@@ -170,16 +192,8 @@ namespace Empiria.Land.Registration {
       return true;
     }
 
-    protected override void OnInitialize() {
-      this.Location = new Address();
-      this.CadastralData = new CadastralInfo();
-    }
-
     protected override void OnLoadObjectData(DataRow row) {
-      this.Location = new Address();
-      this.CadastralData = new CadastralInfo();
-      //this.Location = Address.FromJson((string) row["LocationExtData"]);
-      //this.CadastralData = CadastralInfo.FromJson((string) row["CadastralExtData"]);
+      this.RealEstateExtData = RealEstateExtData.Parse((string) row["PropertyExtData"]);
     }
 
     protected override void OnSave() {
@@ -197,6 +211,16 @@ namespace Empiria.Land.Registration {
       return partitions;
     }
 
+    public void Update(RealEstateExtData newData) {
+      Assertion.AssertObject(newData, "newData");
+
+      newData.AssertIsValid();
+
+      this.RealEstateExtData = newData;
+
+      this.Save();
+    }
+
     #endregion Public methods
 
     #region Private methods
@@ -204,7 +228,7 @@ namespace Empiria.Land.Registration {
     private RealEstate CreatePartition(string partititionNo) {
       var lot = new RealEstate();
       lot.IsPartitionOf = this;
-      lot.PartitionNo = partititionNo;    //partitionInfo.PartitionNo.ToString("00");
+      lot.PartitionNo = partititionNo;
       lot.Save();
 
       return lot;

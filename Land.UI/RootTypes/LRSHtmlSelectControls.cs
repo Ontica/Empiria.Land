@@ -161,7 +161,7 @@ namespace Empiria.Land.UI {
 
 
       string header = (comboControlUseMode == ComboControlUseMode.ObjectCreation)
-                              ? "( Seleccionar un Distrito )" : "( Todos los Distritos )";
+                              ? "( Distrito )" : "( Todos los Distritos )";
 
       HtmlSelectContent.LoadCombo(comboControl, officeList, "Id", "Alias", header);
       if (defaultOffice != null && !defaultOffice.IsEmptyInstance) {

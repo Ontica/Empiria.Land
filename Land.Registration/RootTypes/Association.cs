@@ -9,6 +9,7 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Data;
 
 using Empiria.Land.Registration.Data;
 
@@ -23,8 +24,10 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework
     }
 
-    internal Association(string name) {
-      this.Name = name;
+    internal Association(AssociationExtData data) {
+      Assertion.AssertObject(data, "data");
+
+      this.AssociationExtData = data;
     }
 
     static public new Association Parse(int id) {
@@ -35,10 +38,16 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField("PropertyName")]
-    public string Name {
+    internal AssociationExtData AssociationExtData {
       get;
       private set;
+    } = AssociationExtData.Empty;
+
+
+    public string Name {
+      get {
+        return this.AssociationExtData.Name;
+      }
     }
 
     internal protected override string Keywords {
@@ -97,6 +106,10 @@ namespace Empiria.Land.Registration {
         } else {
         return RecordingAct.Empty;
       }
+    }
+
+    protected override void OnLoadObjectData(DataRow row) {
+      this.AssociationExtData = AssociationExtData.ParseJson((string) row["PropertyExtData"]);
     }
 
     protected override void OnSave() {

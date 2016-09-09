@@ -51,31 +51,27 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteAssociation(Association o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
-                                          String.Empty, o.Name, String.Empty, o.Notes,
-                                          o.AntecedentNotes, o.AsText, String.Empty,
-                                          o.ExtensionData.ToString(), o.Keywords, 0, -1, -1,
-                                          String.Empty, -1, o.PostingTime, o.PostedBy.Id,
+                                          String.Empty, o.AssociationExtData.ToString(), o.Keywords,
+                                          -1, String.Empty, -1,
+                                          o.PostingTime, o.PostedBy.Id,
                                           (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 
     static internal int WriteNoPropertyResource(NoPropertyResource o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
-                                          String.Empty, String.Empty, String.Empty, o.Notes,
-                                          o.AntecedentNotes, o.AsText, String.Empty,
-                                          o.ExtensionData.ToString(), o.Keywords, 0, -1, -1,
-                                          String.Empty, -1, o.PostingTime, o.PostedBy.Id,
+                                          String.Empty, String.Empty, o.Keywords,
+                                          -1, String.Empty, -1,
+                                          o.PostingTime, o.PostedBy.Id,
                                           (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }
 
     static internal int WriteRealEstate(RealEstate o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
-                                          o.CadastralKey, o.Name, o.PropertyKind, o.Notes,
-                                          o.AntecedentNotes, o.AsText, o.Location.ToSearchVector(),
-                                          o.ExtensionData.ToString(), o.Keywords, o.LotSize,
-                                          o.LotSizeUnit.Id, o.IsPartitionOf.Id, o.PartitionNo,
-                                          o.MergedInto.Id, o.PostingTime, o.PostedBy.Id,
+                                          o.CadastralKey, o.RealEstateExtData.ToString(), o.Keywords,
+                                          o.IsPartitionOf.Id, o.PartitionNo, o.MergedInto.Id,
+                                          o.PostingTime, o.PostedBy.Id,
                                           (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(operation);
     }

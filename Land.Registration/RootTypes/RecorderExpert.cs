@@ -324,9 +324,14 @@ namespace Empiria.Land.Registration {
     // Don't call directly. Please use it only in GetResources()
     private Association[] GetAssociations() {
       if (this.CreateNewResource) {
-        return new Association[] { new Association(Task.ResourceName) };
+        var newAssociationData = new AssociationExtData(Task.ResourceName);
+
+        return new Association[] { new Association(newAssociationData) };
       } else if (this.CreateResourceOnNewPhysicalRecording) {
-        var association = new Association(Task.ResourceName);
+        var newAssociationData = new AssociationExtData(Task.ResourceName);
+
+        var association = new Association(newAssociationData);
+
         this.AttachResourceToNewPhysicalRecording(association);
         return new Association[] { association };
       } else {
@@ -353,16 +358,22 @@ namespace Empiria.Land.Registration {
     // Call it only in GetResources()
     private RealEstate[] GetRealEstates() {
       if (this.CreateNewResource) {
-        return new RealEstate[] { new RealEstate(Task.CadastralKey) };
+        var data = new RealEstateExtData() { CadastralKey = Task.CadastralKey };
+
+        return new RealEstate[] { new RealEstate(data) };
       }
 
       RealEstate property = null;
 
       if (this.CreateResourceOnNewPhysicalRecording) {
-        property = new RealEstate(Task.CadastralKey);
+        var data = new RealEstateExtData() { CadastralKey = Task.CadastralKey };
+
+        property = new RealEstate(data);
         this.AttachResourceToNewPhysicalRecording(property);
       } else if (this.CreateResourceOnExistingPhysicalRecording) {
-        property = new RealEstate(Task.CadastralKey);
+        var data = new RealEstateExtData() { CadastralKey = Task.CadastralKey };
+
+        property = new RealEstate(data);
         this.AttachResourceToExistingPhysicalRecording(property);
       } else {
         property = (RealEstate) this.Task.PrecedentProperty;

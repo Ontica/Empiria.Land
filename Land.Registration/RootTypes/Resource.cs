@@ -14,6 +14,7 @@ using System.Data;
 using Empiria.Contacts;
 using Empiria.Json;
 using Empiria.Security;
+
 using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration {
@@ -73,38 +74,9 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    [DataField("PropertyNotes")]
-    public string Notes {
-      get;
-      set;
-    }
-
-    [DataField("PropertyAsText")]
-    public string AsText {
-      get;
-      private set;
-    }
-
-    [DataField("AntecedentNotes")]
-    public string AntecedentNotes {
-      get;
-      set;
-    }
-
     internal protected virtual string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.UID);
-      }
-    }
-
-    [DataField("PropertyExtData")]
-    private JsonObject _extensionData = new JsonObject();
-    public JsonObject ExtensionData {
-      get {
-        return _extensionData;
-      }
-      private set {
-        _extensionData = value;
       }
     }
 
@@ -128,7 +100,7 @@ namespace Empiria.Land.Registration {
     [DataField("PropertyStatus", Default = RecordableObjectStatus.Incomplete)]
     public RecordableObjectStatus Status {
       get;
-      set;      // OOJJOO -- Remove public set and change status through a special change status method.
+      private set;
     }
 
     int IProtected.CurrentDataIntegrityVersion {

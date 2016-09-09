@@ -95,7 +95,7 @@ namespace Empiria.Land.Certification {
         return EmpiriaString.BuildKeywords(this.UID, this.Property.UID,
                                            this.OwnerName, this.Transaction.UID,
                                            this.Transaction.RequestedBy,
-                                           this.Property.AsText, this.ExtensionData.Keywords);
+                                           this.ExtensionData.Keywords);
       }
     }
 
