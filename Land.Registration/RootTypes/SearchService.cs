@@ -45,9 +45,9 @@ namespace Empiria.Land.Registration {
 
     static public FixedList<RecordingDocument> ImagingControlIDs(string imagingControlID, string sort = "") {
       string filter = FilterExpression("ImagingControlID", imagingControlID, true);
-      sort = SortExpression(sort, "ImagingControlID");
+      sort = SortExpression(sort, "ImagingControlID DESC");
 
-      string sql = EntitySqlString("LRSDocuments", "DocumentStatus", filter, sort, 50);
+      string sql = EntitySqlString("LRSDocuments", "DocumentStatus", filter, sort, 250);
 
       return DataReader.GetList(DataOperation.Parse(sql),
                                 (x) => BaseObject.ParseList<RecordingDocument>(x)).ToFixedList();
