@@ -9,7 +9,6 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
 
 using Empiria.Contacts;
 using Empiria.Land.Registration.Data;
@@ -232,8 +231,12 @@ namespace Empiria.Land.Registration.Transactions {
       this.ResetTasksList();
     }
 
+    private LRSWorkflowTask _currentTask = null;
     public LRSWorkflowTask GetCurrentTask() {
-      return WorkflowData.GetWorkflowLastTask(_transaction);
+      if (_currentTask == null) {
+        _currentTask = WorkflowData.GetWorkflowLastTask(_transaction);
+      }
+      return _currentTask;
     }
 
     public void PullToControlDesk(string notes) {
@@ -273,6 +276,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     private void ResetTasksList() {
       taskList = new Lazy<LRSWorkflowTaskList>(() => LRSWorkflowTaskList.Parse(_transaction));
+      _currentTask = null;
     }
 
     #endregion Private methods

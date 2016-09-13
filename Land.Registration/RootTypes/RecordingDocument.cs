@@ -267,13 +267,22 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public bool IsReadyForEdition {
+      get {
+        if (this.IsEmptyInstance) {
+          return false;
+        }
+        return LRSWorkflowRules.IsDocumentReadyForEdition(this);
+      }
+    }
+
     #endregion Public properties
 
-    #region Public methods
+      #region Public methods
 
-    /// <summary>Adds a recording act to the document's recording acts collection.</summary>
-    /// <param name="recordingAct">The item to be added to the end of the RecordingActs collection.</param>
-    /// <returns> The recording act's index inside the RecordingActs collection.</returns>
+      /// <summary>Adds a recording act to the document's recording acts collection.</summary>
+      /// <param name="recordingAct">The item to be added to the end of the RecordingActs collection.</param>
+      /// <returns> The recording act's index inside the RecordingActs collection.</returns>
     internal int AddRecordingAct(RecordingAct recordingAct) {
       Assertion.AssertObject(recordingAct, "recordingAct");
 

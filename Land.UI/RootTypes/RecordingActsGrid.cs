@@ -66,7 +66,11 @@ namespace Empiria.Land.UI {
         antecedentsDictionary.Add(antecedentText, recordingAct.Index + 1);
         row = row.Replace("{{ANTECEDENT}}", antecedentText);
       }
-      row = row.Replace("{{OPTIONS.COMBO}}", GetOptionsCombo(recordingAct));
+      if (this.document.IsReadyForEdition) {
+        row = row.Replace("{{OPTIONS.LINKS}}", GetDeleteLink(recordingAct));
+      } else {
+        row = row.Replace("{{OPTIONS.LINKS}}", "&nbsp;");
+      }
       row = row.Replace("{{RESOURCE.ID}}", recordingAct.Resource.Id.ToString());
       row = row.Replace("{{ID}}", recordingAct.Id.ToString());
 
@@ -169,7 +173,7 @@ namespace Empiria.Land.UI {
             "<a {{RESOURCE.CLASS}} href='javascript:doOperation(\"editResource\", {{RESOURCE.ID}}, {{ID}});'>" +
                 "{{RESOURCE.URL}}</a></td>" +
             "<td style='white-space:normal'>{{ANTECEDENT}}</td>" +
-            "<td>{{OPTIONS.COMBO}}</td></tr>";
+            "<td>{{OPTIONS.LINKS}}</td></tr>";
 
       int index = recordingAct.Index + 1;
 
@@ -185,21 +189,12 @@ namespace Empiria.Land.UI {
       return html;
     }
 
-    static private string GetOptionsCombo(RecordingAct recordingAct) {
+    static private string GetDeleteLink(RecordingAct recordingAct) {
       const string template =
-        "<select id='cboRecordingOptions_{{ID}}' class='selectBox' style='width:130px'>" +
-        "<option value='selectRecordingActOperation'>( Seleccionar )</option>" +
-        "<option value='modifyRecordingActType'>Modificar este acto</option>" +
-        "<option value='deleteRecordingAct'>Eliminar este acto</option>" +
-        "<option value='viewResourceTract'>Ver la historia</option>" +
-        "</select><img class='comboExecuteImage' src='../themes/default/buttons/next.gif' " +
-        "alt='' title='Ejecuta la operación seleccionada' onclick='" +
-        "doOperation(getElement(\"cboRecordingOptions_{{ID}}\").value, {{ID}}, {{RESOURCE.ID}});'/>";
+        "<a href='javascript:doOperation(\"deleteRecordingAct\", {{ID}});' title='Elimina este acto jurídico'>" +
+                "<img src='../themes/default/buttons/trash.gif'></a>";
 
-      string html = template.Replace("{{ID}}", recordingAct.Id.ToString());
-      html = html.Replace("{{RESOURCE.ID}}", recordingAct.Resource.Id.ToString());
-
-      return html;
+      return template.Replace("{{ID}}", recordingAct.Id.ToString());
     }
 
     #endregion Private auxiliar methods

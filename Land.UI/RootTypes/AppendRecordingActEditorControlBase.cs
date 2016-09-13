@@ -79,10 +79,7 @@ namespace Empiria.Land.UI {
     }
 
     public bool IsReadyForEdition() {
-      if (this.Document.IsEmptyInstance) {
-        return false;
-      }
-      return LRSWorkflowRules.IsDocumentReadyForEdition(this.Document);
+      return this.Document.IsReadyForEdition;
     }
 
     #endregion Public methods

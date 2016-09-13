@@ -464,7 +464,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     #endregion Methods
 
-    static public bool IsDocumentReadyForEdition(RecordingDocument document) {
+    static internal bool IsDocumentReadyForEdition(RecordingDocument document) {
       if (!(ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Register") ||
             ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Certificates") ||
             ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Juridic"))) {
@@ -489,29 +489,12 @@ namespace Empiria.Land.Registration.Transactions {
         return false;
       }
 
-      return true;
-    }
-
-    static public bool IsTransactionDocumentReadyForEdition(LRSTransaction transaction) {
-      if (!(ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Register") ||
-            ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Certificates") ||
-            ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Juridic"))) {
-        return false;
-      }
-      if (!(transaction.Workflow.CurrentStatus == LRSTransactionStatus.Recording ||
-            transaction.Workflow.CurrentStatus == LRSTransactionStatus.Elaboration ||
-            transaction.Workflow.CurrentStatus == LRSTransactionStatus.Juridic)) {
-        return false;
-      }
-      if (!IsRecordingDocumentCase(transaction.TransactionType, transaction.DocumentType)) {
-        return false;
-      }
-      if (transaction.Document.IsEmptyInstance) {
+      if (transaction.Workflow.GetCurrentTask().Responsible.Id == ExecutionServer.CurrentUserId) {
         return true;
-      } else if (transaction.Document.Status != RecordableObjectStatus.Incomplete) {
+      } else {
         return false;
       }
-      return true;
+
     }
 
   }  // class LRSWorkflowRules
