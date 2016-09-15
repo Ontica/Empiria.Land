@@ -11,18 +11,17 @@
 using System;
 
 using Empiria.DataTypes;
+using Empiria.Json;
 
 namespace Empiria.Land.Registration {
 
   /// <summary>Contains extensible data for a recording act.</summary>
-  public class RecordingActExtData : IExtensibleData {
+  public class RecordingActExtData  {
 
     #region Constructors and parsers
 
     public RecordingActExtData() {
-      this.AppraisalAmount = Money.Empty;
-      this.OperationAmount = Money.Empty;
-      this.Contract = ContractData.Empty;
+
     }
 
     static internal RecordingActExtData Parse(string jsonString) {
@@ -30,19 +29,17 @@ namespace Empiria.Land.Registration {
         return RecordingActExtData.Empty;
       }
 
-      var json = Empiria.Json.JsonConverter.ToJsonObject(jsonString);
+      var json = JsonConverter.ToJsonObject(jsonString);
 
       var data = new RecordingActExtData();
-      data.AppraisalAmount = Money.Parse(json.Slice("AppraisalAmount"));
-      data.OperationAmount = Money.Parse(json.Slice("OperationAmount"));
-      data.Contract = ContractData.Parse(json.Slice("Contract"));
+      data.LoadJson(json);
 
       return data;
     }
 
-    static private readonly RecordingActExtData _empty = new RecordingActExtData() {
-      IsEmptyInstance = true
-    };
+    static private readonly RecordingActExtData _empty =
+                                new RecordingActExtData() { IsEmptyInstance = true };
+
     static public RecordingActExtData Empty {
       get {
         return _empty;
@@ -56,17 +53,14 @@ namespace Empiria.Land.Registration {
     public Money AppraisalAmount {
       get;
       set;
-    }
+    } = Money.Empty;
 
-    public ContractData Contract {
-      get;
-      private set;
-    }
 
     public Money OperationAmount {
       get;
       set;
-    }
+    } = Money.Empty;
+
 
     public bool IsEmptyInstance {
       get;
@@ -77,36 +71,34 @@ namespace Empiria.Land.Registration {
 
     #region Methods
 
-    public string ToJson() {
-      if (!this.IsEmptyInstance) {
-        return Empiria.Json.JsonConverter.ToJson(this.GetObject());
-      } else {
-        return String.Empty;
+    public JsonObject GetJson() {
+      var json = new JsonObject();
+
+      if (this.AppraisalAmount != Money.Empty) {
+        json.Add(new JsonItem("AppraisalAmount", this.AppraisalAmount.Amount));
+        json.Add(new JsonItem("AppraisalAmountCurrencyId", this.AppraisalAmount.Currency.Id));
       }
+
+      if (this.OperationAmount != Money.Empty) {
+        json.Add(new JsonItem("OperationAmount", this.OperationAmount.Amount));
+        json.Add(new JsonItem("OperationAmountCurrencyId", this.OperationAmount.Currency.Id));
+      }
+
+      return json;
     }
 
-    private object GetObject() {
-      return new {
-        AppraisalAmount = new {
-          CurrencyId = this.AppraisalAmount.Currency.Id,
-          Value = this.AppraisalAmount.Amount.ToString("N2"),
-        },
-        OperationAmount = new {
-          CurrencyId = this.OperationAmount.Currency.Id,
-          Value = this.OperationAmount.Amount.ToString("N2"),
-        },
-        Contract = new {
-          Number = this.Contract.Number,
-          Date = this.Contract.Date,
-          PlaceId = this.Contract.Place.Id,
-          Interest = new {
-            Rate = this.Contract.Interest.Rate.ToString("N4"),
-            RateTypeId = this.Contract.Interest.RateType.Id,
-            TermPeriods = this.Contract.Interest.TermPeriods,
-            TermUnit = this.Contract.Interest.TermUnit.Id,
-          }
-        }
-      };
+
+    private void LoadJson(JsonObject json) {
+      this.AppraisalAmount = Money.Parse(Currency.Parse(json.Get<Int32>("AppraisalAmountCurrencyId", -1)),
+                                         json.Get<decimal>("AppraisalAmount", 0m));
+
+      this.OperationAmount = Money.Parse(Currency.Parse(json.Get<Int32>("OperationAmountCurrencyId", -1)),
+                                         json.Get<decimal>("OperationAmount", 0m));
+    }
+
+
+    public override string ToString() {
+      return this.GetJson().ToString();
     }
 
     #endregion Methods

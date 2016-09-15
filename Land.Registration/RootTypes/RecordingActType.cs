@@ -22,15 +22,7 @@ namespace Empiria.Land.Registration {
 
     #region Fields
 
-    static readonly string allowEmptyPartiesVector = ConfigurationData.GetString("AllowEmptyParties.Vector");
-    static readonly string autoRegisterVector = ConfigurationData.GetString("AutoRegister.RecordingActType");
-    static readonly string blockAllFieldsVector = ConfigurationData.GetString("BlockAllFields.Vector");
-    static readonly string blockFirstPropertyOwnerVector = ConfigurationData.GetString("BlockFirstPropertyOwner.Vector");
-
-    static readonly string blockOperationAmountVector = ConfigurationData.GetString("BlockOperationAmount.Vector");
-    static readonly string useCreditFieldsVector = ConfigurationData.GetString("UseCreditFields.Vector");
-
-    private RecordingSection registerSectionType = RecordingSection.Empty;
+    //private RecordingSection registerSectionType = RecordingSection.Empty;
 
     #endregion Fields
 
@@ -61,30 +53,6 @@ namespace Empiria.Land.Registration {
     #endregion Constructors and parsers
 
     #region Public properties
-
-    public bool AllowsEmptyParties {
-      get {
-        string[] array = allowEmptyPartiesVector.Split('~');
-
-        return array.Contains(base.Id.ToString());
-      }
-    }
-
-    public bool Autoregister {
-      get {
-        string[] array = autoRegisterVector.Split('~');
-
-        return array.Contains(base.Id.ToString());
-      }
-    }
-
-    public bool BlockAllFields {
-      get {
-        string[] array = blockAllFieldsVector.Split('~');
-
-        return array.Contains(base.Id.ToString());
-      }
-    }
 
     public bool IsAmendmentActType {
       get {
@@ -132,28 +100,6 @@ namespace Empiria.Land.Registration {
 
     public RecordingRule RecordingRule {
       get { return RecordingRule.Parse(this); }
-    }
-
-    public bool UseCreditFields {
-      get {
-        if (this.BlockAllFields) {
-          return false;
-        }
-        string[] array = useCreditFieldsVector.Split('~');
-
-        return array.Contains(base.Id.ToString());
-      }
-    }
-
-    public bool UseOperationAmount {
-      get {
-        if (this.BlockAllFields) {
-          return false;
-        }
-        string[] array = blockOperationAmountVector.Split('~');
-
-        return array.Contains(base.Id.ToString());
-      }
     }
 
     public ResourceRole ResourceRole {

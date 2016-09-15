@@ -23,8 +23,7 @@ namespace Empiria.Land.Registration {
   /// <summary>Partitioned type that represents a recording act. All recording acts types must be
   /// descendents of this type.</summary>
   [PartitionedType(typeof(RecordingActType))]
-  public abstract class RecordingAct : BaseObject, IResourceTractItem,
-                                       IExtensible<RecordingActExtData>, IProtected {
+  public abstract class RecordingAct : BaseObject, IResourceTractItem, IProtected {
 
     #region Constructors and parsers
 
@@ -80,11 +79,7 @@ namespace Empiria.Land.Registration {
       }
       recordingAct.Resource = resource;
 
-      if (recordingActType.Autoregister) {
-        recordingAct.Status = RecordableObjectStatus.Registered;
-      } else {
-        recordingAct.Status = RecordableObjectStatus.Pending;
-      }
+      recordingAct.Status = RecordableObjectStatus.Pending;
 
       if (physicalRecording.IsNew) {
         physicalRecording.Save();
@@ -181,7 +176,8 @@ namespace Empiria.Land.Registration {
     public RecordingActExtData ExtensionData {
       get;
       private set;
-    }
+    } = RecordingActExtData.Empty;
+
 
     internal string Keywords {
       get {
@@ -305,7 +301,7 @@ namespace Empiria.Land.Registration {
         return new object[] {
           1, "Id", this.Id, "RecordingActType", this.RecordingActType.Id,
           "Document", this.Document.Id, "Index", this.Index, "Notes", this.Notes,
-          "ExtensionData", this.ExtensionData.ToJson(), "AmendmentOf", this.AmendmentOf.Id,
+          "ExtensionData", this.ExtensionData.ToString(), "AmendmentOf", this.AmendmentOf.Id,
           "AmendedBy", this.AmendedBy.Id, "Recording", this.PhysicalRecording.Id,
           "RegisteredBy", this.RegisteredBy.Id, "RegistrationTime", this.RegistrationTime,
           "Status", (char) this.Status
@@ -407,10 +403,6 @@ namespace Empiria.Land.Registration {
       this.Percentage = percentage;
 
       this.Index = this.Document.AddRecordingAct(this);
-    }
-
-    protected override void OnInitialize() {
-      this.ExtensionData = RecordingActExtData.Empty;
     }
 
     protected override void OnLoadObjectData(DataRow row) {

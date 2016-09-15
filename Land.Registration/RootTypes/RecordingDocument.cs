@@ -278,7 +278,7 @@ namespace Empiria.Land.Registration {
 
     #endregion Public properties
 
-      #region Public methods
+    #region Public methods
 
       /// <summary>Adds a recording act to the document's recording acts collection.</summary>
       /// <param name="recordingAct">The item to be added to the end of the RecordingActs collection.</param>

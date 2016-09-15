@@ -79,16 +79,16 @@ namespace Empiria.Land.Registration {
     }
 
     static public LandRegistrationException ValidateRecordingActAsComplete(RecordingAct recordingAct) {
-      if (!recordingAct.RecordingActType.BlockAllFields &&
-           recordingAct.ExtensionData.AppraisalAmount.Equals(Money.Empty)) {
+      if (recordingAct.RecordingActType.RecordingRule.EditAppraisalAmount &&
+          recordingAct.ExtensionData.AppraisalAmount.Equals(Money.Empty)) {
         return new LandRegistrationException(LandRegistrationException.Msg.EmptyAppraisalAmount);
       }
-      if (recordingAct.RecordingActType.UseOperationAmount &&
+      if (recordingAct.RecordingActType.RecordingRule.EditOperationAmount &&
           recordingAct.ExtensionData.OperationAmount.Equals(Money.Empty)) {
         return new LandRegistrationException(LandRegistrationException.Msg.EmptyOperationAmount);
       }
       // Parties Validation
-      if (recordingAct.RecordingActType.AllowsEmptyParties) {
+      if (recordingAct.RecordingActType.RecordingRule.AllowNoParties) {
         return null;
       }
       if (!recordingAct.IsAnnotation) {

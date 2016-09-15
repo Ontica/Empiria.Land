@@ -74,6 +74,12 @@ namespace Empiria.Land.Registration {
         this.AskForResourceName = json.Get<bool>("AskForResourceName", false);
         this.ResourceTypeName = json.Get<string>("ResourceTypeName", String.Empty);
         this.DynamicActNamePattern = json.Get<string>("DynamicActNamePattern", String.Empty);
+
+        this.EditRealEstate = json.Get<bool>("EditRealEstate", false);
+        this.EditAppraisalAmount = json.Get<bool>("EditAppraisalAmount", false);
+        this.EditOperationAmount = json.Get<bool>("EditOperationAmount", false);
+        this.AllowNoParties = json.Get<bool>("AllowNoParties", false);
+
       } catch (Exception e) {
         throw new LandRegistrationException(LandRegistrationException.Msg.MistakeInRecordingRuleConfig, e,
                                             this.recordingActType.Id);
@@ -99,6 +105,11 @@ namespace Empiria.Land.Registration {
       json.Add(new JsonItem("ResourceRecordingStatus", this.ResourceRecordingStatus.ToString()));
       json.Add(new JsonItem("SpecialCase", this.SpecialCase));
       json.Add(new JsonItem("IsActive", this.IsActive));
+
+      json.Add(new JsonItem("EditRealEstate", this.EditRealEstate));
+      json.Add(new JsonItem("EditAppraisalAmount", this.EditAppraisalAmount));
+      json.Add(new JsonItem("EditOperationAmount", this.EditOperationAmount));
+      json.Add(new JsonItem("AllowNoParties", this.AllowNoParties));
 
       return json;
     }
@@ -187,7 +198,7 @@ namespace Empiria.Land.Registration {
 
     public string ResourceTypeName {
       get;
-      internal set;
+      private set;
     } = String.Empty;
 
 
@@ -195,6 +206,26 @@ namespace Empiria.Land.Registration {
       get {
         return (this.DynamicActNamePattern.Length != 0);
       }
+    }
+
+    public bool EditAppraisalAmount {
+      get;
+      private set;
+    }
+
+    public bool EditOperationAmount {
+      get;
+      private set;
+    }
+
+    public bool EditRealEstate {
+      get;
+      private set;
+    }
+
+    public bool AllowNoParties {
+      get;
+      private set;
     }
 
     #endregion Properties
