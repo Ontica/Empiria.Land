@@ -261,6 +261,13 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public bool IsClosed {
+      get {
+        return this.Status == RecordableObjectStatus.Closed ||
+               this.AuthorizationTime < DateTime.Parse("2016-09-16");
+      }
+    }
+
     public bool IsEmptyDocument {
       get {
         return (this.DocumentType == RecordingDocumentType.Empty);
