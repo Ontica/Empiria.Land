@@ -386,6 +386,9 @@ namespace Empiria.Land.Registration.Transactions {
       if (transaction.Document.RecordingActs.Count == 0) {
         return false;
       }
+      if (!transaction.Document.IsClosed) {
+        return false;
+      }
       if (!LRSWorkflowRules.IsDigitalizable(transaction.TransactionType, transaction.DocumentType)) {
         return false;
       }
@@ -431,6 +434,33 @@ namespace Empiria.Land.Registration.Transactions {
       return true;
     }
 
+    static internal bool UserCanEditDocument(RecordingDocument document) {
+      if (!(ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Register") ||
+            ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Certificates") ||
+            ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Juridic"))) {
+        return false;
+      }
+      if (document.IsHistoricDocument) {
+        return true;
+      }
+      var transaction = document.GetTransaction();
+
+      Assertion.Assert(!transaction.IsEmptyInstance,
+                       "Transaction can't be the empty instance, because the document is not historic.");
+
+      if (!(transaction.Workflow.CurrentStatus == LRSTransactionStatus.Recording ||
+            transaction.Workflow.CurrentStatus == LRSTransactionStatus.Elaboration ||
+            transaction.Workflow.CurrentStatus == LRSTransactionStatus.Juridic)) {
+        return false;
+      }
+
+      if (transaction.Workflow.GetCurrentTask().Responsible.Id == ExecutionServer.CurrentUserId) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
     static public bool IsStatusOfficeWork(LRSTransactionStatus currentStatus) {
       if (currentStatus == LRSTransactionStatus.Payment || currentStatus == LRSTransactionStatus.ToDeliver ||
           currentStatus == LRSTransactionStatus.ToReturn || currentStatus == LRSTransactionStatus.Delivered ||
@@ -463,39 +493,6 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     #endregion Methods
-
-    static internal bool IsDocumentReadyForEdition(RecordingDocument document) {
-      if (!(ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Register") ||
-            ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Certificates") ||
-            ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.Juridic"))) {
-        return false;
-      }
-      if (document.Status != RecordableObjectStatus.Incomplete) {
-        return false;
-      }
-
-      if (document.IsHistoricDocument) {
-        return true;
-      }
-
-      var transaction = document.GetTransaction();
-
-      Assertion.Assert(!transaction.IsEmptyInstance,
-                       "Transaction can't be the empty instance, because the document is not historic.");
-
-      if (!(transaction.Workflow.CurrentStatus == LRSTransactionStatus.Recording ||
-            transaction.Workflow.CurrentStatus == LRSTransactionStatus.Elaboration ||
-            transaction.Workflow.CurrentStatus == LRSTransactionStatus.Juridic)) {
-        return false;
-      }
-
-      if (transaction.Workflow.GetCurrentTask().Responsible.Id == ExecutionServer.CurrentUserId) {
-        return true;
-      } else {
-        return false;
-      }
-
-    }
 
   }  // class LRSWorkflowRules
 

@@ -122,6 +122,7 @@ namespace Empiria.Land.Registration {
 
     [DataField("IssuePlaceId")]
     private LazyInstance<GeographicRegion> _issuePlace = LazyInstance<GeographicRegion>.Empty;
+
     public GeographicRegion IssuePlace {
       get { return _issuePlace.Value; }
       set {
@@ -274,22 +275,44 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public bool IsReadyForEdition {
-      get {
-        if (this.IsEmptyInstance) {
-          return false;
-        }
-        return LRSWorkflowRules.IsDocumentReadyForEdition(this);
+    public bool IsReadyForEdition() {
+      if (this.IsEmptyInstance) {
+        return false;
       }
+      if (this.Status != RecordableObjectStatus.Incomplete) {
+        return false;
+      }
+      return LRSWorkflowRules.UserCanEditDocument(this);
+    }
+
+
+    public bool IsReadyToClose() {
+      if (this.IsEmptyInstance) {
+        return false;
+      }
+      if (this.Status != RecordableObjectStatus.Incomplete) {
+        return false;
+      }
+      return LRSWorkflowRules.UserCanEditDocument(this);
+    }
+
+    public bool IsReadyToOpen() {
+      if (this.IsEmptyInstance) {
+        return false;
+      }
+      if (this.Status != RecordableObjectStatus.Closed) {
+        return false;
+      }
+      return LRSWorkflowRules.UserCanEditDocument(this);
     }
 
     #endregion Public properties
 
     #region Public methods
 
-      /// <summary>Adds a recording act to the document's recording acts collection.</summary>
-      /// <param name="recordingAct">The item to be added to the end of the RecordingActs collection.</param>
-      /// <returns> The recording act's index inside the RecordingActs collection.</returns>
+    /// <summary>Adds a recording act to the document's recording acts collection.</summary>
+    /// <param name="recordingAct">The item to be added to the end of the RecordingActs collection.</param>
+    /// <returns> The recording act's index inside the RecordingActs collection.</returns>
     internal int AddRecordingAct(RecordingAct recordingAct) {
       Assertion.AssertObject(recordingAct, "recordingAct");
 
@@ -357,11 +380,30 @@ namespace Empiria.Land.Registration {
       this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
     }
 
+
+    public void Close() {
+      if (!this.IsReadyToClose()) {
+        Assertion.AssertFail("Document is not ready to be closed.");
+      }
+      this.Status = RecordableObjectStatus.Closed;
+      this.Save();
+    }
+
+    public void Open() {
+      if (!this.IsReadyToOpen()) {
+        Assertion.AssertFail("Document is not ready to be opened.");
+      }
+      this.Status = RecordableObjectStatus.Incomplete;
+      this.Save();
+    }
+
     public void GenerateImagingControlID() {
       Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance.");
       Assertion.Assert(this.RecordingActs.Count > 0, "Document should have recording acts.");
       Assertion.Assert(this.RecordingActs.CountAll((x) => !x.PhysicalRecording.IsEmptyInstance) == 0,
                        "Document can't have any recording acts that are related to physical recordings.");
+      Assertion.Assert(this.ImagingControlID.Length == 0,
+                       "Document already has assigned an imaging control number.");
 
       this.ImagingControlID = DocumentsData.GetNextImagingControlID(this);
       DocumentsData.SaveImagingControlID(this);

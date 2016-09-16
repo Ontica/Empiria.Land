@@ -66,7 +66,7 @@ namespace Empiria.Land.UI {
         antecedentsDictionary.Add(antecedentText, recordingAct.Index + 1);
         row = row.Replace("{{ANTECEDENT}}", antecedentText);
       }
-      if (this.document.IsReadyForEdition) {
+      if (this.document.IsReadyForEdition()) {
         row = row.Replace("{{OPTIONS.LINKS}}", GetDeleteLink(recordingAct));
       } else {
         row = row.Replace("{{OPTIONS.LINKS}}", "&nbsp;");
