@@ -54,7 +54,7 @@ namespace Empiria.Land.UI {
     private string GetTitle() {
       string template =
             "<tr class='detailsTitle'>" +
-              "<td colspan='5'>Partidas registradas en el libro {{RECORDING.BOOK.AS.TEXT}}</td>" +
+              "<td colspan='6'>Partidas registradas en el libro {{RECORDING.BOOK.AS.TEXT}}</td>" +
             "</tr>";
 
       return template.Replace("{{RECORDING.BOOK.AS.TEXT}}", this._recordingBook.AsText);
@@ -66,6 +66,7 @@ namespace Empiria.Land.UI {
               "<td>Partida</td>" +
               "<td style='width:260px'>Acto jurídico</td>" +
               "<td style='white-space:nowrap'>Folio real</td>" +
+              "<td style='white-space:nowrap'>&nbsp;</td>" +
               "<td style='width:200px'>Present/Registro</td>" +
               "<td style ='width:160px'>Registró</td>" +
             "</tr>";
@@ -82,6 +83,8 @@ namespace Empiria.Land.UI {
              "<td style='white-space:nowrap;'>" +
                 "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{RESOURCE.UID}}</a></td>" +
+             "<td><a href='javascript:copyToClipboard(\"{{RESOURCE.UID}}\");'>" +
+                 "<img src='../themes/default/bullets/copy.gif' title='Copiar el folio real'></a></td>" +
              "<td style='white-space:nowrap;'>{{PRESENTATION.DATE}}<br/>{{AUTHORIZATION.DATE}}</td>" +
              "<td>{{REGISTERED.BY}}</td>" +
            "</tr>";

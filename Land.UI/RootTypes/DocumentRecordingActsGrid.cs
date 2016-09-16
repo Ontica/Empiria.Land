@@ -57,7 +57,7 @@ namespace Empiria.Land.UI {
     private string GetTitle() {
       string template =
             "<tr class='detailsTitle'>" +
-              "<td colspan='5'>{{DOCUMENT.AS.TEXT}}</td>" +
+              "<td colspan='4'>{{DOCUMENT.AS.TEXT}}</td>" +
             "</tr>";
 
       if (_document.IsHistoricDocument) {
@@ -74,6 +74,7 @@ namespace Empiria.Land.UI {
             "<tr class='detailsHeader'>" +
               "<td style='width:260px'>Acto jurídico</td>" +
               "<td style='white-space:nowrap'>Folio real</td>" +
+              "<td style='white-space:nowrap'>&nbsp;</td>" +
               "<td style ='width:160px'>Registró</td>" +
             "</tr>";
       return template;
@@ -86,6 +87,8 @@ namespace Empiria.Land.UI {
              "<td style='white-space:nowrap;'>" +
                 "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{RESOURCE.UID}}</a></td>" +
+             "<td><a href='javascript:copyToClipboard(\"{{RESOURCE.UID}}\");'>" +
+                 "<img src='../themes/default/bullets/copy.gif' title='Copiar el folio real'></a></td>" +
              "<td>{{REGISTERED.BY}}</td>" +
            "</tr>";
 
