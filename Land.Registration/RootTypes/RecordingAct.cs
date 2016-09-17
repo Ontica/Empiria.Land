@@ -142,6 +142,12 @@ namespace Empiria.Land.Registration {
       internal set;
     }
 
+    public string IndexedName {
+      get {
+        return "[" + (this.Index + 1).ToString("00") + "] " + this.RecordingActType.DisplayName;
+      }
+    }
+
     [DataField("ResourceId", Default = "Empiria.Land.Registration.RealEstate.Empty")]
     public Resource Resource {
       get;
@@ -328,9 +334,11 @@ namespace Empiria.Land.Registration {
       get {
         return this.Document.PresentationTime.ToString("yyyyMMddTHH:mm@") +
                this.Document.AuthorizationTime.ToString("yyyyMMddTHH:mm@") +
-               this.RegistrationTime.ToString("yyyyMMddTHH:mm");
+               this.RegistrationTime.ToString("yyyyMMddTHH:mm") +
+               this.Id.ToString("000000000000");
       }
     }
+
 
     #endregion Public properties
 
@@ -348,6 +356,37 @@ namespace Empiria.Land.Registration {
       this.AmendedBy = modificationAct;
       modificationAct.Save();
       this.Save();
+    }
+
+    public RecordingActParty AppendParty(Party party, SecondaryPartyRole role, Party partyOf) {
+      var recordingActParty = RecordingActParty.Create(this, party, role, partyOf);
+
+      return recordingActParty;
+    }
+
+    public RecordingActParty AppendParty(Party party, DomainActPartyRole role) {
+      var recordingActParty = RecordingActParty.Create(this, party, role);
+
+      return recordingActParty;
+    }
+
+    public void AssertCanBeClosed() {
+      var rule = this.RecordingActType.RecordingRule;
+      if (!this.Resource.IsEmptyInstance) {
+        this.RecordingActType.AssertIsApplicableResource(this.Resource);
+        this.Resource.AssertCanBeClosed();
+      } else {
+        Assertion.Assert(rule.AppliesTo == RecordingRuleApplication.NoProperty,
+                         "El acto jurídico  " + this.IndexedName + " debe aplicar a un predio o asociación.");
+      }
+      if (!this.PhysicalRecording.IsEmptyInstance) {
+        this.PhysicalRecording.AssertCanBeClosed();
+      }
+      this.ExtensionData.AssertIsComplete(this);
+
+      this.AssertParties();
+
+      this.AssertPrelation();
     }
 
     public void ChangeStatusTo(RecordableObjectStatus newStatus) {
@@ -379,21 +418,20 @@ namespace Empiria.Land.Registration {
       this.Resource.TryDelete();
     }
 
-    public RecordingAct GetRecordingAntecedent() {
-      return this.Resource.GetRecordingAntecedent(this, true);
+    public FixedList<RecordingActParty> GetParties() {
+      return PartyData.GetRecordingPartyList(this);
     }
 
-    private void RemoveAmendment() {
-      this.AmendmentOf = RecordingAct.Empty;
-      this.Save();
+    public RecordingAct GetRecordingAntecedent() {
+      return this.Resource.GetRecordingAntecedent(this, true);
     }
 
     protected void SetResource(Resource resource, ResourceRole role = ResourceRole.Informative,
                                Resource relatedResource = null, decimal percentage = 1m) {
       Assertion.Assert(resource != null  && !resource.IsEmptyInstance,
-                       "resource can't be null  or the empty instance.");
+                       "Resource can't be null  or the empty instance.");
       Assertion.Assert(decimal.Zero < percentage && percentage <= decimal.One,
-                       "percentage should be set between zero and one inclusive.");
+                       "Percentage should be set between zero and one inclusive.");
 
       resource.AssertIsStillAlive();
 
@@ -428,6 +466,58 @@ namespace Empiria.Land.Registration {
 
     #endregion Public methods
 
+    #region Private methods
+
+    private void AssertParties() {
+      var rule = this.RecordingActType.RecordingRule;
+      var parties = this.GetParties();
+      var roles = this.RecordingActType.GetRoles();
+
+      if (roles.Count == 0 || rule.AllowNoParties || roles.Count == 0) {
+        return;
+      }
+      Assertion.Assert(parties.Count != 0, "El acto jurídico  " + this.IndexedName +
+                                           " requiere cuando menos una persona o propietario.");
+      foreach (var role in roles) {
+        var found = parties.Contains((x) => x.PartyRole == role);
+        if (found) {
+          return;
+        }
+      }
+      Assertion.AssertFail("En el acto jurídico  " + this.IndexedName +
+                           " no hay registradas personas o propietarios jugando alguno de" +
+                           " los roles obligatorios para dicho tipo de acto.");
+    }
+
+    private void AssertPrelation() {
+      var fullTract = this.Resource.GetFullRecordingActsTract();
+
+      var wrongPrelation = fullTract.Contains( (x) => !x.Document.Equals(this.Document) &&
+                                               x.Document.PresentationTime > this.Document.PresentationTime);
+
+      if (wrongPrelation) {
+        Assertion.AssertFail("El acto jurídico " + this.IndexedName +
+                             " hace referencia a un predio o sociedad que tiene registrado" +
+                             " cuando menos otro acto jurídico que viola el orden de prelación de inscripción.");
+      }
+
+      var certificates = this.Resource.GetEmittedCerificates();
+
+      wrongPrelation = certificates.Contains((x) => x.Transaction.PresentationTime > this.Document.PresentationTime);
+
+      if (wrongPrelation) {
+        Assertion.AssertFail("El acto jurídico " + this.IndexedName +
+                             " hace referencia a un predio o sociedad para el cual se ha expedido " +
+                             " cuando menos un certificado que viola la prelación de inscripción.");
+      }
+    }
+
+    private void RemoveAmendment() {
+      this.AmendmentOf = RecordingAct.Empty;
+      this.Save();
+    }
+
+    #endregion Private methods
   } // class RecordingAct
 
 } // namespace Empiria.Land.Registration

@@ -60,6 +60,11 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
+    public override void AssertCanBeClosed() {
+      Assertion.Assert(this.Name.Length != 0,
+                       "Se requiere el nombre de la asociación o sociedad civil.");
+    }
+
     protected override string GenerateResourceUID() {
       return TransactionData.GenerateAssociationUID();
     }

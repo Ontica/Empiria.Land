@@ -127,6 +127,8 @@ namespace Empiria.Land.Registration {
           Assertion.Assert(resourceToApply is RealEstate,
             "This recording act is applicable only to real estate resources.");
           return;
+        case RecordingRuleApplication.RecordingAct:
+          return;
         case RecordingRuleApplication.Structure:
           Assertion.Assert(resourceToApply is RealEstate,
             "Structure acts are only applicable to real estate resources.");

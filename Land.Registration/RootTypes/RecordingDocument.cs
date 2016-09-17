@@ -264,8 +264,7 @@ namespace Empiria.Land.Registration {
 
     public bool IsClosed {
       get {
-        return this.Status == RecordableObjectStatus.Closed ||
-               this.AuthorizationTime < DateTime.Parse("2016-09-16");
+        return this.Status == RecordableObjectStatus.Closed;
       }
     }
 
@@ -315,11 +314,10 @@ namespace Empiria.Land.Registration {
     /// <returns> The recording act's index inside the RecordingActs collection.</returns>
     internal int AddRecordingAct(RecordingAct recordingAct) {
       Assertion.AssertObject(recordingAct, "recordingAct");
+      Assertion.Assert(!this.IsClosed,
+                       "Recording acts can't be added to closed documents");
 
       recordingActList.Value.Add(recordingAct);
-
-      // updates the authorization time of the document each time it's modified
-      this.SetAuthorizationTime();
 
       /// returns the collection's index of the recording act
       return recordingActList.Value.Count - 1;
@@ -332,8 +330,8 @@ namespace Empiria.Land.Registration {
       physicalRecording = (physicalRecording != null) ? physicalRecording : Recording.Empty;
 
       Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance.");
-      Assertion.Assert(this.Status == RecordableObjectStatus.Incomplete,
-                       "Recording acts can be appended to 'Incomplete' documents only.");
+      Assertion.Assert(!this.IsClosed,
+                       "Recording acts can't be added to closed documents");
 
       Assertion.AssertObject(recordingActType, "recordingActType");
       Assertion.AssertObject(resource, "resource");
@@ -349,11 +347,18 @@ namespace Empiria.Land.Registration {
                                              this.RecordingActs.Count, physicalRecording);
       recordingActList.Value.Add(recordingAct);
 
-      this.SetAuthorizationTime();
-
-      this.Save();
-
       return recordingAct;
+    }
+
+
+    public void AssertCanBeClosed() {
+      if (!this.IsReadyToClose()) {
+        Assertion.AssertFail("El usuario tiene permisos para cerrar el documento o éste no tiene un estado válido.");
+      }
+      Assertion.Assert(this.RecordingActs.Count > 0, "El documento no tiene actos jurídicos.");
+      foreach (var recordingAct in this.RecordingActs) {
+        recordingAct.AssertCanBeClosed();
+      }
     }
 
     private Recording ObtainPhysicalRecording(Recording physicalRecording) {
@@ -385,8 +390,15 @@ namespace Empiria.Land.Registration {
       if (!this.IsReadyToClose()) {
         Assertion.AssertFail("Document is not ready to be closed.");
       }
+      this.SetAuthorizationTime();
       this.Status = RecordableObjectStatus.Closed;
       this.Save();
+    }
+
+    private void SetAuthorizationTime() {
+      if (!this.IsHistoricDocument) {
+        this.AuthorizationTime = DateTime.Now;
+      }
     }
 
     public void Open() {
@@ -450,7 +462,7 @@ namespace Empiria.Land.Registration {
     public void RemoveRecordingAct(RecordingAct recordingAct) {
       Assertion.AssertObject(recordingAct, "recordingAct");
 
-      Assertion.Assert(this.Status != RecordableObjectStatus.Closed,
+      Assertion.Assert(!this.IsClosed,
                        "Recording acts can't be removed from closed documents");
 
       Assertion.Assert(recordingAct.Document == this,
@@ -522,15 +534,6 @@ namespace Empiria.Land.Registration {
     #endregion Public methods
 
     #region Private methods
-
-    private void SetAuthorizationTime() {
-      // ToDo: ASAP call SetAuthorizationTime() ONLY when the document is closed
-      if (this.RecordingActs.Count == 0 || this.IsHistoricDocument) {
-        this.AuthorizationTime = ExecutionServer.DateMinValue;
-      } else {
-        this.AuthorizationTime = DateTime.Now;
-      }
-    }
 
     private void Delete() {
       this.Status = RecordableObjectStatus.Deleted;

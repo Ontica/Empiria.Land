@@ -198,6 +198,10 @@ namespace Empiria.Land.Registration {
       return (!this.FirstRecordingAct.PhysicalRecording.IsEmptyInstance);
     }
 
+    public virtual void AssertCanBeClosed() {
+
+    }
+
     internal void AssertIsStillAlive() {
       Assertion.Assert(this.Status != RecordableObjectStatus.Deleted,
                        "Resource is marked as deleted.");
@@ -237,6 +241,10 @@ namespace Empiria.Land.Registration {
       } else {
         return true;
       }
+    }
+
+    public FixedList<Certification.Certificate> GetEmittedCerificates() {
+      return Empiria.Land.Data.CertificatesData.ResourceEmittedCertificates(this);
     }
 
     public FixedList<RecordingAct> GetFullRecordingActsTract() {

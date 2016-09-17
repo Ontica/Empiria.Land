@@ -9,8 +9,6 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
-using System.Data;
 
 using Empiria.Contacts;
 using Empiria.Security;
@@ -243,74 +241,12 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public void Delete() {
-      Delete(true);
+    public void AssertCanBeClosed() {
+
     }
 
-    //public RecordingAct CreateAnnotation(LRSTransaction transaction,
-    //                                     RecordingActType recordingActType, Property property) {
-    //  Assertion.AssertObject(transaction, "transaction");
-    //  Assertion.AssertObject(transaction.Document, "document");
-    //  Assertion.Assert(!transaction.Document.IsEmptyInstance && !transaction.Document.IsNew,
-    //                    "Transaction document can not be neither an empty or a new document instance");
-    //  Assertion.Assert(!property.IsNew && !property.IsEmptyInstance,
-    //                    "Property can not be empty or a new instance");
-    //  Assertion.Assert(!this.IsEmptyInstance && !this.IsNew,
-    //                    "Can not create an annotation using an empty or new recording");
-
-    //  var recordingAct = RecordingAct.Create(recordingActType, Recording.Empty, property);
-
-    //  this.Refresh();
-    //  this.RecordingBook.Refresh();
-
-    //  return recordingAct;
-    //}
-
-    //public RecordingAct CreateRecordingAct(RecordingActType recordingActType, Property property) {
-    //  if (this.IsNew) {
-    //    throw new LandRegistrationException(LandRegistrationException.Msg.NotSavedRecording, "CreateRecordingAct");
-    //  }
-    //  if (this.Status == RecordableObjectStatus.Closed) {
-    //    throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
-    //  }
-    //  if (this.Status == RecordableObjectStatus.Obsolete) {
-    //    this.Status = RecordableObjectStatus.Incomplete;
-    //    this.Save();
-    //  }
-
-    //  var recordingAct = RecordingAct.Create(recordingActType, this, property);
-
-    //  this.Refresh();
-    //  this.RecordingBook.Refresh();
-
-    //  return recordingAct;
-    //}
-
-    //public void DeleteRecordingAct(RecordingAct recordingAct) {
-    //  if (this.Status == RecordableObjectStatus.Closed) {
-    //    throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
-    //  }
-    //  if (!this.RecordingActs.Contains(recordingAct)) {
-    //    throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording,
-    //                                        recordingAct.Id, this.Id);
-    //  }
-    //  if (recordingAct.Status == RecordableObjectStatus.Closed) {
-    //    throw new LandRegistrationException(LandRegistrationException.Msg.CantAlterClosedRecordingAct, recordingAct.Id);
-    //  }
-    //  recordingAct.Delete();
-    //  SortRecordingActs();
-    //  this.DeleteMeIfNecessary();
-    //  this.Refresh();
-    //  this.RecordingBook.Refresh();
-    //}
-
-    public void SortRecordingActs() {
-      this.recordingActList = null;
-      for (int i = 0; i < this.RecordingActs.Count; i++) {
-        RecordingActs[i].Index = i + 1;
-        RecordingActs[i].Save();
-      }
-      this.recordingActList = null;
+    public void Delete() {
+      Delete(true);
     }
 
     public RecordingAct GetRecordingAct(int recordingActId) {
@@ -322,7 +258,6 @@ namespace Empiria.Land.Registration {
                                             recordingActId, this.Id);
       }
     }
-
 
     public FixedList<Resource> GetResources() {
       return ResourceData.GetPhysicalRecordingResources(this);
@@ -345,6 +280,15 @@ namespace Empiria.Land.Registration {
     }
 
     public void Refresh() {
+      this.recordingActList = null;
+    }
+
+    public void SortRecordingActs() {
+      this.recordingActList = null;
+      for (int i = 0; i < this.RecordingActs.Count; i++) {
+        RecordingActs[i].Index = i + 1;
+        RecordingActs[i].Save();
+      }
       this.recordingActList = null;
     }
 
