@@ -21,7 +21,7 @@ namespace Empiria.Land.Registration.Data {
 
     #region Public methods
 
-    static public FixedList<RecordingActParty> GetRecordingPartyList(RecordingAct recordingAct) {
+    static internal FixedList<RecordingActParty> GetRecordingPartyList(RecordingAct recordingAct) {
       string sql = "SELECT * FROM LRSRecordingActParties " +
                    "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
                    "AND RecActPartyStatus <> 'X'";

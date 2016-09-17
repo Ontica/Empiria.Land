@@ -157,7 +157,8 @@ namespace Empiria.Land.Certification {
       get {
         return this.Transaction.PresentationTime.ToString("yyyyMMddTHH:mm@") +
                this.IssueTime.ToString("yyyyMMddTHH:mm@") +
-               this.PostingTime.ToString("yyyyMMddTHH:mm");
+               this.PostingTime.ToString("yyyyMMddTHH:mm") +
+               this.Id.ToString("000000000000");
       }
     }
 

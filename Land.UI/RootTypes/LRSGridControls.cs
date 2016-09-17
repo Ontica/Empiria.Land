@@ -34,7 +34,7 @@ namespace Empiria.Land.UI {
     }
 
     static public string GetRecordingActPartiesGrid(RecordingAct recordingAct, bool readOnly) {
-      FixedList<RecordingActParty> allInvolvedParties = PartyData.GetRecordingPartyList(recordingAct);
+      FixedList<RecordingActParty> allInvolvedParties = recordingAct.GetParties();
 
       var primaryParties = allInvolvedParties.FindAll((x) => x.PartyOf.IsEmptyInstance);
 

@@ -43,8 +43,8 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<RecordingActParty>(id);
     }
 
-    static public RecordingActParty Create(RecordingAct recordingAct, Party party,
-                                           DomainActPartyRole role) {
+    static internal RecordingActParty Create(RecordingAct recordingAct, Party party,
+                                             DomainActPartyRole role) {
       Assertion.AssertObject(recordingAct, "recordingAct");
       Assertion.AssertObject(party, "party");
       Assertion.AssertObject(role, "role");
@@ -52,8 +52,8 @@ namespace Empiria.Land.Registration {
       return new RecordingActParty(recordingAct, party, role, Party.Empty);
     }
 
-    static public RecordingActParty Create(RecordingAct recordingAct, Party party,
-                                           SecondaryPartyRole role, Party partyOf) {
+    static internal RecordingActParty Create(RecordingAct recordingAct, Party party,
+                                             SecondaryPartyRole role, Party partyOf) {
       Assertion.AssertObject(recordingAct, "recordingAct");
       Assertion.AssertObject(party, "party");
       Assertion.AssertObject(role, "role");
@@ -61,6 +61,7 @@ namespace Empiria.Land.Registration {
 
       return new RecordingActParty(recordingAct, party, role, partyOf);
     }
+
     #endregion Constructors and parsers
 
     #region Public properties
