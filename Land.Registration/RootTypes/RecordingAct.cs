@@ -144,7 +144,7 @@ namespace Empiria.Land.Registration {
 
     public string IndexedName {
       get {
-        return "[" + (this.Index + 1).ToString("00") + "] " + this.RecordingActType.DisplayName;
+        return "[" + (this.Index + 1).ToString("00") + "] " + this.DisplayName;
       }
     }
 
@@ -339,7 +339,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-
     #endregion Public properties
 
     #region Public methods
@@ -386,7 +385,42 @@ namespace Empiria.Land.Registration {
 
       this.AssertParties();
 
-      this.AssertPrelation();
+      this.AssertIsLastInPrelationOrder();
+    }
+
+    internal void AssertCanBeOpened() {
+      this.AssertIsLastInPrelationOrder();
+    }
+
+    public void AssertIsLastInPrelationOrder() {
+      var fullTract = this.Resource.GetFullRecordingActsTract();
+
+      var wrongPrelation = fullTract.Contains((x) => !x.Document.Equals(this.Document) &&
+                                              x.Document.PresentationTime > this.Document.PresentationTime &&
+                                              x.Document.IsClosed);
+
+      if (wrongPrelation) {
+        Assertion.AssertFail("El acto jurídico " + this.IndexedName +
+                             " hace referencia a un predio o sociedad que tiene registrado " +
+                             "cuando menos otro acto jurídico con una prelación posterior " +
+                             "a la de este documento.\n\n" +
+                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
+                             "Favor de revisar la historia del predio involucrado, quizás lo que " +
+                             "procede es iniciar un nuevo trámite de aclaración.");
+      }
+
+      var certificates = this.Resource.GetEmittedCerificates();
+
+      wrongPrelation = certificates.Contains((x) => x.Transaction.PresentationTime > this.Document.PresentationTime);
+
+      if (wrongPrelation) {
+        Assertion.AssertFail("El acto jurídico " + this.IndexedName +
+                             " hace referencia a un predio o sociedad para el cual se ha expedido " +
+                             "cuando menos un certificado con una prelación posterior a la de este documento.\n\n" +
+                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
+                             "Favor de revisar la historia del predio involucrado, quizás lo que " +
+                             "procede es iniciar un nuevo trámite de aclaración.");
+      }
     }
 
     public void ChangeStatusTo(RecordableObjectStatus newStatus) {
@@ -487,29 +521,6 @@ namespace Empiria.Land.Registration {
       Assertion.AssertFail("En el acto jurídico  " + this.IndexedName +
                            " no hay registradas personas o propietarios jugando alguno de" +
                            " los roles obligatorios para dicho tipo de acto.");
-    }
-
-    private void AssertPrelation() {
-      var fullTract = this.Resource.GetFullRecordingActsTract();
-
-      var wrongPrelation = fullTract.Contains( (x) => !x.Document.Equals(this.Document) &&
-                                               x.Document.PresentationTime > this.Document.PresentationTime);
-
-      if (wrongPrelation) {
-        Assertion.AssertFail("El acto jurídico " + this.IndexedName +
-                             " hace referencia a un predio o sociedad que tiene registrado" +
-                             " cuando menos otro acto jurídico que viola el orden de prelación de inscripción.");
-      }
-
-      var certificates = this.Resource.GetEmittedCerificates();
-
-      wrongPrelation = certificates.Contains((x) => x.Transaction.PresentationTime > this.Document.PresentationTime);
-
-      if (wrongPrelation) {
-        Assertion.AssertFail("El acto jurídico " + this.IndexedName +
-                             " hace referencia a un predio o sociedad para el cual se ha expedido " +
-                             " cuando menos un certificado que viola la prelación de inscripción.");
-      }
     }
 
     private void RemoveAmendment() {

@@ -355,9 +355,46 @@ namespace Empiria.Land.Registration {
       if (!this.IsReadyToClose()) {
         Assertion.AssertFail("El usuario tiene permisos para cerrar el documento o éste no tiene un estado válido.");
       }
+
+      this.AssertGraceDaysForEdition();
+
       Assertion.Assert(this.RecordingActs.Count > 0, "El documento no tiene actos jurídicos.");
       foreach (var recordingAct in this.RecordingActs) {
         recordingAct.AssertCanBeClosed();
+      }
+    }
+
+
+    public void AssertCanBeOpened() {
+      if (!this.IsReadyToOpen()) {
+        Assertion.AssertFail("El usuario no tiene permisos para abrir este documento.");
+      }
+
+      this.AssertGraceDaysForEdition();
+
+      foreach (var recordingAct in this.RecordingActs) {
+        recordingAct.AssertCanBeOpened();
+      }
+    }
+
+    private void AssertGraceDaysForEdition() {
+      var transaction = this.GetTransaction();
+
+      if (transaction.IsEmptyInstance) {
+        return;
+      }
+
+      const int graceDaysForEdition = 45;
+      DateTime lastDate = transaction.PresentationTime;
+      if (transaction.LastReentryTime != ExecutionServer.DateMaxValue) {
+        lastDate = transaction.LastReentryTime;
+      }
+      if (lastDate.AddDays(graceDaysForEdition) < DateTime.Today) {
+        Assertion.AssertFail("Por motivos de seguridad y calidad en el registro de la información, " +
+                             "no es posible modificar documentos de trámites de más de 45 días.\n\n" +
+                             "En su lugar se puede optar por registrar un nuevo trámite, " +
+                             "o quizás se pueda hacer un reingreso si no han transcurrido los " +
+                             "90 días de gracia.");
       }
     }
 
@@ -387,9 +424,7 @@ namespace Empiria.Land.Registration {
 
 
     public void Close() {
-      if (!this.IsReadyToClose()) {
-        Assertion.AssertFail("Document is not ready to be closed.");
-      }
+      this.AssertCanBeClosed();
       this.SetAuthorizationTime();
       this.Status = RecordableObjectStatus.Closed;
       this.Save();
@@ -402,9 +437,7 @@ namespace Empiria.Land.Registration {
     }
 
     public void Open() {
-      if (!this.IsReadyToOpen()) {
-        Assertion.AssertFail("Document is not ready to be opened.");
-      }
+      this.AssertCanBeOpened();
       this.Status = RecordableObjectStatus.Incomplete;
       this.Save();
     }
@@ -435,8 +468,19 @@ namespace Empiria.Land.Registration {
       return recordingOfficials;
     }
 
+    private LRSTransaction _transaction = null;
     public LRSTransaction GetTransaction() {
-      return DocumentsData.GetDocumentTransaction(this);
+      if (this.IsEmptyInstance || this.IsEmptyDocument) {
+        return LRSTransaction.Empty;
+      }
+      if (_transaction == null) {
+        _transaction = DocumentsData.GetDocumentTransaction(this);
+        if (_transaction.IsEmptyInstance) {
+          _transaction = null;
+          return LRSTransaction.Empty;
+        }
+      }
+      return _transaction;
     }
 
     protected override void OnInitialize() {
