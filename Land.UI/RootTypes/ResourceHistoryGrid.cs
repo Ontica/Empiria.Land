@@ -11,6 +11,7 @@
 using System;
 
 using Empiria.Land.Registration;
+using Empiria.Land.Registration.Transactions;
 using Empiria.Land.Certification;
 
 namespace Empiria.Land.UI {
@@ -18,30 +19,55 @@ namespace Empiria.Land.UI {
   /// <summary>Generates a grid HTML content that displays the full resource's history.</summary>
   public class ResourceHistoryGrid {
 
-    #region Fields
-
-    private Resource _resource = null;
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    private ResourceHistoryGrid(Resource resource) {
-      _resource = resource;
+    private ResourceHistoryGrid(Resource resource, LRSTransaction selectedTransaction) {
+      this.Resource = resource;
+      this.SelectedTransaction = selectedTransaction;
+      this.SelectedDocument = selectedTransaction.Document;
     }
 
-    static public string Parse(Resource resource) {
-      var grid = new ResourceHistoryGrid(resource);
+    private ResourceHistoryGrid(Resource resource, RecordingDocument selectedDocument) {
+      this.Resource = resource;
+      this.SelectedDocument = selectedDocument;
+      this.SelectedTransaction = selectedDocument.GetTransaction();
+    }
+
+    static public string Parse(Resource resource, LRSTransaction selectedTransaction) {
+      var grid = new ResourceHistoryGrid(resource, selectedTransaction);
+
+      return grid.GetHtml();
+    }
+
+    static public string Parse(Resource resource, RecordingDocument selectedDocument) {
+      var grid = new ResourceHistoryGrid(resource, selectedDocument);
 
       return grid.GetHtml();
     }
 
     #endregion Constructors and parsers
 
+    #region Public properties
+
+    public Resource Resource {
+      get;
+    }
+
+    public LRSTransaction SelectedTransaction {
+      get;
+    }
+
+    public RecordingDocument SelectedDocument {
+      get;
+    }
+
+    #endregion Public properties
+
+
     #region Private methods
 
     private string GetHtml() {
-      FixedList<IResourceTractItem> resourceHistory = _resource.GetFullRecordingActsTractWithCertificates();
+      FixedList<IResourceTractItem> resourceHistory = Resource.GetFullRecordingActsTractWithCertificates();
 
       string html = this.GetTitle() + this.GetHeader();
       for (int i = resourceHistory.Count - 1; 0 <= i; i--) {
@@ -64,7 +90,7 @@ namespace Empiria.Land.UI {
               "<td colspan='6'>Historia del predio <b>{{RESOURCE.UID}}</b></td>" +
             "</tr>";
 
-      return template.Replace("{{RESOURCE.UID}}", this._resource.UID);
+      return template.Replace("{{RESOURCE.UID}}", this.Resource.UID);
     }
 
     private string GetHeader() {
@@ -94,7 +120,13 @@ namespace Empiria.Land.UI {
            "<td>{{ISSUED.BY}}</td>" +
          "</tr>";
 
-      string row = template.Replace("{{CLASS}}", (index % 2 == 0) ? "detailsItem" : "detailsOddItem");
+      string className = (index % 2 == 0) ? "detailsItem" : "detailsOddItem";
+      if (certificate.Transaction.Equals(this.SelectedTransaction)) {
+        className = "selectedItem";
+      } else if (!certificate.IsClosed) {
+        className = "warningItem";
+      }
+      string row = template.Replace("{{CLASS}}", className);
 
       row = row.Replace("{{PRESENTATION.DATE}}",
                         HtmlFormatters.GetDateAsText(certificate.Transaction.PresentationTime));
@@ -123,7 +155,14 @@ namespace Empiria.Land.UI {
           "<td>{{RECORDED.BY}}</td>" +
         "</tr>";
 
-      string row = template.Replace("{{CLASS}}", (index % 2 == 0) ? "detailsItem" : "detailsOddItem");
+      string className = (index % 2 == 0) ? "detailsItem" : "detailsOddItem";
+      if (recordingAct.Document.Equals(this.SelectedDocument)) {
+        className = "selectedItem";
+      } else if (!recordingAct.Document.IsClosed) {
+        className = "warningItem";
+      }
+
+      string row = template.Replace("{{CLASS}}", className);
 
       row = row.Replace("{{RECORDING.ACT}}", recordingAct.DisplayName);
       row = row.Replace("{{PARTITION}}", this.GetPartitionOrAntecedentCell(recordingAct));
@@ -149,7 +188,7 @@ namespace Empiria.Land.UI {
     }
 
     private string GetPartitionOrAntecedentCell(RecordingAct recordingAct) {
-      if (!(this._resource is RealEstate)) {
+      if (!(this.Resource is RealEstate)) {
         return "&nbsp;";
       }
 
@@ -159,7 +198,7 @@ namespace Empiria.Land.UI {
 
         if (recordingAct.ResourceRole == ResourceRole.Created) {
           return "Sin antecedente registral";
-        } else if (realEstate.Equals(this._resource)) {
+        } else if (realEstate.Equals(this.Resource)) {
           var temp = "Creado como <b>" + realEstate.PartitionNo + "</b> del predio " +
                       "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
                       "{{RESOURCE.UID}}</a>";
