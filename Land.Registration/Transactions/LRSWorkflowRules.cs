@@ -369,7 +369,8 @@ namespace Empiria.Land.Registration.Transactions {
       var user = ExecutionServer.CurrentPrincipal;
 
       return ((transaction.Workflow.CurrentStatus == LRSTransactionStatus.Returned ||
-              (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Delivered)) &&
+              (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Delivered ||
+               transaction.Workflow.CurrentStatus == LRSTransactionStatus.Archived)) &&
                user.IsInRole("LRSTransaction.ReentryByFails"));
     }
 

@@ -160,6 +160,32 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+    public void Reentry() {
+      if (!this.IsReadyForReentry) {
+        throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
+                                            _transaction.UID);
+      }
+
+      this.AssertGraceDaysForReentry();
+      this.AssertRecordingActsPrelation();
+      this.AssertCertificatesPrelation();
+
+      this.CurrentStatus = LRSTransactionStatus.Reentry;
+      _transaction.ClosingTime = ExecutionServer.DateMaxValue;
+      _transaction.LastReentryTime = DateTime.Now;
+      LRSWorkflowTask currentTask = this.GetCurrentTask();
+      currentTask.NextStatus = LRSTransactionStatus.Reentry;
+
+      currentTask = currentTask.CreateNext("Trámite reingresado");
+      currentTask.NextStatus = LRSTransactionStatus.Control;
+      currentTask.Status = WorkflowTaskStatus.OnDelivery;
+      currentTask.EndProcessTime = currentTask.CheckInTime;
+      currentTask.AssignedBy = LRSWorkflowRules.InterestedContact;
+      currentTask.Save();
+      _transaction.Save();
+      this.ResetTasksList();
+    }
+
     public void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact, string notes) {
       if (nextStatus == LRSTransactionStatus.Returned || nextStatus == LRSTransactionStatus.Delivered ||
           nextStatus == LRSTransactionStatus.Archived) {
@@ -210,27 +236,6 @@ namespace Empiria.Land.Registration.Transactions {
       _transaction.Save();
     }
 
-    public void DoReentry(string notes) {
-      if (!this.IsReadyForReentry) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
-                                            _transaction.UID);
-      }
-      this.CurrentStatus = LRSTransactionStatus.Reentry;
-      _transaction.ClosingTime = ExecutionServer.DateMaxValue;
-      _transaction.LastReentryTime = DateTime.Now;
-      LRSWorkflowTask currentTask = this.GetCurrentTask();
-      currentTask.NextStatus = LRSTransactionStatus.Reentry;
-
-      currentTask = currentTask.CreateNext(notes);
-      currentTask.NextStatus = LRSTransactionStatus.Control;
-      currentTask.Status = WorkflowTaskStatus.OnDelivery;
-      currentTask.EndProcessTime = currentTask.CheckInTime;
-      currentTask.AssignedBy = LRSWorkflowRules.InterestedContact;
-      currentTask.Save();
-      _transaction.Save();
-      this.ResetTasksList();
-    }
-
     private LRSWorkflowTask _currentTask = null;
     public LRSWorkflowTask GetCurrentTask() {
       if (_currentTask == null) {
@@ -247,16 +252,41 @@ namespace Empiria.Land.Registration.Transactions {
       this.Take(String.Empty);
     }
 
-    public void Unarchive(string notes) {
-      Assertion.Assert(this.CurrentStatus == LRSTransactionStatus.Archived,
-                       "Transaction current status should be Archived.");
-      this.SetNextStatus(LRSTransactionStatus.Control, Person.Empty, notes);
-      this.Take(String.Empty);
-    }
-
     #endregion Public methods
 
     #region Private methods
+
+    private void AssertGraceDaysForReentry() {
+      int graceDaysForReentry = 90;
+      DateTime lastDate = _transaction.PresentationTime;
+      if (_transaction.LastReentryTime != ExecutionServer.DateMaxValue) {
+        lastDate = _transaction.LastReentryTime;
+      }
+      if (lastDate.AddDays(graceDaysForReentry) <= DateTime.Now) {
+        Assertion.AssertFail("Por motivos de seguridad y calidad en el registro de la información, " +
+                             "no es posible reingresar trámites después de 90 días contados " +
+                             "a partir de su fecha de presentación original o de su último reingreso.\n\n" +
+                             "En su lugar se debe optar por registrar un nuevo trámite de aclaración.");
+      }
+    }
+
+    private void AssertRecordingActsPrelation() {
+      if (_transaction.Document.IsEmptyInstance || _transaction.Document.IsEmptyDocument) {
+        return;
+      }
+      foreach (var recordingAct in _transaction.Document.RecordingActs) {
+        recordingAct.AssertIsLastInPrelationOrder();
+      }
+    }
+
+    private void AssertCertificatesPrelation() {
+      var certificates = _transaction.GetIssuedCertificates();
+
+      foreach (var certificate in certificates) {
+        certificate.AssertIsLastInPrelationOrder();
+      }
+
+    }
 
     private void Close(LRSTransactionStatus closeStatus, string notes) {
       LRSWorkflowTask currentTask = this.GetCurrentTask();
