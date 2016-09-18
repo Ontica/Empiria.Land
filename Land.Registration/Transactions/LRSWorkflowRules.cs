@@ -471,8 +471,26 @@ namespace Empiria.Land.Registration.Transactions {
       return true;
     }
 
-    static public string ValidateStatusChange(LRSTransaction transaction, LRSTransactionStatus newStatus) {
-      if (newStatus == LRSTransactionStatus.Received) {
+    static public string ValidateStatusChange(LRSTransaction transaction, LRSTransactionStatus nextStatus) {
+      var currentStatus = transaction.Workflow.CurrentStatus;
+
+      if ((currentStatus == LRSTransactionStatus.Recording ||
+           currentStatus == LRSTransactionStatus.Elaboration ||
+           currentStatus == LRSTransactionStatus.Juridic) ||
+           nextStatus == LRSTransactionStatus.OnSign ||
+           nextStatus == LRSTransactionStatus.Digitalization ||
+           nextStatus == LRSTransactionStatus.ToDeliver ||
+           nextStatus == LRSTransactionStatus.ToReturn ||
+           nextStatus == LRSTransactionStatus.Delivered ||
+           nextStatus == LRSTransactionStatus.Returned ||
+           nextStatus == LRSTransactionStatus.Archived) {
+        if (!transaction.Document.IsEmptyInstance && !transaction.Document.IsClosed) {
+          return "El documento registral de este trámite todavía no ha sido cerrado.\n\n" +
+                 "Favor de cerrarlo antes de enviarlo a otra bandeja de trabajo.";
+        }
+      }
+
+      if (nextStatus == LRSTransactionStatus.Received) {
         if (transaction.Payments.Count == 0) {
           return "Este trámite todavía no tiene registrada una boleta de pago.";
         }
@@ -483,8 +501,8 @@ namespace Empiria.Land.Registration.Transactions {
         }
       }
       if (IsRecordingDocumentCase(transaction.TransactionType, transaction.DocumentType)) {
-        if (newStatus == LRSTransactionStatus.Revision || newStatus == LRSTransactionStatus.OnSign ||
-            newStatus == LRSTransactionStatus.Digitalization || newStatus == LRSTransactionStatus.ToDeliver) {
+        if (nextStatus == LRSTransactionStatus.Revision || nextStatus == LRSTransactionStatus.OnSign ||
+            nextStatus == LRSTransactionStatus.Digitalization || nextStatus == LRSTransactionStatus.ToDeliver) {
           if (transaction.Document.IsEmptyInstance) {
             return "Este trámite no tiene inscrito un documento. No es posible realizar esta operación.";
           }
