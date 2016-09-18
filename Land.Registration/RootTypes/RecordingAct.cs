@@ -395,9 +395,8 @@ namespace Empiria.Land.Registration {
     public void AssertIsLastInPrelationOrder() {
       var fullTract = this.Resource.GetFullRecordingActsTract();
 
-      var wrongPrelation = fullTract.Contains((x) => !x.Document.Equals(this.Document) &&
-                                              x.Document.PresentationTime > this.Document.PresentationTime &&
-                                              x.Document.IsClosed);
+      var wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > this.Document.PresentationTime &&
+                                                     x.Document.IsClosed);
 
       if (wrongPrelation) {
         Assertion.AssertFail("El acto jurídico " + this.IndexedName +

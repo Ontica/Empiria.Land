@@ -356,9 +356,10 @@ namespace Empiria.Land.Registration {
         Assertion.AssertFail("El usuario tiene permisos para cerrar el documento o éste no tiene un estado válido.");
       }
 
-      this.AssertGraceDaysForEdition();
+      //this.AssertGraceDaysForEdition();
 
       Assertion.Assert(this.RecordingActs.Count > 0, "El documento no tiene actos jurídicos.");
+
       foreach (var recordingAct in this.RecordingActs) {
         recordingAct.AssertCanBeClosed();
       }
@@ -370,7 +371,7 @@ namespace Empiria.Land.Registration {
         Assertion.AssertFail("El usuario no tiene permisos para abrir este documento.");
       }
 
-      this.AssertGraceDaysForEdition();
+      //this.AssertGraceDaysForEdition();
 
       foreach (var recordingAct in this.RecordingActs) {
         recordingAct.AssertCanBeOpened();

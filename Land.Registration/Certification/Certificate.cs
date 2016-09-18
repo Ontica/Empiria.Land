@@ -223,9 +223,8 @@ namespace Empiria.Land.Certification {
       }
       var fullTract = this.Property.GetFullRecordingActsTract();
 
-      var wrongPrelation = fullTract.Contains((x) => !x.Document.GetTransaction().Equals(this.Transaction) &&
-                                              x.Document.PresentationTime > this.Transaction.PresentationTime &&
-                                              x.Document.IsClosed);
+      var wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > this.Transaction.PresentationTime &&
+                                                     x.Document.IsClosed);
 
       if (wrongPrelation) {
         Assertion.AssertFail("El certificado " + this.UID +
