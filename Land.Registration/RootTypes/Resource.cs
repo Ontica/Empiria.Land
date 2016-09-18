@@ -202,6 +202,39 @@ namespace Empiria.Land.Registration {
 
     }
 
+    public void AssertCanBeAddedTo(RecordingDocument document) {
+      this.AssertIsLastInPrelationOrder(document);
+    }
+
+    public void AssertIsLastInPrelationOrder(RecordingDocument document) {
+      var fullTract = this.GetFullRecordingActsTract();
+
+      var wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > document.PresentationTime &&
+                                                     x.Document.IsClosed);
+
+      if (wrongPrelation) {
+        Assertion.AssertFail("El predio o sociedad " + this.UID +
+                             " tiene registrado cuando menos otro acto jurídico con una prelación posterior " +
+                             "a la de este documento.\n\n" +
+                             "Por lo anterior, no es posible agregarlo en este documento.\n\n" +
+                             "Favor de revisar que se trate del predio correcto. De lo contrario, " +
+                             "quizás lo que procede es iniciar un trámite de aclaración.");
+      }
+
+      var certificates = this.GetEmittedCerificates();
+
+      wrongPrelation = certificates.Contains((x) => x.Transaction.PresentationTime > document.PresentationTime);
+
+      if (wrongPrelation) {
+        Assertion.AssertFail("El predio o sociedad " + this.UID +
+                             " tiene registrado cuando menos un certificado con una prelación posterior " +
+                             "a la de este documento.\n\n" +
+                             "Por lo anterior, no es posible agregarlo en este documento.\n\n" +
+                             "Favor de revisar que se trate del predio correcto. De lo contrario, " +
+                             "quizás lo que procede es iniciar un trámite de aclaración.");
+      }
+    }
+
     internal void AssertIsStillAlive() {
       Assertion.Assert(this.Status != RecordableObjectStatus.Deleted,
                        "Resource is marked as deleted.");

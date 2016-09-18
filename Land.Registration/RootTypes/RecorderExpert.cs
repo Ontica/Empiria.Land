@@ -79,26 +79,24 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public void AssertValidTask() {
+      if (!Task.PrecedentProperty.IsEmptyInstance) {
+        Task.PrecedentProperty.AssertCanBeAddedTo(Task.Document);
+      }
+
       string sMsg = String.Empty;
       if (CreateResourceOnExistingPhysicalRecording) {
         throw new NotImplementedException();
       }
       if (CreateResourceOnNewPhysicalRecording &&
           Task.PrecedentRecordingBook.ExistsRecording(Task.QuickAddRecordingNumber)) {
-          sMsg = "La partida indicada ya existe en el libro seleccionado,\n" +
-                  "y ya no es posible generar más de un folio de predio\n" +
-                  "en una misma partida o antecedente.\n\n" +
-                  "Si se requiere registrar más de un predio en una partida,\n" +
-                  "favor de consultarlo con el área de soporte. Gracias.";
+        sMsg = "La partida indicada ya existe en el libro seleccionado,\n" +
+                "y no es posible generar más de un folio de predio\n" +
+                "en una misma partida o antecedente.\n\n" +
+                "Si se requiere registrar más de un predio en una partida,\n" +
+                "favor de consultarlo con el área de soporte. Gracias.";
 
         throw new NotImplementedException(sMsg);
       }
-      //  if (Task.PrecedentRecording.PresentationTime > Task.Transaction.PresentationTime) {
-      //    throw new LandRegistrationException(LandRegistrationException.Msg.PrecendentPresentationTimeIsAfterThisTransactionDate,
-      //                                        Task.PrecedentRecording.FullNumber,
-      //                                        Task.PrecedentRecording.PresentationTime,
-      //                                        Task.Transaction.UID, Task.Transaction.PresentationTime);
-      //  }
     }
 
     #endregion Public methods
