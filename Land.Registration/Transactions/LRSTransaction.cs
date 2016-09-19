@@ -397,6 +397,22 @@ namespace Empiria.Land.Registration.Transactions {
       this.Save();
     }
 
+    public void RemoveDocument() {
+      Assertion.Assert(!this.IsEmptyInstance && !this.IsNew,
+                       "Document can't be detached from a new or empty transaction.");
+      Assertion.Assert(!this.Document.IsEmptyInstance,
+                       "Document can't be removed because it's the empty instance.");
+      Assertion.Assert(this.Document.RecordingActs.Count == 0,
+                       "Document has recording acts. It's not possible to delete it.");
+
+      var tempDocument = this.Document;
+
+      this.Document = RecordingDocument.Empty;
+      this.Save();
+
+      tempDocument.Delete();
+    }
+
     public string GetDigitalSign() {
       return Cryptographer.CreateDigitalSign(GetDigitalString());
     }

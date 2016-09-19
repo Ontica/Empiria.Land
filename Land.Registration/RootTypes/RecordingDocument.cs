@@ -510,7 +510,7 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(!this.IsClosed,
                        "Recording acts can't be removed from closed documents");
 
-      Assertion.Assert(recordingAct.Document == this,
+      Assertion.Assert(recordingAct.Document.Equals(this),
                        "The recording act doesn't belong to this document");
 
       recordingAct.Delete();
@@ -580,9 +580,12 @@ namespace Empiria.Land.Registration {
 
     #region Private methods
 
-    private void Delete() {
-      this.Status = RecordableObjectStatus.Deleted;
-      this.Save();
+    internal void Delete() {
+      if (this.RecordingActs.Count == 0) {
+        this.Status = RecordableObjectStatus.Deleted;
+        this.Save();
+        _transaction = null;
+      }
     }
 
     #endregion Private methods
