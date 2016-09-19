@@ -152,7 +152,6 @@
     <Compile Include="RootTypes\RecordingExtData.cs" />
     <Compile Include="RootTypes\RealEstatePartitionDTO.cs" />
     <Compile Include="RootTypes\RecordingActExtData.cs" />
-    <Compile Include="RootTypes\RealEstateRule.cs" />
     <Compile Include="RootTypes\RecordingRule.cs" />
     <Compile Include="RootTypes\RecordingSection.cs" />
     <Compile Include="RootTypes\RecorderExpert.cs" />

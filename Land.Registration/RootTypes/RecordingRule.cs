@@ -60,10 +60,6 @@ namespace Empiria.Land.Registration {
         this.AppliesTo = json.Get<RecordingRuleApplication>("AppliesTo", RecordingRuleApplication.Undefined);
         this.AutoCancel = json.Get<Int32>("AutoCancel", 0);
 
-        this.InputResources = json.GetList<RealEstateRule>("InputResources", false).ToArray();
-
-        this.NewResource = RealEstateRule.Parse(json.Slice("NewResource", false));
-
         this.ResourceRecordingStatus = json.Get<ResourceRecordingStatus>("ResourceStatus",
                                                                          ResourceRecordingStatus.Undefined);
         this.RecordingSection = json.Get<RecordingSection>("RecordingSectionId", RecordingSection.Empty);
@@ -146,18 +142,6 @@ namespace Empiria.Land.Registration {
       get;
       private set;
     } = 0;
-
-
-    public RealEstateRule[] InputResources {
-      get;
-      private set;
-    } = new RealEstateRule[0];
-
-
-    public RealEstateRule NewResource {
-      get;
-      private set;
-    } = new RealEstateRule();
 
 
     public ResourceRecordingStatus ResourceRecordingStatus {
