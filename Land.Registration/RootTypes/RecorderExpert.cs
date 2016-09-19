@@ -80,6 +80,7 @@ namespace Empiria.Land.Registration {
 
     public void AssertValidTask() {
       if (!Task.PrecedentProperty.IsEmptyInstance) {
+        Task.PrecedentProperty.AssertIsStillAlive();
         Task.PrecedentProperty.AssertCanBeAddedTo(Task.Document);
       }
 

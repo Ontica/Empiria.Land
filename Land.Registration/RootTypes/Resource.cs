@@ -207,18 +207,17 @@ namespace Empiria.Land.Registration {
     }
 
     public void AssertIsLastInPrelationOrder(RecordingDocument document) {
-      var fullTract = this.GetFullRecordingActsTract();
+      var fullTract = this.GetRecordingActsTract();
 
       var wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > document.PresentationTime &&
                                                      x.Document.IsClosed);
 
       if (wrongPrelation) {
-        Assertion.AssertFail("El predio o sociedad " + this.UID +
+        Assertion.AssertFail("El folio real " + this.UID +
                              " tiene registrado cuando menos otro acto jurídico con una prelación posterior " +
                              "a la de este documento.\n\n" +
                              "Por lo anterior, no es posible agregarlo en este documento.\n\n" +
-                             "Favor de revisar que se trate del predio correcto. De lo contrario, " +
-                             "quizás lo que procede es iniciar un trámite de aclaración.");
+                             "Favor de revisar que se trate del predio correcto.");
       }
 
       var certificates = this.GetEmittedCerificates();
@@ -226,24 +225,24 @@ namespace Empiria.Land.Registration {
       wrongPrelation = certificates.Contains((x) => x.Transaction.PresentationTime > document.PresentationTime);
 
       if (wrongPrelation) {
-        Assertion.AssertFail("El predio o sociedad " + this.UID +
+        Assertion.AssertFail("El folio real " + this.UID +
                              " tiene registrado cuando menos un certificado con una prelación posterior " +
                              "a la de este documento.\n\n" +
                              "Por lo anterior, no es posible agregarlo en este documento.\n\n" +
-                             "Favor de revisar que se trate del predio correcto. De lo contrario, " +
-                             "quizás lo que procede es iniciar un trámite de aclaración.");
+                             "Favor de revisar que se trate del predio correcto.");
       }
     }
 
     internal void AssertIsStillAlive() {
       Assertion.Assert(this.Status != RecordableObjectStatus.Deleted,
-                       "Resource is marked as deleted.");
+                       "El folio real '{0}' está marcado como eliminado.", this.UID);
 
       var tract = this.GetRecordingActsTract();
-
-      if (0 != tract.CountAll((x) => Resource.IsCancelationRole(x.ResourceRole))) {
-        Assertion.AssertFail("Resource '{0}' was already canceled, merged or divided. " +
-                             "It's not possible to append more acts on it.", this.UID);
+      if (0 != tract.CountAll((x) => EmpiriaMath.IsMemberOf(x.RecordingActType.Id,
+                                                            new int[] { 2785, 2300, 2786, 2373, 2784, 2218, }) ||
+                                      Resource.IsCancelationRole(x.ResourceRole))) {
+        Assertion.AssertFail("El folio real '{0}' ya fue cancelado, fusionado o dividido en su totalidad. " +
+                             "Ya no es posible agregarle nuevos actos jurídicos.", this.UID);
       }
 
     }
