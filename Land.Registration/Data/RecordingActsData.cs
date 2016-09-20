@@ -111,6 +111,15 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList<RecordingAct>(operation, (x) => BaseObject.ParseList<RecordingAct>(x));
     }
 
+    internal static int UpdateRecordingActResourceExtData(RecordingAct recordingAct,
+                                                          RealEstate realEstateUpdatedData) {
+      var op = DataOperation.Parse("doLRSUpdateRecordingActResourceExtData",
+                                   recordingAct.Id,
+                                   realEstateUpdatedData.RealEstateExtData.ToString());
+      return DataWriter.Execute(op);
+    }
+
+
     static internal int WriteRecordingAct(RecordingAct o) {
       Assertion.Assert(o.Id != 0, "RecordingAct.Id can't be zero");
       Assertion.Assert(!o.Resource.IsEmptyInstance && !o.Resource.IsNew,

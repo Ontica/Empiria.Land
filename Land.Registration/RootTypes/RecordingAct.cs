@@ -184,6 +184,19 @@ namespace Empiria.Land.Registration {
       private set;
     } = RecordingActExtData.Empty;
 
+
+    private RealEstateExtData ResourceExtData {
+      get;
+      set;
+    } = RealEstateExtData.Empty;
+
+
+    public bool ResourceUpdated {
+      get {
+        return (!this.ResourceExtData.IsEmptyInstance);
+      }
+    }
+
     internal string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName, this.Document.UID,
@@ -444,6 +457,36 @@ namespace Empiria.Land.Registration {
       return PartyData.GetRecordingPartyList(this);
     }
 
+    /// <summary>Gets the resource data as it was when it was applied to this recording act.</summary>
+    public RealEstateExtData GetResourceExtData() {
+      if (!this.ResourceExtData.IsEmptyInstance) {
+        return this.ResourceExtData;
+      }
+      var tract = this.Resource.GetRecordingActsTract();
+
+      /// Look for the first recording act with ResourceExtData added before this act in the tract.
+      /// If it is found then return it, if not then return the current resource data.
+      var lastData = tract.Find((x) => x.Document.PresentationTime > this.Document.PresentationTime &&
+                                       !x.ResourceExtData.IsEmptyInstance);
+      if (lastData != null) {
+        return lastData.ResourceExtData;
+      }
+      if (this.Resource is RealEstate) {
+        return ((RealEstate) this.Resource).RealEstateExtData;
+      } else {
+        return RealEstateExtData.Empty;
+      }
+    }
+
+    public void OnResourceUpdated(RealEstate realEstateUpdatedData) {
+      Assertion.Assert(realEstateUpdatedData.Equals(this.Resource),
+                       "Recording act resource and the updated resource are not the same.");
+
+      this.ResourceExtData = realEstateUpdatedData.RealEstateExtData;
+
+      RecordingActsData.UpdateRecordingActResourceExtData(this, realEstateUpdatedData);
+    }
+
     public RecordingAct GetRecordingAntecedent() {
       return this.Resource.GetRecordingAntecedent(this, true);
     }
@@ -467,6 +510,7 @@ namespace Empiria.Land.Registration {
 
     protected override void OnLoadObjectData(DataRow row) {
       this.ExtensionData = RecordingActExtData.Parse((string) row["RecordingActExtData"]);
+      this.ResourceExtData = RealEstateExtData.Parse((string) row["RecordingActResourceExtData"]);
     }
 
     protected override void OnSave() {
