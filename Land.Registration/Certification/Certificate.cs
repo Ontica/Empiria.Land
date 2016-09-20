@@ -217,41 +217,6 @@ namespace Empiria.Land.Certification {
 
     #region Public methods
 
-    public void AssertIsLastInPrelationOrder() {
-      if (this.Property.IsEmptyInstance) {
-        return;
-      }
-      var fullTract = this.Property.GetFullRecordingActsTract();
-
-      var wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > this.Transaction.PresentationTime &&
-                                                     x.Document.IsClosed);
-
-      if (wrongPrelation) {
-        Assertion.AssertFail("El certificado " + this.UID +
-                             " hace referencia a un predio que tiene registrado " +
-                             "cuando menos un acto jurídico con una prelación posterior " +
-                             "a la de este trámite.\n\n" +
-                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
-                             "Favor de revisar la historia del predio involucrado en el certificado, " +
-                             "quizás lo que procede es es ingresar un trámite de aclaración, o bien, " +
-                             "un nuevo trámite de expedición de certificados.");
-      }
-
-      var certificates = this.Property.GetEmittedCerificates();
-
-      wrongPrelation = certificates.Contains((x) => x.Transaction.PresentationTime > this.Transaction.PresentationTime);
-
-      if (wrongPrelation) {
-        Assertion.AssertFail("El certificado " + this.UID +
-                             " hace referencia a un predio para el cual se ha expedido " +
-                             "cuando menos otro certificado con una prelación posterior a la de este trámite.\n\n" +
-                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
-                             "Favor de revisar la historia del predio involucrado en el certificado, " +
-                             "quizás lo que procede es es ingresar un trámite de aclaración, o bien, " +
-                             "un nuevo trámite de expedición de certificados.");
-      }
-    }
-
     public bool CanCancel() {
       return this.Status == CertificateStatus.Closed;
     }

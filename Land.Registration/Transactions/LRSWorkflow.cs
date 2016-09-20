@@ -168,7 +168,6 @@ namespace Empiria.Land.Registration.Transactions {
 
       this.AssertGraceDaysForReentry();
       this.AssertRecordingActsPrelation();
-      this.AssertCertificatesPrelation();
 
       this.CurrentStatus = LRSTransactionStatus.Reentry;
       _transaction.ClosingTime = ExecutionServer.DateMaxValue;
@@ -277,15 +276,6 @@ namespace Empiria.Land.Registration.Transactions {
       foreach (var recordingAct in _transaction.Document.RecordingActs) {
         recordingAct.AssertIsLastInPrelationOrder();
       }
-    }
-
-    private void AssertCertificatesPrelation() {
-      var certificates = _transaction.GetIssuedCertificates();
-
-      foreach (var certificate in certificates) {
-        certificate.AssertIsLastInPrelationOrder();
-      }
-
     }
 
     private void Close(LRSTransactionStatus closeStatus, string notes) {

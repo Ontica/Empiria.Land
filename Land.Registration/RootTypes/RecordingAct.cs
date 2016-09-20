@@ -184,7 +184,6 @@ namespace Empiria.Land.Registration {
       private set;
     } = RecordingActExtData.Empty;
 
-
     internal string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName, this.Document.UID,
@@ -373,7 +372,9 @@ namespace Empiria.Land.Registration {
       var rule = this.RecordingActType.RecordingRule;
       if (!this.Resource.IsEmptyInstance) {
         this.RecordingActType.AssertIsApplicableResource(this.Resource);
-        this.Resource.AssertCanBeClosed();
+        if (this.RecordingActType.RecordingRule.AutoCancel == 0) {
+          this.Resource.AssertCanBeClosed();
+        }
       } else {
         Assertion.Assert(rule.AppliesTo == RecordingRuleApplication.NoProperty,
                          "El acto jurídico  " + this.IndexedName + " debe aplicar a un predio o asociación.");
@@ -408,18 +409,6 @@ namespace Empiria.Land.Registration {
                              "procede es iniciar un nuevo trámite de aclaración.");
       }
 
-      var certificates = this.Resource.GetEmittedCerificates();
-
-      wrongPrelation = certificates.Contains((x) => x.Transaction.PresentationTime > this.Document.PresentationTime);
-
-      if (wrongPrelation) {
-        Assertion.AssertFail("El acto jurídico " + this.IndexedName +
-                             " hace referencia a un predio o sociedad para el cual se ha expedido " +
-                             "cuando menos un certificado con una prelación posterior a la de este documento.\n\n" +
-                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
-                             "Favor de revisar la historia del predio involucrado, quizás lo que " +
-                             "procede es iniciar un nuevo trámite de aclaración.");
-      }
     }
 
     public void ChangeStatusTo(RecordableObjectStatus newStatus) {

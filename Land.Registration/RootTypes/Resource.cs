@@ -219,18 +219,6 @@ namespace Empiria.Land.Registration {
                              "Por lo anterior, no es posible agregarlo en este documento.\n\n" +
                              "Favor de revisar que se trate del predio correcto.");
       }
-
-      var certificates = this.GetEmittedCerificates();
-
-      wrongPrelation = certificates.Contains((x) => x.Transaction.PresentationTime > document.PresentationTime);
-
-      if (wrongPrelation) {
-        Assertion.AssertFail("El folio real " + this.UID +
-                             " tiene registrado cuando menos un certificado con una prelación posterior " +
-                             "a la de este documento.\n\n" +
-                             "Por lo anterior, no es posible agregarlo en este documento.\n\n" +
-                             "Favor de revisar que se trate del predio correcto.");
-      }
     }
 
     internal void AssertIsStillAlive() {
