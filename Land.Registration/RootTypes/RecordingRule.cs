@@ -66,6 +66,7 @@ namespace Empiria.Land.Registration {
         this.SpecialCase = json.Get<string>("SpecialCase", String.Empty);
         this.RecordingActTypes = json.GetList<RecordingActType>("RecordingActTypes", false).ToArray();
         this.AllowsPartitions = json.Get<bool>("AllowsPartitions", false);
+        this.IsEndingAct = json.Get<bool>("IsEndingAct", false);
         this.IsActive = json.Get<bool>("IsActive", false);
         this.AskForResourceName = json.Get<bool>("AskForResourceName", false);
         this.ResourceTypeName = json.Get<string>("ResourceTypeName", String.Empty);
@@ -94,6 +95,7 @@ namespace Empiria.Land.Registration {
       JsonObject json = new JsonObject();
       json.Add(new JsonItem("IsModification", this.recordingActType.IsModificationActType));
       json.Add(new JsonItem("IsCancelation", this.recordingActType.IsCancelationActType));
+      json.Add(new JsonItem("IsEndingAct", this.IsEndingAct));
       json.Add(new JsonItem("AllowsPartitions", this.AllowsPartitions));
       json.Add(new JsonItem("AppliesTo", this.AppliesTo.ToString()));
       json.Add(new JsonItem("AutoCancel", this.AutoCancel));
@@ -165,7 +167,7 @@ namespace Empiria.Land.Registration {
     public string SpecialCase {
       get;
       private set;
-    } = "None";
+    } = String.Empty;
 
 
     public bool IsActive {
@@ -173,6 +175,10 @@ namespace Empiria.Land.Registration {
       private set;
     } = false;
 
+    public bool IsEndingAct {
+      get;
+      private set;
+    } = false;
 
     public string DynamicActNamePattern {
       get;

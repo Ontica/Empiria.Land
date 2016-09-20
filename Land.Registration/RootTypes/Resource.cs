@@ -226,13 +226,10 @@ namespace Empiria.Land.Registration {
                        "El folio real '{0}' está marcado como eliminado.", this.UID);
 
       var tract = this.GetRecordingActsTract();
-      if (0 != tract.CountAll((x) => EmpiriaMath.IsMemberOf(x.RecordingActType.Id,
-                                                            new int[] { 2785, 2300, 2786, 2373, 2784, 2218, }) ||
-                                      Resource.IsCancelationRole(x.ResourceRole))) {
+      if (tract.CountAll((x) => x.RecordingActType.RecordingRule.IsEndingAct) != 0) {
         Assertion.AssertFail("El folio real '{0}' ya fue cancelado, fusionado o dividido en su totalidad. " +
                              "Ya no es posible agregarle nuevos actos jurídicos.", this.UID);
       }
-
     }
 
     abstract protected string GenerateResourceUID();
