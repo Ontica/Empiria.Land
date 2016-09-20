@@ -21,6 +21,12 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
+    static public DomainActPartyRole AntecedentOwnerRole {
+      get {
+        return DomainActPartyRole.ParseKey<DomainActPartyRole>("DomainActPartyRole.AntecedentOwner");
+      }
+    }
+
     static public FixedList<DomainActPartyRole> GetList() {
       return GeneralObject.ParseList<DomainActPartyRole>();
     }
