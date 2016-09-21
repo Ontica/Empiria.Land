@@ -342,6 +342,13 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public void SetExtensionData(RecordingActExtData updatedData) {
+      Assertion.Assert(updatedData != null && !updatedData.IsEmptyInstance,
+                       "updatedData can't be null or the empty instance");
+
+      this.ExtensionData = updatedData;
+    }
+
     string IResourceTractItem.TractPrelationStamp {
       get {
         return this.Document.PresentationTime.ToString("yyyyMMddTHH:mm@") +

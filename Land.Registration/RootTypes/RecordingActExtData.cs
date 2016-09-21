@@ -20,8 +20,13 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public RecordingActExtData() {
+    private RecordingActExtData() {
 
+    }
+
+    public RecordingActExtData(Money? appraisalAmount, Money? operationAmount) {
+      this.AppraisalAmount = appraisalAmount.HasValue ? appraisalAmount.Value : Money.Empty;
+      this.OperationAmount = operationAmount.HasValue ? operationAmount.Value : Money.Empty;
     }
 
     static internal RecordingActExtData Parse(string jsonString) {
@@ -30,15 +35,15 @@ namespace Empiria.Land.Registration {
       }
 
       var json = JsonConverter.ToJsonObject(jsonString);
-
       var data = new RecordingActExtData();
+
       data.LoadJson(json);
 
       return data;
     }
 
     static private readonly RecordingActExtData _empty =
-                                new RecordingActExtData() { IsEmptyInstance = true };
+                                                  new RecordingActExtData() { IsEmptyInstance = true };
 
     static public RecordingActExtData Empty {
       get {
@@ -52,13 +57,13 @@ namespace Empiria.Land.Registration {
 
     public Money AppraisalAmount {
       get;
-      set;
+      private set;
     } = Money.Empty;
 
 
     public Money OperationAmount {
       get;
-      set;
+      private set;
     } = Money.Empty;
 
 
