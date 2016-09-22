@@ -14,7 +14,6 @@ using Empiria.Land.Certification;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
-
 namespace Empiria.Land.UI {
 
   /// <summary>Generates a grid HTML content that displays the document and

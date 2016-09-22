@@ -202,8 +202,11 @@ namespace Empiria.Land.Registration {
 
     }
 
-    public void AssertCanBeAddedTo(RecordingDocument document) {
+    public void AssertCanBeAddedTo(RecordingDocument document, RecordingActType newRecordingActType) {
       this.AssertIsLastInPrelationOrder(document);
+
+
+      RecordingAct.AssertChainedRecordingAct(document, newRecordingActType, this);
     }
 
     public void AssertIsLastInPrelationOrder(RecordingDocument document) {

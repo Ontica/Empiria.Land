@@ -156,17 +156,16 @@ namespace Empiria.Land.Registration {
 
     public override void AssertCanBeClosed() {
       Assertion.Assert(!this.RealEstateType.IsEmptyInstance,
-                       "Predio " + this.UID +
-                       ":\n Se requiere proporcionar el tipo de predio.");
+                       "Se requiere proporcionar la información del predio con folio real {0}.", this.UID);
       Assertion.Assert(!this.District.IsEmptyInstance,
                       "Predio " + this.UID +
-                      ":\n Se requiere proporcionar el Distrito judicial al que pertenece el predio.");
+                      ":\nSe requiere proporcionar el Distrito judicial al que pertenece el predio.");
       Assertion.Assert(!this.Municipality.IsEmptyInstance,
                       "Predio " + this.UID +
-                      ":\n Se requiere proporcionar el municipio donde se ubica el predio.");
+                      ":\nSe requiere proporcionar el municipio donde se ubica el predio.");
       Assertion.Assert(this.LotSize != Quantity.Zero,
                       "Predio " + this.UID  +
-                      ":\n Se requiere proporcionar la superficie del predio.");
+                      ":\nSe requiere proporcionar la superficie del predio.");
     }
 
     public bool IsFirstDomainAct(RecordingAct recordingAct) {

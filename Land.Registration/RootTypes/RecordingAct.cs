@@ -10,7 +10,6 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Contacts;
@@ -117,6 +116,34 @@ namespace Empiria.Land.Registration {
       get {
         return (RecordingActType) base.GetEmpiriaType();
       }
+    }
+
+    public bool IsCanceled {
+      get {
+        if (!this.AmendedBy.IsEmptyInstance && this.AmendedBy.RecordingActType.IsCancelationActType) {
+          return true;
+        }
+        return false;
+      }
+    }
+
+    public bool WasAliveOn(DateTime onDate) {
+      if (this.WasCanceledOn(onDate)) {
+        return false;
+      }
+      var autoCancelDays = this.RecordingActType.RecordingRule.AutoCancel;
+      if (autoCancelDays == 0) {
+        return true;
+      }
+      return this.Document.PresentationTime.Date.AddDays(autoCancelDays) >= onDate.Date;
+    }
+
+    public bool WasCanceledOn(DateTime onDate) {
+      if (!this.AmendedBy.IsEmptyInstance && this.AmendedBy.RecordingActType.IsCancelationActType &&
+           this.AmendedBy.Document.PresentationTime > onDate) {
+        return true;
+      }
+      return false;
     }
 
     [DataField("DocumentId")]
@@ -390,23 +417,29 @@ namespace Empiria.Land.Registration {
 
     public void AssertCanBeClosed() {
       var rule = this.RecordingActType.RecordingRule;
+
       if (!this.Resource.IsEmptyInstance) {
         this.RecordingActType.AssertIsApplicableResource(this.Resource);
-        if (this.RecordingActType.RecordingRule.AutoCancel == 0) {
+        if (!this.RecordingActType.RecordingRule.AllowUncompletedResource) {
           this.Resource.AssertCanBeClosed();
         }
       } else {
         Assertion.Assert(rule.AppliesTo == RecordingRuleApplication.NoProperty,
-                         "El acto jurídico  " + this.IndexedName + " debe aplicar a un predio o asociación.");
+                         "El acto jurídico " + this.IndexedName + " debe aplicar a un predio o asociación.");
       }
+
       if (!this.PhysicalRecording.IsEmptyInstance) {
         this.PhysicalRecording.AssertCanBeClosed();
       }
+
+
+      this.AssertIsLastInPrelationOrder();
+
+      this.AssertChainedRecordingAct();
+
       this.ExtensionData.AssertIsComplete(this);
 
       this.AssertParties();
-
-      this.AssertIsLastInPrelationOrder();
     }
 
     internal void AssertCanBeOpened() {
@@ -541,6 +574,59 @@ namespace Empiria.Land.Registration {
 
     #region Private methods
 
+    static internal void AssertChainedRecordingAct(RecordingDocument document, RecordingActType newRecordingActType,
+                                                   Resource resource, int index = int.MaxValue) {
+      if (document.IssueDate < DateTime.Parse("2014-01-01") ||
+        document.PresentationTime < DateTime.Parse("2016-01-01")) {
+        return;
+      }
+
+      var chainedRecordingAct = newRecordingActType.RecordingRule.ChainedRecordingActType;
+
+      if (chainedRecordingAct.Equals(RecordingActType.Empty)) {
+        return;
+      }
+
+      var tract = resource.GetRecordingActsTract();
+
+      if (tract.Count <= 1) {
+        return;
+      }
+
+      var lastAct = tract.FindLast((x) => (x.WasAliveOn(document.PresentationTime) &&
+                                           ((x.Document.PresentationTime < document.PresentationTime &&
+                                             x.Document.IsClosed))
+                                           ));
+      // TODO: Remove this condition when historic recording act edition (adding) is ready
+
+      if (lastAct != null && lastAct.RecordingActType.Equals(RecordingActType.Empty)) {
+        return;
+      }
+      if (lastAct == null || !lastAct.RecordingActType.Equals(chainedRecordingAct)) {
+        Assertion.AssertFail("El acto jurídico " + GetIndexedName(newRecordingActType, index) +
+                             " no pude ser inscrito debido a que el folio real no tiene registrado " +
+                             "un acto VIGENTE de " + chainedRecordingAct.DisplayName + ".\n\n" +
+                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
+                             "Favor de revisar la historia del predio involucrado. Es posible que el trámite donde " +
+                             "viene el acto faltante aún no haya sido procesado o que el documento esté abierto.\n\n" +
+                             "También puede ser que sí esté registrado pero que ya haya vencido o esté cancelado. " +
+                             "En este último caso lo que procede es una devolución del trámite.");
+      }
+    }
+
+    private static string GetIndexedName(RecordingActType newRecordingActType, int index = int.MaxValue) {
+      if (index == int.MaxValue) {
+        return newRecordingActType.DisplayName;
+      } else {
+        return "[" + (index + 1).ToString("00") + "] " + newRecordingActType.DisplayName;
+      }
+    }
+
+    private void AssertChainedRecordingAct() {
+      AssertChainedRecordingAct(this.Document, this.RecordingActType, this.Resource, this.Index);
+    }
+
+
     private void AssertParties() {
       var rule = this.RecordingActType.RecordingRule;
       var parties = this.GetParties();
@@ -549,7 +635,7 @@ namespace Empiria.Land.Registration {
       if (roles.Count == 0 || rule.AllowNoParties || roles.Count == 0) {
         return;
       }
-      Assertion.Assert(parties.Count != 0, "El acto jurídico  " + this.IndexedName +
+      Assertion.Assert(parties.Count != 0, "El acto jurídico " + this.IndexedName +
                                            " requiere cuando menos una persona o propietario.");
       foreach (var role in roles) {
         var found = parties.Contains((x) => x.PartyRole == role);
@@ -557,7 +643,7 @@ namespace Empiria.Land.Registration {
           return;
         }
       }
-      Assertion.AssertFail("En el acto jurídico  " + this.IndexedName +
+      Assertion.AssertFail("En el acto jurídico " + this.IndexedName +
                            " no hay registradas personas o propietarios jugando alguno de" +
                            " los roles obligatorios para dicho tipo de acto.");
     }

@@ -76,6 +76,8 @@ namespace Empiria.Land.Registration {
         this.EditAppraisalAmount = json.Get<bool>("EditAppraisalAmount", false);
         this.EditOperationAmount = json.Get<bool>("EditOperationAmount", false);
         this.AllowNoParties = json.Get<bool>("AllowNoParties", false);
+        this.AllowUncompletedResource = json.Get<bool>("AllowUncompletedResource", false);
+        this.ChainedRecordingActType = json.Get<RecordingActType>("ChainedAct", RecordingActType.Empty);
 
       } catch (Exception e) {
         throw new LandRegistrationException(LandRegistrationException.Msg.MistakeInRecordingRuleConfig, e,
@@ -108,6 +110,7 @@ namespace Empiria.Land.Registration {
       json.Add(new JsonItem("EditAppraisalAmount", this.EditAppraisalAmount));
       json.Add(new JsonItem("EditOperationAmount", this.EditOperationAmount));
       json.Add(new JsonItem("AllowNoParties", this.AllowNoParties));
+      json.Add(new JsonItem("AllowUncompletedResource", this.AllowUncompletedResource));
 
       return json;
     }
@@ -214,6 +217,16 @@ namespace Empiria.Land.Registration {
     }
 
     public bool AllowNoParties {
+      get;
+      private set;
+    }
+
+    public bool AllowUncompletedResource {
+      get;
+      private set;
+    }
+
+    public RecordingActType ChainedRecordingActType {
       get;
       private set;
     }
