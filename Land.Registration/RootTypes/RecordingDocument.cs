@@ -35,7 +35,9 @@ namespace Empiria.Land.Registration {
     #region Constructors and parsers
 
     public RecordingDocument(RecordingDocumentType powerType) : base(powerType) {
-      // Required by Empiria Framework for all partitioned types.
+      if (powerType.Equals(RecordingDocumentType.Empty)) {
+        this.Status = RecordableObjectStatus.Closed;
+      }
     }
 
     static public RecordingDocument Parse(int id) {
@@ -89,7 +91,13 @@ namespace Empiria.Land.Registration {
 
     public bool IsHistoricDocument {
       get {
-        if (this.IsEmptyInstance || this.RecordingActs.Count == 0) {
+        if (this.IsEmptyInstance) {
+          return false;
+        }
+        if (this.DocumentType.Equals(RecordingDocumentType.Empty)) {
+          return true;
+        }
+        if (this.RecordingActs.Count == 0) {
           return false;
         }
         return (!this.RecordingActs[0].PhysicalRecording.IsEmptyInstance);
@@ -264,7 +272,7 @@ namespace Empiria.Land.Registration {
 
     public bool IsClosed {
       get {
-        return this.Status == RecordableObjectStatus.Closed;
+        return (this.Status == RecordableObjectStatus.Closed);
       }
     }
 
@@ -314,8 +322,8 @@ namespace Empiria.Land.Registration {
     /// <returns> The recording act's index inside the RecordingActs collection.</returns>
     internal int AddRecordingAct(RecordingAct recordingAct) {
       Assertion.AssertObject(recordingAct, "recordingAct");
-      Assertion.Assert(!this.IsClosed,
-                       "Recording acts can't be added to closed documents");
+      Assertion.Assert(this.IsHistoricDocument || !this.IsClosed,
+                       "Recording acts can't be added to closed documents.");
 
       recordingActList.Value.Add(recordingAct);
 
@@ -330,14 +338,13 @@ namespace Empiria.Land.Registration {
       physicalRecording = (physicalRecording != null) ? physicalRecording : Recording.Empty;
 
       Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance.");
-      Assertion.Assert(!this.IsClosed,
+      Assertion.Assert(this.IsHistoricDocument || !this.IsClosed,
                        "Recording acts can't be added to closed documents");
 
       Assertion.AssertObject(recordingActType, "recordingActType");
       Assertion.AssertObject(resource, "resource");
       Assertion.AssertObject(amendmentOf, "amendmentOf");
       Assertion.AssertObject(!resource.IsEmptyInstance, "Resource can't be an empty instance.");
-      physicalRecording = ObtainPhysicalRecording(physicalRecording);
 
       if (this.IsNew) {
         this.Save();
@@ -397,20 +404,6 @@ namespace Empiria.Land.Registration {
                              "o quizás se pueda hacer un reingreso si no han transcurrido los " +
                              "90 días de gracia.");
       }
-    }
-
-    private Recording ObtainPhysicalRecording(Recording physicalRecording) {
-      Assertion.AssertObject(physicalRecording, "physicalRecording");
-
-      if (this.IsHistoricDocument) {
-        Recording historicRecording = TryGetHistoricRecording();
-        if (!physicalRecording.IsEmptyInstance) {
-          Assertion.Assert(physicalRecording.Equals(historicRecording),
-                           "physicalRecording is not equal to the document's historic recording.");
-        }
-        return historicRecording;
-      }
-      return physicalRecording;
     }
 
     public void ChangeDocumentType(RecordingDocumentType newRecordingDocumentType) {
@@ -507,11 +500,11 @@ namespace Empiria.Land.Registration {
     public void RemoveRecordingAct(RecordingAct recordingAct) {
       Assertion.AssertObject(recordingAct, "recordingAct");
 
-      Assertion.Assert(!this.IsClosed,
-                       "Recording acts can't be removed from closed documents");
+      Assertion.Assert(this.IsHistoricDocument || !this.IsClosed,
+                       "Recording acts can't be removed from closed documents.");
 
       Assertion.Assert(recordingAct.Document.Equals(this),
-                       "The recording act doesn't belong to this document");
+                       "The recording act doesn't belong to this document.");
 
       recordingAct.Delete();
       recordingActList.Value.Remove(recordingAct);
