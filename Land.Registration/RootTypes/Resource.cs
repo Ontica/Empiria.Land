@@ -204,9 +204,43 @@ namespace Empiria.Land.Registration {
 
     public void AssertCanBeAddedTo(RecordingDocument document, RecordingActType newRecordingActType) {
       this.AssertIsLastInPrelationOrder(document);
+      this.AssertChainedRecordingAct(document, newRecordingActType);
+    }
 
+    private void AssertChainedRecordingAct(RecordingDocument document, RecordingActType newRecordingActType) {
+      if (document.IssueDate < DateTime.Parse("2014-01-01") ||
+          document.PresentationTime < DateTime.Parse("2016-01-01")) {
+        return;
+      }
 
-      RecordingAct.AssertChainedRecordingAct(document, newRecordingActType, this);
+      var chainedRecordingAct = newRecordingActType.RecordingRule.ChainedRecordingActType;
+
+      if (chainedRecordingAct.Equals(RecordingActType.Empty)) {
+        return;
+      }
+
+      var tract = this.GetRecordingActsTract();
+
+      if (tract.Count == 1 && this is RealEstate && !((RealEstate) this).IsPartition) {
+        return;
+      }
+
+      var lastAct = tract.FindLast((x) => (x.WasAliveOn(document.PresentationTime) &&
+                                           !x.RecordingActType.RecordingRule.IsAnnotation &&
+                                           ((x.Document.PresentationTime <= document.PresentationTime &&
+                                             x.Document.IsClosed))
+                                           ));
+
+      if (lastAct == null || !lastAct.RecordingActType.Equals(chainedRecordingAct)) {
+        Assertion.AssertFail("El acto jurídico " + newRecordingActType.DisplayName +
+                             " no pude ser inscrito debido a que el folio real no tiene registrado " +
+                             "un acto VIGENTE de " + chainedRecordingAct.DisplayName + ".\n\n" +
+                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
+                             "Favor de revisar la historia del predio involucrado. Es posible que el trámite donde " +
+                             "viene el acto faltante aún no haya sido procesado o que el documento esté abierto.\n\n" +
+                             "También puede ser que sí esté registrado pero que ya haya vencido o esté cancelado. " +
+                             "En este último caso lo que procede es una devolución del trámite.");
+      }
     }
 
     public void AssertIsLastInPrelationOrder(RecordingDocument document) {

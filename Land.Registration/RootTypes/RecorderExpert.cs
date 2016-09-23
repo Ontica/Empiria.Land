@@ -80,10 +80,27 @@ namespace Empiria.Land.Registration {
 
     public void AssertValidTask() {
       if (!Task.PrecedentProperty.IsEmptyInstance) {
+
+        this.AssertIsApplicableResource(Task.PrecedentProperty);
+
         Task.PrecedentProperty.AssertIsStillAlive();
+
+        if (this.AppliesOverNewPartition && Task.RecordingActType.RecordingRule.HasChainedRule) {
+          var msg = "Este acto no puede aplicar a una nueva fracción ya que requiere " +
+                    "previamente un acto de " + Task.RecordingActType.RecordingRule.ChainedRecordingActType.DisplayName + ".";
+          Assertion.AssertFail(msg);
+        }
         Task.PrecedentProperty.AssertCanBeAddedTo(Task.Document, Task.RecordingActType);
       }
 
+      if ((this.CreateResourceOnNewPhysicalRecording || this.CreateResourceOnExistingPhysicalRecording) &&
+           Task.RecordingActType.RecordingRule.HasChainedRule) {
+          var msg = "Este acto no puede aplicar a una nueva fracción ya que requiere " +
+                    "previamente un acto de " + Task.RecordingActType.RecordingRule.ChainedRecordingActType.DisplayName + ".\n\n" +
+                    "Sabemos que es posible que dicho acto se encuentre registrado en la partida, pero el sistema no tiene esa información.\n\n" +
+                    "Si este es el caso, favor de agregar primero el acto que falta en este documento aclarando dicho asunto en las observaciones.";
+          Assertion.AssertFail(msg);
+      }
       string sMsg = String.Empty;
       if (CreateResourceOnExistingPhysicalRecording) {
         throw new NotImplementedException();
@@ -103,6 +120,22 @@ namespace Empiria.Land.Registration {
     #endregion Public methods
 
     #region Recording methods
+
+    private void AssertIsApplicableResource(Resource resourceToApply) {
+      Assertion.AssertObject(resourceToApply, "resourceToApply");
+
+      switch (Task.RecordingActType.RecordingRule.AppliesTo) {
+        case RecordingRuleApplication.Association:
+          Assertion.Assert(resourceToApply is Association,
+            "Este acto sólo es aplicable a asociaciones. El folio real corresponde a un predio.");
+          return;
+        case RecordingRuleApplication.RealEstate:
+          Assertion.Assert(resourceToApply is RealEstate,
+            "Este acto sólo es aplicable a predios. El folio real corresponde a una asociación.");
+          return;
+      }
+
+    }
 
     private RecordingAct[] ProcessTask() {
       var recordingActType = this.Task.RecordingActType;

@@ -78,6 +78,7 @@ namespace Empiria.Land.Registration {
         this.AllowNoParties = json.Get<bool>("AllowNoParties", false);
         this.AllowUncompletedResource = json.Get<bool>("AllowUncompletedResource", false);
         this.ChainedRecordingActType = json.Get<RecordingActType>("ChainedAct", RecordingActType.Empty);
+        this.IsAnnotation = json.Get<bool>("IsAnnotation", false);
 
       } catch (Exception e) {
         throw new LandRegistrationException(LandRegistrationException.Msg.MistakeInRecordingRuleConfig, e,
@@ -111,6 +112,7 @@ namespace Empiria.Land.Registration {
       json.Add(new JsonItem("EditOperationAmount", this.EditOperationAmount));
       json.Add(new JsonItem("AllowNoParties", this.AllowNoParties));
       json.Add(new JsonItem("AllowUncompletedResource", this.AllowUncompletedResource));
+      json.Add(new JsonItem("IsAnnotation", this.IsAnnotation));
 
       return json;
     }
@@ -204,32 +206,46 @@ namespace Empiria.Land.Registration {
     public bool EditAppraisalAmount {
       get;
       private set;
-    }
+    } = false;
 
     public bool EditOperationAmount {
       get;
       private set;
-    }
+    } = false;
 
     public bool EditRealEstate {
       get;
       private set;
-    }
+    } = false;
 
     public bool AllowNoParties {
       get;
       private set;
-    }
+    } = false;
+
 
     public bool AllowUncompletedResource {
       get;
       private set;
-    }
+    } = false;
+
 
     public RecordingActType ChainedRecordingActType {
       get;
       private set;
+    } = RecordingActType.Empty;
+
+
+    public bool HasChainedRule {
+      get {
+        return !this.ChainedRecordingActType.Equals(RecordingActType.Empty);
+      }
     }
+
+    public bool IsAnnotation {
+      get;
+      private set;
+    } = false;
 
     #endregion Properties
 

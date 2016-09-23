@@ -420,9 +420,6 @@ namespace Empiria.Land.Registration {
 
       if (!this.Resource.IsEmptyInstance) {
         this.RecordingActType.AssertIsApplicableResource(this.Resource);
-        if (!this.RecordingActType.RecordingRule.AllowUncompletedResource) {
-          this.Resource.AssertCanBeClosed();
-        }
       } else {
         Assertion.Assert(rule.AppliesTo == RecordingRuleApplication.NoProperty,
                          "El acto jurídico " + this.IndexedName + " debe aplicar a un predio o asociación.");
@@ -432,14 +429,40 @@ namespace Empiria.Land.Registration {
         this.PhysicalRecording.AssertCanBeClosed();
       }
 
+      this.Resource.AssertIsStillAlive();
 
       this.AssertIsLastInPrelationOrder();
 
+      this.AssertNoTrappedActs();
+
       this.AssertChainedRecordingAct();
 
+      if (!this.RecordingActType.RecordingRule.AllowUncompletedResource) {
+          this.Resource.AssertCanBeClosed();
+      }
       this.ExtensionData.AssertIsComplete(this);
-
       this.AssertParties();
+    }
+
+    private void AssertNoTrappedActs() {
+      var tract = this.Resource.GetRecordingActsTract();
+
+      var trappedAct = tract.Find((x) => x.Document.PresentationTime < this.Document.PresentationTime &&
+                                  !x.Document.IsClosed);
+
+      if (trappedAct != null) {
+        Assertion.AssertFail("Este documento no puede ser cerrado, ya que el acto jurídico\n" +
+                             "{0} hace referencia a un folio real que tiene registrado " +
+                             "movimientos en otro documento que está abierto y que tiene una prelación " +
+                             "anterior al de este.\n\n" +
+                             "Primero debe cerrarse dicho documento para evitar que sus actos " +
+                             "queden atrapados en el orden de prelación y luego no pueda cerrarse.\n\n" +
+                             "El documento en cuestión es el: {1}\n" +
+                             "Lo tiene {2}.",
+                             this.IndexedName, trappedAct.Document.UID,
+                             trappedAct.Document.GetTransaction().Workflow.GetCurrentTask().Responsible.Alias);
+      }
+
     }
 
     internal void AssertCanBeOpened() {
@@ -574,36 +597,32 @@ namespace Empiria.Land.Registration {
 
     #region Private methods
 
-    static internal void AssertChainedRecordingAct(RecordingDocument document, RecordingActType newRecordingActType,
-                                                   Resource resource, int index = int.MaxValue) {
-      if (document.IssueDate < DateTime.Parse("2014-01-01") ||
-        document.PresentationTime < DateTime.Parse("2016-01-01")) {
+    private void AssertChainedRecordingAct() {
+      if (this.Document.IssueDate < DateTime.Parse("2014-01-01") ||
+          this.Document.PresentationTime < DateTime.Parse("2016-01-01")) {
         return;
       }
 
-      var chainedRecordingAct = newRecordingActType.RecordingRule.ChainedRecordingActType;
+      var chainedRecordingAct = this.RecordingActType.RecordingRule.ChainedRecordingActType;
 
       if (chainedRecordingAct.Equals(RecordingActType.Empty)) {
         return;
       }
 
-      var tract = resource.GetRecordingActsTract();
+      var tract = this.Resource.GetRecordingActsTract();
 
-      if (tract.Count <= 1) {
+      if (tract.Count == 1 && this.Resource is RealEstate && !((RealEstate) this.Resource).IsPartition) {
         return;
       }
 
-      var lastAct = tract.FindLast((x) => (x.WasAliveOn(document.PresentationTime) &&
-                                           ((x.Document.PresentationTime < document.PresentationTime &&
+      var lastAct = tract.FindLast((x) => (x.WasAliveOn(this.Document.PresentationTime) &&
+                                           !x.RecordingActType.RecordingRule.IsAnnotation &&
+                                           ((x.Document.PresentationTime <= this.Document.PresentationTime &&
                                              x.Document.IsClosed))
                                            ));
-      // TODO: Remove this condition when historic recording act edition (adding) is ready
 
-      if (lastAct != null && lastAct.RecordingActType.Equals(RecordingActType.Empty)) {
-        return;
-      }
       if (lastAct == null || !lastAct.RecordingActType.Equals(chainedRecordingAct)) {
-        Assertion.AssertFail("El acto jurídico " + GetIndexedName(newRecordingActType, index) +
+        Assertion.AssertFail("El acto jurídico " + this.IndexedName +
                              " no pude ser inscrito debido a que el folio real no tiene registrado " +
                              "un acto VIGENTE de " + chainedRecordingAct.DisplayName + ".\n\n" +
                              "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
@@ -612,18 +631,6 @@ namespace Empiria.Land.Registration {
                              "También puede ser que sí esté registrado pero que ya haya vencido o esté cancelado. " +
                              "En este último caso lo que procede es una devolución del trámite.");
       }
-    }
-
-    private static string GetIndexedName(RecordingActType newRecordingActType, int index = int.MaxValue) {
-      if (index == int.MaxValue) {
-        return newRecordingActType.DisplayName;
-      } else {
-        return "[" + (index + 1).ToString("00") + "] " + newRecordingActType.DisplayName;
-      }
-    }
-
-    private void AssertChainedRecordingAct() {
-      AssertChainedRecordingAct(this.Document, this.RecordingActType, this.Resource, this.Index);
     }
 
 

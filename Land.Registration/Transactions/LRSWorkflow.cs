@@ -245,7 +245,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public void PullToControlDesk(string notes) {
       if (notes.Length == 0) {
-        notes = "Se jaló a la mesa de control";
+        notes = "Se trajo a la mesa de control";
       }
       this.SetNextStatus(LRSTransactionStatus.Control, Person.Empty, notes);
       this.Take(String.Empty);
