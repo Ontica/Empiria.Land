@@ -470,6 +470,11 @@ namespace Empiria.Land.Registration {
     }
 
     public void AssertIsLastInPrelationOrder() {
+
+      if (TlaxcalaOperationalCondition()) {
+        return;
+      }
+
       var fullTract = this.Resource.GetFullRecordingActsTract();
 
       var wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > this.Document.PresentationTime &&
@@ -598,8 +603,11 @@ namespace Empiria.Land.Registration {
     #region Private methods
 
     private void AssertChainedRecordingAct() {
-      if (this.Document.IssueDate < DateTime.Parse("2014-01-01") ||
-          this.Document.PresentationTime < DateTime.Parse("2016-01-01")) {
+      // Fixed rule, based on law
+      if (this.Document.IssueDate < DateTime.Parse("2014-01-01")) {
+        return;
+      }
+      if (TlaxcalaOperationalCondition()) {
         return;
       }
 
@@ -660,7 +668,16 @@ namespace Empiria.Land.Registration {
       this.Save();
     }
 
+    private bool TlaxcalaOperationalCondition() {
+      // Temporarily rule, based on Tlaxcala Recording Office operation
+      if (this.Document.PresentationTime < DateTime.Parse("2016-09-26") && DateTime.Today < DateTime.Parse("2016-10-03")) {
+        return true;
+      }
+      return false;
+    }
+
     #endregion Private methods
+
   } // class RecordingAct
 
 } // namespace Empiria.Land.Registration

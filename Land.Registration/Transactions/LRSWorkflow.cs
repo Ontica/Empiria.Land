@@ -256,16 +256,18 @@ namespace Empiria.Land.Registration.Transactions {
     #region Private methods
 
     private void AssertGraceDaysForReentry() {
-      int graceDaysForReentry = 90;
+      const int graceDaysForReentry = 900;
+
       DateTime lastDate = _transaction.PresentationTime;
       if (_transaction.LastReentryTime != ExecutionServer.DateMaxValue) {
         lastDate = _transaction.LastReentryTime;
       }
       if (lastDate.AddDays(graceDaysForReentry) <= DateTime.Now) {
         Assertion.AssertFail("Por motivos de seguridad y calidad en el registro de la información, " +
-                             "no es posible reingresar trámites después de 90 días contados " +
+                             "no es posible reingresar trámites después de {0} días contados " +
                              "a partir de su fecha de presentación original o de su último reingreso.\n\n" +
-                             "En su lugar se debe optar por registrar un nuevo trámite de aclaración.");
+                             "En su lugar se debe optar por registrar un nuevo trámite de aclaración.",
+                             graceDaysForReentry);
       }
     }
 

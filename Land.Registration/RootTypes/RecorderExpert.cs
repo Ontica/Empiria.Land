@@ -85,6 +85,10 @@ namespace Empiria.Land.Registration {
 
         Task.PrecedentProperty.AssertIsStillAlive();
 
+        if (TlaxcalaOperationalCondition(Task.Document)) {
+          return;
+        }
+
         if (this.AppliesOverNewPartition && Task.RecordingActType.RecordingRule.HasChainedRule) {
           var msg = "Este acto no puede aplicar a una nueva fracción ya que requiere " +
                     "previamente un acto de " + Task.RecordingActType.RecordingRule.ChainedRecordingActType.DisplayName + ".";
@@ -95,7 +99,10 @@ namespace Empiria.Land.Registration {
 
       if ((this.CreateResourceOnNewPhysicalRecording || this.CreateResourceOnExistingPhysicalRecording) &&
            Task.RecordingActType.RecordingRule.HasChainedRule) {
-          var msg = "Este acto no puede aplicar a una nueva fracción ya que requiere " +
+        if (TlaxcalaOperationalCondition(Task.Document)) {
+          return;
+        }
+        var msg = "Este acto no puede aplicar a una nueva fracción ya que requiere " +
                     "previamente un acto de " + Task.RecordingActType.RecordingRule.ChainedRecordingActType.DisplayName + ".\n\n" +
                     "Sabemos que es posible que dicho acto se encuentre registrado en la partida, pero el sistema no tiene esa información.\n\n" +
                     "Si este es el caso, favor de agregar primero el acto que falta en este documento aclarando dicho asunto en las observaciones.";
@@ -447,6 +454,14 @@ namespace Empiria.Land.Registration {
       precedentAct.Save();
 
       return newPhysicalRecording;
+    }
+
+    private bool TlaxcalaOperationalCondition(RecordingDocument document) {
+      // Temporarily rule, based on Tlaxcala Recording Office operation
+      if (document.PresentationTime < DateTime.Parse("2016-09-26") && DateTime.Today < DateTime.Parse("2016-10-03")) {
+        return true;
+      }
+      return false;
     }
 
     #endregion Physical recording methods
