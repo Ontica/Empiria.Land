@@ -9,8 +9,9 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Data;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 using Empiria.Contacts;
 using Empiria.Geography;
@@ -460,6 +461,24 @@ namespace Empiria.Land.Registration {
         }
       }
       return recordingOfficials;
+    }
+
+    public Resource GetUniqueInvolvedResource() {
+      var recordingActs = this.RecordingActs;
+
+      if (recordingActs.Count == 0) {
+        return Resource.Empty;
+      } else if (recordingActs.Count == 1) {
+        return recordingActs[0].Resource;
+      }
+
+      var distinctResources = recordingActs.Select((x) => x.Resource).GroupBy((x) => x.Id).ToList();
+
+      if (distinctResources.Count == 1) {
+        return recordingActs[0].Resource;
+      } else {
+        return Resource.Empty;
+      }
     }
 
     private LRSTransaction _transaction = null;

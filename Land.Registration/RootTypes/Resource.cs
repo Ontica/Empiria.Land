@@ -42,6 +42,12 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    static public Resource Empty {
+      get {
+        return RealEstate.Empty;
+      }
+    }
+
     static public bool IsCancelationRole(ResourceRole resourceRole) {
       return (resourceRole == ResourceRole.Canceled ||
               resourceRole == ResourceRole.MergedInto ||

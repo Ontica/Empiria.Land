@@ -570,7 +570,7 @@ namespace Empiria.Land.Registration {
 
       this.Resource = resource;
       this.ResourceRole = role;
-      this.RelatedResource = relatedResource ?? RealEstate.Empty;
+      this.RelatedResource = relatedResource ?? Resource.Empty;
       this.Percentage = percentage;
 
       this.Index = this.Document.AddRecordingAct(this);

@@ -46,7 +46,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    static public RealEstate Empty {
+    static public new RealEstate Empty {
       get { return BaseObject.ParseEmpty<RealEstate>(); }
     }
 

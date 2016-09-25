@@ -51,7 +51,7 @@ namespace Empiria.Land.Registration {
 
         this.PrecedentProperty = new RealEstate(data);
       } else if (precedentResourceId == -1) {
-        this.PrecedentProperty = RealEstate.Empty;
+        this.PrecedentProperty = Resource.Empty;
       } else {
         this.PrecedentProperty = Resource.Parse(precedentResourceId);
       }
