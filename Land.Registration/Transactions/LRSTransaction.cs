@@ -19,7 +19,7 @@ using Empiria.Security;
 namespace Empiria.Land.Registration.Transactions {
 
   /// <summary>Represents a transaction or process on a land registration office.</summary>
-  public class LRSTransaction : BaseObject, IExtensible<LRSTransactionExtData>, IProtected {
+  public class LRSTransaction : BaseObject, IProtected {
 
     #region Fields
 
@@ -55,21 +55,6 @@ namespace Empiria.Land.Registration.Transactions {
       GeneralList listType = GeneralList.Parse("LRSTransaction.ManagementAgencies.List");
 
       return listType.GetItems<Contact>();
-    }
-
-    protected override void OnInitialize() {
-      recordingActs = new Lazy<LRSTransactionItemList>(() => new LRSTransactionItemList());
-      payments = new Lazy<LRSPaymentList>(() => new LRSPaymentList());
-      workflow = new Lazy<LRSWorkflow>(() => new LRSWorkflow(this));
-    }
-
-    protected override void OnLoadObjectData(System.Data.DataRow row) {
-      recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
-      payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
-      workflow = new Lazy<LRSWorkflow>(
-                            () => LRSWorkflow.Parse(this, (LRSTransactionStatus) Convert.ToChar(row["TransactionStatus"])));
-
-      this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);
     }
 
     #endregion Constructors and parsers
@@ -109,6 +94,12 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+    public Resource BaseResource {
+      get {
+        return this.ExtensionData.BaseResource;
+      }
+    }
+
     [DataField("RecorderOfficeId")]
     public RecorderOffice RecorderOffice {
       get;
@@ -127,11 +118,12 @@ namespace Empiria.Land.Registration.Transactions {
       set;
     }
 
-    private LRSTransactionExtData _extensionData = LRSTransactionExtData.Empty;
+
     public LRSTransactionExtData ExtensionData {
-      get { return _extensionData; }
-      set { _extensionData = value; }
-    }
+      get;
+      private set;
+    } = LRSTransactionExtData.Empty;
+
 
     public bool IsExternalTransaction {
       get {
@@ -139,10 +131,10 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    private LRSExternalTransaction _externalTransaction = LRSExternalTransaction.Empty;
     public LRSExternalTransaction ExternalTransaction {
-      get { return _externalTransaction; }
-      set { _externalTransaction = value; }
+      get {
+        return this.ExtensionData.ExternalTransaction;
+      }
     }
 
     [DataField("TransactionKeywords")]
@@ -195,7 +187,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public DateTime EstimatedDueTime {
       get {
-        return this.PresentationTime.AddDays(2);
+        return this.PresentationTime.AddDays(10);
       }
     }
 
@@ -260,8 +252,7 @@ namespace Empiria.Land.Registration.Transactions {
           "UID", this.UID, "DocumentTypeId", this.DocumentType.Id,
           "DocumentDescriptor", this.DocumentDescriptor, "DocumentId", this.Document.Id,
           "RecorderOfficeId", this.RecorderOffice.Id, "RequestedBy", this.RequestedBy,
-          "AgencyId", this.Agency.Id, "ExternalTransaction", this.ExternalTransaction.ToString(),
-          "ExtensionData", this.ExtensionData.ToString(),
+          "AgencyId", this.Agency.Id, "ExtensionData", this.ExtensionData.ToString(),
           "PresentationTime", this.PresentationTime, "ExpectedDelivery", this.ExpectedDelivery,
           "LastReentryTime", this.LastReentryTime, "ClosingTime", this.ClosingTime,
           "LastDeliveryTime", this.LastDeliveryTime, "NonWorkingTime", this.NonWorkingTime,
@@ -365,7 +356,9 @@ namespace Empiria.Land.Registration.Transactions {
       copy.DocumentDescriptor = this.DocumentDescriptor;
       copy.DocumentType = this.DocumentType;
       copy.RequestedBy = this.RequestedBy;
-      copy.ExtensionData.RequesterNotes = this.ExtensionData.RequesterNotes;
+
+
+      //copy.ExtensionData.RequesterNotes = this.ExtensionData.RequesterNotes;
 
       if (this.IsFeeWaiverApplicable) {
         copy.ApplyFeeWaiver();
@@ -449,6 +442,21 @@ namespace Empiria.Land.Registration.Transactions {
       return Empiria.Land.Data.CertificatesData.GetTransactionIssuedCertificates(this);
     }
 
+    protected override void OnInitialize() {
+      recordingActs = new Lazy<LRSTransactionItemList>(() => new LRSTransactionItemList());
+      payments = new Lazy<LRSPaymentList>(() => new LRSPaymentList());
+      workflow = new Lazy<LRSWorkflow>(() => new LRSWorkflow(this));
+    }
+
+    protected override void OnLoadObjectData(System.Data.DataRow row) {
+      recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
+      payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
+      workflow = new Lazy<LRSWorkflow>(
+                            () => LRSWorkflow.Parse(this, (LRSTransactionStatus) Convert.ToChar(row["TransactionStatus"])));
+
+      this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);
+    }
+
     internal void OnRecordingActsUpdated() {
       recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
       this.UpdateComplexityIndex();
@@ -468,6 +476,12 @@ namespace Empiria.Land.Registration.Transactions {
         var newWorkflow = LRSWorkflow.Create(this);
         workflow = new Lazy<LRSWorkflow>(() => newWorkflow);
       }
+    }
+
+    internal void SetExternalTransaction(LRSExternalTransaction externalTransaction) {
+      Assertion.AssertObject(externalTransaction, "externalTransaction");
+
+      this.ExtensionData.ExternalTransaction = externalTransaction;
     }
 
     #endregion Public methods

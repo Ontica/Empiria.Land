@@ -36,6 +36,10 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+    static internal LRSExternalTransaction Parse(JsonObject jsonObject) {
+      return new LRSExternalTransaction();
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
@@ -142,7 +146,7 @@ namespace Empiria.Land.Registration.Transactions {
       var transaction = new LRSTransaction(this.TransactionType);
 
       transaction.DocumentType = this.DocumentType;
-      transaction.ExternalTransaction = this;
+      transaction.SetExternalTransaction(this);
       transaction.RequestedBy = this.RequestedBy;
       transaction.Agency = this.Agency;
       transaction.DocumentDescriptor = "CITyS-" + this.ExternalTransactionNo;

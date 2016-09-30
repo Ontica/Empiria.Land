@@ -9,26 +9,28 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
 
-using Empiria.Contacts;
-using Empiria.DataTypes;
-using Empiria.Ontology;
+using Empiria.Json;
 
 namespace Empiria.Land.Registration.Transactions {
 
   /// <summary>Contains extensible data for a land registration system transaction.</summary>
-  public class LRSTransactionExtData : IExtensibleData {
+  public class LRSTransactionExtData {
+
+    #region Fields
+
+    private readonly JsonObject _json = new JsonObject();
+
+    #endregion Fields
 
     #region Constructors and parsers
 
-    public LRSTransactionExtData() {
-      this.RequesterEmail = String.Empty;
-      this.RequesterPhone = String.Empty;
-      this.RequesterNotes = String.Empty;
-      this.OfficeNotes = String.Empty;
-      this.ClosingNotes = String.Empty;
-      this.DeliveryNotes = String.Empty;
+    private LRSTransactionExtData(JsonObject json) {
+      this._json = json;
+    }
+
+    public LRSTransactionExtData(Resource baseResource) {
+      this.BaseResource = baseResource;
     }
 
     static internal LRSTransactionExtData Parse(string jsonString) {
@@ -36,22 +38,12 @@ namespace Empiria.Land.Registration.Transactions {
         return LRSTransactionExtData.Empty;
       }
 
-      var json = Empiria.Json.JsonConverter.ToJsonObject(jsonString);
+      var json = JsonConverter.ToJsonObject(jsonString);
 
-      var data = new LRSTransactionExtData();
-      data.RequesterEmail = json.Get<String>("RequesterEmail", String.Empty);
-      data.RequesterPhone = json.Get<String>("RequesterPhone", String.Empty);
-      data.RequesterNotes = json.Get<String>("RequesterNotes", String.Empty);
-      data.OfficeNotes = json.Get<String>("OfficeNotes", String.Empty);
-      data.ClosingNotes = json.Get<String>("ClosingNotes", String.Empty);
-      data.DeliveryNotes = json.Get<String>("DeliveryNotes", String.Empty);
-
-      return data;
+      return new LRSTransactionExtData(json);
     }
 
-    static private readonly LRSTransactionExtData _empty = new LRSTransactionExtData() {
-      IsEmptyInstance = true
-    };
+    static private readonly LRSTransactionExtData _empty = new LRSTransactionExtData(JsonObject.Empty);
 
     static public LRSTransactionExtData Empty {
       get {
@@ -63,70 +55,88 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Properties
 
+    public Resource BaseResource {
+      get {
+        return _json.Get<Resource>("BaseResourceId", Resource.Empty);
+      }
+      private set {
+        _json.SetIfValue("BaseResourceId", value.Id);
+      }
+    }
+
     public string RequesterEmail {
-      get;
-      set;
+      get {
+        return _json.Get<string>("RequesterEmail", String.Empty);
+      }
+      private set {
+        _json.SetIfValue("RequesterEmail", value);
+      }
     }
 
     public string RequesterPhone {
-      get;
-      set;
+      get {
+        return _json.Get<string>("RequesterPhone", String.Empty);
+      }
+      private set {
+        _json.SetIfValue("RequesterPhone", value);
+      }
     }
 
     public string RequesterNotes {
-      get;
-      set;
+      get {
+        return _json.Get<string>("RequesterPhone", String.Empty);
+      }
+      private set {
+        _json.SetIfValue("RequesterPhone", value);
+      }
     }
 
     public string OfficeNotes {
-      get;
-      set;
+      get {
+        return _json.Get<string>("OfficeNotes", String.Empty);
+      }
+      private set {
+        _json.SetIfValue("OfficeNotes", value);
+      }
     }
 
     public string ClosingNotes {
-      get;
-      set;
+      get {
+        return _json.Get<string>("ClosingNotes", String.Empty);
+      }
+      private set {
+        _json.SetIfValue("ClosingNotes", value);
+      }
     }
 
     public string DeliveryNotes {
-      get;
-      set;
+      get {
+        return _json.Get<string>("DeliveryNotes", String.Empty);
+      }
+      private set {
+        _json.SetIfValue("DeliveryNotes", value);
+      }
+    }
+
+    public LRSExternalTransaction ExternalTransaction {
+      get {
+        return LRSExternalTransaction.Parse(_json.Slice("ExternalTransaction", false));
+      }
+      internal set {
+        _json.SetIfValue("ExternalTransaction", value);
+      }
     }
 
     public bool IsEmptyInstance {
       get;
-      private set;
-    }
+    } = false;
 
     #endregion Properties
 
     #region Methods
 
-    public T GetObject<T>(string objectKey) {
-      return default(T);
-    }
-
-    public string ToJson() {
-      if (!this.IsEmptyInstance) {
-        return Empiria.Json.JsonConverter.ToJson(this.GetObject());
-      } else {
-        return String.Empty;
-      }
-    }
-
     public override string ToString() {
-      return this.ToJson().ToString();
-    }
-
-    private object GetObject() {
-      return new {
-        RequesterEmail = this.RequesterEmail,
-        RequesterPhone = this.RequesterPhone,
-        RequesterNotes = this.RequesterNotes,
-        OfficeNotes = this.OfficeNotes,
-        ClosingNotes = this.ClosingNotes,
-        DeliveryNotes = this.DeliveryNotes,
-      };
+      return _json.ToString();
     }
 
     #endregion Methods

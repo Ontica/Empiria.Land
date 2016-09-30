@@ -218,9 +218,9 @@ namespace Empiria.Land.Registration.Data {
 
     static internal DataOperation WriteTransactionOp(LRSTransaction o) {
       return DataOperation.Parse("writeLRSTransaction", o.Id, o.TransactionType.Id, o.UID,
-                  o.DocumentType.Id, o.DocumentDescriptor, o.Document.Id, o.RecorderOffice.Id,
-                  o.RequestedBy, o.Agency.Id, o.ExternalTransaction.ExternalTransactionNo,
-                  o.ExternalTransaction.ToString(), o.ExtensionData.ToString(),
+                  o.DocumentType.Id, o.DocumentDescriptor, o.Document.Id, o.BaseResource.Id,
+                  o.RecorderOffice.Id, o.RequestedBy, o.Agency.Id,
+                  o.ExternalTransaction.ExternalTransactionNo, o.ExtensionData.ToString(),
                   o.Keywords, o.PresentationTime, o.ExpectedDelivery, o.LastReentryTime, o.ClosingTime,
                   o.LastDeliveryTime, o.NonWorkingTime, o.ComplexityIndex, o.IsArchived,
                   (char) o.Workflow.CurrentStatus, o.Integrity.GetUpdatedHashCode());
