@@ -12,7 +12,6 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
-using Empiria.Json;
 using Empiria.Security;
 
 using Empiria.Land.Registration.Data;
@@ -225,8 +224,10 @@ namespace Empiria.Land.Registration {
         return;
       }
 
+
       var tract = this.GetRecordingActsTract();
 
+      // This rule doesn't apply to new registered resources
       if (tract.Count == 1 && this is RealEstate && !((RealEstate) this).IsPartition) {
         return;
       }
@@ -234,18 +235,16 @@ namespace Empiria.Land.Registration {
       var lastAct = tract.FindLast((x) => (x.WasAliveOn(document.PresentationTime) &&
                                            !x.RecordingActType.RecordingRule.IsAnnotation &&
                                            ((x.Document.PresentationTime <= document.PresentationTime &&
-                                             x.Document.IsClosed))
+                                             (x.Document.IsClosed || x.Document.Equals(document))))
                                            ));
 
       if (lastAct == null || !lastAct.RecordingActType.Equals(chainedRecordingAct)) {
-        Assertion.AssertFail("El acto jurídico " + newRecordingActType.DisplayName +
-                             " no pude ser inscrito debido a que el folio real no tiene registrado " +
-                             "un acto VIGENTE de " + chainedRecordingAct.DisplayName + ".\n\n" +
+        Assertion.AssertFail("El acto jurídico {0} no puede ser inscrito debido a que el folio real '{1}' " +
+                             "no tiene registrado previamente un acto de: '{2}'.\n\n" +
                              "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
-                             "Favor de revisar la historia del predio involucrado. Es posible que el trámite donde " +
-                             "viene el acto faltante aún no haya sido procesado o que el documento esté abierto.\n\n" +
-                             "También puede ser que sí esté registrado pero que ya haya vencido o esté cancelado. " +
-                             "En este último caso lo que procede es una devolución del trámite.");
+                             "Favor de revisar la historia del folio real involucrado. Es posible que el trámite donde " +
+                             "viene el acto faltante aún no haya sido procesado o que el documento esté abierto.",
+                             newRecordingActType.DisplayName, this.UID, chainedRecordingAct.DisplayName);
       }
     }
 
@@ -256,22 +255,22 @@ namespace Empiria.Land.Registration {
                                                      x.Document.IsClosed);
 
       if (wrongPrelation) {
-        Assertion.AssertFail("El folio real " + this.UID +
-                             " tiene registrado cuando menos otro acto jurídico con una prelación posterior " +
-                             "a la de este documento.\n\n" +
+        Assertion.AssertFail("El folio real '{0}' tiene registrado cuando menos otro acto jurídico " +
+                             "con una prelación posterior a la fecha de presentación de este documento.\n\n" +
                              "Por lo anterior, no es posible agregarlo en este documento.\n\n" +
-                             "Favor de revisar que se trate del predio correcto.");
+                             "Favor de revisar la historia del predio.", this.UID);
       }
     }
 
-    internal void AssertIsStillAlive() {
+    internal void AssertIsStillAlive(RecordingDocument document) {
       Assertion.Assert(this.Status != RecordableObjectStatus.Deleted,
                        "El folio real '{0}' está marcado como eliminado.", this.UID);
 
       var tract = this.GetRecordingActsTract();
-      if (tract.CountAll((x) => x.RecordingActType.RecordingRule.IsEndingAct) != 0) {
+      if (0 != tract.CountAll((x) => x.RecordingActType.RecordingRule.IsEndingAct &&
+                                     x.Document.PresentationTime < document.PresentationTime)) {
         Assertion.AssertFail("El folio real '{0}' ya fue cancelado, fusionado o dividido en su totalidad. " +
-                             "Ya no es posible agregarle nuevos actos jurídicos.", this.UID);
+                             "Ya no es posible agregarlo en este documento.", this.UID);
       }
     }
 

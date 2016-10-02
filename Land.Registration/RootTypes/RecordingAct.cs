@@ -422,14 +422,15 @@ namespace Empiria.Land.Registration {
         this.RecordingActType.AssertIsApplicableResource(this.Resource);
       } else {
         Assertion.Assert(rule.AppliesTo == RecordingRuleApplication.NoProperty,
-                         "El acto jurídico " + this.IndexedName + " debe aplicar a un predio o asociación.");
+                         "El acto jurídico " + this.IndexedName +
+                         " sólo puede aplicarse al folio real de un predio o asociación.");
       }
 
       if (!this.PhysicalRecording.IsEmptyInstance) {
         this.PhysicalRecording.AssertCanBeClosed();
       }
 
-      this.Resource.AssertIsStillAlive();
+      this.Resource.AssertIsStillAlive(this.Document);
 
       this.AssertIsLastInPrelationOrder();
 
@@ -438,7 +439,7 @@ namespace Empiria.Land.Registration {
       this.AssertChainedRecordingAct();
 
       if (!this.RecordingActType.RecordingRule.AllowUncompletedResource) {
-          this.Resource.AssertCanBeClosed();
+        this.Resource.AssertCanBeClosed();
       }
       this.ExtensionData.AssertIsComplete(this);
       this.AssertParties();
@@ -482,14 +483,12 @@ namespace Empiria.Land.Registration {
 
       if (wrongPrelation) {
         Assertion.AssertFail("El acto jurídico " + this.IndexedName +
-                             " hace referencia a un predio o sociedad que tiene registrado " +
+                             " hace referencia a un folio real que tiene registrado " +
                              "cuando menos otro acto jurídico con una prelación posterior " +
                              "a la de este documento.\n\n" +
                              "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
-                             "Favor de revisar la historia del predio involucrado, quizás lo que " +
-                             "procede es iniciar un nuevo trámite de aclaración.");
+                             "Favor de revisar la historia del predio involucrado.");
       }
-
     }
 
     public void ChangeStatusTo(RecordableObjectStatus newStatus) {
@@ -566,7 +565,7 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(decimal.Zero < percentage && percentage <= decimal.One,
                        "Percentage should be set between zero and one inclusive.");
 
-      resource.AssertIsStillAlive();
+      resource.AssertIsStillAlive(this.Document);
 
       this.Resource = resource;
       this.ResourceRole = role;
@@ -603,41 +602,36 @@ namespace Empiria.Land.Registration {
     #region Private methods
 
     private void AssertChainedRecordingAct() {
-      // Fixed rule, based on law
-      if (this.Document.IssueDate < DateTime.Parse("2014-01-01")) {
-        return;
-      }
       if (TlaxcalaOperationalCondition()) {
         return;
       }
 
-      var chainedRecordingAct = this.RecordingActType.RecordingRule.ChainedRecordingActType;
+      var chainedRecordingActType = this.RecordingActType.RecordingRule.ChainedRecordingActType;
 
-      if (chainedRecordingAct.Equals(RecordingActType.Empty)) {
+      if (chainedRecordingActType.Equals(RecordingActType.Empty)) {
         return;
       }
 
-      var tract = this.Resource.GetRecordingActsTract();
+      var tract = this.Resource.GetRecordingActsTractUntil(this, false);
 
-      if (tract.Count == 1 && this.Resource is RealEstate && !((RealEstate) this.Resource).IsPartition) {
+      // This rule doesn't apply to new registered resources
+      if ((tract.Count == 0) && this.Resource is RealEstate && !((RealEstate) this.Resource).IsPartition) {
         return;
       }
 
       var lastAct = tract.FindLast((x) => (x.WasAliveOn(this.Document.PresentationTime) &&
                                            !x.RecordingActType.RecordingRule.IsAnnotation &&
                                            ((x.Document.PresentationTime <= this.Document.PresentationTime &&
-                                             x.Document.IsClosed))
+                                            (x.Document.IsClosed || x.Document.Equals(this.Document))))
                                            ));
 
-      if (lastAct == null || !lastAct.RecordingActType.Equals(chainedRecordingAct)) {
+      if (lastAct == null || !lastAct.RecordingActType.Equals(chainedRecordingActType)) {
         Assertion.AssertFail("El acto jurídico " + this.IndexedName +
                              " no pude ser inscrito debido a que el folio real no tiene registrado " +
-                             "un acto VIGENTE de " + chainedRecordingAct.DisplayName + ".\n\n" +
+                             "un acto de: '" + chainedRecordingActType.DisplayName + "'.\n\n" +
                              "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
                              "Favor de revisar la historia del predio involucrado. Es posible que el trámite donde " +
-                             "viene el acto faltante aún no haya sido procesado o que el documento esté abierto.\n\n" +
-                             "También puede ser que sí esté registrado pero que ya haya vencido o esté cancelado. " +
-                             "En este último caso lo que procede es una devolución del trámite.");
+                             "viene el acto faltante aún no haya sido procesado o que el documento esté abierto.");
       }
     }
 
@@ -669,8 +663,13 @@ namespace Empiria.Land.Registration {
     }
 
     private bool TlaxcalaOperationalCondition() {
+      // Fixed rule, based on law
+      if (this.Document.IssueDate < DateTime.Parse("2014-01-01")) {
+        return true;
+      }
+
       // Temporarily rule, based on Tlaxcala Recording Office operation
-      if (this.Document.PresentationTime < DateTime.Parse("2016-09-26") && DateTime.Today < DateTime.Parse("2016-10-03")) {
+      if (this.Document.PresentationTime < DateTime.Parse("2016-09-26") && DateTime.Today < DateTime.Parse("2016-10-02")) {
         return true;
       }
       return false;

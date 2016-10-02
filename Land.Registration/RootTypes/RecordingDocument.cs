@@ -361,7 +361,7 @@ namespace Empiria.Land.Registration {
 
     public void AssertCanBeClosed() {
       if (!this.IsReadyToClose()) {
-        Assertion.AssertFail("El usuario tiene permisos para cerrar el documento o éste no tiene un estado válido.");
+        Assertion.AssertFail("El usuario no tiene permisos para cerrar el documento o éste no tiene un estado válido.");
       }
 
       //this.AssertGraceDaysForEdition();
@@ -416,7 +416,6 @@ namespace Empiria.Land.Registration {
       this.ExtensionData = RecordingDocumentExtData.Empty;
       this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
     }
-
 
     public void Close() {
       this.AssertCanBeClosed();

@@ -83,15 +83,15 @@ namespace Empiria.Land.Registration {
 
         this.AssertIsApplicableResource(Task.PrecedentProperty);
 
-        Task.PrecedentProperty.AssertIsStillAlive();
+        Task.PrecedentProperty.AssertIsStillAlive(Task.Document);
 
         if (TlaxcalaOperationalCondition(Task.Document)) {
           return;
         }
 
         if (this.AppliesOverNewPartition && Task.RecordingActType.RecordingRule.HasChainedRule) {
-          var msg = "Este acto no puede aplicar a una nueva fracción ya que requiere " +
-                    "previamente un acto de " + Task.RecordingActType.RecordingRule.ChainedRecordingActType.DisplayName + ".";
+          var msg = "Este acto no puede aplicarse a una nueva fracción ya que requiere " +
+                    "previamente un acto de: '" + Task.RecordingActType.RecordingRule.ChainedRecordingActType.DisplayName + "'.";
           Assertion.AssertFail(msg);
         }
         Task.PrecedentProperty.AssertCanBeAddedTo(Task.Document, Task.RecordingActType);
@@ -102,12 +102,13 @@ namespace Empiria.Land.Registration {
         if (TlaxcalaOperationalCondition(Task.Document)) {
           return;
         }
-        var msg = "Este acto no puede aplicar a una nueva fracción ya que requiere " +
-                    "previamente un acto de " + Task.RecordingActType.RecordingRule.ChainedRecordingActType.DisplayName + ".\n\n" +
-                    "Sabemos que es posible que dicho acto se encuentre registrado en la partida, pero el sistema no tiene esa información.\n\n" +
-                    "Si este es el caso, favor de agregar primero el acto que falta en este documento aclarando dicho asunto en las observaciones.";
+        var msg = "Este acto no puede aplicarse a una nueva fracción ya que requiere " +
+                  "previamente un acto de: '" + Task.RecordingActType.RecordingRule.ChainedRecordingActType.DisplayName + "'.\n\n" +
+                  "Es posible que dicho acto se encuentre registrado en la partida, pero el sistema no tiene esa información.\n\n" +
+                  "Si este es el caso, favor de agregar primero el acto que falta en este documento aclarando dicho asunto en las observaciones.";
           Assertion.AssertFail(msg);
       }
+
       string sMsg = String.Empty;
       if (CreateResourceOnExistingPhysicalRecording) {
         throw new NotImplementedException();
@@ -122,6 +123,7 @@ namespace Empiria.Land.Registration {
 
         throw new NotImplementedException(sMsg);
       }
+
     }
 
     #endregion Public methods
@@ -457,8 +459,13 @@ namespace Empiria.Land.Registration {
     }
 
     private bool TlaxcalaOperationalCondition(RecordingDocument document) {
+      // Fixed rule, based on law
+      if (document.IssueDate < DateTime.Parse("2014-01-01")) {
+        return true;
+      }
+
       // Temporarily rule, based on Tlaxcala Recording Office operation
-      if (document.PresentationTime < DateTime.Parse("2016-09-26") && DateTime.Today < DateTime.Parse("2016-10-03")) {
+      if (document.PresentationTime < DateTime.Parse("2016-09-26") && DateTime.Today < DateTime.Parse("2016-10-01")) {
         return true;
       }
       return false;
