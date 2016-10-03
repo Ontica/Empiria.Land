@@ -24,13 +24,13 @@ namespace Empiria.Land.Registration {
     internal DomainAct(RecordingActType recordingActType,
                        RecordingDocument document, RealEstate property,
                        decimal percentage = decimal.One) : base(recordingActType, document) {
-      this.AttachProperty(property, percentage);
+      this.AttachRealEstate(property, percentage);
     }
 
     internal DomainAct(RecordingActType recordingActType, RecordingDocument document,
                        RealEstate property, Recording physicalRecording,
                        decimal percentage = decimal.One) : base(recordingActType, document, physicalRecording) {
-      this.AttachProperty(property, percentage);
+      this.AttachRealEstate(property, percentage);
     }
 
     static public new DomainAct Parse(int id) {
@@ -41,12 +41,12 @@ namespace Empiria.Land.Registration {
 
     #region Private methods
 
-    private void AttachProperty(RealEstate property, decimal percentage) {
+    private void AttachRealEstate(RealEstate property, decimal percentage) {
       Assertion.AssertObject(property, "property");
 
       var tract = property.GetRecordingActsTract();
 
-      this.AssertNotLimitationActs(tract);
+      this.AssertNoLimitationActs(tract);
 
       if (tract.Count != 0) {     // This is not the first act of the real estate
         base.SetResource(property, ResourceRole.Informative, percentage: percentage);
@@ -60,7 +60,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    private void AssertNotLimitationActs(FixedList<RecordingAct> tract) {
+    private void AssertNoLimitationActs(FixedList<RecordingAct> tract) {
       //var limitationActs = tract.FindAll((x) => x.RecordingActType.IsLimitationActType);
 
       //if (limitationActs.Count > 0) {

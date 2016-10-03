@@ -27,14 +27,14 @@ namespace Empiria.Land.Registration {
                             Resource resource) : base(recordingActType, document) {
       recordingActType.AssertIsApplicableResource(resource);
 
-      base.SetResource(resource);
+      this.AttachResource(resource);
     }
 
     internal InformationAct(RecordingActType recordingActType, RecordingDocument document,
                             Resource resource, Recording physicalRecording)
                                       : base(recordingActType, document, physicalRecording) {
       recordingActType.AssertIsApplicableResource(resource);
-      base.SetResource(resource);
+      this.AttachResource(resource);
     }
 
     static public new InformationAct Parse(int id) {
@@ -42,6 +42,36 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Constructors and parsers
+
+    #region Private methods
+
+    private void AttachResource(Resource resource) {
+      if (resource is RealEstate) {
+        this.SetRealEstate((RealEstate) resource);
+      } else {
+        base.SetResource(resource);
+      }
+    }
+
+
+    private void SetRealEstate(RealEstate property) {
+      Assertion.AssertObject(property, "property");
+
+      var tract = property.GetRecordingActsTract();
+
+      if (tract.Count != 0) {     // This is not the first act of the real estate
+        base.SetResource(property, ResourceRole.Informative);
+        return;
+      }
+
+      if (property.IsPartition) {
+        base.SetResource(property, ResourceRole.PartitionOf, property.IsPartitionOf);
+      } else {
+        base.SetResource(property, ResourceRole.Created);
+      }
+    }
+
+    #endregion Private methods
 
   } // class InformationAct
 
