@@ -153,6 +153,23 @@ namespace Empiria.Land.Certification {
       private set;
     }
 
+    public string StatusName {
+      get {
+        switch (this.Status) {
+          case CertificateStatus.Canceled:
+            return "Cancelado";
+          case CertificateStatus.Closed:
+            return "Cerrado";
+          case CertificateStatus.Deleted:
+            return "Eliminado";
+          case CertificateStatus.Pending:
+            return "En elaboración";
+          default:
+            throw Assertion.AssertNoReachThisCode("Unrecognized certificate status.");
+        }
+      }
+    }
+
     string IResourceTractItem.TractPrelationStamp {
       get {
         return this.Transaction.PresentationTime.ToString("yyyyMMddTHH:mm@") +

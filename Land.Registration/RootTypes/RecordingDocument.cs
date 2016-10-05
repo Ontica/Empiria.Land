@@ -448,6 +448,28 @@ namespace Empiria.Land.Registration {
       DocumentsData.SaveImagingControlID(this);
     }
 
+    public string GetDigitalSeal() {
+      var transaction = this.GetTransaction();
+
+      string s = "||" + transaction.UID + "|" + this.UID;
+      for (int i = 0; i < this.RecordingActs.Count; i++) {
+        s += "|" + this.RecordingActs[i].Id.ToString();
+      }
+      s += "||";
+
+      return Cryptographer.CreateDigitalSign(s);
+    }
+
+    public string GetDigitalSignature() {
+      var transaction = this.GetTransaction();
+
+      string s = "||" + transaction.UID + "|" + this.UID;
+      for (int i = 0; i < this.RecordingActs.Count; i++) {
+        s += "|" + this.RecordingActs[i].Id.ToString();
+      }
+      return Cryptographer.CreateDigitalSign(s + "eSign");
+    }
+
     public List<Contact> GetRecordingOfficials() {
       var recordingOfficials = new List<Contact>();
 

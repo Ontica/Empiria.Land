@@ -108,6 +108,7 @@
     <Compile Include="Models\ExternalCertificateType.cs" />
     <Compile Include="Models\CertificateRequest.cs" />
     <Compile Include="Models\PendingNoteRequest.cs" />
+    <Compile Include="Models\PropertyBagItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
