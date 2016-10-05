@@ -621,8 +621,10 @@ namespace Empiria.Land.Registration {
 
       var lastAct = tract.FindLast((x) => (x.WasAliveOn(this.Document.PresentationTime) &&
                                            !x.RecordingActType.RecordingRule.IsAnnotation &&
-                                           ((x.Document.PresentationTime <= this.Document.PresentationTime &&
-                                            (x.Document.IsClosed || x.Document.Equals(this.Document))))
+                                           !x.RecordingActType.IsCancelationActType &&
+                                           !x.RecordingActType.IsModificationActType &&
+                                           x.Document.PresentationTime < this.Document.PresentationTime &&
+                                           x.Document.IsClosed
                                            ));
 
       if (lastAct == null || !lastAct.RecordingActType.Equals(chainedRecordingActType)) {
