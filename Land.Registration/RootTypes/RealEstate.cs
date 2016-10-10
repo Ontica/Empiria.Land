@@ -168,6 +168,27 @@ namespace Empiria.Land.Registration {
                       ":\nSe requiere proporcionar la superficie del predio.");
     }
 
+    public string AsText() {
+      if (this.RealEstateType.IsEmptyInstance) {
+        return "Información disponible únicamente en documentos físicos.";
+      }
+
+      const string template = "predio denominado {0}, de tipo {1}";
+      return String.Format(template, this.Name, this.RealEstateType.Name);
+    }
+
+    public bool HasHardLimitationActs {
+      get {
+        var tract = this.GetRecordingActsTract();
+
+        var lastAct = tract.FindLast((x) => (x.WasAliveOn(DateTime.Now) &&
+                                             x.RecordingActType.RecordingRule.IsHardLimitation &&
+                                             x.Document.IsClosed
+                                             ));
+        return lastAct != null;
+      }
+    }
+
     public bool IsFirstDomainAct(RecordingAct recordingAct) {
       var list = this.GetRecordingActsTract();
 
@@ -182,6 +203,45 @@ namespace Empiria.Land.Registration {
 
     protected override string GenerateResourceUID() {
       return TransactionData.GeneratePropertyUID();
+    }
+
+    public FixedList<RecordingAct> GetHardLimitationActs() {
+      var tract = this.GetRecordingActsTract();
+
+      tract = tract.FindAll((x) => (x.WasAliveOn(DateTime.Now) &&
+                                    x.RecordingActType.RecordingRule.IsHardLimitation &&
+                                    x.Document.IsClosed
+                            ));
+      return tract;
+    }
+
+    public RecordingAct LastDomainAct {
+      get {
+        var tract = this.GetRecordingActsTract();
+
+        var lastDomainAct = tract.FindLast((x) => x.WasAliveOn(DateTime.Now) &&
+                                            x.RecordingActType.IsDomainActType &&
+                                            x.Document.IsClosed);
+        return lastDomainAct;
+      }
+    }
+
+    public string CurrentOwners {
+      get {
+        var parties = this.LastDomainAct.GetParties();
+
+        parties = parties.FindAll((x) => x.PartyOf.IsEmptyInstance);
+
+        string temp = String.Empty;
+
+        foreach (var party in parties) {
+          if (temp.Length != 0) {
+            temp += ", ";
+          }
+          temp += party.Party.FullName;
+        }
+        return temp;
+      }
     }
 
     public RealEstate[] GetPartitions() {

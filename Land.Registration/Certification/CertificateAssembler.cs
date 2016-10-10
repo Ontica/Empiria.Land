@@ -22,6 +22,78 @@ namespace Empiria.Land.Certification {
 
     #region Certificate public methods related with CertificateDTO
 
+    static public Certificate AutoCreate(LRSTransaction transaction,
+                                         string certificateType,
+                                         RealEstate property, string ownerName) {
+
+      CertificateDTO data = new CertificateDTO();
+
+      switch (certificateType) {
+        case "gravamen":
+          if (property.HasHardLimitationActs) {
+            data.CertificateTypeUID = "ObjectType.LandCertificate.Gravamen";
+            data.MarginalNotes = AutoFillMarginalNotes(property.GetHardLimitationActs());
+            ownerName = property.CurrentOwners;
+          } else {
+            data.CertificateTypeUID = "ObjectType.LandCertificate.LibertadGravamen";
+            ownerName = property.CurrentOwners;
+          }
+          break;
+        case "inscripción":
+          data.CertificateTypeUID = "ObjectType.LandCertificate.Inscripción";
+          ownerName = property.CurrentOwners;
+          break;
+        case "no-propiedad":
+          data.CertificateTypeUID = "ObjectType.LandCertificate.NoPropiedad";
+          break;
+      }
+      data.TransactionUID = transaction.UID;
+
+      data.RecorderOfficeId = 101;
+      data.SeekForName = ownerName;
+      data.FromOwnerName = ownerName;
+      data.ToOwnerName = ownerName;
+      data.StartingYear = 1976;
+      data.PropertyUID = property.UID;
+      data.PropertyMetesAndBounds = property.MetesAndBounds;
+      data.PropertyLocation = property.LocationReference +
+                              " en el municipio de " + property.Municipality.FullName;
+      data.PropertyCommonName = property.AsText();
+
+      data.Operation = property.LastDomainAct.DisplayName.ToUpperInvariant();
+      data.OperationDate = property.LastDomainAct.Document.AuthorizationTime;
+
+      var assembler = new CertificateAssembler(data);
+      var newCertificate = assembler.CreateCertificate();
+
+      newCertificate.OwnerName = ownerName;
+      newCertificate.Save();
+      newCertificate.Close();
+
+      return newCertificate;
+    }
+
+    private static string AutoFillMarginalNotes(FixedList<RecordingAct> recordingActs) {
+      const string template = "{0} registrado el día {1} bajo el número de documento electrónico {2}";
+
+      string notes = String.Empty;
+
+      foreach (var act in recordingActs) {
+        string temp = String.Format(template, act.DisplayName,
+                                    EmpiriaString.SpeechDate(act.Document.AuthorizationTime),
+                                    act.Document.UID);
+        if (act.RecordingActType.RecordingRule.IsHardLimitation) {
+          var p = act.GetParties().Find((x) => !x.PartyOf.IsEmptyInstance);
+          if (p != null) {
+            temp += " a favor de " + p.Party.FullName;
+          }
+        }
+        notes += temp + ".\n";
+      }
+      return notes;
+    }
+
+
     /// <summary>Creates a certificate with the data contained in a CertificateDTO.</summary>
     static public Certificate Create(CertificateDTO data) {
       Assertion.AssertObject(data, "data");

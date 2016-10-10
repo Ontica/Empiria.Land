@@ -79,6 +79,7 @@ namespace Empiria.Land.Registration {
         this.AllowUncompletedResource = json.Get<bool>("AllowUncompletedResource", false);
         this.ChainedRecordingActType = json.Get<RecordingActType>("ChainedAct", RecordingActType.Empty);
         this.IsAnnotation = json.Get<bool>("IsAnnotation", false);
+        this.IsHardLimitation = json.Get<bool>("IsHardLimitation", false);
 
       } catch (Exception e) {
         throw new LandRegistrationException(LandRegistrationException.Msg.MistakeInRecordingRuleConfig, e,
@@ -113,6 +114,7 @@ namespace Empiria.Land.Registration {
       json.Add(new JsonItem("AllowNoParties", this.AllowNoParties));
       json.Add(new JsonItem("AllowUncompletedResource", this.AllowUncompletedResource));
       json.Add(new JsonItem("IsAnnotation", this.IsAnnotation));
+      json.Add(new JsonItem("IsHardLimitation", this.IsHardLimitation));
 
       return json;
     }
@@ -243,6 +245,12 @@ namespace Empiria.Land.Registration {
     }
 
     public bool IsAnnotation {
+      get;
+      private set;
+    } = false;
+
+
+    public bool IsHardLimitation {
       get;
       private set;
     } = false;
