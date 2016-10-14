@@ -113,7 +113,7 @@ namespace Empiria.Land.WebApi.Models {
 
     #region Public methods
 
-    protected override void AssertIsValid() {
+    public override void AssertIsValid() {
       base.AssertIsValid();
 
       this.CleanData();

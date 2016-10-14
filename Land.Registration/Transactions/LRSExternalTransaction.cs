@@ -37,7 +37,15 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static internal LRSExternalTransaction Parse(JsonObject jsonObject) {
-      return new LRSExternalTransaction();
+      var transaction = new LRSExternalTransaction();
+
+      transaction.ExternalTransactionNo = jsonObject.Get<string>("ExternalTransactionNo", String.Empty);
+      transaction.ExternalTransactionTime = jsonObject.Get<DateTime>("ExternalTransactionTime", ExecutionServer.DateMaxValue);
+      transaction.PaymentAmount = jsonObject.Get<decimal>("PaymentAmount", 0m);
+      transaction.PaymentReceiptNo = jsonObject.Get<string>("PaymentReceiptNo", String.Empty);
+      transaction.RequestedBy = jsonObject.Get<string>("RequestedBy", String.Empty);
+
+      return transaction;
     }
 
     #endregion Constructors and parsers
@@ -114,7 +122,8 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    protected virtual void AssertIsValid() {
+
+    public virtual void AssertIsValid() {
       this.ExternalTransactionNo = EmpiriaString.TrimAll(this.ExternalTransactionNo).ToUpperInvariant();
       this.PaymentReceiptNo = EmpiriaString.TrimAll(this.PaymentReceiptNo);
       this.RequestedBy = EmpiriaString.TrimAll(this.RequestedBy).ToUpperInvariant();
@@ -166,6 +175,7 @@ namespace Empiria.Land.Registration.Transactions {
     public virtual JsonObject ToJson() {
       var json = new JsonObject();
 
+      json.Add(new JsonItem("ExternalTransactionNo", this.ExternalTransactionNo));
       json.Add(new JsonItem("ExternalTransactionTime", this.ExternalTransactionTime));
       json.Add(new JsonItem("PaymentAmount", this.PaymentAmount));
       json.Add(new JsonItem("PaymentReceiptNo", this.PaymentReceiptNo));

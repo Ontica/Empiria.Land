@@ -57,6 +57,11 @@ namespace Empiria.Land.WebApi {
         var dryRun = base.Request.RequestUri.Query.Contains("dry-run");
 
         base.RequireBody(certificateRequest);
+        certificateRequest.AssertIsValid();
+
+        if (dryRun) {
+          return new SingleObjectModel(this.Request, new object());
+        }
 
         var transaction = certificateRequest.CreateTransaction();
 
@@ -73,6 +78,13 @@ namespace Empiria.Land.WebApi {
     public SingleObjectModel RequestPendingNoteRecording([FromBody] PendingNoteRequest pendingNoteRequest) {
       try {
         var dryRun = base.Request.RequestUri.Query.Contains("dry-run");
+
+        base.RequireBody(pendingNoteRequest);
+        pendingNoteRequest.AssertIsValid();
+
+        if (dryRun) {
+          return new SingleObjectModel(this.Request, new object());
+        }
 
         base.RequireBody(pendingNoteRequest);
 
