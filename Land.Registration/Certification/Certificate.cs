@@ -269,6 +269,17 @@ namespace Empiria.Land.Certification {
       this.Save();
     }
 
+    public void Delete() {
+      Assertion.Assert(this.Status == CertificateStatus.Pending,
+                      "This certificate can't be deleted. It's not in pending status.");
+
+      this.UserNotes += "Eliminado por " + Contact.Parse(EmpiriaUser.Current.Id).Alias +
+                        " el " + DateTime.Now.ToShortDateString() + " a las " +
+                        DateTime.Now.ToShortTimeString() + @"\n\n";
+      this.Status = CertificateStatus.Deleted;
+      this.Save();
+    }
+
     public string GetDigitalSeal() {
       if (this.Status == CertificateStatus.Pending) {
         return "* * * * CERTIFICADO EN PROCESO DE ELABORACIÓN * * * *";
@@ -302,7 +313,11 @@ namespace Empiria.Land.Certification {
 
       int removeThisCharacters = 72;
 
-      return s.Substring(s.Length - removeThisCharacters);
+      if (this.IssueTime < DateTime.Parse("2016-11-20")) {
+        return s.Substring(s.Length - removeThisCharacters);
+      } else {
+        return s.Substring(0, 64);
+      }
     }
 
     public void Open() {
@@ -324,15 +339,12 @@ namespace Empiria.Land.Certification {
       this.Save();
     }
 
-    public void Delete() {
-      Assertion.Assert(this.Status == CertificateStatus.Pending,
-                      "This certificate can't be deleted. It's not in pending status.");
-
-      this.UserNotes += "Eliminado por " + Contact.Parse(EmpiriaUser.Current.Id).Alias +
-                        " el " + DateTime.Now.ToShortDateString() + " a las " +
-                        DateTime.Now.ToShortTimeString() + @"\n\n";
-      this.Status = CertificateStatus.Deleted;
-      this.Save();
+    public string QRCodeSecurityHash() {
+      if (!this.IsNew) {
+        return Cryptographer.CreateHashCode(this.Id.ToString("00000000"), this.UID);
+      } else {
+        return String.Empty;
+      }
     }
 
     #endregion Public methods

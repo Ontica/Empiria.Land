@@ -51,6 +51,23 @@ namespace Empiria.Land.Certification {
 
       var o = this.Certificate;
 
+      template.Replace("{{QR.CODE.SOURCE}}",
+                       "{{QR.CODE.SERVICE.URL}}?size=120&data={{EXTRANET.SERVER.URL}}?" +
+                        "type=certificate%26uid={{NUMERO.CERTIFICADO}}");
+
+      if (!o.Property.IsEmptyInstance) {
+        template.Replace("{{RESOURCE.QR.CODE.SOURCE}}",
+                         "{{QR.CODE.SERVICE.URL}}?size=120&data={{EXTRANET.SERVER.URL}}?" +
+                         "type=resource%26uid={{FOLIO REAL}}");
+        template.Replace("{{DISPLAY.RESOURCE.QR.CODE}}", "inline");
+      } else {
+        template.Replace("{{RESOURCE.QR.CODE.SOURCE}}", String.Empty);
+        template.Replace("{{DISPLAY.RESOURCE.QR.CODE}}", "none");
+      }
+
+      template.Replace("{{QR.CODE.SERVICE.URL}}", ConfigurationData.GetString("QRCodeServiceURL"));
+      template.Replace("{{EXTRANET.SERVER.URL}}", ConfigurationData.GetString("ExtranetServerURL"));
+
       template.Replace("{{DOCUMENT.OR.PHYSICAL.RECORDING}}", this.GetDocumentOrPhysicalRecording());
       template.Replace("{{NUMERO.CERTIFICADO}}", o.UID);
       template.Replace("{{TIPO.CERTIFICADO}}",
@@ -183,11 +200,10 @@ namespace Empiria.Land.Certification {
       if (document.AuthorizationTime != ExecutionServer.DateMinValue) {
         text.Replace("{{DATE}}", document.AuthorizationTime.ToString("dd \\de MMMM \\de yyyy"));
 
-        return text.ToString();
       } else {
         text.Replace("{{DATE}}", AsWarning("FECHA DE INSCRIPCIÓN NO DETERMINADA"));
-        return text.ToString();
       }
+      return text.ToString();
     }
 
     #endregion Private methods

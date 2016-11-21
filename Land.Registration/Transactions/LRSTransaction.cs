@@ -478,6 +478,14 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+    public string QRCodeSecurityHash() {
+      if (!this.IsNew) {
+        return Cryptographer.CreateHashCode(this.Id.ToString("00000000"), this.UID);
+      } else {
+        return String.Empty;
+      }
+    }
+
     internal void SetExternalTransaction(LRSExternalTransaction externalTransaction) {
       Assertion.AssertObject(externalTransaction, "externalTransaction");
 

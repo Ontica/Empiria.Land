@@ -592,6 +592,13 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public string QRCodeSecurityHash() {
+      if (!this.IsNew) {
+        return Cryptographer.CreateHashCode(this.Id.ToString("00000000"), this.UID);
+      } else {
+        return String.Empty;
+      }
+    }
 
     public ImagingItem TryGetAuxiliarImageSet() {
       if (this.ExtensionData.AuxiliarImageSetId != -1) {
