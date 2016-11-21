@@ -183,7 +183,7 @@ namespace Empiria.Land.Registration.Data {
         useLetters = !useLetters;
       }
       string prefix = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
-      temp = prefix + temp;
+      temp = "TR-" + temp.Substring(0, 5) + "-" + temp.Substring(5, 5);
       hashCode = (hashCode * Convert.ToInt32(prefix[0])) % 49;
       hashCode = (hashCode * Convert.ToInt32(prefix[1])) % 53;
 
