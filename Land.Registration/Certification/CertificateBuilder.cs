@@ -53,13 +53,14 @@ namespace Empiria.Land.Certification {
 
       template.Replace("{{QR.CODE.SOURCE}}",
                        "{{QR.CODE.SERVICE.URL}}?size=120&data={{EXTRANET.SERVER.URL}}?" +
-                        "type=certificate%26uid={{NUMERO.CERTIFICADO}}");
+                        "type=certificate%26uid={{NUMERO.CERTIFICADO}}%26hash={{QR.CODE.HASH}}");
 
       if (!o.Property.IsEmptyInstance) {
         template.Replace("{{RESOURCE.QR.CODE.SOURCE}}",
                          "{{QR.CODE.SERVICE.URL}}?size=120&data={{EXTRANET.SERVER.URL}}?" +
-                         "type=resource%26uid={{FOLIO REAL}}");
+                         "type=resource%26uid={{FOLIO REAL}}%26hash={{RESOURCE.QR.CODE.HASH}}");
         template.Replace("{{DISPLAY.RESOURCE.QR.CODE}}", "inline");
+        template.Replace("{{RESOURCE.QR.CODE.HASH}}", o.Property.QRCodeSecurityHash());
       } else {
         template.Replace("{{RESOURCE.QR.CODE.SOURCE}}", String.Empty);
         template.Replace("{{DISPLAY.RESOURCE.QR.CODE}}", "none");
@@ -76,6 +77,8 @@ namespace Empiria.Land.Certification {
       template.Replace("{{FECHA.EXPEDICION}}", this.GetIssueDate());
       template.Replace("{{CADENA.ORIGINAL}}", this.GetDigitalSeal());
       template.Replace("{{SELLO.DIGITAL}}", this.GetDigitalSignature());
+      template.Replace("{{QR.CODE.HASH}}", this.Certificate.QRCodeSecurityHash());
+
 
       template.Replace("{{SOLICITANTE}}", o.ExtensionData.SeekForName.ToUpperInvariant());
       template.Replace("{{DISTRITO}}", o.RecorderOffice.Alias);

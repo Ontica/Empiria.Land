@@ -341,7 +341,10 @@ namespace Empiria.Land.Certification {
 
     public string QRCodeSecurityHash() {
       if (!this.IsNew) {
-        return Cryptographer.CreateHashCode(this.Id.ToString("00000000"), this.UID);
+        return Cryptographer.CreateHashCode(this.Id.ToString("00000000") +
+                                            this.IssueTime.Ticks.ToString(), this.UID)
+                                            .Substring(0, 8)
+                                            .ToUpperInvariant();
       } else {
         return String.Empty;
       }
