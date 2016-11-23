@@ -368,7 +368,7 @@ namespace Empiria.Land.Certification {
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
         this.UID = CertificatesData.BuildCertificateUID();
       }
-      if (this.Status != CertificateStatus.Deleted ||
+      if (this.Status != CertificateStatus.Deleted &&
           this.Status != CertificateStatus.Canceled) {
         this.AsText = CertificateBuilder.Build(this);
       }

@@ -49,18 +49,18 @@ namespace Empiria.Land.WebApi {
                                               "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
                                               certificateUID);
 
-        } else if (certificate != null && hash.Length != 0 && hash != certificate.QRCodeSecurityHash()) {
-          throw new ResourceNotFoundException("Land.Certificate.InvalidQRCode",
-                                              "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                              "referencia al certificado con número '{0}' que está registrado en nuestros archivos " +
-                                              "pero el código de validación del QR no es correcto.\n\n" +
-                                              "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
-                                              "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                              certificateUID);
+        //} else if (certificate != null && hash.Length != 0 && hash != certificate.QRCodeSecurityHash()) {
+        //  throw new ResourceNotFoundException("Land.Certificate.InvalidQRCode",
+        //                                      "El código QR que está impreso en su documento y que acaba de escanear hace " +
+        //                                      "referencia al certificado con número '{0}' que está registrado en nuestros archivos " +
+        //                                      "pero el código de validación del QR no es correcto.\n\n" +
+        //                                      "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
+        //                                      "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
+        //                                      certificateUID);
 
         }
 
-        return new SingleObjectModel(this.Request, BuildCertificateResponse(certificate),
+        return new SingleObjectModel(this.Request, BuildCertificateResponse(certificate, hash),
                                      "Empiria.PropertyBag");
 
       } catch (Exception e) {
@@ -192,32 +192,42 @@ namespace Empiria.Land.WebApi {
 
     #region Private methods
 
-    private List<PropertyBagItem> BuildCertificateResponse(Certificate certificate) {
+    private List<PropertyBagItem> BuildCertificateResponse(Certificate certificate, string hash) {
       var propertyBag = new List<PropertyBagItem>(16);
 
       propertyBag.Add(new PropertyBagItem("Información del certificado", String.Empty, "new-section"));
       propertyBag.Add(new PropertyBagItem("Número de certificado", certificate.UID, "enhanced-text"));
       propertyBag.Add(new PropertyBagItem("Tipo de certificado", certificate.CertificateType.DisplayName, "enhanced-text"));
-      propertyBag.Add(new PropertyBagItem("Fecha de expedición", certificate.IssueTime, "date-time"));
-      propertyBag.Add(new PropertyBagItem("Sello digital", certificate.GetDigitalSeal(), "mono-space-text"));
-      propertyBag.Add(new PropertyBagItem("Firma digital",
-                                          EmpiriaString.DivideLongString(certificate.GetDigitalSignature(), 32, " "),
-                                          "mono-space-text"));
-      propertyBag.Add(new PropertyBagItem("Elaborado por", certificate.IssuedBy.Nickname));
+      propertyBag.Add(new PropertyBagItem("Fecha de expedición", GetDateTime(certificate.IssueTime), "date-time"));
+      propertyBag.Add(new PropertyBagItem("Elaborado por", certificate.IssuedBy.Alias));
       propertyBag.Add(new PropertyBagItem("Estado del certificado", certificate.StatusName, "ok-status-text"));
+
+      propertyBag.Add(new PropertyBagItem("Verificación de elementos de seguridad", String.Empty, "new-section"));
+      if (hash.Length != 0) {
+        propertyBag.Add(new PropertyBagItem("Código de verificación", hash, "bold-text"));
+        //propertyBag.Add(new PropertyBagItem("Código de verificación", certificate.QRCodeSecurityHash(), "bold-text"));
+      }
+
+      propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(certificate.GetDigitalSignature()), "mono-space-text"));
+      propertyBag.Add(new PropertyBagItem("Firma digital", "Documento firmado de forma autógrafa."));
 
       if (!certificate.Property.IsEmptyInstance) {
         propertyBag.Add(new PropertyBagItem("Certificado expedido sobre el predio", String.Empty, "new-section"));
-        propertyBag.Add(new PropertyBagItem("Folio real", certificate.Property.UID, "enhanced-text"));
-        propertyBag.Add(new PropertyBagItem("Clave catastral", certificate.Property.CadastralKey, "bold-text"));
+        propertyBag.Add(new PropertyBagItem("Folio real", certificate.Property.UID + "<br/>" +
+                                            GetResourceLink(certificate.Property.UID), "enhanced-text"));
+
+        propertyBag.Add(new PropertyBagItem("Clave catastral",
+                                             certificate.Property.CadastralKey.Length != 0 ?
+                                             certificate.Property.CadastralKey : "Clave catastral no proporcionada.", "bold-text"));
         propertyBag.Add(new PropertyBagItem("Descripción", certificate.Property.AsText()));
       }
 
       propertyBag.Add(new PropertyBagItem("Información del trámite", String.Empty, "new-section"));
-      propertyBag.Add(new PropertyBagItem("Número de trámite", certificate.Transaction.UID, "bold-text"));
+      propertyBag.Add(new PropertyBagItem("Número de trámite", certificate.Transaction.UID + "<br/>" +
+                                          GetTransactionLink(certificate.Transaction.UID), "bold-text"));
       propertyBag.Add(new PropertyBagItem("Solicitado por", certificate.Transaction.RequestedBy));
-      propertyBag.Add(new PropertyBagItem("Fecha de presentación", certificate.Transaction.PresentationTime, "date-time"));
-      propertyBag.Add(new PropertyBagItem("Estado del trámite", certificate.Transaction.Workflow.CurrentStatusName, "warning-status-text"));
+      propertyBag.Add(new PropertyBagItem("Fecha de presentación", GetDateTime(certificate.Transaction.PresentationTime), "date-time"));
+      propertyBag.Add(new PropertyBagItem("Estado del trámite", certificate.Transaction.Workflow.CurrentStatusName, "ok-status-text"));
 
       return propertyBag;
     }
@@ -247,17 +257,28 @@ namespace Empiria.Land.WebApi {
 
       propertyBag.Add(new PropertyBagItem("Información del predio", String.Empty, "new-section"));
       propertyBag.Add(new PropertyBagItem("Folio real", property.UID, "enhanced-text"));
-      propertyBag.Add(new PropertyBagItem("Clave catastral", property.CadastralKey, "bold-text"));
+      propertyBag.Add(new PropertyBagItem("Clave catastral",
+                                           property.CadastralKey.Length != 0 ?
+                                           property.CadastralKey : "Clave catastral no proporcionada.", "bold-text"));
       propertyBag.Add(new PropertyBagItem("Descripción", property.LocationReference));
 
-      var tract = property.GetRecordingActsTract();
-
+      var tract = property.GetRecordingActsTract().FindAll( (x) => !x.RecordingActType.Equals(RecordingActType.Empty) &&
+                                                                    x.Document.AuthorizationTime != ExecutionServer.DateMinValue);
       if (tract.Count != 0) {
         propertyBag.Add(new PropertyBagItem("Últimos actos jurídicos del predio", String.Empty, "new-section"));
+
+        tract.Reverse();
         foreach (var act in tract) {
           propertyBag.Add(new PropertyBagItem(act.Document.AuthorizationTime.ToString("dd/MMM/yyyy"),
                                               act.DisplayName));
         }
+      }
+      if (!property.FirstRecordingAct.PhysicalRecording.IsEmptyInstance) {
+        propertyBag.Add(new PropertyBagItem("Partida origen del predio en libros físicos", String.Empty, "new-section"));
+        propertyBag.Add(new PropertyBagItem("Partida", property.FirstRecordingAct.PhysicalRecording.AsText));
+        propertyBag.Add(new PropertyBagItem("Nota importante","Los datos de la partida sólo se muestran con fines informativos.<br/>" +
+                                            "A partir del año 2015 todos los predios se deben identificar mediante su folio real, " +
+                                            "no con la partida que tenían en libros físicos."));
       }
 
       return propertyBag;
@@ -269,16 +290,15 @@ namespace Empiria.Land.WebApi {
       propertyBag.Add(new PropertyBagItem("Información del documento", String.Empty, "new-section"));
       propertyBag.Add(new PropertyBagItem("Sello registral número", document.UID, "bold-text"));
       propertyBag.Add(new PropertyBagItem("Tipo de documento", document.DocumentType.DisplayName, "bold-text"));
-      propertyBag.Add(new PropertyBagItem("Fecha de presentación", document.PresentationTime, "date-time"));
-      propertyBag.Add(new PropertyBagItem("Fecha de registro", document.AuthorizationTime, "date"));
-      propertyBag.Add(new PropertyBagItem("Sello digital", EmpiriaString.DivideLongString(document.GetDigitalSeal(), 32, " "),
-                                          "mono-space-text"));
-      propertyBag.Add(new PropertyBagItem("Firma digital",
-                                          EmpiriaString.DivideLongString(document.GetDigitalSignature(), 32, " "),
-                                          "mono-space-text"));
-      propertyBag.Add(new PropertyBagItem("Elaborado por", document.IssuedBy.Nickname));
-      propertyBag.Add(new PropertyBagItem("Estado del documento", document.Status, "ok-status-text"));
-      propertyBag.Add(new PropertyBagItem("Resumen", document.Notes));
+      propertyBag.Add(new PropertyBagItem("Fecha de presentación", GetDateTime(document.PresentationTime), "date-time"));
+      propertyBag.Add(new PropertyBagItem("Fecha de registro", GetDateTime(document.AuthorizationTime), "date"));
+      propertyBag.Add(new PropertyBagItem("Elaborado por", document.IssuedBy.Alias));
+      propertyBag.Add(new PropertyBagItem("Resumen", document.Notes, "small-text"));
+
+      propertyBag.Add(new PropertyBagItem("Verificación de elementos de seguridad", String.Empty, "new-section"));
+      propertyBag.Add(new PropertyBagItem("Código de verificación", document.QRCodeSecurityHash(), "bold-text"));
+      propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(document.GetDigitalSeal()), "mono-space-text"));
+      propertyBag.Add(new PropertyBagItem("Firma digital", "Documento firmado de forma autógrafa."));
 
       if (document.RecordingActs.Count > 0) {
         propertyBag.Add(new PropertyBagItem("Actos jurídicos registrados", String.Empty, "new-section"));
@@ -287,11 +307,15 @@ namespace Empiria.Land.WebApi {
         }
       }
       var uniqueResource = document.GetUniqueInvolvedResource();
-      if (!uniqueResource.Equals(Resource.Empty)) {
+      if (!uniqueResource.Equals(Resource.Empty) && uniqueResource is RealEstate) {
         propertyBag.Add(new PropertyBagItem("Documento registral expedido sobre el folio real", String.Empty, "new-section"));
-        propertyBag.Add(new PropertyBagItem("Folio real", uniqueResource.UID, "enhanced-text"));
-        //propertyBag.Add(new PropertyBagItem("Clave catastral", uniqueResource.CadastralKey, "bold-text"));
-        //propertyBag.Add(new PropertyBagItem("Descripción", uniqueResource.LocationReference));
+        propertyBag.Add(new PropertyBagItem("Folio real", uniqueResource.UID + "<br/>" +
+                                            GetResourceLink(uniqueResource.UID), "enhanced-text"));
+
+        propertyBag.Add(new PropertyBagItem("Clave catastral",
+                                             ((RealEstate) uniqueResource).CadastralKey.Length != 0 ?
+                                             ((RealEstate) uniqueResource).CadastralKey : "Clave catastral no proporcionada.", "bold-text"));
+        propertyBag.Add(new PropertyBagItem("Descripción", ((RealEstate) uniqueResource).AsText()));
       }
       return propertyBag;
     }
@@ -301,16 +325,106 @@ namespace Empiria.Land.WebApi {
       var propertyBag = new List<PropertyBagItem>(16);
 
       propertyBag.Add(new PropertyBagItem("Información del trámite", String.Empty, "new-section"));
-      propertyBag.Add(new PropertyBagItem("Número de trámite", transaction.UID, "bold-text"));
-      propertyBag.Add(new PropertyBagItem("Tipo de trámite", transaction.TransactionType.Name));
+      propertyBag.Add(new PropertyBagItem("Número de trámite", transaction.UID, "enhanced-text"));
+      propertyBag.Add(new PropertyBagItem("Tipo de trámite", transaction.TransactionType.Name, "bold-text"));
+      propertyBag.Add(new PropertyBagItem("Tipo de documento", transaction.DocumentType.Name));
       propertyBag.Add(new PropertyBagItem("Solicitado por", transaction.RequestedBy));
-      propertyBag.Add(new PropertyBagItem("Fecha de presentación", transaction.PresentationTime, "date-time"));
-      propertyBag.Add(new PropertyBagItem("Boleta de pago", transaction.Payments.ReceiptNumbers));
-      propertyBag.Add(new PropertyBagItem("Pago de derechos por", transaction.Payments.Total, "money"));
-      propertyBag.Add(new PropertyBagItem("Estado del trámite", transaction.Workflow.CurrentStatusName, "warning-status-text"));
-      propertyBag.Add(new PropertyBagItem("Fecha de entrega", transaction.ClosingTime, "date"));
+
+      if (transaction.PresentationTime != ExecutionServer.DateMaxValue) {
+        propertyBag.Add(new PropertyBagItem("Fecha de presentación", GetDateTime(transaction.PresentationTime), "bold-text"));
+      } else {
+        propertyBag.Add(new PropertyBagItem("Fecha de presentación",
+                                            "Este trámite no ha sido ingresado en ventanilla.", "warning-status-text"));
+      }
+
+      if (transaction.Payments.Count > 0 && transaction.Payments.Total != decimal.Zero) {
+        propertyBag.Add(new PropertyBagItem("Pago de derechos",
+                                            transaction.Payments.Total.ToString("C2"), "bold-text"));
+        propertyBag.Add(new PropertyBagItem("Boleta de pago", transaction.Payments.ReceiptNumbers));
+
+      } else if (transaction.Items.TotalFee.Total > 0) {
+        propertyBag.Add(new PropertyBagItem("Derechos a pagar",
+                                            transaction.Items.TotalFee.Total.ToString("C2"), "bold-text"));
+
+      } else if (transaction.IsFeeWaiverApplicable) {
+        propertyBag.Add(new PropertyBagItem("Pago de derechos", "Este trámite no requiere pago alguno."));
+      } else {
+        propertyBag.Add(new PropertyBagItem("Pago de derechos", "Este trámite no pagó derechos.", "warning-status-text"));
+        //propertyBag.Add(new PropertyBagItem("Atendió", transaction.PostedBy.Alias));
+      }
+
+      if (transaction.PresentationTime == ExecutionServer.DateMaxValue) {
+        // no-op
+      } else if (transaction.Workflow.Delivered) {
+        propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                            transaction.Workflow.CurrentStatusName, "ok-status-text"));
+        propertyBag.Add(new PropertyBagItem("Fecha de entrega", GetDateTime(transaction.LastDeliveryTime)));
+      } else if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Archived) {
+        propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                            transaction.Workflow.CurrentStatusName, "ok-status-text"));
+        propertyBag.Add(new PropertyBagItem("Fecha de entrega",
+                                            "Por su naturaleza, este trámite se procesa pero no se entrega al interesado."));
+
+      } else if (transaction.Workflow.IsArchivable) {
+        propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                            transaction.Workflow.CurrentStatusName, "in-process-status-text"));
+        propertyBag.Add(new PropertyBagItem("Fecha de entrega", "Este trámite se procesa pero no se entrega al interesado."));
+
+      } else if (transaction.Workflow.IsReadyForDelivery) {
+        propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                            transaction.Workflow.CurrentStatusName, "ok-status-text"));
+        propertyBag.Add(new PropertyBagItem("Fecha de entrega",
+                                            "<b>¡Su trámite está listo!</b><br />" +
+                                            "Ya puede pasar a recoger sus documentos.", "ok-status-text"));
+
+      } else {
+        propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                            transaction.Workflow.CurrentStatusName, "in-process-status-text"));
+
+        if (transaction.EstimatedDueTime < DateTime.Today) {
+          propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada",
+                                              transaction.EstimatedDueTime.ToString("dd/MMM/yyyy") + " (atrasado)<br/>" +
+                                              "Lo sentimos, este trámite nos ha llevado hacerlo un poco más de lo normal.",
+                                              "warning-status-text"));
+        } else {
+          propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada",
+                                              transaction.EstimatedDueTime.ToString("dd/MMM/yyyy")));
+        }
+      }
+
+      if (transaction.Items.Count > 0) {
+        propertyBag.Add(new PropertyBagItem("Conceptos", String.Empty, "new-section"));
+        foreach (var item in transaction.Items) {
+          propertyBag.Add(new PropertyBagItem(item.TransactionItemType.DisplayName,
+                                              item.Fee.Total.ToString("C2")));
+        }
+      }
 
       return propertyBag;
+    }
+
+    private string GetDateTime(DateTime dateTime) {
+      var temp = dateTime.ToString("dd/MMM/yyyy a la\\s HH:mm");
+
+      return temp.Replace(".", String.Empty) + " hrs.";
+    }
+
+    private string GetDigitalText(string sign) {
+      return EmpiriaString.DivideLongString(sign.Substring(0, 64), 34, "&#8203;");
+    }
+
+    private string GetResourceLink(string resourceUID) {
+      const string link =
+          "<a href='http://registropublico.tlaxcala.gob.mx/consultas/?type=resource&uid={0}'>Consultar este folio real</a>";
+
+      return String.Format(link, resourceUID);
+    }
+
+    private string GetTransactionLink(string transactionUID) {
+      const string link =
+          "<a href='http://registropublico.tlaxcala.gob.mx/consultas/?type=transaction&uid={0}'>Consultar este trámite</a>";
+
+      return String.Format(link, transactionUID);
     }
 
     #endregion Private methods
