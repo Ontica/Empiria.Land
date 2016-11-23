@@ -71,6 +71,12 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+    public bool IsArchivable {
+      get {
+        return LRSWorkflowRules.IsArchivable(_transaction.TransactionType,
+                                             _transaction.DocumentType);
+      }
+    }
 
     public bool IsEmptyItemsTransaction {
       get {
@@ -78,6 +84,20 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+    public bool IsReadyForDelivery {
+      get {
+        return (this.CurrentStatus == LRSTransactionStatus.ToDeliver ||
+                this.CurrentStatus == LRSTransactionStatus.ToReturn);
+      }
+    }
+
+
+    public bool Delivered {
+      get {
+        return (this.CurrentStatus == LRSTransactionStatus.Delivered ||
+                this.CurrentStatus == LRSTransactionStatus.Returned);
+      }
+    }
 
     public bool IsReadyForReentry {
       get {
@@ -256,7 +276,7 @@ namespace Empiria.Land.Registration.Transactions {
     #region Private methods
 
     private void AssertGraceDaysForReentry() {
-      const int graceDaysForReentry = 900;
+      const int graceDaysForReentry = 90;
 
       DateTime lastDate = _transaction.PresentationTime;
       if (_transaction.LastReentryTime != ExecutionServer.DateMaxValue) {

@@ -322,7 +322,7 @@ namespace Empiria.Land.Registration.Transactions {
         case LRSTransactionStatus.Deleted:
           return "Trámite eliminado";
         case LRSTransactionStatus.Archived:
-          return "Archivado";
+          return "Archivado/Concluido";
         default:
           return "No determinado";
       }
@@ -335,9 +335,10 @@ namespace Empiria.Land.Registration.Transactions {
         }
       }
       if (ExecutionServer.LicenseName == "Tlaxcala") {
-        if (type.Id == 699 || type.Id == 704 || (type.Id == 706 &&
-           EmpiriaMath.IsMemberOf(docType.Id, new int[] { 733, 734, 736, 737, 738, 739, 740,
-                                                          741, 742, 744, 755, 756 }))) {
+        if ((type.Id == 699 && docType.Id == 757) ||
+             type.Id == 704 ||
+             (type.Id == 706 && EmpiriaMath.IsMemberOf(docType.Id, new int[] { 733, 734, 736, 737, 738, 739, 740,
+                                                                               741, 742, 744, 755, 756 }))) {
           return true;
         }
       }

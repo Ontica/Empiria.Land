@@ -187,7 +187,17 @@ namespace Empiria.Land.Registration.Transactions {
 
     public DateTime EstimatedDueTime {
       get {
-        return this.PresentationTime.AddDays(10);
+        int addedDays = (this.TransactionType.Id == 699 || this.TransactionType.Id == 702) ? 2 : 7;
+        DateTime date = this.PresentationTime.Date.AddDays(addedDays);
+        if (this.PresentationTime.Hour > 12) {
+          addedDays++;
+        }
+        if (date.DayOfWeek == DayOfWeek.Saturday) {
+          date = date.AddDays(2);
+        } else if (date.DayOfWeek == DayOfWeek.Sunday) {
+          date = date.AddDays(1);
+        }
+        return date;
       }
     }
 
