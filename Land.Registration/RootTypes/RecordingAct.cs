@@ -476,6 +476,11 @@ namespace Empiria.Land.Registration {
         return;
       }
 
+      // Cancelation acts don't follow prelation rules
+      if (this.RecordingActType.IsCancelationActType) {
+        return;
+      }
+
       var fullTract = this.Resource.GetFullRecordingActsTract();
 
       var wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > this.Document.PresentationTime &&
@@ -667,6 +672,11 @@ namespace Empiria.Land.Registration {
     private bool TlaxcalaOperationalCondition() {
       // Fixed rule, based on law
       if (this.Document.IssueDate < DateTime.Parse("2014-01-01")) {
+        return true;
+      }
+
+      // Temporarily rule, based on Tlaxcala Recording Office operation
+      if (this.Document.PresentationTime < DateTime.Parse("2016-10-01")) {
         return true;
       }
 

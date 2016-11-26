@@ -34,7 +34,7 @@ namespace Empiria.Land.Registration {
 
     static public RecordingDocumentType Empty {
       get {
-        return RecordingDocumentType.Parse("ObjectType.RecordingDocument");
+        return RecordingDocumentType.Parse("ObjectType.RecordingDocument.Empty");
       }
     }
 

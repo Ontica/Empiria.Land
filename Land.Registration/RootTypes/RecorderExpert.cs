@@ -465,6 +465,11 @@ namespace Empiria.Land.Registration {
       }
 
       // Temporarily rule, based on Tlaxcala Recording Office operation
+      if (document.PresentationTime < DateTime.Parse("2016-10-01")) {
+        return true;
+      }
+
+      // Temporarily rule, based on Tlaxcala Recording Office operation
       if (document.PresentationTime < DateTime.Parse("2016-09-26") && DateTime.Today < DateTime.Parse("2016-10-01")) {
         return true;
       }

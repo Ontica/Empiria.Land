@@ -276,7 +276,7 @@ namespace Empiria.Land.Registration.Transactions {
     #region Private methods
 
     private void AssertGraceDaysForReentry() {
-      const int graceDaysForReentry = 90;
+      int graceDaysForReentry = ConfigurationData.GetInteger("GraceDaysForReentry");
 
       DateTime lastDate = _transaction.PresentationTime;
       if (_transaction.LastReentryTime != ExecutionServer.DateMaxValue) {

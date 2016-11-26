@@ -208,7 +208,7 @@ namespace Empiria.Land.Registration {
     }
 
     public void AssertCanBeAddedTo(RecordingDocument document, RecordingActType newRecordingActType) {
-      this.AssertIsLastInPrelationOrder(document);
+      this.AssertIsLastInPrelationOrder(document, newRecordingActType);
       this.AssertChainedRecordingAct(document, newRecordingActType);
     }
 
@@ -250,8 +250,13 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public void AssertIsLastInPrelationOrder(RecordingDocument document) {
+    public void AssertIsLastInPrelationOrder(RecordingDocument document, RecordingActType newRecordingActType) {
       var fullTract = this.GetRecordingActsTract();
+
+      // Cancelation acts don't follow prelation rules
+      if (newRecordingActType.IsCancelationActType) {
+        return;
+      }
 
       var wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > document.PresentationTime &&
                                                      x.Document.IsClosed);
@@ -410,6 +415,14 @@ namespace Empiria.Land.Registration {
 
     protected override void OnSave() {
       Assertion.AssertNoReachThisCode();
+    }
+
+    public string QRCodeSecurityHash() {
+      if (!this.IsNew) {
+        return Cryptographer.CreateHashCode(this.Id.ToString("00000000"), this.UID).Substring(0, 8);
+      } else {
+        return String.Empty;
+      }
     }
 
     internal void TryDelete() {
