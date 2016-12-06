@@ -521,7 +521,7 @@ namespace Empiria.Land.Registration {
       this.ExtensionData = new RecordingDocumentExtData();
       this.Number = String.Empty;
       this.ExpedientNo = String.Empty;
-      recordingActList = new Lazy<List<RecordingAct>>(() => RecordingActsData.GetRecordingActs(this));
+      recordingActList = new Lazy<List<RecordingAct>>(() => RecordingActsData.GetDocumentRecordingActs(this));
     }
 
     protected override void OnLoadObjectData(DataRow row) {

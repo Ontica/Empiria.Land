@@ -179,7 +179,7 @@ namespace Empiria.Land.Registration {
 
     public bool HasHardLimitationActs {
       get {
-        var tract = this.GetRecordingActsTract();
+        var tract = base.Tract.GetRecordingActs();
 
         var lastAct = tract.FindLast((x) => (x.WasAliveOn(DateTime.Now) &&
                                              x.RecordingActType.RecordingRule.IsHardLimitation &&
@@ -190,7 +190,7 @@ namespace Empiria.Land.Registration {
     }
 
     public bool IsFirstDomainAct(RecordingAct recordingAct) {
-      var list = this.GetRecordingActsTract();
+      var list = base.Tract.GetRecordingActs();
 
       var firstDomainAct = list.Find((x) => x.RecordingActType.IsDomainActType);
 
@@ -206,7 +206,7 @@ namespace Empiria.Land.Registration {
     }
 
     public FixedList<RecordingAct> GetHardLimitationActs() {
-      var tract = this.GetRecordingActsTract();
+      var tract = base.Tract.GetRecordingActs();
 
       tract = tract.FindAll((x) => (x.WasAliveOn(DateTime.Now) &&
                                     x.RecordingActType.RecordingRule.IsHardLimitation &&
@@ -217,7 +217,7 @@ namespace Empiria.Land.Registration {
 
     public RecordingAct LastDomainAct {
       get {
-        var tract = this.GetRecordingActsTract();
+        var tract = base.Tract.GetRecordingActs();
 
         var lastDomainAct = tract.FindLast((x) => x.WasAliveOn(DateTime.Now) &&
                                             x.RecordingActType.IsDomainActType &&
@@ -249,7 +249,7 @@ namespace Empiria.Land.Registration {
     }
 
     public bool IsInTheRankOfTheFirstDomainAct(RecordingAct recordingAct) {
-      FixedList<RecordingAct> recordingActs = this.GetRecordingActsTractUntil(recordingAct, true);
+      FixedList<RecordingAct> recordingActs = base.Tract.GetRecordingActsUntil(recordingAct, true);
 
       int recordingActIndex = recordingActs.IndexOf(recordingAct);
 

@@ -85,7 +85,7 @@ namespace Empiria.Land.UI {
       if (recordingAct.Resource is RealEstate) {
         var realEstate = (RealEstate) recordingAct.Resource;
         if (!realEstate.IsPartitionOf.IsEmptyInstance &&
-             realEstate.FirstRecordingAct.Equals(recordingAct)) {
+             realEstate.Tract.FirstRecordingAct.Equals(recordingAct)) {
           return realEstate.UID + "<br />" +
                  (realEstate.CadastralKey.Length != 0 ?
                  "<i>Catastro: " + realEstate.CadastralKey + "</i><br />" : String.Empty) +

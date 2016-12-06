@@ -67,7 +67,7 @@ namespace Empiria.Land.UI {
     #region Private methods
 
     private string GetHtml() {
-      FixedList<IResourceTractItem> resourceHistory = Resource.GetFullRecordingActsTractWithCertificates();
+      FixedList<IResourceTractItem> resourceHistory = Resource.Tract.GetFullRecordingActsWithCertificates();
 
       string html = this.GetTitle() + this.GetHeader();
       for (int i = resourceHistory.Count - 1; 0 <= i; i--) {

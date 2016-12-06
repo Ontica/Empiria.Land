@@ -24,60 +24,6 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    //static public int GetOverlappingRecordingsCount(RecordingBook recordingBook, Recording recording,
-    //                                                int imageStartIndex, int imageEndIndex) {
-    //  FixedList<Recording> list = RecordingBooksData.GetRecordingsOnImageRangeList(recordingBook,
-    //                                                                               imageStartIndex, imageEndIndex);
-    //  if (list.Count == 0) {
-    //    return 0;
-    //  }
-    //  int counter = 0;
-    //  for (int i = 0; i < list.Count; i++) {
-    //    if (list[i].Equals(recording)) {
-    //      continue;
-    //    } else if ((list[i].StartImageIndex == imageStartIndex) &&
-    //               (list[i].EndImageIndex == imageEndIndex) &&
-    //               (imageStartIndex == imageEndIndex)) {
-    //      continue;
-    //    } else if (list[i].EndImageIndex == imageStartIndex) {
-    //      continue;
-    //    } else {
-    //      counter++;
-    //    }
-    //  }
-    //  return counter;
-    //}
-
-    static public LandRegistrationException ValidateDeleteRecordingAct(RecordingAct recordingAct) {
-      Resource resource = recordingAct.Resource;
-      FixedList<RecordingAct> domainActs = resource.GetRecordingActsTract();
-      if ((domainActs.Count > 1) && (resource.FirstRecordingAct.Equals(recordingAct))) {
-        return new LandRegistrationException(LandRegistrationException.Msg.PropertyIsReferencedInOtherDomainActs,
-                                             resource.UID);
-      }
-      if (domainActs.Count == 1 && resource.Annotations.Count > 0) {
-        return new LandRegistrationException(LandRegistrationException.Msg.PropertyHasAnnotations, resource.UID);
-      }
-      return null;
-    }
-
-    static public LandRegistrationException ValidateDeleteRecordingActProperty(RecordingAct recordingAct,
-                                                                               Resource resource) {
-      FixedList<RecordingAct> domainActs = resource.GetRecordingActsTract();
-      if ((domainActs.Count > 1) && (resource.FirstRecordingAct.Equals(recordingAct))) {
-        return new LandRegistrationException(LandRegistrationException.Msg.PropertyIsReferencedInOtherDomainActs,
-                                             resource.UID);
-      }
-      if ((domainActs.Count == 1) && (!resource.FirstRecordingAct.Equals(recordingAct))) {
-        return new LandRegistrationException(LandRegistrationException.Msg.OrphanRecordingActIfPropertyDeleted,
-                                             resource.UID);
-      }
-      if ((domainActs.Count == 1) && (resource.Annotations.Count > 0)) {
-        return new LandRegistrationException(LandRegistrationException.Msg.PropertyHasAnnotations, resource.UID);
-      }
-      return null;
-    }
-
     static public LandRegistrationException ValidateRecordingActAsComplete(RecordingAct recordingAct) {
       if (recordingAct.RecordingActType.RecordingRule.EditAppraisalAmount &&
           recordingAct.ExtensionData.AppraisalAmount.Equals(Money.Empty)) {

@@ -44,7 +44,7 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnInitialize() {
-      recordingActList = new Lazy<FixedList<RecordingAct>>(() => RecordingActsData.GetRecordingActs(this));
+      recordingActList = new Lazy<FixedList<RecordingAct>>(() => RecordingActsData.GetPhysicalRecordingRecordedActs(this));
       payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
       this.ExtendedData = new RecordingExtData();
     }

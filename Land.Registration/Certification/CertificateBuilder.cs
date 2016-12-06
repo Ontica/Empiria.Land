@@ -162,7 +162,7 @@ namespace Empiria.Land.Certification {
     }
 
     private string GetDocumentOrPhysicalRecording() {
-      var antecedent = this.Certificate.Property.GetRecordingAntecedent();
+      var antecedent = this.Certificate.Property.Tract.GetRecordingAntecedent();
 
       if (antecedent.Equals(RecordingAct.Empty)) {
         return AsWarning("NO SE ENCONTRÓ INFORMACIÓN DEL ANTECEDENTE REGISTRAL. " +

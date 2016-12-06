@@ -134,33 +134,9 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public FixedList<RecordingAct> Annotations {
+    public ResourceTract Tract {
       get {
-        throw new NotImplementedException();
-        //return RecordingBooksData.GetPropertyAnnotationList(this);
-      }
-    }
-
-    public RecordingAct FirstRecordingAct {
-      get {
-        FixedList<RecordingAct> recordingActs = this.GetRecordingActsTract();
-        if (recordingActs.Count != 0) {
-          return recordingActs[0];
-        } else {
-          throw new LandRegistrationException(LandRegistrationException.Msg.PropertyDoesNotHaveAnyRecordingActs,
-                                              this.UID);
-        }
-      }
-    }
-
-    public RecordingAct LastRecordingAct {
-      get {
-        FixedList<RecordingAct> domainActs = this.GetRecordingActsTract();
-        if (domainActs.Count != 0) {
-          return domainActs[domainActs.Count - 1];
-        } else {
-          return RecordingAct.Empty;
-        }
+        return ResourceTract.Parse(this);
       }
     }
 
@@ -200,7 +176,7 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public bool AllowHistoricChanges() {
-      return (!this.FirstRecordingAct.PhysicalRecording.IsEmptyInstance);
+      return (!this.Tract.FirstRecordingAct.PhysicalRecording.IsEmptyInstance);
     }
 
     public virtual void AssertCanBeClosed() {
@@ -225,7 +201,7 @@ namespace Empiria.Land.Registration {
       }
 
 
-      var tract = this.GetRecordingActsTract();
+      var tract = this.Tract.GetRecordingActs();
 
       // This rule doesn't apply to new registered resources
       if (tract.Count == 1 && this is RealEstate && !((RealEstate) this).IsPartition) {
@@ -251,7 +227,7 @@ namespace Empiria.Land.Registration {
     }
 
     public void AssertIsLastInPrelationOrder(RecordingDocument document, RecordingActType newRecordingActType) {
-      var fullTract = this.GetRecordingActsTract();
+      var fullTract = this.Tract.GetRecordingActs();
 
       // Cancelation acts don't follow prelation rules
       if (newRecordingActType.IsCancelationActType) {
@@ -273,7 +249,7 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(this.Status != RecordableObjectStatus.Deleted,
                        "El folio real '{0}' está marcado como eliminado.", this.UID);
 
-      var tract = this.GetRecordingActsTract();
+      var tract = this.Tract.GetRecordingActs();
       if (0 != tract.CountAll((x) => x.RecordingActType.RecordingRule.IsEndingAct &&
                                      x.Document.PresentationTime < document.PresentationTime)) {
         Assertion.AssertFail("El folio real '{0}' ya fue cancelado, fusionado o dividido en su totalidad. " +
@@ -283,128 +259,7 @@ namespace Empiria.Land.Registration {
 
     abstract protected string GenerateResourceUID();
 
-    public bool IsFirstRecordingAct(RecordingAct recordingAct) {
-      if (recordingAct.IsAnnotation) {
-        return false;
-      }
-
-      RecordingAct firstRecordingAct = this.FirstRecordingAct;
-      if (firstRecordingAct != RecordingAct.Empty) {
-        return firstRecordingAct.Equals(recordingAct);
-      } else {
-        return true;
-      }
-    }
-
-    public bool IsLastRecordingAct(RecordingAct recordingAct) {
-      if (recordingAct.IsAnnotation) {
-        return false;
-      }
-
-      RecordingAct lastRecordingAct = this.LastRecordingAct;
-      if (lastRecordingAct != RecordingAct.Empty) {
-        return lastRecordingAct.Equals(recordingAct);
-      } else {
-        return true;
-      }
-    }
-
-    public FixedList<Certification.Certificate> GetEmittedCerificates() {
-      return Empiria.Land.Data.CertificatesData.ResourceEmittedCertificates(this);
-    }
-
-    public FixedList<RecordingAct> GetFullRecordingActsTract() {
-      return RecordingActsData.GetResourceFullTractIndex(this);
-    }
-
-    public FixedList<IResourceTractItem> GetFullRecordingActsTractWithCertificates() {
-      return RecordingActsData.GetResourceFullTractIndexWithCertificates(this);
-    }
-
-    public FixedList<RecordingAct> GetRecordingActsTract() {
-      return RecordingActsData.GetResourceRecordingActList(this);
-    }
-
-    public FixedList<RecordingAct> GetRecordingActsTractUntil(RecordingAct breakAct,
-                                                              bool includeBreakAct) {
-      return RecordingActsData.GetResourceRecordingActListUntil(this, breakAct, includeBreakAct);
-    }
-
-    public RecordingAct GetRecordingAntecedent() {
-      return this.GetRecordingAntecedent(RecordingAct.Empty, false);
-    }
-
-    public RecordingAct GetRecordingAntecedent(DateTime presentationTime) {
-      FixedList<RecordingAct> tract = this.GetRecordingActsTract();
-
-      if (tract.Count == 0) {
-        return RecordingAct.Empty;
-      }
-
-      /// For no real estate, return always the first act that is the creational act.
-      /// Resources different than real estates don't have domain or structure acts.
-      if (!(this is RealEstate)) {
-        return tract[0];
-      }
-
-      /// Returns the last domain or structure act if founded, otherwise
-      /// return the very first act of the real estate.
-      var antecedent = tract.FindLast((x) => x.Document.PresentationTime <= presentationTime &&
-                                      (x.RecordingActType.IsDomainActType || x.RecordingActType.IsStructureActType));
-
-      if (antecedent != null) {
-        return antecedent;
-      } else {
-        return tract[0];
-      }
-    }
-
-    public RecordingAct GetRecordingAntecedent(RecordingAct beforeRecordingAct,
-                                               bool returnAmendmentActs = false) {
-      /// For amendment acts, this method returns the amendmentOf act
-      /// when returnAmendmentActs flag is true
-      if (returnAmendmentActs && beforeRecordingAct.RecordingActType.IsAmendmentActType) {
-        return beforeRecordingAct.AmendmentOf;
-      }
-
-      var tract = this.GetRecordingActsTractUntil(beforeRecordingAct, false);
-
-      /// Returns the empty recording act if there are not antecedents.
-      if (tract.Count == 0) {
-
-        if (!(this is RealEstate)) {
-          return RecordingAct.Empty;
-        }
-
-        /// If no antecedent, then look if the real estate is a new partition.
-        /// If it is then return the antecedent of the partitioned or parent real estate.
-        var parentRealEstate = ((RealEstate) this).IsPartitionOf;
-        if (!parentRealEstate.IsEmptyInstance) {
-          return parentRealEstate.GetRecordingAntecedent(beforeRecordingAct.Document.PresentationTime);
-        } else {
-          return RecordingAct.Empty;
-        }
-
-      }
-
-      if (this is RealEstate) {
-        /// Returns the last domain or structure act if founded, otherwise
-        /// return the very first act of the real estate.
-
-        return tract.FindLast((x) => x.RecordingActType.IsDomainActType ||
-                                     x.RecordingActType.IsStructureActType) ?? tract[0];
-      } else {
-        /// For no real estate, return always the first act that is the creational act.
-        /// Resources different than real estates don't have domain or structure acts.
-        return tract[0];
-      }
-    }
-
-    public bool IsFirstAct(RecordingAct recordingAct) {
-      return this.FirstRecordingAct.Equals(recordingAct);
-    }
-
-    protected override void OnBeforeSave() {
+     protected override void OnBeforeSave() {
       if (this.IsNew) {
         this.AssignUID();
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
@@ -426,7 +281,7 @@ namespace Empiria.Land.Registration {
     }
 
     internal void TryDelete() {
-      var tract = this.GetRecordingActsTract();
+      var tract = this.Tract.GetRecordingActs();
       if (tract.Count == 0) {
         this.Status = RecordableObjectStatus.Deleted;
         this.Save();

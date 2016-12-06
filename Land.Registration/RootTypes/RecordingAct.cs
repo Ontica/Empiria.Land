@@ -98,7 +98,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<RecordingAct> GetList(RecordingDocument document) {
-      return RecordingActsData.GetRecordingActs(document).ToFixedList();
+      return RecordingActsData.GetDocumentRecordingActs(document).ToFixedList();
     }
 
     static private readonly RecordingAct _empty = BaseObject.ParseEmpty<RecordingAct>();
@@ -446,7 +446,7 @@ namespace Empiria.Land.Registration {
     }
 
     private void AssertNoTrappedActs() {
-      var tract = this.Resource.GetRecordingActsTract();
+      var tract = this.Resource.Tract.GetRecordingActs();
 
       var trappedAct = tract.Find((x) => x.Document.PresentationTime < this.Document.PresentationTime &&
                                   !x.Document.IsClosed);
@@ -481,7 +481,7 @@ namespace Empiria.Land.Registration {
         return;
       }
 
-      var fullTract = this.Resource.GetFullRecordingActsTract();
+      var fullTract = this.Resource.Tract.GetFullRecordingActs();
 
       var wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > this.Document.PresentationTime &&
                                                      x.Document.IsClosed);
@@ -534,7 +534,7 @@ namespace Empiria.Land.Registration {
       if (!this.ResourceExtData.IsEmptyInstance) {
         return this.ResourceExtData;
       }
-      var tract = this.Resource.GetRecordingActsTract();
+      var tract = this.Resource.Tract.GetRecordingActs();
 
       /// Look for the first recording act with ResourceExtData added before this act in the tract.
       /// If it is found then return it, if not then return the current resource data.
@@ -560,7 +560,7 @@ namespace Empiria.Land.Registration {
     }
 
     public RecordingAct GetRecordingAntecedent() {
-      return this.Resource.GetRecordingAntecedent(this, true);
+      return this.Resource.Tract.GetRecordingAntecedent(this, true);
     }
 
     protected void SetResource(Resource resource, ResourceRole role = ResourceRole.Informative,
@@ -617,7 +617,7 @@ namespace Empiria.Land.Registration {
         return;
       }
 
-      var tract = this.Resource.GetRecordingActsTractUntil(this, false);
+      var tract = this.Resource.Tract.GetRecordingActsUntil(this, false);
 
       // This rule doesn't apply to new registered resources
       if ((tract.Count == 0) && this.Resource is RealEstate && !((RealEstate) this.Resource).IsPartition) {

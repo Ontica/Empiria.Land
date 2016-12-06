@@ -121,6 +121,7 @@
     <Compile Include="Certification\CertificateExtData.cs" />
     <Compile Include="Certification\CertificateType.cs" />
     <Compile Include="Data\CertificatesData.cs" />
+    <Compile Include="Data\ResourceTractData.cs" />
     <Compile Include="RootTypes\IResourceTractItem.cs" />
     <Compile Include="Data\DocumentsData.cs" />
     <Compile Include="Data\AnalyticsData.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="RootTypes\RealEstateType.cs" />
     <Compile Include="RootTypes\RealEstateExtData.cs" />
     <Compile Include="RootTypes\AssociationExtData.cs" />
+    <Compile Include="RootTypes\ResourceTract.cs" />
     <Compile Include="RootTypes\SearchService.cs" />
     <Compile Include="RootTypes\NoPropertyResource.cs" />
     <Compile Include="RootTypes\RecordBookDirectory.cs" />

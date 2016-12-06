@@ -14,8 +14,6 @@ using System.Data;
 
 using Empiria.Data;
 
-using Empiria.Land.Data;
-
 namespace Empiria.Land.Registration.Data {
 
   /// <summary>Provides database read and write methods for recording acts.</summary>
@@ -23,70 +21,7 @@ namespace Empiria.Land.Registration.Data {
 
     #region Public methods
 
-    /// <summary>Gets those recording acts where the given resource appears as
-    ///  the main resource (ResourceId field).</summary>
-    static public FixedList<RecordingAct> GetResourceRecordingActList(Resource resource) {
-      if (resource.IsEmptyInstance) {
-        return new FixedList<RecordingAct>();
-      }
-
-      var operation = DataOperation.Parse("qryLRSResourceRecordingActs", resource.Id);
-
-      return DataReader.GetList<RecordingAct>(operation,
-                                              (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
-    }
-
-    /// <summary>Gets those recording acts where the given resource appears as
-    ///  the main resource or as the related resource.</summary>
-    internal static FixedList<RecordingAct> GetResourceFullTractIndex(Resource resource) {
-      if (resource.IsEmptyInstance) {
-        return new FixedList<RecordingAct>();
-      }
-
-      var operation = DataOperation.Parse("qryLRSResourceFullTractIndex", resource.Id);
-
-      return DataReader.GetList<RecordingAct>(operation,
-                                              (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
-    }
-
-    static internal FixedList<IResourceTractItem> GetResourceFullTractIndexWithCertificates(Resource resource) {
-      var list = new List<IResourceTractItem>();
-
-      var recordingActs = RecordingActsData.GetResourceFullTractIndex(resource);
-      var certificates = CertificatesData.ResourceEmittedCertificates(resource);
-
-      list.AddRange(recordingActs);
-      list.AddRange(certificates);
-      list.Sort((x, y) => x.TractPrelationStamp.CompareTo(y.TractPrelationStamp));
-
-      return list.ToFixedList();
-    }
-
-    static public FixedList<RecordingAct> GetResourceRecordingActListUntil(Resource resource, RecordingAct breakAct,
-                                                                           bool includeBreakAct) {
-      if (resource.IsEmptyInstance) {
-        return new FixedList<RecordingAct>();
-      }
-
-      var operation = DataOperation.Parse("qryLRSResourceRecordingActs", resource.Id);
-      DataTable table = DataReader.GetDataTable(operation);
-      List<RecordingAct> list = new List<RecordingAct>();
-      foreach (DataRow row in table.Rows) {
-        var recordingAct = BaseObject.ParseDataRow<RecordingAct>(row);
-        Assertion.Assert(recordingAct.Document.Id > 0, "DocId not valid");
-        if (recordingAct.Equals(breakAct)) {
-          if (includeBreakAct) {
-            list.Add(BaseObject.ParseDataRow<RecordingAct>(row));
-          }
-          break;
-        } else {
-          list.Add(BaseObject.ParseDataRow<RecordingAct>(row));
-        }
-      }
-      return list.ToFixedList();
-    }
-
-    static public FixedList<RecordingAct> GetRecordingActs(Recording recording) {
+    static public FixedList<RecordingAct> GetPhysicalRecordingRecordedActs(Recording recording) {
       if (recording.IsEmptyInstance) {
         return new FixedList<RecordingAct>();
       }
@@ -96,7 +31,7 @@ namespace Empiria.Land.Registration.Data {
                                               (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
     }
 
-    static internal List<RecordingAct> GetRecordingActs(RecordingDocument document) {
+    static internal List<RecordingAct> GetDocumentRecordingActs(RecordingDocument document) {
       if (document.IsEmptyInstance) {
         return new List<RecordingAct>();
       }

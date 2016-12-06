@@ -57,7 +57,7 @@ namespace Empiria.Land.Registration {
     private void SetRealEstate(RealEstate property) {
       Assertion.AssertObject(property, "property");
 
-      var tract = property.GetRecordingActsTract();
+      var tract = property.Tract.GetRecordingActs();
 
       if (tract.Count != 0) {     // This is not the first act of the real estate
         base.SetResource(property, ResourceRole.Informative);

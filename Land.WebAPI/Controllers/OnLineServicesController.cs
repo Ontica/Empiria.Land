@@ -270,8 +270,8 @@ namespace Empiria.Land.WebApi {
                                            property.CadastralKey : "Clave catastral no proporcionada.", "bold-text"));
       propertyBag.Add(new PropertyBagItem("Descripción", property.LocationReference));
 
-      var tract = property.GetRecordingActsTract().FindAll( (x) => !x.RecordingActType.Equals(RecordingActType.Empty) &&
-                                                                    x.Document.AuthorizationTime != ExecutionServer.DateMinValue);
+      var tract = property.Tract.GetRecordingActs().FindAll( (x) => !x.RecordingActType.Equals(RecordingActType.Empty) &&
+                                                                     x.Document.AuthorizationTime != ExecutionServer.DateMinValue);
       if (tract.Count != 0) {
         propertyBag.Add(new PropertyBagItem("Últimos actos jurídicos del predio", String.Empty, "new-section"));
 
@@ -281,9 +281,11 @@ namespace Empiria.Land.WebApi {
                                               act.DisplayName));
         }
       }
-      if (!property.FirstRecordingAct.PhysicalRecording.IsEmptyInstance) {
+      var physicalRecording = property.Tract.GetLastPhysicalRecording();
+
+      if (!physicalRecording.IsEmptyInstance) {
         propertyBag.Add(new PropertyBagItem("Partida origen del predio en libros físicos", String.Empty, "new-section"));
-        propertyBag.Add(new PropertyBagItem("Partida", property.FirstRecordingAct.PhysicalRecording.AsText));
+        propertyBag.Add(new PropertyBagItem("Partida", physicalRecording.AsText));
         propertyBag.Add(new PropertyBagItem("Nota importante","Los datos de la partida sólo se muestran con fines informativos.<br/>" +
                                             "A partir del año 2015 todos los predios se deben identificar mediante su folio real, " +
                                             "no con la partida que tenían en libros físicos."));

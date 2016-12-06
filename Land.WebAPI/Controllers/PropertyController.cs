@@ -78,8 +78,8 @@ namespace Empiria.Land.WebApi {
           throw this.PropertyNotFound(propertyUID);
         }
 
-        var antecedent = property.GetRecordingAntecedent();
-        var fullTract = property.GetRecordingActsTract();
+        var antecedent = property.Tract.GetRecordingAntecedent();
+        var fullTract = property.Tract.GetRecordingActs();
 
         var data = new {
           antecedent = this.GetRecordingActModel(antecedent),
