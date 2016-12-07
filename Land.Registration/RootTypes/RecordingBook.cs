@@ -192,28 +192,28 @@ namespace Empiria.Land.Registration {
     }
 
     public string FormatRecordingNumber(string rawRecordingNumber) {
-      rawRecordingNumber = rawRecordingNumber.Replace(" ", String.Empty);
-      rawRecordingNumber = rawRecordingNumber.Replace("-", "/");
+      try {
+        rawRecordingNumber = rawRecordingNumber.Replace(" ", String.Empty);
+        rawRecordingNumber = rawRecordingNumber.Replace("-", "/");
 
-      string[] parts = rawRecordingNumber.Split('/');
-      string temp = String.Empty;
+        string[] parts = rawRecordingNumber.Split('/');
 
-      if (parts.Length == 1) {
-        temp = int.Parse(parts[0]).ToString("0000");
-      } else if (parts.Length == 2 && EmpiriaString.IsInteger(parts[1])) {
-        temp = int.Parse(parts[0]).ToString("0000") + "/";
-        temp += int.Parse(parts[1]).ToString("000");       // e.g. 0003/007
-      } else if (parts.Length == 2 && !EmpiriaString.IsInteger(parts[1])) {
-        temp = int.Parse(parts[0]).ToString("0000") + "-";
-        temp += parts[1];                                  // e.g. 0003-Bis
-      } else if (parts.Length == 3) {
-        temp = int.Parse(parts[0]).ToString("0000") + "/";
-        temp += int.Parse(parts[1]).ToString("000") + "-";
-        temp += parts[2];                                  // e.g. 0003/007-Bis
-      } else {
-        throw new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingNumber, rawRecordingNumber);
+        string temp = int.Parse(parts[0]).ToString("0000");
+        for (int i = 1; i <= parts.Length - 2; i++) {
+          temp += "/" + int.Parse(parts[i]).ToString("000");
+        }
+        if (parts.Length == 1) {                                              // e.g 0456
+          // no-op
+        } else if (!EmpiriaString.IsInteger(parts[parts.Length - 1])) {
+          temp += "-" + parts[parts.Length - 1];                              // e.g 0456/123-bis
+        } else {
+          temp += "/" + int.Parse(parts[parts.Length - 1]).ToString("000");   // e.g  0456/123/423
+        }
+        return temp;
+      } catch {
+        throw new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingNumber,
+                                            rawRecordingNumber);
       }
-      return temp;
     }
 
     public bool ExistsRecording(string rawRecordingNumber) {
