@@ -194,36 +194,61 @@ namespace Empiria.Land.Registration {
         return;
       }
 
-      var chainedRecordingAct = newRecordingActType.RecordingRule.ChainedRecordingActType;
-
-      if (chainedRecordingAct.Equals(RecordingActType.Empty)) {
+      var chainedRecordingActType = newRecordingActType.RecordingRule.ChainedRecordingActType;
+      if (chainedRecordingActType.Equals(RecordingActType.Empty)) {
         return;
       }
 
-
-      var tract = this.Tract.GetRecordingActs();
-
-      // This rule doesn't apply to new registered resources
-      if (tract.Count == 1 && this is RealEstate && !((RealEstate) this).IsPartition) {
+      // Lookup the tract for the last chained act
+      var lastChainedActInstance = this.Tract.TryGetLastActiveChainedAct(chainedRecordingActType,
+                                                                         document);
+      // If exists an active chained act, then the assertion meets
+      if (lastChainedActInstance != null) {
         return;
       }
 
-      var lastAct = tract.FindLast((x) => (x.WasAliveOn(document.PresentationTime) &&
-                                           !x.RecordingActType.RecordingRule.IsAnnotation &&
-                                           !x.RecordingActType.IsCancelationActType &&
-                                           !x.RecordingActType.IsModificationActType &&
-                                           x.Document.PresentationTime < document.PresentationTime &&
-                                           x.Document.IsClosed
-                                           ));
+      // Try to assert that the act is in the very first recorded document
+      var tract = this.Tract.GetClosedRecordingActsUntil(document, true);
 
-      if (lastAct == null || !lastAct.RecordingActType.Equals(chainedRecordingAct)) {
-        Assertion.AssertFail("El acto jurídico {0} no puede ser inscrito debido a que el folio real '{1}' " +
-                             "no tiene registrado previamente un acto de: '{2}'.\n\n" +
-                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
-                             "Favor de revisar la historia del folio real involucrado. Es posible que el trámite donde " +
-                             "viene el acto faltante aún no haya sido procesado o que el documento esté abierto.",
-                             newRecordingActType.DisplayName, this.UID, chainedRecordingAct.DisplayName);
+      // First check no real estates
+      if (!(this is RealEstate) &&
+          (tract.Count == 0 || tract[0].Document.Equals(document))) {
+        return;
       }
+
+      // For real estates, this rule apply for new no-partitions
+      if (this is RealEstate && !((RealEstate) this).IsPartition &&
+          (tract.Count == 0 || tract[0].Document.Equals(document))) {
+        return;
+      }
+
+      // When the chained act rule applies to a modification act, then lookup in this
+      // recorded document for an act applied to a partition of this real estate
+      // with the same ChainedRecordingActType, if it is found then the assertion meets.
+      // Ejemplo: Tanto CV como Rectificación de medidas requieren aviso preventivo.
+      // Si en el documento hay una CV sobre una fracción F de P, y también hay una
+      // rectificación de medidas del predio P, entonces basta con que el aviso preventivo
+      // exista para la fraccion F de P.
+      if (this is RealEstate && newRecordingActType.IsModificationActType) {
+        foreach (RecordingAct recordingAct in document.RecordingActs) {
+          if (recordingAct.Equals(this)) {
+            break;
+          }
+          if (recordingAct.Resource is RealEstate &&
+              ((RealEstate) recordingAct.Resource).IsPartitionOf.Equals(this) &&
+              recordingAct.RecordingActType.RecordingRule.ChainedRecordingActType.Equals(chainedRecordingActType)) {
+              recordingAct.AssertChainedRecordingAct();
+            return;
+          }
+        }
+      }
+
+      Assertion.AssertFail("El acto jurídico {0} no puede ser inscrito debido a que el folio real '{1}' " +
+                            "no tiene registrado previamente un acto de: '{2}'.\n\n" +
+                            "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
+                            "Favor de revisar la historia del folio real involucrado. Es posible que el trámite donde " +
+                            "viene el acto faltante aún no haya sido procesado o que el documento esté abierto.",
+                            newRecordingActType.DisplayName, this.UID, chainedRecordingActType.DisplayName);
     }
 
     public void AssertIsLastInPrelationOrder(RecordingDocument document, RecordingActType newRecordingActType) {

@@ -108,6 +108,19 @@ namespace Empiria.Land.Registration {
                                                                 breakAct, includeBreakAct);
     }
 
+    public FixedList<RecordingAct> GetClosedRecordingActsUntil(RecordingDocument breakingDocument,
+                                                               bool includeBreakingDocument) {
+      var tract = ResourceTractData.GetResourceRecordingActList(this.Resource);
+
+      if (includeBreakingDocument) {
+        return tract.FindAll((x) => ((x.Document.IsClosed &&
+                                      x.Document.PresentationTime < breakingDocument.PresentationTime)) ||
+                                      x.Document.Equals(breakingDocument));
+      } else {
+        return tract.FindAll((x) => ((x.Document.IsClosed &&
+                                      x.Document.PresentationTime < breakingDocument.PresentationTime)));
+      }
+    }
 
     public RecordingAct GetRecordingAntecedent() {
       return this.GetRecordingAntecedent(RecordingAct.Empty, false);
@@ -165,7 +178,6 @@ namespace Empiria.Land.Registration {
         } else {
           return RecordingAct.Empty;
         }
-
       }
 
       if (this.Resource is RealEstate) {
@@ -207,6 +219,45 @@ namespace Empiria.Land.Registration {
       } else {
         return true;
       }
+    }
+
+    internal RecordingAct TryGetLastActiveChainedAct(RecordingActType chainedRecordingActType,
+                                                     RecordingDocument beforeThisDocument) {
+      //var tract = this.Resource.Tract.GetRecordingActsUntil(this, false); /// From RecordingAct rule
+
+      var tract = this.GetClosedRecordingActsUntil(beforeThisDocument, true);
+
+      // Lookup for the last chainedRecordingActType occurrence, possibly including acts in beforeThisDocument
+      RecordingAct lastChainedAct =
+            tract.FindLast( (x) => (x.RecordingActType.Equals(chainedRecordingActType) &&
+                                    x.WasAliveOn(beforeThisDocument.PresentationTime)));
+
+      // If there aren't any chainedRecordingActType acts in the tract, then return null.
+      if (lastChainedAct == null) {
+        return null;
+      }
+
+      // Assert that the founded chained act was not used by any act recorded
+      // after lastChainedAct AND before beforeThisDocument was recorded
+
+      int startIndex = tract.IndexOf(lastChainedAct);
+
+      // Get the index of the last closed recording act previous to beforeThisDocument
+      RecordingAct lastActToSearch =
+              tract.FindLast( (x) => x.Document.PresentationTime < beforeThisDocument.PresentationTime);
+
+      int endIndex = lastActToSearch != null ? tract.IndexOf(lastActToSearch) : tract.Count - 1;
+
+      for (int i = startIndex + 1; i <= endIndex; i++) {
+        var rule = tract[startIndex].RecordingActType.RecordingRule;
+
+        // If there are a recording act with the same chaining rule, then lastChainedAct was already used.
+        if (rule.ChainedRecordingActType.Equals(chainedRecordingActType)) {
+          return null;
+        }
+      }
+
+      return lastChainedAct;
     }
 
     #endregion Methods

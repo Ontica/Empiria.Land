@@ -201,6 +201,25 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
+    public bool IsInTheRankOfTheFirstDomainAct(RecordingAct recordingAct) {
+      FixedList<RecordingAct> recordingActs = this.Tract.GetRecordingActsUntil(recordingAct, true);
+
+      int recordingActIndex = recordingActs.IndexOf(recordingAct);
+
+      if (recordingActIndex == -1) {
+        return false;
+      }
+
+      for (int i = 0; i < recordingActIndex; i++) {
+        if (recordingActs[i].RecordingActType.IsDomainActType ||
+            recordingActs[i].RecordingActType.IsStructureActType) {
+          return false;
+        }
+      }
+      return true;
+    }
+
     protected override string GenerateResourceUID() {
       return TransactionData.GeneratePropertyUID();
     }
@@ -246,24 +265,6 @@ namespace Empiria.Land.Registration {
 
     public RealEstate[] GetPartitions() {
       return ResourceData.GetRealEstatePartitions(this);
-    }
-
-    public bool IsInTheRankOfTheFirstDomainAct(RecordingAct recordingAct) {
-      FixedList<RecordingAct> recordingActs = base.Tract.GetRecordingActsUntil(recordingAct, true);
-
-      int recordingActIndex = recordingActs.IndexOf(recordingAct);
-
-      if (recordingActIndex == -1) {
-        return false;
-      }
-
-      for (int i = 0; i < recordingActIndex; i++) {
-        if (recordingActs[i].RecordingActType.IsDomainActType ||
-            recordingActs[i].RecordingActType.IsStructureActType) {
-          return false;
-        }
-      }
-      return true;
     }
 
     protected override void OnLoadObjectData(DataRow row) {
