@@ -46,11 +46,9 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList<RecordingAct>(operation, (x) => BaseObject.ParseList<RecordingAct>(x));
     }
 
-    internal static int UpdateRecordingActResourceExtData(RecordingAct recordingAct,
-                                                          RealEstate realEstateUpdatedData) {
+    internal static int UpdateRecordingActResourceExtData(RecordingAct recordingAct) {
       var op = DataOperation.Parse("doLRSUpdateRecordingActResourceExtData",
-                                   recordingAct.Id,
-                                   realEstateUpdatedData.RealEstateExtData.ToString());
+                                   recordingAct.Id, recordingAct.ResourceExtData.ToString());
       return DataWriter.Execute(op);
     }
 

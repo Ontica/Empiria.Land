@@ -60,7 +60,6 @@ namespace Empiria.Land.Registration.Data {
       List<RecordingAct> list = new List<RecordingAct>();
       foreach (DataRow row in table.Rows) {
         var recordingAct = BaseObject.ParseDataRow<RecordingAct>(row);
-        Assertion.Assert(recordingAct.Document.Id > 0, "DocId not valid");
         if (recordingAct.Equals(breakAct)) {
           if (includeBreakAct) {
             list.Add(BaseObject.ParseDataRow<RecordingAct>(row));

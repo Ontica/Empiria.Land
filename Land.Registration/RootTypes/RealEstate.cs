@@ -207,9 +207,8 @@ namespace Empiria.Land.Registration {
 
       int recordingActIndex = recordingActs.IndexOf(recordingAct);
 
-      if (recordingActIndex == -1) {
-        return false;
-      }
+      Assertion.Assert(recordingActIndex != -1,
+                       "Supplied recordingAct doesn't belong to the property tract.");
 
       for (int i = 0; i < recordingActIndex; i++) {
         if (recordingActs[i].RecordingActType.IsDomainActType ||
@@ -275,6 +274,23 @@ namespace Empiria.Land.Registration {
       ResourceData.WriteRealEstate(this);
     }
 
+    public void SetExtData(RealEstateExtData newData) {
+      Assertion.AssertObject(newData, "newData");
+
+      newData.AssertIsValid();
+
+      this.RealEstateExtData = newData;
+    }
+
+    public void SetPartitionNo(string newPartitionNo) {
+      Assertion.Assert(this.IsPartition,
+                       "This real estate is not a partition of another property.");
+
+      this.PartitionNo = EmpiriaString.TrimAll(newPartitionNo);
+
+      Assertion.AssertObject(this.PartitionNo, "newPartitionNo");
+    }
+
     internal RealEstate[] Subdivide(RealEstatePartitionDTO partitionInfo) {
       Assertion.Assert(!this.IsNew, "New properties can't be subdivided.");
 
@@ -284,16 +300,6 @@ namespace Empiria.Land.Registration {
         partitions[i] = this.CreatePartition(partitionNames[i]);
       }
       return partitions;
-    }
-
-    public void Update(RealEstateExtData newData) {
-      Assertion.AssertObject(newData, "newData");
-
-      newData.AssertIsValid();
-
-      this.RealEstateExtData = newData;
-
-      this.Save();
     }
 
     #endregion Public methods
