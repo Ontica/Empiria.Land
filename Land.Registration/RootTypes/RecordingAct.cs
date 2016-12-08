@@ -212,9 +212,9 @@ namespace Empiria.Land.Registration {
     } = RecordingActExtData.Empty;
 
 
-    private RealEstateExtData ResourceExtData {
+    internal RealEstateExtData ResourceExtData {
       get;
-      set;
+      private set;
     } = RealEstateExtData.Empty;
 
 
@@ -472,10 +472,6 @@ namespace Empiria.Land.Registration {
 
     public void AssertIsLastInPrelationOrder() {
 
-      if (TlaxcalaOperationalCondition()) {
-        return;
-      }
-
       // Cancelation acts don't follow prelation rules
       if (this.RecordingActType.IsCancelationActType) {
         return;
@@ -556,7 +552,7 @@ namespace Empiria.Land.Registration {
 
       this.ResourceExtData = realEstateUpdatedData.RealEstateExtData;
 
-      RecordingActsData.UpdateRecordingActResourceExtData(this, realEstateUpdatedData);
+      RecordingActsData.UpdateRecordingActResourceExtData(this);
     }
 
     public RecordingAct GetRecordingAntecedent() {
@@ -708,7 +704,8 @@ namespace Empiria.Land.Registration {
       }
 
       // Temporarily rule, based on Tlaxcala Recording Office operation
-      if (this.Document.PresentationTime < DateTime.Parse("2016-09-26") && DateTime.Today < DateTime.Parse("2016-10-02")) {
+      if (this.Document.PresentationTime < DateTime.Parse("2016-09-26") &&
+          DateTime.Today < DateTime.Parse("2016-10-02")) {
         return true;
       }
       return false;

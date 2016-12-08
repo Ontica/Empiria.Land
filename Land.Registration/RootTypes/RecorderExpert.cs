@@ -85,14 +85,13 @@ namespace Empiria.Land.Registration {
 
         Task.PrecedentProperty.AssertIsStillAlive(Task.Document);
 
-        if (TlaxcalaOperationalCondition(Task.Document)) {
-          return;
-        }
-
         if (this.AppliesOverNewPartition && Task.RecordingActType.RecordingRule.HasChainedRule) {
-          var msg = "Este acto no puede aplicarse a una nueva fracción ya que requiere " +
-                    "previamente un acto de: '" + Task.RecordingActType.RecordingRule.ChainedRecordingActType.DisplayName + "'.";
-          Assertion.AssertFail(msg);
+          if (TlaxcalaOperationalCondition(Task.Document)) {
+            var msg = "Este acto no puede aplicarse a una nueva fracción ya que requiere " +
+                      "previamente un acto de: '" +
+                      Task.RecordingActType.RecordingRule.ChainedRecordingActType.DisplayName + "'.";
+            Assertion.AssertFail(msg);
+          }
         }
         Task.PrecedentProperty.AssertCanBeAddedTo(Task.Document, Task.RecordingActType);
       }
@@ -106,7 +105,7 @@ namespace Empiria.Land.Registration {
                   "previamente un acto de: '" + Task.RecordingActType.RecordingRule.ChainedRecordingActType.DisplayName + "'.\n\n" +
                   "Es posible que dicho acto se encuentre registrado en la partida, pero el sistema no tiene esa información.\n\n" +
                   "Si este es el caso, favor de agregar primero el acto que falta en este documento aclarando dicho asunto en las observaciones.";
-          Assertion.AssertFail(msg);
+        Assertion.AssertFail(msg);
       }
 
       string sMsg = String.Empty;
