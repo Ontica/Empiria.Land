@@ -80,6 +80,7 @@ namespace Empiria.Land.Registration {
         this.ChainedRecordingActType = json.Get<RecordingActType>("ChainedAct", RecordingActType.Empty);
         this.IsAnnotation = json.Get<bool>("IsAnnotation", false);
         this.IsHardLimitation = json.Get<bool>("IsHardLimitation", false);
+        this.SkipPrelation = json.Get<bool>("SkipPrelation", false);
 
       } catch (Exception e) {
         throw new LandRegistrationException(LandRegistrationException.Msg.MistakeInRecordingRuleConfig, e,
@@ -115,6 +116,7 @@ namespace Empiria.Land.Registration {
       json.Add(new JsonItem("AllowUncompletedResource", this.AllowUncompletedResource));
       json.Add(new JsonItem("IsAnnotation", this.IsAnnotation));
       json.Add(new JsonItem("IsHardLimitation", this.IsHardLimitation));
+      json.Add(new JsonItem("SkipPrelation", this.SkipPrelation));
 
       return json;
     }
@@ -244,6 +246,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     public bool IsAnnotation {
       get;
       private set;
@@ -254,6 +257,12 @@ namespace Empiria.Land.Registration {
       get;
       private set;
     } = false;
+
+
+    public bool SkipPrelation {
+      get;
+      private set;
+    }
 
     #endregion Properties
 

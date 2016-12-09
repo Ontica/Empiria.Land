@@ -86,7 +86,7 @@ namespace Empiria.Land.Registration {
         Task.PrecedentProperty.AssertIsStillAlive(Task.Document);
 
         if (this.AppliesOverNewPartition && Task.RecordingActType.RecordingRule.HasChainedRule) {
-          if (TlaxcalaOperationalCondition(Task.Document)) {
+          if (!TlaxcalaOperationalCondition(Task.Document)) {
             var msg = "Este acto no puede aplicarse a una nueva fracción ya que requiere " +
                       "previamente un acto de: '" +
                       Task.RecordingActType.RecordingRule.ChainedRecordingActType.DisplayName + "'.";

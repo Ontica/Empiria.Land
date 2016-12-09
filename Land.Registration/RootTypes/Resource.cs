@@ -252,12 +252,14 @@ namespace Empiria.Land.Registration {
     }
 
     public void AssertIsLastInPrelationOrder(RecordingDocument document, RecordingActType newRecordingActType) {
-      var fullTract = this.Tract.GetRecordingActs();
-
       // Cancelation acts don't follow prelation rules
       if (newRecordingActType.IsCancelationActType) {
         return;
       }
+
+      var fullTract = this.Tract.GetRecordingActs();
+
+      fullTract = fullTract.FindAll((x) => !x.RecordingActType.RecordingRule.SkipPrelation);
 
       var wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > document.PresentationTime &&
                                                      x.Document.IsClosed);
