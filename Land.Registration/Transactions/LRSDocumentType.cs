@@ -43,6 +43,18 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Properties
 
+    FixedList<RecordingActType> _defaultRecordingActs = null;
+    public FixedList<RecordingActType> DefaultRecordingActs {
+      get {
+        if (_defaultRecordingActs == null) {
+          var list = base.ExtendedDataField.GetList<RecordingActType>("DefaultRecordingActTypes", false);
+
+          _defaultRecordingActs = list.ToFixedList();
+        }
+        return _defaultRecordingActs;
+      }
+    }
+
     public string LArt {
       get { return base.NamedKey; }
     }

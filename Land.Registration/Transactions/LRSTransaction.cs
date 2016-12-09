@@ -23,6 +23,8 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Fields
 
+    private static readonly decimal BaseSalaryValue = decimal.Parse(ConfigurationData.GetString("BaseSalaryValue"));
+
     private Lazy<LRSTransactionItemList> recordingActs = null;
     private Lazy<LRSPaymentList> payments = null;
     private Lazy<LRSWorkflow> workflow = null;
@@ -485,6 +487,8 @@ namespace Empiria.Land.Registration.Transactions {
       if (base.IsNew) {
         var newWorkflow = LRSWorkflow.Create(this);
         workflow = new Lazy<LRSWorkflow>(() => newWorkflow);
+
+        this.AddAutomaticItems();
       }
     }
 
@@ -505,6 +509,13 @@ namespace Empiria.Land.Registration.Transactions {
     #endregion Public methods
 
     #region Private methods
+
+    private void AddAutomaticItems() {
+      foreach (var item in this.DocumentType.DefaultRecordingActs) {
+        this.AddItem(item, item.GetFinancialLawArticles()[0],
+                     BaseSalaryValue * item.GetFeeUnits());
+      }
+    }
 
     private void AssertAddItem() {
       Assertion.Assert(this.Workflow.CurrentStatus == LRSTransactionStatus.Payment,

@@ -162,6 +162,15 @@ namespace Empiria.Land.Registration {
       return list.ToFixedList();
     }
 
+    /// <summary>Returns the default fee units (typically minimal-wage days)
+    /// for this recording act type.</summary>
+    /// <returns>The default fee units or -1 if the fee depends on each case.</returns>
+    public decimal GetFeeUnits() {
+      var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
+
+      return json.Get<decimal>("FeeUnits", -1);
+    }
+
     public FixedList<LRSLawArticle> GetFinancialLawArticles() {
       var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
 
