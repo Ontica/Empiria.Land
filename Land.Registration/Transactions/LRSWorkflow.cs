@@ -188,6 +188,7 @@ namespace Empiria.Land.Registration.Transactions {
 
       this.AssertGraceDaysForReentry();
       this.AssertRecordingActsPrelation();
+      this.AssertDigitalizedDocument();
 
       this.CurrentStatus = LRSTransactionStatus.Reentry;
       _transaction.ClosingTime = ExecutionServer.DateMaxValue;
@@ -275,18 +276,45 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Private methods
 
+    private void AssertDigitalizedDocument() {
+      if (_transaction.Document.IsEmptyDocument) {
+        return;
+      }
+
+      if (_transaction.Document.HasImageSet) {
+        return;
+      }
+
+      int graceDaysForImaging = ConfigurationData.GetInteger("GraceDaysForImaging");
+
+      DateTime lastDate = _transaction.Document.AuthorizationTime;
+
+      if (lastDate.AddDays(graceDaysForImaging) <= DateTime.Now) {
+        Assertion.AssertFail("No es posible reingresar este trámite debido a que el documento " +
+                             "que se registró aún no ha sido digitalizado y ya " +
+                             "transcurrieron más de {0} días desde que éste se cerró.\n\n" +
+                             "Favor de consultar con la mesa de armado el estado de este documento.",
+                             graceDaysForImaging);
+      }
+    }
+
     private void AssertGraceDaysForReentry() {
       int graceDaysForReentry = ConfigurationData.GetInteger("GraceDaysForReentry");
 
       DateTime lastDate = _transaction.PresentationTime;
+
       if (_transaction.LastReentryTime != ExecutionServer.DateMaxValue) {
         lastDate = _transaction.LastReentryTime;
+      }
+      if (!_transaction.Document.IsEmptyDocument) {
+        lastDate = _transaction.Document.AuthorizationTime;
       }
       if (lastDate.AddDays(graceDaysForReentry) <= DateTime.Now) {
         Assertion.AssertFail("Por motivos de seguridad y calidad en el registro de la información, " +
                              "no es posible reingresar trámites después de {0} días contados " +
-                             "a partir de su fecha de presentación original o de su último reingreso.\n\n" +
-                             "En su lugar se debe optar por registrar un nuevo trámite de aclaración.",
+                             "a partir de su fecha de presentación original, de su fecha de registro, o bien, " +
+                             "de la fecha del último reingreso.\n\n" +
+                             "En su lugar se debe optar por registrar un nuevo trámite.",
                              graceDaysForReentry);
       }
     }
