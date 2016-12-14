@@ -277,7 +277,7 @@ namespace Empiria.Land.Registration.Transactions {
     #region Private methods
 
     private void AssertDigitalizedDocument() {
-      if (_transaction.Document.IsEmptyDocument) {
+      if (_transaction.Document.IsEmptyInstance) {
         return;
       }
 
@@ -293,7 +293,7 @@ namespace Empiria.Land.Registration.Transactions {
         Assertion.AssertFail("No es posible reingresar este trámite debido a que el documento " +
                              "que se registró aún no ha sido digitalizado y ya " +
                              "transcurrieron más de {0} días desde que éste se cerró.\n\n" +
-                             "Favor de consultar con la mesa de armado el estado de este documento.",
+                             "Favor de preguntar en la mesa de armado acerca de este documento.",
                              graceDaysForImaging);
       }
     }
@@ -306,7 +306,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (_transaction.LastReentryTime != ExecutionServer.DateMaxValue) {
         lastDate = _transaction.LastReentryTime;
       }
-      if (!_transaction.Document.IsEmptyDocument) {
+      if (!_transaction.Document.IsEmptyInstance) {
         lastDate = _transaction.Document.AuthorizationTime;
       }
       if (lastDate.AddDays(graceDaysForReentry) <= DateTime.Now) {
