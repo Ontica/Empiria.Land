@@ -277,6 +277,11 @@ namespace Empiria.Land.Registration.Transactions {
     #region Private methods
 
     private void AssertDigitalizedDocument() {
+      if (!LRSWorkflowRules.IsDigitalizable(_transaction.TransactionType,
+                                            _transaction.DocumentType)) {
+        return;
+      }
+
       if (_transaction.Document.IsEmptyInstance) {
         return;
       }

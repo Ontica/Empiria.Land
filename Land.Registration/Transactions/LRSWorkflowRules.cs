@@ -425,7 +425,7 @@ namespace Empiria.Land.Registration.Transactions {
         return false;
       }
       if (ExecutionServer.LicenseName == "Tlaxcala") {
-        if (type.Id == 699 || type.Id == 702) {
+        if (type.Id == 699 || type.Id == 702 || type.Id == 706) {
           return false;
         } else if (NotRecordableDocumentType(docType)) {
           return false;
