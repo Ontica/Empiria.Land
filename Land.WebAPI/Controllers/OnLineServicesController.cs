@@ -27,6 +27,7 @@ namespace Empiria.Land.WebApi {
   public class OnLineServicesController : WebApiController {
 
     private readonly DateTime hashCodeValidationStartDate = DateTime.Parse("2016-11-24");
+    private readonly DateTime certificateHashCodeValidationStartDate = DateTime.Parse("2020-01-01");
 
     #region Public APIs
 
@@ -52,7 +53,7 @@ namespace Empiria.Land.WebApi {
                                               certificateUID);
 
         } else if (certificate != null && hash.Length != 0 &&
-                   certificate.IssueTime >= hashCodeValidationStartDate && hash != certificate.QRCodeSecurityHash()) {
+                   certificate.IssueTime >= certificateHashCodeValidationStartDate && hash != certificate.QRCodeSecurityHash()) {
           throw new ResourceNotFoundException("Land.Certificate.InvalidQRCode",
                                               "El código QR que está impreso en su documento y que acaba de escanear hace " +
                                               "referencia al certificado con número '{0}' que está registrado en nuestros archivos " +
@@ -211,7 +212,7 @@ namespace Empiria.Land.WebApi {
       propertyBag.Add(new PropertyBagItem("Estado del certificado", certificate.StatusName, "ok-status-text"));
 
       propertyBag.Add(new PropertyBagItem("Verificación de elementos de seguridad", String.Empty, "new-section"));
-      if (hash.Length != 0 && certificate.IssueTime < hashCodeValidationStartDate) {
+      if (hash.Length != 0 && certificate.IssueTime < certificateHashCodeValidationStartDate) {
         propertyBag.Add(new PropertyBagItem("Código de verificación", hash, "bold-text"));
       } else {
         propertyBag.Add(new PropertyBagItem("Código de verificación", certificate.QRCodeSecurityHash(), "bold-text"));
