@@ -148,7 +148,6 @@ namespace Empiria.Land.Registration.Data {
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomCharacter(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter();
 
       int hashCode = 0;
       for (int i = 0; i < temp.Length; i++) {
