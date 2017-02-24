@@ -99,8 +99,6 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="PresentationCore" />
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -111,9 +109,6 @@
       <Name>System.Data</Name>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml">
-      <Name>System.XML</Name>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Empiria.Land.Documentation.AssemblyInfo.cs" />
