@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                    System   : Land Registration System            *
 *  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land.UI                     *
 *  Type      : LRSGridControls                                 Pattern  : Static Class                        *
-*  Version   : 2.1                                             License  : Please read license.txt file        *
+*  Version   : 3.0                                             License  : Please read license.txt file        *
 *                                                                                                             *
 *  Summary   : Static class that generates predefined grid content for Land Registration System data.         *
 *                                                                                                             *
-********************************** Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************** Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections;
 using System.Web.UI.WebControls;
@@ -179,24 +179,24 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{RECORDING.NUMBER}", recordings[i].Number);
 
         if (recordings[i].GetAnnotationActs().Count != 0) {     // No guarantee that the recording IS AN annotation. Annotation isn't a recording property.
-          temp = temp.Replace("{RECORDING.IMAGES}", "*¿¿ Puede ser anotación ??*");
+          temp = temp.Replace("{RECORDING.IMAGES}", "No determinada");
         } else if (recordings[i].StartImageIndex <= 0 && recordings[i].EndImageIndex <= 0) {
           temp = temp.Replace("{RECORDING.IMAGES}", "Sin imagen");
         } else {
           temp = temp.Replace("{RECORDING.IMAGES}", "De la " + recordings[i].StartImageIndex.ToString() +
                               " a la " + recordings[i].EndImageIndex);
         }
-        if (recordings[i].Document.PresentationTime == ExecutionServer.DateMinValue) {
+        if (recordings[i].MainDocument.PresentationTime == ExecutionServer.DateMinValue) {
           temp = temp.Replace("{RECORDING.PRESENTATION.TIME}", "No consta");
         } else {
           temp = temp.Replace("{RECORDING.PRESENTATION.TIME}",
-                                recordings[i].Document.PresentationTime.ToString("dd/MMM/yyyy HH:mm"));
+                                recordings[i].MainDocument.PresentationTime.ToString("dd/MMM/yyyy HH:mm"));
         }
-        if (recordings[i].AuthorizationTime == Empiria.ExecutionServer.DateMaxValue) {
+        if (recordings[i].MainDocument.AuthorizationTime == Empiria.ExecutionServer.DateMinValue) {
           temp = temp.Replace("{RECORDING.AUTHORIZATION.TIME}", "No consta");
         } else {
           temp = temp.Replace("{RECORDING.AUTHORIZATION.TIME}",
-                                recordings[i].AuthorizationTime.ToString("dd/MMM/yyyy"));
+                                recordings[i].MainDocument.AuthorizationTime.ToString("dd/MMM/yyyy"));
         }
         if (recordings[i].Notes.Length == 0) {
           temp = temp.Replace("{RECORDING.NOTES}", "Ninguna");
@@ -210,6 +210,66 @@ namespace Empiria.Land.UI {
         html += temp;
       }
       return header + html + "</table>";
+    }
+
+    static private string GetRowTemplate(RecordingAct recordingAct) {
+      const string template =
+          "<tr class='{{CLASS}}'>" +
+            "<td><b id='ancRecordingActIndex_{{ID}}'>{{INDEX}}</b></td>" +
+            "<td style='white-space:normal'>" +
+              "<a {{RECORDING.ACT.CLASS}} href='javascript:doOperation(\"editRecordingAct\", {{ID}});'>" +
+                 "{{RECORDING.ACT.URL}}</a></td>" +
+            "<td style='white-space:nowrap'>" +
+              "<a {{RESOURCE.CLASS}} href='javascript:doOperation(\"editResource\", {{RESOURCE.ID}}, {{ID}});'>" +
+              "{{RESOURCE.URL}}</a></td>" +
+            "<td>{{OPTIONS.LINKS}}</td></tr>";
+
+      int index = recordingAct.Index + 1;
+
+      string html = template.Replace("{{CLASS}}", (index % 2 == 0) ? "detailsItem" : "detailsOddItem");
+      html = html.Replace("{{INDEX}}", index.ToString("00"));
+      html = html.Replace("{{RESOURCE.ID}}", recordingAct.Resource.Id.ToString());
+      html = html.Replace("{{RESOURCE.URL}}", recordingAct.Resource.UID);
+      html = html.Replace("{{ID}}", recordingAct.Id.ToString());
+      html = html.Replace("{{RECORDING.ACT.URL}}", recordingAct.DisplayName);
+
+      if (!recordingAct.IsCompleted) {
+        html = html.Replace("{{RECORDING.ACT.CLASS}}", "class='pending-edition'");
+      } else {
+        html = html.Replace("{{RECORDING.ACT.CLASS}}", "");
+      }
+      if (!recordingAct.Resource.IsCompleted) {
+        html = html.Replace("{{RESOURCE.CLASS}}", "class='pending-edition'");
+      } else {
+        html = html.Replace("{{RESOURCE.CLASS}}", "");
+      }
+      if (recordingAct.Document.IsReadyForEdition()) {
+        html = html.Replace("{{OPTIONS.LINKS}}", GetDeleteLink(recordingAct));
+      } else {
+        html = html.Replace("{{OPTIONS.LINKS}}", "&nbsp;");
+      }
+      return html;
+    }
+
+    static private string GetDeleteLink(RecordingAct recordingAct) {
+      const string template =
+        "<a href='javascript:doOperation(\"deleteRecordingAct\", {{ID}});' title='Elimina este acto jurídico'>" +
+                "<img src='../themes/default/buttons/trash.gif'></a>";
+
+      return template.Replace("{{ID}}", recordingAct.Id.ToString());
+    }
+
+    public static string GetPhysicalRecordingActsGrid(Recording recording) {
+      string html = String.Empty;
+
+      var document = recording.MainDocument;
+
+      for (int i = 0; i < document.RecordingActs.Count; i++) {
+        var recordingAct = document.RecordingActs[i];
+
+        html += GetRowTemplate(recordingAct);
+      }
+      return html;
     }
 
     static private string GetRecordingActPartyRowTemplate(bool readOnly) {

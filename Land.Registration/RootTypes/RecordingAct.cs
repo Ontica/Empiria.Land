@@ -3,12 +3,12 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingAct                                   Pattern  : Partitioned type                    *
-*  Version   : 2.1                                            License  : Please read license.txt file        *
+*  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Partitioned type that represents a recording act. All recording acts must be descendents      *
 *              of this type.                                                                                 *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 
@@ -229,7 +229,7 @@ namespace Empiria.Land.Registration {
         return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName, this.Document.UID,
                                            this.Resource.UID, this.RelatedResource.UID,
                                            !this.PhysicalRecording.IsEmptyInstance ?
-                                           this.PhysicalRecording.FullNumber : String.Empty);
+                                           this.PhysicalRecording.AsText : String.Empty);
       }
     }
 

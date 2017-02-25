@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : LRSValidator                                   Pattern  : Validation Services Static Class    *
-*  Version   : 2.1                                            License  : Please read license.txt file        *
+*  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Static class that provides Land Registration System validation methods.                       *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 
@@ -67,23 +67,15 @@ namespace Empiria.Land.Registration {
     }
 
     static public LandRegistrationException ValidateRecordingNumber(RecordingBook recordingBook, Recording recording,
-                                                                    string recordingNumberToValidate,
-                                                                    int imageStartIndex, int imageEndIndex) {
+                                                                    string recordingNumberToValidate) {
       string recordingNo = recordingBook.FormatRecordingNumber(recordingNumberToValidate);
-      string filter = "RecordingId <> " + recording.Id + " AND RecordingNumber = '" + recordingNo + "'";
+      string filter = "PhysicalRecordingId <> " + recording.Id + " AND RecordingNo = '" + recordingNo + "'";
       Recording findResult = RecordingBooksData.FindRecording(recordingBook, filter);
 
       if (!findResult.IsEmptyInstance) {
         return new LandRegistrationException(LandRegistrationException.Msg.RecordingNumberAlreadyExists, recordingNo);
       }
 
-      int imageCount = 0; // OOJJOO recordingBook.ImagingFilesFolder.FilesCount;
-
-      if ((imageStartIndex == 0) || (imageEndIndex == 0) ||
-          (imageStartIndex > imageEndIndex) || (imageEndIndex > imageCount)) {
-        return new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingImageRange,
-                                             recordingBook.AsText, imageStartIndex, imageEndIndex, imageCount);
-      }
       return null;
     }
 

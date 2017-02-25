@@ -3,12 +3,12 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecorderExpert                                 Pattern  : Standard Class                      *
-*  Version   : 2.1                                            License  : Please read license.txt file        *
+*  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Performs the registry of recording acts based on a supplied recording task                    *
 *              and a set of rules defined for each recording act type.                                       *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Land.Registration {
@@ -434,7 +434,7 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(this.CreateResourceOnExistingPhysicalRecording,
                        "Wrong RecordingTask values to execute this method.");
 
-      var document = Task.PrecedentRecording.Document;
+      var document = Task.PrecedentRecording.MainDocument;
 
       var precedentAct = new InformationAct(RecordingActType.Empty, document,
                                             resource, Task.PrecedentRecording);
@@ -449,7 +449,7 @@ namespace Empiria.Land.Registration {
 
       RecordingBook recordingBook = Task.PrecedentRecordingBook;
 
-      Recording newPhysicalRecording = recordingBook.CreateQuickRecording(Task.QuickAddRecordingNumber);
+      Recording newPhysicalRecording = recordingBook.AddRecording(document, Task.QuickAddRecordingNumber);
       var precedentAct = new InformationAct(RecordingActType.Empty, document,
                                             resource, newPhysicalRecording);
       precedentAct.Save();

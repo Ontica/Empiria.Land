@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
 *  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
 *  Type      : RecordingBooksData                           Pattern  : Data Services                         *
-*  Version   : 2.1                                          License  : Please read license.txt file          *
+*  Version   : 3.0                                          License  : Please read license.txt file          *
 *                                                                                                            *
 *  Summary   : Provides database read and write methods for recording books.                                 *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 
@@ -168,7 +168,7 @@ namespace Empiria.Land.Registration.Data {
 
     static internal Recording FindRecording(RecordingBook recordingBook, string filter) {
       string sql = "SELECT * FROM LRSPhysicalRecordings WHERE " +
-                   "(RecordingBookId = " + recordingBook.Id.ToString() + " AND RecordingStatus <> 'X')";
+                   "(PhysicalBookId = " + recordingBook.Id.ToString() + " AND RecordingStatus <> 'X')";
       if (!String.IsNullOrWhiteSpace(filter)) {
         sql += " AND " + filter;
       }
@@ -200,9 +200,8 @@ namespace Empiria.Land.Registration.Data {
 
     static internal int WriteRecording(Recording o) {
       var op = DataOperation.Parse("writeLRSPhysicalRecording", o.Id, o.RecordingBook.Id,
-                                   o.Number, o.Notes, o.AsText, o.ExtendedData.ToJson(),
-                                   o.Keywords, o.AuthorizationTime, o.ReviewedBy.Id,
-                                   o.AuthorizedBy.Id, o.RecordedBy.Id, o.RecordingTime,
+                                   o.MainDocument.Id, o.Number, o.AsText, o.ExtendedData.GetJson().ToString(),
+                                   o.Keywords, o.RecordedBy.Id, o.RecordingTime,
                                    (char) o.Status, o.Integrity.GetUpdatedHashCode());
       return DataWriter.Execute(op);
     }

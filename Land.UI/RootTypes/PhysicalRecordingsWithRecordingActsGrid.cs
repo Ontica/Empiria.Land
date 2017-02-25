@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                    System   : Land Registration System            *
 *  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land.UI                     *
 *  Type      : PhysicalRecordingsWithRecordingActsGrid         Pattern  : Standard class                      *
-*  Version   : 2.1                                             License  : Please read license.txt file        *
+*  Version   : 3.0                                             License  : Please read license.txt file        *
 *                                                                                                             *
 *  Summary   : HTML grid that displays a list of physical recordings with their recording acts.               *
 *                                                                                                             *
-********************************** Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************** Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Land.Registration;
@@ -54,8 +54,11 @@ namespace Empiria.Land.UI {
     private string GetTitle() {
       string template =
             "<tr class='detailsTitle'>" +
-              "<td colspan='6'>Partidas registradas en el libro {{RECORDING.BOOK.AS.TEXT}}</td>" +
+              "<td colspan='5'>Partidas registradas en el libro {{RECORDING.BOOK.AS.TEXT}}</td>" +
+              "<td><a href='javascript:doOperation(\"showRecordingBookAnalyzer\", {{RECORDING.BOOK.ID}});'>Captura histórica</a></td>" +
             "</tr>";
+
+      template = template.Replace("{{RECORDING.BOOK.ID}}", this._recordingBook.Id.ToString());
 
       return template.Replace("{{RECORDING.BOOK.AS.TEXT}}", this._recordingBook.AsText);
     }
@@ -96,8 +99,8 @@ namespace Empiria.Land.UI {
 
       string row = template.Replace("{{CLASS}}", (index % 2 == 0) ? "detailsItem" : "detailsOddItem");
       row = row.Replace("{{RECORDING.NUMBER}}", physicalRecording.Number);
-      row = row.Replace("{{DOCUMENT.ID}}", physicalRecording.Document.Id.ToString());
-      row = HtmlFormatters.SetPresentationAndAuthorizationDates(row, physicalRecording.Document);
+      row = row.Replace("{{DOCUMENT.ID}}", physicalRecording.MainDocument.Id.ToString());
+      row = HtmlFormatters.SetPresentationAndAuthorizationDates(row, physicalRecording.MainDocument);
 
       for (int i = 0; i < recordingActs.Count; i++) {
         var recordingAct = recordingActs[i];

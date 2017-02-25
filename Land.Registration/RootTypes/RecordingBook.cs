@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingBook                                  Pattern  : Empiria Object Type                 *
-*  Version   : 2.1                                            License  : Please read license.txt file        *
+*  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Indicates the status of a recording book according to it use in historic capture.             *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Contacts;
@@ -187,8 +187,27 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public Recording CreateQuickRecording(string recordingNumber) {
-      return new Recording(this, this.FormatRecordingNumber(recordingNumber));
+    public Recording AddRecording(RecordingDTO dto) {
+      Assertion.AssertObject(dto, "dto");
+
+      this.AssertValidDTOForAppend(dto);
+
+      var recording = new Recording(dto);
+
+      recording.Save();
+
+      return recording;
+    }
+
+    public Recording AddRecording(RecordingDocument document, string recordingNumber) {
+      Assertion.AssertObject(document, "document");
+      Assertion.AssertObject(recordingNumber, "recordingNumber");
+
+      return new Recording(this, document, this.FormatRecordingNumber(recordingNumber));
+    }
+
+    public Recording CreateNew() {
+      return new Recording(this, RecordingDocument.Empty, "Nueva partida");
     }
 
     public string FormatRecordingNumber(string rawRecordingNumber) {
@@ -306,6 +325,10 @@ namespace Empiria.Land.Registration {
     #endregion Public methods
 
     #region Private methods
+
+    private void AssertValidDTOForAppend(RecordingDTO dto) {
+      //throw new NotImplementedException();
+    }
 
     private int CalculateTotalSheets() {
       throw new NotImplementedException();

@@ -3,12 +3,12 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingActInfoDTO                            Pattern  : Data Transfer Object                *
-*  Version   : 2.1                                            License  : Please read license.txt file        *
+*  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Data transfer object used to hold information about a recording act and send it               *
 *              to the recorder expert.                                                                       *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Land.Registration {
@@ -24,7 +24,7 @@ namespace Empiria.Land.Registration {
     }
 
     public RecordingActInfoDTO(int recordingActTypeId, int physicalBookId,
-                            int physicalRecordingId = -1, string recordingNumber = "") {
+                               int physicalRecordingId = -1, string recordingNumber = "") {
       Initialize();
       this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
       this.PhysicalBook = RecordingBook.Parse(physicalBookId);
@@ -32,7 +32,7 @@ namespace Empiria.Land.Registration {
       if (physicalRecordingId != -1) {
         this.PhysicalRecording = Recording.Parse(physicalRecordingId);
       } else if (recordingNumber != String.Empty) {
-        this.PhysicalRecording = this.PhysicalBook.CreateQuickRecording(recordingNumber);
+        this.PhysicalRecording = this.PhysicalBook.AddRecording(RecordingDocument.Empty, recordingNumber);
       } else {
         this.PhysicalRecording = Recording.Empty;
       }

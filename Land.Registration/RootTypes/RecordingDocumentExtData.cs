@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RecordingDocumentExtData                       Pattern  : IExtensibleData class               *
-*  Version   : 2.1                                            License  : Please read license.txt file        *
+*  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Contains extensible data for a recording document.                                            *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Contacts;
@@ -29,7 +29,7 @@ namespace Empiria.Land.Registration {
         return RecordingDocumentExtData.Empty;
       }
 
-      var json = Empiria.Json.JsonConverter.ToJsonObject(jsonString);
+      var json = JsonConverter.ToJsonObject(jsonString);
 
       var data = new RecordingDocumentExtData();
       data.LoadJson(json);

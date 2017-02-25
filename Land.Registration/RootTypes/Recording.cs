@@ -3,12 +3,13 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : Recording                                      Pattern  : Empiria Object Type                 *
-*  Version   : 2.1                                            License  : Please read license.txt file        *
+*  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Represents a general recording in Land Registration System.                                   *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Data;
 
 using Empiria.Contacts;
 using Empiria.Security;
@@ -33,14 +34,33 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    internal Recording(RecordingBook recordingBook, string number) {
+    internal Recording(RecordingBook recordingBook,
+                       RecordingDocument mainDocument, string recordingNumber) {
       Assertion.AssertObject(recordingBook, "recordingBook");
-      Assertion.AssertObject(number, "number");
+      Assertion.AssertObject(mainDocument, "mainDocument");
+      Assertion.AssertObject(recordingNumber, "recordingNumber");
 
       Assertion.Assert(!recordingBook.IsEmptyInstance, "recordingBook can't be the empty instance.");
 
       this.RecordingBook = recordingBook;
-      this.Number = number;
+      this.MainDocument = mainDocument;
+      this.Number = recordingNumber;
+    }
+
+    internal Recording(RecordingDTO dto) : this(dto?.RecordingBook, dto?.MainDocument, dto?.Number) {
+      this.MainDocument = dto.MainDocument;
+
+      if (this.MainDocument.IsNew) {
+        this.MainDocument.PresentationTime = dto.PresentationTime;
+        // this.MainDocument.AuthorizationTime = dto.AuthorizationTime;
+      }
+      this.StartImageIndex = dto.StartImageIndex;
+      this.EndImageIndex = dto.EndImageIndex;
+
+      // this.AuthorizationTime = dto.AuthorizationDate;
+      this.AuthorizedBy = dto.AuthorizedBy;
+      this.Notes = dto.Notes;
+      this.Status = dto.Status;
     }
 
     protected override void OnInitialize() {
@@ -48,6 +68,11 @@ namespace Empiria.Land.Registration {
       payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
       this.ExtendedData = new RecordingExtData();
     }
+
+    protected override void OnLoadObjectData(DataRow row) {
+      this.ExtendedData = RecordingExtData.Parse((string) row["RecordingExtData"]);
+    }
+
 
     static public Recording Parse(int id) {
       return BaseObject.ParseId<Recording>(id);
@@ -79,14 +104,10 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    public RecordingDocument Document {
-      get {
-        if (recordingActList.Value.Count == 0) {
-          return RecordingDocument.Empty;
-        } else {
-          return recordingActList.Value[0].Document;
-        }
-      }
+    [DataField("MainDocumentId")]
+    public RecordingDocument MainDocument {
+      get;
+      private set;
     }
 
     [DataField("PhysicalBookId")]
@@ -101,29 +122,46 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    [DataField("RecordingNotes")]
     public string Notes {
-      get;
-      set;
+      get {
+        return ExtendedData.Notes;
+      }
+      private set {
+        ExtendedData.Notes = value;
+      }
     }
 
     public string AsText {
       get {
-        return String.Format("Partida {0} en {1}", this.Number, this.RecordingBook.AsText);
+        if (ExecutionServer.LicenseName == "Tlaxcala") {
+          return String.Format("Partida {0} en {1}", this.Number, this.RecordingBook.AsText);
+        } else {
+          return String.Format("Inscripción {0} en {1}", this.Number, this.RecordingBook.AsText);
+        }
       }
     }
 
-    public RecordingExtData ExtendedData {
+    internal RecordingExtData ExtendedData {
       get;
       private set;
     }
 
     public int StartImageIndex {
-      get { return -1; }
+      get {
+        return ExtendedData.StartImageIndex;
+      }
+      private set {
+        ExtendedData.StartImageIndex = value;
+      }
     }
 
     public int EndImageIndex {
-      get { return -1; }
+      get {
+        return ExtendedData.EndImageIndex;
+      }
+      private set {
+        ExtendedData.EndImageIndex = value;
+      }
     }
 
     public string Keywords {
@@ -132,22 +170,22 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    [DataField("RecordingAuthorizationTime")]
-    public DateTime AuthorizationTime {
-      get;
-      private set;
-    }
-
-    [DataField("ReviewedById")]
     public Contact ReviewedBy {
-      get;
-      private set;
+      get {
+        return ExtendedData.ReviewedBy;
+      }
+      private set {
+        ExtendedData.ReviewedBy = value;
+      }
     }
 
-    [DataField("AuthorizedById")]
     public Contact AuthorizedBy {
-      get;
-      private set;
+      get {
+        return ExtendedData.AuthorizedBy;
+      }
+      private set {
+        ExtendedData.AuthorizedBy = value;
+      }
     }
 
     [DataField("RecordedById")]
@@ -166,16 +204,6 @@ namespace Empiria.Land.Registration {
     public RecordableObjectStatus Status {
       get;
       private set;
-    }
-
-    public string FullNumber {
-      get {
-        if (ExecutionServer.LicenseName == "Tlaxcala") {
-          return "Partida " + this.Number + " en " + this.RecordingBook.AsText;
-        } else {
-          return "Inscripción " + this.Number + " en " + this.RecordingBook.AsText;
-        }
-      }
     }
 
     public LRSPaymentList Payments {
@@ -230,6 +258,7 @@ namespace Empiria.Land.Registration {
     }
 
     private IntegrityValidator _validator = null;
+
     public IntegrityValidator Integrity {
       get {
         if (_validator == null) {
@@ -275,6 +304,10 @@ namespace Empiria.Land.Registration {
       if (this.IsNew) {
         this.RecordingTime = DateTime.Now;
         this.RecordedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+
+        if (this.MainDocument.IsNew) {
+          this.MainDocument.Save();
+        }
       }
       RecordingBooksData.WriteRecording(this);
     }

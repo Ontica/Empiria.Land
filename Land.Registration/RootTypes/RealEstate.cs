@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : RealEstate                                     Pattern  : Empiria Object Type                 *
-*  Version   : 2.1                                            License  : Please read license.txt file        *
+*  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Represents a real estate or land property.                                                    *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 
@@ -26,7 +26,7 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    internal RealEstate(RealEstateExtData data) {
+    public RealEstate(RealEstateExtData data) {
       Assertion.AssertObject(data, "data");
 
       this.RealEstateExtData = data;
