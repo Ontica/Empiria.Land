@@ -5,6 +5,11 @@
   "settings": [
     {
       "type": "",
+      "key": "ApplicationKey",
+      "value": "d5AF4FyqLXG50hNCekZFwUf8Odlq8n2birEbW3rvOXrF2256bUCvEFthHDxFQnGW"
+    },
+    {
+      "type": "",
       "key": "License.Name",
       "value": "Tlaxcala"
     },
@@ -80,11 +85,6 @@
     },
     {
       "type": "",
-      "key": "Service.Provider",
-      "value": "Departamento de Informática, DNRP"
-    },
-    {
-      "type": "",
       "key": "Support.Url",
       "value": "http://empiria.ontica.org/support/exceptions.aspx"
     },
@@ -102,6 +102,12 @@
       "type": "",
       "key": "System.Url",
       "value": "http://www.ontica.org/land/"
+    },
+    {
+      "type": "Data",
+      "key": "§DataSource.Default",
+      "value": "UyphNVLnsz61AvWOk8NlkBecUSY2vJ2+I0z0iS9l28IOI2zNXPLJkESP86mDxc6c1E21dOzThN4KjsRGHkg3/hu3knuPD7FXqv2mbBf9WnzFD/VWAqeXNYR7uqI5+5Kz"
+      // "value": "rqcstjh9ZYsq8hvMqk+Lw+dBgkuEeNNOD03mD971KM0D0LK0TsdFTiSLa8jK65otusvcnbBPA4bs0uUq4GCbOFpwHzHcWwunNwIkGhO541Y4eQ689Nk28ClbMZ6VRZ3SINf0OcRnlSmITmGYKTGXoH+oHOOJbHWaq+X5jF4/mznX6xmx9JTKcy4Bzu6/bcmigYp9B/RqprK05rg1Tbjl8XURggW7Ls9B/oRKNqlHF1mwZbU0/yhdyUlIJ/U2N+BahVaXKfPQtnhHQrpolga+Tg=="
     },
     {
       "type": "Data",
@@ -130,6 +136,16 @@
     },
     {
       "type": "Security",
+      "key": "§RSACryptoFile",
+      "value": "ktTzeJScNZxaCmSBvPCmqPGPXkHpqhHqHi7calwmtDA="
+    },
+    {
+      "type": "Security",
+      "key": "§RSACryptoFilePwd",
+      "value": "D4MRrAZXH7rByPNAq/kj9g=="
+    },
+    {
+      "type": "Security",
       "key": "IV",
       "value": "@~App_Data/IV.txt"
     },
@@ -152,6 +168,21 @@
       "type": "Land.WebApi",
       "key": "PendingNoteRequest.ProjectedActsArray",
       "value": "2203~2206~2207~2208~2209~2214~2335~2371~2787"
+    },
+    {
+      "type": "WebApi.Client",
+      "key": "Default.WebApiServer",
+      "value": "Microservices"
+    },
+    {
+      "type": "WebApi.Client",
+      "key": "WebApiServer.Microservices",
+      "value": "http://empiria.microservices"
+    },
+    {
+      "type": "WebApi.Client",
+      "key": "ServiceDirectory.Path",
+      "value": "v1/system/service-directory"
     }
   ]
 }
