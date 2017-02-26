@@ -36,9 +36,6 @@ Empiria Land includes the following software components:
 6. **Web API (HTTP/REST-based)**  
    Http/Json RESTful type web services used to communicate with third party systems, to emit certificates and perform data searching operations.
 
-7. **XML Web Services (to be deprecated)**  
-   Old fashioned XML/SOAP web services that are still in use by some external systems (government treasury).
-
 # Documentation
 
 Folder [**docs**](https://github.com/Ontica/Empiria.Land/tree/master/docs) contains a web site with the full code documentation. It can be downloaded and installed in the web server of your preference.
