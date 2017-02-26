@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
 *  Type      : LRSPayment                                     Pattern  : Empiria Object Type                 *
-*  Version   : 2.1                                            License  : Please read license.txt file        *
+*  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Represents a payment for a recorder office transaction.                                       *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Contacts;

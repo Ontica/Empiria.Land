@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                     System   : Land Web API                      *
 *  Namespace : Empiria.Land.WebApi                              Assembly : Empiria.Land.WebApi.dll           *
 *  Type      : PropertyController                               Pattern  : Web API                           *
-*  Version   : 2.1                                              License  : Please read license.txt file      *
+*  Version   : 3.0                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Contains services used to get real estate and other resources data.                           *
 *                                                                                                            *
-********************************* Copyright (c) 2014-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2014-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Linq;
 using System.Web.Http;

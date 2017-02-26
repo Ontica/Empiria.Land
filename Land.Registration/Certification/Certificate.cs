@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Certification Services              *
 *  Namespace : Empiria.Land.Certification                     Assembly : Empiria.Land.Certification.dll      *
 *  Type      : Certificate                                    Pattern  : Empiria Object Type                 *
-*  Version   : 2.1                                            License  : Please read license.txt file        *
+*  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Holds information about a land certificate.                                                   *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Text;
 

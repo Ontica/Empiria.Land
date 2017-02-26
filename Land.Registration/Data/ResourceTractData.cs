@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
 *  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
 *  Type      : ResourceTractData                            Pattern  : Data Services                         *
-*  Version   : 2.1                                          License  : Please read license.txt file          *
+*  Version   : 3.0                                          License  : Please read license.txt file          *
 *                                                                                                            *
 *  Summary   : Provides database read methods for resource recording tracts.                                 *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Data;

@@ -1,15 +1,14 @@
-﻿/* Empiria Land 2015 *****************************************************************************************
+﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
 *  Namespace : Empiria.Land.Data                            Assembly : Empiria.Land.Registration             *
 *  Type      : CertificatesData                             Pattern  : Data Services                         *
-*  Version   : 2.0        Date: 23/Oct/2015                 License  : Please read license.txt file          *
+*  Version   : 3.0                                          License  : Please read license.txt file          *
 *                                                                                                            *
 *  Summary   : Provides database read and write methods for land certificates.                               *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Data;
 
 using Empiria.Data;
 

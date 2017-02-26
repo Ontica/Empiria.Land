@@ -1,16 +1,16 @@
 ﻿# About Empiria Land
 
 [Empiria Land](http://www.ontica.org/land/) is a suite of powerful solutions that provide information services
-for land recording offices, cadastral departments and other land management government organizations.
+for land recording offices, cadastral departments and other land management governmental organizations.
 
 This repository corresponds to the system's backend just for the Land Recording System.
 
-The project is based on C# 6.0 and .NET Framework 4.6 and the web API is tailored on ASP .NET Web API 2.1.
+The project is based on C# 6.0 and .NET Framework 4.6.2 and the web API is tailored on ASP .NET Web API 2.2.
 
 As other Empiria products, this backend runs over [Empiria Framework](https://github.com/Ontica/Empiria.Core)
 components and, as usual, needs some of the [Empiria Extensions](https://github.com/Ontica/Empiria.Extensions).
 
-The project can be compiled using Visual Studio 2015 starting with the Community Edition.
+The project can be compiled using Visual Studio 2015 Community Edition.
 
 
 # Contents
@@ -56,10 +56,6 @@ This system is distributed by the GNU AFFERO GENERAL PUBLIC LICENSE.
 Óntica always delivers **open source** information systems, and we consider that it is specially
 important in the case of public utility or government systems.
 
-# Version
-
-Most updated version of this product that can run in production is Empiria Land 3.0 Beta 1.
-
 # Copyright
 
-Copyright © 2009-2016. La Vía Óntica SC, Ontica LLC and colaborators.
+Copyright © 2009-2017. La Vía Óntica SC, Ontica LLC and colaborators.

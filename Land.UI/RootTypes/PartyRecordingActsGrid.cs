@@ -3,12 +3,12 @@
 *  Solution  : Empiria Land                                    System   : Land Registration System            *
 *  Namespace : Empiria.Land.UI                                 Assembly : Empiria.Land.UI                     *
 *  Type      : PartyRecordingActsGrid                          Pattern  : Standard class                      *
-*  Version   : 2.1                                             License  : Please read license.txt file        *
+*  Version   : 3.0                                             License  : Please read license.txt file        *
 *                                                                                                             *
 *  Summary   : Generates a grid HTML content with the recording acts associated with a human                  *
 *              or organization party.                                                                         *
 *                                                                                                             *
-********************************** Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************** Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Land.Registration;

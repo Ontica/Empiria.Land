@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Documentation                     Assembly : Empiria.Land.Documentation          *
 *  Type      : DataServices                                   Pattern  : Data Services Static Class          *
-*  Version   : 2.1                                            License  : Please read license.txt file        *
+*  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Database read and write services specific for the Land Documentation component.               *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Data;

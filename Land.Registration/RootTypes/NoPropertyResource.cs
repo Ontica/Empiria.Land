@@ -3,12 +3,12 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
 *  Type      : NoPropertyResource                             Pattern  : Empiria Object Type                 *
-*  Version   : 2.1                                            License  : Please read license.txt file        *
+*  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Represents a no-property or document resource. Wills, testaments and some contracts are       *
 *              kinds of No-property resources.                                                               *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Land.Registration.Data;

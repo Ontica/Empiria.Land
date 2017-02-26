@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                     System   : Land Web API                      *
 *  Namespace : Empiria.Land.WebApi                              Assembly : Empiria.Land.WebApi.dll           *
 *  Type      : RecordingBooksController                         Pattern  : Web API                           *
-*  Version   : 2.1                                              License  : Please read license.txt file      *
+*  Version   : 3.0                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Web API used to retrive physical recording books and recordings information.                  *
 *                                                                                                            *
-********************************* Copyright (c) 2014-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2014-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections;
 using System.Web.Http;

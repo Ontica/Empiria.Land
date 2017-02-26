@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Documentation                     Assembly : Empiria.Land.Documentation          *
 *  Type      : FileAuditTrail                                 Pattern  : Service provider                    *
-*  Version   : 6.7                                            License  : Please read license.txt file        *
+*  Version   : 6.8                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Audit trail services for Land file system operations.                                         *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Land.Documentation {

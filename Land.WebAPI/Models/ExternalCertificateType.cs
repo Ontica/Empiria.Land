@@ -3,11 +3,11 @@
 *  Solution  : Empiria Land                                   System   : Land Services                       *
 *  Namespace : Empiria.Land.WebApi.Models                     Assembly : Empiria.Land.WebApi.dll             *
 *  Type      : ExternalCertificateType                        Pattern  : Enumeration Type                    *
-*  Version   : 2.1                                            License  : Please read license.txt file        *
+*  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Contains the list of certificates types to be used from external systems.                     *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Land.WebApi.Models {
