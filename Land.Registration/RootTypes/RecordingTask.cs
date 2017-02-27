@@ -46,6 +46,7 @@ namespace Empiria.Land.Registration {
       this.CadastralKey = cadastralKey;
       this.PrecedentRecordingBook = RecordingBook.Parse(precedentRecordingBookId);
       this.PrecedentRecording = Recording.Parse(precedentRecordingId);
+
       if (precedentResourceId == 0) {
         var data = new RealEstateExtData() { CadastralKey = cadastralKey };
 

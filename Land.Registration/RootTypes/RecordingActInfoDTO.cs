@@ -32,7 +32,8 @@ namespace Empiria.Land.Registration {
       if (physicalRecordingId != -1) {
         this.PhysicalRecording = Recording.Parse(physicalRecordingId);
       } else if (recordingNumber != String.Empty) {
-        this.PhysicalRecording = this.PhysicalBook.AddRecording(RecordingDocument.Empty, recordingNumber);
+        this.PhysicalRecording = this.PhysicalBook.AddRecording(recordingNumber);
+        this.PhysicalRecordingWasCreated = true;
       } else {
         this.PhysicalRecording = Recording.Empty;
       }
@@ -75,6 +76,11 @@ namespace Empiria.Land.Registration {
     }
 
     public Recording PhysicalRecording {
+      get;
+      private set;
+    }
+
+    public bool PhysicalRecordingWasCreated {
       get;
       private set;
     }

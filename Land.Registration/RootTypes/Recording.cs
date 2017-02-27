@@ -41,6 +41,7 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(recordingNumber, "recordingNumber");
 
       Assertion.Assert(!recordingBook.IsEmptyInstance, "recordingBook can't be the empty instance.");
+      Assertion.Assert(!mainDocument.IsEmptyInstance, "mainDocument can't be the empty instance.");
 
       this.RecordingBook = recordingBook;
       this.MainDocument = mainDocument;

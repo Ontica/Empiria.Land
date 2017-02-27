@@ -277,7 +277,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public bool IsEmptyDocument {
+    public bool IsEmptyDocumentType {
       get {
         return (this.DocumentType == RecordingDocumentType.Empty);
       }
@@ -504,7 +504,7 @@ namespace Empiria.Land.Registration {
 
     private LRSTransaction _transaction = null;
     public LRSTransaction GetTransaction() {
-      if (this.IsEmptyInstance || this.IsEmptyDocument) {
+      if (this.IsEmptyInstance || this.IsEmptyDocumentType) {
         return LRSTransaction.Empty;
       }
       if (_transaction == null) {
@@ -549,7 +549,7 @@ namespace Empiria.Land.Registration {
       recordingAct.Delete();
       recordingActList.Value.Remove(recordingAct);
 
-      if (this.RecordingActs.Count == 0 && this.IsEmptyDocument) {
+      if (this.RecordingActs.Count == 0 && this.IsEmptyDocumentType) {
         this.Delete();
       }
     }

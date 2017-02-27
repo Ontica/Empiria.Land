@@ -515,9 +515,9 @@ namespace Empiria.Land.Registration {
       this.Status = RecordableObjectStatus.Deleted;
       this.Save();
 
-      if (this.IsAmendment && this.AmendmentOf.Document.IsEmptyDocument) {
+      if (this.IsAmendment && this.AmendmentOf.Document.IsEmptyDocumentType) {
         this.AmendmentOf.Delete();
-      } else if (this.IsAmendment && !this.AmendmentOf.Document.IsEmptyDocument) {
+      } else if (this.IsAmendment && !this.AmendmentOf.Document.IsEmptyDocumentType) {
         this.AmendmentOf.RemoveAmendment();
       }
       this.Resource.TryDelete();

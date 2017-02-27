@@ -199,9 +199,21 @@ namespace Empiria.Land.Registration {
       return recording;
     }
 
+    /// <summary>Adds a new recording to the book, creating a main empty document.</summary>
+    public Recording AddRecording(string recordingNumber) {
+      Assertion.AssertObject(recordingNumber, "recordingNumber");
+
+      var newDocument = new RecordingDocument(RecordingDocumentType.Empty);
+
+      return new Recording(this, newDocument, this.FormatRecordingNumber(recordingNumber));
+    }
+
     public Recording AddRecording(RecordingDocument document, string recordingNumber) {
       Assertion.AssertObject(document, "document");
       Assertion.AssertObject(recordingNumber, "recordingNumber");
+
+      Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance.");
+      Assertion.Assert(!document.IsEmptyDocumentType, "document can't be the special empty document.");
 
       return new Recording(this, document, this.FormatRecordingNumber(recordingNumber));
     }

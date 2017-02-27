@@ -325,7 +325,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     private void AssertRecordingActsPrelation() {
-      if (_transaction.Document.IsEmptyInstance || _transaction.Document.IsEmptyDocument) {
+      if (_transaction.Document.IsEmptyInstance || _transaction.Document.IsEmptyDocumentType) {
         return;
       }
       foreach (var recordingAct in _transaction.Document.RecordingActs) {

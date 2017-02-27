@@ -126,7 +126,7 @@ namespace Empiria.Land.UI {
     private string GetHtml() {
       string html = this.GetTitle() + this.GetHeader();
 
-      if (!_transaction.Document.IsEmptyDocument) {
+      if (!_transaction.Document.IsEmptyDocumentType) {
         html += this.GetDocumentRow(_transaction.Document, 0);
       }
       FixedList<Certificate> certificates = _transaction.GetIssuedCertificates();
@@ -136,7 +136,7 @@ namespace Empiria.Land.UI {
         html += this.GetCertificateRow(certificate, i + 1);
       }
 
-      if (_transaction.Document.IsEmptyDocument && certificates.Count == 0) {
+      if (_transaction.Document.IsEmptyDocumentType && certificates.Count == 0) {
         html += this.NoRecordsFoundRow();
       }
 
