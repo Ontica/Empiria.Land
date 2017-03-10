@@ -79,6 +79,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ToDeprecateController.cs" />
     <Compile Include="Controllers\OnLineServicesController.cs" />
     <Compile Include="Controllers\TransactionsController.cs" />
     <Compile Include="Controllers\CertificatesController.cs" />
@@ -88,6 +89,8 @@
     <Compile Include="Empiria.Land.WebApi.AssemblyInfo.cs" />
     <Compile Include="Models\ExternalCertificateType.cs" />
     <Compile Include="Models\CertificateRequest.cs" />
+    <Compile Include="Models\HttpEndpoint.cs" />
+    <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\PendingNoteRequest.cs" />
     <Compile Include="Models\PropertyBagItem.cs" />
   </ItemGroup>
