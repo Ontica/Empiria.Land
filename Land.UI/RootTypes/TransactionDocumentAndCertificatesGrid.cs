@@ -50,7 +50,7 @@ namespace Empiria.Land.UI {
                  "{{DOCUMENT.UID}}</a></td>" +
            "<td>{{DOCUMENT.TYPE}}</td>" +
            "<td style='white-space:nowrap'>{{IMAGING.LINKS}}</td>" +
-           "<td>&nbsp;</td>" +
+           "<td>&#160;</td>" +
            "<td>{{RECORDING.DATE}}</td>" +
            "<td>{{ISSUED.BY}}</td>" +
          "</tr>";
@@ -79,7 +79,7 @@ namespace Empiria.Land.UI {
            "<td>{{CERTIFICATE.TYPE}}<br/>" +
               "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{CERTIFICATE.ID}});'>" +
                   "{{RESOURCE.UID}}</a></td>" +
-           "<td style='white-space:nowrap'>&nbsp;</td>" +
+           "<td style='white-space:nowrap'>&#160;</td>" +
            "<td style='width:300px;white-space:normal;'>{{OWNER.NAME}}</td>" +
            "<td>{{RECORDING.DATE}}</td>" +
            "<td>{{ISSUED.BY}}</td>" +

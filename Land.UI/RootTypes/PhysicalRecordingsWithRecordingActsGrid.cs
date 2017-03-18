@@ -69,7 +69,7 @@ namespace Empiria.Land.UI {
               "<td>Partida</td>" +
               "<td style='width:260px'>Acto jurídico</td>" +
               "<td style='white-space:nowrap'>Folio real</td>" +
-              "<td style='white-space:nowrap'>&nbsp;</td>" +
+              "<td style='white-space:nowrap'>&#160;</td>" +
               "<td style='width:200px'>Present/Registro</td>" +
               "<td style ='width:160px'>Registró</td>" +
             "</tr>";
@@ -117,12 +117,12 @@ namespace Empiria.Land.UI {
     private string GetSecondaryRow(RecordingAct recordingAct, int index) {
       const string template =
           "<tr class='{{CLASS}}'>" +
-             "<td>&nbsp;</td>" +
+             "<td>&#160;</td>" +
              "<td style='white-space:normal'>{{RECORDING.ACT}}</td>" +
              "<td style='white-space:nowrap;'>" +
                 "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{RESOURCE.UID}}</a></td>" +
-             "<td>&nbsp;</td>" +
+             "<td>&#160;</td>" +
              "<td>{{REGISTERED.BY}}</td>" +
            "</tr>";
 

@@ -74,7 +74,7 @@ namespace Empiria.Land.UI {
             "<tr class='detailsHeader'>" +
               "<td style='width:260px'>Acto jurídico</td>" +
               "<td style='white-space:nowrap'>Folio real</td>" +
-              "<td style='white-space:nowrap'>&nbsp;</td>" +
+              "<td style='white-space:nowrap'>&#160;</td>" +
               "<td style ='width:160px'>Registró</td>" +
             "</tr>";
       return template;

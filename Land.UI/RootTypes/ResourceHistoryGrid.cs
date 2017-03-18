@@ -116,7 +116,7 @@ namespace Empiria.Land.UI {
              "<a href='javascript:doOperation(\"onSelectCertificate\", {{CERTIFICATE.ID}});'>" +
                  "{{CERTIFICATE.UID}}</a>" +
              "<br>{{TRANSACTION}}</td>" +
-           "<td>&nbsp;</td>" +
+           "<td>&#160;</td>" +
            "<td>{{ISSUED.BY}}</td>" +
          "</tr>";
 
@@ -189,7 +189,7 @@ namespace Empiria.Land.UI {
 
     private string GetPartitionOrAntecedentCell(RecordingAct recordingAct) {
       if (!(this.Resource is RealEstate)) {
-        return "&nbsp;";
+        return "&#160;";
       }
 
       if (Resource.IsCreationalRole(recordingAct.ResourceRole)) {
@@ -218,7 +218,7 @@ namespace Empiria.Land.UI {
           return temp;
         }
       }
-      return "&nbsp;";
+      return "&#160;";
     }
 
     private string OnSelectDocumentButton(RecordingAct recordingAct) {

@@ -28,7 +28,7 @@ namespace Empiria.Land.UI {
 
     static public string GetImagingLinks(RecordingBook recordingBook) {
       if (!recordingBook.HasImageSet) {
-        return "&nbsp;";
+        return "&#160;";
       }
       string html = String.Empty;
 
@@ -42,7 +42,7 @@ namespace Empiria.Land.UI {
 
       static public string GetImagingLinks(RecordingDocument document) {
       if (!document.HasImageSet && !document.HasAuxiliarImageSet) {
-        return "&nbsp;";
+        return "&#160;";
       }
       string html = String.Empty;
 
@@ -66,7 +66,7 @@ namespace Empiria.Land.UI {
 
       if (!document.HasImageSet && !document.HasAuxiliarImageSet &&
            recordingAct.PhysicalRecording.IsEmptyInstance) {
-        return "&nbsp;";
+        return "&#160;";
       }
       string html = String.Empty;
 
@@ -101,7 +101,7 @@ namespace Empiria.Land.UI {
       if (document.PresentationTime == ExecutionServer.DateMinValue &&
           document.AuthorizationTime == ExecutionServer.DateMinValue) {
         row = row.Replace("{{PRESENTATION.DATE}}", "No constan");
-        row = row.Replace("{{AUTHORIZATION.DATE}}", "&nbsp;");
+        row = row.Replace("{{AUTHORIZATION.DATE}}", "&#160;");
       } else {
         row = row.Replace("{{PRESENTATION.DATE}}", GetDateAsText(document.PresentationTime));
         row = row.Replace("{{AUTHORIZATION.DATE}}", GetDateAsText(document.AuthorizationTime));
