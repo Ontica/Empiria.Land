@@ -143,14 +143,14 @@ namespace Empiria.Land.UI {
       } else if (amendedAct.PhysicalRecording.IsEmptyInstance) {
         return amendedAct.RecordingActType.DisplayName +
                (amendedAct.RecordingActType.FemaleGenre ?
-                                            " registrada en<br/>" : " registrado en<br/>") +
+                                            " registrada en<br></br>" : " registrado en</br>") +
                "Doc: " + amendedAct.Document.UID + "<br />" +
                GetRecordingDates(amendedAct.Document);
 
       } else {
         return amendedAct.RecordingActType.DisplayName +
                (amendedAct.RecordingActType.FemaleGenre ?
-                                            " registrada en<br/>" : " registrado en<br/>") +
+                                            " registrada en<br></br>" : " registrado en</br>") +
                amendedAct.PhysicalRecording.AsText + "<br />" +
                GetRecordingDates(amendedAct.Document);
 

@@ -88,7 +88,7 @@ namespace Empiria.Land.UI {
                 "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{RESOURCE.UID}}</a></td>" +
              "<td><a href='javascript:copyToClipboard(\"{{RESOURCE.UID}}\");'>" +
-                 "<img src='../themes/default/bullets/copy.gif' title='Copiar el folio real'></a></td>" +
+                 "<img src='../themes/default/bullets/copy.gif' title='Copiar el folio real'></img></a></td>" +
              "<td>{{REGISTERED.BY}}</td>" +
            "</tr>";
 
@@ -106,7 +106,7 @@ namespace Empiria.Land.UI {
       const string template =
         "<tr class='detailsItem'>" +
           "<td colspan='3'>Este documento no tiene actos jurídicos</td>" +
-        "<tr>";
+        "</tr>";
 
       return template;
     }

@@ -101,7 +101,7 @@ namespace Empiria.Land.UI {
               "<td style='white-space:nowrap'>Antecedente / Fracción</td>" +
               "<td style='width:200px'>Registrado en</td>" +
               "<td style='white-space:nowrap'>Img</td>" +
-              "<td style ='width:160px'>Registró</ td >" +
+              "<td style ='width:160px'>Registró</td>" +
             "</tr>";
       return template;
     }
@@ -109,13 +109,13 @@ namespace Empiria.Land.UI {
     private string GetCertificateRow(Certificate certificate, int index) {
       const string template =
          "<tr class='{{CLASS}}'>" +
-           "<td>{{PRESENTATION.DATE}}<br/>{{ISSUE.DATE}}</td>" +
+           "<td>{{PRESENTATION.DATE}}<br></br>{{ISSUE.DATE}}</td>" +
            "<td style='white-space:normal'>Emisión de certificado</td>" +
            "<td>{{CERTIFICATE.TYPE}}</td>" +
            "<td style='white-space:nowrap;'>" +
              "<a href='javascript:doOperation(\"onSelectCertificate\", {{CERTIFICATE.ID}});'>" +
                  "{{CERTIFICATE.UID}}</a>" +
-             "<br>{{TRANSACTION}}</td>" +
+             "<br></br>{{TRANSACTION}}</td>" +
            "<td>&#160;</td>" +
            "<td>{{ISSUED.BY}}</td>" +
          "</tr>";
@@ -144,13 +144,13 @@ namespace Empiria.Land.UI {
     private string GetRecordingActRow(RecordingAct recordingAct, int index) {
       const string template =
         "<tr class='{{CLASS}}'>" +
-          "<td>{{PRESENTATION.DATE}}<br/>{{AUTHORIZATION.DATE}}</td>" +
+          "<td>{{PRESENTATION.DATE}}<br></br>{{AUTHORIZATION.DATE}}</td>" +
           "<td style='white-space:normal;width:260px'>{{RECORDING.ACT}}</td>" +
           "<td style='white-space:normal;'>{{PARTITION}}</td>" +
           "<td style='white-space:{{WHITE-SPACE}};'>" +
             "<a href='javascript:doOperation(\"onSelectDocument\", {{DOCUMENT.ID}}, {{RECORDING.ACT.ID}});'>" +
                 "{{DOCUMENT.OR.RECORDING}}</a>" +
-            "<br>{{TRANSACTION}}</td>" +
+            "<br></br>{{TRANSACTION}}</td>" +
           "<td style='white-space:nowrap'>{{IMAGING.LINKS}}</td>" +
           "<td>{{RECORDED.BY}}</td>" +
         "</tr>";

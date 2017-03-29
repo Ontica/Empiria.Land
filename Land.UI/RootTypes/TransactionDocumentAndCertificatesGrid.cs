@@ -76,7 +76,7 @@ namespace Empiria.Land.UI {
            "<td style='white-space:nowrap;'>" +
              "<a href='javascript:doOperation(\"onSelectCertificate\", {{CERTIFICATE.ID}});'>" +
                  "{{CERTIFICATE.UID}}</a></td>" +
-           "<td>{{CERTIFICATE.TYPE}}<br/>" +
+           "<td>{{CERTIFICATE.TYPE}}<br></br>" +
               "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{CERTIFICATE.ID}});'>" +
                   "{{RESOURCE.UID}}</a></td>" +
            "<td style='white-space:nowrap'>&#160;</td>" +
