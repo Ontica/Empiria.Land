@@ -110,7 +110,7 @@ namespace Empiria.Land.UI {
     }
 
     static internal string TableWrapper(string html) {
-      return "<table class='details' style='width:96%'>" + html + "</table>";
+      return "<table class='details' style='width:96%;height:100px;'>" + html + "</table>";
     }
 
   } // class HtmlFormatters
