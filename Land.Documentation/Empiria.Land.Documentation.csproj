@@ -106,12 +106,6 @@
     <Reference Include="Empiria.Foundation, Version=6.8.328.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Empiria.Foundation.6.8.328\lib\net46\Empiria.Foundation.dll</HintPath>
     </Reference>
-    <Reference Include="Empiria.Geography, Version=6.8.328.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Empiria.Geography.6.8.328\lib\net46\Empiria.Geography.dll</HintPath>
-    </Reference>
-    <Reference Include="Empiria.Land.Registration, Version=3.0.308.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Empiria.Land.Registration.3.0.308\lib\net46\Empiria.Land.Registration.dll</HintPath>
-    </Reference>
     <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
     </Reference>
@@ -186,6 +180,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj">
+      <Project>{ea85313c-bbbb-4f31-b6b9-05bb79addff1}</Project>
+      <Name>Empiria.Land.Registration</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
