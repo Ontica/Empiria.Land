@@ -5,7 +5,7 @@ for land recording offices, cadastral departments and other land management gove
 
 This repository corresponds to the system's backend just for the Land Recording System.
 
-The project is based on C# 6.0 and .NET Framework 4.6.2 and the web API is tailored on ASP .NET Web API 2.2.
+The project is based on C# 6.0 and .NET Framework 4.6 and the web API is tailored on ASP .NET Web API 2.2.
 
 As other Empiria products, this backend runs over [Empiria Framework](https://github.com/Ontica/Empiria.Core)
 components and, as usual, needs some of the [Empiria Extensions](https://github.com/Ontica/Empiria.Extensions).

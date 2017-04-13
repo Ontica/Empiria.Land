@@ -36,6 +36,9 @@ namespace Empiria.Land.WebApi {
     public SingleObjectModel GetCertificate([FromUri] string certificateUID,
                                             [FromUri] string hash = "") {
       try {
+        certificateUID = FormatParameter(certificateUID);
+        hash = FormatParameter(hash);
+
         var certificate = Certificate.TryParse(certificateUID);
 
         if (certificate == null && hash.Length == 0) {
@@ -79,6 +82,9 @@ namespace Empiria.Land.WebApi {
     public SingleObjectModel GetDocument([FromUri] string documentUID,
                                          [FromUri] string hash = "") {
       try {
+        documentUID = FormatParameter(documentUID);
+        hash = FormatParameter(hash);
+
         var document = RecordingDocument.TryParse(documentUID);
 
         if (document == null && hash.Length == 0) {
@@ -122,6 +128,9 @@ namespace Empiria.Land.WebApi {
     public SingleObjectModel GetResource([FromUri] string resourceUID,
                                          [FromUri] string hash = "") {
       try {
+        resourceUID = FormatParameter(resourceUID);
+        hash = FormatParameter(hash);
+
         var resource = Resource.TryParseWithUID(resourceUID);
 
         if (resource == null && hash.Length == 0) {
@@ -162,6 +171,9 @@ namespace Empiria.Land.WebApi {
     public SingleObjectModel GetTransaction([FromUri] string transactionUID,
                                             [FromUri] string hash = "") {
       try {
+        transactionUID = FormatParameter(transactionUID);
+        hash = FormatParameter(hash);
+
         var transaction = LRSTransaction.TryParse(transactionUID);
 
         if (transaction == null && hash.Length == 0) {
@@ -441,6 +453,11 @@ namespace Empiria.Land.WebApi {
           "<a href='http://registropublico.tlaxcala.gob.mx/consultas/?type=transaction&uid={0}'>Consultar este trámite</a>";
 
       return String.Format(link, transactionUID);
+    }
+
+
+    private string FormatParameter(string parameter) {
+      return EmpiriaString.TrimSpacesAndControl(parameter).ToUpperInvariant();
     }
 
     #endregion Private methods
