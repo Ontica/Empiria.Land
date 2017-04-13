@@ -70,7 +70,7 @@ namespace Empiria.Land.UI {
               "<td style='white-space:nowrap'>Rol</td>" +
               "<td style='width:200px'>Registrado en</td>" +
               "<td style='white-space:nowrap'>Img</td>" +
-              "<td style ='width:160px'>Registró</ td >" +
+              "<td style ='width:160px'>Registró</td>" +
             "</tr>";
       return template;
     }
@@ -78,15 +78,15 @@ namespace Empiria.Land.UI {
     private string GetRecordingActPartyRow(RecordingActParty recordingActParty, int index) {
       const string template =
            "<tr class='{{CLASS}}'>" +
-             "<td>{{PRESENTATION.DATE}}<br/>{{AUTHORIZATION.DATE}}</td>" +
+             "<td>{{PRESENTATION.DATE}}<br></br>{{AUTHORIZATION.DATE}}</td>" +
              "<td style='white-space:normal;width:260px'>{{RECORDING.ACT}}</td>" +
-             "<td style='white-space:normal;'>{{ROLE}}<br/>" +
+             "<td style='white-space:normal;'>{{ROLE}}<br></br>" +
                  "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
                  "{{RESOURCE.UID}}</a></td>" +
              "<td style='white-space:{{WHITE-SPACE}};'>" +
                "<a href='javascript:doOperation(\"onSelectDocument\", {{DOCUMENT.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{DOCUMENT.OR.RECORDING}}</a>" +
-               "<br>{{TRANSACTION}}</td>" +
+               "<br></br>{{TRANSACTION}}</td>" +
              "<td style='white-space:nowrap'>{{IMAGING.LINKS}}</td>" +
              "<td>{{RECORDED.BY}}</td>" +
            "</tr>";

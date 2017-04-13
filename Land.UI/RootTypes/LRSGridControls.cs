@@ -131,7 +131,7 @@ namespace Empiria.Land.UI {
 
     static private string GetRelatedPartyOnRoleRow(RecordingActParty recordingActParty, bool displayPartyOf) {
       const string row = "<table class='ghostTable' style='margin:8px;'>" +
-                         "<tr><td>{ROLE}:&nbsp;&nbsp;</td><td style='white-space:normal'>" +
+                         "<tr><td>{ROLE}:&#160;&#160;</td><td style='white-space:normal'>" +
                          "<a href='javascript:doOperation(\"selectParty\", {PARTY.ID})'><i>{NAME}</i></a>" +
                          " <a href='javascript:doOperation(\"deleteParty\", {ID})'>(supr)</a>" +
                          "</td></tr>" +
@@ -246,15 +246,14 @@ namespace Empiria.Land.UI {
       if (recordingAct.Document.IsReadyForEdition()) {
         html = html.Replace("{{OPTIONS.LINKS}}", GetDeleteLink(recordingAct));
       } else {
-        html = html.Replace("{{OPTIONS.LINKS}}", "&nbsp;");
+        html = html.Replace("{{OPTIONS.LINKS}}", "&#160;");
       }
       return html;
     }
 
     static private string GetDeleteLink(RecordingAct recordingAct) {
       const string template =
-        "<a href='javascript:doOperation(\"deleteRecordingAct\", {{ID}});' title='Elimina este acto jurídico'>" +
-                "<img src='../themes/default/buttons/trash.gif'></a>";
+        "<a href='javascript:doOperation(\"deleteRecordingAct\", {{ID}});' title='Elimina este acto jurídico1'> <img src='../themes/default/buttons/trash.gif'/></a>";
 
       return template.Replace("{{ID}}", recordingAct.Id.ToString());
     }

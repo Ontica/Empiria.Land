@@ -42,12 +42,12 @@ namespace Empiria.Land.UI {
     private string GetCertificateRow(Certificate certificate, int index) {
       const string template =
          "<tr class='{{CLASS}}'>" +
-           "<td>{{PRESENTATION.DATE}}<br/>{{ISSUE.DATE}}</td>" +
+           "<td>{{PRESENTATION.DATE}}<br></br>{{ISSUE.DATE}}</td>" +
            "<td style='white-space:nowrap;'>" +
              "<a href='javascript:doOperation(\"onSelectCertificate\", {{CERTIFICATE.ID}});'>" +
                  "{{CERTIFICATE.UID}}</a>" +
-             "<br>{{TRANSACTION}}</td>" +
-           "<td>{{CERTIFICATE.TYPE}}<br/>" +
+             "<br></br>{{TRANSACTION}}</td>" +
+           "<td>{{CERTIFICATE.TYPE}}<br></br>" +
               "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{CERTIFICATE.ID}});'>" +
                   "{{RESOURCE.UID}}</a></td>" +
            "<td style='width:300px;white-space:normal;'>{{OWNER.NAME}}</td>" +
@@ -90,7 +90,7 @@ namespace Empiria.Land.UI {
               "<td style='width:200px'>Certificado</td>" +
               "<td style='white-space:nowrap'>Tipo / Folio real</td>" +
               "<td style='width:300px'>Personas</td>" +
-              "<td style ='width:160px'>Registró</ td >" +
+              "<td style ='width:160px'>Registró</td>" +
             "</tr>";
       return template;
     }
