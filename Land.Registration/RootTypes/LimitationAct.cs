@@ -29,7 +29,7 @@ namespace Empiria.Land.Registration {
 
       Assertion.AssertObject(property, "property");
 
-      base.SetResource(property, percentage: percentage);
+      this.SetRealEstate(property, percentage);
     }
 
     static public new LimitationAct Parse(int id) {
@@ -37,6 +37,22 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Constructors and parsers
+
+
+    private void SetRealEstate(RealEstate property, decimal percentage) {
+      var tract = property.Tract.GetRecordingActs();
+
+      if (tract.Count != 0) {     // This is not the first act of the real estate
+        base.SetResource(property, ResourceRole.Informative);
+        return;
+      }
+
+      if (property.IsPartition) {
+        base.SetResource(property, ResourceRole.PartitionOf, property.IsPartitionOf, percentage: percentage);
+      } else {
+        base.SetResource(property, ResourceRole.Created, percentage: percentage);
+      }
+    }
 
   } // class LimitationAct
 
