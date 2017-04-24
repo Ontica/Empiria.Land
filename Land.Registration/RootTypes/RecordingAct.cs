@@ -127,25 +127,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public bool WasAliveOn(DateTime onDate) {
-      if (this.WasCanceledOn(onDate)) {
-        return false;
-      }
-      var autoCancelDays = this.RecordingActType.RecordingRule.AutoCancel;
-      if (autoCancelDays == 0) {
-        return true;
-      }
-      return this.Document.PresentationTime.Date.AddDays(autoCancelDays) >= onDate.Date;
-    }
-
-    public bool WasCanceledOn(DateTime onDate) {
-      if (!this.AmendedBy.IsEmptyInstance && this.AmendedBy.RecordingActType.IsCancelationActType &&
-           this.AmendedBy.Document.PresentationTime > onDate) {
-        return true;
-      }
-      return false;
-    }
-
     [DataField("DocumentId")]
     public RecordingDocument Document {
       get;
@@ -355,9 +336,6 @@ namespace Empiria.Land.Registration {
       throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
     }
 
-    private bool HasCompleteInformation() {
-      return false;
-    }
 
     private IntegrityValidator _validator = null;
     public IntegrityValidator Integrity {
@@ -367,13 +345,6 @@ namespace Empiria.Land.Registration {
         }
         return _validator;
       }
-    }
-
-    public void SetExtensionData(RecordingActExtData updatedData) {
-      Assertion.Assert(updatedData != null && !updatedData.IsEmptyInstance,
-                       "updatedData can't be null or the empty instance");
-
-      this.ExtensionData = updatedData;
     }
 
     string IResourceTractItem.TractPrelationStamp {
@@ -494,6 +465,15 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public void ChangeRecordingActType(RecordingActType recordingActType) {
+      Assertion.AssertObject(recordingActType, "recordingActType");
+      Assertion.Assert(!this.PhysicalRecording.IsEmptyInstance,
+                       "Recording act type changes are possible only are physical recordings.");
+
+      this.ReclassifyAs(recordingActType);
+      this.Save();
+    }
+
     public void ChangeStatusTo(RecordableObjectStatus newStatus) {
       this.Status = newStatus;
       this.Save();
@@ -527,6 +507,10 @@ namespace Empiria.Land.Registration {
       return PartyData.GetRecordingPartyList(this);
     }
 
+    public RecordingAct GetRecordingAntecedent() {
+      return this.Resource.Tract.GetRecordingAntecedent(this, true);
+    }
+
     /// <summary>Gets the resource data as it was when it was applied to this recording act.</summary>
     public RealEstateExtData GetResourceExtData() {
       if (!this.ResourceExtData.IsEmptyInstance) {
@@ -548,6 +532,11 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
+    private bool HasCompleteInformation() {
+      return false;
+    }
+
     public void OnResourceUpdated(RealEstate realEstateUpdatedData) {
       Assertion.Assert(realEstateUpdatedData.Equals(this.Resource),
                        "Recording act resource and the updated resource are not the same.");
@@ -555,27 +544,6 @@ namespace Empiria.Land.Registration {
       this.ResourceExtData = realEstateUpdatedData.RealEstateExtData;
 
       RecordingActsData.UpdateRecordingActResourceExtData(this);
-    }
-
-    public RecordingAct GetRecordingAntecedent() {
-      return this.Resource.Tract.GetRecordingAntecedent(this, true);
-    }
-
-    protected void SetResource(Resource resource, ResourceRole role = ResourceRole.Informative,
-                               Resource relatedResource = null, decimal percentage = 1m) {
-      Assertion.Assert(resource != null  && !resource.IsEmptyInstance,
-                       "Resource can't be null  or the empty instance.");
-      Assertion.Assert(decimal.Zero < percentage && percentage <= decimal.One,
-                       "Percentage should be set between zero and one inclusive.");
-
-      resource.AssertIsStillAlive(this.Document);
-
-      this.Resource = resource;
-      this.ResourceRole = role;
-      this.RelatedResource = relatedResource ?? Resource.Empty;
-      this.Percentage = percentage;
-
-      this.Index = this.Document.AddRecordingAct(this);
     }
 
     protected override void OnLoadObjectData(DataRow row) {
@@ -598,6 +566,55 @@ namespace Empiria.Land.Registration {
         this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
       RecordingActsData.WriteRecordingAct(this);
+    }
+
+    public void SetAsMarginalNote(DateTime date, string marginalNote) {
+      Assertion.Assert(!this.PhysicalRecording.IsEmptyInstance,
+                      "Marginal notes can be only set over acts belonging to physical recordings.");
+
+    }
+
+    public void SetExtensionData(RecordingActExtData updatedData) {
+      Assertion.Assert(updatedData != null && !updatedData.IsEmptyInstance,
+                       "updatedData can't be null or the empty instance");
+
+      this.ExtensionData = updatedData;
+    }
+
+    protected void SetResource(Resource resource, ResourceRole role = ResourceRole.Informative,
+                               Resource relatedResource = null, decimal percentage = 1m) {
+      Assertion.Assert(resource != null && !resource.IsEmptyInstance,
+                       "Resource can't be null  or the empty instance.");
+      Assertion.Assert(decimal.Zero < percentage && percentage <= decimal.One,
+                       "Percentage should be set between zero and one inclusive.");
+
+      resource.AssertIsStillAlive(this.Document);
+
+      this.Resource = resource;
+      this.ResourceRole = role;
+      this.RelatedResource = relatedResource ?? Resource.Empty;
+      this.Percentage = percentage;
+
+      this.Index = this.Document.AddRecordingAct(this);
+    }
+
+    public bool WasAliveOn(DateTime onDate) {
+      if (this.WasCanceledOn(onDate)) {
+        return false;
+      }
+      var autoCancelDays = this.RecordingActType.RecordingRule.AutoCancel;
+      if (autoCancelDays == 0) {
+        return true;
+      }
+      return this.Document.PresentationTime.Date.AddDays(autoCancelDays) >= onDate.Date;
+    }
+
+    public bool WasCanceledOn(DateTime onDate) {
+      if (!this.AmendedBy.IsEmptyInstance && this.AmendedBy.RecordingActType.IsCancelationActType &&
+           this.AmendedBy.Document.PresentationTime > onDate) {
+        return true;
+      }
+      return false;
     }
 
     #endregion Public methods

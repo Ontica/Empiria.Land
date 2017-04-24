@@ -49,19 +49,7 @@ namespace Empiria.Land.Registration {
     }
 
     internal Recording(RecordingDTO dto) : this(dto?.RecordingBook, dto?.MainDocument, dto?.Number) {
-      this.MainDocument = dto.MainDocument;
-
-      if (this.MainDocument.IsNew) {
-        this.MainDocument.PresentationTime = dto.PresentationTime;
-        // this.MainDocument.AuthorizationTime = dto.AuthorizationTime;
-      }
-      this.StartImageIndex = dto.StartImageIndex;
-      this.EndImageIndex = dto.EndImageIndex;
-
-      // this.AuthorizationTime = dto.AuthorizationDate;
-      this.AuthorizedBy = dto.AuthorizedBy;
-      this.Notes = dto.Notes;
-      this.Status = dto.Status;
+      LoadData(dto);
     }
 
     protected override void OnInitialize() {
@@ -83,21 +71,6 @@ namespace Empiria.Land.Registration {
     static public Recording Empty {
       get {
         return _empty.Clone<Recording>();
-      }
-    }
-
-    static public int SplitRecordingNumber(string fullRecordingNumber, out string bisSuffixTag) {
-      if (EmpiriaString.IsInteger(fullRecordingNumber)) {
-        bisSuffixTag = String.Empty;
-        return int.Parse(fullRecordingNumber);
-      }
-      if (fullRecordingNumber.Contains("-")) {
-        int index = fullRecordingNumber.IndexOf("-");
-        bisSuffixTag = fullRecordingNumber.Substring(index);
-        return int.Parse(fullRecordingNumber.Substring(0, index));
-      } else {
-        throw new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingNumber,
-                                            fullRecordingNumber);
       }
     }
 
@@ -271,6 +244,17 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
+    public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Resource resource,
+                                           RecordingAct amendmentOf = null) {
+      Assertion.AssertObject(recordingActType, "recordingActType");
+      Assertion.AssertObject(resource, "resource");
+      Assertion.AssertObject(!resource.IsEmptyInstance, "Resource can't be an empty instance.");
+
+      amendmentOf = amendmentOf ?? RecordingAct.Empty;
+
+      return this.MainDocument.AppendRecordingAct(recordingActType, resource, amendmentOf, this);
+    }
+
     public void AssertCanBeClosed() {
 
     }
@@ -326,6 +310,12 @@ namespace Empiria.Land.Registration {
       this.recordingActList = null;
     }
 
+    public void Update(RecordingDTO data) {
+      this.LoadData(data);
+      data.MainDocument.Save();
+      this.Save();
+    }
+
     #endregion Public methods
 
     #region Private methods
@@ -349,6 +339,22 @@ namespace Empiria.Land.Registration {
         return;
       }
       this.Delete(false);
+    }
+
+    private void LoadData(RecordingDTO dto) {
+      if (this.IsNew) {
+        this.MainDocument = dto.MainDocument;
+      }
+
+      this.MainDocument.PresentationTime = dto.PresentationTime;
+      this.MainDocument.SetAuthorizationTime(dto.AuthorizationDate);
+
+      this.StartImageIndex = dto.StartImageIndex;
+      this.EndImageIndex = dto.EndImageIndex;
+
+      this.AuthorizedBy = dto.AuthorizedBy;
+      this.Notes = dto.Notes;
+      this.Status = dto.Status;
     }
 
     #endregion Private methods

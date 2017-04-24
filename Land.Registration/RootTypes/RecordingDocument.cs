@@ -358,6 +358,11 @@ namespace Empiria.Land.Registration {
       return recordingAct;
     }
 
+    internal void SetAuthorizationTime(DateTime authorizationTime) {
+      Assertion.Assert(this.IsNew || this.IsHistoricDocument,
+                      "AutorizationTime can be set only over new or historic documents.");
+      this.AuthorizationTime = authorizationTime;
+    }
 
     public void AssertCanBeClosed() {
       if (!this.IsReadyToClose()) {

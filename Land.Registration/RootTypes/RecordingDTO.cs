@@ -20,7 +20,7 @@ namespace Empiria.Land.Registration {
 
     public RecordingDTO(RecordingBook book, string number) {
       this.RecordingBook = book;
-      this.Number = number;
+      this.Number = RecordingBook.FormatRecordingNumber(number);
     }
 
     #endregion Constructors and parsers
@@ -42,7 +42,7 @@ namespace Empiria.Land.Registration {
     public RecordingDocument MainDocument {
       get;
       set;
-    } = RecordingDocument.Empty;
+    } = new RecordingDocument(RecordingDocumentType.Empty);
 
 
     public string Notes {

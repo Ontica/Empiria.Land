@@ -68,7 +68,7 @@ namespace Empiria.Land.Registration {
 
     static public LandRegistrationException ValidateRecordingNumber(RecordingBook recordingBook, Recording recording,
                                                                     string recordingNumberToValidate) {
-      string recordingNo = recordingBook.FormatRecordingNumber(recordingNumberToValidate);
+      string recordingNo = RecordingBook.FormatRecordingNumber(recordingNumberToValidate);
       string filter = "PhysicalRecordingId <> " + recording.Id + " AND RecordingNo = '" + recordingNo + "'";
       Recording findResult = RecordingBooksData.FindRecording(recordingBook, filter);
 
