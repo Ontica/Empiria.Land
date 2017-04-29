@@ -56,7 +56,7 @@ namespace Empiria.Land.Registration.Transactions {
     static public FixedList<Contact> GetAgenciesList() {
       GeneralList listType = GeneralList.Parse("LRSTransaction.ManagementAgencies.List");
 
-      return listType.GetItems<Contact>();
+      return listType.GetItems<Contact>((x, y) => x.Alias.CompareTo(y.Alias));
     }
 
     #endregion Constructors and parsers

@@ -52,12 +52,12 @@ namespace Empiria.Land.Certification {
       var o = this.Certificate;
 
       template.Replace("{{QR.CODE.SOURCE}}",
-                       "{{QR.CODE.SERVICE.URL}}?size=120&data={{EXTRANET.SERVER.URL}}?" +
+                       "{{QR.CODE.SERVICE.URL}}?size=120&amp;data={{EXTRANET.SERVER.URL}}?" +
                         "type=certificate%26uid={{NUMERO.CERTIFICADO}}%26hash={{QR.CODE.HASH}}");
 
       if (!o.Property.IsEmptyInstance) {
         template.Replace("{{RESOURCE.QR.CODE.SOURCE}}",
-                         "{{QR.CODE.SERVICE.URL}}?size=120&data={{EXTRANET.SERVER.URL}}?" +
+                         "{{QR.CODE.SERVICE.URL}}?size=120&amp;data={{EXTRANET.SERVER.URL}}?" +
                          "type=resource%26uid={{FOLIO REAL}}%26hash={{RESOURCE.QR.CODE.HASH}}");
         template.Replace("{{DISPLAY.RESOURCE.QR.CODE}}", "inline");
         template.Replace("{{RESOURCE.QR.CODE.HASH}}", o.Property.QRCodeSecurityHash());

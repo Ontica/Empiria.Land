@@ -69,7 +69,9 @@ namespace Empiria.Land.UI {
     private string GetHtml() {
       FixedList<IResourceTractItem> resourceHistory = Resource.Tract.GetFullRecordingActsWithCertificates();
 
-      string html = this.GetTitle() + this.GetHeader();
+      string html = "<thead>" + this.GetTitle() + this.GetHeader() + "</thead>";
+
+      html += "<tbody>";
       for (int i = resourceHistory.Count - 1; 0 <= i; i--) {
         IResourceTractItem item = resourceHistory[i];
 
@@ -81,12 +83,14 @@ namespace Empiria.Land.UI {
           Assertion.AssertNoReachThisCode("Invalid resource history tract item type.");
         }
       }
+      html += "</tbody>";
+
       return HtmlFormatters.TableWrapper(html);
     }
 
     private string GetTitle() {
       string template =
-            "<tr class='detailsTitle'>" +
+            "<tr class='fixedDetailsTitle'>" +
               "<td colspan='6'>Historia del predio <b>{{RESOURCE.UID}}</b></td>" +
             "</tr>";
 
@@ -95,13 +99,13 @@ namespace Empiria.Land.UI {
 
     private string GetHeader() {
       string template =
-            "<tr class='detailsHeader'>" +
+            "<tr class='fixedDetailsHeader'>" +
               "<td>Present/Registro</td>" +
               "<td style='width:160px'>Acto jurídico</td>" +
               "<td style='white-space:nowrap'>Antecedente / Fracción</td>" +
               "<td style='width:200px'>Registrado en</td>" +
               "<td style='white-space:nowrap'>Img</td>" +
-              "<td style ='width:160px'>Registró</td>" +
+              "<td style='width:160px'>Registró</td>" +
             "</tr>";
       return template;
     }
