@@ -46,8 +46,14 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Empiria.Documents, Version=6.8.328.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Empiria.Documents.6.8.328\lib\net46\Empiria.Documents.dll</HintPath>
+    </Reference>
     <Reference Include="Empiria.Foundation, Version=6.8.328.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Empiria.Foundation.6.8.328\lib\net46\Empiria.Foundation.dll</HintPath>
+    </Reference>
+    <Reference Include="Empiria.Geography, Version=6.8.328.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Empiria.Geography.6.8.328\lib\net46\Empiria.Geography.dll</HintPath>
     </Reference>
     <Reference Include="Empiria.WebApi, Version=1.2.328.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Empiria.WebApi.1.2.328\lib\net46\Empiria.WebApi.dll</HintPath>
@@ -85,7 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="LICENSE.txt" />
+    <None Include="LICENSE.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -107,7 +113,7 @@
     <Compile Include="Models\PropertyBagItem.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="README.md" />
+    <None Include="README.md" />
     <Content Include="empiria.config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

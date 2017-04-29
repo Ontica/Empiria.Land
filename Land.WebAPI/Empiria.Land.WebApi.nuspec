@@ -5,13 +5,12 @@
     <version>$version$</version>
     <title>$title$</title>
     <authors>$author$</authors>
-    <owners>$author$</owners>
     <licenseUrl>https://github.com/Ontica/Empiria.Land/blob/master/Land.WebAPI/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/Ontica/Empiria.Land/tree/master/Land.WebAPI</projectUrl>
     <iconUrl>http://www.ontica.org/land/empiria-land.logo.png</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>Initial Nuget version</releaseNotes>
-    <copyright>Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.</copyright>
+    <copyright>$copyright$</copyright>
   </metadata>
 </package>
