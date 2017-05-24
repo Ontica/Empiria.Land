@@ -181,11 +181,11 @@ namespace Empiria.Land.Registration {
       }
 
       if (this.Resource is RealEstate) {
-        /// Returns the last domain or structure act if founded, otherwise
+        /// Returns the last NO-CANCELED domain or structure act if founded, otherwise
         /// return the very first act of the real estate.
 
-        return tract.FindLast((x) => x.RecordingActType.IsDomainActType ||
-                                     x.RecordingActType.IsStructureActType) ?? tract[0];
+        return tract.FindLast((x) => (x.RecordingActType.IsDomainActType ||
+                                     x.RecordingActType.IsStructureActType) && !x.IsCanceled) ?? tract[0];
       } else {
         /// For no real estate, return always the first act that is the creational act.
         /// Resources different than real estates don't have domain or structure acts.
