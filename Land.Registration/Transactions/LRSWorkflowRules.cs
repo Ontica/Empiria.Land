@@ -338,7 +338,7 @@ namespace Empiria.Land.Registration.Transactions {
         if ((type.Id == 699 && docType.Id == 757) ||
              type.Id == 704 ||
              (type.Id == 706 && EmpiriaMath.IsMemberOf(docType.Id, new int[] { 733, 734, 736, 737, 738, 739, 740,
-                                                                               741, 742, 744, 755, 756 }))) {
+                                                                               741, 742, 744, 755, 756, 790 }))) {
           return true;
         }
       }
@@ -359,7 +359,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     static public bool IsEmptyItemsTransaction(LRSTransaction transaction) {
       if (transaction.TransactionType.Id == 706) {
-        if (EmpiriaMath.IsMemberOf(transaction.DocumentType.Id, new int[] { 733, 738, 734, 742 })) {
+        if (EmpiriaMath.IsMemberOf(transaction.DocumentType.Id, new int[] { 733, 738, 734, 742, 790 })) {
           return true;
         }
       }
