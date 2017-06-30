@@ -32,7 +32,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<RealEstateType> GetList() {
-      var list = GeneralObject.ParseList<RealEstateType>();
+      var list = GeneralObject.GetList<RealEstateType>();
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 

@@ -24,7 +24,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<SecondaryPartyRole> GetList() {
-      return GeneralObject.ParseList<SecondaryPartyRole>();
+      return GeneralObject.GetList<SecondaryPartyRole>();
     }
 
     #endregion Constructors and parsers

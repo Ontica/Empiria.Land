@@ -32,7 +32,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<RecordingSection> GetList() {
-      var list = GeneralObject.ParseList<RecordingSection>();
+      var list = GeneralObject.GetList<RecordingSection>();
 
       list.Sort((x, y) => x.NamedKey.CompareTo(y.NamedKey));
 

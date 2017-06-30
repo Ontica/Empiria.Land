@@ -28,7 +28,7 @@ namespace Empiria.WebApi {
 
     /// <summary>Gets the full list of available Http API endpoints.</summary>
     static public FixedList<HttpEndpoint> GetList() {
-      return GeneralObject.ParseList<HttpEndpoint>();
+      return GeneralObject.GetList<HttpEndpoint>();
     }
 
     #endregion Constructors and parsers

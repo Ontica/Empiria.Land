@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public FixedList<LRSDocumentType> GetList() {
-      return GeneralObject.ParseList<LRSDocumentType>();
+      return GeneralObject.GetList<LRSDocumentType>();
     }
 
     #endregion Constructors and parsers

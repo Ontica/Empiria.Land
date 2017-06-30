@@ -34,7 +34,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public FixedList<CalculationRule> GetList() {
-      return GeneralObject.ParseList<CalculationRule>();
+      return GeneralObject.GetList<CalculationRule>();
     }
 
     #endregion Constructors and parsers
