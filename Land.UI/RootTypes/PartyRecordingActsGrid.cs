@@ -42,36 +42,70 @@ namespace Empiria.Land.UI {
     #region Private methods
 
     private string GetHtml() {
+      string html = "<div class='tblContainer'>" +
+                       "<div class='tbHeader'>" +
+                          this.GetHeaderTable() +
+                       "</div> " +
+                       "<div class='tbBody'>" +
+                          this.GetBodyTable() +
+                       "</div>" +
+                    "</div>";
+      return html;
+    }
+
+    private string GetBodyTable() {
       FixedList<RecordingActParty> recordingActs = _party.GetRecordingActs();
 
-      string html = this.GetTitle() + this.GetHeader();
+      string rows = String.Empty;
       for (int i = recordingActs.Count - 1; 0 <= i; i--) {
         RecordingActParty item = recordingActs[i];
 
-        html += this.GetRecordingActPartyRow(item, i);
+        rows += this.GetRecordingActPartyRow(item, i);
       }
-      return HtmlFormatters.TableWrapper(html);
+      return HtmlFormatters.TableWrapper(this.GetColGroup() +
+                                          "<tbody>" +
+                                            rows +
+                                          "</tbody>", "details");
     }
 
-    private string GetTitle() {
-      string template =
-            "<tr class='detailsTitle'>" +
-              "<td colspan='6' style='white-space:normal'>Historial de movimientos <b>{{PARTY}}</b></td>" +
-            "</tr>";
+    private string GetTitleRow() {
+      string template = @"<tr>
+                            <td class='tbTitle' colspan='6'>Historial de movimientos <b>{{PARTY}}</b></td>
+                          </tr>";
 
       return template.Replace("{{PARTY}}", this._party.ExtendedName);
     }
 
-    private string GetHeader() {
-      string template =
-            "<tr class='detailsHeader'>" +
-              "<td>Present/Registro</td>" +
-              "<td style='width:160px'>Acto jurídico</td>" +
-              "<td style='white-space:nowrap'>Rol</td>" +
-              "<td style='width:200px'>Registrado en</td>" +
-              "<td style='white-space:nowrap'>Img</td>" +
-              "<td style ='width:160px'>Registró</td>" +
-            "</tr>";
+    private string GetHeaderTable() {
+      return HtmlFormatters.TableWrapper(this.GetColGroup() +
+                                          "<tbody>" +
+                                            this.GetTitleRow() +
+                                            this.GetHeaderRow() +
+                                          "</tbody>");
+    }
+
+    private string GetHeaderRow() {
+      string template = @"<tr>
+                            <th class='tbHeader'>Prest/Reg</th>
+                            <th class='tbHeader'>Acto jurídico</th>
+                            <th class='tbHeader'>Rol</th>
+                            <th class='tbHeader'>Registrado en</th>
+                            <th class='tbHeader'>Img</th>
+                            <th class='tbHeader'>Registró</th>
+                          </tr>";
+
+      return template;
+    }
+
+    private string GetColGroup() {
+      string template = @"<colgroup>
+                            <col width='75'/>
+		                        <col width='130'/>
+                            <col width='130'/>
+		                        <col width='160'/>
+                            <col width='30'/>
+		                        <col />
+	                        </colgroup>";
       return template;
     }
 
@@ -79,15 +113,15 @@ namespace Empiria.Land.UI {
       const string template =
            "<tr class='{{CLASS}}'>" +
              "<td>{{PRESENTATION.DATE}}<br></br>{{AUTHORIZATION.DATE}}</td>" +
-             "<td style='white-space:normal;width:260px'>{{RECORDING.ACT}}</td>" +
-             "<td style='white-space:normal;'>{{ROLE}}<br></br>" +
+             "<td>{{RECORDING.ACT}}</td>" +
+             "<td>{{ROLE}}<br></br>" +
                  "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
                  "{{RESOURCE.UID}}</a></td>" +
-             "<td style='white-space:{{WHITE-SPACE}};'>" +
+             "<td>" +
                "<a href='javascript:doOperation(\"onSelectDocument\", {{DOCUMENT.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{DOCUMENT.OR.RECORDING}}</a>" +
                "<br></br>{{TRANSACTION}}</td>" +
-             "<td style='white-space:nowrap'>{{IMAGING.LINKS}}</td>" +
+             "<td>{{IMAGING.LINKS}}</td>" +
              "<td>{{RECORDED.BY}}</td>" +
            "</tr>";
 

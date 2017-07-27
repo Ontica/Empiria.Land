@@ -40,55 +40,88 @@ namespace Empiria.Land.UI {
     #region Private methods
 
     private string GetHtml() {
+      string html = "<div class='tblContainer'>" +
+                       "<div class='tbHeader'>" +
+                          this.GetHeaderTable() +
+                       "</div> " +
+                       "<div class='tbBody'>" +
+                          this.GetBodyTable() +
+                       "</div>" +
+                    "</div>";
+      return html;
+    }
+
+    private string GetBodyTable() {
       FixedList<Recording> physicalRecordingsList = _recordingBook.GetRecordings();
 
-      string html = this.GetTitle() + this.GetHeader();
+      string rows = String.Empty;
       for (int i = 0; i < physicalRecordingsList.Count; i++) {
         var physicalRecording = physicalRecordingsList[i];
 
-        html += this.GetRow(physicalRecording, i);
+        rows += this.GetRow(physicalRecording, i);
       }
-      return HtmlFormatters.TableWrapper(html);
+      return HtmlFormatters.TableWrapper(this.GetColGroup() +
+                                          "<tbody>" +
+                                            rows +
+                                          "</tbody>", "details");
     }
 
-    private string GetTitle() {
-      string template =
-            "<tr class='detailsTitle'>" +
-              "<td colspan='5'>Partidas registradas en el libro {{RECORDING.BOOK.AS.TEXT}}</td>" +
-              "<td><a href='javascript:doOperation(\"showRecordingBookAnalyzer\", {{RECORDING.BOOK.ID}});'>Captura histórica</a></td>" +
-            "</tr>";
+    private string GetHeaderTable() {
+      return HtmlFormatters.TableWrapper(this.GetColGroup() +
+                                          "<tbody>" +
+                                            this.GetTitleRow() +
+                                            this.GetHeaderRow() +
+                                          "</tbody>");
+    }
 
+    private string GetColGroup() {
+      string template = @"<colgroup>
+                            <col width='70'/>
+		                        <col width='170'/>
+                            <col width='150'/>
+		                        <col width='35'/>
+		                        <col width='100'/>
+                            <col />
+	                        </colgroup>";
+      return template;
+    }
+
+    private string GetTitleRow() {
+      string template = @"<tr>
+                            <td class='tbTitle' colspan='5'>Partidas registradas en el libro {{RECORDING.BOOK.AS.TEXT}}</td>
+                            <td class='tbTitle'><a href='javascript:doOperation(""showRecordingBookAnalyzer"", {{RECORDING.BOOK.ID}});'>Captura histórica</a></td>
+                          </tr>";
       template = template.Replace("{{RECORDING.BOOK.ID}}", this._recordingBook.Id.ToString());
 
       return template.Replace("{{RECORDING.BOOK.AS.TEXT}}", this._recordingBook.AsText);
     }
 
-    private string GetHeader() {
-      string template =
-            "<tr class='detailsHeader'>" +
-              "<td>Partida</td>" +
-              "<td style='width:260px'>Acto jurídico</td>" +
-              "<td style='white-space:nowrap'>Folio real</td>" +
-              "<td style='white-space:nowrap'>&#160;</td>" +
-              "<td style='width:200px'>Present/Registro</td>" +
-              "<td style ='width:160px'>Registró</td>" +
-            "</tr>";
+    private string GetHeaderRow() {
+      string template = @"<tr>
+                            <th class='tbHeader'>Partida</th>
+                            <th class='tbHeader'>Acto jurídico</th>
+                            <th class='tbHeader'>Folio real</th>
+                            <th class='tbHeader'>&#160;</th>
+                            <th class='tbHeader'>Pre/Reg</th>
+                            <th class='tbHeader'>Registró</th>
+                          </tr>";
+
       return template;
     }
 
     private string GetRow(Recording physicalRecording, int index) {
       const string template =
            "<tr class='{{CLASS}}'>" +
-             "<td style='white-space:nowrap'>" +
+             "<td>" +
                 "<a href='javascript:doOperation(\"onSelectDocument\", {{DOCUMENT.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{RECORDING.NUMBER}}</a></td>" +
-             "<td style='white-space:normal;width:260px;'>{{RECORDING.ACT}}</td>" +
-             "<td style='white-space:nowrap;'>" +
+             "<td>{{RECORDING.ACT}}</td>" +
+             "<td>" +
                 "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{RESOURCE.UID}}</a></td>" +
              "<td><a href='javascript:copyToClipboard(\"{{RESOURCE.UID}}\");'>" +
                  "<img src='../themes/default/bullets/copy.gif' title='Copiar el folio real'></img></a></td>" +
-             "<td style='white-space:nowrap;'>{{PRESENTATION.DATE}}<br></br>{{AUTHORIZATION.DATE}}</td>" +
+             "<td>{{PRESENTATION.DATE}}<br></br>{{AUTHORIZATION.DATE}}</td>" +
              "<td>{{REGISTERED.BY}}</td>" +
            "</tr>";
 
@@ -118,8 +151,8 @@ namespace Empiria.Land.UI {
       const string template =
           "<tr class='{{CLASS}}'>" +
              "<td>&#160;</td>" +
-             "<td style='white-space:normal'>{{RECORDING.ACT}}</td>" +
-             "<td style='white-space:nowrap;'>" +
+             "<td>{{RECORDING.ACT}}</td>" +
+             "<td>" +
                 "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{RESOURCE.UID}}</a></td>" +
              "<td>&#160;</td>" +

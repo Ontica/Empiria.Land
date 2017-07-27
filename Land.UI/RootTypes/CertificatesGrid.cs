@@ -43,14 +43,14 @@ namespace Empiria.Land.UI {
       const string template =
          "<tr class='{{CLASS}}'>" +
            "<td>{{PRESENTATION.DATE}}<br></br>{{ISSUE.DATE}}</td>" +
-           "<td style='white-space:nowrap;'>" +
+           "<td>" +
              "<a href='javascript:doOperation(\"onSelectCertificate\", {{CERTIFICATE.ID}});'>" +
                  "{{CERTIFICATE.UID}}</a>" +
              "<br></br>{{TRANSACTION}}</td>" +
            "<td>{{CERTIFICATE.TYPE}}<br></br>" +
               "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{CERTIFICATE.ID}});'>" +
                   "{{RESOURCE.UID}}</a></td>" +
-           "<td style='width:300px;white-space:normal;'>{{OWNER.NAME}}</td>" +
+           "<td>{{OWNER.NAME}}</td>" +
            "<td>{{ISSUED.BY}}</td>" +
          "</tr>";
 
@@ -83,36 +83,68 @@ namespace Empiria.Land.UI {
     }
 
 
-    private string GetHeader() {
-      string template =
-            "<tr class='detailsHeader'>" +
-              "<td>Present/Registro</td>" +
-              "<td style='width:200px'>Certificado</td>" +
-              "<td style='white-space:nowrap'>Tipo / Folio real</td>" +
-              "<td style='width:300px'>Personas</td>" +
-              "<td style ='width:160px'>Registró</td>" +
-            "</tr>";
+    private string GetHeaderRow() {
+      string template = @"<tr>
+                            <th class='tbHeader'>Prest/Reg</th>
+                            <th class='tbHeader'>Certificado</th>
+                            <th class='tbHeader'>Tipo / Folio real</th>
+                            <th class='tbHeader'>Personas</th>
+                            <th class='tbHeader'>Registró</th>
+                          </tr>";
+
       return template;
     }
 
+    private string GetColGroup() {
+      string template = @"<colgroup>
+                            <col width='70'/>
+		                        <col width='145'/>
+                            <col width='135'/>
+		                        <col width='170'/>
+		                        <col />
+	                        </colgroup>";
+      return template;
+    }
 
     private string GetHtml() {
-      string html = this.GetTitle() + this.GetHeader();
+      string html = "<div class='tblContainer'>" +
+                       "<div class='tbHeader'>" +
+                          this.GetHeaderTable() +
+                       "</div> " +
+                       "<div class='tbBody'>" +
+                          this.GetBodyTable() +
+                       "</div>" +
+                    "</div>";
+      return html;
+    }
+
+    private string GetBodyTable() {
+      string rows = String.Empty;
+
       for (int i = 0; i < _list.Count; i++) {
         Certificate certificate = _list[i];
 
-        html += this.GetCertificateRow(certificate, i);
+        rows += this.GetCertificateRow(certificate, i);
       }
-      return HtmlFormatters.TableWrapper(html);
+
+      return HtmlFormatters.TableWrapper(this.GetColGroup() +
+                                          "<tbody>" +
+                                            rows +
+                                          "</tbody>", "details");
     }
 
+    private string GetHeaderTable() {
+      return HtmlFormatters.TableWrapper(this.GetColGroup() +
+                                          "<tbody>" +
+                                            this.GetTitleRow() +
+                                            this.GetHeaderRow() +
+                                          "</tbody>");
+    }
 
-    private string GetTitle() {
-      string template =
-            "<tr class='detailsTitle'>" +
-              "<td colspan='5'>Resultado de la búsqueda de certificados</td>" +
-            "</tr>";
-
+    private string GetTitleRow() {
+      string template = @"<tr>
+                            <td class='tbTitle' colspan='5'>Resultado de la búsqueda de certificados</td>
+                          </tr>";
       return template;
     }
 

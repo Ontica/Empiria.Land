@@ -63,66 +63,95 @@ namespace Empiria.Land.UI {
 
     #endregion Public properties
 
-
     #region Private methods
 
     private string GetHtml() {
+      string html = "<div class='tblContainer'>" +
+                       "<div class='tbHeader'>" +
+                          this.GetHeaderTable() +
+                       "</div> " +
+                       "<div class='tbBody'>" +
+                          this.GetBodyTable() +
+                       "</div>" +
+                    "</div>";
+      return html;
+    }
+
+    private string GetBodyTable() {
       FixedList<IResourceTractItem> resourceHistory = Resource.Tract.GetFullRecordingActsWithCertificates();
 
-      string html = "<thead>" + this.GetTitle() + this.GetHeader() + "</thead>";
-
-      html += "<tbody>";
+      string rows = String.Empty;
       for (int i = resourceHistory.Count - 1; 0 <= i; i--) {
         IResourceTractItem item = resourceHistory[i];
 
         if (item is RecordingAct) {
-          html += this.GetRecordingActRow((RecordingAct) item, i);
+          rows += this.GetRecordingActRow((RecordingAct) item, i);
         } else if (item is Certificate) {
-          html += this.GetCertificateRow((Certificate) item, i);
+          rows += this.GetCertificateRow((Certificate) item, i);
         } else {
           Assertion.AssertNoReachThisCode("Invalid resource history tract item type.");
         }
       }
-      html += "</tbody>";
 
-      return HtmlFormatters.TableWrapper(html);
+      return HtmlFormatters.TableWrapper( this.GetColGroup() +
+                                          "<tbody>" +
+                                            rows +
+                                          "</tbody>", "details");
     }
 
-    private string GetTitle() {
-      string template =
-            "<tr class='fixedDetailsTitle'>" +
-              "<td colspan='6'>Historia del predio <b>{{RESOURCE.UID}}</b></td>" +
-            "</tr>";
+    private string GetHeaderTable() {
+      return HtmlFormatters.TableWrapper(this.GetColGroup() +
+                                          "<tbody>" +
+                                            this.GetTitleRow() +
+                                            this.GetHeaderRow() +
+                                          "</tbody>");
+    }
+
+    private string GetTitleRow() {
+      string template = @"<tr>
+                            <td class='tbTitle' colspan='6'>Historia del predio <b>{{RESOURCE.UID}}</b></td>
+                          </tr>";
 
       return template.Replace("{{RESOURCE.UID}}", this.Resource.UID);
     }
 
-    private string GetHeader() {
-      string template =
-            "<tr class='fixedDetailsHeader'>" +
-              "<td>Present/Registro</td>" +
-              "<td style='width:160px'>Acto jurídico</td>" +
-              "<td style='white-space:nowrap'>Antecedente / Fracción</td>" +
-              "<td style='width:200px'>Registrado en</td>" +
-              "<td style='white-space:nowrap'>Img</td>" +
-              "<td style='width:160px'>Registró</td>" +
-            "</tr>";
+    private string GetHeaderRow() {
+      string template = @"<tr>
+                            <th class='tbHeader'>Pres/Reg</th>
+                            <th class='tbHeader'>Acto jurídico</th>
+                            <th class='tbHeader'>Antecedente / Fracción</th>
+                            <th class='tbHeader'>Registrado en</th>
+                            <th class='tbHeader'>Img</th>
+                            <th class='tbHeader'>Registró</th>
+                          </tr>";
+
+      return template;
+    }
+
+    private string GetColGroup() {
+      string template = @"<colgroup>
+                            <col width='70'/>
+		                        <col width='120'/>
+		                        <col width='140'/>
+		                        <col width='150'/>
+		                        <col width='50'/>
+	                        </colgroup>";
       return template;
     }
 
     private string GetCertificateRow(Certificate certificate, int index) {
       const string template =
-         "<tr class='{{CLASS}}'>" +
-           "<td>{{PRESENTATION.DATE}}<br></br>{{ISSUE.DATE}}</td>" +
-           "<td style='white-space:normal'>Emisión de certificado</td>" +
-           "<td>{{CERTIFICATE.TYPE}}</td>" +
-           "<td style='white-space:nowrap;'>" +
-             "<a href='javascript:doOperation(\"onSelectCertificate\", {{CERTIFICATE.ID}});'>" +
-                 "{{CERTIFICATE.UID}}</a>" +
-             "<br></br>{{TRANSACTION}}</td>" +
-           "<td>&#160;</td>" +
-           "<td>{{ISSUED.BY}}</td>" +
-         "</tr>";
+        @"<tr class='{{CLASS}}'>
+            <td>{{PRESENTATION.DATE}}<br></br>{{ISSUE.DATE}}</td>
+            <td>Emisión de certificado</td>
+            <td>{{CERTIFICATE.TYPE}}</td>
+            <td>
+              <a href='javascript:doOperation(""onSelectCertificate"", {{CERTIFICATE.ID}});'>
+                {{CERTIFICATE.UID}}</a>
+                <br/>{{TRANSACTION}}</td>
+            <td>&#160;</td>
+            <td>{{ISSUED.BY}}</td>
+          </tr>";
 
       string className = (index % 2 == 0) ? "detailsItem" : "detailsOddItem";
       if (certificate.Transaction.Equals(this.SelectedTransaction)) {
@@ -147,17 +176,17 @@ namespace Empiria.Land.UI {
 
     private string GetRecordingActRow(RecordingAct recordingAct, int index) {
       const string template =
-        "<tr class='{{CLASS}}'>" +
-          "<td>{{PRESENTATION.DATE}}<br></br>{{AUTHORIZATION.DATE}}</td>" +
-          "<td style='white-space:normal;width:260px'>{{RECORDING.ACT}}</td>" +
-          "<td style='white-space:normal;'>{{PARTITION}}</td>" +
-          "<td style='white-space:{{WHITE-SPACE}};'>" +
-            "<a href='javascript:doOperation(\"onSelectDocument\", {{DOCUMENT.ID}}, {{RECORDING.ACT.ID}});'>" +
-                "{{DOCUMENT.OR.RECORDING}}</a>" +
-            "<br></br>{{TRANSACTION}}</td>" +
-          "<td style='white-space:nowrap'>{{IMAGING.LINKS}}</td>" +
-          "<td>{{RECORDED.BY}}</td>" +
-        "</tr>";
+        @"<tr class='{{CLASS}}'>
+            <td>{{PRESENTATION.DATE}}<br></br>{{AUTHORIZATION.DATE}}</td>
+            <td>{{RECORDING.ACT}}</td>
+            <td>{{PARTITION}}</td>
+            <td>
+              <a href='javascript:doOperation(""onSelectDocument"", {{DOCUMENT.ID}}, {{RECORDING.ACT.ID}});'>
+                  {{DOCUMENT.OR.RECORDING}}</a>
+              <br/>{{TRANSACTION}}</td>
+            <td>{{IMAGING.LINKS}}</td>
+            <td>{{RECORDED.BY}}</td>
+          </tr>";
 
       string className = (index % 2 == 0) ? "detailsItem" : "detailsOddItem";
       if (recordingAct.Document.Equals(this.SelectedDocument)) {

@@ -109,8 +109,15 @@ namespace Empiria.Land.UI {
       return row;
     }
 
-    static internal string TableWrapper(string html) {
-      return "<table class='details' style='width:98%;height:100px;'>" + html + "</table>";
+    static internal string TableWrapper(string tableContent, string className = "") {
+      string html = @"<table {{CLASS}} width='100%' cellspacing='0' cellpadding='0' border='0'>
+                     {{TABLE-CONTENT}}
+                     </table>";
+
+      html = html.Replace("{{CLASS}}", className.Length != 0 ? "class='" + className + "'" : String.Empty);
+      html = html.Replace("{{TABLE-CONTENT}}", tableContent);
+
+      return html;
     }
 
   } // class HtmlFormatters

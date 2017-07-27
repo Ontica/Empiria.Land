@@ -40,25 +40,48 @@ namespace Empiria.Land.UI {
     #region Private methods
 
     private string GetHtml() {
+      string html = "<div class='tblContainer'>" +
+                       "<div class='tbHeader'>" +
+                          this.GetHeaderTable() +
+                       "</div> " +
+                       "<div class='tbBody'>" +
+                          this.GetBodyTable() +
+                       "</div>" +
+                    "</div>";
+      return html;
+    }
+
+    private string GetBodyTable() {
       FixedList<RecordingAct> recordingActsList = _document.RecordingActs;
 
-      string html = this.GetTitle() + this.GetHeader();
+      string rows = String.Empty;
       for (int i = 0; i < recordingActsList.Count; i++) {
         var recordingAct = recordingActsList[i];
 
-        html += this.GetRow(recordingAct, i);
+        rows += this.GetRow(recordingAct, i);
       }
       if (recordingActsList.Count == 0) {
-        html += this.NoRecordsFoundRow();
+        rows += this.NoRecordsFoundRow();
       }
-      return HtmlFormatters.TableWrapper(html);
+
+      return HtmlFormatters.TableWrapper(this.GetColGroup() +
+                                          "<tbody>" +
+                                            rows +
+                                          "</tbody>", "details");
     }
 
-    private string GetTitle() {
-      string template =
-            "<tr class='detailsTitle'>" +
-              "<td colspan='4'>{{DOCUMENT.AS.TEXT}}</td>" +
-            "</tr>";
+    private string GetHeaderTable() {
+      return HtmlFormatters.TableWrapper(this.GetColGroup() +
+                                          "<tbody>" +
+                                            this.GetTitleRow() +
+                                            this.GetHeaderRow() +
+                                          "</tbody>");
+    }
+
+    private string GetTitleRow() {
+      string template = @"<tr>
+                            <td class='tbTitle' colspan='4'>{{DOCUMENT.AS.TEXT}}</td>
+                          </tr>";
 
       if (_document.IsHistoricDocument) {
         return template.Replace("{{DOCUMENT.AS.TEXT}}",
@@ -69,22 +92,32 @@ namespace Empiria.Land.UI {
       }
     }
 
-    private string GetHeader() {
-      string template =
-            "<tr class='detailsHeader'>" +
-              "<td style='width:260px'>Acto jurídico</td>" +
-              "<td style='white-space:nowrap'>Folio real</td>" +
-              "<td style='white-space:nowrap'>&#160;</td>" +
-              "<td style ='width:160px'>Registró</td>" +
-            "</tr>";
+    private string GetHeaderRow() {
+      string template = @"<tr>
+                            <th class='tbHeader'>Acto jurídico</th>
+                            <th class='tbHeader'>Folio real</th>
+                            <th class='tbHeader'>&#160;</th>
+                            <th class='tbHeader'>Registró</th>
+                          </tr>";
+
+      return template;
+    }
+
+    private string GetColGroup() {
+      string template = @"<colgroup>
+                            <col width='250'/>
+		                        <col width='220'/>
+                            <col width='20'/>
+		                        <col />
+	                        </colgroup>";
       return template;
     }
 
     private string GetRow(RecordingAct recordingAct, int index) {
       const string template =
           "<tr class='{{CLASS}}'>" +
-             "<td style='white-space:normal;width:260px'>{{RECORDING.ACT}}</td>" +
-             "<td style='white-space:nowrap;'>" +
+             "<td>{{RECORDING.ACT}}</td>" +
+             "<td>" +
                 "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{RESOURCE.UID}}</a></td>" +
              "<td><a href='javascript:copyToClipboard(\"{{RESOURCE.UID}}\");'>" +
@@ -105,7 +138,7 @@ namespace Empiria.Land.UI {
     private string NoRecordsFoundRow() {
       const string template =
         "<tr class='detailsItem'>" +
-          "<td colspan='3'>Este documento no tiene actos jurídicos</td>" +
+          "<td colspan='4'>Este documento no tiene actos jurídicos</td>" +
         "</tr>";
 
       return template;

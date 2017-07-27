@@ -45,11 +45,11 @@ namespace Empiria.Land.UI {
     private string GetDocumentRow(RecordingDocument document, int index) {
       const string template =
          "<tr class='{{CLASS}}'>" +
-           "<td style='white-space:nowrap;'>" +
+           "<td>" +
              "<a href='javascript:doOperation(\"onSelectDocument\", {{DOCUMENT.ID}});'>" +
                  "{{DOCUMENT.UID}}</a></td>" +
            "<td>{{DOCUMENT.TYPE}}</td>" +
-           "<td style='white-space:nowrap'>{{IMAGING.LINKS}}</td>" +
+           "<td>{{IMAGING.LINKS}}</td>" +
            "<td>&#160;</td>" +
            "<td>{{RECORDING.DATE}}</td>" +
            "<td>{{ISSUED.BY}}</td>" +
@@ -73,14 +73,14 @@ namespace Empiria.Land.UI {
     private string GetCertificateRow(Certificate certificate, int index) {
       const string template =
          "<tr class='{{CLASS}}'>" +
-           "<td style='white-space:nowrap;'>" +
+           "<td>" +
              "<a href='javascript:doOperation(\"onSelectCertificate\", {{CERTIFICATE.ID}});'>" +
                  "{{CERTIFICATE.UID}}</a></td>" +
            "<td>{{CERTIFICATE.TYPE}}<br></br>" +
               "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{CERTIFICATE.ID}});'>" +
                   "{{RESOURCE.UID}}</a></td>" +
-           "<td style='white-space:nowrap'>&#160;</td>" +
-           "<td style='width:300px;white-space:normal;'>{{OWNER.NAME}}</td>" +
+           "<td>&#160;</td>" +
+           "<td>{{OWNER.NAME}}</td>" +
            "<td>{{RECORDING.DATE}}</td>" +
            "<td>{{ISSUED.BY}}</td>" +
          "</tr>";
@@ -108,50 +108,79 @@ namespace Empiria.Land.UI {
       return row;
     }
 
+    private string GetHeaderRow() {
+      string template = @"<tr>
+                            <th class='tbHeader'>Documento/Certificado</th>
+                            <th class='tbHeader'>Tipo / Folio real</th>
+                            <th class='tbHeader'>Img</th>
+                            <th class='tbHeader'>Personas</th>
+                            <th class='tbHeader'>Fecha</th>
+                            <th class='tbHeader'>Registró</th>
+                          </tr>";
 
-    private string GetHeader() {
-      string template =
-            "<tr class='detailsHeader'>" +
-              "<td style='width:200px'>Documento/Certificado</td>" +
-              "<td style='width:200px'>Tipo / Folio real</td>" +
-              "<td style='white-space:nowrap'>Img</td>" +
-              "<td style='white-space:nowrap'>Personas</td>" +
-              "<td style='width:160px'>Fecha</td>" +
-              "<td style ='width:160px'>Registró</td>" +
-            "</tr>";
       return template;
     }
 
-
     private string GetHtml() {
-      string html = this.GetTitle() + this.GetHeader();
+      string html = "<div class='tblContainer'>" +
+                       "<div class='tbHeader'>" +
+                          this.GetHeaderTable() +
+                       "</div> " +
+                       "<div class='tbBody'>" +
+                          this.GetBodyTable() +
+                       "</div>" +
+                    "</div>";
+      return html;
+    }
 
+    private string GetHeaderTable() {
+      return HtmlFormatters.TableWrapper(this.GetColGroup() +
+                                          "<tbody>" +
+                                            this.GetTitleRow() +
+                                            this.GetHeaderRow() +
+                                          "</tbody>");
+    }
+
+    private string GetColGroup() {
+      string template = @"<colgroup>
+                            <col width='150'/>
+		                        <col width='120'/>
+                            <col width='50'/>
+		                        <col width='130'/>
+		                        <col width='70'/>
+                            <col />
+	                        </colgroup>";
+      return template;
+    }
+
+    private string GetBodyTable() {
+      string rows = String.Empty;
       if (!_transaction.Document.IsEmptyDocumentType) {
-        html += this.GetDocumentRow(_transaction.Document, 0);
+        rows += this.GetDocumentRow(_transaction.Document, 0);
       }
       FixedList<Certificate> certificates = _transaction.GetIssuedCertificates();
       for (int i = 0; i < certificates.Count; i++) {
         Certificate certificate = certificates[i];
 
-        html += this.GetCertificateRow(certificate, i + 1);
+        rows += this.GetCertificateRow(certificate, i + 1);
       }
 
       if (_transaction.Document.IsEmptyDocumentType && certificates.Count == 0) {
-        html += this.NoRecordsFoundRow();
+        rows += this.NoRecordsFoundRow();
       }
-
-      return HtmlFormatters.TableWrapper(html);
+      return HtmlFormatters.TableWrapper(this.GetColGroup() +
+                                          "<tbody>" +
+                                            rows +
+                                          "</tbody>", "details");
     }
 
-    private string GetTitle() {
-      string template =
-            "<tr class='detailsTitle'>" +
-              "<td colspan='6'>Documento y certificados del trámite <b>{{TRANSACTION.UID}}</b></td>" +
-            "</tr>";
+    private string GetTitleRow() {
+      string template = @"<tr>
+                            <td class='tbTitle' colspan='6'>Documento y certificados del trámite <b>{{TRANSACTION.UID}}</b></td>
+                          </tr>";
 
       return template.Replace("{{TRANSACTION.UID}}", _transaction.UID);
     }
-
 
     private string NoRecordsFoundRow() {
       const string template =
