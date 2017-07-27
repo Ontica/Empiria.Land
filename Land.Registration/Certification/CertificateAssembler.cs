@@ -148,8 +148,8 @@ namespace Empiria.Land.Certification {
 
       private void AssertImmutableData(Certificate certificate) {
         Validate.IsTrue(certificate.Transaction.Equals(this.GetTransaction()),
-                        "Certificate Transaction was changed between calls. {0}  {1}",
-                        certificate.Transaction.Id, this.GetTransaction().Id);
+                        $"Certificate Transaction was changed between calls. " +
+                        $"{certificate.Transaction.Id}  {this.GetTransaction().Id}");
       }
 
       private CertificateType GetCertificateType() {
@@ -164,7 +164,7 @@ namespace Empiria.Land.Certification {
         }
         var property = RealEstate.TryParseWithUID(data.PropertyUID);
         Validate.NotNull(property,
-                        "Property with unique ID '{0}' was not found.", data.PropertyUID);
+                        $"Property with unique ID '{data.PropertyUID}' was not found.");
         return property;
       }
 
@@ -175,7 +175,7 @@ namespace Empiria.Land.Certification {
       private LRSTransaction GetTransaction() {
         var transaction = LRSTransaction.TryParse(data.TransactionUID);
         Validate.NotNull(transaction,
-                         "Transaction with unique ID '{0}' was not found.", data.TransactionUID);
+                         $"Transaction with unique ID '{data.TransactionUID}' was not found.");
 
         return transaction;
       }
