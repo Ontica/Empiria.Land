@@ -97,6 +97,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SedatuServices\SedatuRealEstateModel.cs" />
+    <Compile Include="SedatuServices\SedatuServicesController.cs" />
     <Compile Include="Controllers\ToDeprecateController.cs" />
     <Compile Include="Controllers\OnLineServicesController.cs" />
     <Compile Include="Controllers\TransactionsController.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="Models\ExternalCertificateType.cs" />
     <Compile Include="Models\CertificateRequest.cs" />
     <Compile Include="Models\HttpEndpoint.cs" />
+    <Compile Include="SedatuServices\PartiesFilter.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\PendingNoteRequest.cs" />
     <Compile Include="Models\PropertyBagItem.cs" />

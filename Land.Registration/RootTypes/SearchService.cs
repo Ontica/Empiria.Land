@@ -58,7 +58,22 @@ namespace Empiria.Land.Registration {
       string filter = FilterExpression("FullSearchKeywords", keywords);
       sort = SortExpression(sort, "PartyFullName, PartyOfFullName");
 
-      string sql = EntitySqlString("vwLRSRecordingActParties", "RecActPartyStatus", filter, sort, 50);
+      string sql = EntitySqlString("vwLRSRecordingActParties", "RecActPartyStatus",
+                                    filter, sort, 250);
+
+      return DataReader.GetList(DataOperation.Parse(sql),
+                                (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
+    }
+
+    static public FixedList<RecordingActParty> PrimaryParties(string keywords, string sort = "") {
+      string keywordsFilter = FilterExpression("PartyKeywords", keywords);
+      const string domainActFilter = "[RecordingActTypeName] LIKE 'ObjectType.RecordingAct.DomainAct.%'";
+
+      string filter = GeneralDataOperations.BuildSqlAndFilter(domainActFilter, keywordsFilter);
+
+      sort = SortExpression(sort, "PartyFullName");
+
+      string sql = EntitySqlString("vwLRSRecordingActParties", "", filter, sort, 250);
 
       return DataReader.GetList(DataOperation.Parse(sql),
                                 (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
