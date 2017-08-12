@@ -43,6 +43,12 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<RecordingActParty>(id);
     }
 
+    static public RecordingActParty Empty {
+      get {
+        return BaseObject.ParseEmpty<RecordingActParty>();
+      }
+    }
+
     static internal RecordingActParty Create(RecordingAct recordingAct, Party party,
                                              DomainActPartyRole role) {
       Assertion.AssertObject(recordingAct, "recordingAct");

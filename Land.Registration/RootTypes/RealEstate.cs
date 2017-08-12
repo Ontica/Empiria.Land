@@ -37,17 +37,23 @@ namespace Empiria.Land.Registration {
     }
 
     static public new RealEstate TryParseWithUID(string propertyUID) {
-      DataRow row = ResourceData.GetResourceWithUID(propertyUID);
+      var resource = Resource.TryParseWithUID(propertyUID);
 
-      if (row != null) {
-        return BaseObject.ParseDataRow<RealEstate>(row);
+      if (resource == null) {
+        return null;
+      }
+
+      if (resource is RealEstate) {
+        return (RealEstate) resource;
       } else {
         return null;
       }
     }
 
     static public new RealEstate Empty {
-      get { return BaseObject.ParseEmpty<RealEstate>(); }
+      get {
+        return BaseObject.ParseEmpty<RealEstate>();
+      }
     }
 
     #endregion Constructors and parsers
