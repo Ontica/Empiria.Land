@@ -63,7 +63,6 @@ namespace Empiria.Land.UI {
 
     #endregion Public properties
 
-
     #region Private methods
 
     private string GetHtml() {

@@ -212,17 +212,24 @@ namespace Empiria.Land.UI {
       return header + html + "</table>";
     }
 
-    static private string GetRowTemplate(RecordingAct recordingAct) {
+    static private string GetPhysicalRecordingActRowTemplate(RecordingAct recordingAct) {
       const string template =
           "<tr class='{{CLASS}}'>" +
             "<td><b id='ancRecordingActIndex_{{ID}}'>{{INDEX}}</b></td>" +
             "<td style='white-space:normal'>" +
               "<a {{RECORDING.ACT.CLASS}} href='javascript:doOperation(\"editRecordingAct\", {{ID}});'>" +
-                 "{{RECORDING.ACT.URL}}</a></td>" +
+                 "{{RECORDING.ACT.URL}}</a>" +
+               "{{CHANGE-RECORDING-ACT-TYPE-LINK}}" +
+            "</td>" +
+            "<td style='white-space:normal'>" +
+              "{{REGISTERED.ON}}" +
+            "</td>" +
             "<td style='white-space:nowrap'>" +
               "<a {{RESOURCE.CLASS}} href='javascript:doOperation(\"editResource\", {{RESOURCE.ID}}, {{ID}});'>" +
               "{{RESOURCE.URL}}</a></td>" +
             "<td>{{OPTIONS.LINKS}}</td></tr>";
+      const string templateChangeRecordingAct =
+            " <a {{RECORDING.ACT.CLASS}} href='javascript:doOperation(\"changeRecordingAct\", {{ID}});'>[cambiar]</a>";
 
       int index = recordingAct.Index + 1;
 
@@ -230,18 +237,24 @@ namespace Empiria.Land.UI {
       html = html.Replace("{{INDEX}}", index.ToString("00"));
       html = html.Replace("{{RESOURCE.ID}}", recordingAct.Resource.Id.ToString());
       html = html.Replace("{{RESOURCE.URL}}", recordingAct.Resource.UID);
+      html = html.Replace("{{REGISTERED.ON}}", "En esta partida");
+      if (recordingAct.RecordingActType == RecordingActType.Empty) {
+        html = html.Replace("{{CHANGE-RECORDING-ACT-TYPE-LINK}}", templateChangeRecordingAct);
+      } else {
+        html = html.Replace("{{CHANGE-RECORDING-ACT-TYPE-LINK}}", String.Empty);
+      }
       html = html.Replace("{{ID}}", recordingAct.Id.ToString());
       html = html.Replace("{{RECORDING.ACT.URL}}", recordingAct.DisplayName);
 
       if (!recordingAct.IsCompleted) {
         html = html.Replace("{{RECORDING.ACT.CLASS}}", "class='pending-edition'");
       } else {
-        html = html.Replace("{{RECORDING.ACT.CLASS}}", "");
+        html = html.Replace("{{RECORDING.ACT.CLASS}}", String.Empty);
       }
       if (!recordingAct.Resource.IsCompleted) {
         html = html.Replace("{{RESOURCE.CLASS}}", "class='pending-edition'");
       } else {
-        html = html.Replace("{{RESOURCE.CLASS}}", "");
+        html = html.Replace("{{RESOURCE.CLASS}}", String.Empty);
       }
       if (recordingAct.Document.IsReadyForEdition()) {
         html = html.Replace("{{OPTIONS.LINKS}}", GetDeleteLink(recordingAct));
@@ -267,7 +280,7 @@ namespace Empiria.Land.UI {
       for (int i = 0; i < document.RecordingActs.Count; i++) {
         var recordingAct = document.RecordingActs[i];
 
-        html += GetRowTemplate(recordingAct);
+        html += GetPhysicalRecordingActRowTemplate(recordingAct);
       }
       return html;
     }
