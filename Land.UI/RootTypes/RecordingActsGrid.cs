@@ -69,7 +69,7 @@ namespace Empiria.Land.UI {
       if (this.document.IsReadyForEdition()) {
         row = row.Replace("{{OPTIONS.LINKS}}", GetDeleteLink(recordingAct));
       } else {
-        row = row.Replace("{{OPTIONS.LINKS}}", "&#160;");
+        row = row.Replace("{{OPTIONS.LINKS}}", "&nbsp;");
       }
       row = row.Replace("{{RESOURCE.ID}}", recordingAct.Resource.Id.ToString());
       row = row.Replace("{{ID}}", recordingAct.Id.ToString());
@@ -143,14 +143,14 @@ namespace Empiria.Land.UI {
       } else if (amendedAct.PhysicalRecording.IsEmptyInstance) {
         return amendedAct.RecordingActType.DisplayName +
                (amendedAct.RecordingActType.FemaleGenre ?
-                                            " registrada en<br></br>" : " registrado en<br />") +
+                                            " registrada en<br/>" : " registrado en<br/>") +
                "Doc: " + amendedAct.Document.UID + "<br />" +
                GetRecordingDates(amendedAct.Document);
 
       } else {
         return amendedAct.RecordingActType.DisplayName +
                (amendedAct.RecordingActType.FemaleGenre ?
-                                            " registrada en<br></br>" : " registrado en<br />") +
+                                            " registrada en<br/>" : " registrado en<br/>") +
                amendedAct.PhysicalRecording.AsText + "<br />" +
                GetRecordingDates(amendedAct.Document);
 
@@ -158,7 +158,7 @@ namespace Empiria.Land.UI {
     }
 
     static private string GetRecordingDates(RecordingDocument document) {
-      return "Presentación: " + HtmlFormatters.GetDateAsText(document.PresentationTime) + " &#160; " +
+      return "Presentación: " + HtmlFormatters.GetDateAsText(document.PresentationTime) + " &nbsp; " +
              "Registro: " + HtmlFormatters.GetDateAsText(document.AuthorizationTime);
     }
 
@@ -192,7 +192,7 @@ namespace Empiria.Land.UI {
     static private string GetDeleteLink(RecordingAct recordingAct) {
       const string template =
         "<a href='javascript:doOperation(\"deleteRecordingAct\", {{ID}});' title='Elimina este acto jurídico'>" +
-                "<img src='../themes/default/buttons/trash.gif' /></a>";
+                "<img src='../themes/default/buttons/trash.gif'></a>";
 
       return template.Replace("{{ID}}", recordingAct.Id.ToString());
     }

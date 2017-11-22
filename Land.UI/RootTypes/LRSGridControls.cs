@@ -131,7 +131,7 @@ namespace Empiria.Land.UI {
 
     static private string GetRelatedPartyOnRoleRow(RecordingActParty recordingActParty, bool displayPartyOf) {
       const string row = "<table class='ghostTable' style='margin:8px;'>" +
-                         "<tr><td>{ROLE}:&#160;&#160;</td><td style='white-space:normal'>" +
+                         "<tr><td>{ROLE}:&nbsp;&nbsp;</td><td style='white-space:normal'>" +
                          "<a href='javascript:doOperation(\"selectParty\", {PARTY.ID})'><i>{NAME}</i></a>" +
                          " <a href='javascript:doOperation(\"deleteParty\", {ID})'>(supr)</a>" +
                          "</td></tr>" +
@@ -212,24 +212,17 @@ namespace Empiria.Land.UI {
       return header + html + "</table>";
     }
 
-    static private string GetPhysicalRecordingActRowTemplate(RecordingAct recordingAct) {
+    static private string GetRowTemplate(RecordingAct recordingAct) {
       const string template =
           "<tr class='{{CLASS}}'>" +
             "<td><b id='ancRecordingActIndex_{{ID}}'>{{INDEX}}</b></td>" +
             "<td style='white-space:normal'>" +
               "<a {{RECORDING.ACT.CLASS}} href='javascript:doOperation(\"editRecordingAct\", {{ID}});'>" +
-                 "{{RECORDING.ACT.URL}}</a>" +
-               "{{CHANGE-RECORDING-ACT-TYPE-LINK}}" +
-            "</td>" +
-            "<td style='white-space:normal'>" +
-              "{{REGISTERED.ON}}" +
-            "</td>" +
+                 "{{RECORDING.ACT.URL}}</a></td>" +
             "<td style='white-space:nowrap'>" +
               "<a {{RESOURCE.CLASS}} href='javascript:doOperation(\"editResource\", {{RESOURCE.ID}}, {{ID}});'>" +
               "{{RESOURCE.URL}}</a></td>" +
             "<td>{{OPTIONS.LINKS}}</td></tr>";
-      const string templateChangeRecordingAct =
-            " <a {{RECORDING.ACT.CLASS}} href='javascript:doOperation(\"changeRecordingAct\", {{ID}});'>[cambiar]</a>";
 
       int index = recordingAct.Index + 1;
 
@@ -237,36 +230,31 @@ namespace Empiria.Land.UI {
       html = html.Replace("{{INDEX}}", index.ToString("00"));
       html = html.Replace("{{RESOURCE.ID}}", recordingAct.Resource.Id.ToString());
       html = html.Replace("{{RESOURCE.URL}}", recordingAct.Resource.UID);
-      html = html.Replace("{{REGISTERED.ON}}", "En esta partida");
-      if (recordingAct.RecordingActType == RecordingActType.Empty) {
-        html = html.Replace("{{CHANGE-RECORDING-ACT-TYPE-LINK}}", templateChangeRecordingAct);
-      } else {
-        html = html.Replace("{{CHANGE-RECORDING-ACT-TYPE-LINK}}", String.Empty);
-      }
       html = html.Replace("{{ID}}", recordingAct.Id.ToString());
       html = html.Replace("{{RECORDING.ACT.URL}}", recordingAct.DisplayName);
 
       if (!recordingAct.IsCompleted) {
         html = html.Replace("{{RECORDING.ACT.CLASS}}", "class='pending-edition'");
       } else {
-        html = html.Replace("{{RECORDING.ACT.CLASS}}", String.Empty);
+        html = html.Replace("{{RECORDING.ACT.CLASS}}", "");
       }
       if (!recordingAct.Resource.IsCompleted) {
         html = html.Replace("{{RESOURCE.CLASS}}", "class='pending-edition'");
       } else {
-        html = html.Replace("{{RESOURCE.CLASS}}", String.Empty);
+        html = html.Replace("{{RESOURCE.CLASS}}", "");
       }
       if (recordingAct.Document.IsReadyForEdition()) {
         html = html.Replace("{{OPTIONS.LINKS}}", GetDeleteLink(recordingAct));
       } else {
-        html = html.Replace("{{OPTIONS.LINKS}}", "&#160;");
+        html = html.Replace("{{OPTIONS.LINKS}}", "&nbsp;");
       }
       return html;
     }
 
     static private string GetDeleteLink(RecordingAct recordingAct) {
       const string template =
-        "<a href='javascript:doOperation(\"deleteRecordingAct\", {{ID}});' title='Elimina este acto jurídico'> <img src='../themes/default/buttons/trash.gif'/></a>";
+        "<a href='javascript:doOperation(\"deleteRecordingAct\", {{ID}});' title='Elimina este acto jurídico'>" +
+                "<img src='../themes/default/buttons/trash.gif'></a>";
 
       return template.Replace("{{ID}}", recordingAct.Id.ToString());
     }
@@ -279,7 +267,7 @@ namespace Empiria.Land.UI {
       for (int i = 0; i < document.RecordingActs.Count; i++) {
         var recordingAct = document.RecordingActs[i];
 
-        html += GetPhysicalRecordingActRowTemplate(recordingAct);
+        html += GetRowTemplate(recordingAct);
       }
       return html;
     }

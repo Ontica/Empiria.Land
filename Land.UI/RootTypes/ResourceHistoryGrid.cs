@@ -69,9 +69,7 @@ namespace Empiria.Land.UI {
     private string GetHtml() {
       FixedList<IResourceTractItem> resourceHistory = Resource.Tract.GetFullRecordingActsWithCertificates();
 
-      string html = "<thead>" + this.GetTitle() + this.GetHeader() + "</thead>";
-
-      html += "<tbody>";
+      string html = this.GetTitle() + this.GetHeader();
       for (int i = resourceHistory.Count - 1; 0 <= i; i--) {
         IResourceTractItem item = resourceHistory[i];
 
@@ -83,14 +81,12 @@ namespace Empiria.Land.UI {
           Assertion.AssertNoReachThisCode("Invalid resource history tract item type.");
         }
       }
-      html += "</tbody>";
-
       return HtmlFormatters.TableWrapper(html);
     }
 
     private string GetTitle() {
       string template =
-            "<tr class='fixedDetailsTitle'>" +
+            "<tr class='detailsTitle'>" +
               "<td colspan='6'>Historia del predio <b>{{RESOURCE.UID}}</b></td>" +
             "</tr>";
 
@@ -99,13 +95,13 @@ namespace Empiria.Land.UI {
 
     private string GetHeader() {
       string template =
-            "<tr class='fixedDetailsHeader'>" +
+            "<tr class='detailsHeader'>" +
               "<td>Present/Registro</td>" +
               "<td style='width:160px'>Acto jurídico</td>" +
               "<td style='white-space:nowrap'>Antecedente / Fracción</td>" +
               "<td style='width:200px'>Registrado en</td>" +
               "<td style='white-space:nowrap'>Img</td>" +
-              "<td style='width:160px'>Registró</td>" +
+              "<td style ='width:160px'>Registró</ td >" +
             "</tr>";
       return template;
     }
@@ -113,14 +109,14 @@ namespace Empiria.Land.UI {
     private string GetCertificateRow(Certificate certificate, int index) {
       const string template =
          "<tr class='{{CLASS}}'>" +
-           "<td>{{PRESENTATION.DATE}}<br></br>{{ISSUE.DATE}}</td>" +
+           "<td>{{PRESENTATION.DATE}}<br/>{{ISSUE.DATE}}</td>" +
            "<td style='white-space:normal'>Emisión de certificado</td>" +
            "<td>{{CERTIFICATE.TYPE}}</td>" +
            "<td style='white-space:nowrap;'>" +
              "<a href='javascript:doOperation(\"onSelectCertificate\", {{CERTIFICATE.ID}});'>" +
                  "{{CERTIFICATE.UID}}</a>" +
-             "<br></br>{{TRANSACTION}}</td>" +
-           "<td>&#160;</td>" +
+             "<br>{{TRANSACTION}}</td>" +
+           "<td>&nbsp;</td>" +
            "<td>{{ISSUED.BY}}</td>" +
          "</tr>";
 
@@ -148,13 +144,13 @@ namespace Empiria.Land.UI {
     private string GetRecordingActRow(RecordingAct recordingAct, int index) {
       const string template =
         "<tr class='{{CLASS}}'>" +
-          "<td>{{PRESENTATION.DATE}}<br></br>{{AUTHORIZATION.DATE}}</td>" +
+          "<td>{{PRESENTATION.DATE}}<br/>{{AUTHORIZATION.DATE}}</td>" +
           "<td style='white-space:normal;width:260px'>{{RECORDING.ACT}}</td>" +
           "<td style='white-space:normal;'>{{PARTITION}}</td>" +
           "<td style='white-space:{{WHITE-SPACE}};'>" +
             "<a href='javascript:doOperation(\"onSelectDocument\", {{DOCUMENT.ID}}, {{RECORDING.ACT.ID}});'>" +
                 "{{DOCUMENT.OR.RECORDING}}</a>" +
-            "<br></br>{{TRANSACTION}}</td>" +
+            "<br>{{TRANSACTION}}</td>" +
           "<td style='white-space:nowrap'>{{IMAGING.LINKS}}</td>" +
           "<td>{{RECORDED.BY}}</td>" +
         "</tr>";
@@ -193,7 +189,7 @@ namespace Empiria.Land.UI {
 
     private string GetPartitionOrAntecedentCell(RecordingAct recordingAct) {
       if (!(this.Resource is RealEstate)) {
-        return "&#160;";
+        return "&nbsp;";
       }
 
       if (Resource.IsCreationalRole(recordingAct.ResourceRole)) {
@@ -222,7 +218,7 @@ namespace Empiria.Land.UI {
           return temp;
         }
       }
-      return "&#160;";
+      return "&nbsp;";
     }
 
     private string OnSelectDocumentButton(RecordingAct recordingAct) {

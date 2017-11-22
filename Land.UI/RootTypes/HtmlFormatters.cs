@@ -28,12 +28,12 @@ namespace Empiria.Land.UI {
 
     static public string GetImagingLinks(RecordingBook recordingBook) {
       if (!recordingBook.HasImageSet) {
-        return "&#160;";
+        return "&nbsp;";
       }
       string html = String.Empty;
 
       html += "<a href='javascript:doOperation(\"onSelectImageSet\", {{RECORDING.BOOK.IMAGE.SET.ID}});'>" +
-              "<img src='../themes/default/bullets/book.gif' title='Libro registral'></img></a>";
+              "<img src='../themes/default/bullets/book.gif' title='Libro registral'></a>";
 
       html = html.Replace("{{RECORDING.BOOK.IMAGE.SET.ID}}", recordingBook.ImageSetId.ToString());
 
@@ -42,19 +42,19 @@ namespace Empiria.Land.UI {
 
       static public string GetImagingLinks(RecordingDocument document) {
       if (!document.HasImageSet && !document.HasAuxiliarImageSet) {
-        return "&#160;";
+        return "&nbsp;";
       }
       string html = String.Empty;
 
       if (document.HasImageSet) {
         html = "<a href='javascript:doOperation(\"onSelectImageSet\", {{DOCUMENT.IMAGE.SET.ID}});'>" +
-                  "<img src='../themes/default/bullets/scribble_doc_sm.gif' title='Instrumento registral'></img></a>";
+                  "<img src='../themes/default/bullets/scribble_doc_sm.gif' title='Instrumento registral'></a>";
         html = html.Replace("{{DOCUMENT.IMAGE.SET.ID}}", document.ImageSetId.ToString());
       }
 
       if (document.HasAuxiliarImageSet) {
         html += "<a href='javascript:doOperation(\"onSelectImageSet\", {{AUXILIAR.IMAGE.SET.ID}});'>" +
-                   "<img src='../themes/default/bullets/clip.gif' title='Anexos al instrumento registral'></img></a>";
+                   "<img src='../themes/default/bullets/clip.gif' title='Anexos al instrumento registral'></a>";
         html = html.Replace("{{AUXILIAR.IMAGE.SET.ID}}", document.AuxiliarImageSetId.ToString());
       }
 
@@ -66,26 +66,26 @@ namespace Empiria.Land.UI {
 
       if (!document.HasImageSet && !document.HasAuxiliarImageSet &&
            recordingAct.PhysicalRecording.IsEmptyInstance) {
-        return "&#160;";
+        return "&nbsp;";
       }
       string html = String.Empty;
 
       if (document.HasImageSet) {
         html = "<a href='javascript:doOperation(\"onSelectImageSet\", {{DOCUMENT.IMAGE.SET.ID}});'>" +
-                  "<img src='../themes/default/bullets/scribble_doc_sm.gif' title='Instrumento registral'></img></a>";
+                  "<img src='../themes/default/bullets/scribble_doc_sm.gif' title='Instrumento registral'></a>";
         html = html.Replace("{{DOCUMENT.IMAGE.SET.ID}}", document.ImageSetId.ToString());
       }
 
       if (document.HasAuxiliarImageSet) {
         html += "<a href='javascript:doOperation(\"onSelectImageSet\", {{AUXILIAR.IMAGE.SET.ID}});'>" +
-                   "<img src='../themes/default/bullets/clip.gif' title='Anexos al instrumento registral'></img></a>";
+                   "<img src='../themes/default/bullets/clip.gif' title='Anexos al instrumento registral'></a>";
         html = html.Replace("{{AUXILIAR.IMAGE.SET.ID}}", document.AuxiliarImageSetId.ToString());
       }
 
       if (!recordingAct.PhysicalRecording.IsEmptyInstance &&
            recordingAct.PhysicalRecording.RecordingBook.HasImageSet) {
         html += "<a href='javascript:doOperation(\"onSelectImageSet\", {{RECORDING.BOOK.IMAGE.SET.ID}});'>" +
-                   "<img src='../themes/default/bullets/book.gif' title='Libro registral'></img></a>";
+                   "<img src='../themes/default/bullets/book.gif' title='Libro registral'></a>";
         html = html.Replace("{{RECORDING.BOOK.IMAGE.SET.ID}}",
                             recordingAct.PhysicalRecording.RecordingBook.ImageSetId.ToString());
       }
@@ -101,7 +101,7 @@ namespace Empiria.Land.UI {
       if (document.PresentationTime == ExecutionServer.DateMinValue &&
           document.AuthorizationTime == ExecutionServer.DateMinValue) {
         row = row.Replace("{{PRESENTATION.DATE}}", "No constan");
-        row = row.Replace("{{AUTHORIZATION.DATE}}", "&#160;");
+        row = row.Replace("{{AUTHORIZATION.DATE}}", "&nbsp;");
       } else {
         row = row.Replace("{{PRESENTATION.DATE}}", GetDateAsText(document.PresentationTime));
         row = row.Replace("{{AUTHORIZATION.DATE}}", GetDateAsText(document.AuthorizationTime));
@@ -110,7 +110,7 @@ namespace Empiria.Land.UI {
     }
 
     static internal string TableWrapper(string html) {
-      return "<table class='details' style='width:98%;height:100px;'>" + html + "</table>";
+      return "<table class='details' style='width:96%'>" + html + "</table>";
     }
 
   } // class HtmlFormatters
