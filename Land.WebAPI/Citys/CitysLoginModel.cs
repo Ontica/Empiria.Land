@@ -10,11 +10,11 @@
 ********************************** Copyright(c) 2016-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using Empiria.Security;
 
-namespace Empiria.Models.ToDeprecateModels {
+namespace Empiria.Land.WebApi.Citys {
 
   /// <summary>Holds information to log in a user into the web api system.
   /// This model was moved to microservices, so it must be deprecated from here.</summary>
-  public class LoginModel {
+  public class CitysLoginModel {
 
     #region Properties
 

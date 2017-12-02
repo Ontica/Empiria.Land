@@ -5,12 +5,10 @@ using Empiria.Security;
 using Empiria.WebApi;
 using Empiria.WebApi.Models;
 
-using Empiria.Models.ToDeprecateModels;
+namespace Empiria.Land.WebApi.Citys {
 
-namespace Empiria.Land.WebApi {
-
-  /// <summary>Contains almost deprecated services.</summary>
-  public class ToDeprecateController : WebApiController {
+  /// <summary>Contains Citys security services (to be deprecated).</summary>
+  public class CitysSecurityController : WebApiController {
 
     #region Public APIs
 
@@ -19,9 +17,9 @@ namespace Empiria.Land.WebApi {
     /// <returns>A list of former HttpEndpoint objects.</returns>
     [HttpGet]
     [Route("v1/system/api-endpoints")]
-    public CollectionModel GetEndpoints() {
+    public CollectionModel GetFormerEndpoints() {
       try {
-        var endpoints = HttpEndpoint.GetList();
+        var endpoints = CitysHttpEndpoint.GetList();
         return new CollectionModel(base.Request, endpoints);
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -30,7 +28,7 @@ namespace Empiria.Land.WebApi {
 
     [HttpPost, AllowAnonymous]
     [Route("v1/security/login")]
-    public SingleObjectModel Login(LoginModel login)
+    public SingleObjectModel FormerLogin(CitysLoginModel login)
     {
       try
       {
@@ -39,7 +37,7 @@ namespace Empiria.Land.WebApi {
 
         EmpiriaPrincipal principal = this.GetPrincipal(login);
 
-        return new SingleObjectModel(base.Request, LoginModel.ToOAuth(principal),
+        return new SingleObjectModel(base.Request, CitysLoginModel.ToOAuth(principal),
                                      "Empiria.Security.OAuthObject");
       }
       catch (Exception e)
@@ -53,7 +51,7 @@ namespace Empiria.Land.WebApi {
 
     #region Private methods
 
-    private EmpiriaPrincipal GetPrincipal(LoginModel login) {
+    private EmpiriaPrincipal GetPrincipal(CitysLoginModel login) {
       login.AssertValid();
 
       EmpiriaPrincipal principal = AuthenticationHttpModule.Authenticate(login.api_key,
@@ -66,6 +64,6 @@ namespace Empiria.Land.WebApi {
 
     #endregion Private methods
 
-  }  // class ToDeprecateController
+  }  // class CitysSecurityController
 
 }  // namespace Empiria.Land.WebApi

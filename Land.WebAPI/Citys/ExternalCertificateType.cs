@@ -10,7 +10,7 @@
 ********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
-namespace Empiria.Land.WebApi.Models {
+namespace Empiria.Land.WebApi.Citys {
 
   /// <summary>Contains the list of certificates types to be used from external systems.</summary>
   public enum ExternalCertificateType {

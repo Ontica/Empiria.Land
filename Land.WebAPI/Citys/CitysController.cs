@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                     System   : Land Web API                      *
 *  Namespace : Empiria.Land.WebApi                              Assembly : Empiria.Land.WebApi.dll           *
-*  Type      : TransactionsController                           Pattern  : Web API                           *
+*  Type      : CitysController                                  Pattern  : Web API                           *
 *  Version   : 3.0                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Contains services to integrate Empiria Land with third-party transaction systems (CITyS).     *
@@ -17,13 +17,12 @@ using Empiria.WebApi.Models;
 
 using Empiria.Land.Certification;
 using Empiria.Land.Registration.Transactions;
-using Empiria.Land.WebApi.Models;
 
-namespace Empiria.Land.WebApi {
+namespace Empiria.Land.WebApi.Citys {
 
   /// <summary>Contains services to integrate Empiria Land with third-party transaction systems (CITyS).</summary>
   //[WebApiAuthorizationFilter(WebApiClaimType.ClientApp_Controller, "ThirdPartyTransactionController")]
-  public class TransactionsController : WebApiController {
+  public class CitysController : WebApiController {
 
     #region Public APIs
 
@@ -204,6 +203,6 @@ namespace Empiria.Land.WebApi {
 
     #endregion Private methods
 
-  }  // class TransactionsController
+  }  // class CitysController
 
 }  // namespace Empiria.Land.WebApi

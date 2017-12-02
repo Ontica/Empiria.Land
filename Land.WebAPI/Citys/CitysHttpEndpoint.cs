@@ -10,25 +10,25 @@
 ********************************* Copyright (c) 2004-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
-namespace Empiria.WebApi {
+namespace Empiria.Land.WebApi.Citys {
 
   /// <summary>Describes an Http endpoint used to invoke a web API from a client app.</summary>
-  public class HttpEndpoint : GeneralObject {
+  public class CitysHttpEndpoint : GeneralObject {
 
     #region Constructors and parsers
 
-    private HttpEndpoint() {
+    private CitysHttpEndpoint() {
       // Required by Empiria Framework.
     }
 
     /// <summary>Parses an Http endpoint given its numerical id.</summary>
-    static public HttpEndpoint Parse(int id) {
-      return BaseObject.ParseId<HttpEndpoint>(id);
+    static public CitysHttpEndpoint Parse(int id) {
+      return BaseObject.ParseId<CitysHttpEndpoint>(id);
     }
 
     /// <summary>Gets the full list of available Http API endpoints.</summary>
-    static public FixedList<HttpEndpoint> GetList() {
-      return GeneralObject.GetList<HttpEndpoint>();
+    static public FixedList<CitysHttpEndpoint> GetList() {
+      return GeneralObject.GetList<CitysHttpEndpoint>();
     }
 
     #endregion Constructors and parsers

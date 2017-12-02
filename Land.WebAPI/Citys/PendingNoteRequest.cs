@@ -18,7 +18,7 @@ using Empiria.Json;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.WebApi.Models {
+namespace Empiria.Land.WebApi.Citys {
 
   /// <summary>Data transfer object that holds information about a Pending note request from
   /// an external transaction system.</summary>

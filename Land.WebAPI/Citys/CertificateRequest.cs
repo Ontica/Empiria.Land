@@ -14,7 +14,7 @@ using Empiria.Json;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.WebApi.Models {
+namespace Empiria.Land.WebApi.Citys {
 
   /// <summary>Model that holds information about a certificate request
   /// from an external transaction system.</summary>
