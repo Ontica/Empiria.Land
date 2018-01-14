@@ -178,6 +178,9 @@
     <Compile Include="RootTypes\RecorderExpert.cs" />
     <Compile Include="RootTypes\RecordingTask.cs" />
     <Compile Include="RootTypes\TransactionAct.cs" />
+    <Compile Include="Transactions\IFiling.cs" />
+    <Compile Include="Transactions\IPaymentOrder.cs" />
+    <Compile Include="Transactions\PaymentOrder.cs" />
     <Compile Include="Transactions\LRSExternalTransaction.cs" />
     <Compile Include="Transactions\LRSFee.cs" />
     <Compile Include="Transactions\LRSPayment.cs" />

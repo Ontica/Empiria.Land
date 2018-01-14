@@ -19,7 +19,7 @@ using Empiria.Security;
 namespace Empiria.Land.Registration.Transactions {
 
   /// <summary>Represents a transaction or process on a land registration office.</summary>
-  public class LRSTransaction : BaseObject, IProtected {
+  public class LRSTransaction : BaseObject, IFiling, IProtected {
 
     #region Fields
 
@@ -124,7 +124,7 @@ namespace Empiria.Land.Registration.Transactions {
     public LRSTransactionExtData ExtensionData {
       get;
       private set;
-    } = LRSTransactionExtData.Empty;
+    }
 
 
     public bool IsExternalTransaction {
@@ -299,6 +299,8 @@ namespace Empiria.Land.Registration.Transactions {
 
       item.Save();
 
+      this.ClearPaymentOrder();
+
       return item;
     }
 
@@ -312,6 +314,8 @@ namespace Empiria.Land.Registration.Transactions {
 
       item.Save();
 
+      this.ClearPaymentOrder();
+
       return item;
     }
 
@@ -323,6 +327,8 @@ namespace Empiria.Land.Registration.Transactions {
                                         operationValue, quantity);
       this.Items.Add(item);
       item.Save();
+
+      this.ClearPaymentOrder();
 
       return item;
     }
@@ -360,6 +366,8 @@ namespace Empiria.Land.Registration.Transactions {
     public void RemoveItem(LRSTransactionItem item) {
       this.Items.Remove(item);
       item.Delete();
+
+      this.ClearPaymentOrder();
     }
 
     public LRSTransaction MakeCopy() {
@@ -458,6 +466,7 @@ namespace Empiria.Land.Registration.Transactions {
       recordingActs = new Lazy<LRSTransactionItemList>(() => new LRSTransactionItemList());
       payments = new Lazy<LRSPaymentList>(() => new LRSPaymentList());
       workflow = new Lazy<LRSWorkflow>(() => new LRSWorkflow(this));
+      this.ExtensionData = new LRSTransactionExtData();
     }
 
     protected override void OnLoadObjectData(System.Data.DataRow row) {
@@ -508,6 +517,38 @@ namespace Empiria.Land.Registration.Transactions {
 
     #endregion Public methods
 
+    #region IFiling implementation
+
+    private void ClearPaymentOrder() {
+      this.SetPaymentOrder(Transactions.PaymentOrder.Empty);
+    }
+
+    public bool HasPaymentOrder {
+      get {
+        return this.ExtensionData.PaymentOrder.RouteNumber != String.Empty;
+      }
+    }
+
+    public IPaymentOrder PaymentOrder {
+      get {
+        return this.ExtensionData.PaymentOrder;
+      }
+    }
+
+    public void SetPaymentOrder(IPaymentOrder paymentOrder) {
+      this.ExtensionData.PaymentOrder = paymentOrder;
+
+      if (!this.IsNew) {
+        this.Save();
+      }
+    }
+
+    public IPaymentOrder TryGetPaymentOrder() {
+      return this.ExtensionData.PaymentOrder;
+    }
+
+    #endregion IFiling implementation
+
     #region Private methods
 
     private void AddAutomaticItems() {
@@ -515,6 +556,7 @@ namespace Empiria.Land.Registration.Transactions {
         this.AddItem(item, item.GetFinancialLawArticles()[0],
                      BaseSalaryValue * item.GetFeeUnits());
       }
+      this.ClearPaymentOrder();
     }
 
     private void AssertAddItem() {

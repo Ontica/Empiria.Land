@@ -17,16 +17,10 @@ namespace Empiria.Land.Registration.Transactions {
   /// <summary>Contains extensible data for a land registration system transaction.</summary>
   public class LRSTransactionExtData {
 
-    #region Fields
-
-    private readonly JsonObject _json = new JsonObject();
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    private LRSTransactionExtData(JsonObject json) {
-      this._json = json;
+    internal LRSTransactionExtData() {
+
     }
 
     public LRSTransactionExtData(Resource baseResource) {
@@ -40,10 +34,26 @@ namespace Empiria.Land.Registration.Transactions {
 
       var json = JsonConverter.ToJsonObject(jsonString);
 
-      return new LRSTransactionExtData(json);
+      var extData = new LRSTransactionExtData();
+
+      if (json.Contains("BaseResourceId")) {
+        extData.BaseResource = Resource.Parse(json.Get<int>("BaseResourceId"));
+      }
+
+      extData.RequesterNotes = json.Get<string>("RequesterNotes", String.Empty);
+
+      if (json.Contains("PaymentOrder")) {
+        extData.PaymentOrder = Transactions.PaymentOrder.Parse(json.Slice("PaymentOrder"));
+      }
+
+      if (json.Contains("ExternalTransaction")) {
+        extData.ExternalTransaction = LRSExternalTransaction.Parse(json.Slice("ExternalTransaction"));
+      }
+      return extData;
     }
 
-    static private readonly LRSTransactionExtData _empty = new LRSTransactionExtData(JsonObject.Empty);
+    static private readonly LRSTransactionExtData _empty =
+                                new LRSTransactionExtData() { IsEmptyInstance = true };
 
     static public LRSTransactionExtData Empty {
       get {
@@ -56,87 +66,60 @@ namespace Empiria.Land.Registration.Transactions {
     #region Properties
 
     public Resource BaseResource {
-      get {
-        return _json.Get<Resource>("BaseResourceId", Resource.Empty);
-      }
-      private set {
-        _json.SetIfValue("BaseResourceId", value.Id);
-      }
-    }
+      get;
+      internal set;
+    } = Resource.Empty;
 
-    public string RequesterEmail {
-      get {
-        return _json.Get<string>("RequesterEmail", String.Empty);
-      }
-      private set {
-        _json.SetIfValue("RequesterEmail", value);
-      }
-    }
-
-    public string RequesterPhone {
-      get {
-        return _json.Get<string>("RequesterPhone", String.Empty);
-      }
-      private set {
-        _json.SetIfValue("RequesterPhone", value);
-      }
-    }
 
     public string RequesterNotes {
-      get {
-        return _json.Get<string>("RequesterPhone", String.Empty);
-      }
-      private set {
-        _json.SetIfValue("RequesterPhone", value);
-      }
-    }
+      get;
+      internal set;
+    } = String.Empty;
 
-    public string OfficeNotes {
-      get {
-        return _json.Get<string>("OfficeNotes", String.Empty);
-      }
-      private set {
-        _json.SetIfValue("OfficeNotes", value);
-      }
-    }
-
-    public string ClosingNotes {
-      get {
-        return _json.Get<string>("ClosingNotes", String.Empty);
-      }
-      private set {
-        _json.SetIfValue("ClosingNotes", value);
-      }
-    }
-
-    public string DeliveryNotes {
-      get {
-        return _json.Get<string>("DeliveryNotes", String.Empty);
-      }
-      private set {
-        _json.SetIfValue("DeliveryNotes", value);
-      }
-    }
 
     public LRSExternalTransaction ExternalTransaction {
-      get {
-        return LRSExternalTransaction.Parse(_json.Slice("ExternalTransaction", false));
-      }
-      internal set {
-        _json.SetIfValue("ExternalTransaction", value);
-      }
-    }
+      get;
+      internal set;
+    } = LRSExternalTransaction.Empty;
+
+
+    public IPaymentOrder PaymentOrder {
+      get;
+      internal set;
+    } = Transactions.PaymentOrder.Empty;
+
 
     public bool IsEmptyInstance {
       get;
+      private set;
     } = false;
 
     #endregion Properties
 
     #region Methods
 
+    public JsonObject GetJson() {
+      var json = new JsonObject();
+
+      if (!this.BaseResource.IsEmptyInstance) {
+        json.Add(new JsonItem("BaseResourceId", this.BaseResource.Id));
+      }
+
+      json.AddIfValue(new JsonItem("RequesterNotes", this.RequesterNotes));
+
+      if (this.PaymentOrder.RouteNumber != String.Empty) {
+        json.Add("PaymentOrder", this.PaymentOrder.ToJson());
+      }
+
+      if (!this.ExternalTransaction.IsEmptyInstance) {
+        json.Add("ExternalTransaction", this.ExternalTransaction.ToJson());
+      }
+
+      return json;
+    }
+
     public override string ToString() {
-      return _json.ToString();
+      return this.GetJson().ToString();
     }
 
     #endregion Methods
