@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Empiria.Land.Documentation", "Land.Documentation\Empiria.Land.Documentation.csproj", "{7D98C757-6ED4-48D0-B351-A99CE5ED8987}"
 EndProject
@@ -43,5 +43,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B72773E9-F971-4AF0-9D24-D216805C4319}
 	EndGlobalSection
 EndGlobal

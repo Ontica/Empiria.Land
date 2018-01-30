@@ -12,6 +12,8 @@ using System;
 
 using Empiria.Json;
 
+using Empiria.OnePoint;
+
 namespace Empiria.Land.Registration.Transactions {
 
   /// <summary>Contains extensible data for a land registration system transaction.</summary>
@@ -43,7 +45,7 @@ namespace Empiria.Land.Registration.Transactions {
       extData.RequesterNotes = json.Get<string>("RequesterNotes", String.Empty);
 
       if (json.Contains("PaymentOrder")) {
-        extData.PaymentOrder = Transactions.PaymentOrder.Parse(json.Slice("PaymentOrder"));
+        extData.PaymentOrderData = OnePoint.PaymentOrderData.Parse(json.Slice("PaymentOrder"));
       }
 
       if (json.Contains("ExternalTransaction")) {
@@ -83,10 +85,10 @@ namespace Empiria.Land.Registration.Transactions {
     } = LRSExternalTransaction.Empty;
 
 
-    public IPaymentOrder PaymentOrder {
+    public IPaymentOrderData PaymentOrderData {
       get;
       internal set;
-    } = Transactions.PaymentOrder.Empty;
+    } = OnePoint.PaymentOrderData.Empty;
 
 
     public bool IsEmptyInstance {
@@ -107,8 +109,8 @@ namespace Empiria.Land.Registration.Transactions {
 
       json.AddIfValue(new JsonItem("RequesterNotes", this.RequesterNotes));
 
-      if (this.PaymentOrder.RouteNumber != String.Empty) {
-        json.Add("PaymentOrder", this.PaymentOrder.ToJson());
+      if (this.PaymentOrderData.RouteNumber != String.Empty) {
+        json.Add("PaymentOrder", this.PaymentOrderData.ToJson());
       }
 
       if (!this.ExternalTransaction.IsEmptyInstance) {

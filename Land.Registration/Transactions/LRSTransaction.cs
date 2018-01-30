@@ -12,9 +12,12 @@ using System;
 
 using Empiria.Contacts;
 using Empiria.DataTypes;
+using Empiria.Security;
+
+using Empiria.OnePoint;
+
 using Empiria.Land.Certification;
 using Empiria.Land.Registration.Data;
-using Empiria.Security;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -520,31 +523,31 @@ namespace Empiria.Land.Registration.Transactions {
     #region IFiling implementation
 
     private void ClearPaymentOrder() {
-      this.SetPaymentOrder(Transactions.PaymentOrder.Empty);
+      this.SetPaymentOrderData(Empiria.OnePoint.PaymentOrderData.Empty);
     }
 
     public bool HasPaymentOrder {
       get {
-        return this.ExtensionData.PaymentOrder.RouteNumber != String.Empty;
+        return this.ExtensionData.PaymentOrderData.RouteNumber != String.Empty;
       }
     }
 
-    public IPaymentOrder PaymentOrder {
+    public IPaymentOrderData PaymentOrderData {
       get {
-        return this.ExtensionData.PaymentOrder;
+        return this.ExtensionData.PaymentOrderData;
       }
     }
 
-    public void SetPaymentOrder(IPaymentOrder paymentOrder) {
-      this.ExtensionData.PaymentOrder = paymentOrder;
+    public void SetPaymentOrderData(IPaymentOrderData paymentOrderData) {
+      this.ExtensionData.PaymentOrderData = paymentOrderData;
 
       if (!this.IsNew) {
         this.Save();
       }
     }
 
-    public IPaymentOrder TryGetPaymentOrder() {
-      return this.ExtensionData.PaymentOrder;
+    public IPaymentOrderData TryGetPaymentOrderData() {
+      return this.ExtensionData.PaymentOrderData;
     }
 
     #endregion IFiling implementation

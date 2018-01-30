@@ -5,8 +5,8 @@
     <version>$version$</version>
     <title>$title$</title>
     <authors>$author$</authors>
-    <licenseUrl>https://github.com/Ontica/Empiria.Land/blob/master/Land.Application/LICENSE.txt</licenseUrl>
-    <projectUrl>https://github.com/Ontica/Empiria.Land/tree/master/Land.Application</projectUrl>
+    <licenseUrl>https://github.com/Ontica/Empiria.Land/blob/master/Land.AppServices/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/Ontica/Empiria.Land/tree/master/Land.AppServices</projectUrl>
     <iconUrl>http://www.ontica.org/land/empiria-land.logo.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>$description$</description>
