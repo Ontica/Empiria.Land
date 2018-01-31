@@ -36,12 +36,12 @@ namespace Empiria.Land.Registration.Data {
         filter = "(1 = 1)";
       }
       if (sort.Length == 0) {
-        sort = "PresentationTime, CheckInTime, TrackId";
+        sort = "PresentationTime ASC, CheckInTime ASC, TrackId ASC";
       }
       var op = DataOperation.Parse("@qryLRSResponsibleWorkflowInbox",
-                                   contact.Id, (char) status, filter, sort);
+                                   contact.Id, (char) status, filter);
 
-      return DataReader.GetDataView(op);
+      return DataReader.GetDataView(op, String.Empty, sort);
     }
 
     static public DataView GetWorkflowActiveTasksTotals() {
