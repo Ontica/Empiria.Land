@@ -129,9 +129,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Empiria.Land.AppServices.AssemblyInfo.cs" />
-    <Compile Include="RootTypes\ServiceLocator.cs" />
-    <Compile Include="RootTypes\PaymentServices.cs" />
-    <Compile Include="RootTypes\FilingServices.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -177,7 +174,9 @@
       <Name>Empiria.Land.Registration</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="RootTypes\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
