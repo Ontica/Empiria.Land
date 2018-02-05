@@ -94,10 +94,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Filings\PaymentOrderResponseModel.cs" />
-    <Compile Include="Filings\FilingResponseModel.cs" />
-    <Compile Include="Filings\FilingsController.cs" />
-    <Compile Include="Filings\PaymentsController.cs" />
     <Compile Include="SedatuServices\SedatuRealEstateModel.cs" />
     <Compile Include="SedatuServices\SedatuServicesController.cs" />
     <Compile Include="Citys\CitysSecurityController.cs" />
