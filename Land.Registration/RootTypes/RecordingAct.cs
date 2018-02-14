@@ -439,21 +439,39 @@ namespace Empiria.Land.Registration {
 
     internal void AssertCanBeOpened() {
       this.AssertIsLastInPrelationOrder();
+      this.AssertDoesntHasEmittedCertificates();
+    }
+
+    private void AssertDoesntHasEmittedCertificates() {
+      var certificates = this.Resource.Tract.GetEmittedCerificates();
+
+      bool wrongPrelation = certificates.Contains((x) => x.IssueTime > this.Document.AuthorizationTime);
+
+      if (wrongPrelation) {
+        Assertion.AssertFail("El acto jurídico " + this.IndexedName +
+                             " hace referencia a un folio real al cual se le " +
+                             "emitió un certificado con fecha posterior " +
+                             "a la fecha de autorización de este documento.\n\n" +
+                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
+                             "Favor de revisar la historia del predio involucrado.");
+      }
     }
 
     public void AssertIsLastInPrelationOrder() {
 
+      // ToDo: Review this rule (seems like an operation issue)
+
       // Cancelation acts don't follow prelation rules
-      if (this.RecordingActType.IsCancelationActType) {
-        return;
-      }
+      // if (this.RecordingActType.IsCancelationActType) {
+      //  return;
+      // }
 
       var fullTract = this.Resource.Tract.GetFullRecordingActs();
 
       fullTract = fullTract.FindAll((x) => !x.RecordingActType.RecordingRule.SkipPrelation);
 
-      var wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > this.Document.PresentationTime &&
-                                                     x.Document.IsClosed);
+      bool wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > this.Document.PresentationTime &&
+                                                      x.Document.IsClosed);
 
       if (wrongPrelation) {
         Assertion.AssertFail("El acto jurídico " + this.IndexedName +
@@ -463,6 +481,7 @@ namespace Empiria.Land.Registration {
                              "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
                              "Favor de revisar la historia del predio involucrado.");
       }
+
     }
 
     public void ChangeRecordingActType(RecordingActType recordingActType) {
