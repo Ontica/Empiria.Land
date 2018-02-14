@@ -31,6 +31,7 @@ namespace Empiria.Land.Registration.Data {
                                               (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
     }
 
+
     static internal List<RecordingAct> GetDocumentRecordingActs(RecordingDocument document) {
       if (document.IsEmptyInstance) {
         return new List<RecordingAct>();
@@ -46,14 +47,16 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList<RecordingAct>(operation, (x) => BaseObject.ParseList<RecordingAct>(x));
     }
 
-    internal static int UpdateRecordingActResourceExtData(RecordingAct recordingAct) {
+
+    internal static void UpdateRecordingActResourceExtData(RecordingAct recordingAct) {
       var op = DataOperation.Parse("doLRSUpdateRecordingActResourceExtData",
                                    recordingAct.Id, recordingAct.ResourceExtData.ToString());
-      return DataWriter.Execute(op);
+
+      DataWriter.Execute(op);
     }
 
 
-    static internal int WriteRecordingAct(RecordingAct o) {
+    static internal void WriteRecordingAct(RecordingAct o) {
       Assertion.Assert(o.Id != 0, "RecordingAct.Id can't be zero");
       Assertion.Assert(!o.Resource.IsEmptyInstance && !o.Resource.IsNew,
                        "Resource can't be new or the empty instance.");
@@ -68,17 +71,18 @@ namespace Empiria.Land.Registration.Data {
                       o.AmendmentOf.Id, o.AmendedBy.Id, o.PhysicalRecording.Id,
                       o.RegisteredBy.Id, o.RegistrationTime, (char) o.Status, o.Integrity.GetUpdatedHashCode());
 
-      return DataWriter.Execute(op);
+      DataWriter.Execute(op);
     }
 
-    static internal int WriteRecordingActParty(RecordingActParty o) {
+
+    static internal void WriteRecordingActParty(RecordingActParty o) {
       var op = DataOperation.Parse("writeLRSRecordingActParty", o.Id,
                     o.RecordingAct.Id, o.Party.Id, o.PartyRole.Id, o.PartyOf.Id,
                     o.OwnershipPart.Amount, o.OwnershipPart.Unit.Id, o.IsOwnershipStillActive,
                     o.Notes, o.AsText, o.ExtendedData, o.PostedBy.Id,
                     (char) o.Status, o.IntegrityHashCode);
 
-      return DataWriter.Execute(op);
+      DataWriter.Execute(op);
     }
 
     #endregion Public methods

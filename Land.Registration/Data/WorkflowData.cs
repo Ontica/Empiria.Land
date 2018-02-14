@@ -62,14 +62,14 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList(op, (x) => BaseObject.ParseList<LRSWorkflowTask>(x));
     }
 
-    static internal int WriteLRSWorkflowTask(LRSWorkflowTask o) {
+    static internal void WriteLRSWorkflowTask(LRSWorkflowTask o) {
       var operation = DataOperation.Parse("writeLRSWorkflowTask", o.Id, o.Transaction.Id,
                                           o.EventId, (char) o.Mode, o.AssignedBy.Id, o.Responsible.Id,
                                           o.NextContact.Id, (char) o.CurrentStatus, (char) o.NextStatus,
                                           o.CheckInTime, o.EndProcessTime, o.CheckOutTime, o.Notes,
                                           o.PreviousTask.Id, o.NextTask.Id, (char) o.Status, String.Empty);
 
-      return DataWriter.Execute(operation);
+      DataWriter.Execute(operation);
     }
 
     #endregion Public methods

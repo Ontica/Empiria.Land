@@ -49,6 +49,7 @@ namespace Empiria.Land.Registration.Data {
       return temp;
     }
 
+
     static internal LRSTransaction GetDocumentTransaction(RecordingDocument document) {
       if (document.IsEmptyInstance) {
         return LRSTransaction.Empty;
@@ -64,7 +65,8 @@ namespace Empiria.Land.Registration.Data {
       }
     }
 
-    internal static string GetNextImagingControlID(RecordingDocument document) {
+
+    static internal string GetNextImagingControlID(RecordingDocument document) {
       string prefix = document.AuthorizationTime.ToString("yyyy-MM");
 
       var sql = String.Format("SELECT MAX(ImagingControlID) " +
@@ -81,14 +83,17 @@ namespace Empiria.Land.Registration.Data {
       }
     }
 
+
     static internal DataRow GetRecordingMainDocument(Recording recording) {
       return DataReader.GetDataRow(DataOperation.Parse("getLRSRecordingMainDocument", recording.Id));
     }
 
-    internal static int SaveImagingControlID(RecordingDocument document) {
+
+    static internal void SaveImagingControlID(RecordingDocument document) {
       var op = DataOperation.Parse("setLRSDocumentImagingControlID",
                                    document.Id, document.ImagingControlID);
-      return DataWriter.Execute(op);
+
+      DataWriter.Execute(op);
     }
 
     #endregion Public methods

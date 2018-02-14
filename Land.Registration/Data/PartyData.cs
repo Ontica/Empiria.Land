@@ -143,12 +143,14 @@ namespace Empiria.Land.Registration.Data {
       }
     }
 
-    static internal int WriteParty(Party o) {
+
+    static internal void WriteParty(Party o) {
       var dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.GetEmpiriaType().Id,
                                               o.FullName, o.Notes, o.ExtendedData,
                                               o.Keywords, o.Status, String.Empty);
-      return DataWriter.Execute(dataOperation);
+      DataWriter.Execute(dataOperation);
     }
+
 
     #endregion Internal methods
 

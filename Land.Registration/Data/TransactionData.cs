@@ -202,18 +202,20 @@ namespace Empiria.Land.Registration.Data {
       }
     }
 
-    static internal int WritePayment(LRSPayment o) {
+    static internal void WritePayment(LRSPayment o) {
       var op = DataOperation.Parse("writeLRSPayment", o.Id, o.Transaction.Id,
                                    o.PaymentOffice.Id, o.ReceiptNo, o.ReceiptTotal, o.ReceiptIssuedTime,
                                    o.ExtensionData.ToString(), o.Recording.Id, o.PostingTime,
                                    o.PostedBy.Id, 'C', String.Empty);
 
-      return DataWriter.Execute(op);
+      DataWriter.Execute(op);
     }
 
-    static internal int WriteTransaction(LRSTransaction o) {
-      return DataWriter.Execute(WriteTransactionOp(o));
+
+    static internal void WriteTransaction(LRSTransaction o) {
+      DataWriter.Execute(WriteTransactionOp(o));
     }
+
 
     static internal DataOperation WriteTransactionOp(LRSTransaction o) {
       return DataOperation.Parse("writeLRSTransaction", o.Id, o.TransactionType.Id, o.UID,
@@ -225,7 +227,7 @@ namespace Empiria.Land.Registration.Data {
                   (char) o.Workflow.CurrentStatus, o.Integrity.GetUpdatedHashCode());
     }
 
-    static internal int WriteTransactionItem(LRSTransactionItem o) {
+    static internal void WriteTransactionItem(LRSTransactionItem o) {
       var operation = DataOperation.Parse("writeLRSTransactionItem", o.Id, o.Transaction.Id,
                                           o.TransactionItemType.Id, o.TreasuryCode.Id,
                                           o.Payment.Id, o.Quantity.Amount, o.Quantity.Unit.Id,
@@ -234,7 +236,8 @@ namespace Empiria.Land.Registration.Data {
                                           o.Fee.ForeignRecordingFee, o.Fee.Discount.Amount,
                                           o.ExtensionData.ToString(), o.Status,
                                           o.Integrity.GetUpdatedHashCode());
-      return DataWriter.Execute(operation);
+
+      DataWriter.Execute(operation);
     }
 
     #endregion Public methods

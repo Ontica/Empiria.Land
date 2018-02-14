@@ -29,13 +29,15 @@ namespace Empiria.Land.Documentation {
       return (DataReader.Count(DataOperation.Parse(sql)) > 0);
     }
 
-    static internal int WriteImagingItem(DocumentImageSet o) {
+
+    static internal void WriteImagingItem(DocumentImageSet o) {
       var operation = DataOperation.Parse("writeLRSImagingItem", o.Id, o.GetEmpiriaType().Id, o.Document.Id,
                                           RecordingBook.Empty.Id, (char) o.DocumentImageType,
                                           o.BaseFolder.Id, o.ItemPath, o.ImagingItemExtData.ToString(),
                                           o.FilesCount, o.Integrity.GetUpdatedHashCode());
-      return DataWriter.Execute(operation);
+      DataWriter.Execute(operation);
     }
+
 
     static internal void WriteImageProcessingLog(DocumentImageSet o, string message) {
       var op = DataOperation.Parse("apdLRSImageProcessingTrail",
@@ -45,6 +47,7 @@ namespace Empiria.Land.Documentation {
 
       DataWriter.Execute(op);
     }
+
 
     static internal void WriteImageProcessingLogException(CandidateImage o, string message,
                                                           Exception exception) {

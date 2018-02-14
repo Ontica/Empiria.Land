@@ -49,31 +49,33 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetDataRow(operation);
     }
 
-    static internal int WriteAssociation(Association o) {
+    static internal void WriteAssociation(Association o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
                                           String.Empty, o.AssociationExtData.ToString(), o.Keywords,
                                           -1, String.Empty, -1,
                                           o.PostingTime, o.PostedBy.Id,
                                           (char) o.Status, o.Integrity.GetUpdatedHashCode());
-      return DataWriter.Execute(operation);
+
+      DataWriter.Execute(operation);
     }
 
-    static internal int WriteNoPropertyResource(NoPropertyResource o) {
+    static internal void WriteNoPropertyResource(NoPropertyResource o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
                                           String.Empty, String.Empty, o.Keywords,
                                           -1, String.Empty, -1,
                                           o.PostingTime, o.PostedBy.Id,
                                           (char) o.Status, o.Integrity.GetUpdatedHashCode());
-      return DataWriter.Execute(operation);
+      DataWriter.Execute(operation);
     }
 
-    static internal int WriteRealEstate(RealEstate o) {
+    static internal void WriteRealEstate(RealEstate o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
                                           o.CadastralKey, o.RealEstateExtData.ToString(), o.Keywords,
                                           o.IsPartitionOf.Id, o.PartitionNo, o.MergedInto.Id,
                                           o.PostingTime, o.PostedBy.Id,
                                           (char) o.Status, o.Integrity.GetUpdatedHashCode());
-      return DataWriter.Execute(operation);
+
+      DataWriter.Execute(operation);
     }
 
     #endregion Internal methods

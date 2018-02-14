@@ -192,13 +192,14 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetDataView(DataOperation.Parse("rptLRSVolumeBooks", recorderOffice.Id, (char) status), filter, sort);
     }
 
-    static internal int UpdateRecordingsImageIndex(RecordingBook recordingBook, int startImageIndex, int offset) {
+    static internal void UpdateRecordingsImageIndex(RecordingBook recordingBook, int startImageIndex, int offset) {
       DataOperation dataOperation = DataOperation.Parse("doLRSUpdateRecordingsImageIndexes",
                                                         recordingBook.Id, startImageIndex, offset);
-      return DataWriter.Execute(dataOperation);
+
+      DataWriter.Execute(dataOperation);
     }
 
-    static internal int WriteRecording(Recording o) {
+    static internal void WriteRecording(Recording o) {
       Assertion.Assert(o.MainDocument.Id > 0,
                        "Wrong data for physical recording. MainDocument was missed.");
 
@@ -206,20 +207,24 @@ namespace Empiria.Land.Registration.Data {
                                    o.MainDocument.Id, o.Number, o.AsText, o.ExtendedData.GetJson().ToString(),
                                    o.Keywords, o.RecordedBy.Id, o.RecordingTime,
                                    (char) o.Status, o.Integrity.GetUpdatedHashCode());
-      return DataWriter.Execute(op);
+
+      DataWriter.Execute(op);
     }
 
-    static internal int WriteRecordingBook(RecordingBook o) {
+    static internal void WriteRecordingBook(RecordingBook o) {
       var operation = DataOperation.Parse("writeLRSPhysicalBook", o.Id, o.RecorderOffice.Id, o.RecordingSection.Id,
                                            o.BookNumber, o.AsText, o.ExtensionData.ToString(), o.Keywords,
                                            o.StartRecordingIndex, o.EndRecordingIndex, (char) o.Status,
                                            o.RecordIntegrityHashCode);
-      return DataWriter.Execute(operation);
+
+      DataWriter.Execute(operation);
     }
 
-    static internal int WriteRecordingDocument(RecordingDocument o) {
-      return DataWriter.Execute(WriteRecordingDocumentOp(o));
+
+    static internal void WriteRecordingDocument(RecordingDocument o) {
+      DataWriter.Execute(WriteRecordingDocumentOp(o));
     }
+
 
     static internal DataOperation WriteRecordingDocumentOp(RecordingDocument o) {
       return DataOperation.Parse("writeLRSDocument", o.Id, o.DocumentType.Id, o.Subtype.Id, o.UID,
