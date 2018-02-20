@@ -1,268 +1,64 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EA85313C-BBBB-4F31-B6B9-05BB79ADDFF1}</ProjectGuid>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>
-    </ApplicationIcon>
-    <AssemblyKeyContainerName>
-    </AssemblyKeyContainerName>
-    <AssemblyName>Empiria.Land.Registration</AssemblyName>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
-    <DefaultClientScript>JScript</DefaultClientScript>
-    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
-    <DefaultTargetSchema>IE50</DefaultTargetSchema>
-    <DelaySign>true</DelaySign>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Empiria.Land.Registration</RootNamespace>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>
-    </StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <SignAssembly>false</SignAssembly>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
+    <Company>Ontica</Company>
+    <Product>Empiria Land Recording System</Product>
+    <Description>Land titles and documents recording system.</Description>
+    <Copyright>(c) 2009-2018. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
+    <Version>4.0.0</Version>
+    <AssemblyVersion>4.0.0</AssemblyVersion>
+    <FileVersion>4.0.0.0</FileVersion>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Land/blob/master/Land.Registration/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Ontica/Empiria.Land/tree/master/Land.Registration</PackageProjectUrl>
+    <PackageIconUrl>http://www.ontica.org/land/empiria-land.logo.png</PackageIconUrl>
+    <PackageTags>registros públicos, catastro, sistema catastral, land recording, administración territorial, impuesto predial, notarías, sedatu, méxico</PackageTags>
+    <RepositoryUrl>https://github.com/Ontica/Empiria.Land</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Authors>Ontica</Authors>
+    <TargetFramework>net46</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NeutralLanguage></NeutralLanguage>
+    <Configurations>Debug;Release;Multisolutions</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\Debug\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Multisolutions|AnyCPU' ">
+    <OutputPath>bin\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
-    <NoStdLib>false</NoStdLib>
-    <NoWarn>CS1591,CS1587</NoWarn>
-    <Optimize>false</Optimize>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
     <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <NoWarn />
+    <WarningsAsErrors />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\Release\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
-    <DebugSymbols>false</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
-    <NoStdLib>false</NoStdLib>
-    <NoWarn>
-    </NoWarn>
-    <Optimize>true</Optimize>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
+    <OutputPath>bin\</OutputPath>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-    <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <NoWarn />
+    <WarningsAsErrors />
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Empiria.Documents, Version=6.8.328.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Empiria.Documents.6.8.328\lib\net46\Empiria.Documents.dll</HintPath>
-    </Reference>
-    <Reference Include="Empiria.Foundation, Version=6.8.328.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Empiria.Foundation.6.8.328\lib\net46\Empiria.Foundation.dll</HintPath>
-    </Reference>
-    <Reference Include="Empiria.Geography, Version=6.8.328.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Empiria.Geography.6.8.328\lib\net46\Empiria.Geography.dll</HintPath>
-    </Reference>
-    <Reference Include="Empiria.OnePoint, Version=1.0.328.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Empiria.OnePoint.1.0.328\lib\net46\Empiria.OnePoint.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System">
-      <Name>System</Name>
-    </Reference>
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-    </Reference>
+  <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
+    <PackageReference Include="Empiria.Documents" Version="7.0.0" />
+    <PackageReference Include="Empiria.Geography" Version="7.0.0" />
+    <PackageReference Include="Empiria.OnePoint" Version="1.0.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Certification\CertificateAssembler.cs" />
-    <Compile Include="Certification\CertificateIssueMode.cs" />
-    <Compile Include="Certification\CertificateStatus.cs" />
-    <Compile Include="Certification\CertificateBuilder.cs" />
-    <Compile Include="Certification\CertificateDTO.cs" />
-    <Compile Include="Certification\CertificateExtData.cs" />
-    <Compile Include="Certification\CertificateType.cs" />
-    <Compile Include="Data\CertificatesData.cs" />
-    <Compile Include="Data\ResourceTractData.cs" />
-    <Compile Include="RootTypes\IResourceTractItem.cs" />
-    <Compile Include="Data\DocumentsData.cs" />
-    <Compile Include="Data\AnalyticsData.cs" />
-    <Compile Include="Data\RecordingActsData.cs" />
-    <Compile Include="Data\PartyData.cs" />
-    <Compile Include="Data\WorkflowData.cs" />
-    <Compile Include="Data\TransactionData.cs" />
-    <Compile Include="Data\ResourceData.cs" />
-    <Compile Include="Data\RecordingBooksData.cs" />
-    <Compile Include="Empiria.Land.Registration.AssemblyInfo.cs" />
-    <Compile Include="RootTypes\OwnershipMode.cs" />
-    <Compile Include="RootTypes\RealEstateType.cs" />
-    <Compile Include="RootTypes\RealEstateExtData.cs" />
-    <Compile Include="RootTypes\AssociationExtData.cs" />
-    <Compile Include="RootTypes\RecordingDTO.cs" />
-    <Compile Include="RootTypes\ResourceTract.cs" />
-    <Compile Include="RootTypes\SearchService.cs" />
-    <Compile Include="RootTypes\NoPropertyResource.cs" />
-    <Compile Include="RootTypes\RecordBookDirectory.cs" />
-    <Compile Include="RootTypes\RecordingCertificate.cs" />
-    <Compile Include="RootTypes\CadastralInfo.cs" />
-    <Compile Include="RootTypes\ModificationAct.cs" />
-    <Compile Include="Certification\Certificate.cs" />
-    <Compile Include="RootTypes\Association.cs" />
-    <Compile Include="RootTypes\ResourceRole.cs" />
-    <Compile Include="RootTypes\BasePartyRole.cs" />
-    <Compile Include="RootTypes\Resource.cs" />
-    <Compile Include="RootTypes\RecordableObjectStatus.cs" />
-    <Compile Include="RootTypes\RecordingActInfoDTO.cs" />
-    <Compile Include="RootTypes\RecordingDocumentExtData.cs" />
-    <Compile Include="RootTypes\RecordingExtData.cs" />
-    <Compile Include="RootTypes\RealEstatePartitionDTO.cs" />
-    <Compile Include="RootTypes\RecordingActExtData.cs" />
-    <Compile Include="RootTypes\RecordingRule.cs" />
-    <Compile Include="RootTypes\RecordingSection.cs" />
-    <Compile Include="RootTypes\RecorderExpert.cs" />
-    <Compile Include="RootTypes\RecordingTask.cs" />
-    <Compile Include="RootTypes\TransactionAct.cs" />
-    <Compile Include="Transactions\LRSExternalTransaction.cs" />
-    <Compile Include="Transactions\LRSFee.cs" />
-    <Compile Include="Transactions\LRSPayment.cs" />
-    <Compile Include="Transactions\LRSPaymentList.cs" />
-    <Compile Include="Transactions\LRSPaymentRules.cs" />
-    <Compile Include="Transactions\LRSWorkflowRules.cs" />
-    <Compile Include="Transactions\LRSWorkflow.cs" />
-    <Compile Include="Transactions\LRSTransactionStatus.cs" />
-    <Compile Include="Transactions\LRSWorkflowTaskList.cs" />
-    <Compile Include="Transactions\LRSWorkflowTask.cs" />
-    <Compile Include="Transactions\CalculationRule.cs" />
-    <Compile Include="Transactions\LRSLawArticle.cs" />
-    <Compile Include="Transactions\LRSTransactionItem.cs" />
-    <Compile Include="Transactions\LRSDocumentType.cs" />
-    <Compile Include="Transactions\LRSTransaction.cs" />
-    <Compile Include="Transactions\LRSTransactionType.cs" />
-    <Compile Include="RootTypes\SecondaryPartyRole.cs" />
-    <Compile Include="RootTypes\DomainActPartyRole.cs" />
-    <Compile Include="RootTypes\RecordingActParty.cs" />
-    <Compile Include="RootTypes\OrganizationParty.cs" />
-    <Compile Include="RootTypes\HumanParty.cs" />
-    <Compile Include="RootTypes\Party.cs" />
-    <Compile Include="RootTypes\CancelationAct.cs" />
-    <Compile Include="RootTypes\JudicialOffice.cs" />
-    <Compile Include="RootTypes\NotaryOffice.cs" />
-    <Compile Include="RootTypes\RecordingDocument.cs" />
-    <Compile Include="RootTypes\RecordingDocumentType.cs" />
-    <Compile Include="RootTypes\InformationAct.cs" />
-    <Compile Include="RootTypes\RecordingActType.cs" />
-    <Compile Include="RootTypes\StructureAct.cs" />
-    <Compile Include="RootTypes\LimitationAct.cs" />
-    <Compile Include="RootTypes\DomainAct.cs" />
-    <Compile Include="RootTypes\RealEstate.cs" />
-    <Compile Include="RootTypes\RecordingAct.cs" />
-    <Compile Include="RootTypes\RecordingActTypeCategory.cs" />
-    <Compile Include="RootTypes\LRSValidator.cs" />
-    <Compile Include="RootTypes\Recording.cs" />
-    <Compile Include="RootTypes\RecordingBook.cs" />
-    <Compile Include="RootTypes\LandRegistrationException.cs" />
-    <Compile Include="RootTypes\RecorderOffice.cs" />
-    <Compile Include="Transactions\LRSTransactionExtData.cs" />
-    <Compile Include="Transactions\LRSTransactionItemList.cs" />
+  <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
+    <ProjectReference Include="..\..\extensions\Documents\Empiria.Documents.csproj" />
+    <ProjectReference Include="..\..\extensions\Geography\Empiria.Geography.csproj" />
+    <ProjectReference Include="..\..\onepoint\OnePoint.Core\Empiria.OnePoint.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="RootTypes\LandRegistrationExceptionMsg.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-    <None Include="README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="LICENSE.txt" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>

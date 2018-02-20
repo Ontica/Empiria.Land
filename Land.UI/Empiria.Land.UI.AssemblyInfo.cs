@@ -1,28 +1,18 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                     System   : Land Registration System          *
-*  Assembly  : Empiria.Land.UI.dll                              Pattern  : Assembly Attributes File          *
-*  Version   : 3.0                                              License  : Please read license.txt file      *
+*  Solution : Empiria Land                                 System  : Server-side User interface              *
+*  Assembly : Empiria.Land.UI.dll                          Pattern : Assembly Attributes File                *
+*                                                          License : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Empiria Land Registration System User Interface.                                              *
+*  Summary  : Server-side user interface reusable components for Empiria Land solutions.                     *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 /*************************************************************************************************************
 * Assembly configuration attributes.                                                                         *
 *************************************************************************************************************/
-[assembly: AssemblyTitle("Empiria.Land.UI")]
-[assembly: AssemblyDescription("Empiria Land Registration System User Interface")]
-[assembly: AssemblyVersion("3.0.0308.0")]
-[assembly: AssemblyFileVersion("3.0.0308")]
-[assembly: AssemblyCompany("Ontica")]
-[assembly: AssemblyProduct("Empiria Land 2017")]
-[assembly: AssemblyCopyright("(c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.")]
 [assembly: AssemblyTrademark("Empiria and Ontica are either trademarks of La Vía Óntica SC or Ontica LLC.")]
-[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCulture("")]
-[assembly: ComVisible(false)]
 [assembly: CLSCompliant(true)]

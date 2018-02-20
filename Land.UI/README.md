@@ -1,7 +1,11 @@
-﻿Empiria Land User Interface Services
-====================================
+﻿# Empiria Land User Interface Services
 
-Empiria Land UI Services provides the following:
+Server-side user interface reusable components for Empiria Land solutions.
 
+# License
 
-Empiria Land User Interface Services is part of Empiria Land software product line.
+This system is distributed by the GNU AFFERO GENERAL PUBLIC LICENSE.
+
+# Copyright
+
+Copyright © 2009-2018. La Vía Óntica SC, Ontica LLC and colaborators.

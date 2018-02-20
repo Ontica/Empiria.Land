@@ -1,4 +1,11 @@
-﻿Empiria Land Registration Services
-==================================
+﻿# Empiria Land Recording System
 
-Empiria Land Registration Services is part of Empiria Land software product line.
+Land titles and documents recording system.
+
+# License
+
+This system is distributed by the GNU AFFERO GENERAL PUBLIC LICENSE.
+
+# Copyright
+
+Copyright © 2009-2018. La Vía Óntica SC, Ontica LLC and colaborators.

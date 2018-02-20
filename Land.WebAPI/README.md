@@ -1,12 +1,11 @@
-﻿Empiria Land Web API
-====================
+﻿# Empiria Land Web Api
 
-Provides HTTP/REST based web services for:
+Empiria Land Http/Json web services interface.
 
-* Certificate issuing
-* Recording documents
-* Properties and other recordable resources
-* Recording books
-* Recorder office transactions data
+# License
 
-Empiria Land Web API is part of Empiria Land software product line.
+This system is distributed by the GNU AFFERO GENERAL PUBLIC LICENSE.
+
+# Copyright
+
+Copyright © 2009-2018. La Vía Óntica SC, Ontica LLC and colaborators.
