@@ -55,7 +55,7 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Land.AppServices\Empiria.Land.AppServices.csproj" />
+    <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.WebApi" Version="2.0.0" />
