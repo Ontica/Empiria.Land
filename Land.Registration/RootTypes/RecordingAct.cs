@@ -445,7 +445,8 @@ namespace Empiria.Land.Registration {
     private void AssertDoesntHasEmittedCertificates() {
       var certificates = this.Resource.Tract.GetEmittedCerificates();
 
-      bool wrongPrelation = certificates.Contains((x) => x.IssueTime > this.Document.AuthorizationTime);
+      bool wrongPrelation = certificates.Contains((x) => x.IssueTime > this.Document.AuthorizationTime &&
+                                                         !x.Transaction.Equals(this.Document.GetTransaction()));
 
       if (wrongPrelation) {
         Assertion.AssertFail("El acto jurídico " + this.IndexedName +
