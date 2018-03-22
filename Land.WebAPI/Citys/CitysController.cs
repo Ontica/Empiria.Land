@@ -13,7 +13,6 @@ using System.Web.Http;
 
 using Empiria.Data;
 using Empiria.WebApi;
-using Empiria.WebApi.Models;
 
 using Empiria.Land.Certification;
 using Empiria.Land.Registration.Transactions;
