@@ -19,6 +19,11 @@
       "value": "Empiria Land Web Services"
     },
     {
+      "type": "Data",
+      "key": "IsObjectIdGeneratorServer",
+      "value": true
+    },
+    {
       "type": "",
       "key": "QRCodeServiceURL",
       "value": "http://empiria.land/intranet/user.controls/qrcode.aspx"
@@ -42,21 +47,6 @@
       "type": "Land.WebApi",
       "key": "PendingNoteRequest.ProjectedActsArray",
       "value": "2203~2206~2207~2208~2209~2214~2335~2371~2787"
-    },
-    {
-      "type": "WebApi.Client",
-      "key": "Default.WebApiServer",
-      "value": "Microservices"
-    },
-    {
-      "type": "WebApi.Client",
-      "key": "WebApiServer.Microservices",
-      "value": "http://empiria.land/microservices/"
-    },
-    {
-      "type": "WebApi.Client",
-      "key": "ServiceDirectory.Path",
-      "value": "v1/system/service-directory"
     }
   ]
 }
