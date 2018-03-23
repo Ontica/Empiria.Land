@@ -1,0 +1,33 @@
+﻿{
+  "appName": "Empiria Land Tests",
+  "description": "Environment settings",
+  "version": "1.0",
+  "date": "2018-03-23",
+  "settings": [
+    {
+      "type": "",
+      "key": "ApplicationKey",
+      "value": "{{APPLICATION-KEY}}"
+    },
+    {
+      "type": "",
+      "key": "GlobalConfigurationFile",
+      "value": "{{GLOBAL-CONFIGURATION-FILE}}"
+    },
+    {
+      "type": "Data",
+      "key": "IsObjectIdGeneratorServer",
+      "value": true
+    },
+    {
+      "type": "Land.Tests",
+      "key": "Testing.SessionToken",
+      "value": "{{TESTING-SESSION-TOKEN}}"
+    },
+    {
+      "type": "Land.Tests",
+      "key": "Testing.FilingUID",
+      "value": "{{TESTING-FILING-UID}}"
+    }
+  ]
+}
