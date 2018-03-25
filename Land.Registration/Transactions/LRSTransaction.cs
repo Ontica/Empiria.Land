@@ -123,7 +123,6 @@ namespace Empiria.Land.Registration.Transactions {
       set;
     }
 
-
     public LRSTransactionExtData ExtensionData {
       get;
       private set;
@@ -526,12 +525,6 @@ namespace Empiria.Land.Registration.Transactions {
       this.SetPaymentOrderData(Empiria.OnePoint.PaymentOrderData.Empty);
     }
 
-    public bool HasPaymentOrder {
-      get {
-        return this.ExtensionData.PaymentOrderData.RouteNumber != String.Empty;
-      }
-    }
-
     public IPaymentOrderData PaymentOrderData {
       get {
         return this.ExtensionData.PaymentOrderData;
@@ -547,7 +540,11 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public IPaymentOrderData TryGetPaymentOrderData() {
-      return this.ExtensionData.PaymentOrderData;
+      if (!this.ExtensionData.PaymentOrderData.IsEmptyInstance) {
+        return this.ExtensionData.PaymentOrderData;
+      } else {
+        return null;
+      }
     }
 
     #endregion IFiling implementation

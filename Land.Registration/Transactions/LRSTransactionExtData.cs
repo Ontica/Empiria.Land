@@ -31,7 +31,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     static internal LRSTransactionExtData Parse(string jsonString) {
       if (String.IsNullOrWhiteSpace(jsonString)) {
-        return LRSTransactionExtData.Empty;
+        return new LRSTransactionExtData();
       }
 
       var json = JsonConverter.ToJsonObject(jsonString);
@@ -52,15 +52,6 @@ namespace Empiria.Land.Registration.Transactions {
         extData.ExternalTransaction = LRSExternalTransaction.Parse(json.Slice("ExternalTransaction"));
       }
       return extData;
-    }
-
-    static private readonly LRSTransactionExtData _empty =
-                                new LRSTransactionExtData() { IsEmptyInstance = true };
-
-    static public LRSTransactionExtData Empty {
-      get {
-        return _empty;
-      }
     }
 
     #endregion Constructors and parsers
@@ -90,11 +81,6 @@ namespace Empiria.Land.Registration.Transactions {
       internal set;
     } = OnePoint.PaymentOrderData.Empty;
 
-
-    public bool IsEmptyInstance {
-      get;
-      private set;
-    } = false;
 
     #endregion Properties
 
