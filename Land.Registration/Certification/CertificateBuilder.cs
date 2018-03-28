@@ -19,6 +19,13 @@ namespace Empiria.Land.Certification {
   /// <summary>Builds a certificate Html output using a text-based template.</summary>
   internal class CertificateBuilder {
 
+    #region Fields
+
+    private static readonly bool DISPLAY_VEDA_ELECTORAL_UI =
+                                        ConfigurationData.Get<bool>("DisplayVedaElectoralUI", false);
+
+    #endregion Fields
+
     #region Constructors and parsers
 
     private CertificateBuilder(Certificate certificate) {
@@ -50,6 +57,8 @@ namespace Empiria.Land.Certification {
       var template = new StringBuilder(this.GetTemplate());
 
       var o = this.Certificate;
+
+      template.Replace("{{CERTIFICATE_LOGO_SOURCE}}", this.GetLogoSource());
 
       template.Replace("{{QR.CODE.SOURCE}}",
                        "{{QR.CODE.SERVICE.URL}}?size=120&amp;data={{EXTRANET.SERVER.URL}}?" +
@@ -111,6 +120,7 @@ namespace Empiria.Land.Certification {
       return template.ToString();
     }
 
+
     private string GetMarginalNotes() {
       if (this.Certificate.ExtensionData.MarginalNotes.Length != 0) {
         return this.Certificate.ExtensionData.MarginalNotes;
@@ -144,6 +154,15 @@ namespace Empiria.Land.Certification {
         return AsWarning("SIN VALOR LEGAL * * * * * SIN VALOR LEGAL");
       }
     }
+
+
+    private string GetLogoSource() {
+      if (DISPLAY_VEDA_ELECTORAL_UI) {
+        return "assets/government.seal.veda.png";
+      }
+      return "assets/government.seal.png";
+    }
+
 
     private string GetTemplate() {
       string mainTemplateFile = ConfigurationData.GetString("Certificates.MainTemplate");
