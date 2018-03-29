@@ -309,7 +309,7 @@ namespace Empiria.Land.Certification {
         return "SIN VALOR LEGAL * * * * * SIN VALOR LEGAL";
       }
 
-      string s = Cryptographer.CreateDigitalSign(this.GetDigitalSeal());
+      string s = Cryptographer.SignTextWithSystemCredentials(this.GetDigitalSeal());
 
       int removeThisCharacters = 72;
 

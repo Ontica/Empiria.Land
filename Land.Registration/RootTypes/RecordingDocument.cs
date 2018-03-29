@@ -462,7 +462,7 @@ namespace Empiria.Land.Registration {
       }
       s += "||";
 
-      return Cryptographer.CreateDigitalSign(s);
+      return Cryptographer.SignTextWithSystemCredentials(s);
     }
 
     public string GetDigitalSignature() {
@@ -472,7 +472,7 @@ namespace Empiria.Land.Registration {
       for (int i = 0; i < this.RecordingActs.Count; i++) {
         s += "|" + this.RecordingActs[i].Id.ToString();
       }
-      return Cryptographer.CreateDigitalSign(s + "eSign");
+      return Cryptographer.SignTextWithSystemCredentials(s + "eSign");
     }
 
     public List<Contact> GetRecordingOfficials() {
