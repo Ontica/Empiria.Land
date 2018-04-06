@@ -25,6 +25,9 @@ namespace Empiria.Land.WebApi {
   /// <summary>Contains general web methods forthe Empiria Land Online Services system.</summary>
   public class OnLineServicesController : WebApiController {
 
+    private static readonly string SEARCH_SERVICES_SERVER_BASE_ADDRESS =
+                                            ConfigurationData.Get<string>("SearchServicesServerBaseAddress");
+
     private readonly DateTime hashCodeValidationStartDate = DateTime.Parse("2016-11-24");
     private readonly DateTime certificateHashCodeValidationStartDate = DateTime.Parse("2020-01-01");
 
@@ -441,17 +444,13 @@ namespace Empiria.Land.WebApi {
     }
 
     private string GetResourceLink(string resourceUID) {
-      const string link =
-          "<a href='http://registropublico.tlaxcala.gob.mx/consultas/?type=resource&uid={0}'>Consultar este folio real</a>";
-
-      return String.Format(link, resourceUID);
+      return $"<a href='{SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?type=resource&uid={resourceUID}'>" +
+             $"Consultar este folio real</a>";
     }
 
     private string GetTransactionLink(string transactionUID) {
-      const string link =
-          "<a href='http://registropublico.tlaxcala.gob.mx/consultas/?type=transaction&uid={0}'>Consultar este trámite</a>";
-
-      return String.Format(link, transactionUID);
+      return $"<a href='{SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?type=transaction&uid={transactionUID}'>" +
+             $"Consultar este trámite</a>";
     }
 
 

@@ -21,6 +21,9 @@ namespace Empiria.Land.Certification {
 
     #region Fields
 
+    private static readonly string SEARCH_SERVICES_SERVER_BASE_ADDRESS =
+                                          ConfigurationData.Get<string>("SearchServicesServerBaseAddress");
+
     private static readonly bool DISPLAY_VEDA_ELECTORAL_UI =
                                         ConfigurationData.Get<bool>("DisplayVedaElectoralUI", false);
 
@@ -61,12 +64,12 @@ namespace Empiria.Land.Certification {
       template.Replace("{{CERTIFICATE_LOGO_SOURCE}}", this.GetLogoSource());
 
       template.Replace("{{QR.CODE.SOURCE}}",
-                       "{{QR.CODE.SERVICE.URL}}?size=120&amp;data={{EXTRANET.SERVER.URL}}?" +
+                       "{{QR.CODE.SERVICE.URL}}?size=120&amp;data={{SEARCH.SERVICES.SERVER.ADDRESS}}/?" +
                         "type=certificate%26uid={{NUMERO.CERTIFICADO}}%26hash={{QR.CODE.HASH}}");
 
       if (!o.Property.IsEmptyInstance) {
         template.Replace("{{RESOURCE.QR.CODE.SOURCE}}",
-                         "{{QR.CODE.SERVICE.URL}}?size=120&amp;data={{EXTRANET.SERVER.URL}}?" +
+                         "{{QR.CODE.SERVICE.URL}}?size=120&amp;data={{SEARCH.SERVICES.SERVER.ADDRESS}}/?" +
                          "type=resource%26uid={{FOLIO REAL}}%26hash={{RESOURCE.QR.CODE.HASH}}");
         template.Replace("{{DISPLAY.RESOURCE.QR.CODE}}", "inline");
         template.Replace("{{RESOURCE.QR.CODE.HASH}}", o.Property.QRCodeSecurityHash());
@@ -76,7 +79,7 @@ namespace Empiria.Land.Certification {
       }
 
       template.Replace("{{QR.CODE.SERVICE.URL}}", ConfigurationData.GetString("QRCodeServiceURL"));
-      template.Replace("{{EXTRANET.SERVER.URL}}", ConfigurationData.GetString("ExtranetServerURL"));
+      template.Replace("{{SEARCH.SERVICES.SERVER.ADDRESS}}", SEARCH_SERVICES_SERVER_BASE_ADDRESS);
 
       template.Replace("{{DOCUMENT.OR.PHYSICAL.RECORDING}}", this.GetDocumentOrPhysicalRecording());
       template.Replace("{{NUMERO.CERTIFICADO}}", o.UID);
