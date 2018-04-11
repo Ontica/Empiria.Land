@@ -14,7 +14,7 @@ using System.Data;
 using Empiria.Contacts;
 using Empiria.Security;
 
-using Empiria.Land.Registration.Data;
+using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration {
 

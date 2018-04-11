@@ -13,7 +13,8 @@ using System.Data;
 
 using Empiria.Contacts;
 using Empiria.Security;
-using Empiria.Land.Registration.Data;
+
+using Empiria.Land.Data;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {

@@ -9,14 +9,13 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Data;
 
 using Empiria.Contacts;
 using Empiria.DataTypes;
 using Empiria.Documents.IO;
 using Empiria.Geography;
 
-using Empiria.Land.Registration.Data;
+using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration {
 

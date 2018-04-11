@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
-*  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
+*  Namespace : Empiria.Land.Data                            Assembly : Empiria.Land.Registration             *
 *  Type      : WorkflowData                                 Pattern  : Data Services                         *
 *  Version   : 3.0                                          License  : Please read license.txt file          *
 *                                                                                                            *
@@ -17,7 +17,7 @@ using Empiria.Data;
 
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Registration.Data {
+namespace Empiria.Land.Data {
 
   /// <summary>Provides database read and write methods for Empiria Land micro-workflow services.</summary>
   static public class WorkflowData {
@@ -76,4 +76,4 @@ namespace Empiria.Land.Registration.Data {
 
   } // class WorkflowData
 
-} // namespace Empiria.Land.Registration.Data
+} // namespace Empiria.Land.Data

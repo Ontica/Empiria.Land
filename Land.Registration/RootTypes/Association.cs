@@ -11,7 +11,7 @@
 using System;
 using System.Data;
 
-using Empiria.Land.Registration.Data;
+using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration {
 

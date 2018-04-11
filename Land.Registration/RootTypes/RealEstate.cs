@@ -13,7 +13,8 @@ using System.Data;
 
 using Empiria.DataTypes;
 using Empiria.Geography;
-using Empiria.Land.Registration.Data;
+
+using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration {
 

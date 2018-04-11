@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
-*  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
+*  Namespace : Empiria.Land.Data                            Assembly : Empiria.Land.Registration             *
 *  Type      : RecordingActsData                            Pattern  : Data Services                         *
 *  Version   : 3.0                                          License  : Please read license.txt file          *
 *                                                                                                            *
@@ -10,11 +10,12 @@
 ********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 using Empiria.Data;
 
-namespace Empiria.Land.Registration.Data {
+using Empiria.Land.Registration;
+
+namespace Empiria.Land.Data {
 
   /// <summary>Provides database read and write methods for recording acts.</summary>
   static public class RecordingActsData {
@@ -89,4 +90,4 @@ namespace Empiria.Land.Registration.Data {
 
   } // class RecordingActsData
 
-} // namespace Empiria.Land.Registration.Data
+} // namespace Empiria.Land.Data

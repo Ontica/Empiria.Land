@@ -16,10 +16,11 @@ using System.Linq;
 using Empiria.Contacts;
 using Empiria.Geography;
 using Empiria.Documents;
-using Empiria.Land.Registration.Data;
-using Empiria.Land.Registration.Transactions;
 using Empiria.Ontology;
 using Empiria.Security;
+
+using Empiria.Land.Data;
+using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {
 
@@ -335,8 +336,8 @@ namespace Empiria.Land.Registration {
     public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Resource resource,
                                            RecordingAct amendmentOf = null,
                                            Recording physicalRecording = null) {
-      amendmentOf = (amendmentOf != null) ? amendmentOf : RecordingAct.Empty;
-      physicalRecording = (physicalRecording != null) ? physicalRecording : Recording.Empty;
+      amendmentOf = amendmentOf ?? RecordingAct.Empty;
+      physicalRecording = physicalRecording ?? Recording.Empty;
 
       Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance.");
       Assertion.Assert(this.IsHistoricDocument || !this.IsClosed,

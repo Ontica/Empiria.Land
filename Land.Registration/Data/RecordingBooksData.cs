@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
-*  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
+*  Namespace : Empiria.Land.Data                            Assembly : Empiria.Land.Registration             *
 *  Type      : RecordingBooksData                           Pattern  : Data Services                         *
 *  Version   : 3.0                                          License  : Please read license.txt file          *
 *                                                                                                            *
@@ -13,7 +13,10 @@ using System.Data;
 
 using Empiria.Data;
 
-namespace Empiria.Land.Registration.Data {
+using Empiria.Land.Registration;
+using Empiria.Land.Registration.Transactions;
+
+namespace Empiria.Land.Data {
 
   /// <summary>Provides database read and write methods for recording books.</summary>
   static public class RecordingBooksData {
@@ -106,7 +109,7 @@ namespace Empiria.Land.Registration.Data {
     }
 
     static internal FixedList<Recording> GetRecordings(RecordingDocument document,
-                                                       Transactions.LRSTransaction transaction) {
+                                                       LRSTransaction transaction) {
       string sql = "SELECT * FROM LRSRecordings WHERE TransactionId = {T} " +
                    "AND DocumentId = {D} AND RecordingStatus <> 'X' ORDER BY RecordingId";
       sql = sql.Replace("{T}", transaction.Id.ToString());
@@ -239,4 +242,4 @@ namespace Empiria.Land.Registration.Data {
 
   } // class RecordingBooksData
 
-} // namespace Empiria.Land.Registration.Data
+} // namespace Empiria.Land.Data

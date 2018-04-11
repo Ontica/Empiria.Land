@@ -13,7 +13,6 @@ using System.Collections.Generic;
 
 using Empiria.Land.Certification;
 using Empiria.Land.Data;
-using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.Registration {
 

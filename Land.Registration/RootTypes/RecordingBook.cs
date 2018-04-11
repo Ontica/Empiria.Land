@@ -14,7 +14,7 @@ using Empiria.Contacts;
 using Empiria.DataTypes;
 using Empiria.Json;
 
-using Empiria.Land.Registration.Data;
+using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration {
 

@@ -12,8 +12,9 @@ using System;
 using System.Data;
 
 using Empiria.Json;
-using Empiria.Land.Registration.Data;
 using Empiria.Ontology;
+
+using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration {
 

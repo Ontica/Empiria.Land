@@ -12,8 +12,8 @@ using System;
 using System.Collections;
 using System.Web.UI.WebControls;
 
+using Empiria.Land.Data;
 using Empiria.Land.Registration;
-using Empiria.Land.Registration.Data;
 
 namespace Empiria.Land.UI {
 

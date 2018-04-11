@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
-*  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
+*  Namespace : Empiria.Land.Data                            Assembly : Empiria.Land.Registration             *
 *  Type      : ResourceData                                 Pattern  : Data Services                         *
 *  Version   : 3.0                                          License  : Please read license.txt file          *
 *                                                                                                            *
@@ -13,7 +13,9 @@ using System.Data;
 
 using Empiria.Data;
 
-namespace Empiria.Land.Registration.Data {
+using Empiria.Land.Registration;
+
+namespace Empiria.Land.Data {
 
   /// <summary>Provides database methods for recordable resources: real estate and associations.</summary>
   static public class ResourceData {
@@ -82,4 +84,4 @@ namespace Empiria.Land.Registration.Data {
 
   } // class ResourceData
 
-} // namespace Empiria.Land.Registration.Data
+} // namespace Empiria.Land.Data

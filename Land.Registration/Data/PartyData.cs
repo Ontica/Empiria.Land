@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                 System   : Land Registration System              *
-*  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
+*  Namespace : Empiria.Land.Data                            Assembly : Empiria.Land.Registration             *
 *  Type      : PartyData                                    Pattern  : Data Services                         *
 *  Version   : 3.0                                          License  : Please read license.txt file          *
 *                                                                                                            *
@@ -14,7 +14,9 @@ using System.Data;
 using Empiria.Data;
 using Empiria.Ontology;
 
-namespace Empiria.Land.Registration.Data {
+using Empiria.Land.Registration;
+
+namespace Empiria.Land.Data {
 
   /// <summary>Provides database read and write methods for parties: people and organizations.</summary>
   static public class PartyData {
@@ -156,4 +158,4 @@ namespace Empiria.Land.Registration.Data {
 
   } // class PartyData
 
-} // namespace Empiria.Land.Registration.Data
+} // namespace Empiria.Land.Data

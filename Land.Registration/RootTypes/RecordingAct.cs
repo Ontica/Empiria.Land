@@ -13,9 +13,10 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
-using Empiria.Land.Registration.Data;
 using Empiria.Security;
 using Empiria.Ontology;
+
+using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration {
 
