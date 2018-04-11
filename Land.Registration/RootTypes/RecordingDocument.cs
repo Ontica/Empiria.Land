@@ -463,7 +463,7 @@ namespace Empiria.Land.Registration {
       }
       s += "||";
 
-      return Cryptographer.SignTextWithSystemCredentials(s);
+      return FormerCryptographer.SignTextWithSystemCredentials(s);
     }
 
     public string GetDigitalSignature() {
@@ -473,7 +473,7 @@ namespace Empiria.Land.Registration {
       for (int i = 0; i < this.RecordingActs.Count; i++) {
         s += "|" + this.RecordingActs[i].Id.ToString();
       }
-      return Cryptographer.SignTextWithSystemCredentials(s + "eSign");
+      return FormerCryptographer.SignTextWithSystemCredentials(s + "eSign");
     }
 
     public List<Contact> GetRecordingOfficials() {
@@ -600,11 +600,11 @@ namespace Empiria.Land.Registration {
 
     public string QRCodeSecurityHash() {
       if (!this.IsNew) {
-        return Cryptographer.CreateHashCode(this.Id.ToString("00000000") +
-                                            this.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
-                                            this.UID)
-                                            .Substring(0, 8)
-                                            .ToUpperInvariant();
+        return FormerCryptographer.CreateHashCode(this.Id.ToString("00000000") +
+                                                  this.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
+                                                  this.UID)
+                                  .Substring(0, 8)
+                                  .ToUpperInvariant();
       } else {
         return String.Empty;
       }

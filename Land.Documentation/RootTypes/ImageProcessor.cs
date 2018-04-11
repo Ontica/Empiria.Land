@@ -98,8 +98,8 @@ namespace Empiria.Land.Documentation {
               string pngImageFileName = candidateImage.GetTargetPngFileName(frameIndex, totalFrames);
               FileServices.AssureDirectoryForFile(pngImageFileName);
               bmp.Save(pngImageFileName, ImageFormat.Gif);
-              string hashCode = Cryptographer.CreateHashCode(File.ReadAllBytes(pngImageFileName),
-                                                             pngImageFileName);
+              string hashCode = FormerCryptographer.CreateHashCode(File.ReadAllBytes(pngImageFileName),
+                                                                   pngImageFileName);
               securityHashCodes[frameIndex] =
                          hashCode.Substring(0, totalFrames <= 20 ? 32 : (totalFrames <= 100 ? 16 : 8));
             }

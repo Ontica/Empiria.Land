@@ -309,7 +309,7 @@ namespace Empiria.Land.Certification {
         return "SIN VALOR LEGAL * * * * * SIN VALOR LEGAL";
       }
 
-      string s = Cryptographer.SignTextWithSystemCredentials(this.GetDigitalSeal());
+      string s = FormerCryptographer.SignTextWithSystemCredentials(this.GetDigitalSeal());
 
       int removeThisCharacters = 72;
 
@@ -341,10 +341,10 @@ namespace Empiria.Land.Certification {
 
     public string QRCodeSecurityHash() {
       if (!this.IsNew) {
-        return Cryptographer.CreateHashCode(this.Id.ToString("00000000") +
-                                            this.IssueTime.ToString("yyyyMMddTHH:mm"), this.UID)
-                                            .Substring(0, 8)
-                                            .ToUpperInvariant();
+        return FormerCryptographer.CreateHashCode(this.Id.ToString("00000000") +
+                                                  this.IssueTime.ToString("yyyyMMddTHH:mm"), this.UID)
+                                  .Substring(0, 8)
+                                  .ToUpperInvariant();
       } else {
         return String.Empty;
       }
