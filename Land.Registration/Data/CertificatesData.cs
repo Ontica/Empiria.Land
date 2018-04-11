@@ -1,13 +1,12 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                 System   : Land Registration System              *
-*  Namespace : Empiria.Land.Data                            Assembly : Empiria.Land.Registration             *
-*  Type      : CertificatesData                             Pattern  : Data Services                         *
-*  Version   : 3.0                                          License  : Please read license.txt file          *
+*  System   : Empiria Land                                 Module  : Certificate Issuing Services            *
+*  Assembly : Empiria.Land.Registration.dll                Pattern : Data Services                           *
+*  Type     : CertificatesData                             License : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Provides database read and write methods for land certificates.                               *
+*  Summary  : Provides database read and write methods for land certificates.                                *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Data;
@@ -24,28 +23,15 @@ namespace Empiria.Land.Data {
     #region Public methods
 
     static internal string BuildCertificateUID() {
-      string temp = String.Empty;
-      int hashCode = 0;
-      bool useLetters = false;
-      for (int i = 0; i < 7; i++) {
-        if (useLetters) {
-          temp += EmpiriaMath.GetRandomCharacter(temp);
-          temp += EmpiriaMath.GetRandomCharacter(temp);
-        } else {
-          temp += EmpiriaMath.GetRandomDigit(temp);
-          temp += EmpiriaMath.GetRandomDigit(temp);
+      while (true) {
+        string newCertificateUID = UIDGenerators.CreateCertificateUID();
+
+        var checkIfExistCertificate = Certificate.TryParse(newCertificateUID);
+
+        if (checkIfExistCertificate == null) {
+          return newCertificateUID;
         }
-        hashCode += ((Convert.ToInt32(temp[temp.Length - 2]) +
-                      Convert.ToInt32(temp[temp.Length - 1])) % ((int) Math.Pow(i + 1, 2)));
-        useLetters = !useLetters;
       }
-      string prefix = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
-      temp = "CE" + temp.Substring(0, 4) + "-" + temp.Substring(4, 6) + "-" + temp.Substring(10, 4);
-
-      temp += "ABCDEFHJKMNPRTWXYZ".Substring((hashCode * Convert.ToInt32(prefix[0])) % 17, 1);
-      temp += "9A8B7CD5E4F2".Substring((hashCode * Convert.ToInt32(prefix[1])) % 11, 1);
-
-      return temp;
     }
 
     static internal FixedList<Certificate> GetTransactionIssuedCertificates(LRSTransaction transaction) {

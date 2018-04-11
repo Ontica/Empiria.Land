@@ -1,22 +1,22 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                 System   : Land Registration System              *
-*  Namespace : Empiria.Land.Registration.Data               Assembly : Empiria.Land.Registration             *
-*  Type      : TransactionData                              Pattern  : Data Services                         *
-*  Version   : 3.0                                          License  : Please read license.txt file          *
+*  System   : Empiria Land                                 Module  : Recording Services                      *
+*  Assembly : Empiria.Land.Registration.dll                Pattern : Data Services                           *
+*  Type     : TransactionData                              License : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Provides database read and write methods for recording office transactions.                   *
+*  Summary  : Provides database read and write methods for recording office transactions.                    *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Data;
 
+using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Registration.Data {
+namespace Empiria.Land.Data {
 
   /// <summary>Provides database read and write methods for recording office transactions.</summary>
   static public class TransactionData {
@@ -36,6 +36,7 @@ namespace Empiria.Land.Registration.Data {
       }
       return DataReader.GetDataView(DataOperation.Parse(sql));
     }
+
 
     static public DataSet GetLRSTransactionWithKey(string transactionKey) {
       DataSet dataset = new DataSet("LRSTransaction");
@@ -58,6 +59,7 @@ namespace Empiria.Land.Registration.Data {
       return dataset;
     }
 
+
     static public LRSTransactionItemList GetLRSTransactionItemsList(LRSTransaction transaction) {
       var operation = DataOperation.Parse("qryLRSTransactionItems", transaction.Id);
 
@@ -66,6 +68,7 @@ namespace Empiria.Land.Registration.Data {
 
       return new LRSTransactionItemList(list);
     }
+
 
     static internal List<LRSPayment> GetLRSRecordingPayments(Recording recording) {
       if (recording.IsEmptyInstance) {
@@ -76,6 +79,7 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList<LRSPayment>(operation, (x) => BaseObject.ParseList<LRSPayment>(x));
     }
 
+
     static internal List<LRSPayment> GetLRSTransactionPayments(LRSTransaction transaction) {
       if (transaction.IsEmptyInstance) {
         return new List<LRSPayment>();
@@ -85,6 +89,7 @@ namespace Empiria.Land.Registration.Data {
       return DataReader.GetList<LRSPayment>(operation, (x) => BaseObject.ParseList<LRSPayment>(x));
     }
 
+
     static internal bool ExistsExternalTransactionNo(string externalTransactionNo) {
       var sql = "SELECT * FROM LRSTransactions WHERE ExternalTransactionNo = '{0}'";
 
@@ -93,101 +98,58 @@ namespace Empiria.Land.Registration.Data {
       return (DataReader.Count(operation) > 0);
     }
 
-    static public string GenerateAssociationUID() {
-      string temp = ExecutionServer.LicenseName == "Zacatecas" ? "ZS-SC-" : "TL-SC-";
 
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
+    static internal string GenerateAssociationUID() {
+      while (true) {
+        string newAssociationUID = UIDGenerators.CreateAssociationUID();
 
-      int hashCode = 0;
-      for (int i = 0; i < temp.Length; i++) {
-        hashCode += (Convert.ToInt32(temp[i]) + Convert.ToInt32(i == 0 ? 0 : temp[i - 1])) * (i + 1);
+        var checkIfExistAssociation = Resource.TryParseWithUID(newAssociationUID);
+
+        if (checkIfExistAssociation == null) {
+          return newAssociationUID;
+        }
       }
-      temp += GetChecksumCharacterCode(hashCode);
-
-      return temp;
     }
+
 
     static internal string GenerateNoPropertyResourceUID() {
-      string temp = ExecutionServer.LicenseName == "Zacatecas" ? "ZS-DOC-" : "TL-DOC-";
+      while (true) {
+        string newNoPropertyUID = UIDGenerators.CreateNoPropertyResourceUID();
 
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
+        var checkIfExistNoPropertyResource = Resource.TryParseWithUID(newNoPropertyUID);
 
-      int hashCode = 0;
-      for (int i = 0; i < temp.Length; i++) {
-        hashCode += (Convert.ToInt32(temp[i]) + Convert.ToInt32(i == 0 ? 0 : temp[i - 1])) * (i + 1);
+        if (checkIfExistNoPropertyResource == null) {
+          return newNoPropertyUID;
+        }
       }
-      temp += GetChecksumCharacterCode(hashCode);
-
-      return temp;
     }
 
-    static public string GeneratePropertyUID() {
-      string temp = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter();
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
 
-      int hashCode = 0;
-      for (int i = 0; i < temp.Length; i++) {
-        hashCode += (Convert.ToInt32(temp[i]) + Convert.ToInt32(i == 0 ? 0 : temp[i - 1])) * (i + 1);
+    static internal string GeneratePropertyUID() {
+      while (true) {
+        string newPropertyUID = UIDGenerators.CreatePropertyUID();
+
+        var checkIfExistProperty = Resource.TryParseWithUID(newPropertyUID);
+
+        if (checkIfExistProperty == null) {
+          return newPropertyUID;
+        }
       }
-      temp += GetChecksumCharacterCode(hashCode);
-
-      return temp.Substring(0, 4) + "-" + temp.Substring(4, 4) + "-" + temp.Substring(8, 4) + "-" + temp.Substring(12, 4);
     }
 
-    static internal string GetChecksumCharacterCode(int hashCode) {
-      string hashCodeConvertionRule = ExecutionServer.LicenseName == "Zacatecas" ?
-                                                                     "AL8GD7E95ZJSXYTKBHFWR43MCU6N21QPV0" :
-                                                                     "NAXMT1C5WZ7J3HE489RLGV6F2PUQKYD0BS";
-      return hashCodeConvertionRule.Substring(hashCode % hashCodeConvertionRule.Length, 1);
-    }
 
     static internal string GenerateTransactionUID() {
-      string temp = String.Empty;
-      int hashCode = 0;
-      bool useLetters = false;
-      for (int i = 0; i < 5; i++) {
-        if (useLetters) {
-          temp += EmpiriaMath.GetRandomCharacter(temp);
-          temp += EmpiriaMath.GetRandomCharacter(temp);
-        } else {
-          temp += EmpiriaMath.GetRandomDigit(temp);
-          temp += EmpiriaMath.GetRandomDigit(temp);
-        }
-        hashCode += ((Convert.ToInt32(temp[temp.Length - 2]) +
-                      Convert.ToInt32(temp[temp.Length - 1])) % ((int) Math.Pow(i + 1, 2)));
-        useLetters = !useLetters;
-      }
-      string prefix = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
-      temp = "TR-" + temp.Substring(0, 5) + "-" + temp.Substring(5, 5);
-      hashCode = (hashCode * Convert.ToInt32(prefix[0])) % 49;
-      hashCode = (hashCode * Convert.ToInt32(prefix[1])) % 53;
+      while (true) {
+        string newTransactionUID = UIDGenerators.CreateTransactionUID();
 
-      return temp + "-" + (hashCode % 10).ToString();
+        var checkIfExistTransaction = LRSTransaction.TryParse(newTransactionUID);
+
+        if (checkIfExistTransaction == null) {
+          return newTransactionUID;
+        }
+      }
     }
+
 
     static internal int GetLastControlNumber(RecorderOffice recorderOffice) {
       string sql = "SELECT MAX(ControlNumber) FROM vwLRSTransactions " +
@@ -201,6 +163,7 @@ namespace Empiria.Land.Registration.Data {
         return 1;
       }
     }
+
 
     static internal void WritePayment(LRSPayment o) {
       var op = DataOperation.Parse("writeLRSPayment", o.Id, o.Transaction.Id,
@@ -227,6 +190,7 @@ namespace Empiria.Land.Registration.Data {
                   (char) o.Workflow.CurrentStatus, o.Integrity.GetUpdatedHashCode());
     }
 
+
     static internal void WriteTransactionItem(LRSTransactionItem o) {
       var operation = DataOperation.Parse("writeLRSTransactionItem", o.Id, o.Transaction.Id,
                                           o.TransactionItemType.Id, o.TreasuryCode.Id,
@@ -244,4 +208,4 @@ namespace Empiria.Land.Registration.Data {
 
   } // class TransactionData
 
-} // namespace Empiria.Land.Registration.Data
+} // namespace Empiria.Land.Data
