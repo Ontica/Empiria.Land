@@ -41,7 +41,9 @@ namespace Empiria.Land.Data {
     static public DataSet GetLRSTransactionWithKey(string transactionKey) {
       DataSet dataset = new DataSet("LRSTransaction");
 
-      string sql = "SELECT * FROM vwLRSTransactionForWS WHERE TransactionKey = '" + transactionKey + "'";
+      string sql = "SELECT * FROM vwLRSTransactionForWS " +
+                   $"WHERE TransactionKey = '{transactionKey}'";
+
       DataTable table = DataReader.GetDataTable(DataOperation.Parse(sql), "Header");
 
       dataset.Tables.Add(table);
@@ -50,7 +52,8 @@ namespace Empiria.Land.Data {
       if (table.Rows.Count != 0) {
         transactionId = (int) table.Rows[0]["TransactionId"];
       }
-      sql = "SELECT * FROM vwLRSTransactionItemsForWS WHERE TransactionId = " + transactionId;
+      sql = "SELECT * FROM vwLRSTransactionItemsForWS " +
+            $"WHERE TransactionId = {transactionId}";
 
       table = DataReader.GetDataTable(DataOperation.Parse(sql), "Items");
 
@@ -91,9 +94,10 @@ namespace Empiria.Land.Data {
 
 
     static internal bool ExistsExternalTransactionNo(string externalTransactionNo) {
-      var sql = "SELECT * FROM LRSTransactions WHERE ExternalTransactionNo = '{0}'";
+      var sql = "SELECT * FROM LRSTransactions " +
+                $"WHERE ExternalTransactionNo = '{externalTransactionNo}'";
 
-      var operation = DataOperation.Parse(String.Format(sql, externalTransactionNo));
+      var operation = DataOperation.Parse(sql);
 
       return (DataReader.Count(operation) > 0);
     }
@@ -153,7 +157,7 @@ namespace Empiria.Land.Data {
 
     static internal int GetLastControlNumber(RecorderOffice recorderOffice) {
       string sql = "SELECT MAX(ControlNumber) FROM vwLRSTransactions " +
-                   "WHERE RecorderOfficeId = " + recorderOffice.Id.ToString();
+                   $"WHERE RecorderOfficeId = {recorderOffice.Id.ToString()}";
 
       string max = DataReader.GetScalar<String>(DataOperation.Parse(sql), String.Empty);
 
@@ -176,32 +180,29 @@ namespace Empiria.Land.Data {
 
 
     static internal void WriteTransaction(LRSTransaction o) {
-      DataWriter.Execute(WriteTransactionOp(o));
-    }
-
-
-    static internal DataOperation WriteTransactionOp(LRSTransaction o) {
-      return DataOperation.Parse("writeLRSTransaction", o.Id, o.TransactionType.Id, o.UID,
+      var op = DataOperation.Parse("writeLRSTransaction", o.Id, o.TransactionType.Id, o.UID,
                   o.DocumentType.Id, o.DocumentDescriptor, o.Document.Id, o.BaseResource.Id,
                   o.RecorderOffice.Id, o.RequestedBy, o.Agency.Id,
                   o.ExternalTransaction.ExternalTransactionNo, o.ExtensionData.ToString(),
                   o.Keywords, o.PresentationTime, o.ExpectedDelivery, o.LastReentryTime, o.ClosingTime,
                   o.LastDeliveryTime, o.NonWorkingTime, o.ComplexityIndex, o.IsArchived,
                   (char) o.Workflow.CurrentStatus, o.Integrity.GetUpdatedHashCode());
+
+      DataWriter.Execute(op);
     }
 
 
     static internal void WriteTransactionItem(LRSTransactionItem o) {
-      var operation = DataOperation.Parse("writeLRSTransactionItem", o.Id, o.Transaction.Id,
-                                          o.TransactionItemType.Id, o.TreasuryCode.Id,
-                                          o.Payment.Id, o.Quantity.Amount, o.Quantity.Unit.Id,
-                                          o.OperationValue.Amount, o.OperationValue.Currency.Id,
-                                          o.Fee.RecordingRights, o.Fee.SheetsRevision,
-                                          o.Fee.ForeignRecordingFee, o.Fee.Discount.Amount,
-                                          o.ExtensionData.ToString(), o.Status,
-                                          o.Integrity.GetUpdatedHashCode());
+      var op = DataOperation.Parse("writeLRSTransactionItem", o.Id, o.Transaction.Id,
+                                    o.TransactionItemType.Id, o.TreasuryCode.Id,
+                                    o.Payment.Id, o.Quantity.Amount, o.Quantity.Unit.Id,
+                                    o.OperationValue.Amount, o.OperationValue.Currency.Id,
+                                    o.Fee.RecordingRights, o.Fee.SheetsRevision,
+                                    o.Fee.ForeignRecordingFee, o.Fee.Discount.Amount,
+                                    o.ExtensionData.ToString(), o.Status,
+                                    o.Integrity.GetUpdatedHashCode());
 
-      DataWriter.Execute(operation);
+      DataWriter.Execute(op);
     }
 
     #endregion Public methods

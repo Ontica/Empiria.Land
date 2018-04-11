@@ -225,18 +225,16 @@ namespace Empiria.Land.Data {
 
 
     static internal void WriteRecordingDocument(RecordingDocument o) {
-      DataWriter.Execute(WriteRecordingDocumentOp(o));
+      var op = DataOperation.Parse("writeLRSDocument", o.Id, o.DocumentType.Id, o.Subtype.Id, o.UID,
+                                   o.ImagingControlID, o.Notes, o.AsText, o.ExtensionData.GetJson(o).ToString(),
+                                   o.Keywords, o.PresentationTime, o.AuthorizationTime,
+                                   o.IssuePlace.Id, o.IssueOffice.Id, o.IssuedBy.Id, o.IssueDate,
+                                   o.SheetsCount, (char) o.Status, o.PostedBy.Id, o.PostingTime,
+                                   o.Integrity.GetUpdatedHashCode());
+
+      DataWriter.Execute(op);
     }
 
-
-    static internal DataOperation WriteRecordingDocumentOp(RecordingDocument o) {
-      return DataOperation.Parse("writeLRSDocument", o.Id, o.DocumentType.Id, o.Subtype.Id, o.UID,
-                                 o.ImagingControlID, o.Notes, o.AsText, o.ExtensionData.GetJson(o).ToString(),
-                                 o.Keywords, o.PresentationTime, o.AuthorizationTime,
-                                 o.IssuePlace.Id, o.IssueOffice.Id, o.IssuedBy.Id, o.IssueDate,
-                                 o.SheetsCount, (char) o.Status, o.PostedBy.Id, o.PostingTime,
-                                 o.Integrity.GetUpdatedHashCode());
-    }
 
     #endregion Public methods
 

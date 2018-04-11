@@ -5,15 +5,14 @@
 *  Type      : PartiesFilterModel                             Pattern  : Information Holder                  *
 *  Version   : 4.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Holds information to log in a user into the web api system.                                   *
+*  Summary   : Contains parties filter by name fields.                                                       *
 *                                                                                                            *
 ********************************** Copyright(c) 2016-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Land.WebApi.SedatuServices {
 
-  /// <summary>Holds information to log in a user into the web api system.
-  /// This model was moved to microservices, so it must be deprecated from here.</summary>
+  /// <summary>Contains parties filter by name fields.</summary>
   public class PartiesFilterModel {
 
     #region Properties

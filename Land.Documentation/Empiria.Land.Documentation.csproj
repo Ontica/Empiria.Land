@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Company>Ontica</Company>
     <Product>Empiria Land Documentation Services</Product>
-    <Description>"Document imaging and management services for Empiria Land.</Description>
+    <Description>Document imaging and management services for Empiria Land.</Description>
     <Copyright>(c) 2009-2018. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
     <Version>4.0.0</Version>
     <AssemblyVersion>4.0.0</AssemblyVersion>

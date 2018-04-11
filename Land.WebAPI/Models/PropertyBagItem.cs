@@ -18,12 +18,19 @@ namespace Empiria.Land.WebApi.Models {
     #region Constructors and parsers
 
     public PropertyBagItem(string name, object value) {
+      Assertion.AssertObject(name, "name");
+      Assertion.AssertObject(value, "value");
+
       this.Name = name;
       this.Value = value;
     }
 
 
     public PropertyBagItem(string name, object value, string style) {
+      Assertion.AssertObject(name, "name");
+      Assertion.AssertObject(value, "value");
+      Assertion.AssertObject(style, "style");
+
       this.Name = name;
       this.Value = value;
       this.Style = style;

@@ -14,7 +14,7 @@ using Empiria.Security;
 namespace Empiria.Land.Tests {
 
   static internal class CommonMethods {
-    
+
     #region Auxiliary methods
 
     static internal void Authenticate() {

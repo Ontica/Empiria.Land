@@ -40,7 +40,7 @@ namespace Empiria.Land.Data {
         return LRSTransaction.Empty;
       }
 
-      var sql = String.Format("SELECT * FROM LRSTransactions WHERE DocumentId = {0}", document.Id);
+      var sql = $"SELECT * FROM LRSTransactions WHERE DocumentId = {document.Id}";
 
       var dataRow = DataReader.GetDataRow(DataOperation.Parse(sql));
       if (dataRow != null) {
@@ -54,8 +54,8 @@ namespace Empiria.Land.Data {
     static internal string GetNextImagingControlID(RecordingDocument document) {
       string prefix = document.AuthorizationTime.ToString("yyyy-MM");
 
-      var sql = String.Format("SELECT MAX(ImagingControlID) " +
-                              "FROM LRSDocuments WHERE ImagingControlID LIKE '{0}-%'", prefix);
+      var sql = "SELECT MAX(ImagingControlID) " +
+                $"FROM LRSDocuments WHERE ImagingControlID LIKE '{prefix}-%'";
 
       var imagingControlID = DataReader.GetScalar<String>(DataOperation.Parse(sql), String.Empty);
 

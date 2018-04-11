@@ -249,7 +249,7 @@ namespace Empiria.Land.Certification {
       Assertion.Assert(this.Status == CertificateStatus.Closed,
                       "The certificate is not closed so it can't be canceled. Use delete instead.");
 
-      this.UserNotes += "Cancelado por " + Contact.Parse(EmpiriaUser.Current.Id).Alias +
+      this.UserNotes += "Cancelado por " + EmpiriaUser.Current.AsContact().Alias +
                         " el " + DateTime.Now.ToShortDateString() + " a las " +
                         DateTime.Now.ToShortTimeString() + @"\n\n";
       this.Status = CertificateStatus.Canceled;
@@ -262,7 +262,7 @@ namespace Empiria.Land.Certification {
                       "This certificate can't be closed. It's not in pending status.");
 
       this.IssueTime = DateTime.Now;
-      this.IssuedBy = Contact.Parse(EmpiriaUser.Current.Id);
+      this.IssuedBy = EmpiriaUser.Current.AsContact();
       this.SignedBy = Contact.Parse(36);
       this.Status = CertificateStatus.Closed;
 
@@ -273,7 +273,7 @@ namespace Empiria.Land.Certification {
       Assertion.Assert(this.Status == CertificateStatus.Pending,
                       "This certificate can't be deleted. It's not in pending status.");
 
-      this.UserNotes += "Eliminado por " + Contact.Parse(EmpiriaUser.Current.Id).Alias +
+      this.UserNotes += "Eliminado por " + EmpiriaUser.Current.AsContact().Alias +
                         " el " + DateTime.Now.ToShortDateString() + " a las " +
                         DateTime.Now.ToShortTimeString() + @"\n\n";
       this.Status = CertificateStatus.Deleted;
@@ -327,7 +327,7 @@ namespace Empiria.Land.Certification {
                       "This certificate can't be opened. It's not in closed, " +
                       "deleted or canceled status.");
 
-      this.UserNotes += "Abierto por " + Contact.Parse(EmpiriaUser.Current.Id).Alias +
+      this.UserNotes += "Abierto por " + EmpiriaUser.Current.AsContact().Alias +
                         " el " + DateTime.Now.ToShortDateString() + " a las " +
                         DateTime.Now.ToShortTimeString() + @"\n\n";
 
