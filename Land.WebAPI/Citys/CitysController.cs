@@ -157,7 +157,9 @@ namespace Empiria.Land.WebApi.Citys {
           uid = o.Transaction.UID,
           requestedBy = o.Transaction.RequestedBy,
           presentationTime = o.Transaction.PresentationTime,
-          paymentReceipt = o.Transaction.Payments.ReceiptNumbers,
+          paymentReceipt = !o.Transaction.PaymentOrderData.IsEmptyInstance ?
+                                o.Transaction.PaymentOrderData.RouteNumber :
+                                o.Transaction.Payments.ReceiptNumbers
         },
         status = new {
           uid = o.Status.ToString(),

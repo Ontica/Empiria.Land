@@ -107,7 +107,14 @@ namespace Empiria.Land.Certification {
       template.Replace("{{NUMERO.TRAMITE}}", o.Transaction.UID);
       template.Replace("{{FECHA.PRESENTACION}}",
                         o.Transaction.PresentationTime.ToString("dd/MMM/yyyy HH:mm"));
-      template.Replace("{{NUMERO.RECIBO}}", o.Transaction.Payments.ReceiptNumbers);
+
+      if (!o.Transaction.PaymentOrderData.IsEmptyInstance) {
+        template.Replace("{{NUMERO.RECIBO}}", o.Transaction.PaymentOrderData.RouteNumber);
+        template.Replace("Recibo de pago:", "Línea de captura:");
+      } else {
+        template.Replace("{{NUMERO.RECIBO}}", o.Transaction.Payments.ReceiptNumbers);
+      }
+
       template.Replace("{{IMPORTE.DERECHOS}}", o.Transaction.Payments.Total.ToString("C2"));
 
       template.Replace("{{OPERACION}}", o.ExtensionData.Operation.ToLowerInvariant());

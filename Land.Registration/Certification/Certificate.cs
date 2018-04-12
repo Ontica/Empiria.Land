@@ -287,15 +287,23 @@ namespace Empiria.Land.Certification {
 
       var seal = new StringBuilder("||1|" + this.UID +
                                       "|" + this.Transaction.UID);
-      seal.Append("|" + this.Transaction.Payments.ReceiptNumbers);
+
+      if (!this.Transaction.PaymentOrderData.IsEmptyInstance) {
+        seal.Append("|" + this.Transaction.PaymentOrderData.RouteNumber);
+      } else {
+        seal.Append("|" + this.Transaction.Payments.ReceiptNumbers);
+      }
+
       if (!this.Property.IsEmptyInstance) {
         seal.Append("|" + this.Property.UID);
       } else if (this.OwnerName.Length != 0) {
         seal.Append("|" + this.OwnerName.ToUpperInvariant());
       }
+
       if (this.ExtensionData.UseMarginalNotesAsFullBody) {
         seal.Append("|" + "Manual");
       }
+
       seal.Append("|" + this.IssueTime.ToString("yyyyMMddTHH:mm"));
       seal.Append("|" + this.SignedBy.Id + "|" + this.IssuedBy.Id);
       seal.Append("|" +

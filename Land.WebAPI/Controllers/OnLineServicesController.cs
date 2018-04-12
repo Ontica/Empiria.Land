@@ -367,10 +367,16 @@ namespace Empiria.Land.WebApi {
                                             "Este trámite no ha sido ingresado en ventanilla.", "warning-status-text"));
       }
 
+      if (!transaction.PaymentOrderData.IsEmptyInstance) {
+        propertyBag.Add(new PropertyBagItem("Línea de captura para el pago",
+                                            transaction.PaymentOrderData.RouteNumber, "bold-text"));
+      } else {
+        propertyBag.Add(new PropertyBagItem("Boleta de pago", transaction.Payments.ReceiptNumbers));
+      }
+
       if (transaction.Payments.Count > 0 && transaction.Payments.Total != decimal.Zero) {
         propertyBag.Add(new PropertyBagItem("Pago de derechos",
                                             transaction.Payments.Total.ToString("C2"), "bold-text"));
-        propertyBag.Add(new PropertyBagItem("Boleta de pago", transaction.Payments.ReceiptNumbers));
 
       } else if (transaction.Items.TotalFee.Total > 0) {
         propertyBag.Add(new PropertyBagItem("Derechos a pagar",
