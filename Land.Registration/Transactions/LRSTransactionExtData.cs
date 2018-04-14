@@ -90,10 +90,10 @@ namespace Empiria.Land.Registration.Transactions {
       var json = new JsonObject();
 
       if (!this.BaseResource.IsEmptyInstance) {
-        json.Add(new JsonItem("BaseResourceId", this.BaseResource.Id));
+        json.Add("BaseResourceId", this.BaseResource.Id);
       }
 
-      json.AddIfValue(new JsonItem("RequesterNotes", this.RequesterNotes));
+      json.AddIfValue("RequesterNotes", this.RequesterNotes);
 
       if (this.PaymentOrderData.RouteNumber != String.Empty) {
         json.Add("PaymentOrder", this.PaymentOrderData.ToJson());

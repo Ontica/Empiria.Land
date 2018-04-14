@@ -144,47 +144,47 @@ namespace Empiria.Land.Registration {
 
       switch (document.DocumentType.Id) {
         case 2410:
-          json.AddIfValue(new JsonItem("DocumentNo", document.Number));
-          json.AddIfValue(new JsonItem("NotaryBook", this.BookNo));
-          json.AddIfValue(new JsonItem("StartSheet", this.StartSheet));
-          json.AddIfValue(new JsonItem("EndSheet", this.EndSheet));
+          json.AddIfValue("DocumentNo", document.Number);
+          json.AddIfValue("NotaryBook", this.BookNo);
+          json.AddIfValue("StartSheet", this.StartSheet);
+          json.AddIfValue("EndSheet", this.EndSheet);
           break;
 
         case 2411:
-          json.AddIfValue(new JsonItem("DocumentNo", document.Number));
-          json.AddIfValue(new JsonItem("CaseRecordNo", document.ExpedientNo));
+          json.AddIfValue("DocumentNo", document.Number);
+          json.AddIfValue("CaseRecordNo", document.ExpedientNo);
           break;
 
         case 2412:
-          json.AddIfValue(new JsonItem("DocumentNo", document.Number));
-          json.AddIfValue(new JsonItem("CaseRecordNo", document.ExpedientNo));
+          json.AddIfValue("DocumentNo", document.Number);
+          json.AddIfValue("CaseRecordNo", document.ExpedientNo);
           break;
 
         case 2413:
-          json.AddIfValue(new JsonItem("DocumentNo", document.Number));
+          json.AddIfValue("DocumentNo", document.Number);
           if (this.MainWitness != null) {
-            json.AddIfValue(new JsonItem("WitnessId", this.MainWitness.Id));
+            json.AddIfValue("WitnessId", this.MainWitness.Id);
           }
           break;
 
         case 2414:
-          json.AddIfValue(new JsonItem("DocumentNo", document.Number));
+          json.AddIfValue("DocumentNo", document.Number);
           break;
 
         default:
-          json.AddIfValue(new JsonItem("DocumentNo", document.Number));
-          json.AddIfValue(new JsonItem("NotaryBook", this.BookNo));
-          json.AddIfValue(new JsonItem("StartSheet", this.StartSheet));
-          json.AddIfValue(new JsonItem("EndSheet", this.EndSheet));
+          json.AddIfValue("DocumentNo", document.Number);
+          json.AddIfValue("NotaryBook", this.BookNo);
+          json.AddIfValue("StartSheet", this.StartSheet);
+          json.AddIfValue("EndSheet", this.EndSheet);
           break;
 
       }
 
       if (this.DocumentImageSetId != -1) {
-        json.Add(new JsonItem("DocumentImageSetId", this.DocumentImageSetId));
+        json.Add("DocumentImageSetId", this.DocumentImageSetId);
       }
       if (this.AuxiliarImageSetId != -1) {
-        json.Add(new JsonItem("AuxiliarImageSetId", this.AuxiliarImageSetId));
+        json.Add("AuxiliarImageSetId", this.AuxiliarImageSetId);
       }
 
       return json;

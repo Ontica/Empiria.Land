@@ -98,25 +98,26 @@ namespace Empiria.Land.Registration {
 
     private JsonObject ConvertToJson() {
       JsonObject json = new JsonObject();
-      json.Add(new JsonItem("IsModification", this.recordingActType.IsModificationActType));
-      json.Add(new JsonItem("IsCancelation", this.recordingActType.IsCancelationActType));
-      json.Add(new JsonItem("IsEndingAct", this.IsEndingAct));
-      json.Add(new JsonItem("AllowsPartitions", this.AllowsPartitions));
-      json.Add(new JsonItem("AppliesTo", this.AppliesTo.ToString()));
-      json.Add(new JsonItem("AutoCancel", this.AutoCancel));
-      json.Add(new JsonItem("AskForResourceName", this.AskForResourceName));
-      json.Add(new JsonItem("ResourceRecordingStatus", this.ResourceRecordingStatus.ToString()));
-      json.Add(new JsonItem("SpecialCase", this.SpecialCase));
-      json.Add(new JsonItem("IsActive", this.IsActive));
 
-      json.Add(new JsonItem("EditRealEstate", this.EditRealEstate));
-      json.Add(new JsonItem("EditAppraisalAmount", this.EditAppraisalAmount));
-      json.Add(new JsonItem("EditOperationAmount", this.EditOperationAmount));
-      json.Add(new JsonItem("AllowNoParties", this.AllowNoParties));
-      json.Add(new JsonItem("AllowUncompletedResource", this.AllowUncompletedResource));
-      json.Add(new JsonItem("IsAnnotation", this.IsAnnotation));
-      json.Add(new JsonItem("IsHardLimitation", this.IsHardLimitation));
-      json.Add(new JsonItem("SkipPrelation", this.SkipPrelation));
+      json.Add("IsModification", this.recordingActType.IsModificationActType);
+      json.Add("IsCancelation", this.recordingActType.IsCancelationActType);
+      json.Add("IsEndingAct", this.IsEndingAct);
+      json.Add("AllowsPartitions", this.AllowsPartitions);
+      json.Add("AppliesTo", this.AppliesTo.ToString());
+      json.Add("AutoCancel", this.AutoCancel);
+      json.Add("AskForResourceName", this.AskForResourceName);
+      json.Add("ResourceRecordingStatus", this.ResourceRecordingStatus.ToString());
+      json.Add("SpecialCase", this.SpecialCase);
+      json.Add("IsActive", this.IsActive);
+
+      json.Add("EditRealEstate", this.EditRealEstate);
+      json.Add("EditAppraisalAmount", this.EditAppraisalAmount);
+      json.Add("EditOperationAmount", this.EditOperationAmount);
+      json.Add("AllowNoParties", this.AllowNoParties);
+      json.Add("AllowUncompletedResource", this.AllowUncompletedResource);
+      json.Add("IsAnnotation", this.IsAnnotation);
+      json.Add("IsHardLimitation", this.IsHardLimitation);
+      json.Add("SkipPrelation", this.SkipPrelation);
 
       return json;
     }

@@ -148,7 +148,7 @@ namespace Empiria.Land.Documentation {
     private void SetImagesHashCodes(string[] imagesHashCodes) {
       var json = new JsonObject();
 
-      json.Add(new JsonItem("imageHashCodes", imagesHashCodes));
+      json.Add("imageHashCodes", imagesHashCodes);
 
       this.ImagingItemExtData = json;
     }

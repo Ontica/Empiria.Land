@@ -161,18 +161,20 @@ namespace Empiria.Land.WebApi.Citys {
     public override JsonObject ToJson() {
       var json = base.ToJson();
 
-      json.Add(new JsonItem("NotaryId", this.NotaryId));
-      json.Add(new JsonItem("ProjectedActId", this.ProjectedActId));
-      json.Add(new JsonItem("ProjectedOwner", this.ProjectedOwner));
-      json.Add(new JsonItem("PropertyUID", this.RealPropertyUID));
-      json.Add(new JsonItem("IsPartition", this.IsPartition));
+      json.Add("NotaryId", this.NotaryId);
+      json.Add("ProjectedActId", this.ProjectedActId);
+      json.Add("ProjectedOwner", this.ProjectedOwner);
+      json.Add("PropertyUID", this.RealPropertyUID);
+      json.Add("IsPartition", this.IsPartition);
+
       if (this.IsPartition) {
-        json.Add(new JsonItem("PartitionName", this.PartitionName));
-        json.Add(new JsonItem("PartitionSize", this.PartitionSize));
-        json.Add(new JsonItem("PartitionLocation", this.PartitionLocation));
-        json.Add(new JsonItem("PartitionMetesAndBounds", this.PartitionMetesAndBounds));
+        json.Add("PartitionName", this.PartitionName);
+        json.Add("PartitionSize", this.PartitionSize);
+        json.Add("PartitionLocation", this.PartitionLocation);
+        json.Add("PartitionMetesAndBounds", this.PartitionMetesAndBounds);
       }
-      json.AddIfValue(new JsonItem("RecordingObservations", this.RecordingObservations));
+
+      json.AddIfValue("RecordingObservations", this.RecordingObservations);
 
       return json;
     }

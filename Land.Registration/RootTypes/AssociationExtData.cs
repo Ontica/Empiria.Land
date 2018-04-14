@@ -74,7 +74,7 @@ namespace Empiria.Land.Registration {
     public JsonObject GetJson() {
       var json = new JsonObject();
 
-      json.AddIfValue(new JsonItem("Name", this.Name));
+      json.AddIfValue("Name", this.Name);
 
       return json;
     }

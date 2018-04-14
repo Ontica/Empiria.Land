@@ -83,8 +83,8 @@ namespace Empiria.Land.WebApi.Citys {
     public override JsonObject ToJson() {
       var json = base.ToJson();
 
-      json.Add(new JsonItem("CertificateType", this.CertificateType));
-      json.Add(new JsonItem("PropertyUID", this.RealPropertyUID));
+      json.Add("CertificateType", this.CertificateType);
+      json.Add("PropertyUID", this.RealPropertyUID);
 
       return json;
     }

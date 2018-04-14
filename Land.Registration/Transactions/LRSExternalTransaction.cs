@@ -177,11 +177,11 @@ namespace Empiria.Land.Registration.Transactions {
     public virtual JsonObject ToJson() {
       var json = new JsonObject();
 
-      json.Add(new JsonItem("ExternalTransactionNo", this.ExternalTransactionNo));
-      json.Add(new JsonItem("ExternalTransactionTime", this.ExternalTransactionTime));
-      json.Add(new JsonItem("PaymentAmount", this.PaymentAmount));
-      json.Add(new JsonItem("PaymentReceiptNo", this.PaymentReceiptNo));
-      json.Add(new JsonItem("RequestedBy", this.RequestedBy));
+      json.Add("ExternalTransactionNo", this.ExternalTransactionNo);
+      json.Add("ExternalTransactionTime", this.ExternalTransactionTime);
+      json.Add("PaymentAmount", this.PaymentAmount);
+      json.Add("PaymentReceiptNo", this.PaymentReceiptNo);
+      json.Add("RequestedBy", this.RequestedBy);
 
       return json;
     }

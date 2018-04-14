@@ -90,17 +90,17 @@ namespace Empiria.Land.Registration {
       var json = new JsonObject();
 
       if (!this.AuthorizedBy.IsEmptyInstance) {
-        json.Add(new JsonItem("AuthorizedById", this.AuthorizedBy.Id));
+        json.Add("AuthorizedById", this.AuthorizedBy.Id);
       }
       if (this.EndImageIndex != -1) {
-        json.AddIfValue(new JsonItem("EndImageIndex", this.EndImageIndex));
+        json.AddIfValue("EndImageIndex", this.EndImageIndex);
       }
-      json.AddIfValue(new JsonItem("Notes", this.Notes));
+      json.AddIfValue("Notes", this.Notes);
       if (!this.ReviewedBy.IsEmptyInstance) {
-        json.AddIfValue(new JsonItem("ReviewedById", this.ReviewedBy.Id));
+        json.AddIfValue("ReviewedById", this.ReviewedBy.Id);
       }
       if (this.StartImageIndex != -1) {
-        json.AddIfValue(new JsonItem("StartImageIndex", this.StartImageIndex));
+        json.AddIfValue("StartImageIndex", this.StartImageIndex);
       }
       return json;
     }

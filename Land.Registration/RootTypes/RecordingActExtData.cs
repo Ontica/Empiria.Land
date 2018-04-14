@@ -94,13 +94,13 @@ namespace Empiria.Land.Registration {
       var json = new JsonObject();
 
       if (this.AppraisalAmount != Money.Empty) {
-        json.Add(new JsonItem("AppraisalAmount", this.AppraisalAmount.Amount));
-        json.Add(new JsonItem("AppraisalAmountCurrencyId", this.AppraisalAmount.Currency.Id));
+        json.Add("AppraisalAmount", this.AppraisalAmount.Amount);
+        json.Add("AppraisalAmountCurrencyId", this.AppraisalAmount.Currency.Id);
       }
 
       if (this.OperationAmount != Money.Empty) {
-        json.Add(new JsonItem("OperationAmount", this.OperationAmount.Amount));
-        json.Add(new JsonItem("OperationAmountCurrencyId", this.OperationAmount.Currency.Id));
+        json.Add("OperationAmount", this.OperationAmount.Amount);
+        json.Add("OperationAmountCurrencyId", this.OperationAmount.Currency.Id);
       }
 
       return json;

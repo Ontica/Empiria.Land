@@ -204,8 +204,8 @@ namespace Empiria.Land.Registration {
 
       var json = new JsonObject();
 
-      json.Add(new JsonItem("UID", this.UID));
-      json.Add(new JsonItem("UIDType", this.UIDType));
+      json.Add("UID", this.UID);
+      json.Add("UIDType", this.UIDType);
 
       return json.ToString();
     }

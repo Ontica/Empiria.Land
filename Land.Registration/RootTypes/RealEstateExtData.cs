@@ -126,24 +126,24 @@ namespace Empiria.Land.Registration {
     public JsonObject GetJson() {
       var json = new JsonObject();
 
-      json.AddIfValue(new JsonItem("CadastralKey", this.CadastralKey));
-      json.AddIfValue(new JsonItem("Name", this.Name));
+      json.AddIfValue("CadastralKey", this.CadastralKey);
+      json.AddIfValue("Name", this.Name);
       if (!this.RealEstateType.IsEmptyInstance) {
-        json.Add(new JsonItem("RealEstateTypeId", this.RealEstateType.Id));
+        json.Add("RealEstateTypeId", this.RealEstateType.Id);
       }
-      json.AddIfValue(new JsonItem("MetesAndBounds", this.MetesAndBounds));
+      json.AddIfValue("MetesAndBounds", this.MetesAndBounds);
       if (!this.District.IsEmptyInstance) {
-        json.Add(new JsonItem("DistrictId", this.District.Id));
+        json.Add("DistrictId", this.District.Id);
       }
       if (!this.Municipality.IsEmptyInstance) {
-        json.Add(new JsonItem("MunicipalityId", this.Municipality.Id));
+        json.Add("MunicipalityId", this.Municipality.Id);
       }
-      json.AddIfValue(new JsonItem("LocationReference", this.LocationReference));
+      json.AddIfValue("LocationReference", this.LocationReference);
       if (this.LotSize != Quantity.Zero) {
-        json.Add(new JsonItem("LotSize", this.LotSize.Amount));
-        json.Add(new JsonItem("LotSizeUnitId", this.LotSize.Unit.Id));
+        json.Add("LotSize", this.LotSize.Amount);
+        json.Add("LotSizeUnitId", this.LotSize.Unit.Id);
       }
-      json.AddIfValue(new JsonItem("Notes", this.Notes));
+      json.AddIfValue("Notes", this.Notes);
 
       return json;
     }
