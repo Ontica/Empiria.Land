@@ -63,6 +63,10 @@ namespace Empiria.Land.Registration {
       get { return BaseObject.ParseEmpty<RecordingDocument>(); }
     }
 
+    static public FixedList<RecordingDocument> SearchClosed(string filter, string keywords = "") {
+      return DocumentsData.SearchClosedDocuments(filter, keywords);
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
