@@ -44,6 +44,8 @@ namespace Empiria.Land.Registration.Transactions {
 
       extData.RequesterNotes = json.Get<string>("RequesterNotes", String.Empty);
 
+      extData.RFC = json.Get<string>("RFC", String.Empty);
+
       if (json.Contains("PaymentOrder")) {
         extData.PaymentOrderData = OnePoint.PaymentOrderData.Parse(json.Slice("PaymentOrder"));
       }
@@ -67,6 +69,12 @@ namespace Empiria.Land.Registration.Transactions {
     public string RequesterNotes {
       get;
       internal set;
+    } = String.Empty;
+
+
+    public string RFC {
+      get;
+      set;
     } = String.Empty;
 
 
@@ -94,6 +102,8 @@ namespace Empiria.Land.Registration.Transactions {
       }
 
       json.AddIfValue("RequesterNotes", this.RequesterNotes);
+
+      json.AddIfValue("RFC", this.RFC);
 
       if (this.PaymentOrderData.RouteNumber != String.Empty) {
         json.Add("PaymentOrder", this.PaymentOrderData.ToJson());
