@@ -72,10 +72,13 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
-    [DataField("TransactionUID", Default = "Nuevo trámite", IsOptional = false)]
-    public string UID {
-      get;
-      private set;
+    [DataField("TransactionUID", IsOptional = false)]
+    private string _transactionUID = "Nuevo trámite";
+
+    public override string UID {
+      get {
+        return _transactionUID;
+      }
     }
 
     [DataField("DocumentTypeId")]
@@ -485,10 +488,13 @@ namespace Empiria.Land.Registration.Transactions {
       this.UpdateComplexityIndex();
     }
 
-    protected override void OnSave() {
+    protected override void OnBeforeSave() {
       if (base.IsNew) {
-        this.UID = TransactionData.GenerateTransactionUID();
+        this._transactionUID = TransactionData.GenerateTransactionUID();
       }
+    }
+
+    protected override void OnSave() {
       this.Keywords = EmpiriaString.BuildKeywords(this.UID, this.Document.UID,
                                                   this.DocumentDescriptor, this.RequestedBy,
                                                   this.Agency.FullName,

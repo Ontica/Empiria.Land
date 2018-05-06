@@ -50,10 +50,14 @@ namespace Empiria.Land.Certification {
     }
 
     [DataField("CertificateUID", IsOptional = false)]
-    public string UID {
-      get;
-      private set;
+    private string _certificateUID = String.Empty;
+
+    public override string UID {
+      get {
+        return _certificateUID;
+      }
     }
+
 
     [DataField("TransactionId", IsOptional = false)]
     public LRSTransaction Transaction {
@@ -370,11 +374,16 @@ namespace Empiria.Land.Certification {
       this.ExtensionData = CertificateExtData.Parse((string) row["CertificateExtData"]);
     }
 
+    protected override void OnBeforeSave() {
+      if (this.IsNew) {
+        this._certificateUID = CertificatesData.BuildCertificateUID();
+      }
+    }
+
     protected override void OnSave() {
       if (this.IsNew) {
         this.PostingTime = DateTime.Now;
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-        this.UID = CertificatesData.BuildCertificateUID();
       }
       if (this.Status != CertificateStatus.Deleted &&
           this.Status != CertificateStatus.Canceled) {

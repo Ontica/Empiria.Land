@@ -36,7 +36,7 @@ namespace Empiria.Land.WebApi.Citys {
     #region Properties
 
     /// <summary>Unique ID string for the Http Endpoint.</summary>
-    public string UID {
+    public override string UID {
       get {
         return base.NamedKey;
       }

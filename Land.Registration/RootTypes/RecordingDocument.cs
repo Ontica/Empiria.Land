@@ -84,10 +84,14 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("DocumentUID", IsOptional = false)]
-    public string UID {
-      get;
-      private set;
+    private string _documentUID = String.Empty;
+
+    public override string UID {
+      get {
+        return _documentUID;
+      }
     }
+
 
     [DataField("ImagingControlID")]
     public string ImagingControlID {
@@ -538,11 +542,16 @@ namespace Empiria.Land.Registration {
       this.ExtensionData = RecordingDocumentExtData.Parse((string) row["DocumentExtData"]);
     }
 
+    protected override void OnBeforeSave() {
+      if (this.IsNew) {
+        this._documentUID = DocumentsData.GenerateDocumentUID();
+      }
+    }
+
     protected override void OnSave() {
       if (this.IsNew) {
         this.PostingTime = DateTime.Now;
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-        this.UID = DocumentsData.GenerateDocumentUID();
       }
       RecordingBooksData.WriteRecordingDocument(this);
     }

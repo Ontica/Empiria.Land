@@ -74,9 +74,12 @@ namespace Empiria.Land.Registration {
     #region Public properties
 
     [DataField("PropertyUID", IsOptional = false)]
-    public string UID {
-      get;
-      private set;
+    private string _propertyUID = String.Empty;
+
+    public override string UID {
+      get {
+        return _propertyUID;
+      }
     }
 
     internal protected virtual string Keywords {
@@ -286,7 +289,7 @@ namespace Empiria.Land.Registration {
 
     abstract protected string GenerateResourceUID();
 
-     protected override void OnBeforeSave() {
+    protected override void OnBeforeSave() {
       if (this.IsNew) {
         this.AssignUID();
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
@@ -322,16 +325,16 @@ namespace Empiria.Land.Registration {
     #region Private methods
 
     private void AssignUID() {
-      Assertion.Assert(this.UID.Length == 0, "Property has already assigned a UniqueIdentifier.");
+      Assertion.Assert(this._propertyUID.Length == 0, "Property has already assigned a UniqueIdentifier.");
 
       while (true) {
         string temp = this.GenerateResourceUID();
         if (!ResourceData.ExistsResourceUID(temp)) {
-          this.UID = temp;
+          this._propertyUID = temp;
           break;
         }
       } // while
-      Assertion.Assert(this.UID.Length != 0, "Property UniqueIdentifier has not been generated.");
+      Assertion.Assert(this._propertyUID.Length != 0, "Property UniqueIdentifier has not been generated.");
     }
 
     private bool HasCompleteInformation() {
