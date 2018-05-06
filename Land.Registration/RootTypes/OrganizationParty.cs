@@ -22,7 +22,7 @@ namespace Empiria.Land.Registration {
     }
 
     public OrganizationParty(int typeId, string fullName,
-                             string uid, string uidType) : base(fullName, uid, uidType) {
+                             string officialID, string officialIDType) : base(fullName, officialID, officialIDType) {
       base.ReclassifyAs(Ontology.ObjectTypeInfo.Parse(typeId));
     }
 

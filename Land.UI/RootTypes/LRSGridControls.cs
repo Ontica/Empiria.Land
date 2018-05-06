@@ -64,7 +64,7 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{ID}", primaryPartyItem.Id.ToString());
         temp = temp.Replace("{PARTY.ID}", primaryPartyItem.Party.Id.ToString());
         temp = temp.Replace("{NAME}", primaryPartyItem.Party.FullName);
-        temp = temp.Replace("{UNIQUE.ID}", primaryPartyItem.Party.FullUID);
+        temp = temp.Replace("{UNIQUE.ID}", primaryPartyItem.Party.FullOfficialID);
         temp = temp.Replace("{ROLE}", primaryPartyItem.PartyRole.Name);
         temp = temp.Replace("{DOMAIN.PART}", primaryPartyItem.GetOwnershipPartAsText());
 
@@ -102,7 +102,7 @@ namespace Empiria.Land.UI {
         temp = temp.Replace("{ID}", recordingActParty.Id.ToString());
         temp = temp.Replace("{PARTY.ID}", recordingActParty.Party.Id.ToString());
         temp = temp.Replace("{NAME}", recordingActParty.Party.FullName);
-        temp = temp.Replace("{UNIQUE.ID}", recordingActParty.Party.FullUID);
+        temp = temp.Replace("{UNIQUE.ID}", recordingActParty.Party.FullOfficialID);
         temp = temp.Replace("{ROLE}", String.Empty);
         temp = temp.Replace("{DOMAIN.PART}", String.Empty);
 

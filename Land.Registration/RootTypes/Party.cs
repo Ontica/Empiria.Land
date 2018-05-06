@@ -42,16 +42,16 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    protected Party(string fullName, string uid, string uidType) {
+    protected Party(string fullName, string officialID, string officialIDType) {
       fullName = EmpiriaString.TrimAll(fullName);
-      uid = EmpiriaString.TrimAll(uid);
+      officialID = EmpiriaString.TrimAll(officialID);
 
       Assertion.AssertObject(fullName, "fullName");
-      Assertion.Assert(uidType == "None" || uid.Length != 0, "Party unique ID can't be empty.");
+      Assertion.Assert(officialIDType == "None" || officialID.Length != 0, "Party unique ID can't be empty.");
 
       this.FullName = fullName;
-      this.UID = uid;
-      this.UIDType = uidType;
+      this.OfficialID = officialID;
+      this.OfficialIDType = officialIDType;
     }
 
     static public Party Parse(int id) {
@@ -89,8 +89,8 @@ namespace Empiria.Land.Registration {
       get {
         string temp = this.FullName;
 
-        if (this.FullUID.Length != 0) {
-          temp += " (" + this.FullUID + ")";
+        if (this.FullOfficialID.Length != 0) {
+          temp += " (" + this.FullOfficialID + ")";
         }
         return temp;
       }
@@ -117,30 +117,30 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public string UID {
+    public string OfficialID {
       get;
       private set;
     } = String.Empty;
 
 
-    public string UIDType {
+    public string OfficialIDType {
       get;
       private set;
     } = String.Empty;
 
 
-    public string FullUID {
+    public string FullOfficialID {
       get {
-        if (this.UID.Length == 0) {
+        if (this.OfficialID.Length == 0) {
           return String.Empty;
         }
-        return this.UIDType + ": " + this.UID;
+        return this.OfficialIDType + ": " + this.OfficialID;
       }
     }
 
     protected internal virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.FullName, this.UID);
+        return EmpiriaString.BuildKeywords(this.FullName, this.OfficialID);
       }
     }
 
@@ -193,19 +193,19 @@ namespace Empiria.Land.Registration {
     private void ReadUIDFromJson(string jsonString) {
       var json = JsonObject.Parse(jsonString);
 
-      this.UID = json.Get<string>("UID", String.Empty);
-      this.UIDType = json.Get<string>("UIDType", "None");
+      this.OfficialID = json.Get<string>("UID", String.Empty);
+      this.OfficialIDType = json.Get<string>("UIDType", "None");
     }
 
     private string GetUIDAsJsonString() {
-      if (this.UID.Length == 0) {
+      if (this.OfficialID.Length == 0) {
         return String.Empty;
       }
 
       var json = new JsonObject();
 
-      json.Add("UID", this.UID);
-      json.Add("UIDType", this.UIDType);
+      json.Add("UID", this.OfficialID);
+      json.Add("UIDType", this.OfficialIDType);
 
       return json.ToString();
     }

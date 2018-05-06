@@ -65,27 +65,27 @@ namespace Empiria.Land.WebApi.SedatuServices {
 
     public string RFC {
       get {
-        return this.party.UIDType == "RFC" ? this.party.UID : String.Empty;
+        return this.party.OfficialIDType == "RFC" ? this.party.OfficialID : String.Empty;
       }
     }
 
 
     public string CURP {
       get {
-        return this.party.UIDType == "CURP" ? this.party.UID : String.Empty;
+        return this.party.OfficialIDType == "CURP" ? this.party.OfficialID : String.Empty;
       }
     }
 
     public string DOC_IDENTIF {
       get {
-        return this.party.UIDType != "None" ? this.party.UIDType : String.Empty;
+        return this.party.OfficialIDType != "None" ? this.party.OfficialIDType : String.Empty;
       }
     }
 
 
     public string NUM_IDENTIF {
       get {
-        return this.party.UID;
+        return this.party.OfficialID;
       }
     }
 

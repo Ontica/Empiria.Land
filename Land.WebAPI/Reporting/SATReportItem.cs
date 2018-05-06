@@ -60,14 +60,14 @@ namespace Empiria.Land.WebApi.Reporting {
 
       //Datos para la identificación del contribuyente
 
-      if (party.UIDType == "RFC") {       // RFC
-        text.Append(party.UID);
+      if (party.OfficialIDType == "RFC") {       // RFC
+        text.Append(party.OfficialID);
       } else {
         text.Append("XAXX010101000");
       }
       text.Append('|');
-      if (party.UIDType == "CURP") {      // CURP
-        text.Append(party.UID);
+      if (party.OfficialIDType == "CURP") {      // CURP
+        text.Append(party.OfficialID);
       } else {
         text.Append("XEXX010101HNEXXXA4");
       }
