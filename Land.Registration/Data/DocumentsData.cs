@@ -90,7 +90,7 @@ namespace Empiria.Land.Data {
 
     static internal void SaveImagingControlID(RecordingDocument document) {
       var op = DataOperation.Parse("setLRSDocumentImagingControlID",
-                                   document.Id, document.ImagingControlID);
+                                   document.Id, document.Imaging.ImagingControlID);
 
       DataWriter.Execute(op);
     }

@@ -55,25 +55,30 @@ namespace Empiria.Land.Registration {
       set;
     } = String.Empty;
 
+
     public string ExpedientNo {
       get;
       set;
     } = String.Empty;
+
 
     public string BookNo {
       get;
       set;
     } = String.Empty;
 
+
     public RoleType IssuedByPosition {
       get;
       set;
     } = RoleType.Empty;
 
+
     public Contact MainWitness {
       get;
       set;
     } = Person.Empty;
+
 
     public string StartSheet {
       get;
@@ -94,6 +99,7 @@ namespace Empiria.Land.Registration {
       get;
       set;
     } = -1;
+
 
     internal int AuxiliarImageSetId {
       get;

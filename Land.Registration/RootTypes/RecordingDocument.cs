@@ -1,13 +1,12 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : RecordingDocument                              Pattern  : Partitioned type                    *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Land Recording services                      Component : Recording documents                   *
+*  Assembly : Empiria.Land.Registration.dll                Pattern   : Partitioned type                      *
+*  Type     : RecordingDocumentSecurity                    License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Partitioned type that represents a document that is attached to recordings.                   *
+*  Summary  : Partitioned type that represents a recording document with one or more recording acts.         *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,9 +14,7 @@ using System.Linq;
 
 using Empiria.Contacts;
 using Empiria.Geography;
-using Empiria.Documents;
 using Empiria.Ontology;
-using Empiria.Security;
 
 using Empiria.Land.Data;
 using Empiria.Land.Registration.Transactions;
@@ -26,7 +23,7 @@ namespace Empiria.Land.Registration {
 
   /// <summary>Partitioned type that represents a document that is attached to recordings.</summary>
   [PartitionedType(typeof(RecordingDocumentType))]
-  public class RecordingDocument : BaseObject, IExtensible<RecordingDocumentExtData>, IProtected {
+  public class RecordingDocument : BaseObject, IExtensible<RecordingDocumentExtData> {
 
     #region Fields
 
@@ -93,12 +90,6 @@ namespace Empiria.Land.Registration {
     }
 
 
-    [DataField("ImagingControlID")]
-    public string ImagingControlID {
-      get;
-      private set;
-    }
-
     public bool IsHistoricDocument {
       get {
         if (this.IsEmptyInstance) {
@@ -114,17 +105,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public Recording TryGetHistoricRecording() {
-      if (!this.IsHistoricDocument) {
-        return null;
-      }
-      Recording historicRecording = this.RecordingActs[0].PhysicalRecording;
-
-      Assertion.Assert(!historicRecording.IsEmptyInstance,
-                      "historicRecording can't be the empty instance.");
-
-      return historicRecording;
-    }
 
     [DataField("PresentationTime", Default = "ExecutionServer.DateMinValue")]
     public DateTime PresentationTime {
@@ -248,38 +228,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    int IProtected.CurrentDataIntegrityVersion {
-      get {
-        return 1;
-      }
-    }
-
-    object[] IProtected.GetDataIntegrityFieldValues(int version) {
-      if (version == 1) {
-        return new object[] {
-          1, "Id", this.Id, "DocumentTypeId", this.DocumentType.Id,
-          "SubtypeId", this.Subtype.Id, "UID", this.UID,
-          "IssuePlaceId", this.IssuePlace.Id, "IssueOfficeId", this.IssueOffice.Id,
-          "IssuedById", this.IssuedBy.Id, "IssueDate", this.IssueDate,
-          "AsText", this.AsText, "SheetsCount", this.SheetsCount,
-          "ExtensionData", this.ExtensionData.ToJson(),
-          "PostedBy", this.PostedBy.Id, "PostingTime", this.PostingTime,
-          "Status", (char) this.Status,
-        };
-      }
-      throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
-    }
-
-    private IntegrityValidator _validator = null;
-    public IntegrityValidator Integrity {
-      get {
-        if (_validator == null) {
-          _validator = new IntegrityValidator(this);
-        }
-        return _validator;
-      }
-    }
-
     public bool IsClosed {
       get {
         return (this.Status == RecordableObjectStatus.Closed);
@@ -292,36 +240,18 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public bool IsReadyForEdition() {
-      if (this.IsEmptyInstance) {
-        return false;
-      }
-      if (this.Status != RecordableObjectStatus.Incomplete) {
-        return false;
-      }
-      return LRSWorkflowRules.UserCanEditDocument(this);
+    [DataObject]
+    public RecordingDocumentImaging Imaging {
+      get;
+      private set;
     }
 
-
-    public bool IsReadyToClose() {
-      if (this.IsEmptyInstance) {
-        return false;
-      }
-      if (this.Status != RecordableObjectStatus.Incomplete) {
-        return false;
-      }
-      return LRSWorkflowRules.UserCanEditDocument(this);
+    [DataObject]
+    public RecordingDocumentSecurity Security {
+      get;
+      private set;
     }
 
-    public bool IsReadyToOpen() {
-      if (this.IsEmptyInstance) {
-        return false;
-      }
-      if (this.Status != RecordableObjectStatus.Closed) {
-        return false;
-      }
-      return LRSWorkflowRules.UserCanEditDocument(this);
-    }
 
     #endregion Public properties
 
@@ -373,53 +303,6 @@ namespace Empiria.Land.Registration {
       this.AuthorizationTime = authorizationTime;
     }
 
-    public void AssertCanBeClosed() {
-      if (!this.IsReadyToClose()) {
-        Assertion.AssertFail("El usuario no tiene permisos para cerrar el documento o éste no tiene un estado válido.");
-      }
-
-      //this.AssertGraceDaysForEdition();
-
-      Assertion.Assert(this.RecordingActs.Count > 0, "El documento no tiene actos jurídicos.");
-
-      foreach (var recordingAct in this.RecordingActs) {
-        recordingAct.AssertCanBeClosed();
-      }
-    }
-
-
-    public void AssertCanBeOpened() {
-      if (!this.IsReadyToOpen()) {
-        Assertion.AssertFail("El usuario no tiene permisos para abrir este documento.");
-      }
-
-      //this.AssertGraceDaysForEdition();
-
-      foreach (var recordingAct in this.RecordingActs) {
-        recordingAct.AssertCanBeOpened();
-      }
-    }
-
-    private void AssertGraceDaysForEdition() {
-      var transaction = this.GetTransaction();
-
-      if (transaction.IsEmptyInstance) {
-        return;
-      }
-
-      const int graceDaysForEdition = 45;
-      DateTime lastDate = transaction.PresentationTime;
-      if (transaction.LastReentryTime != ExecutionServer.DateMaxValue) {
-        lastDate = transaction.LastReentryTime;
-      }
-      if (lastDate.AddDays(graceDaysForEdition) < DateTime.Today) {
-        Assertion.AssertFail("Por motivos de seguridad y calidad en el registro de la información, " +
-                             "no es posible modificar documentos de trámites de más de 45 días.\n\n" +
-                             "En su lugar se puede optar por registrar un nuevo trámite, " +
-                             "o quizás se pueda hacer un reingreso si no han transcurrido los " +
-                             "90 días de gracia.");
-      }
-    }
 
     public void ChangeDocumentType(RecordingDocumentType newRecordingDocumentType) {
       if (this.DocumentType.Equals(newRecordingDocumentType)) {
@@ -431,58 +314,23 @@ namespace Empiria.Land.Registration {
       this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
     }
 
-    public void Close() {
-      this.AssertCanBeClosed();
-      this.SetAuthorizationTime();
-      this.Status = RecordableObjectStatus.Closed;
-      this.Save();
-    }
-
     private void SetAuthorizationTime() {
       if (!this.IsHistoricDocument) {
         this.AuthorizationTime = DateTime.Now;
       }
     }
 
-    public void Open() {
-      this.AssertCanBeOpened();
+    internal void Close() {
+      this.SetAuthorizationTime();
+      this.Status = RecordableObjectStatus.Closed;
+      this.Save();
+    }
+
+    internal void Open() {
       this.Status = RecordableObjectStatus.Incomplete;
       this.Save();
     }
 
-    public void GenerateImagingControlID() {
-      Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance.");
-      Assertion.Assert(this.RecordingActs.Count > 0, "Document should have recording acts.");
-      Assertion.Assert(this.RecordingActs.CountAll((x) => !x.PhysicalRecording.IsEmptyInstance) == 0,
-                       "Document can't have any recording acts that are related to physical recordings.");
-      Assertion.Assert(this.ImagingControlID.Length == 0,
-                       "Document already has assigned an imaging control number.");
-
-      this.ImagingControlID = DocumentsData.GetNextImagingControlID(this);
-      DocumentsData.SaveImagingControlID(this);
-    }
-
-    public string GetDigitalSeal() {
-      var transaction = this.GetTransaction();
-
-      string s = "||" + transaction.UID + "|" + this.UID;
-      for (int i = 0; i < this.RecordingActs.Count; i++) {
-        s += "|" + this.RecordingActs[i].Id.ToString();
-      }
-      s += "||";
-
-      return FormerCryptographer.SignTextWithSystemCredentials(s);
-    }
-
-    public string GetDigitalSignature() {
-      var transaction = this.GetTransaction();
-
-      string s = "||" + transaction.UID + "|" + this.UID;
-      for (int i = 0; i < this.RecordingActs.Count; i++) {
-        s += "|" + this.RecordingActs[i].Id.ToString();
-      }
-      return FormerCryptographer.SignTextWithSystemCredentials(s + "eSign");
-    }
 
     public List<Contact> GetRecordingOfficials() {
       var recordingOfficials = new List<Contact>();
@@ -535,7 +383,11 @@ namespace Empiria.Land.Registration {
       this.ExtensionData = new RecordingDocumentExtData();
       this.Number = String.Empty;
       this.ExpedientNo = String.Empty;
+
       recordingActList = new Lazy<List<RecordingAct>>(() => RecordingActsData.GetDocumentRecordingActs(this));
+
+      this.Imaging = new RecordingDocumentImaging(this);
+      this.Security = new RecordingDocumentSecurity(this);
     }
 
     protected override void OnLoadObjectData(DataRow row) {
@@ -573,70 +425,16 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public void SetAuxiliarImageSet(ImagingItem image) {
-      Assertion.AssertObject(image, "image");
-
-      this.ExtensionData.AuxiliarImageSetId = image.Id;
-      this.Save();
-    }
-
-    public void SetImageSet(ImagingItem image) {
-      Assertion.AssertObject(image, "image");
-
-      this.ExtensionData.DocumentImageSetId = image.Id;
-      this.Save();
-    }
-
-    public bool HasAuxiliarImageSet {
-      get {
-        return (this.ExtensionData.AuxiliarImageSetId != -1);
-      }
-    }
-
-    public bool HasImageSet {
-      get {
-        return (this.ExtensionData.DocumentImageSetId != -1);
-      }
-    }
-
-    public int ImageSetId {
-      get {
-        return this.ExtensionData.DocumentImageSetId;
-      }
-    }
-
-    public int AuxiliarImageSetId {
-      get {
-        return this.ExtensionData.AuxiliarImageSetId;
-      }
-    }
-
-    public string QRCodeSecurityHash() {
-      if (!this.IsNew) {
-        return FormerCryptographer.CreateHashCode(this.Id.ToString("00000000") +
-                                                  this.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
-                                                  this.UID)
-                                  .Substring(0, 8)
-                                  .ToUpperInvariant();
-      } else {
-        return String.Empty;
-      }
-    }
-
-    public ImagingItem TryGetAuxiliarImageSet() {
-      if (this.ExtensionData.AuxiliarImageSetId != -1) {
-        return ImagingItem.Parse(this.ExtensionData.AuxiliarImageSetId);
-      } else {
+    public Recording TryGetHistoricRecording() {
+      if (!this.IsHistoricDocument) {
         return null;
       }
-    }
+      Recording historicRecording = this.RecordingActs[0].PhysicalRecording;
 
-    public ImagingItem TryGetImageSet() {
-      if (this.ExtensionData.DocumentImageSetId != -1) {
-        return ImagingItem.Parse(this.ExtensionData.DocumentImageSetId);
-      } else {
-        return null;
-      }
+      Assertion.Assert(!historicRecording.IsEmptyInstance,
+                      "historicRecording can't be the empty instance.");
+
+      return historicRecording;
     }
 
     #endregion Public methods

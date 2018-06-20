@@ -10,8 +10,6 @@
 ********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
-using Empiria.Land.Data;
-
 namespace Empiria.Land.Registration {
 
   /// <summary>Describes the type of a real estate.</summary>
@@ -40,7 +38,6 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Constructors and parsers
-
 
   } // class RealEstateType
 

@@ -159,9 +159,9 @@ namespace Empiria.Land.Documentation {
       imageSet.Save();
 
       if (imageSet.DocumentImageType == DocumentImageType.MainDocument) {
-        imageSet.Document.SetImageSet(imageSet);
+        imageSet.Document.Imaging.SetImageSet(imageSet);
       } else if (imageSet.DocumentImageType == DocumentImageType.Appendix) {
-        imageSet.Document.SetAuxiliarImageSet(imageSet);
+        imageSet.Document.Imaging.SetAuxiliarImageSet(imageSet);
       }
 
       return imageSet;

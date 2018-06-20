@@ -382,7 +382,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (!ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.DocumentSafeguard")) {
         return false;
       }
-      if (transaction.Document.ImagingControlID.Length != 0) {
+      if (transaction.Document.Imaging.ImagingControlID.Length != 0) {
         return false;
       }
       if (transaction.Document.RecordingActs.Count == 0) {

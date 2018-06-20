@@ -256,7 +256,7 @@ namespace Empiria.Land.UI {
       } else {
         html = html.Replace("{{RESOURCE.CLASS}}", String.Empty);
       }
-      if (recordingAct.Document.IsReadyForEdition()) {
+      if (recordingAct.Document.Security.IsReadyForEdition()) {
         html = html.Replace("{{OPTIONS.LINKS}}", GetDeleteLink(recordingAct));
       } else {
         html = html.Replace("{{OPTIONS.LINKS}}", "&nbsp;");

@@ -79,7 +79,7 @@ namespace Empiria.Land.UI {
     }
 
     public bool IsReadyForEdition() {
-      return this.Document.IsReadyForEdition();
+      return this.Document.Security.IsReadyForEdition();
     }
 
     #endregion Public methods

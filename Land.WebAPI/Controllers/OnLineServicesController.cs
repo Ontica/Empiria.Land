@@ -104,7 +104,7 @@ namespace Empiria.Land.WebApi {
                                               documentUID);
 
         } else if (document != null && hash.Length != 0  &&
-                   document.AuthorizationTime >= hashCodeValidationStartDate && hash != document.QRCodeSecurityHash()) {
+                   document.AuthorizationTime >= hashCodeValidationStartDate && hash != document.Security.QRCodeSecurityHash()) {
           throw new ResourceNotFoundException("Land.RecordingDocument.InvalidQRCode",
                                               "El código QR que está impreso en su documento y que acaba de escanear hace " +
                                               "referencia al sello registral con número '{0}' que sí tenemos registrado " +
@@ -324,9 +324,9 @@ namespace Empiria.Land.WebApi {
       if (hash.Length != 0 && document.AuthorizationTime < hashCodeValidationStartDate) {
         propertyBag.Add(new PropertyBagItem("Código de verificación", hash, "bold-text"));
       } else {
-        propertyBag.Add(new PropertyBagItem("Código de verificación", document.QRCodeSecurityHash(), "bold-text"));
+        propertyBag.Add(new PropertyBagItem("Código de verificación", document.Security.QRCodeSecurityHash(), "bold-text"));
       }
-      propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(document.GetDigitalSeal()), "mono-space-text"));
+      propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(document.Security.GetDigitalSeal()), "mono-space-text"));
       propertyBag.Add(new PropertyBagItem("Firma digital", "Documento firmado de forma autógrafa."));
 
       if (document.RecordingActs.Count > 0) {
@@ -368,7 +368,7 @@ namespace Empiria.Land.WebApi {
       }
 
       if (!transaction.PaymentOrderData.IsEmptyInstance) {
-        propertyBag.Add(new PropertyBagItem("Línea de captura para el pago",
+        propertyBag.Add(new PropertyBagItem("Línea de captura",
                                             transaction.PaymentOrderData.RouteNumber, "bold-text"));
       } else {
         propertyBag.Add(new PropertyBagItem("Boleta de pago", transaction.Payments.ReceiptNumbers));

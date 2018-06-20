@@ -287,7 +287,7 @@ namespace Empiria.Land.Registration.Transactions {
         return;
       }
 
-      if (_transaction.Document.HasImageSet) {
+      if (_transaction.Document.Imaging.HasImageSet) {
         return;
       }
 
