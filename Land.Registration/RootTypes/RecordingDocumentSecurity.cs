@@ -27,14 +27,9 @@ namespace Empiria.Land.Registration {
     #endregion Constructors and parsers
 
     #region Public properties
+
     internal RecordingDocument Document {
       get;
-    }
-
-    [DataField("ImagingControlID")]
-    public string ImagingControlID {
-      get;
-      private set;
     }
 
     public bool Signed() {
