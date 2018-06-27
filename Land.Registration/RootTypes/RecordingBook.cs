@@ -487,8 +487,8 @@ namespace Empiria.Land.Registration {
       //int currentBookSheets = this.CalculateTotalSheets();
       //int newTotalSheets = currentBookSheets + document.SheetsCount;
 
-      //int lowerBound = ExecutionServer.LicenseName == "Tlaxcala" ? 275 : 250;
-      //int upperBound = ExecutionServer.LicenseName == "Tlaxcala" ? 286 : 260;
+      //int lowerBound = 275;
+      //int upperBound = 286;
 
       //if (newTotalSheets <= lowerBound) {
       //  return true;

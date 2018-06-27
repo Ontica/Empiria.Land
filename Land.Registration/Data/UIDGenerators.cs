@@ -17,7 +17,7 @@ namespace Empiria.Land.Data {
     #region Public methods
 
     static internal string CreateAssociationUID() {
-      string temp = ExecutionServer.LicenseName == "Zacatecas" ? "ZS-SC-" : "TL-SC-";
+      string temp = "TL-SC-";
 
       temp += EmpiriaMath.GetRandomCharacter(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);
@@ -53,7 +53,7 @@ namespace Empiria.Land.Data {
                       Convert.ToInt32(temp[temp.Length - 1])) % ((int) Math.Pow(i + 1, 2)));
         useLetters = !useLetters;
       }
-      string prefix = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
+      string prefix = "TL";
       temp = "CE" + temp.Substring(0, 4) + "-" + temp.Substring(4, 6) + "-" + temp.Substring(10, 4);
 
       temp += "ABCDEFHJKMNPRTWXYZ".Substring((hashCode * Convert.ToInt32(prefix[0])) % 17, 1);
@@ -79,7 +79,7 @@ namespace Empiria.Land.Data {
                       Convert.ToInt32(temp[temp.Length - 1])) % ((int) Math.Pow(i + 1, 2)));
         useLetters = !useLetters;
       }
-      string prefix = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
+      string prefix = "TL";
       temp = "RP" + temp.Substring(0, 4) + "-" + temp.Substring(4, 6) + "-" + temp.Substring(10, 4);
 
       hashCode = (hashCode * Convert.ToInt32(prefix[0])) % 49;
@@ -93,7 +93,7 @@ namespace Empiria.Land.Data {
 
 
     static internal string CreateNoPropertyResourceUID() {
-      string temp = ExecutionServer.LicenseName == "Zacatecas" ? "ZS-DOC-" : "TL-DOC-";
+      string temp = "TL-DOC-";
 
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomCharacter(temp);
@@ -114,7 +114,7 @@ namespace Empiria.Land.Data {
 
 
     static internal string CreatePropertyUID() {
-      string temp = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
+      string temp = "TL";
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomCharacter(temp);
@@ -155,7 +155,7 @@ namespace Empiria.Land.Data {
                       Convert.ToInt32(temp[temp.Length - 1])) % ((int) Math.Pow(i + 1, 2)));
         useLetters = !useLetters;
       }
-      string prefix = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
+      string prefix = "TL";
       temp = "TR-" + temp.Substring(0, 5) + "-" + temp.Substring(5, 5);
       hashCode = (hashCode * Convert.ToInt32(prefix[0])) % 49;
       hashCode = (hashCode * Convert.ToInt32(prefix[1])) % 53;
@@ -168,9 +168,7 @@ namespace Empiria.Land.Data {
     #region Private methods
 
     static private string GetChecksumCharacterCode(int hashCode) {
-      string hashCodeConvertionRule = ExecutionServer.LicenseName == "Zacatecas" ?
-                                                                     "AL8GD7E95ZJSXYTKBHFWR43MCU6N21QPV0" :
-                                                                     "NAXMT1C5WZ7J3HE489RLGV6F2PUQKYD0BS";
+      string hashCodeConvertionRule = "NAXMT1C5WZ7J3HE489RLGV6F2PUQKYD0BS";
       return hashCodeConvertionRule.Substring(hashCode % hashCodeConvertionRule.Length, 1);
     }
 

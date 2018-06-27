@@ -33,7 +33,7 @@ namespace Empiria.Land.Registration {
     }
 
     public bool Signed() {
-      throw new NotImplementedException();
+      return true;
     }
 
     public bool Unsigned() {

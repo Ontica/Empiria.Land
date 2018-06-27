@@ -452,11 +452,11 @@ namespace Empiria.Land.Registration.Transactions {
           temp += "U" + act.Quantity.Unit.Id.ToString() + "^";
         }
         temp += act.TreasuryCode.Id.ToString();
-        if (ExecutionServer.LicenseName == "Tlaxcala") {
-          temp += "^" + "S" + act.Fee.SubTotal.ToString("N2") + "^";
-          temp += "D" + act.Fee.Discount.Amount.ToString("N2") + "^";
-          temp += "T" + act.Fee.Total.ToString("N2");
-        }
+
+        temp += "^" + "S" + act.Fee.SubTotal.ToString("N2") + "^";
+        temp += "D" + act.Fee.Discount.Amount.ToString("N2") + "^";
+        temp += "T" + act.Fee.Total.ToString("N2");
+
       }
       temp += "||";
 
@@ -571,14 +571,15 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     private string BuildControlNumber() {
-      if (ExecutionServer.LicenseName == "Tlaxcala") {
-        return String.Empty;
-      }
-      int current = TransactionData.GetLastControlNumber(this.RecorderOffice);
+      return String.Empty;
 
-      current++;
+      // Uncomment this code in order to generate a transaction's consecutive control number
 
-      return current.ToString();
+      //int current = TransactionData.GetLastControlNumber(this.RecorderOffice);
+
+      //current++;
+
+      //return current.ToString();
     }
 
     private void UpdateComplexityIndex() {

@@ -108,11 +108,7 @@ namespace Empiria.Land.Registration {
 
     public string AsText {
       get {
-        if (ExecutionServer.LicenseName == "Tlaxcala") {
-          return String.Format("Partida {0} en {1}", this.Number, this.RecordingBook.AsText);
-        } else {
-          return String.Format("Inscripción {0} en {1}", this.Number, this.RecordingBook.AsText);
-        }
+        return String.Format("Partida {0} en {1}", this.Number, this.RecordingBook.AsText);
       }
     }
 

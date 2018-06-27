@@ -45,13 +45,7 @@ namespace Empiria.Land.Registration {
 
     public bool UsePerpetualNumbering {
       get {
-        if (ExecutionServer.LicenseName == "Tlaxcala") {
-          return (this.Id == 1050);
-        } else if (ExecutionServer.LicenseName == "Zacatecas") {
-          return (this.Id == 1070);
-        } else {
-          return false;
-        }
+        return (this.Id == 1050);
       }
     }
 
