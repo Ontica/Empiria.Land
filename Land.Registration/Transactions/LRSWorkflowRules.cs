@@ -67,7 +67,8 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public List<LRSTransactionStatus> GetNextStatusList(LRSTransactionType type,
-                                      LRSDocumentType docType, LRSTransactionStatus currentStatus) {
+                                                               LRSDocumentType docType,
+                                                               LRSTransactionStatus currentStatus) {
       List<LRSTransactionStatus> list = new List<LRSTransactionStatus>();
 
       switch (currentStatus) {
@@ -88,49 +89,60 @@ namespace Empiria.Land.Registration.Transactions {
         case LRSTransactionStatus.Process:
         case LRSTransactionStatus.Control:
           AddRecordingOrElaborationStatus(list, type, docType);
-          if (LRSWorkflowRules.IsArchivable(type, docType)) {
+
+          if (LRSWorkflowRules.IsNotSignable(type, docType)) {
             list.Add(LRSTransactionStatus.Archived);
           }
+
           list.Add(LRSTransactionStatus.Juridic);
 
-          list.Add(LRSTransactionStatus.Revision);
+          // list.Add(LRSTransactionStatus.Revision);
           list.Add(LRSTransactionStatus.OnSign);
-          if (LRSWorkflowRules.IsDigitalizable(type, docType)) {
-            list.Add(LRSTransactionStatus.Digitalization);
-          }
+          //if (LRSWorkflowRules.IsDigitalizable(type, docType)) {
+          //  list.Add(LRSTransactionStatus.Digitalization);
+          //}
           list.Add(LRSTransactionStatus.ToReturn);
 
           break;
 
         case LRSTransactionStatus.Juridic:
           AddRecordingOrElaborationStatus(list, type, docType);
-          list.Add(LRSTransactionStatus.Revision);
+          // list.Add(LRSTransactionStatus.Revision);
           list.Add(LRSTransactionStatus.OnSign);
           list.Add(LRSTransactionStatus.ToReturn);
-          list.Add(LRSTransactionStatus.Archived);
+
+          if (IsNotSignable(type, docType)) {
+            list.Add(LRSTransactionStatus.Archived);
+          }
+
           list.Add(LRSTransactionStatus.Control);
 
           break;
 
         case LRSTransactionStatus.Recording:
-          list.Add(LRSTransactionStatus.Revision);
+          // list.Add(LRSTransactionStatus.Revision);
+          list.Add(LRSTransactionStatus.OnSign);    // new
+
           list.Add(LRSTransactionStatus.Recording);
           list.Add(LRSTransactionStatus.Control);
 
           list.Add(LRSTransactionStatus.Juridic);
-          if (LRSWorkflowRules.IsArchivable(type, docType)) {
-            list.Add(LRSTransactionStatus.Archived);
-          }
-          if (type.Id == 704) {    // Trámite comercio
-            list.Add(LRSTransactionStatus.ToDeliver);
-            list.Add(LRSTransactionStatus.ToReturn);
-          } else if (ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.LawyerRegister")) {
+
+          //if (LRSWorkflowRules.IsArchivable(type, docType)) {
+          //  list.Add(LRSTransactionStatus.Archived);
+          //}
+          //if (type.Id == 704) {    // Trámite comercio
+          //  list.Add(LRSTransactionStatus.ToDeliver);
+          //  list.Add(LRSTransactionStatus.ToReturn);
+          if (ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.LawyerRegister")) {
             list.Add(LRSTransactionStatus.ToReturn);
           }
           break;
 
         case LRSTransactionStatus.Elaboration:
-          list.Add(LRSTransactionStatus.Revision);
+          // list.Add(LRSTransactionStatus.Revision);
+          list.Add(LRSTransactionStatus.OnSign);    // new
+
           list.Add(LRSTransactionStatus.Elaboration);
           list.Add(LRSTransactionStatus.Control);
 
@@ -142,9 +154,9 @@ namespace Empiria.Land.Registration.Transactions {
 
         case LRSTransactionStatus.Revision:
           list.Add(LRSTransactionStatus.OnSign);
-          if (LRSWorkflowRules.IsArchivable(type, docType)) {
-            list.Add(LRSTransactionStatus.Archived);
-          }
+          //if (LRSWorkflowRules.IsArchivable(type, docType)) {
+          //  list.Add(LRSTransactionStatus.Archived);
+          //}
           AddRecordingOrElaborationStatus(list, type, docType);
           list.Add(LRSTransactionStatus.Control);
           break;
@@ -155,6 +167,9 @@ namespace Empiria.Land.Registration.Transactions {
           } else {
             list.Add(LRSTransactionStatus.ToDeliver);
           }
+          if (LRSWorkflowRules.IsArchivable(type, docType)) {
+            list.Add(LRSTransactionStatus.Archived);
+          }
           list.Add(LRSTransactionStatus.ToReturn);
           list.Add(LRSTransactionStatus.Control);
           list.Add(LRSTransactionStatus.Juridic);
@@ -164,13 +179,16 @@ namespace Empiria.Land.Registration.Transactions {
           list.Add(LRSTransactionStatus.ToDeliver);
           list.Add(LRSTransactionStatus.ToReturn);
           list.Add(LRSTransactionStatus.Control);
+          if (LRSWorkflowRules.IsArchivable(type, docType)) {
+            list.Add(LRSTransactionStatus.Archived);
+          }
           break;
 
         case LRSTransactionStatus.ToDeliver:
           list.Add(LRSTransactionStatus.Delivered);
-          if (LRSWorkflowRules.IsDigitalizable(type, docType)) {
-            list.Add(LRSTransactionStatus.Digitalization);
-          }
+          //if (LRSWorkflowRules.IsDigitalizable(type, docType)) {
+          //  list.Add(LRSTransactionStatus.Digitalization);
+          //}
           list.Add(LRSTransactionStatus.Control);
           break;
 
@@ -223,6 +241,8 @@ namespace Empiria.Land.Registration.Transactions {
           return "En área jurídica";
         case LRSTransactionStatus.OnSign:
           return "En firma";
+        case LRSTransactionStatus.OnSignRevocation:
+          return "En revocación de firma";
         case LRSTransactionStatus.Digitalization:
           return "En digitalización y resguardo";
         case LRSTransactionStatus.ToDeliver:
@@ -240,6 +260,13 @@ namespace Empiria.Land.Registration.Transactions {
         default:
           return "No determinado";
       }
+    }
+
+    static internal bool IsNotSignable(LRSTransactionType type, LRSDocumentType docType) {
+      if (type.Id == 704 || type.Id == 705 || (type.Id == 706 && docType.Id == 734)) {
+        return true;
+      }
+      return false;
     }
 
     static internal bool IsArchivable(LRSTransactionType type, LRSDocumentType docType) {
