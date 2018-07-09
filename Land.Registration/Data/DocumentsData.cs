@@ -50,6 +50,24 @@ namespace Empiria.Land.Data {
       }
     }
 
+    internal static bool IsSigned(RecordingDocument document) {
+      var sql = $"SELECT * FROM vwLRSDocumentSign WHERE DocumentNo = '{document.UID}' " +
+                $"AND SignStatus = 'S' AND DigitalSign <> ''";
+
+      var dataRow = DataReader.GetDataRow(DataOperation.Parse(sql));
+
+      return dataRow != null;
+    }
+
+    internal static string GetDigitalSignature(RecordingDocument document) {
+      var sql = $"SELECT DigitalSign FROM vwLRSDocumentSign WHERE DocumentNo = '{document.UID}' " +
+                $"AND SignStatus = 'S' AND DigitalSign <> ''";
+
+      var sign = DataReader.GetScalar<string>(DataOperation.Parse(sql),
+                                              "NO TIENE FIRMA ELECTRÓNICA.");
+
+      return sign;
+    }
 
     static internal string GetNextImagingControlID(RecordingDocument document) {
       string prefix = document.AuthorizationTime.ToString("yyyy-MM");

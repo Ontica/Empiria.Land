@@ -32,13 +32,13 @@ namespace Empiria.Land.Registration {
       get;
     }
 
-    public bool Signed() {
-      return true;
+
+    public bool UseESign {
+      get {
+        return this.Document.AuthorizationTime >= DateTime.Parse("2018-07-10");
+      }
     }
 
-    public bool Unsigned() {
-      return !this.Signed();
-    }
 
     #endregion Public properties
 
@@ -49,10 +49,22 @@ namespace Empiria.Land.Registration {
       this.Document.Close();
     }
 
+
     public void Open() {
       this.AssertCanBeOpened();
       this.Document.Open();
     }
+
+
+    public bool Signed() {
+      return Data.DocumentsData.IsSigned(this.Document);
+    }
+
+
+    public bool Unsigned() {
+      return !this.Signed();
+    }
+
 
     public bool IsReadyForEdition() {
       if (this.Document.IsEmptyInstance) {
@@ -149,13 +161,15 @@ namespace Empiria.Land.Registration {
 
 
     public string GetDigitalSignature() {
-      var transaction = this.Document.GetTransaction();
-
-      string s = "||" + transaction.UID + "|" + this.Document.UID;
-      for (int i = 0; i < this.Document.RecordingActs.Count; i++) {
-        s += "|" + this.Document.RecordingActs[i].Id.ToString();
+      if (!UseESign) {
+        return "Documento firmado de forma autógrafa.";
       }
-      return FormerCryptographer.SignTextWithSystemCredentials(s + "eSign");
+      if (this.Unsigned()) {
+        return "NO TIENE FIRMA ELECTRONICA";
+      } else {
+        return Data.DocumentsData.GetDigitalSignature(this.Document);
+      }
+
     }
 
 

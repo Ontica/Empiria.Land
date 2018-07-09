@@ -65,6 +65,24 @@ namespace Empiria.Land.Data {
       DataWriter.Execute(op);
     }
 
+    internal static bool IsSigned(Certificate certificate) {
+      var sql = $"SELECT * FROM vwLRSDocumentSign WHERE DocumentNo = '{certificate.UID}' " +
+                $"AND SignStatus = 'S' AND DigitalSign <> ''";
+
+      var dataRow = DataReader.GetDataRow(DataOperation.Parse(sql));
+
+      return dataRow != null;
+    }
+
+    internal static string GetDigitalSignature(Certificate certificate) {
+      var sql = $"SELECT DigitalSign FROM vwLRSDocumentSign WHERE DocumentNo = '{certificate.UID}' " +
+                $"AND SignStatus = 'S' AND DigitalSign <> ''";
+
+      var sign = DataReader.GetScalar<string>(DataOperation.Parse(sql),
+                                              "NO TIENE FIRMA ELECTRÓNICA.");
+      return sign;
+    }
+
     #endregion Public methods
 
   } // class CertificatesData

@@ -32,11 +32,11 @@ namespace Empiria.Land.Certification {
     }
 
     static public Certificate Parse(int id) {
-      return BaseObject.ParseId<Certificate>(id);
+      return BaseObject.ParseId<Certificate>(id, true);
     }
 
     static public Certificate TryParse(string certificateUID) {
-      return BaseObject.TryParse<Certificate>("CertificateUID = '" + certificateUID + "'");
+      return BaseObject.TryParse<Certificate>("CertificateUID = '" + certificateUID + "'", true);
     }
 
     #endregion Constructors and parsers
@@ -284,7 +284,7 @@ namespace Empiria.Land.Certification {
       this.Save();
     }
 
-    public string GetDigitalSeal() {
+    public string GetDigitalString() {
       if (this.Status == CertificateStatus.Pending) {
         return "* * * * CERTIFICADO EN PROCESO DE ELABORACIÓN * * * *";
       }
@@ -316,12 +316,12 @@ namespace Empiria.Land.Certification {
       return EmpiriaString.DivideLongString(seal.ToString(), 72, "&#8203;");
     }
 
-    public string GetDigitalSignature() {
+    public string GetDigitalSeal() {
       if (this.Status == CertificateStatus.Pending) {
         return "SIN VALOR LEGAL * * * * * SIN VALOR LEGAL";
       }
 
-      string s = FormerCryptographer.SignTextWithSystemCredentials(this.GetDigitalSeal());
+      string s = FormerCryptographer.SignTextWithSystemCredentials(this.GetDigitalString());
 
       int removeThisCharacters = 72;
 
@@ -331,6 +331,34 @@ namespace Empiria.Land.Certification {
         return s.Substring(0, 64);
       }
     }
+
+    public bool UseESign {
+      get {
+        return this.IssueTime >= DateTime.Parse("2018-07-10");
+      }
+    }
+
+
+    public bool Signed() {
+      return Data.CertificatesData.IsSigned(this);
+    }
+
+
+    public bool Unsigned() {
+      return !Signed();
+    }
+
+    public string GetDigitalSignature() {
+      if (!UseESign) {
+        return "Documento firmado de forma autógrafa. Requiere también sello oficial.";
+      }
+      if (this.Unsigned()) {
+        return "NO SE HA FIRMADO ELECTRÓNICAMENTE";
+      } else {
+        return Data.CertificatesData.GetDigitalSignature(this);
+      }
+    }
+
 
     public void Open() {
       Assertion.Assert(this.Status == CertificateStatus.Closed ||
