@@ -1,13 +1,12 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Certification Services              *
-*  Namespace : Empiria.Land.Certification                     Assembly : Empiria.Land.Certification.dll      *
-*  Type      : CertificateBuilder                             Pattern  : Builder Class                       *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Certification Services                       Component : Certificate builder                   *
+*  Assembly : Empiria.Land.Registration.dll                Pattern   : Builder Class                         *
+*  Type     : CertificateBuilder                           License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Builds a certificate Html output using a text-based template.                                 *
+*  Summary  : Builds a certificate Html output using a text-based template.                                  *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.IO;
 using System.Text;
@@ -18,16 +17,6 @@ namespace Empiria.Land.Certification {
 
   /// <summary>Builds a certificate Html output using a text-based template.</summary>
   internal class CertificateBuilder {
-
-    #region Fields
-
-    private static readonly string SEARCH_SERVICES_SERVER_BASE_ADDRESS =
-                                          ConfigurationData.Get<string>("SearchServicesServerBaseAddress");
-
-    private static readonly bool DISPLAY_VEDA_ELECTORAL_UI =
-                                        ConfigurationData.Get<bool>("DisplayVedaElectoralUI", false);
-
-    #endregion Fields
 
     #region Constructors and parsers
 
@@ -61,37 +50,7 @@ namespace Empiria.Land.Certification {
 
       var o = this.Certificate;
 
-      template.Replace("{{CERTIFICATE_LOGO_SOURCE}}", this.GetLogoSource());
-
-      template.Replace("{{QR.CODE.SOURCE}}",
-                       "{{QR.CODE.SERVICE.URL}}?size=120&amp;data={{SEARCH.SERVICES.SERVER.ADDRESS}}/?" +
-                        "type=certificate%26uid={{NUMERO.CERTIFICADO}}%26hash={{QR.CODE.HASH}}");
-
-      if (!o.Property.IsEmptyInstance) {
-        template.Replace("{{RESOURCE.QR.CODE.SOURCE}}",
-                         "{{QR.CODE.SERVICE.URL}}?size=120&amp;data={{SEARCH.SERVICES.SERVER.ADDRESS}}/?" +
-                         "type=resource%26uid={{FOLIO REAL}}%26hash={{RESOURCE.QR.CODE.HASH}}");
-        template.Replace("{{DISPLAY.RESOURCE.QR.CODE}}", "inline");
-        template.Replace("{{RESOURCE.QR.CODE.HASH}}", o.Property.QRCodeSecurityHash());
-      } else {
-        template.Replace("{{RESOURCE.QR.CODE.SOURCE}}", String.Empty);
-        template.Replace("{{DISPLAY.RESOURCE.QR.CODE}}", "none");
-      }
-
-      template.Replace("{{QR.CODE.SERVICE.URL}}", ConfigurationData.GetString("QRCodeServiceURL"));
-      template.Replace("{{SEARCH.SERVICES.SERVER.ADDRESS}}", SEARCH_SERVICES_SERVER_BASE_ADDRESS);
-
       template.Replace("{{DOCUMENT.OR.PHYSICAL.RECORDING}}", this.GetDocumentOrPhysicalRecording());
-      template.Replace("{{NUMERO.CERTIFICADO}}", o.UID);
-      template.Replace("{{TIPO.CERTIFICADO}}",
-                   this.Certificate.CertificateType.DisplayName.ToUpperInvariant());
-      template.Replace("{{FIRMA}}", o.SignedBy.FullName);
-      template.Replace("{{FECHA.EXPEDICION}}", this.GetIssueDate());
-      template.Replace("{{CADENA.ORIGINAL}}", this.GetDigitalString());
-      template.Replace("{{SELLO.DIGITAL}}", this.GetDigitalSeal());
-      template.Replace("{{FIRMA.ELECTRONICA}}", this.GetDigitalSignature());
-      template.Replace("{{QR.CODE.HASH}}", this.Certificate.QRCodeSecurityHash());
-
 
       template.Replace("{{SOLICITANTE}}", o.ExtensionData.SeekForName.ToUpperInvariant());
       template.Replace("{{DISTRITO}}", o.RecorderOffice.Alias);
@@ -103,20 +62,6 @@ namespace Empiria.Land.Certification {
       template.Replace("{{AÑO.BÚSQUEDA}}", o.ExtensionData.StartingYear >= 1900 ?
                           EmpiriaString.SpeechInteger(o.ExtensionData.StartingYear).ToLowerInvariant() :
                           AsWarning("AÑO DE BÚSQUEDA NO PROPORCIONADO"));
-
-      template.Replace("{{ELABORADO.POR}}", o.IssuedBy.Nickname);
-      template.Replace("{{NUMERO.TRAMITE}}", o.Transaction.UID);
-      template.Replace("{{FECHA.PRESENTACION}}",
-                        o.Transaction.PresentationTime.ToString("dd/MMM/yyyy HH:mm"));
-
-      if (!o.Transaction.PaymentOrderData.IsEmptyInstance) {
-        template.Replace("{{NUMERO.RECIBO}}", o.Transaction.PaymentOrderData.RouteNumber);
-        template.Replace("Recibo de pago:", "Línea de captura:");
-      } else {
-        template.Replace("{{NUMERO.RECIBO}}", o.Transaction.Payments.ReceiptNumbers);
-      }
-
-      template.Replace("{{IMPORTE.DERECHOS}}", o.Transaction.Payments.Total.ToString("C2"));
 
       template.Replace("{{OPERACION}}", o.ExtensionData.Operation.ToLowerInvariant());
       template.Replace("{{OTORGADA.POR}}", o.ExtensionData.FromOwnerName);
@@ -140,47 +85,6 @@ namespace Empiria.Land.Certification {
       } else {
         return "1) No presenta notas al margen.";
       }
-    }
-
-    private string GetIssueDate() {
-      if (this.Certificate.Status != CertificateStatus.Pending) {
-        return EmpiriaString.SpeechDate(this.Certificate.IssueTime).ToUpperInvariant();
-      } else {
-        return AsWarning("SIN FECHA DE EXPEDICIÓN");
-      }
-    }
-
-    protected string GetDigitalString() {
-      if (this.Certificate.Status != CertificateStatus.Pending) {
-        return this.Certificate.GetDigitalString();
-      } else {
-        return AsWarning("SIN VALOR LEGAL * * * * * SIN VALOR LEGAL");
-      }
-    }
-
-    protected string GetDigitalSeal() {
-      if (this.Certificate.Status != CertificateStatus.Pending) {
-        return this.Certificate.GetDigitalSeal();
-      } else {
-        return AsWarning("SIN VALOR LEGAL * * * * * SIN VALOR LEGAL");
-      }
-    }
-
-    protected string GetDigitalSignature() {
-      if (this.Certificate.Status != CertificateStatus.Pending) {
-        return this.Certificate.GetDigitalSignature();
-      } else if (this.Certificate.Signed()) {
-        return "ESTA ES LA FIRMA ELECTRÓNICA";
-      } else {
-        return AsWarning("SIN FIRMA ELECTRÓNICA");
-      }
-    }
-
-    private string GetLogoSource() {
-      if (DISPLAY_VEDA_ELECTORAL_UI) {
-        return "assets/government.seal.veda.png";
-      }
-      return "assets/government.seal.png";
     }
 
 

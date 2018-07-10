@@ -30,11 +30,6 @@
     },
     {
       "type": "Land",
-      "key": "Certificates.MainTemplate",
-      "value": "template.principal.certificados.txt"
-    },
-    {
-      "type": "Land",
       "key": "Certificates.Templates.Path",
       "value": "E:\\empiria.files\\tlaxcala\\"
     },
