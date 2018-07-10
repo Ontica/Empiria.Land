@@ -87,8 +87,9 @@ namespace Empiria.Land.Certification {
                    this.Certificate.CertificateType.DisplayName.ToUpperInvariant());
       template.Replace("{{FIRMA}}", o.SignedBy.FullName);
       template.Replace("{{FECHA.EXPEDICION}}", this.GetIssueDate());
-      template.Replace("{{CADENA.ORIGINAL}}", this.GetDigitalSeal());
-      template.Replace("{{SELLO.DIGITAL}}", this.GetDigitalSignature());
+      template.Replace("{{CADENA.ORIGINAL}}", this.GetDigitalString());
+      template.Replace("{{SELLO.DIGITAL}}", this.GetDigitalSeal());
+      template.Replace("{{FIRMA.ELECTRONICA}}", this.GetDigitalSignature());
       template.Replace("{{QR.CODE.HASH}}", this.Certificate.QRCodeSecurityHash());
 
 
@@ -149,6 +150,14 @@ namespace Empiria.Land.Certification {
       }
     }
 
+    protected string GetDigitalString() {
+      if (this.Certificate.Status != CertificateStatus.Pending) {
+        return this.Certificate.GetDigitalString();
+      } else {
+        return AsWarning("SIN VALOR LEGAL * * * * * SIN VALOR LEGAL");
+      }
+    }
+
     protected string GetDigitalSeal() {
       if (this.Certificate.Status != CertificateStatus.Pending) {
         return this.Certificate.GetDigitalSeal();
@@ -160,11 +169,12 @@ namespace Empiria.Land.Certification {
     protected string GetDigitalSignature() {
       if (this.Certificate.Status != CertificateStatus.Pending) {
         return this.Certificate.GetDigitalSignature();
+      } else if (this.Certificate.Signed()) {
+        return "ESTA ES LA FIRMA ELECTRÓNICA";
       } else {
-        return AsWarning("SIN VALOR LEGAL * * * * * SIN VALOR LEGAL");
+        return AsWarning("SIN FIRMA ELECTRÓNICA");
       }
     }
-
 
     private string GetLogoSource() {
       if (DISPLAY_VEDA_ELECTORAL_UI) {
@@ -175,18 +185,17 @@ namespace Empiria.Land.Certification {
 
 
     private string GetTemplate() {
-      string mainTemplateFile = ConfigurationData.GetString("Certificates.MainTemplate");
       string templatesPath = ConfigurationData.GetString("Certificates.Templates.Path");
 
-      string content = File.ReadAllText(Path.Combine(templatesPath, mainTemplateFile));
-
       if (!this.Certificate.ExtensionData.UseMarginalNotesAsFullBody) {
+
         string bodyTemplateFile = this.Certificate.CertificateType.GetHtmlTemplateFileName();
         string bodyTemplate = File.ReadAllText(Path.Combine(templatesPath, bodyTemplateFile));
 
-        return content.Replace("{{CERTIFICATE.BODY}}", bodyTemplate);
+        return bodyTemplate;
       } else {
-        return content;
+        return "{{CERTIFICATE.BODY}}";
+
       }
     }
 
