@@ -95,6 +95,9 @@ namespace Empiria.Land.Registration {
       if (this.Document.Status != RecordableObjectStatus.Closed) {
         return false;
       }
+      if (this.Document.Security.Signed()) {
+        return false;
+      }
       return LRSWorkflowRules.UserCanEditDocument(this.Document);
     }
 
@@ -156,7 +159,7 @@ namespace Empiria.Land.Registration {
       }
       s += "||";
 
-      return FormerCryptographer.SignTextWithSystemCredentials(s);
+      return Cryptographer.SignTextWithSystemCredentials(s);
     }
 
 
@@ -167,7 +170,8 @@ namespace Empiria.Land.Registration {
       if (this.Unsigned()) {
         return "NO TIENE FIRMA ELECTRONICA";
       } else {
-        return Data.DocumentsData.GetDigitalSignature(this.Document);
+        return Data.DocumentsData.GetDigitalSignature(this.Document)
+                                 .Substring(0, 64);
       }
 
     }

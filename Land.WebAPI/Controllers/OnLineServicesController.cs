@@ -231,8 +231,8 @@ namespace Empiria.Land.WebApi {
       } else {
         propertyBag.Add(new PropertyBagItem("Código de verificación", certificate.QRCodeSecurityHash(), "bold-text"));
       }
-      propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(certificate.GetDigitalSignature()), "mono-space-text"));
-      propertyBag.Add(new PropertyBagItem("Firma digital", "Documento firmado de forma autógrafa."));
+      propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(certificate.GetDigitalSeal()), "mono-space-text"));
+      propertyBag.Add(new PropertyBagItem("Firma digital", certificate.GetDigitalSignature()));
 
       if (!certificate.Property.IsEmptyInstance) {
         propertyBag.Add(new PropertyBagItem("Certificado expedido sobre el predio", String.Empty, "new-section"));
@@ -327,7 +327,7 @@ namespace Empiria.Land.WebApi {
         propertyBag.Add(new PropertyBagItem("Código de verificación", document.Security.QRCodeSecurityHash(), "bold-text"));
       }
       propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(document.Security.GetDigitalSeal()), "mono-space-text"));
-      propertyBag.Add(new PropertyBagItem("Firma digital", "Documento firmado de forma autógrafa."));
+      propertyBag.Add(new PropertyBagItem("Firma digital", document.Security.GetDigitalSignature()));
 
       if (document.RecordingActs.Count > 0) {
         propertyBag.Add(new PropertyBagItem("Actos jurídicos registrados", String.Empty, "new-section"));

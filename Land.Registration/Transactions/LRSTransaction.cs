@@ -432,7 +432,8 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public string GetDigitalSign() {
-      return FormerCryptographer.SignTextWithSystemCredentials(GetDigitalString());
+      return Cryptographer.SignTextWithSystemCredentials(GetDigitalString())
+                          .Substring(0, 64);
     }
 
     public string GetDigitalString() {

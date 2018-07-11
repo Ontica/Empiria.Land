@@ -321,7 +321,7 @@ namespace Empiria.Land.Certification {
         return "SIN VALOR LEGAL * * * * * SIN VALOR LEGAL";
       }
 
-      string s = FormerCryptographer.SignTextWithSystemCredentials(this.GetDigitalString());
+      string s = Cryptographer.SignTextWithSystemCredentials(this.GetDigitalString());
 
       int removeThisCharacters = 72;
 
@@ -355,7 +355,8 @@ namespace Empiria.Land.Certification {
       if (this.Unsigned()) {
         return "NO SE HA FIRMADO ELECTRÓNICAMENTE";
       } else {
-        return Data.CertificatesData.GetDigitalSignature(this);
+        return Data.CertificatesData.GetDigitalSignature(this)
+                                    .Substring(0, 64);
       }
     }
 
