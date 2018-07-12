@@ -1,13 +1,12 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSWorkflowRules                               Pattern  : Micro-workflow                      *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Filing                                       Component : Filing Workflow                       *
+*  Assembly : Empiria.Land.Registration.dll                Pattern   : Micro-workflow                        *
+*  Type     : LRSWorkflowRules                             License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Micro-workflow rules set for the Land Registration System.                                    *
+*  Summary  : Micro-workflow rules set for the Land Registration System.                                     *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
 
@@ -96,18 +95,14 @@ namespace Empiria.Land.Registration.Transactions {
 
           list.Add(LRSTransactionStatus.Juridic);
 
-          // list.Add(LRSTransactionStatus.Revision);
           list.Add(LRSTransactionStatus.OnSign);
-          //if (LRSWorkflowRules.IsDigitalizable(type, docType)) {
-          //  list.Add(LRSTransactionStatus.Digitalization);
-          //}
           list.Add(LRSTransactionStatus.ToReturn);
 
           break;
 
         case LRSTransactionStatus.Juridic:
           AddRecordingOrElaborationStatus(list, type, docType);
-          // list.Add(LRSTransactionStatus.Revision);
+
           list.Add(LRSTransactionStatus.OnSign);
           list.Add(LRSTransactionStatus.ToReturn);
 
@@ -120,28 +115,25 @@ namespace Empiria.Land.Registration.Transactions {
           break;
 
         case LRSTransactionStatus.Recording:
-          // list.Add(LRSTransactionStatus.Revision);
-          list.Add(LRSTransactionStatus.OnSign);    // new
+          list.Add(LRSTransactionStatus.OnSign);
 
           list.Add(LRSTransactionStatus.Recording);
           list.Add(LRSTransactionStatus.Control);
 
           list.Add(LRSTransactionStatus.Juridic);
 
-          //if (LRSWorkflowRules.IsArchivable(type, docType)) {
-          //  list.Add(LRSTransactionStatus.Archived);
-          //}
-          //if (type.Id == 704) {    // Trámite comercio
-          //  list.Add(LRSTransactionStatus.ToDeliver);
-          //  list.Add(LRSTransactionStatus.ToReturn);
-          if (ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.LawyerRegister")) {
+          if (type.Id == 704) {    // Trámite comercio
+            list.Add(LRSTransactionStatus.ToDeliver);
             list.Add(LRSTransactionStatus.ToReturn);
+          } else {
+            if (ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.LawyerRegister")) {
+              list.Add(LRSTransactionStatus.ToReturn);
+            }
           }
           break;
 
         case LRSTransactionStatus.Elaboration:
-          // list.Add(LRSTransactionStatus.Revision);
-          list.Add(LRSTransactionStatus.OnSign);    // new
+          list.Add(LRSTransactionStatus.OnSign);
 
           list.Add(LRSTransactionStatus.Elaboration);
           list.Add(LRSTransactionStatus.Control);
@@ -154,9 +146,7 @@ namespace Empiria.Land.Registration.Transactions {
 
         case LRSTransactionStatus.Revision:
           list.Add(LRSTransactionStatus.OnSign);
-          //if (LRSWorkflowRules.IsArchivable(type, docType)) {
-          //  list.Add(LRSTransactionStatus.Archived);
-          //}
+
           AddRecordingOrElaborationStatus(list, type, docType);
           list.Add(LRSTransactionStatus.Control);
           break;
@@ -171,14 +161,13 @@ namespace Empiria.Land.Registration.Transactions {
             list.Add(LRSTransactionStatus.Archived);
           }
           list.Add(LRSTransactionStatus.ToReturn);
-          list.Add(LRSTransactionStatus.Control);
-          list.Add(LRSTransactionStatus.Juridic);
+
           break;
 
         case LRSTransactionStatus.Digitalization:
           list.Add(LRSTransactionStatus.ToDeliver);
           list.Add(LRSTransactionStatus.ToReturn);
-          list.Add(LRSTransactionStatus.Control);
+
           if (LRSWorkflowRules.IsArchivable(type, docType)) {
             list.Add(LRSTransactionStatus.Archived);
           }
@@ -186,10 +175,8 @@ namespace Empiria.Land.Registration.Transactions {
 
         case LRSTransactionStatus.ToDeliver:
           list.Add(LRSTransactionStatus.Delivered);
-          //if (LRSWorkflowRules.IsDigitalizable(type, docType)) {
-          //  list.Add(LRSTransactionStatus.Digitalization);
-          //}
-          list.Add(LRSTransactionStatus.Control);
+          list.Add(LRSTransactionStatus.OnSign);
+
           break;
 
         case LRSTransactionStatus.Archived:
@@ -198,7 +185,7 @@ namespace Empiria.Land.Registration.Transactions {
 
         case LRSTransactionStatus.ToReturn:
           list.Add(LRSTransactionStatus.Returned);
-          list.Add(LRSTransactionStatus.Control);
+
           break;
       }
       return list;
@@ -241,8 +228,6 @@ namespace Empiria.Land.Registration.Transactions {
           return "En área jurídica";
         case LRSTransactionStatus.OnSign:
           return "En firma";
-        case LRSTransactionStatus.OnSignRevocation:
-          return "En revocación de firma";
         case LRSTransactionStatus.Digitalization:
           return "En digitalización y resguardo";
         case LRSTransactionStatus.ToDeliver:
@@ -417,6 +402,10 @@ namespace Empiria.Land.Registration.Transactions {
           return "El documento registral de este trámite todavía no ha sido cerrado.\n\n" +
                  "Favor de cerrarlo antes de enviarlo a otra bandeja de trabajo.";
         }
+        if (transaction.GetIssuedCertificates().Exists(x => !x.IsClosed)) {
+          return "Este trámite tiene uno o más certificados que todavía no han sido cerrados.\n\n" +
+                 "Favor de cerrarlos antes de enviar este trámite a otra bandeja de trabajo.";
+        }
       }
 
       if (nextStatus == LRSTransactionStatus.Received) {
@@ -432,8 +421,8 @@ namespace Empiria.Land.Registration.Transactions {
       if (IsRecordingDocumentCase(transaction.TransactionType, transaction.DocumentType)) {
         if (nextStatus == LRSTransactionStatus.Revision || nextStatus == LRSTransactionStatus.OnSign ||
             nextStatus == LRSTransactionStatus.Digitalization || nextStatus == LRSTransactionStatus.ToDeliver) {
-          if (transaction.Document.IsEmptyInstance) {
-            return "Este trámite no tiene inscrito un documento. No es posible realizar esta operación.";
+          if (transaction.Document.IsEmptyInstance && transaction.GetIssuedCertificates().Count == 0) {
+            return "Este trámite no tiene inscrito un documento y tampoco tiene certificados. No es posible realizar esta operación.";
           }
         }
       }
