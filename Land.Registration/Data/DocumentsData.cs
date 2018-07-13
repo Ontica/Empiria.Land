@@ -1,8 +1,8 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  System   : Empiria Land                                 Module  : Recording Services                      *
-*  Assembly : Empiria.Land.Registration.dll                Pattern : Data Services                           *
-*  Type     : DocumentsData                                License : Please read LICENSE.txt file            *
+*  Module   : Recording services                           Component : Land Recording Documents              *
+*  Assembly : Empiria.Land.Registration.dll                Pattern   : Data Services                         *
+*  Type     : DocumentsData                                License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Provides database read and write methods for recording documents.                              *
 *                                                                                                            *
@@ -50,7 +50,7 @@ namespace Empiria.Land.Data {
       }
     }
 
-    internal static bool IsSigned(RecordingDocument document) {
+    static internal bool IsSigned(RecordingDocument document) {
       var sql = $"SELECT * FROM vwLRSDocumentSign WHERE DocumentNo = '{document.UID}' " +
                 $"AND SignStatus = 'S' AND DigitalSign <> ''";
 
@@ -59,15 +59,23 @@ namespace Empiria.Land.Data {
       return dataRow != null;
     }
 
-    internal static string GetDigitalSignature(RecordingDocument document) {
+
+    static internal string GetDigitalSignature(RecordingDocument document) {
       var sql = $"SELECT DigitalSign FROM vwLRSDocumentSign WHERE DocumentNo = '{document.UID}' " +
                 $"AND SignStatus = 'S' AND DigitalSign <> ''";
 
-      var sign = DataReader.GetScalar<string>(DataOperation.Parse(sql),
-                                              "NO TIENE FIRMA ELECTRÓNICA.");
-
-      return sign;
+      return DataReader.GetScalar<string>(DataOperation.Parse(sql),
+                                          "NO TIENE FIRMA ELECTRÓNICA.");
     }
+
+
+    static internal DateTime GetLastSignTimeForAllTransactionDocuments(LRSTransaction transaction) {
+      var sql = $"SELECT MAX(SignTime) FROM vwLRSDocumentSign WHERE TransactionNo = '{transaction.UID}' " +
+                $"AND SignStatus = 'S' AND DigitalSign <> ''";
+
+      return DataReader.GetScalar<DateTime>(DataOperation.Parse(sql));
+    }
+
 
     static internal string GetNextImagingControlID(RecordingDocument document) {
       string prefix = document.AuthorizationTime.ToString("yyyy-MM");
