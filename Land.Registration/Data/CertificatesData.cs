@@ -41,7 +41,7 @@ namespace Empiria.Land.Data {
 
       var op = DataOperation.Parse("qryLRSCertificatesByTransaction", transaction.Id);
 
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<Certificate>(x)).ToFixedList();
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<Certificate>(x, true)).ToFixedList();
     }
 
     static internal FixedList<Certificate> ResourceEmittedCertificates(Resource resource) {
@@ -51,7 +51,7 @@ namespace Empiria.Land.Data {
 
       var op = DataOperation.Parse("qryLRSResourceEmittedCertificates", resource.Id);
 
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<Certificate>(x)).ToFixedList();
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<Certificate>(x, true)).ToFixedList();
     }
 
     static internal void WriteCertificate(Certificate o) {
