@@ -213,11 +213,13 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Public method
 
-    internal void Close() {
+    internal void Close(DateTime? date = null) {
+      DateTime closingDate = date.HasValue? date.Value: DateTime.Now;
+
       if (this.EndProcessTime == ExecutionServer.DateMaxValue) {
-        this.EndProcessTime = DateTime.Now;
+        this.EndProcessTime = closingDate;
       }
-      this.CheckOutTime = DateTime.Now;
+      this.CheckOutTime = closingDate;
       this.NextContact = LRSWorkflowRules.InterestedContact;
       this.NextStatus = LRSTransactionStatus.EndPoint;
       this.NextTask = LRSWorkflowTask.Empty;
@@ -238,15 +240,15 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    internal LRSWorkflowTask CreateNext(string notes) {
+    internal LRSWorkflowTask CreateNext(string notes, Contact responsible = null, DateTime? date = null) {
       // Create next track
       LRSWorkflowTask newTrack = new LRSWorkflowTask(this.Transaction);
       newTrack.PreviousTask = this;
       newTrack.NextTask = LRSWorkflowTask.Empty;
       newTrack.CurrentStatus = this.NextStatus;
       newTrack.AssignedBy = this.Responsible;
-      newTrack.Responsible = Contact.Parse(ExecutionServer.CurrentUserId);
-      newTrack.CheckInTime = DateTime.Now;
+      newTrack.Responsible = responsible ?? Contact.Parse(ExecutionServer.CurrentUserId);
+      newTrack.CheckInTime = date.HasValue ? date.Value : DateTime.Now;
       if (notes.Length != 0) {
         newTrack.Notes = notes;
       }
@@ -262,7 +264,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
       this.CheckOutTime = newTrack.CheckInTime;
       if (this.NextContact.IsEmptyInstance) {
-        this.NextContact = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.NextContact = responsible ?? Contact.Parse(ExecutionServer.CurrentUserId);
       }
       this.Status = WorkflowTaskStatus.Closed;
       this.NextTask = newTrack;
@@ -271,10 +273,10 @@ namespace Empiria.Land.Registration.Transactions {
       return newTrack;
     }
 
-    internal void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact, string notes) {
+    internal void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact, string notes, DateTime? date = null) {
       this.NextStatus = nextStatus;
       this.NextContact = nextContact;
-      this.EndProcessTime = DateTime.Now;
+      this.EndProcessTime = date.HasValue ? date.Value : DateTime.Now;
       this.Notes = notes;
       this.Status = WorkflowTaskStatus.OnDelivery;
       this.Save();

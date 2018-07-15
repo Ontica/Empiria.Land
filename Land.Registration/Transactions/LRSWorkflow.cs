@@ -207,15 +207,15 @@ namespace Empiria.Land.Registration.Transactions {
       this.ResetTasksList();
     }
 
-    public void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact, string notes) {
+    public void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact, string notes, DateTime? date = null) {
       if (nextStatus == LRSTransactionStatus.Returned || nextStatus == LRSTransactionStatus.Delivered ||
           nextStatus == LRSTransactionStatus.Archived) {
-        this.Close(nextStatus, notes);
+        this.Close(nextStatus, notes, nextContact, date);
         return;
       }
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
-      currentTask.SetNextStatus(nextStatus, nextContact, notes);
+      currentTask.SetNextStatus(nextStatus, nextContact, notes, date);
 
       if (nextStatus == LRSTransactionStatus.OnSign || nextStatus == LRSTransactionStatus.Revision) {
         _transaction.Save();
@@ -225,7 +225,8 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public void Take(string notes) {
+
+    public void Take(string notes, Contact responsible = null, DateTime? date = null) {
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
       if (currentTask.NextStatus == LRSTransactionStatus.EndPoint) {
@@ -233,7 +234,7 @@ namespace Empiria.Land.Registration.Transactions {
                                             currentTask.Id);
       }
       this.CurrentStatus = currentTask.NextStatus;
-      currentTask.CreateNext(notes);
+      currentTask.CreateNext(notes, responsible, date);
       ResetTasksList();
 
       if (this.CurrentStatus == LRSTransactionStatus.ToDeliver ||
@@ -334,16 +335,16 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    private void Close(LRSTransactionStatus closeStatus, string notes) {
+    private void Close(LRSTransactionStatus closeStatus, string notes, Contact responsible = null, DateTime? date = null) {
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
       currentTask.NextStatus = closeStatus;
-      currentTask = currentTask.CreateNext(notes);
+      currentTask = currentTask.CreateNext(notes, responsible, date);
 
       ResetTasksList();
 
       currentTask.Notes = notes;
-      currentTask.Close();
+      currentTask.Close(date);
 
       _transaction.LastDeliveryTime = currentTask.EndProcessTime;
       this.CurrentStatus = closeStatus;
