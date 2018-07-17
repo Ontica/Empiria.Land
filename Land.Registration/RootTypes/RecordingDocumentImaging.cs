@@ -69,13 +69,34 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
+    public bool CanGenerateImagingControlID() {
+      if (this.Document.IsEmptyInstance) {
+        return false;
+      }
+      if (this.ImagingControlID.Length != 0) {
+        return false;
+      }
+      if (!this.Document.IsClosed) {
+        return false;
+      }
+      if (this.Document.RecordingActs.Count == 0) {
+        return false;
+      }
+      if (this.Document.RecordingActs.CountAll((x) => !x.PhysicalRecording.IsEmptyInstance) != 0) {
+        return false;
+      }
+      return true;
+    }
+
     public void GenerateImagingControlID() {
       Assertion.Assert(!this.Document.IsEmptyInstance, "Document can't be the empty instance.");
+      Assertion.Assert(this.Document.IsClosed, "Document is not closed.");
+      Assertion.Assert(this.ImagingControlID.Length == 0,
+                       "Document has already assigned an imaging control number.");
       Assertion.Assert(this.Document.RecordingActs.Count > 0, "Document should have recording acts.");
       Assertion.Assert(this.Document.RecordingActs.CountAll((x) => !x.PhysicalRecording.IsEmptyInstance) == 0,
                        "Document can't have any recording acts that are related to physical recordings.");
-      Assertion.Assert(this.ImagingControlID.Length == 0,
-                       "Document already has assigned an imaging control number.");
+
 
       this.ImagingControlID = DocumentsData.GetNextImagingControlID(this.Document);
       DocumentsData.SaveImagingControlID(this.Document);
