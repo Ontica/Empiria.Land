@@ -22,11 +22,15 @@ namespace Empiria.Land.Registration.Transactions {
 
     static public void Clean() {
 
-      CleanWorkflowTransactions();
+      // CleanWorkflowTransactions();
 
-      //CleanWorkflowTransactionsWithOpenDocument();
-      //UpdateESignJobs();
-      //AutoUpdateWorkflowForESignedTransactions();
+      // CleanWorkflowTransactionsWithOpenDocument();
+
+      //CleanUndelivered();
+
+      UpdateESignJobs();
+
+      AutoUpdateWorkflowForESignedTransactions();
     }
 
 
@@ -79,7 +83,6 @@ namespace Empiria.Land.Registration.Transactions {
 
       }
     }
-
 
     static private void CleanTransaction(LRSTransaction transaction) {
       var currentTask = transaction.Workflow.GetCurrentTask();
@@ -134,6 +137,34 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+    static private void CleanUndelivered() {
+      FixedList<LRSTransaction> transactions = GetUndeliveredTransactions();
+
+      foreach (var transaction in transactions) {
+        if ((!transaction.Document.IsEmptyInstance && !transaction.Document.IsClosed) ||
+            transaction.GetIssuedCertificates().Exists((x) => !x.IsClosed)) {
+          continue;
+        }
+
+        if ((transaction.Document.Security.UseESign && transaction.Document.Security.Unsigned()) ||
+            transaction.GetIssuedCertificates().Exists((x) => x.UseESign && x.Unsigned())) {
+          continue;
+        }
+
+        var currentTask = transaction.Workflow.GetCurrentTask();
+        DateTime date = currentTask.CheckOutTime == ExecutionServer.DateMaxValue ? currentTask.CheckInTime : currentTask.CheckOutTime;
+
+        if (currentTask.CurrentStatus == LRSTransactionStatus.ToDeliver) {
+          transaction.Workflow.SetNextStatus(LRSTransactionStatus.Delivered, currentTask.Responsible,
+                                            "Entregado por el sistema", date);
+
+        } else if (currentTask.CurrentStatus == LRSTransactionStatus.ToReturn) {
+          transaction.Workflow.SetNextStatus(LRSTransactionStatus.Returned, currentTask.Responsible,
+                                            "Devuelto por el sistema", date);
+        }
+
+      } // foreach
+    }
 
     static private void CleanWorkflowTransactions() {
       FixedList<LRSTransaction> transactions = GetTransactionsToBeCleaned();
@@ -147,6 +178,10 @@ namespace Empiria.Land.Registration.Transactions {
             transaction.GetIssuedCertificates().Exists((x) => x.UseESign)) {
           continue;
         }
+
+        var currentTask = transaction.Workflow.GetCurrentTask();
+        DateTime date = currentTask.CheckOutTime == ExecutionServer.DateMaxValue ? currentTask.CheckInTime : currentTask.CheckOutTime;
+
 
         CleanTransaction(transaction);
       } // foreach
@@ -194,6 +229,15 @@ namespace Empiria.Land.Registration.Transactions {
       return DataReader.GetFixedList<LRSTransaction>(operation);
     }
 
+
+    static private FixedList<LRSTransaction> GetUndeliveredTransactions() {
+      var sql = "SELECT * FROM vwLRSTransactionsToBeDelivered " +
+                "ORDER BY PresentationTime";
+
+      var operation = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<LRSTransaction>(operation);
+    }
 
     static private void UpdateESignJobs() {
       var op = DataOperation.Parse("doLRSUpdateESignJobs");
