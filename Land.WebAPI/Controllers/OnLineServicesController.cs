@@ -53,8 +53,17 @@ namespace Empiria.Land.WebApi {
           throw new ResourceNotFoundException("Land.Certificate.InvalidQRCode",
                                               "El código QR que está impreso en su documento y que acaba de escanear hace " +
                                               "referencia a un certificado con número '{0}' que NO está registrado en nuestros archivos.\n\n" +
-                                              "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
+                                              "MUY IMPORTANTE: Es muy probable que su documento sea falso.\n\n" +
                                               "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
+                                              certificateUID);
+
+        } else if (certificate != null && certificate.Status == CertificateStatus.Deleted) {
+          throw new ResourceNotFoundException("Land.Certificate.Deleted",
+                                              $"El certificado {certificate.UID} que está consultando fue ELIMINADO posteriormente a " +
+                                              "su impresión, por lo que no tiene ninguna validez oficial.\n\n" +
+                                              "Es posible que se lo hayan entregado por equivocación o que haya sido víctima de un fraude.\n\n" +
+                                              "MUY IMPORTANTE: Para obtener más información comuníquese de inmediato a la " +
+                                              "oficina del Registro Público.",
                                               certificateUID);
 
         } else if (certificate != null && hash.Length != 0 &&
@@ -386,7 +395,6 @@ namespace Empiria.Land.WebApi {
         propertyBag.Add(new PropertyBagItem("Pago de derechos", "Este trámite no requiere pago alguno."));
       } else {
         propertyBag.Add(new PropertyBagItem("Pago de derechos", "Este trámite no pagó derechos.", "warning-status-text"));
-        //propertyBag.Add(new PropertyBagItem("Atendió", transaction.PostedBy.Alias));
       }
 
       if (transaction.PresentationTime == ExecutionServer.DateMaxValue) {
