@@ -240,15 +240,21 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    internal LRSWorkflowTask CreateNext(string notes, Contact responsible = null, DateTime? date = null) {
+    internal LRSWorkflowTask CreateNext(string notes) {
+      var responsible = Contact.Parse(ExecutionServer.CurrentUserId);
+
+      return this.CreateNext(notes, responsible, DateTime.Now);
+    }
+
+    internal LRSWorkflowTask CreateNext(string notes, Contact responsible, DateTime date) {
       // Create next track
       LRSWorkflowTask newTrack = new LRSWorkflowTask(this.Transaction);
       newTrack.PreviousTask = this;
       newTrack.NextTask = LRSWorkflowTask.Empty;
       newTrack.CurrentStatus = this.NextStatus;
       newTrack.AssignedBy = this.Responsible;
-      newTrack.Responsible = responsible ?? Contact.Parse(ExecutionServer.CurrentUserId);
-      newTrack.CheckInTime = date.HasValue ? date.Value : DateTime.Now;
+      newTrack.Responsible = responsible;
+      newTrack.CheckInTime = date;
       if (notes.Length != 0) {
         newTrack.Notes = notes;
       }
@@ -264,7 +270,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
       this.CheckOutTime = newTrack.CheckInTime;
       if (this.NextContact.IsEmptyInstance) {
-        this.NextContact = responsible ?? Contact.Parse(ExecutionServer.CurrentUserId);
+        this.NextContact = responsible;
       }
       this.Status = WorkflowTaskStatus.Closed;
       this.NextTask = newTrack;
@@ -273,7 +279,8 @@ namespace Empiria.Land.Registration.Transactions {
       return newTrack;
     }
 
-    internal void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact, string notes, DateTime? date = null) {
+    internal void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact,
+                                string notes, DateTime? date = null) {
       this.NextStatus = nextStatus;
       this.NextContact = nextContact;
       this.EndProcessTime = date.HasValue ? date.Value : DateTime.Now;

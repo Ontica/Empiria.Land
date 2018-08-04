@@ -36,6 +36,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     internal static LRSWorkflow Create(LRSTransaction transaction) {
       var workflow = new LRSWorkflow(transaction);
+
       workflow.CurrentStatus = LRSTransactionStatus.Payment;
       workflow.Tasks.Add(LRSWorkflowTask.CreateFirst(transaction));
 
@@ -146,6 +147,7 @@ namespace Empiria.Land.Registration.Transactions {
       //  }
     }
 
+
     public void ReturnToMe() {
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
@@ -155,6 +157,7 @@ namespace Empiria.Land.Registration.Transactions {
       ResetTasksList();
     }
 
+
     internal Contact GetPostedBy() {
       if (this.Tasks.Count != 0) {
         return this.Tasks[0].Responsible;
@@ -163,6 +166,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
     internal DateTime GetPostingTime() {
       if (this.Tasks.Count != 0) {
         return this.Tasks[0].CheckInTime;
@@ -170,6 +174,7 @@ namespace Empiria.Land.Registration.Transactions {
         return ExecutionServer.DateMaxValue;
       }
     }
+
 
     internal Contact GetReceivedBy() {
       var task = this.Tasks.Find((x) => x.CurrentStatus == LRSTransactionStatus.Received);
@@ -180,6 +185,7 @@ namespace Empiria.Land.Registration.Transactions {
         return Person.Empty;
       }
     }
+
 
     public void Reentry() {
       if (!this.IsReadyForReentry) {
@@ -207,10 +213,17 @@ namespace Empiria.Land.Registration.Transactions {
       this.ResetTasksList();
     }
 
-    public void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact, string notes, DateTime? date = null) {
+
+    public void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact,
+                              string notes, DateTime? date = null) {
+
       if (nextStatus == LRSTransactionStatus.Returned || nextStatus == LRSTransactionStatus.Delivered ||
           nextStatus == LRSTransactionStatus.Archived) {
-        this.Close(nextStatus, notes, nextContact, date);
+        if (date.HasValue) {
+          this.Close(nextStatus, notes, nextContact, date.Value);
+        } else {
+          this.Close(nextStatus, notes);
+        }
         return;
       }
       LRSWorkflowTask currentTask = this.GetCurrentTask();
@@ -226,7 +239,14 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public void Take(string notes, Contact responsible = null, DateTime? date = null) {
+    public void Take(string notes) {
+      var responsible = Contact.Parse(ExecutionServer.CurrentUserId);
+
+      this.Take(notes, responsible, DateTime.Now);
+    }
+
+
+    internal void Take(string notes, Contact responsible, DateTime date) {
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
       if (currentTask.NextStatus == LRSTransactionStatus.EndPoint) {
@@ -244,6 +264,7 @@ namespace Empiria.Land.Registration.Transactions {
       _transaction.Save();
     }
 
+
     public void Undelete() {
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
@@ -258,6 +279,7 @@ namespace Empiria.Land.Registration.Transactions {
       _transaction.Save();
     }
 
+
     private LRSWorkflowTask _currentTask = null;
     public LRSWorkflowTask GetCurrentTask() {
       if (_currentTask == null) {
@@ -266,11 +288,13 @@ namespace Empiria.Land.Registration.Transactions {
       return _currentTask;
     }
 
+
     public void PullToControlDesk(string notes) {
       if (notes.Length == 0) {
         notes = "Se trajo a la mesa de control";
       }
-      this.SetNextStatus(LRSTransactionStatus.Control, Person.Empty, notes);
+      this.SetNextStatus(LRSTransactionStatus.Control,
+                         Person.Empty, notes);
       this.Take(String.Empty);
     }
 
@@ -305,6 +329,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
     private void AssertGraceDaysForReentry() {
       int graceDaysForReentry = ConfigurationData.GetInteger("GraceDaysForReentry");
 
@@ -326,6 +351,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
     private void AssertRecordingActsPrelation() {
       if (_transaction.Document.IsEmptyInstance || _transaction.Document.IsEmptyDocumentType) {
         return;
@@ -335,7 +361,17 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    private void Close(LRSTransactionStatus closeStatus, string notes, Contact responsible = null, DateTime? date = null) {
+
+    private void Close(LRSTransactionStatus closeStatus, string notes) {
+      var responsible = Contact.Parse(ExecutionServer.CurrentUserId);
+
+      this.Close(closeStatus, notes, responsible, DateTime.Now);
+    }
+
+
+    private void Close(LRSTransactionStatus closeStatus, string notes,
+                       Contact responsible, DateTime date) {
+
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
       currentTask.NextStatus = closeStatus;

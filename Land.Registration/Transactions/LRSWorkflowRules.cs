@@ -176,6 +176,7 @@ namespace Empiria.Land.Registration.Transactions {
         case LRSTransactionStatus.ToDeliver:
           list.Add(LRSTransactionStatus.Delivered);
           list.Add(LRSTransactionStatus.OnSign);
+          list.Add(LRSTransactionStatus.Control);
 
           break;
 
@@ -185,6 +186,7 @@ namespace Empiria.Land.Registration.Transactions {
 
         case LRSTransactionStatus.ToReturn:
           list.Add(LRSTransactionStatus.Returned);
+          list.Add(LRSTransactionStatus.Control);
 
           break;
       }
@@ -275,10 +277,13 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public bool IsEmptyItemsTransaction(LRSTransaction transaction) {
-      if (transaction.TransactionType.Id == 706) {
-        if (EmpiriaMath.IsMemberOf(transaction.DocumentType.Id, new int[] { 733, 738, 734, 742, 790 })) {
-          return true;
-        }
+      //if (transaction.TransactionType.Id == 706) {
+      //  if (EmpiriaMath.IsMemberOf(transaction.DocumentType.Id, new int[] { 733, 738, 734, 742, 790 })) {
+      //    return true;
+      //  }
+      //}
+      if (transaction.TransactionType.Id == 706 && transaction.DocumentType.Id == 734) {  // Correspondencia en gral
+        return true;
       }
       return false;
     }
@@ -405,6 +410,18 @@ namespace Empiria.Land.Registration.Transactions {
         if (transaction.GetIssuedCertificates().Exists(x => !x.IsClosed)) {
           return "Este trámite tiene uno o más certificados que todavía no han sido cerrados.\n\n" +
                  "Favor de cerrarlos antes de enviar este trámite a otra bandeja de trabajo.";
+        }
+      }
+
+      if (nextStatus == LRSTransactionStatus.Delivered || nextStatus == LRSTransactionStatus.Returned) {
+        if (!transaction.Document.IsEmptyInstance &&
+             transaction.Document.Security.UseESign && transaction.Document.Security.Unsigned()) {
+          return "El documento registral de este trámite todavía no ha sido firmado.\n\n" +
+                 "Favor de enviarlo a firma antes de entregarlo al interesado.";
+        }
+        if (transaction.GetIssuedCertificates().Exists( (x) => x.UseESign && x.Unsigned() )) {
+          return "Este trámite tiene uno o más certificados que todavía no han sido firmados.\n\n" +
+                 "Favor de enviarlos a firma antes de entregarlo al interesado.";
         }
       }
 
