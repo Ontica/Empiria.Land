@@ -1,13 +1,12 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                     System   : Land Web API                      *
-*  Namespace : Empiria.Land.WebApi                              Assembly : Empiria.Land.WebApi.dll           *
-*  Type      : OnLineServicesController                         Pattern  : Web API                           *
-*  Version   : 3.0                                              License  : Please read license.txt file      *
+*  Module   : Search services                              Component : Web Api                               *
+*  Assembly : Empiria.Land.WebApi.dll                      Pattern   : Controller                            *
+*  Type     : OnLineSearchServicesController               License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Contains general web methods for the Empiria Land Online Services system.                     *
+*  Summary  : Contains general web methods for the Empiria Land Online Search Services system.               *
 *                                                                                                            *
-********************************* Copyright (c) 2014-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
 using System.Web.Http;
@@ -22,8 +21,8 @@ using Empiria.Land.WebApi.Models;
 
 namespace Empiria.Land.WebApi {
 
-  /// <summary>Contains general web methods forthe Empiria Land Online Services system.</summary>
-  public class OnLineServicesController : WebApiController {
+  /// <summary>Contains general web methods forthe Empiria Land Online Search Services system.</summary>
+  public class OnLineSearchServicesController : WebApiController {
 
     private static readonly string SEARCH_SERVICES_SERVER_BASE_ADDRESS =
                                             ConfigurationData.Get<string>("SearchServicesServerBaseAddress");
@@ -664,6 +663,6 @@ namespace Empiria.Land.WebApi {
 
     #endregion Private methods
 
-  }  // class OnLineServicesController
+  }  // class OnLineSearchServicesController
 
 }  // namespace Empiria.Land.WebApi
