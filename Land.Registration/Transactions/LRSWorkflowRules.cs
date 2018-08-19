@@ -89,7 +89,7 @@ namespace Empiria.Land.Registration.Transactions {
         case LRSTransactionStatus.Control:
           AddRecordingOrElaborationStatus(list, type, docType);
 
-          if (LRSWorkflowRules.IsNotSignable(type, docType)) {
+          if (LRSWorkflowRules.IsNotSignable(type, docType) || LRSWorkflowRules.IsArchivable(type, docType)) {
             list.Add(LRSTransactionStatus.Archived);
           }
 
@@ -106,7 +106,7 @@ namespace Empiria.Land.Registration.Transactions {
           list.Add(LRSTransactionStatus.OnSign);
           list.Add(LRSTransactionStatus.ToReturn);
 
-          if (IsNotSignable(type, docType)) {
+          if (LRSWorkflowRules.IsNotSignable(type, docType) || LRSWorkflowRules.IsArchivable(type, docType)) {
             list.Add(LRSTransactionStatus.Archived);
           }
 
@@ -277,13 +277,10 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public bool IsEmptyItemsTransaction(LRSTransaction transaction) {
-      //if (transaction.TransactionType.Id == 706) {
-      //  if (EmpiriaMath.IsMemberOf(transaction.DocumentType.Id, new int[] { 733, 738, 734, 742, 790 })) {
-      //    return true;
-      //  }
-      //}
-      if (transaction.TransactionType.Id == 706 && transaction.DocumentType.Id == 734) {  // Correspondencia en gral
-        return true;
+      if (transaction.TransactionType.Id == 706) {
+        if (EmpiriaMath.IsMemberOf(transaction.DocumentType.Id, new int[] { 733, 738, 734, 742, 790 })) {
+          return true;
+        }
       }
       return false;
     }
@@ -445,6 +442,14 @@ namespace Empiria.Land.Registration.Transactions {
       }
       return String.Empty;
     }
+
+
+    static public string ValidateTakeTransaction(LRSTransaction transaction) {
+      return String.Empty;
+
+      //return "Su bandeja de trámites en proceso está llena.\n\nPara recibir más trámites primero debe concluir y entregar los trámites que ya tiene asignados.";
+    }
+
 
     #endregion Methods
 
