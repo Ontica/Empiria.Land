@@ -11,6 +11,7 @@
 using System;
 
 using Empiria.Json;
+using Empiria.Messaging;
 
 using Empiria.OnePoint;
 
@@ -53,6 +54,11 @@ namespace Empiria.Land.Registration.Transactions {
       if (json.Contains("ExternalTransaction")) {
         extData.ExternalTransaction = LRSExternalTransaction.Parse(json.Slice("ExternalTransaction"));
       }
+
+      if (json.Contains("SendTo")) {
+        extData.SendTo = SendTo.Parse(json.Slice("SendTo"));
+      }
+
       return extData;
     }
 
@@ -90,6 +96,12 @@ namespace Empiria.Land.Registration.Transactions {
     } = OnePoint.PaymentOrderData.Empty;
 
 
+    public SendTo SendTo {
+      get;
+      internal set;
+    } = SendTo.Empty;
+
+
     #endregion Properties
 
     #region Methods
@@ -111,6 +123,10 @@ namespace Empiria.Land.Registration.Transactions {
 
       if (!this.ExternalTransaction.IsEmptyInstance) {
         json.Add("ExternalTransaction", this.ExternalTransaction.ToJson());
+      }
+
+      if (!this.SendTo.IsEmptyInstance) {
+        json.Add("SendTo", this.SendTo.ToJson());
       }
 
       return json;
