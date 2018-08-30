@@ -117,7 +117,7 @@ namespace Empiria.Land.Registration.Transactions {
         case LRSTransactionStatus.Recording:
           list.Add(LRSTransactionStatus.OnSign);
 
-          list.Add(LRSTransactionStatus.Recording);
+          // list.Add(LRSTransactionStatus.Recording);
           list.Add(LRSTransactionStatus.Control);
 
           list.Add(LRSTransactionStatus.Juridic);
@@ -135,7 +135,7 @@ namespace Empiria.Land.Registration.Transactions {
         case LRSTransactionStatus.Elaboration:
           list.Add(LRSTransactionStatus.OnSign);
 
-          list.Add(LRSTransactionStatus.Elaboration);
+          // list.Add(LRSTransactionStatus.Elaboration);
           list.Add(LRSTransactionStatus.Control);
 
           list.Add(LRSTransactionStatus.Juridic);
@@ -145,22 +145,26 @@ namespace Empiria.Land.Registration.Transactions {
           break;
 
         case LRSTransactionStatus.Revision:
-          list.Add(LRSTransactionStatus.OnSign);
+          // list.Add(LRSTransactionStatus.OnSign);
 
-          AddRecordingOrElaborationStatus(list, type, docType);
+          // AddRecordingOrElaborationStatus(list, type, docType);
           list.Add(LRSTransactionStatus.Control);
           break;
 
         case LRSTransactionStatus.OnSign:
-          if (LRSWorkflowRules.IsDigitalizable(type, docType)) {
-            list.Add(LRSTransactionStatus.Digitalization);
-          } else {
+          //if (LRSWorkflowRules.IsDigitalizable(type, docType)) {
+          //  list.Add(LRSTransactionStatus.Digitalization);
+          //} else {
             list.Add(LRSTransactionStatus.ToDeliver);
-          }
+            list.Add(LRSTransactionStatus.ToReturn);
+
+          //}
           if (LRSWorkflowRules.IsArchivable(type, docType)) {
             list.Add(LRSTransactionStatus.Archived);
           }
-          list.Add(LRSTransactionStatus.ToReturn);
+
+          list.Add(LRSTransactionStatus.Recording);
+          list.Add(LRSTransactionStatus.Elaboration);
 
           break;
 
@@ -171,22 +175,29 @@ namespace Empiria.Land.Registration.Transactions {
           if (LRSWorkflowRules.IsArchivable(type, docType)) {
             list.Add(LRSTransactionStatus.Archived);
           }
+
+          list.Add(LRSTransactionStatus.Recording);
+          list.Add(LRSTransactionStatus.Elaboration);
+
           break;
 
         case LRSTransactionStatus.ToDeliver:
-          list.Add(LRSTransactionStatus.Delivered);
-          list.Add(LRSTransactionStatus.OnSign);
           list.Add(LRSTransactionStatus.Control);
+          AddRecordingOrElaborationStatus(list, type, docType);
+          list.Add(LRSTransactionStatus.Juridic);
+          list.Add(LRSTransactionStatus.OnSign);
 
           break;
 
         case LRSTransactionStatus.Archived:
-          list.Add(LRSTransactionStatus.Control);
+    //      list.Add(LRSTransactionStatus.Control);
           break;
 
         case LRSTransactionStatus.ToReturn:
-          list.Add(LRSTransactionStatus.Returned);
           list.Add(LRSTransactionStatus.Control);
+          AddRecordingOrElaborationStatus(list, type, docType);
+          list.Add(LRSTransactionStatus.Juridic);
+          list.Add(LRSTransactionStatus.OnSign);
 
           break;
       }
