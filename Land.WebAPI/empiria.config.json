@@ -42,6 +42,11 @@
       "type": "Land.WebApi",
       "key": "PendingNoteRequest.ProjectedActsArray",
       "value": "2203~2206~2207~2208~2209~2214~2335~2371~2787"
+    },
+    {
+      "type": "Land.WebApi",
+      "key": "Citys.NewTransactionsEnabled",
+      "value": false
     }
   ]
 }

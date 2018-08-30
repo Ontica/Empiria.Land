@@ -23,6 +23,8 @@ namespace Empiria.Land.WebApi.Citys {
   //[WebApiAuthorizationFilter(WebApiClaimType.ClientApp_Controller, "ThirdPartyTransactionController")]
   public class CitysController : WebApiController {
 
+    private readonly bool IsCitysNewTransactionsEnabled = ConfigurationData.Get<bool>("Citys.NewTransactionsEnabled", false);
+
     #region Public APIs
 
     [HttpGet, AllowAnonymous]
@@ -52,6 +54,8 @@ namespace Empiria.Land.WebApi.Citys {
     [Route("v1/transactions/request-certificate")]
     public SingleObjectModel RequestCertificate([FromBody] CertificateRequest certificateRequest) {
       try {
+        Assertion.Assert(IsCitysNewTransactionsEnabled, "Citys endpoints are not enabled.");
+
         var dryRun = base.Request.RequestUri.Query.Contains("dry-run");
 
         base.RequireBody(certificateRequest);
@@ -75,6 +79,8 @@ namespace Empiria.Land.WebApi.Citys {
     [Route("v1/transactions/request-pending-note-recording")]
     public SingleObjectModel RequestPendingNoteRecording([FromBody] PendingNoteRequest pendingNoteRequest) {
       try {
+        Assertion.Assert(IsCitysNewTransactionsEnabled, "Citys endpoints are not enabled.");
+
         var dryRun = base.Request.RequestUri.Query.Contains("dry-run");
 
         base.RequireBody(pendingNoteRequest);
@@ -94,21 +100,6 @@ namespace Empiria.Land.WebApi.Citys {
         throw base.CreateHttpException(e);
       }
     }
-
-    ///// <summary>Request a new transaction to issue an unregistered property UID (aka folio real).</summary>
-    //[HttpPost]
-    //[Route("v1/citys/request-property-uid")]
-    //public SingleObjectModel RequestRealPropertyUID([FromBody] RealPropertyUIDRequestDTO requestData) {
-    //  try {
-    //    base.RequireBody(requestData);
-
-    //    var transaction = RealPropertyUIDRequestDTO.CreateTransaction(requestData);
-
-    //    return this.BuildTransactionResponse(transaction);
-    //  } catch (Exception e) {
-    //    throw base.CreateHttpException(e);
-    //  }
-    //}
 
     #endregion Public APIs
 
