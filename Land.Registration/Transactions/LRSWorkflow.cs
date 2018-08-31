@@ -13,6 +13,7 @@ using System;
 using Empiria.Contacts;
 
 using Empiria.Land.Data;
+using Empiria.Land.Messaging;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -65,6 +66,17 @@ namespace Empiria.Land.Registration.Transactions {
       get;
       private set;
     } = LRSTransactionStatus.Payment;
+
+
+    public LRSTransactionStatus NextStatus {
+      get {
+        if (this._transaction.IsNew) {
+          return LRSTransactionStatus.Undefined;
+        } else {
+          return this.GetCurrentTask().NextStatus;
+        }
+      }
+    }
 
 
     public string CurrentStatusName {
@@ -211,6 +223,8 @@ namespace Empiria.Land.Registration.Transactions {
       currentTask.Save();
       _transaction.Save();
       this.ResetTasksList();
+
+      LandMessenger.Notify(_transaction, NotificationType.TransactionReentered);
     }
 
 
@@ -316,7 +330,8 @@ namespace Empiria.Land.Registration.Transactions {
         return;
       }
 
-      int graceDaysForImaging = ConfigurationData.GetInteger("GraceDaysForImaging");
+      // int graceDaysForImaging = ConfigurationData.GetInteger("GraceDaysForImaging");
+      int graceDaysForImaging = 90;
 
       DateTime lastDate = _transaction.Document.AuthorizationTime;
 
@@ -331,13 +346,14 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     private void AssertGraceDaysForReentry() {
-      int graceDaysForReentry = ConfigurationData.GetInteger("GraceDaysForReentry");
+      // int graceDaysForReentry = ConfigurationData.GetInteger("GraceDaysForReentry");
+      int graceDaysForReentry = 90;
 
       DateTime lastDate = _transaction.PresentationTime;
 
-      if (_transaction.LastReentryTime != ExecutionServer.DateMaxValue) {
-        lastDate = _transaction.LastReentryTime;
-      }
+      //if (_transaction.LastReentryTime != ExecutionServer.DateMaxValue) {
+      //  lastDate = _transaction.LastReentryTime;
+      //}
       if (!_transaction.Document.IsEmptyInstance) {
         lastDate = _transaction.Document.AuthorizationTime;
       }
@@ -385,6 +401,8 @@ namespace Empiria.Land.Registration.Transactions {
       _transaction.LastDeliveryTime = currentTask.EndProcessTime;
       this.CurrentStatus = closeStatus;
       _transaction.Save();
+
+      LandMessenger.Notify(_transaction, NotificationType.TransactionFinished);
     }
 
     private void ResetTasksList() {
