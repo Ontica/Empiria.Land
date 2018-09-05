@@ -267,6 +267,14 @@ namespace Empiria.Land.Registration.Transactions {
         throw new LandRegistrationException(LandRegistrationException.Msg.NextStatusCantBeEndPoint,
                                             currentTask.Id);
       }
+
+      string s = LRSWorkflowRules.ValidateStatusChange(_transaction, currentTask.NextStatus);
+
+      if (!String.IsNullOrWhiteSpace(s)) {
+        Assertion.AssertFail(s);
+        return;
+      }
+
       this.CurrentStatus = currentTask.NextStatus;
       currentTask.CreateNext(notes, responsible, date);
       ResetTasksList();

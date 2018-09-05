@@ -421,7 +421,11 @@ namespace Empiria.Land.Registration.Transactions {
         }
       }
 
-      if (nextStatus == LRSTransactionStatus.Delivered || nextStatus == LRSTransactionStatus.Returned) {
+      if (nextStatus == LRSTransactionStatus.ToReturn ||
+          nextStatus == LRSTransactionStatus.ToDeliver ||
+          nextStatus == LRSTransactionStatus.Delivered ||
+          nextStatus == LRSTransactionStatus.Returned ||
+          nextStatus == LRSTransactionStatus.Archived) {
         if (!transaction.Document.IsEmptyInstance &&
              transaction.Document.Security.UseESign && transaction.Document.Security.Unsigned()) {
           return "El documento registral de este trámite todavía no ha sido firmado.\n\n" +
