@@ -84,23 +84,29 @@ namespace Empiria.Land.UI {
                                                                       LRSTransactionStatus nextStatus) {
       if (currentStatus == LRSTransactionStatus.Archived) {
         return HtmlSelectContent.GetComboHtmlItem("Unarchive", "Desarchivarlo y ponerlo en la mesa de control");
+
       } else if (currentStatus == LRSTransactionStatus.Payment || currentStatus == LRSTransactionStatus.Returned ||
-                 currentStatus == LRSTransactionStatus.Delivered || currentStatus == LRSTransactionStatus.Deleted ||
-                 currentStatus == LRSTransactionStatus.ToDeliver || currentStatus == LRSTransactionStatus.ToReturn ||
-                 currentStatus == LRSTransactionStatus.Digitalization) {
-        return HtmlSelectContent.GetComboHtmlItem("Nothing", "No hay nada qué hacer con este trámite");
+                 currentStatus == LRSTransactionStatus.Delivered || currentStatus == LRSTransactionStatus.Deleted) {
+        return HtmlSelectContent.GetComboHtmlItem("Nothing", "No se puede hacer nada con este trámite");
+
       } else if (currentStatus == LRSTransactionStatus.Control && nextStatus == LRSTransactionStatus.EndPoint) {
         return GetTransactionNewStatusComboItems(typeId, docTypeId, currentStatus);
+
       } else if (currentStatus == LRSTransactionStatus.Control && nextStatus != LRSTransactionStatus.EndPoint) {
         return HtmlSelectContent.GetComboHtmlItem("ReturnToControlDesk", "Dejar pendiente el 'Siguiente estado'");
+
       } else if (currentStatus != LRSTransactionStatus.Control && nextStatus == LRSTransactionStatus.Control) {
         return HtmlSelectContent.GetComboHtmlItem("ReceiveInControlDesk", "Listo para recibirse en mesa de control");
+
       } else if (currentStatus != LRSTransactionStatus.Control && nextStatus != LRSTransactionStatus.Control) {
         return HtmlSelectContent.GetComboHtmlItem("PullToControlDesk", "Traerlo a la mesa de control");
+
       } else {
         return HtmlSelectContent.GetComboHtmlItem("Undefined", "Opción no definida. Informar a soporte.");
+
       }
     }
+
 
     static public string GetRecordingBookClassesComboItems(string headerItemText) {
       var list = RecordingActTypeCategory.GetList("RecordingBookClasses.List");
