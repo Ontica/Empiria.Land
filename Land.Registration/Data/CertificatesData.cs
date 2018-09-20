@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Data;
+using Empiria.Contacts;
 
 using Empiria.Land.Registration;
 using Empiria.Land.Certification;
@@ -34,6 +35,7 @@ namespace Empiria.Land.Data {
       }
     }
 
+
     static internal FixedList<Certificate> GetTransactionIssuedCertificates(LRSTransaction transaction) {
       if (transaction.IsEmptyInstance) {
         return new FixedList<Certificate>();
@@ -44,6 +46,37 @@ namespace Empiria.Land.Data {
       return DataReader.GetList(op, (x) => BaseObject.ParseList<Certificate>(x, true)).ToFixedList();
     }
 
+
+    static internal bool IsSigned(Certificate certificate) {
+      var sql = $"SELECT * FROM vwLRSDocumentSign WHERE DocumentNo = '{certificate.UID}' " +
+                $"AND SignStatus = 'S' AND DigitalSign <> ''";
+
+      var dataRow = DataReader.GetDataRow(DataOperation.Parse(sql));
+
+      return dataRow != null;
+    }
+
+
+    static internal string GetDigitalSignature(Certificate certificate) {
+      var sql = $"SELECT DigitalSign FROM vwLRSDocumentSign WHERE DocumentNo = '{certificate.UID}' " +
+                $"AND SignStatus = 'S' AND DigitalSign <> ''";
+
+      var sign = DataReader.GetScalar<string>(DataOperation.Parse(sql),
+                                              "NO TIENE FIRMA ELECTRÓNICA.");
+      return sign;
+    }
+
+
+    static internal Person GetDigitalSignatureSignedBy(Certificate certificate) {
+      var sql = $"SELECT RequestedToId FROM vwLRSDocumentSign WHERE DocumentNo = '{certificate.UID}' " +
+                $"AND SignStatus = 'S' AND DigitalSign <> ''";
+
+      var signedById = DataReader.GetScalar<int>(DataOperation.Parse(sql), -1);
+
+      return Person.Parse(signedById);
+    }
+
+
     static internal FixedList<Certificate> ResourceEmittedCertificates(Resource resource) {
       if (resource.IsEmptyInstance) {
         return new FixedList<Certificate>();
@@ -53,6 +86,7 @@ namespace Empiria.Land.Data {
 
       return DataReader.GetList(op, (x) => BaseObject.ParseList<Certificate>(x, true)).ToFixedList();
     }
+
 
     static internal void WriteCertificate(Certificate o) {
       var op = DataOperation.Parse("writeLRSCertificate",
@@ -65,23 +99,6 @@ namespace Empiria.Land.Data {
       DataWriter.Execute(op);
     }
 
-    internal static bool IsSigned(Certificate certificate) {
-      var sql = $"SELECT * FROM vwLRSDocumentSign WHERE DocumentNo = '{certificate.UID}' " +
-                $"AND SignStatus = 'S' AND DigitalSign <> ''";
-
-      var dataRow = DataReader.GetDataRow(DataOperation.Parse(sql));
-
-      return dataRow != null;
-    }
-
-    internal static string GetDigitalSignature(Certificate certificate) {
-      var sql = $"SELECT DigitalSign FROM vwLRSDocumentSign WHERE DocumentNo = '{certificate.UID}' " +
-                $"AND SignStatus = 'S' AND DigitalSign <> ''";
-
-      var sign = DataReader.GetScalar<string>(DataOperation.Parse(sql),
-                                              "NO TIENE FIRMA ELECTRÓNICA.");
-      return sign;
-    }
 
     #endregion Public methods
 

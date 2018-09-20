@@ -103,11 +103,13 @@ namespace Empiria.Land.Certification {
       }
     }
 
+
     [DataField("CertificateNotes")]
     public string UserNotes {
       get;
       private set;
     }
+
 
     [DataField("IssueTime", Default = "ExecutionServer.DateMaxValue")]
     public DateTime IssueTime {
@@ -115,17 +117,24 @@ namespace Empiria.Land.Certification {
       private set;
     }
 
+
     [DataField("IssuedById")]
     public Contact IssuedBy {
       get;
       private set;
     }
 
-    [DataField("SignedById")]
-    public Contact SignedBy {
-      get;
-      private set;
+
+    public Person SignedBy {
+      get {
+        if (this.UseESign) {
+          return CertificatesData.GetDigitalSignatureSignedBy(this);
+        } else {
+          return Person.Parse(36);
+        }
+      }
     }
+
 
     public bool IsSigned {
       get {
@@ -133,11 +142,13 @@ namespace Empiria.Land.Certification {
       }
     }
 
+
     [DataField("IssueMode", Default = CertificateIssueMode.Manual)]
     internal CertificateIssueMode IssueMode {
       get;
       private set;
     }
+
 
     [DataField("PostedById")]
     internal Contact PostedBy {
@@ -145,17 +156,20 @@ namespace Empiria.Land.Certification {
       private set;
     }
 
+
     [DataField("PostingTime", Default = "DateTime.Now")]
     internal DateTime PostingTime {
       get;
       private set;
     }
 
+
     [DataField("CertificateStatus", Default = CertificateStatus.Pending)]
     public CertificateStatus Status {
       get;
       private set;
     }
+
 
     public string StatusName {
       get {
@@ -174,6 +188,7 @@ namespace Empiria.Land.Certification {
       }
     }
 
+
     string IResourceTractItem.TractPrelationStamp {
       get {
         return this.Transaction.PresentationTime.ToString("yyyyMMddTHH:mm@") +
@@ -182,6 +197,7 @@ namespace Empiria.Land.Certification {
                this.Id.ToString("000000000000");
       }
     }
+
 
     public bool IsClosed {
       get {
@@ -199,6 +215,7 @@ namespace Empiria.Land.Certification {
       }
     }
 
+
     private IntegrityValidator _validator = null;
     IntegrityValidator IProtected.Integrity {
       get {
@@ -209,6 +226,7 @@ namespace Empiria.Land.Certification {
       }
     }
 
+
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
       if (version == 1) {
         return new object[] {
@@ -216,14 +234,15 @@ namespace Empiria.Land.Certification {
           "UID", this.UID, "TransactionId", this.Transaction.Id,
           "RecorderOffice", this.RecorderOffice.Id, "PropertyId", this.Property.Id,
           "OwnerName", this.OwnerName, "ExtensionData", this.ExtensionData.ToJson(),
-          "AsText", this.AsText, "IssueTime", this.IssueTime, "IssuedById", this.IssuedBy.Id,
-          "SignedBy", this.SignedBy.Id, "IssueMode", (char) this.IssueMode,
+          "AsText", this.AsText, "IssueTime", this.IssueTime,
+          "IssuedById", this.IssuedBy.Id, "IssueMode", (char) this.IssueMode,
           "PostedBy", this.PostedBy.Id, "PostingTime", this.PostingTime,
           "Status", (char) this.Status
         };
       }
       throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
     }
+
 
     public IntegrityValidator Integrity {
       get {
@@ -242,13 +261,17 @@ namespace Empiria.Land.Certification {
       return this.Status == CertificateStatus.Closed;
     }
 
+
     public bool CanDelete() {
       return this.Status == CertificateStatus.Pending;
     }
 
+
     public bool CanOpen() {
       return this.Status == CertificateStatus.Closed;
     }
+
+
     public void Cancel() {
       Assertion.Assert(this.Status == CertificateStatus.Closed,
                       "The certificate is not closed so it can't be canceled. Use delete instead.");
@@ -261,17 +284,18 @@ namespace Empiria.Land.Certification {
       this.Save();
     }
 
+
     public void Close() {
       Assertion.Assert(this.Status == CertificateStatus.Pending,
                       "This certificate can't be closed. It's not in pending status.");
 
       this.IssueTime = DateTime.Now;
       this.IssuedBy = EmpiriaUser.Current.AsContact();
-      this.SignedBy = Contact.Parse(36);
       this.Status = CertificateStatus.Closed;
 
       this.Save();
     }
+
 
     public void Delete() {
       Assertion.Assert(this.Status == CertificateStatus.Pending,
@@ -283,6 +307,7 @@ namespace Empiria.Land.Certification {
       this.Status = CertificateStatus.Deleted;
       this.Save();
     }
+
 
     public string GetDigitalString() {
       if (this.Status == CertificateStatus.Pending) {
@@ -316,6 +341,7 @@ namespace Empiria.Land.Certification {
       return EmpiriaString.DivideLongString(seal.ToString(), 72, "&#8203;");
     }
 
+
     public string GetDigitalSeal() {
       if (this.Status == CertificateStatus.Pending) {
         return "SIN VALOR LEGAL * * * * * SIN VALOR LEGAL";
@@ -332,6 +358,7 @@ namespace Empiria.Land.Certification {
       }
     }
 
+
     public bool UseESign {
       get {
         return this.IssueTime >= DateTime.Parse("2018-07-10");
@@ -347,6 +374,7 @@ namespace Empiria.Land.Certification {
     public bool Unsigned() {
       return !Signed();
     }
+
 
     public string GetDigitalSignature() {
       if (!UseESign) {
@@ -374,11 +402,11 @@ namespace Empiria.Land.Certification {
 
       this.IssueTime = ExecutionServer.DateMaxValue;
       this.IssuedBy = Contact.Empty;
-      this.SignedBy = Contact.Empty;
       this.Status = CertificateStatus.Pending;
 
       this.Save();
     }
+
 
     public string QRCodeSecurityHash() {
       if (!this.IsNew) {

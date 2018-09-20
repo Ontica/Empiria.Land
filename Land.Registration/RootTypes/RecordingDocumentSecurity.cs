@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Contacts;
 using Empiria.Security;
 
 using Empiria.Land.Registration.Transactions;
@@ -168,12 +169,21 @@ namespace Empiria.Land.Registration {
         return "Documento firmado de forma autógrafa.";
       }
       if (this.Unsigned()) {
-        return "NO TIENE FIRMA ELECTRONICA";
+        return "NO TIENE FIRMA ELECTRÓNICA";
       } else {
         return Data.DocumentsData.GetDigitalSignature(this.Document)
                                  .Substring(0, 64);
       }
 
+    }
+
+
+    public Person GetSignedBy() {
+      if (UseESign) {
+        return Data.DocumentsData.GetDigitalSignatureSignedBy(this.Document);
+      } else {
+        return Person.Parse(36);
+      }
     }
 
 

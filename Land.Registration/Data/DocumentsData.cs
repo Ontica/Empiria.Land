@@ -11,6 +11,7 @@ using System;
 using System.Data;
 
 using Empiria.Data;
+using Empiria.Contacts;
 
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
@@ -66,6 +67,16 @@ namespace Empiria.Land.Data {
 
       return DataReader.GetScalar<string>(DataOperation.Parse(sql),
                                           "NO TIENE FIRMA ELECTRÓNICA.");
+    }
+
+
+    static internal Person GetDigitalSignatureSignedBy(RecordingDocument document) {
+      var sql = $"SELECT RequestedToId FROM vwLRSDocumentSign WHERE DocumentNo = '{document.UID}' " +
+                $"AND SignStatus = 'S' AND DigitalSign <> ''";
+
+      var signedById = DataReader.GetScalar<int>(DataOperation.Parse(sql), -1);
+
+      return Person.Parse(signedById);
     }
 
 
