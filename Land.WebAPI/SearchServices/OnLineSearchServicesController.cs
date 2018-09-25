@@ -87,6 +87,7 @@ namespace Empiria.Land.WebApi {
       }
     }
 
+
     [HttpGet, AllowAnonymous]
     [Route("v1/online-services/documents/{documentUID}")]
     public SingleObjectModel GetDocument([FromUri] string documentUID,
@@ -133,6 +134,7 @@ namespace Empiria.Land.WebApi {
       }
     }
 
+
     [HttpGet, AllowAnonymous]
     [Route("v1/online-services/resources/{resourceUID}")]
     public SingleObjectModel GetResource([FromUri] string resourceUID,
@@ -175,6 +177,7 @@ namespace Empiria.Land.WebApi {
         throw base.CreateHttpException(e);
       }
     }
+
 
     [HttpGet, AllowAnonymous]
     [Route("v1/online-services/transactions/{transactionUID}")]
@@ -257,21 +260,20 @@ namespace Empiria.Land.WebApi {
       }
       propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(certificate.GetDigitalSeal()), "mono-space-text"));
 
-
       if (unsigned) {
-        propertyBag.Add(new PropertyBagItem("Firma electrónica",
+        propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada",
                         "MUY IMPORTANTE: El certificado NO ES VÁLIDO. NO HA SIDO FIRMADO ELECTRÓNICAMENTE.", "warning-status-text"));
       } else {
-        propertyBag.Add(new PropertyBagItem("Firma electrónica", certificate.GetDigitalSignature()));
+        propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada", certificate.GetDigitalSignature()));
+        propertyBag.Add(new PropertyBagItem("Firmado por", certificate.SignedBy.FullName, "bold-text"));
+        propertyBag.Add(new PropertyBagItem("Puesto", certificate.SignedBy.JobTitle));
       }
-
-
-      var transaction = certificate.Transaction;
 
       propertyBag.AddRange(TransactionSectionItems(certificate.Transaction));
 
       return propertyBag;
     }
+
 
     private List<PropertyBagItem> BuildResourceStatusResponse(Resource resource) {
       if (resource is RealEstate) {
@@ -285,13 +287,16 @@ namespace Empiria.Land.WebApi {
       }
     }
 
+
     private List<PropertyBagItem> BuildAssociationStatusResponse(Association resource) {
       throw new NotImplementedException();
     }
 
+
     private List<PropertyBagItem> BuildNoPropertyStatusResponse(NoPropertyResource resource) {
       throw new NotImplementedException();
     }
+
 
     private List<PropertyBagItem> BuildRealEstateStatusResponse(RealEstate property) {
       var propertyBag = new List<PropertyBagItem>(16);
@@ -318,6 +323,7 @@ namespace Empiria.Land.WebApi {
 
       return propertyBag;
     }
+
 
     private List<PropertyBagItem> BuildRecordingDocumentResponse(RecordingDocument document, string hash) {
       var propertyBag = new List<PropertyBagItem>(16);
@@ -361,18 +367,19 @@ namespace Empiria.Land.WebApi {
       }
       propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(document.Security.GetDigitalSeal()), "mono-space-text"));
       if (unsigned) {
-        propertyBag.Add(new PropertyBagItem("Firma electrónica",
+        propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada",
                         "MUY IMPORTANTE: El documento NO ES VÁLIDO. NO HA SIDO FIRMADO ELECTRÓNICAMENTE.", "warning-status-text"));
       } else {
-        propertyBag.Add(new PropertyBagItem("Firma electrónica", document.Security.GetDigitalSignature()));
+        propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada", document.Security.GetDigitalSignature()));
+        propertyBag.Add(new PropertyBagItem("Firmado por", document.Security.GetSignedBy().FullName, "bold-text"));
+        propertyBag.Add(new PropertyBagItem("Puesto", document.Security.GetSignedBy().JobTitle));
       }
 
-      var transaction = document.GetTransaction();
-
-      propertyBag.AddRange(TransactionSectionItems(transaction));
+      propertyBag.AddRange(TransactionSectionItems(document.GetTransaction()));
 
       return propertyBag;
     }
+
 
     private List<PropertyBagItem> BuildTransactionResponse(LRSTransaction transaction) {
       var propertyBag = new List<PropertyBagItem>(16);
@@ -480,30 +487,36 @@ namespace Empiria.Land.WebApi {
       return propertyBag;
     }
 
+
     private string GetDateTime(DateTime dateTime) {
       var temp = dateTime.ToString("dd/MMM/yyyy a la\\s HH:mm");
 
       return temp.Replace(".", String.Empty) + " hrs.";
     }
 
+
     private string GetDigitalText(string sign) {
       return EmpiriaString.DivideLongString(sign.Substring(0, 64), 34, "&#8203;");
     }
+
 
     private string GetCertificateUIDAsLink(string certificateUID) {
       return $"<a href='{SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?type=certificate&uid={certificateUID}'>" +
              $"{certificateUID}</a>";
     }
 
+
     private string GetDocumentUIDAsLink(string documentUID) {
       return $"<a href='{SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?type=document&uid={documentUID}'>" +
              $"{documentUID}</a>";
     }
 
+
     private string GetResourceLink(string resourceUID) {
       return $"<a href='{SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?type=resource&uid={resourceUID}'>" +
              $"Consultar este folio real</a>";
     }
+
 
     private string GetTransactionLink(string transactionUID) {
       return $"<a href='{SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?type=transaction&uid={transactionUID}'>" +
@@ -529,6 +542,7 @@ namespace Empiria.Land.WebApi {
       return source;
     }
 
+
     private string FixHtmlErrors(string source) {
       source = source.Replace("INSCRITO<strong>", "INSCRITO</strong>");
       source = source.Replace("<BR>", "<br/>");
@@ -539,9 +553,11 @@ namespace Empiria.Land.WebApi {
       return source;
     }
 
+
     private string FormatParameter(string parameter) {
       return EmpiriaString.TrimSpacesAndControl(parameter).ToUpperInvariant();
     }
+
 
     private string GetCertificateText(Certificate certificate) {
       if (certificate.UseESign) {
@@ -552,6 +568,7 @@ namespace Empiria.Land.WebApi {
         return FixHtmlErrors(certificateText);
       }
     }
+
 
     private IEnumerable<PropertyBagItem> TransactionSectionItems(LRSTransaction transaction) {
       if (transaction.IsEmptyInstance) {
@@ -635,7 +652,7 @@ namespace Empiria.Land.WebApi {
           RecordingAct recordingAct = (RecordingAct) tractItem;
 
           if (!recordingAct.Document.IsClosed ||
-                recordingAct.Document.AuthorizationTime == ExecutionServer.DateMinValue) {
+               recordingAct.Document.AuthorizationTime == ExecutionServer.DateMinValue) {
             continue;
           }
 
