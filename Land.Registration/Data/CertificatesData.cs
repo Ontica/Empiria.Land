@@ -93,8 +93,9 @@ namespace Empiria.Land.Data {
                           o.Id, o.CertificateType.Id, o.UID,
                           o.Transaction.Id, o.RecorderOffice.Id, o.Property.Id, o.OwnerName,
                           o.UserNotes, o.ExtensionData.ToJson(), o.AsText, o.Keywords,
-                          o.IssueTime, o.IssuedBy.Id, o.SignedBy.Id, (char) o.IssueMode,
-                          o.PostedBy.Id, o.PostingTime, (char) o.Status, o.Integrity.GetUpdatedHashCode());
+                          o.IssueTime, o.IssuedBy.Id, (char) o.IssueMode,
+                          o.PostedBy.Id, o.PostingTime, (char) o.Status,
+                          o.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(op);
     }
