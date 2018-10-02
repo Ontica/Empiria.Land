@@ -16,21 +16,59 @@ using Empiria.Land.Data;
 namespace Empiria.Land.Registration.Transactions {
 
   /// <summary>Provides methods to clean out of date transactions.</summary>
-  static public class TransactionCleaner {
+  public class TransactionCleaner {
+
+    #region Fields
+
+    static private readonly TransactionCleaner instance = new TransactionCleaner();  // singleton element
+
+    #endregion Fields
+
+    #region Constructors and parsers
+
+    private TransactionCleaner() {
+      // Singleton pattern needs private constructor
+    }
+
+    static public TransactionCleaner GetInstance() {
+      return instance;
+    }
+
+    #endregion Constructors and parsers
+
 
     #region Public methods
 
-    static public void Clean() {
+    public string UID {
+      get;
+    } = Guid.NewGuid().ToString();
 
-      // CleanWorkflowTransactions();
 
-      // CleanWorkflowTransactionsWithOpenDocument();
+    public bool IsRunning {
+      get;
+      private set;
+    } = false;
 
-      //CleanUndelivered();
+    public void Clean() {
+      if (IsRunning) {
+        return;
+      }
 
-      UpdateESignJobs();
+      try {
+        IsRunning = true;
+        // CleanWorkflowTransactions();
 
-      AutoUpdateWorkflowForESignedTransactions();
+        // CleanWorkflowTransactionsWithOpenDocument();
+
+        //CleanUndelivered();
+
+        UpdateESignJobs();
+
+        AutoUpdateWorkflowForESignedTransactions();
+
+      } finally {
+        IsRunning = false;
+      }
     }
 
 
