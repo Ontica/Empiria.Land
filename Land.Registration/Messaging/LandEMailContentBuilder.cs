@@ -30,58 +30,64 @@ namespace Empiria.Land.Messaging {
     #region Public methods
 
     internal EMailContent BuildForRegisterForResourceChanges(Resource resource) {
-      var content = new EMailContent($"El predio con folio real {resource.UID} ha sido registrado para su monitoreo",
-                                     "Este es el cuerpo del recurso monitoreado.");
+      var body = GetTemplate(NotificationType.RegisterForResourceChanges);
 
-      return content;
+      return new EMailContent($"El predio con folio real {resource.UID} " +
+                              $"ha sido registrado para su monitoreo", body);
     }
 
 
     internal EMailContent BuildForResourceChanged(Resource resource) {
-      var content = new EMailContent($"Se han registrado nuevos movimientos en el predio con folio real {resource.UID}",
-                                     "Este es el cuerpo del recurso con nuevo movimiento.");
+      var body = GetTemplate(NotificationType.ResourceWasChanged);
 
-      return content;
+      return new EMailContent($"Se han registrado nuevos movimientos " +
+                              $"en el predio con folio real {resource.UID}", body);
     }
 
 
     internal EMailContent BuildForTransactionDelayed(LRSTransaction transaction) {
-      var content = new EMailContent($"Su trámite {transaction.UID} tiene una nueva fecha de entrega",
-                                     "Este es el cuerpo del mensaje de trámite con nueva fecha de entrega.");
+      var body = GetTemplate(NotificationType.TransactionDelayed);
 
-      return content;
+      return new EMailContent($"Su trámite {transaction.UID} tiene una nueva fecha de entrega", body);
     }
 
 
-    internal EMailContent BuildForTransactionFinished(LRSTransaction transaction) {
-      var content = new EMailContent($"Su trámite de inscripción {transaction.UID} está listo",
-                                     "Este es el cuerpo del mensaje.");
+    internal EMailContent BuildForTransactionFinished(Message message) {
+      var transaction = GetTransaction(message);
 
-      return content;
+      var body = GetTemplate(NotificationType.TransactionFinished);
+
+      body = SetTransactionFields(body, transaction);
+      body = SetMessageFields(body, message);
+
+      return new EMailContent($"Su trámite {transaction.UID} está listo", body);
     }
 
 
     internal EMailContent BuildForTransactionReceived(LRSTransaction transaction) {
-      var content = new EMailContent($"Su trámite {transaction.UID} fue recibido para su procesamiento",
-                                     "Este es el cuerpo del mensaje de recibido.");
+      var body = GetTemplate(NotificationType.TransactionReceived);
 
-      return content;
+      return new EMailContent($"Su trámite {transaction.UID} fue recibido para su procesamiento", body);
     }
 
 
-    internal EMailContent BuildForTransactionReentered(LRSTransaction transaction) {
-      var content = new EMailContent($"Su trámite {transaction.UID} fue reingresado para corrección",
-                                     "Este es el cuerpo del mensaje reingresado.");
+    internal EMailContent BuildForTransactionReentered(Message message) {
+      var transaction = GetTransaction(message);
 
-      return content;
+      var body = GetTemplate(NotificationType.TransactionReentered);
+
+      body = SetTransactionFields(body, transaction);
+      body = SetMessageFields(body, message);
+
+      return new EMailContent($"Su trámite {transaction.UID} fue reingresado. " +
+                              $"Sus documentos impresos pueden estar sujetos a cambios.", body);
     }
 
 
     internal EMailContent BuildForTransactionReturned(LRSTransaction transaction) {
-      var content = new EMailContent($"Su trámite {transaction.UID} le ha sido devuelto",
-                                     "Este es el cuerpo del mensaje de devolución.");
+      var body = GetTemplate(NotificationType.TransactionReturned);
 
-      return content;
+      return new EMailContent($"Su trámite {transaction.UID} ha sido devuelto", body);
     }
 
 
@@ -90,9 +96,42 @@ namespace Empiria.Land.Messaging {
 
     #region Private methods
 
+    static private string GetTemplate(NotificationType notificationType) {
+      string templatesPath = ConfigurationData.GetString("Certificates.Templates.Path");
+
+      string fileName = System.IO.Path.Combine(templatesPath, $"template.email.{notificationType}.txt");
+
+      return System.IO.File.ReadAllText(fileName);
+    }
+
+
+    static private LRSTransaction GetTransaction(Message message) {
+      var transaction = LRSTransaction.TryParse(message.UnitOfWorkUID);
+
+      Assertion.AssertObject(transaction,
+                            $"Unrecognized transaction with UID {message.UnitOfWorkUID}.");
+
+      return transaction;
+    }
+
+
+    static private string SetMessageFields(string body, Message message) {
+      body = body.Replace("{{MESSAGE-UID}}", message.UID);
+
+      return body;
+    }
+
+
+    static private string SetTransactionFields(string body, LRSTransaction transaction) {
+      body = body.Replace("{{TRANSACTION-UID}}", transaction.UID);
+      body = body.Replace("{{TRANSACTION-HASH}}", transaction.QRCodeSecurityHash());
+      body = body.Replace("{{PRESENTATION-TIME}}", transaction.PresentationTime.ToString("dd/MMM/yyyy HH:mm"));
+      body = body.Replace("{{REQUESTED_BY}}", transaction.RequestedBy);
+
+      return body;
+    }
 
     #endregion Private methods
-
 
   }  // class LandEMailContentBuilder
 
