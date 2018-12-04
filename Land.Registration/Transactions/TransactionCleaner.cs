@@ -12,6 +12,7 @@ using System;
 using Empiria.Data;
 
 using Empiria.Land.Data;
+using Empiria.Land.Messaging;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -36,7 +37,6 @@ namespace Empiria.Land.Registration.Transactions {
 
     #endregion Constructors and parsers
 
-
     #region Public methods
 
     public string UID {
@@ -48,6 +48,7 @@ namespace Empiria.Land.Registration.Transactions {
       get;
       private set;
     } = false;
+
 
     public void Clean() {
       if (IsRunning) {
@@ -65,6 +66,8 @@ namespace Empiria.Land.Registration.Transactions {
         UpdateESignJobs();
 
         AutoUpdateWorkflowForESignedTransactions();
+
+        LandMessenger.Execute();
 
       } finally {
         IsRunning = false;

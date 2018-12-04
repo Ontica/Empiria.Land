@@ -48,7 +48,8 @@ namespace Empiria.Land.Messaging {
 
 
     /// <summary>Notifies the messenger about a workflow status change of a land transaction.</summary>
-    static internal void Notify(LRSTransaction transaction, NotificationType notificationType) {
+    static internal void Notify(LRSTransaction transaction,
+                                NotificationType notificationType) {
       Assertion.AssertObject(transaction, "transaction");
 
       SendTo sendTo = transaction.ExtensionData.SendTo;
@@ -101,7 +102,8 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    static private void Notify(SendTo sendTo, LRSTransaction transaction, NotificationType notificationType) {
+    static private void Notify(SendTo sendTo, LRSTransaction transaction,
+                               NotificationType notificationType) {
       var data = new JsonObject();
 
       data.Add("NotificationType", notificationType.ToString());
@@ -156,7 +158,7 @@ namespace Empiria.Land.Messaging {
           break;
 
         case NotificationType.TransactionFinished:
-          content = emailContentBuilder.BuildForTransactionFinished(GetTransaction(message));
+          content = emailContentBuilder.BuildForTransactionFinished(message);
           break;
 
         case NotificationType.TransactionReceived:
@@ -164,11 +166,15 @@ namespace Empiria.Land.Messaging {
           break;
 
         case NotificationType.TransactionReentered:
-          content = emailContentBuilder.BuildForTransactionReentered(GetTransaction(message));
+          content = emailContentBuilder.BuildForTransactionReentered(message);
           break;
 
         case NotificationType.TransactionReturned:
           content = emailContentBuilder.BuildForTransactionReturned(GetTransaction(message));
+          break;
+
+        case NotificationType.TransactionArchived:
+          content = emailContentBuilder.BuildForTransactionFinished(message);
           break;
 
         default:

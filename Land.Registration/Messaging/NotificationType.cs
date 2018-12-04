@@ -14,6 +14,10 @@ namespace Empiria.Land.Messaging {
   /// <summary>Describes a workflow status change of a land transaction.</summary>
   internal enum NotificationType {
 
+    RegisterForResourceChanges,
+
+    ResourceWasChanged,
+
     TransactionReceived,
 
     TransactionDelayed,
@@ -24,9 +28,7 @@ namespace Empiria.Land.Messaging {
 
     TransactionReentered,
 
-    RegisterForResourceChanges,
-
-    ResourceWasChanged,
+    TransactionArchived
 
   }  // enum NotificationType
 

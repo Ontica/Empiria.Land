@@ -240,6 +240,7 @@ namespace Empiria.Land.Registration.Transactions {
         }
         return;
       }
+
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
       currentTask.SetNextStatus(nextStatus, nextContact, notes, date);
@@ -250,8 +251,12 @@ namespace Empiria.Land.Registration.Transactions {
                 (nextStatus == LRSTransactionStatus.ToDeliver || nextStatus == LRSTransactionStatus.Archived)) {
         _transaction.Save();
       }
+      if (this.CurrentStatus == LRSTransactionStatus.ToDeliver) {
+        LandMessenger.Notify(_transaction, NotificationType.TransactionFinished);
+      } else if (this.CurrentStatus == LRSTransactionStatus.ToReturn) {
+        LandMessenger.Notify(_transaction, NotificationType.TransactionReturned);
+      }
     }
-
 
     public void Take(string notes) {
       var responsible = Contact.Parse(ExecutionServer.CurrentUserId);
@@ -410,7 +415,9 @@ namespace Empiria.Land.Registration.Transactions {
       this.CurrentStatus = closeStatus;
       _transaction.Save();
 
-      LandMessenger.Notify(_transaction, NotificationType.TransactionFinished);
+      if (closeStatus == LRSTransactionStatus.Archived) {
+        LandMessenger.Notify(_transaction, NotificationType.TransactionArchived);
+      }
     }
 
     private void ResetTasksList() {
