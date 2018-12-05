@@ -47,6 +47,11 @@
       "type": "Land.WebApi",
       "key": "Citys.NewTransactionsEnabled",
       "value": false
+    },
+    {
+      "type": "Land.WebApi",
+      "key": "PrintServicesServerBaseAddress",
+      "value": "http://empiria.land/intranet/land.registration.system"
     }
   ]
 }

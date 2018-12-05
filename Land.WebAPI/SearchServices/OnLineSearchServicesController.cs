@@ -27,6 +27,9 @@ namespace Empiria.Land.WebApi {
     private static readonly string SEARCH_SERVICES_SERVER_BASE_ADDRESS =
                                             ConfigurationData.Get<string>("SearchServicesServerBaseAddress");
 
+    private static readonly string PRINT_SERVICES_SERVER_BASE_ADDRESS =
+                                            ConfigurationData.Get<string>("PrintServicesServerBaseAddress");
+
     private readonly DateTime hashCodeValidationStartDate = DateTime.Parse("2016-11-24");
     private readonly DateTime certificateHashCodeValidationStartDate = DateTime.Parse("2020-01-01");
 
@@ -182,10 +185,12 @@ namespace Empiria.Land.WebApi {
     [HttpGet, AllowAnonymous]
     [Route("v1/online-services/transactions/{transactionUID}")]
     public SingleObjectModel GetTransaction([FromUri] string transactionUID,
-                                            [FromUri] string hash = "") {
+                                            [FromUri] string hash = "",
+                                            [FromUri] string msg = "") {
       try {
         transactionUID = FormatParameter(transactionUID);
         hash = FormatParameter(hash);
+        msg= FormatParameter(msg);
 
         var transaction = LRSTransaction.TryParse(transactionUID);
 
@@ -207,14 +212,14 @@ namespace Empiria.Land.WebApi {
           throw new ResourceNotFoundException("Land.Transaction.InvalidQRCode",
                                               "El código QR que está impreso en su documento y que acaba de escanear hace " +
                                               "referencia al trámite con número '{0}' que tenemos registrado en nuestros archivos " +
-                                              "pero el código de validación del QR no es correcto.\n\n" +
+                                              $"pero el código de validación del QR no es correcto [{hash}] != [{transaction.QRCodeSecurityHash()}].\n\n" +
                                               "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
                                               "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
                                               transactionUID);
 
         }
 
-        return new SingleObjectModel(this.Request, BuildTransactionResponse(transaction),
+        return new SingleObjectModel(this.Request, BuildTransactionResponse(transaction, msg),
                                     "Empiria.PropertyBag");
 
       } catch (Exception e) {
@@ -381,7 +386,7 @@ namespace Empiria.Land.WebApi {
     }
 
 
-    private List<PropertyBagItem> BuildTransactionResponse(LRSTransaction transaction) {
+    private List<PropertyBagItem> BuildTransactionResponse(LRSTransaction transaction, string msg) {
       var propertyBag = new List<PropertyBagItem>(16);
 
       propertyBag.Add(new PropertyBagItem("Información del trámite", String.Empty, "section"));
@@ -429,12 +434,12 @@ namespace Empiria.Land.WebApi {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
                                             transaction.Workflow.CurrentStatusName, "ok-status-text"));
         propertyBag.Add(new PropertyBagItem("Fecha de entrega",
-                                            "Por su naturaleza, este trámite se procesa pero no se entrega al interesado."));
+                                            "Por su naturaleza, este trámite se procesa pero no se entrega al interesado en ventanilla."));
 
       } else if (transaction.Workflow.IsArchivable) {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
                                             transaction.Workflow.CurrentStatusName, "in-process-status-text"));
-        propertyBag.Add(new PropertyBagItem("Fecha de entrega", "Este trámite se procesa pero no se entrega al interesado."));
+        propertyBag.Add(new PropertyBagItem("Fecha de entrega", "Este trámite se procesa pero no se entrega al interesado en ventanilla."));
 
       } else if (transaction.Workflow.IsReadyForDelivery) {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
@@ -476,12 +481,14 @@ namespace Empiria.Land.WebApi {
 
       if (!transaction.Document.IsEmptyInstance) {
         propertyBag.Add(new PropertyBagItem("Documento inscrito", transaction.Document.DocumentType.DisplayName + "<br/>" +
-                                                                  GetDocumentUIDAsLink(transaction.Document.UID)));
+                                                                  GetDocumentUIDAsLink(transaction.Document.UID) +
+                                                                  GetPrintableDocumentLink(transaction.Document.UID, transaction.Workflow.CurrentStatus, msg)));
       }
 
       foreach (var certificate in transaction.GetIssuedCertificates()) {
         propertyBag.Add(new PropertyBagItem("Certificado", certificate.CertificateType.DisplayName + "<br/>" +
-                                                           GetCertificateUIDAsLink(certificate.UID)));
+                                                           GetCertificateUIDAsLink(certificate.UID) +
+                                                           GetPrintableCertificateLink(certificate.UID, transaction.Workflow.CurrentStatus, msg)));
       }
 
       return propertyBag;
@@ -509,6 +516,30 @@ namespace Empiria.Land.WebApi {
     private string GetDocumentUIDAsLink(string documentUID) {
       return $"<a href='{SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?type=document&uid={documentUID}'>" +
              $"{documentUID}</a>";
+    }
+
+
+    private string GetPrintableDocumentLink(string documentUID, LRSTransactionStatus status, string msg) {
+      if (String.IsNullOrWhiteSpace(msg)) {
+        return String.Empty;
+      }
+      if (status == LRSTransactionStatus.Archived || status == LRSTransactionStatus.Delivered) {
+        return $" &nbsp; <a target='_blank' href='{PRINT_SERVICES_SERVER_BASE_ADDRESS}/recording.seal.aspx?uid={documentUID}&msg={msg}'>" +
+               $"Imprimir</a>";
+      }
+      return String.Empty;
+    }
+
+
+    private string GetPrintableCertificateLink(string certificateUID, LRSTransactionStatus status, string msg) {
+      if (String.IsNullOrWhiteSpace(msg)) {
+        return String.Empty;
+      }
+      if (status == LRSTransactionStatus.Archived || status == LRSTransactionStatus.Delivered) {
+        return $" &nbsp; <a target='_blank' href='{PRINT_SERVICES_SERVER_BASE_ADDRESS}/certificate.aspx?uid={certificateUID}&msg={msg}'>" +
+               $"Imprimir</a>";
+      }
+      return String.Empty;
     }
 
 
@@ -555,7 +586,7 @@ namespace Empiria.Land.WebApi {
 
 
     private string FormatParameter(string parameter) {
-      return EmpiriaString.TrimSpacesAndControl(parameter).ToUpperInvariant();
+      return EmpiriaString.TrimSpacesAndControl(parameter);
     }
 
 
@@ -619,7 +650,7 @@ namespace Empiria.Land.WebApi {
         items.Add(new PropertyBagItem("Estado del trámite",
                                       transaction.Workflow.CurrentStatusName, "ok-status-text"));
         items.Add(new PropertyBagItem("Fecha de entrega",
-                                      "Por su naturaleza, este trámite se procesa pero no se entrega al interesado."));
+                                      "Por su naturaleza, este trámite se procesa pero no se entrega al interesado en ventanilla."));
 
       } else {
         var msg = $"Este trámite aún no ha sido marcado como entregado al interesado.<br/><br/>" +
