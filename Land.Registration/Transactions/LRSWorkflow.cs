@@ -98,7 +98,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public bool IsReadyForDelivery {
+    public bool IsReadyForDeliveryOrReturn {
       get {
         return (this.CurrentStatus == LRSTransactionStatus.ToDeliver ||
                 this.CurrentStatus == LRSTransactionStatus.ToReturn);
@@ -106,7 +106,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public bool Delivered {
+    public bool DeliveredOrReturned {
       get {
         return (this.CurrentStatus == LRSTransactionStatus.Delivered ||
                 this.CurrentStatus == LRSTransactionStatus.Returned);
@@ -156,6 +156,9 @@ namespace Empiria.Land.Registration.Transactions {
 
       _transaction.Save();
       this.ResetTasksList();
+
+      LandMessenger.Notify(_transaction, NotificationType.TransactionReceived);
+
       //  }
     }
 
@@ -231,7 +234,8 @@ namespace Empiria.Land.Registration.Transactions {
     public void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact,
                               string notes, DateTime? date = null) {
 
-      if (nextStatus == LRSTransactionStatus.Returned || nextStatus == LRSTransactionStatus.Delivered ||
+      if (nextStatus == LRSTransactionStatus.Returned ||
+          nextStatus == LRSTransactionStatus.Delivered ||
           nextStatus == LRSTransactionStatus.Archived) {
         if (date.HasValue) {
           this.Close(nextStatus, notes, nextContact, date.Value);
@@ -250,11 +254,6 @@ namespace Empiria.Land.Registration.Transactions {
       } else if (this.CurrentStatus == LRSTransactionStatus.OnSign &&
                 (nextStatus == LRSTransactionStatus.ToDeliver || nextStatus == LRSTransactionStatus.Archived)) {
         _transaction.Save();
-      }
-      if (this.CurrentStatus == LRSTransactionStatus.ToDeliver) {
-        LandMessenger.Notify(_transaction, NotificationType.TransactionFinished);
-      } else if (this.CurrentStatus == LRSTransactionStatus.ToReturn) {
-        LandMessenger.Notify(_transaction, NotificationType.TransactionReturned);
       }
     }
 
@@ -285,10 +284,19 @@ namespace Empiria.Land.Registration.Transactions {
       ResetTasksList();
 
       if (this.CurrentStatus == LRSTransactionStatus.ToDeliver ||
-          this.CurrentStatus == LRSTransactionStatus.ToReturn || this.CurrentStatus == LRSTransactionStatus.Archived) {
+          this.CurrentStatus == LRSTransactionStatus.ToReturn ||
+          this.CurrentStatus == LRSTransactionStatus.Archived) {
         _transaction.ClosingTime = currentTask.EndProcessTime;
       }
       _transaction.Save();
+
+      EmpiriaLog.Debug("Take->Notify " + this._transaction.UID + " CURRENT STATUS == " + this.CurrentStatus);
+
+      if (this.CurrentStatus == LRSTransactionStatus.ToDeliver) {
+        LandMessenger.Notify(_transaction, NotificationType.TransactionFinished);
+      } else if (this.CurrentStatus == LRSTransactionStatus.ToReturn) {
+        LandMessenger.Notify(_transaction, NotificationType.TransactionReturned);
+      }
     }
 
 
