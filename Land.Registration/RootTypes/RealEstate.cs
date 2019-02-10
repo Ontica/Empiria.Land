@@ -37,8 +37,8 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<RealEstate>(id);
     }
 
-    static public new RealEstate TryParseWithUID(string propertyUID) {
-      var resource = Resource.TryParseWithUID(propertyUID);
+    static public new RealEstate TryParseWithUID(string propertyUID, bool reload = false) {
+      var resource = Resource.TryParseWithUID(propertyUID, reload);
 
       if (resource == null) {
         return null;

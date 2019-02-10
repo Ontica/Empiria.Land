@@ -35,8 +35,8 @@ namespace Empiria.Land.Certification {
       return BaseObject.ParseId<Certificate>(id, true);
     }
 
-    static public Certificate TryParse(string certificateUID) {
-      return BaseObject.TryParse<Certificate>("CertificateUID = '" + certificateUID + "'", true);
+    static public Certificate TryParse(string certificateUID, bool reload = false) {
+      return BaseObject.TryParse<Certificate>("CertificateUID = '" + certificateUID + "'", reload);
     }
 
     #endregion Constructors and parsers

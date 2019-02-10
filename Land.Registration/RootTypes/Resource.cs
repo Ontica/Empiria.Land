@@ -31,11 +31,11 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<Resource>(id);
     }
 
-    static public Resource TryParseWithUID(string propertyUID) {
+    static public Resource TryParseWithUID(string propertyUID, bool reload = false) {
       DataRow row = ResourceData.GetResourceWithUID(propertyUID);
 
       if (row != null) {
-        return BaseObject.ParseDataRow<Resource>(row);
+        return BaseObject.ParseDataRow<Resource>(row, reload);
       } else {
         return null;
       }

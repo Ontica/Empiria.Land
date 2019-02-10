@@ -43,7 +43,7 @@ namespace Empiria.Land.WebApi {
         certificateUID = FormatParameter(certificateUID);
         hash = FormatParameter(hash);
 
-        var certificate = Certificate.TryParse(certificateUID);
+        var certificate = Certificate.TryParse(certificateUID, true);
 
         if (certificate == null && hash.Length == 0) {
           throw new ResourceNotFoundException("Land.Certificate.NotFound",
@@ -99,7 +99,7 @@ namespace Empiria.Land.WebApi {
         documentUID = FormatParameter(documentUID);
         hash = FormatParameter(hash);
 
-        var document = RecordingDocument.TryParse(documentUID);
+        var document = RecordingDocument.TryParse(documentUID, true);
 
         if (document == null && hash.Length == 0) {
           throw new ResourceNotFoundException("Land.RecordingDocument.NotFound",
@@ -146,7 +146,7 @@ namespace Empiria.Land.WebApi {
         resourceUID = FormatParameter(resourceUID);
         hash = FormatParameter(hash);
 
-        var resource = Resource.TryParseWithUID(resourceUID);
+        var resource = Resource.TryParseWithUID(resourceUID, true);
 
         if (resource == null && hash.Length == 0) {
           throw new ResourceNotFoundException("Land.Resource.NotFound",
@@ -192,7 +192,7 @@ namespace Empiria.Land.WebApi {
         hash = FormatParameter(hash);
         msg= FormatParameter(msg);
 
-        var transaction = LRSTransaction.TryParse(transactionUID);
+        var transaction = LRSTransaction.TryParse(transactionUID, true);
 
         if (transaction == null && hash.Length == 0) {
           throw new ResourceNotFoundException("Land.Transaction.NotFound",
@@ -426,10 +426,17 @@ namespace Empiria.Land.WebApi {
 
       if (transaction.PresentationTime == ExecutionServer.DateMaxValue) {
         // no-op
-      } else if (transaction.Workflow.Delivered) {
+      } else if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Delivered) {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
                                             transaction.Workflow.CurrentStatusName, "ok-status-text"));
         propertyBag.Add(new PropertyBagItem("Fecha de entrega", GetDateTime(transaction.LastDeliveryTime)));
+
+      } else if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Returned) {
+        propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                             transaction.Workflow.CurrentStatusName, "warning-status-text"));
+        propertyBag.Add(new PropertyBagItem("Fecha de devolución",
+                                            GetDateTime(transaction.LastDeliveryTime), "warning-status-text"));
+
       } else if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Archived) {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
                                             transaction.Workflow.CurrentStatusName, "ok-status-text"));
@@ -441,12 +448,20 @@ namespace Empiria.Land.WebApi {
                                             transaction.Workflow.CurrentStatusName, "in-process-status-text"));
         propertyBag.Add(new PropertyBagItem("Fecha de entrega", "Este trámite se procesa pero no se entrega al interesado en ventanilla."));
 
-      } else if (transaction.Workflow.IsReadyForDelivery) {
+      } else if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.ToDeliver) {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
                                             transaction.Workflow.CurrentStatusName, "ok-status-text"));
         propertyBag.Add(new PropertyBagItem("Fecha de entrega",
                                             "<b>¡Su trámite está listo!</b><br />" +
                                             "Ya puede pasar a recoger sus documentos.", "ok-status-text"));
+
+      } else if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.ToReturn) {
+        propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                            transaction.Workflow.CurrentStatusName, "warning-status-text"));
+        propertyBag.Add(new PropertyBagItem("Fecha de entrega",
+                                            "Desafortunadamente el trámite no procedió.<br />" +
+                                            "Requiere pasar a recoger su oficio de devolución.", "warning-status-text"));
+
 
       } else {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
@@ -471,7 +486,8 @@ namespace Empiria.Land.WebApi {
         }
       }
 
-      if ((!transaction.Workflow.Delivered && transaction.Workflow.CurrentStatus != LRSTransactionStatus.Archived) &&
+      if ((transaction.Workflow.CurrentStatus != LRSTransactionStatus.Delivered &&
+           transaction.Workflow.CurrentStatus != LRSTransactionStatus.Archived) ||
           (transaction.Document.IsEmptyInstance && transaction.GetIssuedCertificates().Count == 0)) {
         return propertyBag;
       }
@@ -608,7 +624,7 @@ namespace Empiria.Land.WebApi {
 
       var items = new List<PropertyBagItem>(8);
 
-      bool transactionHasErrors = (!transaction.Workflow.Delivered &&
+      bool transactionHasErrors = (!transaction.Workflow.DeliveredOrReturned &&
                                     transaction.Workflow.CurrentStatus != LRSTransactionStatus.Archived) ||
                                   (transaction.Payments.Count == 0 &&
                                   transaction.Items.TotalFee.Total > 0 && !transaction.IsFeeWaiverApplicable);
@@ -643,7 +659,7 @@ namespace Empiria.Land.WebApi {
         items.Add(new PropertyBagItem("Pago de derechos", "Este trámite no pagó derechos.", "warning-status-text"));
       }
 
-      if (transaction.Workflow.Delivered) {
+      if (transaction.Workflow.DeliveredOrReturned) {
         items.Add(new PropertyBagItem("Estado del trámite", transaction.Workflow.CurrentStatusName, "ok-status-text"));
 
       } else if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Archived) {

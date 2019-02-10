@@ -48,8 +48,8 @@ namespace Empiria.Land.Registration.Transactions {
       return BaseObject.ParseId<LRSTransaction>(id);
     }
 
-    static public LRSTransaction TryParse(string transactionUID) {
-      return BaseObject.TryParse<LRSTransaction>("TransactionUID = '" + transactionUID + "'");
+    static public LRSTransaction TryParse(string transactionUID, bool reload = false) {
+      return BaseObject.TryParse<LRSTransaction>("TransactionUID = '" + transactionUID + "'", reload);
     }
 
     static public LRSTransaction Empty {
