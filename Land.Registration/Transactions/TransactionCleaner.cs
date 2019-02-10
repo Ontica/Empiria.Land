@@ -63,7 +63,7 @@ namespace Empiria.Land.Registration.Transactions {
 
         //CleanUndelivered();
 
-        UpdateESignJobs();
+        SendTransactionsToESignSystem();
 
         AutoUpdateWorkflowForESignedTransactions();
 
@@ -117,7 +117,7 @@ namespace Empiria.Land.Registration.Transactions {
           transaction.Workflow.SetNextStatus(LRSTransactionStatus.ToDeliver, currentTask.Responsible, String.Empty, date);
           transaction.Workflow.Take(String.Empty, deliveryDesk, date);
 
-        } else if (hasDocument && isDigitalizable) {
+        } else if (hasDocument && isDigitalizable && currentTask.Status == WorkflowTaskStatus.Pending) {
           transaction.Workflow.SetNextStatus(LRSTransactionStatus.ToDeliver, currentTask.Responsible, String.Empty, date);
 
         }
@@ -280,7 +280,7 @@ namespace Empiria.Land.Registration.Transactions {
       return DataReader.GetFixedList<LRSTransaction>(operation);
     }
 
-    static private void UpdateESignJobs() {
+    static private void SendTransactionsToESignSystem() {
       var op = DataOperation.Parse("doLRSUpdateESignJobs");
 
       DataWriter.Execute(op);
