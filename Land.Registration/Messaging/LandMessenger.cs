@@ -8,13 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
 using Empiria.Json;
-using Empiria.Messaging;
-using Empiria.StateEnums;
-
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
+using Empiria.Messaging;
+using Empiria.StateEnums;
 
 namespace Empiria.Land.Messaging {
 
@@ -39,7 +37,7 @@ namespace Empiria.Land.Messaging {
 
       foreach (var message in messages) {
         if (message.IsReadyToProcess()) {
-          ProcessMessage(message);
+          ProcessQueuedMessage(message);
         }
       }
 
@@ -52,17 +50,9 @@ namespace Empiria.Land.Messaging {
                                 NotificationType notificationType) {
       Assertion.AssertObject(transaction, "transaction");
 
-      SendTo sendTo = transaction.ExtensionData.SendTo;
-
-      if (!sendTo.IsEmptyInstance) {
-        Notify(sendTo, transaction, notificationType);
-      }
-
-      sendTo = transaction.Agency.ExtendedData.Get<SendTo>("land.sendCompletedFilingsTo", SendTo.Empty);
-
-      if (!sendTo.IsEmptyInstance) {
-        Notify(sendTo, transaction, notificationType);
-      }
+      NotifyInterested(transaction, notificationType);
+      NotifyAgency(transaction, notificationType);
+      NotifyRegistered(transaction, notificationType);
     }
 
 
@@ -81,6 +71,19 @@ namespace Empiria.Land.Messaging {
 
 
     #region Private methods
+
+    static private void EnqueueNotification(SendTo sendTo, LRSTransaction transaction,
+                                            NotificationType notificationType) {
+      var data = new JsonObject();
+
+      data.Add("NotificationType", notificationType.ToString());
+      data.Add("SendTo", sendTo.ToJson());
+
+      var newMessage = new Message(data);
+
+      MESSAGE_QUEUE.AddMessage(newMessage, transaction.UID);
+    }
+
 
     static private Resource GetResource(Message message) {
       var resource = Resource.TryParseWithUID(message.UnitOfWorkUID);
@@ -102,20 +105,38 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    static private void Notify(SendTo sendTo, LRSTransaction transaction,
-                               NotificationType notificationType) {
-      var data = new JsonObject();
+    static private void NotifyAgency(LRSTransaction transaction, NotificationType notificationType) {
+      if (notificationType == NotificationType.RegisterForResourceChanges ||
+          notificationType == NotificationType.ResourceWasChanged ||
+          notificationType == NotificationType.TransactionReceived) {
+        return;
+      }
 
-      data.Add("NotificationType", notificationType.ToString());
-      data.Add("SendTo", sendTo.ToJson());
+      SendTo sendTo = transaction.Agency.ExtendedData.Get<SendTo>("land.sendCompletedFilingsTo", SendTo.Empty);
 
-      var newMessage = new Message(data);
-
-      MESSAGE_QUEUE.AddMessage(newMessage, transaction.UID);
+      if (!sendTo.IsEmptyInstance) {
+        EnqueueNotification(sendTo, transaction, notificationType);
+      }
     }
 
 
-    static private void ProcessMessage(Message message) {
+    static private void NotifyInterested(LRSTransaction transaction, NotificationType notificationType) {
+      SendTo sendTo = transaction.ExtensionData.SendTo;
+
+      if (!sendTo.IsEmptyInstance) {
+        EnqueueNotification(sendTo, transaction, notificationType);
+      }
+    }
+
+
+    static private void NotifyRegistered(LRSTransaction transaction, NotificationType notificationType) {
+      if (notificationType != NotificationType.ResourceWasChanged) {
+        return;
+      }
+    }
+
+
+    static private void ProcessQueuedMessage(Message message) {
       var json = new JsonObject();
 
       try {
@@ -162,7 +183,7 @@ namespace Empiria.Land.Messaging {
           break;
 
         case NotificationType.TransactionReceived:
-          content = emailContentBuilder.BuildForTransactionReceived(GetTransaction(message));
+          content = emailContentBuilder.BuildForTransactionReceived(message);
           break;
 
         case NotificationType.TransactionReentered:
@@ -170,7 +191,7 @@ namespace Empiria.Land.Messaging {
           break;
 
         case NotificationType.TransactionReturned:
-          content = emailContentBuilder.BuildForTransactionReturned(GetTransaction(message));
+          content = emailContentBuilder.BuildForTransactionReturned(message);
           break;
 
         case NotificationType.TransactionArchived:
@@ -186,6 +207,7 @@ namespace Empiria.Land.Messaging {
 
       EMail.Send(sendTo, content);
     }
+
 
     #endregion Private methods
 

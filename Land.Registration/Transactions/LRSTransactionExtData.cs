@@ -98,7 +98,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public SendTo SendTo {
       get;
-      internal set;
+      set;
     } = SendTo.Empty;
 
 

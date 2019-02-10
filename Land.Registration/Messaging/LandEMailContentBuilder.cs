@@ -64,10 +64,15 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    internal EMailContent BuildForTransactionReceived(LRSTransaction transaction) {
+    internal EMailContent BuildForTransactionReceived(Message message) {
+      var transaction = GetTransaction(message);
+
       var body = GetTemplate(NotificationType.TransactionReceived);
 
-      return new EMailContent($"Su trámite {transaction.UID} fue recibido para su procesamiento", body);
+      body = SetTransactionFields(body, transaction);
+      body = SetMessageFields(body, message);
+
+      return new EMailContent($"Su trámite {transaction.UID} fue ingresado", body);
     }
 
 
@@ -84,8 +89,13 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    internal EMailContent BuildForTransactionReturned(LRSTransaction transaction) {
+    internal EMailContent BuildForTransactionReturned(Message message) {
+      var transaction = GetTransaction(message);
+
       var body = GetTemplate(NotificationType.TransactionReturned);
+
+      body = SetTransactionFields(body, transaction);
+      body = SetMessageFields(body, message);
 
       return new EMailContent($"Su trámite {transaction.UID} ha sido devuelto", body);
     }
@@ -125,7 +135,8 @@ namespace Empiria.Land.Messaging {
     static private string SetTransactionFields(string body, LRSTransaction transaction) {
       body = body.Replace("{{TRANSACTION-UID}}", transaction.UID);
       body = body.Replace("{{TRANSACTION-HASH}}", transaction.QRCodeSecurityHash());
-      body = body.Replace("{{PRESENTATION-TIME}}", transaction.PresentationTime.ToString("dd/MMM/yyyy HH:mm"));
+      body = body.Replace("{{PRESENTATION-TIME}}", transaction.PresentationTime.ToString("dd/MMM/yyyy") +
+                                                   " a las " + transaction.PresentationTime.ToShortTimeString());
       body = body.Replace("{{REQUESTED_BY}}", transaction.RequestedBy);
 
       return body;
