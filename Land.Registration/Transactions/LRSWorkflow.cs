@@ -129,6 +129,32 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Public methods
 
+    public void DeliverElectronically(string messageUID) {
+      if (!IsReadyForElectronicDelivery(messageUID)) {
+        throw new LandRegistrationException(LandRegistrationException.Msg.NotReadyForElectronicalDelivery,
+                                            _transaction.UID);
+      }
+      this.Close(LRSTransactionStatus.Delivered,
+                 "Entregado al interesado a través del portal de consultas.",
+                 LRSWorkflowRules.InterestedContact, DateTime.Now);
+    }
+
+
+    public bool IsReadyForElectronicDelivery(string messageUID) {
+      if (String.IsNullOrWhiteSpace(messageUID)) {
+        return false;
+      }
+      if (!this.IsReadyForDeliveryOrReturn) {
+        return false;
+      }
+      if (LRSWorkflowRules.IsDigitalizable(_transaction.TransactionType,
+                                            _transaction.DocumentType)) {
+        return false;
+      }
+      return true;
+    }
+
+
     public void Receive(string notes) {
       if (this.CurrentStatus != LRSTransactionStatus.Payment) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,

@@ -186,40 +186,39 @@ namespace Empiria.Land.WebApi {
     [Route("v1/online-services/transactions/{transactionUID}")]
     public SingleObjectModel GetTransaction([FromUri] string transactionUID,
                                             [FromUri] string hash = "",
-                                            [FromUri] string msg = "") {
+                                            [FromUri] string messageUID = "") {
       try {
-        transactionUID = FormatParameter(transactionUID);
-        hash = FormatParameter(hash);
-        msg= FormatParameter(msg);
+        LRSTransaction transaction = EnsureValidTransactionRequest(transactionUID, hash, messageUID);
 
-        var transaction = LRSTransaction.TryParse(transactionUID, true);
+        return new SingleObjectModel(this.Request, BuildTransactionResponse(transaction, messageUID),
+                                    "Empiria.PropertyBag");
 
-        if (transaction == null && hash.Length == 0) {
-          throw new ResourceNotFoundException("Land.Transaction.NotFound",
-                                              "No tenemos registrado ningún trámite con número '{0}'.\n" +
-                                              "Favor de revisar la información proporcionada.",
-                                              transactionUID);
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
 
-        } else if (transaction == null && hash.Length != 0) {
-          throw new ResourceNotFoundException("Land.Transaction.InvalidQRCode",
-                                              "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                              "referencia a un trámite con número '{0}' que NO está registrado en nuestros archivos.\n\n" +
-                                              "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
-                                              "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                              transactionUID);
 
-        } else if (transaction != null && hash.Length != 0 && hash != transaction.QRCodeSecurityHash()) {
-          throw new ResourceNotFoundException("Land.Transaction.InvalidQRCode",
-                                              "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                              "referencia al trámite con número '{0}' que tenemos registrado en nuestros archivos " +
-                                              $"pero el código de validación del QR no es correcto [{hash}] != [{transaction.QRCodeSecurityHash()}].\n\n" +
-                                              "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
-                                              "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                              transactionUID);
+    [HttpPost, AllowAnonymous]
+    [Route("v1/online-services/transactions/{transactionUID}/electronic-delivery")]
+    public SingleObjectModel ElectronicDelivery([FromUri] string transactionUID,
+                                                [FromUri] string hash = "",
+                                                [FromUri] string messageUID = "") {
+      try {
+        LRSTransaction transaction = EnsureValidTransactionRequest(transactionUID, hash, messageUID);
+
+        if (!transaction.Workflow.IsReadyForElectronicDelivery(messageUID)) {
+          throw new ResourceNotFoundException("Land.Transaction.NotyReadyForElectronicalDelivery",
+                                              "El trámite {0} NO está disponible para entrega electrónica.\n\n" +
+                                              "Posiblemente su estado cambió después de que usted recibió el mensaje.\n" +
+                                              "Si este es el caso, en breve recibirá un nuevo mensaje sobre la situación del mismo.",
+                                              transaction.UID);
 
         }
+        
+        transaction.Workflow.DeliverElectronically(messageUID);
 
-        return new SingleObjectModel(this.Request, BuildTransactionResponse(transaction, msg),
+        return new SingleObjectModel(this.Request, BuildTransactionResponse(transaction, messageUID),
                                     "Empiria.PropertyBag");
 
       } catch (Exception e) {
@@ -386,7 +385,7 @@ namespace Empiria.Land.WebApi {
     }
 
 
-    private List<PropertyBagItem> BuildTransactionResponse(LRSTransaction transaction, string msg) {
+    private List<PropertyBagItem> BuildTransactionResponse(LRSTransaction transaction, string messageUID) {
       var propertyBag = new List<PropertyBagItem>(16);
 
       propertyBag.Add(new PropertyBagItem("Información del trámite", String.Empty, "section"));
@@ -449,11 +448,21 @@ namespace Empiria.Land.WebApi {
         propertyBag.Add(new PropertyBagItem("Fecha de entrega", "Este trámite se procesa pero no se entrega al interesado en ventanilla."));
 
       } else if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.ToDeliver) {
-        propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                            transaction.Workflow.CurrentStatusName, "ok-status-text"));
-        propertyBag.Add(new PropertyBagItem("Fecha de entrega",
-                                            "<b>¡Su trámite está listo!</b><br />" +
-                                            "Ya puede pasar a recoger sus documentos.", "ok-status-text"));
+        if (transaction.Workflow.IsReadyForElectronicDelivery(messageUID)) {
+          propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                              "<b>¡Su trámite está listo!</b><br />" +
+                                              "Puede pasar a recoger sus documentos, o mejor aún,<br/>" +
+                                              "recíbalos electrónicamente oprimiendo el botón de abajo."));
+          propertyBag.Add(new PropertyBagItem("Entrega electrónica",
+                                              "ELECTRONIC_DELIVERY_COMMAND", "command"));
+        } else {
+          propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                              "<b>¡Su trámite está listo!</b><br />" +
+                                              "Ya puede pasar a recoger sus documentos.", "ok-status-text"));
+          propertyBag.Add(new PropertyBagItem("Entrega electrónica",
+                                              "Desafortunadamente este trámite no puede entregársele de forma electrónica."));
+
+        }
 
       } else if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.ToReturn) {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
@@ -498,16 +507,52 @@ namespace Empiria.Land.WebApi {
       if (!transaction.Document.IsEmptyInstance) {
         propertyBag.Add(new PropertyBagItem("Documento inscrito", transaction.Document.DocumentType.DisplayName + "<br/>" +
                                                                   GetDocumentUIDAsLink(transaction.Document.UID) +
-                                                                  GetPrintableDocumentLink(transaction.Document.UID, transaction.Workflow.CurrentStatus, msg)));
+                                                                  GetPrintableDocumentLink(transaction.Document.UID, transaction.Workflow.CurrentStatus, messageUID)));
       }
 
       foreach (var certificate in transaction.GetIssuedCertificates()) {
         propertyBag.Add(new PropertyBagItem("Certificado", certificate.CertificateType.DisplayName + "<br/>" +
                                                            GetCertificateUIDAsLink(certificate.UID) +
-                                                           GetPrintableCertificateLink(certificate.UID, transaction.Workflow.CurrentStatus, msg)));
+                                                           GetPrintableCertificateLink(certificate.UID, transaction.Workflow.CurrentStatus, messageUID)));
       }
 
       return propertyBag;
+    }
+
+
+    private LRSTransaction EnsureValidTransactionRequest(string transactionUID, string hash, string messageUID) {
+      transactionUID = FormatParameter(transactionUID);
+      hash = FormatParameter(hash);
+      messageUID = FormatParameter(messageUID);
+
+      var transaction = LRSTransaction.TryParse(transactionUID, true);
+
+      if (transaction == null && hash.Length == 0) {
+        throw new ResourceNotFoundException("Land.Transaction.NotFound",
+                                            "No tenemos registrado ningún trámite con número '{0}'.\n" +
+                                            "Favor de revisar la información proporcionada.",
+                                            transaction.UID);
+
+      } else if (transaction == null && hash.Length != 0) {
+        throw new ResourceNotFoundException("Land.Transaction.InvalidQRCode",
+                                            "El código QR que está impreso en su documento y que acaba de escanear hace " +
+                                            "referencia a un trámite con número '{0}' que NO está registrado en nuestros archivos.\n\n" +
+                                            "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
+                                            "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
+                                            transaction.UID);
+
+      } else if (transaction != null && hash.Length != 0 && hash != transaction.QRCodeSecurityHash()) {
+        throw new ResourceNotFoundException("Land.Transaction.InvalidQRCode",
+                                            "El código QR que está impreso en su documento y que acaba de escanear hace " +
+                                            "referencia al trámite con número '{0}' que tenemos registrado en nuestros archivos " +
+                                            $"pero el código de validación del QR no es correcto [{hash}] != [{transaction.QRCodeSecurityHash()}].\n\n" +
+                                            "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
+                                            "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
+                                            transaction.UID);
+
+      }
+
+      return transaction;
     }
 
 
@@ -535,24 +580,24 @@ namespace Empiria.Land.WebApi {
     }
 
 
-    private string GetPrintableDocumentLink(string documentUID, LRSTransactionStatus status, string msg) {
-      if (String.IsNullOrWhiteSpace(msg)) {
+    private string GetPrintableDocumentLink(string documentUID, LRSTransactionStatus status, string messageUID) {
+      if (String.IsNullOrWhiteSpace(messageUID)) {
         return String.Empty;
       }
       if (status == LRSTransactionStatus.Archived || status == LRSTransactionStatus.Delivered) {
-        return $" &nbsp; <a target='_blank' href='{PRINT_SERVICES_SERVER_BASE_ADDRESS}/recording.seal.aspx?uid={documentUID}&msg={msg}'>" +
+        return $" &nbsp; <a target='_blank' href='{PRINT_SERVICES_SERVER_BASE_ADDRESS}/recording.seal.aspx?uid={documentUID}&msg={messageUID}'>" +
                $"Imprimir</a>";
       }
       return String.Empty;
     }
 
 
-    private string GetPrintableCertificateLink(string certificateUID, LRSTransactionStatus status, string msg) {
-      if (String.IsNullOrWhiteSpace(msg)) {
+    private string GetPrintableCertificateLink(string certificateUID, LRSTransactionStatus status, string messageUID) {
+      if (String.IsNullOrWhiteSpace(messageUID)) {
         return String.Empty;
       }
       if (status == LRSTransactionStatus.Archived || status == LRSTransactionStatus.Delivered) {
-        return $" &nbsp; <a target='_blank' href='{PRINT_SERVICES_SERVER_BASE_ADDRESS}/certificate.aspx?uid={certificateUID}&msg={msg}'>" +
+        return $" &nbsp; <a target='_blank' href='{PRINT_SERVICES_SERVER_BASE_ADDRESS}/certificate.aspx?uid={certificateUID}&msg={messageUID}'>" +
                $"Imprimir</a>";
       }
       return String.Empty;
