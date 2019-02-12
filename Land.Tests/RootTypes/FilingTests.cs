@@ -27,11 +27,11 @@ namespace Empiria.Land.Tests {
 
 
     [Fact]
-    public void Should_Execute_LandMessenger() {
+    public void Should_Start_LandMessenger() {
       Exception e = null;
 
       try {
-        LandMessenger.Execute();
+        LandMessenger.Start();
 
       } catch (Exception exception) {
         e = exception;

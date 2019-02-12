@@ -67,8 +67,6 @@ namespace Empiria.Land.Registration.Transactions {
 
         AutoUpdateWorkflowForESignedTransactions();
 
-        LandMessenger.Execute();
-
       } finally {
         IsRunning = false;
       }

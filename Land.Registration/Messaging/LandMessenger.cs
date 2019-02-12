@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Threading;
+
 using Empiria.Json;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
@@ -22,30 +24,16 @@ namespace Empiria.Land.Messaging {
 
     private static readonly MessageQueue MESSAGE_QUEUE = MessageQueue.Parse("Land.SendDocumentsToRequester");
 
+    private static volatile bool isRunning = false;
+    private static volatile Timer timer = null;
+
     #endregion Fields
 
 
-    #region Public static methods
+    #region Public methods
 
 
-    /// <summary>Executes pending messages using a synchronous execution mode.</summary>
-    static public void Execute() {
-
-      EmpiriaLog.Info("LandMessenger was started.");
-
-      var messages = MESSAGE_QUEUE.GetNextMessages();
-
-      foreach (var message in messages) {
-        if (message.IsReadyToProcess()) {
-          ProcessQueuedMessage(message);
-        }
-      }
-
-      EmpiriaLog.Info("LandMessenger was stopped. All messages were processed.");
-    }
-
-
-    /// <summary>Notifies the messenger about a workflow status change of a land transaction.</summary>
+    /// <summary>Notifies messenger about a workflow status change of a land transaction.</summary>
     static internal void Notify(LRSTransaction transaction,
                                 NotificationType notificationType) {
       Assertion.AssertObject(transaction, "transaction");
@@ -57,82 +45,48 @@ namespace Empiria.Land.Messaging {
 
 
     /// <summary>Starts the execution engine for pending messages in asyncronous mode.</summary>
-    static internal void Start() {
+    static public void Start() {
+      if (isRunning) {
+        return;
+      }
 
+      int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 1);
+
+      timer = new Timer(SendQueuedMessages, null, 10 * 1000,
+                        MESSAGE_ENGINE_EXECUTION_MINUTES * 60 * 1000);
+
+      isRunning = true;
+      EmpiriaLog.Info("LandMessenger was started.");
     }
 
 
     /// <summary>Stops the execution engine.</summary>
-    static internal void Stop() {
-
-    }
-
-    #endregion Public static methods
-
-
-    #region Private methods
-
-    static private void EnqueueNotification(SendTo sendTo, LRSTransaction transaction,
-                                            NotificationType notificationType) {
-      var data = new JsonObject();
-
-      data.Add("NotificationType", notificationType.ToString());
-      data.Add("SendTo", sendTo.ToJson());
-
-      var newMessage = new Message(data);
-
-      MESSAGE_QUEUE.AddMessage(newMessage, transaction.UID);
-    }
-
-
-    static private Resource GetResource(Message message) {
-      var resource = Resource.TryParseWithUID(message.UnitOfWorkUID);
-
-      Assertion.AssertObject(resource,
-                            $"Unrecognized resource with UID {message.UnitOfWorkUID}.");
-
-      return resource;
-    }
-
-
-    static private LRSTransaction GetTransaction(Message message) {
-      var transaction = LRSTransaction.TryParse(message.UnitOfWorkUID);
-
-      Assertion.AssertObject(transaction,
-                            $"Unrecognized transaction with UID {message.UnitOfWorkUID}.");
-
-      return transaction;
-    }
-
-
-    static private void NotifyAgency(LRSTransaction transaction, NotificationType notificationType) {
-      if (notificationType == NotificationType.RegisterForResourceChanges ||
-          notificationType == NotificationType.ResourceWasChanged ||
-          notificationType == NotificationType.TransactionReceived) {
+    static public void Stop() {
+      if (!isRunning) {
         return;
       }
+      timer.Dispose();
+      timer = null;
+      isRunning = false;
 
-      SendTo sendTo = transaction.Agency.ExtendedData.Get<SendTo>("land.sendCompletedFilingsTo", SendTo.Empty);
-
-      if (!sendTo.IsEmptyInstance) {
-        EnqueueNotification(sendTo, transaction, notificationType);
-      }
+      EmpiriaLog.Info("LandMessenger was stopped.");
     }
 
 
-    static private void NotifyInterested(LRSTransaction transaction, NotificationType notificationType) {
-      SendTo sendTo = transaction.ExtensionData.SendTo;
+    #endregion Public methods
 
-      if (!sendTo.IsEmptyInstance) {
-        EnqueueNotification(sendTo, transaction, notificationType);
+
+    #region Message queue execution methods
+
+
+    private static bool IsMessageReadyToProcess(Message message) {
+      if (!message.IsInProcessStatus) {
+        return false;
       }
-    }
 
+      int waitMinutes = WaitMinutesToProcessMessage(message);
 
-    static private void NotifyRegistered(LRSTransaction transaction, NotificationType notificationType) {
-      if (notificationType != NotificationType.ResourceWasChanged) {
-        return;
-      }
+      return (message.PostingTime.AddMinutes(waitMinutes) < DateTime.Now);
     }
 
 
@@ -209,7 +163,127 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    #endregion Private methods
+    /// <summary>Executes pending messages using a synchronous execution mode.</summary>
+    static private void SendQueuedMessages(object stateInfo) {
+      var messages = MESSAGE_QUEUE.GetNextMessages();
+
+      int count = 0;
+      foreach (var message in messages) {
+        if (IsMessageReadyToProcess(message)) {
+          ProcessQueuedMessage(message);
+          count++;
+        }
+      }
+
+      EmpiriaLog.Info($"LandMessenger was executed with {count} messages.");
+    }
+
+
+    static private int WaitMinutesToProcessMessage(Message message) {
+      var notificationType = message.MessageData.Get<NotificationType>("NotificationType");
+
+      int IMMEDIATELY = ConfigurationData.Get("Immediately.Execution.Minutes", 0);
+      int SOME_WAIT = ConfigurationData.Get("SomeWait.Execution.Minutes", 5);
+
+      switch (notificationType) {
+
+        case NotificationType.RegisterForResourceChanges:
+        case NotificationType.TransactionReceived:
+        case NotificationType.TransactionReentered:
+          return IMMEDIATELY;
+
+
+        case NotificationType.ResourceWasChanged:
+        case NotificationType.TransactionDelayed:
+        case NotificationType.TransactionFinished:
+        case NotificationType.TransactionReturned:
+        case NotificationType.TransactionArchived:
+          return SOME_WAIT;
+
+        default:
+          throw Assertion.AssertNoReachThisCode($"Unhandled notificationType {notificationType.ToString()}.");
+
+      }
+    }
+
+
+    #endregion Message queue execution methods
+
+
+    #region Queue notification methods
+
+
+    static private void EnqueueNotification(SendTo sendTo, LRSTransaction transaction,
+                                            NotificationType notificationType) {
+      var data = new JsonObject();
+
+      data.Add("NotificationType", notificationType.ToString());
+      data.Add("SendTo", sendTo.ToJson());
+
+      var newMessage = new Message(data);
+
+      MESSAGE_QUEUE.AddMessage(newMessage, transaction.UID);
+    }
+
+
+    static private void NotifyAgency(LRSTransaction transaction, NotificationType notificationType) {
+      if (notificationType == NotificationType.RegisterForResourceChanges ||
+          notificationType == NotificationType.ResourceWasChanged ||
+          notificationType == NotificationType.TransactionReceived) {
+        return;
+      }
+
+      SendTo sendTo = transaction.Agency.ExtendedData.Get<SendTo>("land.sendCompletedFilingsTo", SendTo.Empty);
+
+      if (!sendTo.IsEmptyInstance) {
+        EnqueueNotification(sendTo, transaction, notificationType);
+      }
+    }
+
+
+    static private void NotifyInterested(LRSTransaction transaction, NotificationType notificationType) {
+      SendTo sendTo = transaction.ExtensionData.SendTo;
+
+      if (!sendTo.IsEmptyInstance) {
+        EnqueueNotification(sendTo, transaction, notificationType);
+      }
+    }
+
+
+    static private void NotifyRegistered(LRSTransaction transaction, NotificationType notificationType) {
+      if (notificationType != NotificationType.ResourceWasChanged) {
+        return;
+      }
+    }
+
+
+    #endregion Queue notification methods
+
+
+    #region Utility methods
+
+
+    static private Resource GetResource(Message message) {
+      var resource = Resource.TryParseWithUID(message.UnitOfWorkUID);
+
+      Assertion.AssertObject(resource,
+                            $"Unrecognized resource with UID {message.UnitOfWorkUID}.");
+
+      return resource;
+    }
+
+
+    static private LRSTransaction GetTransaction(Message message) {
+      var transaction = LRSTransaction.TryParse(message.UnitOfWorkUID);
+
+      Assertion.AssertObject(transaction,
+                            $"Unrecognized transaction with UID {message.UnitOfWorkUID}.");
+
+      return transaction;
+    }
+
+
+    #endregion Utility methods
 
 
   }  // class LandMessenger
