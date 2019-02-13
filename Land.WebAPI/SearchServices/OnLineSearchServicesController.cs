@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 using Empiria.WebApi;
@@ -199,23 +200,29 @@ namespace Empiria.Land.WebApi {
     }
 
 
-    [HttpPost, AllowAnonymous]
+    [HttpGet, AllowAnonymous]
     [Route("v1/online-services/transactions/{transactionUID}/electronic-delivery")]
-    public SingleObjectModel ElectronicDelivery([FromUri] string transactionUID,
-                                                [FromUri] string hash = "",
-                                                [FromUri] string messageUID = "") {
+    public async Task<SingleObjectModel> ElectronicDelivery([FromUri] string transactionUID,
+                                                            [FromUri] string hash = "",
+                                                            [FromUri] string messageUID = "") {
       try {
+        if (IsPassThroughServer) {
+          var apiClient = new OnLineSearchServicesClient();
+
+          return await apiClient.ElectronicDelivery(this.Request);
+        }
+
         LRSTransaction transaction = EnsureValidTransactionRequest(transactionUID, hash, messageUID);
 
         if (!transaction.Workflow.IsReadyForElectronicDelivery(messageUID)) {
-          throw new ResourceNotFoundException("Land.Transaction.NotyReadyForElectronicalDelivery",
+          throw new ResourceNotFoundException("Land.Transaction.NotReadyForElectronicalDelivery",
                                               "El trámite {0} NO está disponible para entrega electrónica.\n\n" +
                                               "Posiblemente su estado cambió después de que usted recibió el mensaje.\n" +
                                               "Si este es el caso, en breve recibirá un nuevo mensaje sobre la situación del mismo.",
                                               transaction.UID);
 
         }
-        
+
         transaction.Workflow.DeliverElectronically(messageUID);
 
         return new SingleObjectModel(this.Request, BuildTransactionResponse(transaction, messageUID),
@@ -531,7 +538,7 @@ namespace Empiria.Land.WebApi {
         throw new ResourceNotFoundException("Land.Transaction.NotFound",
                                             "No tenemos registrado ningún trámite con número '{0}'.\n" +
                                             "Favor de revisar la información proporcionada.",
-                                            transaction.UID);
+                                            transactionUID);
 
       } else if (transaction == null && hash.Length != 0) {
         throw new ResourceNotFoundException("Land.Transaction.InvalidQRCode",
@@ -539,13 +546,13 @@ namespace Empiria.Land.WebApi {
                                             "referencia a un trámite con número '{0}' que NO está registrado en nuestros archivos.\n\n" +
                                             "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
                                             "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                            transaction.UID);
+                                            transactionUID);
 
       } else if (transaction != null && hash.Length != 0 && hash != transaction.QRCodeSecurityHash()) {
         throw new ResourceNotFoundException("Land.Transaction.InvalidQRCode",
                                             "El código QR que está impreso en su documento y que acaba de escanear hace " +
                                             "referencia al trámite con número '{0}' que tenemos registrado en nuestros archivos " +
-                                            $"pero el código de validación del QR no es correcto [{hash}] != [{transaction.QRCodeSecurityHash()}].\n\n" +
+                                            $"pero el código de validación del QR no es correcto [{hash}].\n\n" +
                                             "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
                                             "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
                                             transaction.UID);
