@@ -1,10 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  System   : Empiria Land                                 Module  : Recording Services                      *
-*  Assembly : Empiria.Land.Registration.dll                Pattern : Data Services                           *
-*  Type     : TransactionData                              License : Please read LICENSE.txt file            *
+*  Module   : Filing                                       Component : Filing Data Services                  *
+*  Assembly : Empiria.Land.Registration.dll                Pattern   : Data Services                         *
+*  Type     : TransactionData                              License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Provides database read and write methods for recording office transactions.                    *
+*  Summary  : Provides database read and write methods for recording office filings.                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -18,10 +18,20 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Data {
 
-  /// <summary>Provides database read and write methods for recording office transactions.</summary>
+  /// <summary>Provides database read and write methods for recording office filings.</summary>
   static public class TransactionData {
 
     #region Public methods
+
+    static internal bool ExistsExternalTransactionNo(string externalTransactionNo) {
+      var sql = "SELECT * FROM LRSTransactions " +
+                $"WHERE ExternalTransactionNo = '{externalTransactionNo}'";
+
+      var operation = DataOperation.Parse(sql);
+
+      return (DataReader.Count(operation) > 0);
+    }
+
 
     static public DataView GetLRSTransactionsForUI(string filter, string sort) {
       string sql = "SELECT TOP 200 * FROM vwLRSTransactionsAndCurrentTrack";
@@ -77,6 +87,7 @@ namespace Empiria.Land.Data {
       if (recording.IsEmptyInstance) {
         return new List<LRSPayment>();
       }
+
       var operation = DataOperation.Parse("qryLRSRecordingPayments", recording.Id);
 
       return DataReader.GetList<LRSPayment>(operation, (x) => BaseObject.ParseList<LRSPayment>(x));
@@ -87,19 +98,10 @@ namespace Empiria.Land.Data {
       if (transaction.IsEmptyInstance) {
         return new List<LRSPayment>();
       }
+
       var operation = DataOperation.Parse("qryLRSTransactionPayments", transaction.Id);
 
       return DataReader.GetList<LRSPayment>(operation, (x) => BaseObject.ParseList<LRSPayment>(x));
-    }
-
-
-    static internal bool ExistsExternalTransactionNo(string externalTransactionNo) {
-      var sql = "SELECT * FROM LRSTransactions " +
-                $"WHERE ExternalTransactionNo = '{externalTransactionNo}'";
-
-      var operation = DataOperation.Parse(sql);
-
-      return (DataReader.Count(operation) > 0);
     }
 
 

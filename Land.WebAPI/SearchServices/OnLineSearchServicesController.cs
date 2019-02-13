@@ -38,8 +38,8 @@ namespace Empiria.Land.WebApi {
 
     [HttpGet, AllowAnonymous]
     [Route("v1/online-services/certificates/{certificateUID}")]
-    public SingleObjectModel GetCertificate([FromUri] string certificateUID,
-                                            [FromUri] string hash = "") {
+    public CollectionModel GetCertificate([FromUri] string certificateUID,
+                                          [FromUri] string hash = "") {
       try {
         certificateUID = FormatParameter(certificateUID);
         hash = FormatParameter(hash);
@@ -83,8 +83,8 @@ namespace Empiria.Land.WebApi {
 
         }
 
-        return new SingleObjectModel(this.Request, BuildCertificateResponse(certificate, hash),
-                                     "Empiria.PropertyBag");
+        return new CollectionModel(this.Request, BuildCertificateResponse(certificate, hash),
+                                  "Empiria.PropertyBag");
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -94,8 +94,8 @@ namespace Empiria.Land.WebApi {
 
     [HttpGet, AllowAnonymous]
     [Route("v1/online-services/documents/{documentUID}")]
-    public SingleObjectModel GetDocument([FromUri] string documentUID,
-                                         [FromUri] string hash = "") {
+    public CollectionModel GetDocument([FromUri] string documentUID,
+                                       [FromUri] string hash = "") {
       try {
         documentUID = FormatParameter(documentUID);
         hash = FormatParameter(hash);
@@ -130,8 +130,8 @@ namespace Empiria.Land.WebApi {
 
         }
 
-        return new SingleObjectModel(this.Request, BuildRecordingDocumentResponse(document, hash),
-                                     "Empiria.PropertyBag");
+        return new CollectionModel(this.Request, BuildRecordingDocumentResponse(document, hash),
+                                   "Empiria.PropertyBag");
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -141,8 +141,8 @@ namespace Empiria.Land.WebApi {
 
     [HttpGet, AllowAnonymous]
     [Route("v1/online-services/resources/{resourceUID}")]
-    public SingleObjectModel GetResource([FromUri] string resourceUID,
-                                         [FromUri] string hash = "") {
+    public CollectionModel GetResource([FromUri] string resourceUID,
+                                       [FromUri] string hash = "") {
       try {
         resourceUID = FormatParameter(resourceUID);
         hash = FormatParameter(hash);
@@ -174,8 +174,8 @@ namespace Empiria.Land.WebApi {
                                               resourceUID);
         }
 
-        return new SingleObjectModel(this.Request, BuildResourceStatusResponse(resource),
-                                     "Empiria.PropertyBag");
+        return new CollectionModel(this.Request, BuildResourceStatusResponse(resource),
+                                   "Empiria.PropertyBag");
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -185,14 +185,14 @@ namespace Empiria.Land.WebApi {
 
     [HttpGet, AllowAnonymous]
     [Route("v1/online-services/transactions/{transactionUID}")]
-    public SingleObjectModel GetTransaction([FromUri] string transactionUID,
-                                            [FromUri] string hash = "",
-                                            [FromUri] string messageUID = "") {
+    public CollectionModel GetTransaction([FromUri] string transactionUID,
+                                          [FromUri] string hash = "",
+                                          [FromUri] string messageUID = "") {
       try {
         LRSTransaction transaction = EnsureValidTransactionRequest(transactionUID, hash, messageUID);
 
-        return new SingleObjectModel(this.Request, BuildTransactionResponse(transaction, messageUID),
-                                    "Empiria.PropertyBag");
+        return new CollectionModel(this.Request, BuildTransactionResponse(transaction, messageUID),
+                                  "Empiria.PropertyBag");
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -200,16 +200,18 @@ namespace Empiria.Land.WebApi {
     }
 
 
-    [HttpGet, AllowAnonymous]
+    [HttpPost, AllowAnonymous]
     [Route("v1/online-services/transactions/{transactionUID}/electronic-delivery")]
-    public async Task<SingleObjectModel> ElectronicDelivery([FromUri] string transactionUID,
-                                                            [FromUri] string hash = "",
-                                                            [FromUri] string messageUID = "") {
+    public async Task<CollectionModel> ElectronicDelivery([FromUri] string transactionUID,
+                                                          [FromUri] string hash = "",
+                                                          [FromUri] string messageUID = "") {
       try {
         if (IsPassThroughServer) {
           var apiClient = new OnLineSearchServicesClient();
 
-          return await apiClient.ElectronicDelivery(this.Request);
+          var data = await apiClient.ElectronicDelivery(this.Request);
+
+          return new CollectionModel(this.Request, data, "Empiria.PropertyBag");
         }
 
         LRSTransaction transaction = EnsureValidTransactionRequest(transactionUID, hash, messageUID);
@@ -225,8 +227,8 @@ namespace Empiria.Land.WebApi {
 
         transaction.Workflow.DeliverElectronically(messageUID);
 
-        return new SingleObjectModel(this.Request, BuildTransactionResponse(transaction, messageUID),
-                                    "Empiria.PropertyBag");
+        return new CollectionModel(this.Request, BuildTransactionResponse(transaction, messageUID),
+                                   "Empiria.PropertyBag");
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);

@@ -30,7 +30,7 @@
     },
     {
       "type": "Land",
-      "key": "Certificates.Templates.Path",
+      "key": "Templates.Path",
       "value": "E:\\empiria.files\\tlaxcala\\"
     },
     {
@@ -60,8 +60,14 @@
     },
     {
       "type": "Land.WebApi",
-      "key": "Target.WebApi.Server",
-      "value": "http://empiria.land/intranet"
+      "key": "PassThrough.TargetServer",
+      "value": {
+        "baseAddress": "http://empiria.land/intranet",
+        "pathRule": {
+          "replace": "/web.api/",
+          "with":  ""
+        }
+      }
     }
   ]
 }

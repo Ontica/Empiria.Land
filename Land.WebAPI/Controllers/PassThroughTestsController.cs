@@ -20,7 +20,7 @@ namespace Empiria.Land.WebApi {
   /// <summary>Web api used to test pass through server calls using Empiria HttpApiClient.</summary>
   public class PassThroughTestsController : WebApiController {
 
-    private readonly string TARGET_WEB_API_SERVER = ConfigurationData.GetString("Target.WebApi.Server");
+    private readonly string TARGET_WEB_API_SERVER = ConfigurationData.GetString("PassThrough.TargetServer");
 
 
     [HttpGet, AllowAnonymous]

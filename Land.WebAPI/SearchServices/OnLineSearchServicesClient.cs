@@ -10,7 +10,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-
+using Empiria.Json;
 using Empiria.WebApi;
 using Empiria.WebApi.Client;
 
@@ -18,24 +18,33 @@ namespace Empiria.Land.WebApi {
 
   internal class OnLineSearchServicesClient {
 
-    private readonly string TARGET_WEB_API_SERVER = ConfigurationData.GetString("Target.WebApi.Server");
-
-    HttpApiClient apiClient = null;
+    private readonly JsonObject targetWebApiServer = null;
+    private readonly HttpApiClient apiClient = null;
 
     public OnLineSearchServicesClient() {
-      apiClient = new HttpApiClient(TARGET_WEB_API_SERVER);
+      targetWebApiServer = targetWebApiServer = ConfigurationData.Get<JsonObject>("PassThrough.TargetServer");
+      apiClient = new HttpApiClient(targetWebApiServer.Get<string>("baseAddress"));
     }
 
 
-    internal async Task<SingleObjectModel> ElectronicDelivery(HttpRequestMessage request) {
+    internal async Task<object[]> ElectronicDelivery(HttpRequestMessage request) {
       var path = GetPath(request);
 
-      return await apiClient.GetAsync<SingleObjectModel>(path);
+      var response = await apiClient.PostAsync<ResponseModel<object[]>>(path);
+
+      return response.Data;
     }
 
 
-    static private string GetPath(HttpRequestMessage request) {
-      return request.RequestUri.PathAndQuery.Replace("/web.api/", "");
+    private string GetPath(HttpRequestMessage request) {
+      if (!targetWebApiServer.Contains("pathRule")) {
+        return request.RequestUri.PathAndQuery;
+      }
+
+      string replace = targetWebApiServer.Get<string>("pathRule/replace");
+      string with = targetWebApiServer.Get<string>("pathRule/with");
+
+      return request.RequestUri.PathAndQuery.Replace(replace, with);
     }
 
   }

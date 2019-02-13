@@ -89,7 +89,7 @@ namespace Empiria.Land.Certification {
 
 
     private string GetTemplate() {
-      string templatesPath = ConfigurationData.GetString("Certificates.Templates.Path");
+      string templatesPath = ConfigurationData.GetString("Templates.Path");
 
       if (!this.Certificate.ExtensionData.UseMarginalNotesAsFullBody) {
 
