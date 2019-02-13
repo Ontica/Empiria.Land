@@ -52,6 +52,16 @@
       "type": "Land.WebApi",
       "key": "PrintServicesServerBaseAddress",
       "value": "http://empiria.land/intranet/land.registration.system"
+    },
+    {
+      "type": "WebApi",
+      "key": "IsPassThroughServer",
+      "value": true
+    },
+    {
+      "type": "Land.WebApi",
+      "key": "Target.WebApi.Server",
+      "value": "http://empiria.land/intranet"
     }
   ]
 }
