@@ -183,7 +183,7 @@ namespace Empiria.Land.Registration.Transactions {
       _transaction.Save();
       this.ResetTasksList();
 
-      LandMessenger.Notify(_transaction, NotificationType.TransactionReceived);
+      LandMessenger.Notify(_transaction, TransactionEventType.TransactionReceived);
 
       //  }
     }
@@ -253,7 +253,7 @@ namespace Empiria.Land.Registration.Transactions {
       _transaction.Save();
       this.ResetTasksList();
 
-      LandMessenger.Notify(_transaction, NotificationType.TransactionReentered);
+      LandMessenger.Notify(_transaction, TransactionEventType.TransactionReentered);
     }
 
 
@@ -319,9 +319,9 @@ namespace Empiria.Land.Registration.Transactions {
       EmpiriaLog.Debug("Take->Notify " + this._transaction.UID + " CURRENT STATUS == " + this.CurrentStatus);
 
       if (this.CurrentStatus == LRSTransactionStatus.ToDeliver) {
-        LandMessenger.Notify(_transaction, NotificationType.TransactionFinished);
+        LandMessenger.Notify(_transaction, TransactionEventType.TransactionReadyToDelivery);
       } else if (this.CurrentStatus == LRSTransactionStatus.ToReturn) {
-        LandMessenger.Notify(_transaction, NotificationType.TransactionReturned);
+        LandMessenger.Notify(_transaction, TransactionEventType.TransactionReturned);
       }
     }
 
@@ -450,7 +450,7 @@ namespace Empiria.Land.Registration.Transactions {
       _transaction.Save();
 
       if (closeStatus == LRSTransactionStatus.Archived) {
-        LandMessenger.Notify(_transaction, NotificationType.TransactionArchived);
+        LandMessenger.Notify(_transaction, TransactionEventType.TransactionArchived);
       }
     }
 

@@ -30,18 +30,24 @@ namespace Empiria.Land.Messaging {
     #endregion Fields
 
 
-    #region Public methods
+    #region Notification and subscription methods
 
 
     /// <summary>Notifies messenger about a workflow status change of a land transaction.</summary>
     static internal void Notify(LRSTransaction transaction,
-                                NotificationType notificationType) {
+                                TransactionEventType eventType) {
       Assertion.AssertObject(transaction, "transaction");
 
-      NotifyInterested(transaction, notificationType);
-      NotifyAgency(transaction, notificationType);
-      NotifyRegistered(transaction, notificationType);
+      NotifyInterested(transaction, eventType);
+      NotifyAgency(transaction, eventType);
+      // NotifySubscribers(transaction, eventType);
     }
+
+
+    #endregion Notification and subscription methods
+
+
+    #region Engine methods
 
 
     /// <summary>Starts the execution engine for pending messages in asyncronous mode.</summary>
@@ -73,7 +79,7 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    #endregion Public methods
+    #endregion Engine methods
 
 
     #region Message queue execution methods
@@ -94,11 +100,9 @@ namespace Empiria.Land.Messaging {
       var json = new JsonObject();
 
       try {
-        var notificationType = message.MessageData.Get<NotificationType>("NotificationType");
-
         SendEmail(message);
 
-        json.Add("Result", "E-mail was sent.");
+        json.Add("Result", "Message was sent.");
 
         MESSAGE_QUEUE.MarkAsProcessed(message, json, ExecutionStatus.Completed);
 
@@ -120,8 +124,8 @@ namespace Empiria.Land.Messaging {
 
       switch (notificationType) {
 
-        case NotificationType.RegisterForResourceChanges:
-          content = emailContentBuilder.BuildForRegisterForResourceChanges(GetResource(message));
+        case NotificationType.SubscribedForResourceChanges:
+          content = emailContentBuilder.BuildForRegisteredForResourceChanges(GetResource(message));
           break;
 
         case NotificationType.ResourceWasChanged:
@@ -132,8 +136,8 @@ namespace Empiria.Land.Messaging {
           content = emailContentBuilder.BuildForTransactionDelayed(GetTransaction(message));
           break;
 
-        case NotificationType.TransactionFinished:
-          content = emailContentBuilder.BuildForTransactionFinished(message);
+        case NotificationType.TransactionReadyToDelivery:
+          content = emailContentBuilder.BuildForTransactionReadyToDelivery(message);
           break;
 
         case NotificationType.TransactionReceived:
@@ -149,11 +153,11 @@ namespace Empiria.Land.Messaging {
           break;
 
         case NotificationType.TransactionArchived:
-          content = emailContentBuilder.BuildForTransactionFinished(message);
+          content = emailContentBuilder.BuildForTransactionReadyToDelivery(message);
           break;
 
         default:
-          throw Assertion.AssertNoReachThisCode($"Unhandled notificationType {notificationType.ToString()}.");
+          throw Assertion.AssertNoReachThisCode($"Unhandled notificationType {notificationType}.");
 
       }
 
@@ -187,21 +191,25 @@ namespace Empiria.Land.Messaging {
 
       switch (notificationType) {
 
-        case NotificationType.RegisterForResourceChanges:
+        case NotificationType.DocumentWasChanged:
+        case NotificationType.ResourceWasChanged:
+        case NotificationType.SubscribedForDocumentChanges:
+        case NotificationType.SubscribedForResourceChanges:
+        case NotificationType.UnsubscribedForDocumentChanges:
+        case NotificationType.UnsubscribedForResourceChanges:
         case NotificationType.TransactionReceived:
         case NotificationType.TransactionReentered:
           return IMMEDIATELY;
 
 
-        case NotificationType.ResourceWasChanged:
-        case NotificationType.TransactionDelayed:
-        case NotificationType.TransactionFinished:
-        case NotificationType.TransactionReturned:
         case NotificationType.TransactionArchived:
+        case NotificationType.TransactionDelayed:
+        case NotificationType.TransactionReadyToDelivery:
+        case NotificationType.TransactionReturned:
           return SOME_WAIT;
 
         default:
-          throw Assertion.AssertNoReachThisCode($"Unhandled notificationType {notificationType.ToString()}.");
+          throw Assertion.AssertNoReachThisCode($"Unhandled notificationType {notificationType}.");
 
       }
     }
@@ -226,33 +234,28 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    static private void NotifyAgency(LRSTransaction transaction, NotificationType notificationType) {
-      if (notificationType == NotificationType.RegisterForResourceChanges ||
-          notificationType == NotificationType.ResourceWasChanged ||
-          notificationType == NotificationType.TransactionReceived) {
+    static private void NotifyAgency(LRSTransaction transaction, TransactionEventType eventType) {
+      if (eventType == TransactionEventType.TransactionReceived) {
         return;
       }
 
       SendTo sendTo = transaction.Agency.ExtendedData.Get<SendTo>("land.sendCompletedFilingsTo", SendTo.Empty);
 
       if (!sendTo.IsEmptyInstance) {
+        NotificationType notificationType = ConvertToNotificationType(eventType);
+
         EnqueueNotification(sendTo, transaction, notificationType);
       }
     }
 
 
-    static private void NotifyInterested(LRSTransaction transaction, NotificationType notificationType) {
+    static private void NotifyInterested(LRSTransaction transaction, TransactionEventType eventType) {
       SendTo sendTo = transaction.ExtensionData.SendTo;
 
       if (!sendTo.IsEmptyInstance) {
+        NotificationType notificationType = ConvertToNotificationType(eventType);
+
         EnqueueNotification(sendTo, transaction, notificationType);
-      }
-    }
-
-
-    static private void NotifyRegistered(LRSTransaction transaction, NotificationType notificationType) {
-      if (notificationType != NotificationType.ResourceWasChanged) {
-        return;
       }
     }
 
@@ -261,6 +264,17 @@ namespace Empiria.Land.Messaging {
 
 
     #region Utility methods
+
+
+    static private NotificationType ConvertToNotificationType(TransactionEventType eventType) {
+      NotificationType result;
+
+      if (Enum.TryParse<NotificationType>(eventType.ToString(), out result)) {
+        return result;
+      }
+
+      throw Assertion.AssertNoReachThisCode($"Can't convert to NotificationType from TransactionEventType value {eventType}.");
+    }
 
 
     static private Resource GetResource(Message message) {

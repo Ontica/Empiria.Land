@@ -29,8 +29,8 @@ namespace Empiria.Land.Messaging {
 
     #region Public methods
 
-    internal EMailContent BuildForRegisterForResourceChanges(Resource resource) {
-      var body = GetTemplate(NotificationType.RegisterForResourceChanges);
+    internal EMailContent BuildForRegisteredForResourceChanges(Resource resource) {
+      var body = GetTemplate(NotificationType.SubscribedForResourceChanges);
 
       return new EMailContent($"El predio con folio real {resource.UID} " +
                               $"ha sido registrado para su monitoreo", body);
@@ -52,10 +52,10 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    internal EMailContent BuildForTransactionFinished(Message message) {
+    internal EMailContent BuildForTransactionReadyToDelivery(Message message) {
       var transaction = GetTransaction(message);
 
-      var body = GetTemplate(NotificationType.TransactionFinished);
+      var body = GetTemplate(NotificationType.TransactionReadyToDelivery);
 
       body = SetTransactionFields(body, transaction);
       body = SetMessageFields(body, message);
@@ -85,7 +85,7 @@ namespace Empiria.Land.Messaging {
       body = SetMessageFields(body, message);
 
       return new EMailContent($"Su trámite {transaction.UID} fue reingresado. " +
-                              $"Sus documentos impresos pueden estar sujetos a cambios.", body);
+                              $"Sus documentos impresos están sujetos a cambios.", body);
     }
 
 
@@ -107,7 +107,7 @@ namespace Empiria.Land.Messaging {
     #region Private methods
 
     static private string GetTemplate(NotificationType notificationType) {
-      string templatesPath = ConfigurationData.GetString("Certificates.Templates.Path");
+      string templatesPath = ConfigurationData.GetString("Templates.Path");
 
       string fileName = System.IO.Path.Combine(templatesPath, $"template.email.{notificationType}.txt");
 
