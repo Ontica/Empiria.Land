@@ -4,25 +4,37 @@
 *  Assembly : Empiria.Land.Registration.dll              Pattern   : Enumeration type                        *
 *  Type     : SubscriptionEventType                      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Describes a workflow status change of a land transaction.                                      *
+*  Summary  : Event type used to send notifications to document and resource subscribers.                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Land.Messaging {
 
-  /// <summary>Describes a workflow status change of a land transaction.</summary>
+  /// <summary>Event type used to send notifications to document and resource subscribers.</summary>
   internal enum SubscriptionEventType {
+
+    CertificateWasChanged,
 
     DocumentWasChanged,
 
     ResourceWasChanged,
 
-    SubscribedForDocumentChanges,
+    SubscribedForCertificateChanges,
+
+    SubscribedForRecordingDocumentChanges,
 
     SubscribedForResourceChanges,
 
-    UnsubscribedForDocumentChanges,
+    ConfirmedForCertificateChanges,
+
+    ConfirmedForRecordingDocumentChanges,
+
+    ConfirmedForResourceChanges,
+
+    UnsubscribedForCertificateChanges,
+
+    UnsubscribedForRecordingDocumentChanges,
 
     UnsubscribedForResourceChanges
 
