@@ -11,10 +11,11 @@ using System;
 using System.Threading;
 
 using Empiria.Json;
-using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
 using Empiria.Messaging;
 using Empiria.StateEnums;
+
+using Empiria.Land.Registration;
+using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Messaging {
 
@@ -43,6 +44,14 @@ namespace Empiria.Land.Messaging {
       // NotifySubscribers(transaction, eventType);
     }
 
+
+    /// <summary>Notifies messenger about a workflow status change of a land transaction.</summary>
+    static internal void Notify(SubscriptionEventType eventType, Subscription subscription) {
+      Assertion.AssertObject(subscription, "subscription");
+      NotificationType notificationType = ConvertToNotificationType(eventType);
+
+      EnqueueNotification(notificationType, subscription);
+    }
 
     #endregion Notification and subscription methods
 
@@ -234,6 +243,19 @@ namespace Empiria.Land.Messaging {
     }
 
 
+    static private void EnqueueNotification(NotificationType notificationType,
+                                            Subscription subscription) {
+      var data = new JsonObject();
+
+      data.Add("NotificationType", notificationType.ToString());
+      data.Add("SendTo", subscription.SendTo.ToJson());
+
+      var newMessage = new Message(data);
+
+      MESSAGE_QUEUE.AddMessage(newMessage, subscription.UID);
+    }
+
+
     static private void NotifyAgency(LRSTransaction transaction, TransactionEventType eventType) {
       if (eventType == TransactionEventType.TransactionReceived) {
         return;
@@ -266,14 +288,14 @@ namespace Empiria.Land.Messaging {
     #region Utility methods
 
 
-    static private NotificationType ConvertToNotificationType(TransactionEventType eventType) {
+    static private NotificationType ConvertToNotificationType(Enum eventType) {
       NotificationType result;
 
       if (Enum.TryParse<NotificationType>(eventType.ToString(), out result)) {
         return result;
       }
 
-      throw Assertion.AssertNoReachThisCode($"Can't convert to NotificationType from TransactionEventType value {eventType}.");
+      throw Assertion.AssertNoReachThisCode($"Can't convert to NotificationType from {eventType.GetType().Name} value {eventType}.");
     }
 
 
