@@ -315,9 +315,6 @@ namespace Empiria.Land.Registration.Transactions {
         _transaction.ClosingTime = currentTask.EndProcessTime;
       }
       _transaction.Save();
-
-      EmpiriaLog.Debug("Take->Notify " + this._transaction.UID + " CURRENT STATUS == " + this.CurrentStatus);
-
       if (this.CurrentStatus == LRSTransactionStatus.ToDeliver) {
         LandMessenger.Notify(_transaction, TransactionEventType.TransactionReadyToDelivery);
       } else if (this.CurrentStatus == LRSTransactionStatus.ToReturn) {

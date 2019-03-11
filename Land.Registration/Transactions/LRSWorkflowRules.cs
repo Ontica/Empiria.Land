@@ -51,6 +51,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
     private static bool IsRecorderOfficerCase(LRSTransactionType transactionType, RecorderOffice office) {
       if (transactionType.Id == 706 && office.Id == 147) {
         return true;
@@ -64,6 +65,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
       return false;
     }
+
 
     static public List<LRSTransactionStatus> GetNextStatusList(LRSTransactionType type,
                                                                LRSDocumentType docType,

@@ -4,14 +4,14 @@
 *  Assembly : Empiria.Land.Registration.dll              Pattern   : Enumeration type                        *
 *  Type     : TransactionEventType                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Describes a transaction workflow event used to send notifications.                             *
+*  Summary  : Event type used to send notifications when a transaction's status changes.                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Land.Messaging {
 
-  /// <summary>Describes a transaction workflow event used to send notifications.</summary>
+  /// <summary>Event type used to send notifications when a transaction's status changes.</summary>
   internal enum TransactionEventType {
 
     TransactionReceived,

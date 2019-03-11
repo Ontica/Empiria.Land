@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Land Messaging services                    Component : Application Services                    *
-*  Assembly : Empiria.Land.Registration.dll              Pattern   : Service                                 *
+*  Assembly : Empiria.Land.Registration.dll              Pattern   : Service provider                        *
 *  Type     : SubscriptionServices                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Application services to subscribe and unsubscribe for resource and document changes.           *
