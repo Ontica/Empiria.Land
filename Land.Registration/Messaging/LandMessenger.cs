@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Empiria.Json;
 using Empiria.Messaging;
@@ -61,17 +62,26 @@ namespace Empiria.Land.Messaging {
 
     /// <summary>Starts the execution engine for pending messages in asyncronous mode.</summary>
     static public void Start() {
-      if (isRunning) {
-        return;
+      try {
+        if (isRunning) {
+          return;
+        }
+
+        int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 2);
+
+        timer = new Timer(SendQueuedMessages, null, 10 * 1000,
+                          MESSAGE_ENGINE_EXECUTION_MINUTES * 60 * 1000);
+
+        isRunning = true;
+        EmpiriaLog.Info("LandMessenger was started.");
+
+      } catch (Exception e) {
+        EmpiriaLog.Info("LandMessenger was stopped due to an ocurred exception.");
+
+        EmpiriaLog.Error(e);
+
+        isRunning = false;
       }
-
-      int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 1);
-
-      timer = new Timer(SendQueuedMessages, null, 10 * 1000,
-                        MESSAGE_ENGINE_EXECUTION_MINUTES * 60 * 1000);
-
-      isRunning = true;
-      EmpiriaLog.Info("LandMessenger was started.");
     }
 
 
@@ -105,15 +115,16 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    static private void ProcessQueuedMessage(Message message) {
+    static private async Task ProcessQueuedMessage(Message message) {
       var json = new JsonObject();
 
       try {
-        SendEmail(message);
+        await SendEmail(message);
 
         json.Add("Result", "Message was sent.");
 
         MESSAGE_QUEUE.MarkAsProcessed(message, json, ExecutionStatus.Completed);
+
 
       } catch (Exception e) {
         json.Add("FailedReason", $"E-mail was not sent because: {e.Message}.");
@@ -124,7 +135,7 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    static private void SendEmail(Message message) {
+    static private async Task SendEmail(Message message) {
       var notificationType = message.MessageData.Get<NotificationType>("NotificationType");
 
       var emailContentBuilder = new LandEMailContentBuilder();
@@ -172,18 +183,18 @@ namespace Empiria.Land.Messaging {
 
       var sendTo = message.MessageData.Get<SendTo>("SendTo");
 
-      EMail.Send(sendTo, content);
+      await EMail.SendAsync(sendTo, content);
     }
 
 
     /// <summary>Executes pending messages using a synchronous execution mode.</summary>
-    static private void SendQueuedMessages(object stateInfo) {
+    static private async void SendQueuedMessages(object stateInfo) {
       var messages = MESSAGE_QUEUE.GetNextMessages();
 
       int count = 0;
       foreach (var message in messages) {
         if (IsMessageReadyToProcess(message)) {
-          ProcessQueuedMessage(message);
+          await ProcessQueuedMessage(message);
           count++;
         }
       }
