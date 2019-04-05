@@ -253,9 +253,7 @@ namespace Empiria.Land.Registration {
 
     public string CurrentOwners {
       get {
-        var parties = this.LastDomainAct.GetParties();
-
-        parties = parties.FindAll((x) => x.PartyOf.IsEmptyInstance);
+        var parties = this.CurrentOwnersList;
 
         string temp = String.Empty;
 
@@ -266,6 +264,20 @@ namespace Empiria.Land.Registration {
           temp += party.Party.FullName;
         }
         return temp;
+      }
+    }
+
+    public FixedList<RecordingActParty> CurrentOwnersList {
+      get {
+        var parties = this.LastDomainAct.GetParties();
+
+        parties = parties.FindAll((x) => x.PartyOf.IsEmptyInstance);
+
+        if (parties != null) {
+          return parties;
+        } else {
+          return new FixedList<RecordingActParty>();
+        }
       }
     }
 
