@@ -54,4 +54,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web" />
+  </ItemGroup>
 </Project>
