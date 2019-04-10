@@ -19,16 +19,21 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    internal RecordingDocumentImaging(RecordingDocument document) {
+
+    public RecordingDocumentImaging(RecordingDocument document) {
       this.Document = document;
     }
+
 
     #endregion Constructors and parsers
 
     #region Public properties
-    internal RecordingDocument Document {
+
+
+    public RecordingDocument Document {
       get;
     }
+
 
     public int AuxiliarImageSetId {
       get {
@@ -69,6 +74,7 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
+
     public bool CanGenerateImagingControlID() {
       if (this.Document.IsEmptyInstance) {
         return false;
@@ -88,6 +94,7 @@ namespace Empiria.Land.Registration {
       return true;
     }
 
+
     public void GenerateImagingControlID() {
       Assertion.Assert(!this.Document.IsEmptyInstance, "Document can't be the empty instance.");
       Assertion.Assert(this.Document.IsClosed, "Document is not closed.");
@@ -99,6 +106,7 @@ namespace Empiria.Land.Registration {
 
 
       this.ImagingControlID = DocumentsData.GetNextImagingControlID(this.Document);
+
       DocumentsData.SaveImagingControlID(this.Document);
     }
 
@@ -107,15 +115,20 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(image, "image");
 
       this.Document.ExtensionData.AuxiliarImageSetId = image.Id;
+
       this.Document.Save();
     }
+
 
     public void SetImageSet(ImagingItem image) {
       Assertion.AssertObject(image, "image");
 
       this.Document.ExtensionData.DocumentImageSetId = image.Id;
+
       this.Document.Save();
     }
+
+
     public ImagingItem TryGetAuxiliarImageSet() {
       if (this.Document.ExtensionData.AuxiliarImageSetId != -1) {
         return ImagingItem.Parse(this.Document.ExtensionData.AuxiliarImageSetId);
@@ -123,6 +136,7 @@ namespace Empiria.Land.Registration {
         return null;
       }
     }
+
 
     public ImagingItem TryGetImageSet() {
       if (this.Document.ExtensionData.DocumentImageSetId != -1) {

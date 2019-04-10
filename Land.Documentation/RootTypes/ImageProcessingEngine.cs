@@ -11,11 +11,10 @@
 using System;
 using System.Runtime.Remoting.Messaging;
 
-using Empiria.Documents.IO;
-
 namespace Empiria.Land.Documentation {
 
   public class ImageProcessingEngine {
+
 
     #region Delegates
 
@@ -23,20 +22,19 @@ namespace Empiria.Land.Documentation {
 
     #endregion
 
+
     #region Fields
 
-    static private readonly ImageProcessingEngine instance = new ImageProcessingEngine();  // singleton element
+    static private readonly ImageProcessingEngine instance = new ImageProcessingEngine();  // singleton
 
     private readonly string logFilePath = ConfigurationData.GetString("ImageProcessor.LogFilesPath");
 
     private IAsyncResult asyncResult = null;
 
-    private bool isRunning = false;   // semaphore
-    private int totalJobs = 0;        // total jobs count;
-    private int completedJobs = 0;    // completed jobs count;
     private string logText = String.Empty;
 
     #endregion Fields
+
 
     #region Constructors and parsers
 
@@ -44,38 +42,42 @@ namespace Empiria.Land.Documentation {
       // Singleton pattern needs private constructor
     }
 
+
     static public ImageProcessingEngine GetInstance() {
       return instance;
     }
+
 
     #endregion Constructors and parsers
 
     #region Public methods
 
+
     public bool IsRunning {
-      get {
-        return isRunning;
-      }
-    }
+      get;
+      private set;
+    } = false;
+
 
     public int TotalJobs {
-      get {
-        return totalJobs;
-      }
-    }
+      get;
+      private set;
+    } = 0;
+
 
     public int CompletedJobs {
-      get {
-        return completedJobs;
-      }
-    }
+      get;
+      private set;
+    } = 0;
+
 
     public void Start() {
-      if (this.isRunning) {
+      if (this.IsRunning) {
         return;
       }
       this.ProcessImages();
     }
+
 
     private void ProcessImages() {
       WriteLog(String.Empty);
@@ -83,8 +85,9 @@ namespace Empiria.Land.Documentation {
       WriteLog(String.Empty);
 
       asyncResult = BeginProcessImages(EndProcessImages);
-      isRunning = true;
+      IsRunning = true;
     }
+
 
     #endregion Public methods
 
@@ -96,6 +99,7 @@ namespace Empiria.Land.Documentation {
       return processImageDelegate.BeginInvoke(callback, null);
     }
 
+
     private void EndProcessImages(IAsyncResult asyncResult) {
       var processImagesDelegate = (ProcessImagesDelegate) ((AsyncResult) asyncResult).AsyncDelegate;
 
@@ -103,16 +107,17 @@ namespace Empiria.Land.Documentation {
 
       WriteLog(String.Empty);
       WriteLog("Proceso terminado a las: " + DateTime.Now.ToLongTimeString());
-      isRunning = false;
+      IsRunning = false;
       WriteLogToDisk();
     }
+
 
     private int DoProcessImages() {
       var auditTrail = FileAuditTrail.GetInstance();
       try {
         auditTrail.Start();
         var imagesToProcess = ImageProcessor.GetImagesToProcess();
-        this.totalJobs = imagesToProcess.Length;
+        this.TotalJobs = imagesToProcess.Length;
 
         FileAuditTrail.LogText(String.Empty);
 
@@ -129,7 +134,7 @@ namespace Empiria.Land.Documentation {
 
         return imagesToProcess.Length;
       } catch (Exception exception) {
-        isRunning = false;
+        IsRunning = false;
         string msg = auditTrail.GetLogs() + "\n\n" +
                       "Ocurrió un problema en la conversión y procesamiento de imágenes:\n" +
                       exception.ToString() + "\n\n" +
@@ -139,17 +144,19 @@ namespace Empiria.Land.Documentation {
       }
     }
 
+
     private void WriteLog(string text) {
-      logText += text + System.Environment.NewLine;
+      logText += text + Environment.NewLine;
     }
+
 
     private void WriteLogToDisk() {
       string message = "Tarea de conversión y procesamiento de imágenes";
-      message += System.Environment.NewLine;
+      message += Environment.NewLine;
 
       message += logText;
 
-      message += System.Environment.NewLine;
+      message += Environment.NewLine;
 
       System.IO.File.WriteAllText(logFilePath + @"\imaging.processing." +
                                   DateTime.Now.ToString("yyyy-MM-dd-HH.mm.ss.ffff") + ".log",
@@ -157,6 +164,7 @@ namespace Empiria.Land.Documentation {
 
       logText = String.Empty;
     }
+
 
     #endregion Private and internal methods
 

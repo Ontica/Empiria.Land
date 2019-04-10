@@ -23,9 +23,11 @@ namespace Empiria.Land.Documentation {
 
     #region Constructors and parsers
 
+
     private DocumentImageSet() {
       // Required by Empiria Framework
     }
+
 
     internal DocumentImageSet(CandidateImage candidateImage, string[] imagesHashCodes) {
       Assertion.AssertObject(candidateImage, "candidateImage");
@@ -44,6 +46,7 @@ namespace Empiria.Land.Documentation {
       this.SetImagesHashCodes(imagesHashCodes);
     }
 
+
     static public new DocumentImageSet Parse(int id) {
       return BaseObject.ParseId<DocumentImageSet>(id);
     }
@@ -52,17 +55,20 @@ namespace Empiria.Land.Documentation {
 
     #region Public properties
 
+
     [DataField("DocumentId")]
     public RecordingDocument Document {
       get;
       private set;
     }
 
+
     [DataField("ImageType", Default = DocumentImageType.Unknown)]
     public DocumentImageType DocumentImageType {
       get;
       private set;
     }
+
 
     public override string FullPath {
       get {
@@ -72,12 +78,14 @@ namespace Empiria.Land.Documentation {
       }
     }
 
+
     internal string MainImageFileName {
       get {
         return base.ItemPath.Substring(base.ItemPath.LastIndexOf('\\') + 1)
                              .ToUpperInvariant();
       }
     }
+
 
     public override string UrlRelativePath {
       get {
@@ -86,11 +94,13 @@ namespace Empiria.Land.Documentation {
       }
     }
 
+
     int IProtected.CurrentDataIntegrityVersion {
       get {
         return 1;
       }
     }
+
 
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
       if (version == 1) {
@@ -113,9 +123,11 @@ namespace Empiria.Land.Documentation {
       }
     }
 
+
     #endregion Public properties
 
     #region Private methods
+
 
     ///<summary>Builds the relative path from the BaseFolder given an absolute path.</summary>
     private string GetRelativePath(string absolutePath) {
@@ -123,6 +135,7 @@ namespace Empiria.Land.Documentation {
 
       return absolutePath.Replace(baseFolder, "~");
     }
+
 
     protected override string[] GetImagesFileNamesArray() {
       string[] array = new string[base.FilesCount];
@@ -141,9 +154,11 @@ namespace Empiria.Land.Documentation {
       return array;
     }
 
+
     protected override void OnSave() {
       DataServices.WriteImagingItem(this);
     }
+
 
     private void SetImagesHashCodes(string[] imagesHashCodes) {
       var json = new JsonObject();
@@ -152,6 +167,7 @@ namespace Empiria.Land.Documentation {
 
       this.ImagingItemExtData = json;
     }
+
 
     #endregion Private methods
 
