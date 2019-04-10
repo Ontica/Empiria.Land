@@ -10,6 +10,8 @@
 using System;
 using System.Web;
 
+using Empiria.Security;
+
 using Empiria.Documents;
 
 using Empiria.Land.Registration.Transactions;
@@ -23,9 +25,7 @@ namespace Empiria.Land.Documentation {
 
 
     static public TransactionDocument SetMainDocument(LRSTransaction transaction, HttpPostedFile uploadedFile) {
-      Assertion.AssertObject(transaction, "transaction");
-      Assertion.AssertObject(uploadedFile, "uploadedFile");
-      Assertion.Assert(uploadedFile.ContentLength > 0, "uploadedFile is an empty file.");
+      AssertIsValid(transaction, uploadedFile);
 
       var documentSet = TransactionDocumentSet.ParseFor(transaction);
 
@@ -35,9 +35,7 @@ namespace Empiria.Land.Documentation {
 
 
     static public TransactionDocument SetAuxiliaryDocument(LRSTransaction transaction, HttpPostedFile uploadedFile) {
-      Assertion.AssertObject(transaction, "transaction");
-      Assertion.AssertObject(uploadedFile, "uploadedFile");
-      Assertion.Assert(uploadedFile.ContentLength > 0, "uploadedFile is an empty file.");
+      AssertIsValid(transaction, uploadedFile);
 
       var documentSet = TransactionDocumentSet.ParseFor(transaction);
 
@@ -53,6 +51,17 @@ namespace Empiria.Land.Documentation {
     #region Private methods
 
 
+    static private void AssertIsValid(LRSTransaction transaction, HttpPostedFile uploadedFile) {
+      Assertion.AssertObject(transaction, "transaction");
+      Assertion.Assert(!transaction.IsEmptyInstance, "transaction can't be the empty instance.");
+      Assertion.AssertObject(uploadedFile, "uploadedFile");
+      Assertion.Assert(uploadedFile.ContentLength > 0, "uploadedFile is an empty file.");
+
+      Assertion.Assert(EmpiriaPrincipal.Current.IsInRole("LRSTransaction.Digitalizer"),
+                       "Current user must be in 'Digitalizer' role to perform this operation.");
+    }
+
+
     static private FileContentType GetFileType(HttpPostedFile uploadedFile) {
       switch (uploadedFile.ContentType) {
         case "application/pdf":
@@ -63,6 +72,7 @@ namespace Empiria.Land.Documentation {
                                                 $"with content type {uploadedFile.ContentType}.");
       }
     }
+
 
     #endregion Private methods
 

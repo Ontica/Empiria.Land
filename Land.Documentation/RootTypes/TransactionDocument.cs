@@ -29,7 +29,6 @@ namespace Empiria.Land.Documentation {
 
     #endregion Fields
 
-
     #region Constructors and parsers
 
 
@@ -162,7 +161,6 @@ namespace Empiria.Land.Documentation {
 
     #endregion Public methods
 
-
     #region Integrity protection members
 
 
@@ -196,7 +194,6 @@ namespace Empiria.Land.Documentation {
     }
 
     #endregion Integrity protection members
-
 
     #region Private methods
 
