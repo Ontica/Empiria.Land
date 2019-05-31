@@ -9,6 +9,7 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2014-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 using Empiria.Data;
@@ -52,8 +53,16 @@ namespace Empiria.Land.WebApi.Citys {
     /// <summary>Request a new transaction to issue a land certificate.</summary>
     [HttpPost]
     [Route("v1/transactions/request-certificate")]
-    public SingleObjectModel RequestCertificate([FromBody] CertificateRequest certificateRequest) {
+    public async Task<SingleObjectModel> RequestCertificate([FromBody] CertificateRequest certificateRequest) {
       try {
+        if (IsPassThroughServer) {
+          var apiClient = new CitysClient();
+
+          var data = await apiClient.RequestCertificate(this.Request, certificateRequest);
+
+          return new SingleObjectModel(this.Request, data,  "Empiria.Land.CertificateIssuingTransaction");
+        }
+
         Assertion.Assert(IsCitysNewTransactionsEnabled, "Citys endpoints are not enabled.");
 
         var dryRun = base.Request.RequestUri.Query.Contains("dry-run");
@@ -77,8 +86,16 @@ namespace Empiria.Land.WebApi.Citys {
     /// <summary>Request a new transaction to record a new pending note.</summary>
     [HttpPost]
     [Route("v1/transactions/request-pending-note-recording")]
-    public SingleObjectModel RequestPendingNoteRecording([FromBody] PendingNoteRequest pendingNoteRequest) {
+    public async Task<SingleObjectModel> RequestPendingNoteRecording([FromBody] PendingNoteRequest pendingNoteRequest) {
       try {
+        if (IsPassThroughServer) {
+          var apiClient = new CitysClient();
+
+          var data = await apiClient.RequestPendingNoteRecording(this.Request, pendingNoteRequest);
+
+          return new SingleObjectModel(this.Request, data, "Empiria.Land.PendingNoteTransaction");
+        }
+
         Assertion.Assert(IsCitysNewTransactionsEnabled, "Citys endpoints are not enabled.");
 
         var dryRun = base.Request.RequestUri.Query.Contains("dry-run");
