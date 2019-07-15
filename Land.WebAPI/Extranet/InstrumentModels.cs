@@ -78,6 +78,7 @@ namespace Empiria.Land.WebApi.Extranet {
           sendTo = "",
           rfc = "",
           receiptNo = "",
+          total = 0m,
           presentationDate = "",
         };
       }
@@ -90,9 +91,9 @@ namespace Empiria.Land.WebApi.Extranet {
         status = transaction.Workflow.CurrentStatus,
         sendTo = transaction.ExtensionData.SendTo.Address,
         rfc = transaction.ExtensionData.RFC,
-        receiptNo = transaction.PaymentOrderData.PaymentReference,
+        receiptNo = transaction.Payments.ReceiptNumbers,
+        total = transaction.Items.TotalFee.Total,
         presentationDate = transaction.PresentationTime
-
       };
     }
 
