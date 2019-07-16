@@ -21,7 +21,8 @@ namespace Empiria.Land.Instruments {
     #region Internal methods
     static internal void WriteInstrument(LegalInstrument o) {
       var operation = DataOperation.Parse("writeLRSInstrument", o.Id, o.UID, o.GetEmpiriaType().Id,
-                                          o.Number, o.IssueOffice.Id, o.IssuedBy.Id, o.IssueDate,
+                                          o.RequestedBy, o.Number, o.IssueOffice.Id,
+                                          o.IssuedBy.Id, o.IssueDate,
                                           o.ExtensionData.ToString(), o.Summary, o.Keywords,
                                           (char) o.Status, o.PostingTime, o.PostedBy.Id,
                                           o.Integrity.GetUpdatedHashCode());

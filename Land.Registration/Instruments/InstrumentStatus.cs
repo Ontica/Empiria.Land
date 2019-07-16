@@ -14,11 +14,10 @@ namespace Empiria.Land.Instruments {
 
   /// <summary>Indicates the status of an instrument.</summary>
   public enum InstrumentStatus {
+    All = '?',
     Pending = 'P',
     Signed = 'S',
     Requested = 'R',
-    Payed = 'Y',
-    OnProcess = 'P',
     Delivered = 'C',
     Returned = 'T',
     Deleted = 'X'

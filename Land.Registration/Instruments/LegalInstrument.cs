@@ -20,32 +20,39 @@ namespace Empiria.Land.Instruments {
   /// <summary>Represents a legal instrument: deed, will, contract, notarial act, court writ, etc.</summary>
   public class LegalInstrument : BaseObject, IProtected {
 
-    #region Fields
-
-    #endregion Fields
-
     #region Constructors and parsers
+
 
     private LegalInstrument() {
       // Required by Empiria Framework
     }
 
-    public LegalInstrument(JsonObject data) {
-      EmpiriaLog.Debug(data.ToString());
 
+    public LegalInstrument(JsonObject data) {
       this.ExtensionData = new JsonObject();
 
-      this.ExtensionData.Add("requestedBy", data.Get<string>("requestedBy"));
-      this.ExtensionData.Add("propertyUID", data.Get<string>("propertyUID"));
-
-      this.Summary = data.Get<string>("projectedOperation");
-
-
+      this.LoadData(data);
     }
 
 
     static public LegalInstrument TryParse(string uid) {
       return BaseObject.ParseKey<LegalInstrument>(uid);
+    }
+
+
+    static public FixedList<LegalInstrument> GetList(InstrumentStatus status, string keywords) {
+      string filter = status != InstrumentStatus.All ? $"InstrumentStatus = '{(char) status}'" : String.Empty;
+
+      if (!String.IsNullOrWhiteSpace(keywords)) {
+        if (filter.Length != 0) {
+          filter += " AND ";
+        }
+        filter += SearchExpression.ParseAndLikeKeywords("InstrumentKeywords", keywords);
+      }
+
+      string sort = "PostingTime DESC";
+
+      return BaseObject.GetList<LegalInstrument>(filter, sort).ToFixedList();
     }
 
 
@@ -61,11 +68,12 @@ namespace Empiria.Land.Instruments {
     }
 
 
+    [DataField("RequestedBy")]
     public string RequestedBy {
-      get {
-        return ExtensionData.Get("requestedBy", String.Empty);
-      }
+      get;
+      private set;
     }
+
 
     public RealEstate Property {
       get {
@@ -107,6 +115,7 @@ namespace Empiria.Land.Instruments {
       private set;
     }
 
+
     [DataField("InstrumentExtData")]
     protected internal JsonObject ExtensionData {
       get;
@@ -127,6 +136,28 @@ namespace Empiria.Land.Instruments {
     public InstrumentStatus Status {
       get;
       private set;
+    }
+
+
+    public string StatusName {
+      get {
+        switch (this.Status) {
+          case InstrumentStatus.Pending:
+            return "Pendiente";
+          case InstrumentStatus.Signed:
+            return "Firmado";
+          case InstrumentStatus.Requested:
+            return "En trámite";
+          case InstrumentStatus.Delivered:
+            return "Registrado";
+          case InstrumentStatus.Returned:
+            return "Devuelto";
+          case InstrumentStatus.Deleted:
+            return "Eliminado";
+          default:
+            throw Assertion.AssertNoReachThisCode("Unrecognized instrument status.");
+        }
+      }
     }
 
 
@@ -168,8 +199,8 @@ namespace Empiria.Land.Instruments {
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
       if (version == 1) {
         return new object[] {
-          1, "Id", this.Id, "UID", this.UID, "Number", this.Number, "Summary", this.Summary,
-          "IssueOffice", this.IssueOffice.Id, "IssuedBy", this.IssuedBy.Id, "IssueDate", this.IssueDate,
+          1, "Id", this.Id, "UID", this.UID, "RequestedBy", this.RequestedBy, "Number", this.Number,
+          "Summary", this.Summary, "IssueOffice", this.IssueOffice.Id, "IssuedBy", this.IssuedBy.Id, "IssueDate", this.IssueDate,
           "PostingTime", this.PostingTime, "PostedBy", this.PostedBy.Id,
           "ExtensionData", this.ExtensionData.ToString(), "Status", (char) this.Status
         };
@@ -230,6 +261,7 @@ namespace Empiria.Land.Instruments {
       this.IssueDate = ExecutionServer.DateMinValue;
     }
 
+
     public void Sign(JsonObject bodyAsJson) {
       var signToken = bodyAsJson.Get<string>("signToken");
 
@@ -263,17 +295,19 @@ namespace Empiria.Land.Instruments {
 
 
     public void Update(JsonObject data) {
-      this.ExtensionData.Set("requestedBy", data.Get<string>("requestedBy"));
-      this.ExtensionData.Set("propertyUID", data.Get<string>("propertyUID"));
-      this.Summary = data.Get<string>("projectedOperation");
+      Assertion.AssertObject(data, "data");
+
+      this.LoadData(data);
     }
 
     #endregion Public methods
 
     #region Private methods
 
-    private void LoadData() {
-
+    private void LoadData(JsonObject data) {
+      this.RequestedBy = data.Get<string>("requestedBy");
+      this.ExtensionData.Set("propertyUID", data.Get<string>("propertyUID"));
+      this.Summary = data.Get<string>("projectedOperation");
     }
 
     #endregion Private methods

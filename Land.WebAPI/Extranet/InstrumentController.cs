@@ -24,11 +24,12 @@ namespace Empiria.Land.WebApi.Extranet {
 
     [HttpGet]
     [Route("v2/extranet/instruments")]
-    public CollectionModel GetInstruments() {
+    public PagedCollectionModel GetInstruments([FromUri] InstrumentStatus status = InstrumentStatus.Pending,
+                                               [FromUri] string keywords = "") {
       try {
-        var list = LegalInstrument.GetList<LegalInstrument>();
+        var list = LegalInstrument.GetList(status, keywords);
 
-        return new CollectionModel(this.Request, list.ToResponse());
+        return new PagedCollectionModel(this.Request, list.ToResponse());
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -48,7 +49,7 @@ namespace Empiria.Land.WebApi.Extranet {
           return new SingleObjectModel(this.Request, instrument.ToResponse(),
                                        instrument.GetType().FullName);
         } else {
-          throw new ResourceNotFoundException("NotFound.UID.NotFound",
+          throw new ResourceNotFoundException("Instrument.UID.NotFound",
                                               $"No tenemos registrado ningún instrumento con folio real {instrumentUID}.");
         }
       } catch (Exception e) {

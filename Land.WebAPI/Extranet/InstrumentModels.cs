@@ -43,6 +43,7 @@ namespace Empiria.Land.WebApi.Extranet {
         issueDate = instrument.IssueDate,
         postingTime = instrument.PostingTime,
         status = instrument.Status,
+        statusName = instrument.StatusName,
 
         projectedOperation = instrument.Summary,
         property = instrument.Property.IsEmptyInstance ? new { } : instrument.Property.ToResponse(),
