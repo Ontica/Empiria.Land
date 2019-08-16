@@ -143,17 +143,26 @@ namespace Empiria.Land.Instruments {
       get {
         switch (this.Status) {
           case InstrumentStatus.Pending:
-            return "Pendiente";
+            return "En elaboración";
+
           case InstrumentStatus.Signed:
             return "Firmado";
+
+          case InstrumentStatus.OnPayment:
+            return "Por pagar";
+
           case InstrumentStatus.Requested:
-            return "En trámite";
-          case InstrumentStatus.Delivered:
-            return "Registrado";
+            return "Ingresado";
+
+          case InstrumentStatus.Finished:
+            return "Finalizado";
+
           case InstrumentStatus.Returned:
             return "Devuelto";
+
           case InstrumentStatus.Deleted:
             return "Eliminado";
+
           default:
             throw Assertion.AssertNoReachThisCode("Unrecognized instrument status.");
         }
@@ -231,6 +240,8 @@ namespace Empiria.Land.Instruments {
       var transaction = creator.CreateTransaction(this, data);
 
       ExtensionData.Set("transactionUID", transaction.UID);
+
+      this.Status = InstrumentStatus.OnPayment;
     }
 
 
@@ -242,6 +253,8 @@ namespace Empiria.Land.Instruments {
       var creator = new TransactionCreator();
 
       creator.FileTransaction(this, data);
+
+      this.Status = InstrumentStatus.Requested;
     }
 
     #region Public methods
@@ -300,15 +313,19 @@ namespace Empiria.Land.Instruments {
       this.LoadData(data);
     }
 
+
     #endregion Public methods
+
 
     #region Private methods
 
+
     private void LoadData(JsonObject data) {
-      this.RequestedBy = data.Get<string>("requestedBy");
-      this.ExtensionData.Set("propertyUID", data.Get<string>("propertyUID"));
-      this.Summary = data.Get<string>("projectedOperation");
+      this.RequestedBy = data.GetClean("requestedBy").ToUpperInvariant();
+      this.ExtensionData.Set("propertyUID", data.Get<string>("propertyUID").ToUpperInvariant());
+      this.Summary = data.GetClean("projectedOperation").ToUpperInvariant();
     }
+
 
     #endregion Private methods
 

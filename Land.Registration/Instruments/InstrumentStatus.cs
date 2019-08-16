@@ -17,8 +17,9 @@ namespace Empiria.Land.Instruments {
     All = '?',
     Pending = 'P',
     Signed = 'S',
+    OnPayment = 'Y',
     Requested = 'R',
-    Delivered = 'C',
+    Finished = 'C',
     Returned = 'T',
     Deleted = 'X'
   }
