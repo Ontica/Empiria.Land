@@ -28,15 +28,9 @@ namespace Empiria.Land.Registration.Transactions {
       // Public instance creation not allowed. Instances must be created using a derived class.
     }
 
-    static private readonly LRSExternalTransaction _empty = new LRSExternalTransaction() {
+    static public LRSExternalTransaction Empty { get; } = new LRSExternalTransaction() {
       IsEmptyInstance = true
     };
-
-    static public LRSExternalTransaction Empty {
-      get {
-        return _empty;
-      }
-    }
 
     static internal LRSExternalTransaction Parse(JsonObject jsonObject) {
       var transaction = new LRSExternalTransaction();
