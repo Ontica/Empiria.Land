@@ -13,7 +13,7 @@ using System;
 using Empiria.Json;
 using Empiria.Messaging;
 
-using Empiria.OnePoint;
+using Empiria.OnePoint.EPayments;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -48,7 +48,7 @@ namespace Empiria.Land.Registration.Transactions {
       extData.RFC = json.Get<string>("RFC", String.Empty);
 
       if (json.Contains("PaymentOrder")) {
-        extData.PaymentOrderData = OnePoint.PaymentOrderData.Parse(json.Slice("PaymentOrder"));
+        extData.PaymentOrderData = PaymentOrderDTO.Parse(json.Slice("PaymentOrder"));
       }
 
       if (json.Contains("ExternalTransaction")) {
@@ -90,10 +90,10 @@ namespace Empiria.Land.Registration.Transactions {
     } = LRSExternalTransaction.Empty;
 
 
-    public IPaymentOrderData PaymentOrderData {
+    public PaymentOrderDTO PaymentOrderData {
       get;
       internal set;
-    } = OnePoint.PaymentOrderData.Empty;
+    } = PaymentOrderDTO.Empty;
 
 
     public SendTo SendTo {

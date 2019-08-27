@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\land.tlaxcala\connectors\Empiria.Land.Connectors.csproj" />
+    <ProjectReference Include="..\..\onepoint\EPayments.Core\Empiria.OnePoint.EPayments.csproj" />
     <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
   </ItemGroup>
   <ItemGroup>

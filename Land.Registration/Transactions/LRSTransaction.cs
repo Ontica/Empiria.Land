@@ -14,7 +14,7 @@ using Empiria.Contacts;
 using Empiria.DataTypes;
 using Empiria.Security;
 
-using Empiria.OnePoint;
+using Empiria.OnePoint.EPayments;
 
 using Empiria.Land.Certification;
 using Empiria.Land.Data;
@@ -22,7 +22,7 @@ using Empiria.Land.Data;
 namespace Empiria.Land.Registration.Transactions {
 
   /// <summary>Represents a transaction or process on a land registration office.</summary>
-  public class LRSTransaction : BaseObject, IFiling, IProtected {
+  public class LRSTransaction : BaseObject, IPayable, IProtected {
 
     #region Fields
 
@@ -126,6 +126,11 @@ namespace Empiria.Land.Registration.Transactions {
       set;
     }
 
+    [DataField("ExternalTransactionNo")]
+    public string ExternalTransactionNo {
+      get;
+      internal set;
+    }
     public LRSTransactionExtData ExtensionData {
       get;
       private set;
@@ -522,23 +527,24 @@ namespace Empiria.Land.Registration.Transactions {
       Assertion.AssertObject(externalTransaction, "externalTransaction");
 
       this.ExtensionData.ExternalTransaction = externalTransaction;
+      this.ExternalTransactionNo = this.ExtensionData.ExternalTransaction.ExternalTransactionNo;
     }
 
     #endregion Public methods
 
-    #region IFiling implementation
+    #region IPayable implementation
 
     private void ClearPaymentOrder() {
-      this.SetPaymentOrderData(Empiria.OnePoint.PaymentOrderData.Empty);
+      this.SetPaymentOrderData(PaymentOrderDTO.Empty);
     }
 
-    public IPaymentOrderData PaymentOrderData {
+    public PaymentOrderDTO PaymentOrderData {
       get {
         return this.ExtensionData.PaymentOrderData;
       }
     }
 
-    public void SetPaymentOrderData(IPaymentOrderData paymentOrderData) {
+    public void SetPaymentOrderData(PaymentOrderDTO paymentOrderData) {
       this.ExtensionData.PaymentOrderData = paymentOrderData;
 
       if (!this.IsNew) {
@@ -546,7 +552,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public IPaymentOrderData TryGetPaymentOrderData() {
+    public PaymentOrderDTO TryGetPaymentOrderData() {
       if (!this.ExtensionData.PaymentOrderData.IsEmptyInstance) {
         return this.ExtensionData.PaymentOrderData;
       } else {
@@ -554,7 +560,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    #endregion IFiling implementation
+    #endregion IPayable implementation
 
     #region Private methods
 
