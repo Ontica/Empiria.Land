@@ -9,10 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Json;
-
 using Empiria.OnePoint.EFiling;
-using Empiria.OnePoint.EPayments;
 
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
@@ -22,6 +19,12 @@ namespace Empiria.Land.Integration {
 
   /// <summary>Provides land transaction services through external electronic filing requests.</summary>
   public class LandFilingTransactionProvider: IFilingTransactionProvider {
+
+    #region Fields
+
+    static private readonly decimal BASE_SALARY_VALUE = 84.50m;
+
+    #endregion Fields
 
     #region Constructors and parsers
 
@@ -40,18 +43,10 @@ namespace Empiria.Land.Integration {
       var transaction = new LRSTransaction(transactionType);
 
       transaction.DocumentType = LRSDocumentType.Parse(744);
-      transaction.RequestedBy = filingRequest.RequestedBy;
+      transaction.RequestedBy = filingRequest.RequestedBy.name;
       transaction.Agency = filingRequest.Agency;
-      // transaction.DocumentDescriptor = instrument.Number;
       transaction.RecorderOffice = RecorderOffice.Parse(96);
-      // transaction.ExtensionData.BaseResource = instrument.Property;
       transaction.ExternalTransactionNo = filingRequest.UID;
-
-      //transaction.ExtensionData.RFC = data.Get("rfc", "XAXX-010101-000");
-
-      //if (data.HasValue("sendTo")) {
-      //  transaction.ExtensionData.SendTo = new SendTo(data.Get<string>("sendTo"));
-      //}
 
       transaction.Save();
 
@@ -74,14 +69,23 @@ namespace Empiria.Land.Integration {
     }
 
 
-    public IFilingTransaction SetPayment(string transactionUID, JsonObject paymentData) {
+    public IFilingTransaction SetPayment(string transactionUID, string receiptNo) {
       Assertion.AssertObject(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      transaction.AddPayment(paymentData.Get<string>("paymentReceiptNo", EmpiriaString.BuildRandomString(10, 10)).ToString(), 84.50m * 2);
+      transaction.AddPayment(receiptNo, transaction.Items.TotalFee.Total);
 
       return ConvertToDTOInterface(transaction);
+    }
+
+
+    public OnePoint.EPayments.PaymentOrderDTO TryGetPaymentOrderData(string transactionUID) {
+      Assertion.AssertObject(transactionUID, "transactionUID");
+
+      var transaction = LRSTransaction.TryParse(transactionUID, true);
+
+      return transaction.TryGetPaymentOrderData();
     }
 
 
@@ -102,16 +106,6 @@ namespace Empiria.Land.Integration {
 
       var transaction = LRSTransaction.TryParse(filingRequest.TransactionUID, true);
 
-      //if (data.HasValue("rfc") || data.HasValue("sendTo")) {
-      //  if (data.HasValue("rfc")) {
-      //    transaction.ExtensionData.RFC = data.Get<string>("rfc");
-      //  }
-      //  if (data.HasValue("sendTo")) {
-      //    transaction.ExtensionData.SendTo = new SendTo(data.Get<string>("sendTo"));
-      //  }
-      //  transaction.Save();
-      //}
-
       return ConvertToDTOInterface(transaction);
     }
 
@@ -122,17 +116,15 @@ namespace Empiria.Land.Integration {
     #region Utility methods
 
     static private void ApplyItemsRuleToTransaction(LRSTransaction transaction) {
-      const decimal baseSalaryValue = 84.50m;
-
       if (transaction.TransactionType.Id == 699 && transaction.DocumentType.Id == 708) {
-        transaction.AddItem(RecordingActType.Parse(2284), LRSLawArticle.Parse(874), baseSalaryValue * 2);
-        transaction.AddItem(RecordingActType.Parse(2114), LRSLawArticle.Parse(859), baseSalaryValue * 2);
+        transaction.AddItem(RecordingActType.Parse(2284), LRSLawArticle.Parse(874), BASE_SALARY_VALUE * 2);
+        transaction.AddItem(RecordingActType.Parse(2114), LRSLawArticle.Parse(859), BASE_SALARY_VALUE * 2);
       } else if (transaction.TransactionType.Id == 702 && transaction.DocumentType.Id == 713) {
-        transaction.AddItem(RecordingActType.Parse(2114), LRSLawArticle.Parse(859), baseSalaryValue * 2);
+        transaction.AddItem(RecordingActType.Parse(2114), LRSLawArticle.Parse(859), BASE_SALARY_VALUE * 2);
       } else if (transaction.Id == 702 && transaction.DocumentType.Id == 710) {
-        transaction.AddItem(RecordingActType.Parse(2111), LRSLawArticle.Parse(859), baseSalaryValue * 2);
+        transaction.AddItem(RecordingActType.Parse(2111), LRSLawArticle.Parse(859), BASE_SALARY_VALUE * 2);
       } else if (transaction.TransactionType.Id == 702 && transaction.DocumentType.Id == 711) {
-        transaction.AddItem(RecordingActType.Parse(2112), LRSLawArticle.Parse(859), baseSalaryValue * 2);
+        transaction.AddItem(RecordingActType.Parse(2112), LRSLawArticle.Parse(859), BASE_SALARY_VALUE * 2);
       }
     }
 
@@ -141,19 +133,27 @@ namespace Empiria.Land.Integration {
       return new FilingTransactionDTO(transaction);
     }
 
-    static private PaymentOrderDTO CreatePaymentOrderData() {
+
+    static private OnePoint.EPayments.PaymentOrderDTO CreatePaymentOrderData() {
       var routeNumber = EmpiriaString.BuildRandomString(16, 16);
       var controlTag = EmpiriaString.BuildRandomString(6, 6);
 
-      return new PaymentOrderDTO(routeNumber, DateTime.Today.AddDays(20), controlTag);
+      return new OnePoint.EPayments.PaymentOrderDTO(routeNumber, DateTime.Today.AddDays(20), controlTag);
     }
 
 
     private class FilingTransactionDTO : IFilingTransaction {
 
       internal FilingTransactionDTO(LRSTransaction transaction) {
+        this.Id = transaction.Id;
         this.UID = transaction.UID;
         this.PresentationTime = transaction.PresentationTime;
+        this.StatusName = transaction.Workflow.CurrentStatusName;
+      }
+
+      public int Id {
+        get;
+        private set;
       }
 
       public string UID {
@@ -161,6 +161,10 @@ namespace Empiria.Land.Integration {
         private set;
       }
 
+      public string StatusName {
+        get;
+        private set;
+      }
 
       public DateTime PresentationTime {
         get;
