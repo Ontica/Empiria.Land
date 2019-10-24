@@ -127,6 +127,11 @@ namespace Empiria.Land.Registration.Transactions {
           if (type.Id == 704) {    // Trámite comercio
             list.Add(LRSTransactionStatus.ToDeliver);
             list.Add(LRSTransactionStatus.ToReturn);
+
+          } else if (docType.Id == 757) {    // Segundo aviso definitivo
+            list.Add(LRSTransactionStatus.ToReturn);
+
+
           } else {
             if (ExecutionServer.CurrentPrincipal.IsInRole("LRSTransaction.LawyerRegister")) {
               list.Add(LRSTransactionStatus.ToReturn);
