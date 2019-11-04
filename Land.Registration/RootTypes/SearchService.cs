@@ -11,6 +11,7 @@
 using System;
 
 using Empiria.Data;
+
 using Empiria.Land.Certification;
 using Empiria.Land.Registration.Transactions;
 
@@ -54,6 +55,19 @@ namespace Empiria.Land.Registration {
     }
 
 
+    static public FixedList<LegacyParty> LegacyParties(string keywords) {
+      string filter = String.Empty;
+
+      if (keywords.Length != 0) {
+        filter = SearchExpression.ParseAndLike("Keywords", EmpiriaString.BuildKeywords(keywords));
+      }
+
+      string sql = EntitySqlString("OldLegacyParties", String.Empty, filter, "FullName", 250);
+
+      return DataReader.GetFixedList<LegacyParty>(DataOperation.Parse(sql));
+    }
+
+
     static public FixedList<RecordingActParty> Parties(string keywords, string sort = "") {
       string filter = FilterExpression("FullSearchKeywords", keywords);
       sort = SortExpression(sort, "PartyFullName, PartyOfFullName");
@@ -64,6 +78,7 @@ namespace Empiria.Land.Registration {
       return DataReader.GetList(DataOperation.Parse(sql),
                                 (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
+
 
     static public FixedList<RecordingActParty> PrimaryParties(string keywords, string sort = "") {
       string keywordsFilter = FilterExpression("PartyKeywords", keywords);
@@ -88,6 +103,7 @@ namespace Empiria.Land.Registration {
       return DataReader.GetList(DataOperation.Parse(sql),
                                 (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
     }
+
 
     static public FixedList<RecordingBook> RecordingBooks(string keywords, string sort = "") {
       string filter = FilterExpression("BookKeywords", keywords);
@@ -123,6 +139,7 @@ namespace Empiria.Land.Registration {
     #endregion Public methods
 
     #region Private methods
+
 
     static private string EntitySqlString(string entityTableName, string entityStatusFieldName,
                                           string filter, string sort, int howManyRows) {
