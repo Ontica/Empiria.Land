@@ -30,6 +30,7 @@ namespace Empiria.Land.Documentation {
       var documentSet = TransactionDocumentSet.ParseFor(transaction);
 
       documentSet.SetMainDocument(uploadedFile.InputStream, GetFileType(uploadedFile), uploadedFile.FileName);
+
       return documentSet.MainDocument;
     }
 

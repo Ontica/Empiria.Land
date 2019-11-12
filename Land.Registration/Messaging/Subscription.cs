@@ -28,7 +28,6 @@ namespace Empiria.Land.Messaging {
 
   public class Subscription : BaseObject {
 
-
     #region Constructors and parsers
 
     internal Subscription(SubscriptionType subscriptionType, string subscribedObjectUID, SendTo sendTo) {
@@ -47,7 +46,6 @@ namespace Empiria.Land.Messaging {
 
 
     #endregion Constructors and parsers
-
 
     #region Fields
 

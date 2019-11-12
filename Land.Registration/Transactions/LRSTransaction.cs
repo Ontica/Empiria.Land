@@ -515,6 +515,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
     public string QRCodeSecurityHash() {
       if (!this.IsNew) {
         return FormerCryptographer.CreateHashCode(this.Id.ToString("00000000"), this.UID).Substring(0, 8);
@@ -522,6 +523,7 @@ namespace Empiria.Land.Registration.Transactions {
         return String.Empty;
       }
     }
+
 
     internal void SetExternalTransaction(LRSExternalTransaction externalTransaction) {
       Assertion.AssertObject(externalTransaction, "externalTransaction");

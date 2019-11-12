@@ -45,6 +45,7 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
+
     public void Close() {
       this.AssertCanBeClosed();
       this.Document.Close();
@@ -236,10 +237,6 @@ namespace Empiria.Land.Registration {
         return _validator;
       }
     }
-
-    int IIdentifiable.Id => this.Document.Id;
-
-    string IIdentifiable.UID => this.Document.UID;
 
     #endregion Integrity methods
 

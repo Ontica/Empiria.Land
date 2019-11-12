@@ -65,7 +65,7 @@
         "baseAddress": "http://empiria.land/intranet",
         "pathRule": {
           "replace": "/web.api/",
-          "with":  ""
+          "with": ""
         }
       }
     }

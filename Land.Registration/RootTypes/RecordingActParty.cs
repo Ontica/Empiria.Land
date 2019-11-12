@@ -106,6 +106,7 @@ namespace Empiria.Land.Registration {
       set;
     } = Quantity.Zero;
 
+
     [DataField("IsOwnershipStillActive")]
     public bool IsOwnershipStillActive {
       get;
