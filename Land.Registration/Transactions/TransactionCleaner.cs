@@ -12,7 +12,6 @@ using System;
 using Empiria.Data;
 
 using Empiria.Land.Data;
-using Empiria.Land.Messaging;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -31,13 +30,16 @@ namespace Empiria.Land.Registration.Transactions {
       // Singleton pattern needs private constructor
     }
 
+
     static public TransactionCleaner GetInstance() {
       return instance;
     }
 
+
     #endregion Constructors and parsers
 
     #region Public methods
+
 
     public string UID {
       get;
@@ -76,6 +78,7 @@ namespace Empiria.Land.Registration.Transactions {
     #endregion Public methods
 
     #region Private methods
+
 
     static private void AutoUpdateWorkflowForESignedTransactions() {
       FixedList<LRSTransaction> transactions = GetSignedTransactionsInOnSignStatus();
@@ -122,6 +125,7 @@ namespace Empiria.Land.Registration.Transactions {
 
       }
     }
+
 
     static private void CleanTransaction(LRSTransaction transaction) {
       var currentTask = transaction.Workflow.GetCurrentTask();
@@ -176,6 +180,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
     static private void CleanUndelivered() {
       FixedList<LRSTransaction> transactions = GetUndeliveredTransactions();
 
@@ -204,6 +209,7 @@ namespace Empiria.Land.Registration.Transactions {
 
       } // foreach
     }
+
 
     static private void CleanWorkflowTransactions() {
       FixedList<LRSTransaction> transactions = GetTransactionsToBeCleaned();
@@ -278,10 +284,32 @@ namespace Empiria.Land.Registration.Transactions {
       return DataReader.GetFixedList<LRSTransaction>(operation);
     }
 
+
     static private void SendTransactionsToESignSystem() {
       var op = DataOperation.Parse("doLRSUpdateESignJobs");
 
       DataWriter.Execute(op);
+
+      //var sql = "SELECT * FROM vwLRSTransactionsToBeSigned " +
+      //          "ORDER BY PresentationTime";
+
+      //var operation = DataOperation.Parse(sql);
+
+      //FixedList<LRSTransaction> transactions = DataReader.GetFixedList<LRSTransaction>(operation);
+
+      //var eSignService = new ESignService();
+
+      //foreach (var transaction in transactions) {
+      //  if ((!transaction.Document.IsEmptyInstance && !transaction.Document.IsClosed) ||
+      //      transaction.GetIssuedCertificates().Exists(x => !x.IsClosed)) {
+      //    continue;
+      //  }
+
+      //  SignRequestsDTO[] signRequests = BuildSignRequestsForTransaction(transaction);
+
+      //  eSignService.RequestSign(signRequests);
+
+      //}  // foreach
     }
 
     #endregion Private methods
