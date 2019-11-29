@@ -290,7 +290,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    internal void Take(string notes, Contact responsible, DateTime date) {
+    public void Take(string notes, Contact responsible, DateTime date) {
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
       if (currentTask.NextStatus == LRSTransactionStatus.EndPoint) {

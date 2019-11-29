@@ -26,8 +26,8 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.UI {
 
-  /// <summary>Static class that generates predefined HtmlSelect controls content for Empiria Government Land
-  /// Registration System.</summary>
+  /// <summary>Static class that generates predefined HtmlSelect controls content for
+  /// Empiria Government Land Registration System.</summary>
   static public class LRSHtmlSelectControls {
 
     #region Public methods
@@ -38,11 +38,13 @@ namespace Empiria.Land.UI {
       HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de limitación )");
     }
 
+
     static public void LoadLegacyTraslativeActTypesCategoriesCombo(HtmlSelect comboControl) {
       var list = RecordingActTypeCategory.GetList("LegacyTraslativeActTypesCategories.List");
 
       HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de acto jurídico )");
     }
+
 
     static public void LoadRecordingActTypesCategoriesCombo(HtmlSelect comboControl) {
       var list = RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
@@ -50,11 +52,13 @@ namespace Empiria.Land.UI {
       HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name", "( Tipo de acto jurídico )");
     }
 
+
     static public void LoadTransactionActTypesCategoriesCombo(HtmlSelect comboControl) {
       var list = RecordingActTypeCategory.GetList("TransactionActTypesCategories.List");
 
       HtmlSelectContent.LoadCombo(comboControl, list, "Id", "Name");
     }
+
 
     static public void LoadRecordingBookClassesCombo(HtmlSelect comboControl, string headerItemText,
                                                      RecordingActTypeCategory defaultItem) {
@@ -65,6 +69,7 @@ namespace Empiria.Land.UI {
         comboControl.Value = defaultItem.Id.ToString();
       }
     }
+
 
     static public string GetTransactionNewStatusComboItems(int typeId, int docTypeId,
                                                           LRSTransactionStatus currentStatus) {
@@ -78,6 +83,7 @@ namespace Empiria.Land.UI {
       }
       return html;
     }
+
 
     static public string GetControlDeskTransactionNewStatusComboItems(int typeId, int docTypeId,
                                                                       LRSTransactionStatus currentStatus,
@@ -93,7 +99,13 @@ namespace Empiria.Land.UI {
         return GetTransactionNewStatusComboItems(typeId, docTypeId, currentStatus);
 
       } else if (currentStatus == LRSTransactionStatus.Control && nextStatus != LRSTransactionStatus.EndPoint) {
-        return HtmlSelectContent.GetComboHtmlItem("ReturnToControlDesk", "Dejar pendiente el 'Siguiente estado'");
+        return HtmlSelectContent.GetComboHtmlItem("AssignTo", "Asignar este trámite") +
+               HtmlSelectContent.GetComboHtmlItem("ReturnToControlDesk", "Dejar pendiente el 'Siguiente estado'");
+
+      } else if (currentStatus == LRSTransactionStatus.Received && nextStatus != LRSTransactionStatus.Control
+                                                                && nextStatus != LRSTransactionStatus.EndPoint) {
+        return HtmlSelectContent.GetComboHtmlItem("AssignTo", "Asignar este trámite") +
+               HtmlSelectContent.GetComboHtmlItem("PullToControlDesk", "Traerlo a la mesa de control");
 
       } else if (currentStatus != LRSTransactionStatus.Control && nextStatus == LRSTransactionStatus.Control) {
         return HtmlSelectContent.GetComboHtmlItem("ReceiveInControlDesk", "Listo para recibirse en mesa de control");
@@ -108,11 +120,39 @@ namespace Empiria.Land.UI {
     }
 
 
+    static public FixedList<Contact> GetAsigneeComboItems(LRSTransaction transaction,
+                                                          LRSTransactionStatus operation) {
+      string[] contacts;
+
+      switch (operation) {
+        case LRSTransactionStatus.Recording:
+          contacts = ConfigurationData.GetString("Empiria.Security",
+                                                 "User.Operation.Tag.LRSTransaction.Register").Split('|');
+          return LoadContactsList(contacts);
+
+        case LRSTransactionStatus.Elaboration:
+          contacts = ConfigurationData.GetString("Empiria.Security",
+                                                 "User.Operation.Tag.LRSTransaction.Certificates").Split('|');
+          return LoadContactsList(contacts);
+
+        case LRSTransactionStatus.Juridic:
+          contacts = ConfigurationData.GetString("Empiria.Security",
+                                                 "User.Operation.Tag.LRSTransaction.Juridic").Split('|');
+
+          return LoadContactsList(contacts);
+
+        default:
+          return new FixedList<Contact>();
+      }
+    }
+
+
     static public string GetRecordingBookClassesComboItems(string headerItemText) {
       var list = RecordingActTypeCategory.GetList("RecordingBookClasses.List");
 
       return HtmlSelectContent.GetComboHtml(list, "Id", "Name", headerItemText);
     }
+
 
     static public string GetBookImageClippersComboItems(RecorderOffice recorderOffice,
                                                         ComboControlUseMode comboControlUseMode,
@@ -123,6 +163,7 @@ namespace Empiria.Land.UI {
                                          "( Todos los cortadores de libros )",
                                          "No hay cortadores definidos");
     }
+
 
     static public string GetBookImageDigitalizersComboItems(RecorderOffice recorderOffice,
                                                             ComboControlUseMode comboControlUseMode,
@@ -135,6 +176,7 @@ namespace Empiria.Land.UI {
                                          "No hay digitalizadores definidos");
     }
 
+
     static public string GetRecordingsBatchAnalystComboItems(ComboControlUseMode comboControlUseMode,
                                                              Contact defaultBookBatchRecorderUser) {
       FixedList<Contact> contacts =
@@ -146,6 +188,7 @@ namespace Empiria.Land.UI {
                                          "( Todos los analistas de libros )",
                                          "No hay analistas definidos");
     }
+
 
     static public void LoadRecordingActTypesCombo(RecordingActTypeCategory recordingActTypeCategory,
                                                   HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
@@ -161,6 +204,7 @@ namespace Empiria.Land.UI {
       }
     }
 
+
     static public void LoadRecorderOfficeCombo(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
                                                RecorderOffice defaultOffice) {
       FixedList<RecorderOffice> officeList = RecorderOffice.GetList();
@@ -174,6 +218,7 @@ namespace Empiria.Land.UI {
         comboControl.Value = defaultOffice.Id.ToString();
       }
     }
+
 
     static public void LoadDomainRecordingSections(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
                                                    string defaultValue = "") {
@@ -189,6 +234,7 @@ namespace Empiria.Land.UI {
       }
     }
 
+
     static public void LoadRecorderOfficeMunicipalitiesCombo(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
                                                              RecorderOffice recorderOffice, GeographicRegion defaultItem) {
       FixedList<Municipality> list = recorderOffice.GetMunicipalities();
@@ -201,6 +247,7 @@ namespace Empiria.Land.UI {
         comboControl.Value = defaultItem.Id.ToString();
       }
     }
+
 
     static public void LoadRecorderOfficersCombo(HtmlSelect comboControl, ComboControlUseMode comboControlUseMode,
                                                  RecordingBook recordingBook, Contact defaultRecorderOfficer) {
@@ -217,6 +264,7 @@ namespace Empiria.Land.UI {
       }
     }
 
+
     static public RecorderOffice ParseRecorderOffice(WebPage webPage, string controlUniqueID) {
       string selectedValue = webPage.GetControlState(controlUniqueID);
       if (!String.IsNullOrEmpty(selectedValue)) {
@@ -225,6 +273,7 @@ namespace Empiria.Land.UI {
         return RecorderOffice.Empty;
       }
     }
+
 
     static public RecordingActTypeCategory ParseRecordingActTypeCategory(WebPage webPage,
                                                                          string controlUniqueID) {
@@ -260,9 +309,25 @@ namespace Empiria.Land.UI {
       }
       xhtml += HtmlSelectContent.GetComboHtml(contacts, "Id", "Alias", String.Empty);
       if (!selectedContact.IsEmptyInstance) {
-        xhtml.Replace("value='" + selectedContact.Id.ToString() + "'>", "value='" + selectedContact.Id.ToString() + " selected'>");
+        xhtml.Replace("value='" + selectedContact.Id.ToString() + "'>",
+                      "value='" + selectedContact.Id.ToString() + " selected'>");
       }
       return xhtml;
+    }
+
+
+    private static FixedList<Contact> LoadContactsList(string[] contactIdsArray) {
+      List<Contact> contactsList = new List<Contact>(contactIdsArray.Length);
+
+      foreach (var contactId in contactIdsArray) {
+        var contact = Contact.Parse(int.Parse(contactId.Trim()));
+
+        contactsList.Add(contact);
+      }
+
+      contactsList.Sort((x, y) => x.Alias.CompareTo(y.Alias));
+
+      return contactsList.ToFixedList();
     }
 
     #endregion Private methods
