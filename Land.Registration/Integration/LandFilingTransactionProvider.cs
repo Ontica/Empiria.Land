@@ -13,7 +13,7 @@ using Empiria.OnePoint.EFiling;
 
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
-
+using Empiria.OnePoint.EPayments;
 
 namespace Empiria.Land.Integration {
 
@@ -37,7 +37,8 @@ namespace Empiria.Land.Integration {
 
     #region Methods
 
-    public IFilingTransaction CreateTransaction(EFilingRequest filingRequest) {
+
+    public IPayable CreateTransaction(EFilingRequest filingRequest) {
       var transactionType = LRSTransactionType.Parse(699);
 
       var transaction = new LRSTransaction(transactionType);
@@ -48,15 +49,18 @@ namespace Empiria.Land.Integration {
       transaction.RecorderOffice = RecorderOffice.Parse(96);
       transaction.ExternalTransactionNo = filingRequest.UID;
 
+      if (filingRequest.RequestedBy.rfc.Length != 0) {
+        transaction.ExtensionData.RFC = filingRequest.RequestedBy.rfc;
+      }
+      if (filingRequest.RequestedBy.email.Length != 0) {
+        transaction.ExtensionData.SendTo = new Empiria.Messaging.SendTo(filingRequest.RequestedBy.email);
+      }
+
       transaction.Save();
 
       ApplyItemsRuleToTransaction(transaction);
 
-      var paymentOrderData = CreatePaymentOrderData();
-
-      transaction.SetPaymentOrderData(paymentOrderData);
-
-      return ConvertToDTOInterface(transaction);
+      return transaction;
     }
 
 
@@ -66,6 +70,17 @@ namespace Empiria.Land.Integration {
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
       return ConvertToDTOInterface(transaction);
+    }
+
+
+    public IPayable GetTransactionAsPayable(string transactionUID) {
+      Assertion.AssertObject(transactionUID, "transactionUID");
+
+      var transaction = LRSTransaction.TryParse(transactionUID, true);
+
+      Assertion.AssertObject(transaction, "transaction");
+
+      return transaction;
     }
 
 
@@ -80,12 +95,15 @@ namespace Empiria.Land.Integration {
     }
 
 
-    public OnePoint.EPayments.PaymentOrderDTO TryGetPaymentOrderData(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
 
-      var transaction = LRSTransaction.TryParse(transactionUID, true);
+    public IFilingTransaction SetPaymentOrder(IPayable transaction,
+                                              OnePoint.EPayments.PaymentOrderDTO paymentOrderData) {
+      Assertion.AssertObject(transaction, "transaction");
+      Assertion.AssertObject(paymentOrderData, "paymentOrderData");
 
-      return transaction.TryGetPaymentOrderData();
+      transaction.SetPaymentOrderData(paymentOrderData);
+
+      return ConvertToDTOInterface((LRSTransaction) transaction);
     }
 
 
@@ -97,6 +115,15 @@ namespace Empiria.Land.Integration {
       transaction.Workflow.Receive("Ingresado automáticamente desde el sistema de notarías y grandes usuarios.");
 
       return ConvertToDTOInterface(transaction);
+    }
+
+
+    public OnePoint.EPayments.PaymentOrderDTO TryGetPaymentOrderData(string transactionUID) {
+      Assertion.AssertObject(transactionUID, "transactionUID");
+
+      var transaction = LRSTransaction.TryParse(transactionUID, true);
+
+      return transaction.TryGetPaymentOrderData();
     }
 
 
@@ -131,14 +158,6 @@ namespace Empiria.Land.Integration {
 
     static private IFilingTransaction ConvertToDTOInterface(LRSTransaction transaction) {
       return new FilingTransactionDTO(transaction);
-    }
-
-
-    static private OnePoint.EPayments.PaymentOrderDTO CreatePaymentOrderData() {
-      var routeNumber = EmpiriaString.BuildRandomString(16, 16);
-      var controlTag = EmpiriaString.BuildRandomString(6, 6);
-
-      return new OnePoint.EPayments.PaymentOrderDTO(routeNumber, DateTime.Today.AddDays(20), controlTag);
     }
 
 
