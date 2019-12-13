@@ -133,6 +133,22 @@ namespace Empiria.Land.Integration {
 
       var transaction = LRSTransaction.TryParse(filingRequest.TransactionUID, true);
 
+      transaction.RequestedBy = filingRequest.RequestedBy.name;
+
+      if (filingRequest.RequestedBy.rfc.Length != 0) {
+        transaction.ExtensionData.RFC = filingRequest.RequestedBy.rfc;
+      } else {
+        transaction.ExtensionData.RFC = String.Empty;
+      }
+
+      if (filingRequest.RequestedBy.email.Length != 0) {
+        transaction.ExtensionData.SendTo = new Empiria.Messaging.SendTo(filingRequest.RequestedBy.email);
+      } else {
+        transaction.ExtensionData.SendTo = Empiria.Messaging.SendTo.Empty;
+      }
+
+      transaction.Save();
+
       return ConvertToDTOInterface(transaction);
     }
 
