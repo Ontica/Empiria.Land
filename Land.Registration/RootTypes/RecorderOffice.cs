@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : A recorder of deeds office.                                                                   *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Contacts;
@@ -59,17 +59,6 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public RecordingBook AddRootRecordingBook(string rootTag) {
-      FixedList<RecordingBook> roots = this.GetRootRecordingBooks();
-      if (!roots.Contains((x) => x.BookNumber.Equals(rootTag))) {
-        var recordingBook = new RecordingBook(this, rootTag);
-        recordingBook.Save();
-        return recordingBook;
-      } else {
-        throw new LandRegistrationException(LandRegistrationException.Msg.RecorderOfficeRootRecordingBookAlreadyExists,
-                                            this.Alias, rootTag);
-      }
-    }
 
     public FixedList<GeographicRegion> GetNotaryOfficePlaces() {
       return MainRecorderOffice.GetLinks<GeographicRegion>("RecorderOffice->NotaryOfficePlaces",
@@ -116,9 +105,6 @@ namespace Empiria.Land.Registration {
       return RecordingBooksData.GetRecordingBooksInSection(this, sectionType);
     }
 
-    public FixedList<RecordingBook> GetRootRecordingBooks() {
-      return RecordingBooksData.GetRootRecordingBooks(this);
-    }
 
     internal FilesFolder GetRootImagesFolder() {
       var rootFolders = RootFilesFolder.GetRootFilesFolders();

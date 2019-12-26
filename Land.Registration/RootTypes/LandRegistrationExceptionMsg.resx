@@ -209,9 +209,6 @@
   <data name="PropertyNotBelongsToRecordingAct" xml:space="preserve">
     <value>El acto jurídico con identificador {1} no aplica a la propiedad con id = {0}. Puede ser que este problema sea ocasionado por un error de programación.</value>
   </data>
-  <data name="RecorderOfficeRootRecordingBookAlreadyExists" xml:space="preserve">
-    <value>Se intentó crear la sección '{1}' dentro del Distrito Judicial '{0}', pero ya existe una sección con ese nombre en la misma.</value>
-  </data>
   <data name="RecorderOfficialOutOfPeriod" xml:space="preserve">
     <value>El Oficial Registrador Lic. {0}, no estaba suscrito al Distrito Judicial {1} el día {2}</value>
   </data>

@@ -8,7 +8,7 @@
 *  Summary   : The exception that is thrown when a problem occurs in Empiria Government Land Registration    *
 *              System.                                                                                       *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Reflection;
 
@@ -50,7 +50,6 @@ namespace Empiria.Land.Registration {
       PropertyHasAnnotations,
       PropertyIsReferencedInOtherDomainActs,
       PropertyNotBelongsToRecordingAct,
-      RecorderOfficeRootRecordingBookAlreadyExists,
       RecorderOfficialOutOfPeriod,
       RecordingActNotBelongsToRecording,
       RecordingActWithOnlyOneOwnerParty,

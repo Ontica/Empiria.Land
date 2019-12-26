@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Provides database read and write methods for recording books.                                 *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Data;
 
@@ -183,13 +183,6 @@ namespace Empiria.Land.Data {
       }
     }
 
-    static public FixedList<RecordingBook> GetRootRecordingBooks(RecorderOffice recorderOffice) {
-      var operation = DataOperation.Parse("qryLRSRootRecordingBooks", recorderOffice.Id);
-
-      return DataReader.GetList<RecordingBook>(operation,
-                                        (x) => BaseObject.ParseList<RecordingBook>(x)).ToFixedList();
-
-    }
 
     static public DataView GetVolumeRecordingBooks(RecorderOffice recorderOffice, RecordingBookStatus status, string filter, string sort) {
       return DataReader.GetDataView(DataOperation.Parse("rptLRSVolumeBooks", recorderOffice.Id, (char) status), filter, sort);
