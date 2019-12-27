@@ -7,27 +7,97 @@
 *                                                                                                            *
 *  Summary   : Web API used to retrive physical recording books and recordings information.                  *
 *                                                                                                            *
-********************************* Copyright (c) 2014-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections;
 using System.Web.Http;
 
+using Empiria.Geography;
 using Empiria.WebApi;
 
 using Empiria.Land.Registration;
 
 namespace Empiria.Land.WebApi {
 
+
   /// <summary>Web API used to retrive physical recording books and recordings information.</summary>
   public class RecordingBooksController : WebApiController {
 
     #region Public APIs
+
+
+
+    [HttpGet, AllowAnonymous]
+    [Route("v2/catalogues/real-estate-types")]
+    public CollectionModel GetRealEstateTypes() {
+      try {
+        FixedList<RealEstateType> list = RealEstateType.GetList();
+
+        return new CollectionModel(base.Request, list.ToIdentifiableResponse(x => x.Name),
+                                   typeof(RealEstateType).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpGet, AllowAnonymous]
+    [Route("v2/catalogues/recorder-offices")]
+    public CollectionModel GetRecorderOffice() {
+      try {
+        FixedList<RecorderOffice> list = RecorderOffice.GetList();
+
+        return new CollectionModel(base.Request, list.ToIdentifiableResponse(x => x.Alias),
+                                   typeof(RecorderOffice).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpGet, AllowAnonymous]
+    [Route("v2/catalogues/recorder-offices/{recorderOfficeId}/domain-recording-books")]
+    public CollectionModel GetRecorderOfficeDomainRecordingBooksList(int recorderOfficeId) {
+      try {
+        var recorderOffice = RecorderOffice.Parse(recorderOfficeId);
+
+        var section = RecordingSection.Parse(1051);
+        FixedList<RecordingBook> list = recorderOffice.GetRecordingBooks(section);
+
+        return new CollectionModel(base.Request, list.ToIdentifiableResponse(x => x.AsText),
+                                   typeof(RecordingBook).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
+
+    [HttpGet, AllowAnonymous]
+    [Route("v2/catalogues/recorder-offices/{recorderOfficeId}/municipalities")]
+    public CollectionModel GetRecorderOfficeMunicipalityList(int recorderOfficeId) {
+      try {
+        var recorderOffice = RecorderOffice.Parse(recorderOfficeId);
+
+        FixedList<Municipality> list = recorderOffice.GetMunicipalities();
+
+        return new CollectionModel(base.Request, list.ToIdentifiableResponse(x => x.Name),
+                                   typeof(Municipality).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
 
     [HttpGet, AllowAnonymous]
     [Route("v1/books/{recordingBookId}")]
     public PagedCollectionModel GetRecordingBook(int recordingBookId) {
       throw new NotImplementedException();
     }
+
 
     [HttpGet, AllowAnonymous]
     [Route("v1/books/sections/{sectionId}/recording-offices/{recordingOfficeId}")]
@@ -44,6 +114,7 @@ namespace Empiria.Land.WebApi {
       }
     }
 
+
     [HttpGet, AllowAnonymous]
     [Route("v1/books/sections")]
     public CollectionModel GetRecordingSections() {
@@ -54,6 +125,7 @@ namespace Empiria.Land.WebApi {
         throw base.CreateHttpException(e);
       }
     }
+
 
     [HttpGet, AllowAnonymous]
     [Route("v1/books/sections/{sectionId}")]
@@ -68,9 +140,11 @@ namespace Empiria.Land.WebApi {
       }
     }
 
+
     #endregion Public APIs
 
     #region Private methods
+
 
     private ArrayList GetRecordingBooksList(int sectionId, int recordingOfficeId) {
       var section = RecordingSection.Parse(sectionId);
@@ -102,6 +176,7 @@ namespace Empiria.Land.WebApi {
       return array;
     }
 
+
     private object GetSection(int sectionId) {
       var section = RecordingSection.Parse(sectionId);
 
@@ -122,6 +197,7 @@ namespace Empiria.Land.WebApi {
         recorderOffices = recorderOffices,
       };
     }
+
 
     private ArrayList GetSectionsList() {
       var recordingSections = RecordingSection.GetList();
