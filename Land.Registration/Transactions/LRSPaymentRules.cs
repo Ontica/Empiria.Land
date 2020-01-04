@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Payment rules set for the Land Registration System.                                           *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Land.Registration.Transactions {

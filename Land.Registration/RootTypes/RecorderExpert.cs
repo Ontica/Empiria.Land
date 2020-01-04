@@ -8,7 +8,7 @@
 *  Summary   : Performs the registry of recording acts based on a supplied recording task                    *
 *              and a set of rules defined for each recording act type.                                       *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Land.Registration {

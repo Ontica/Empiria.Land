@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Contains services to integrate Empiria Land with third-party transaction systems (CITyS).     *
 *                                                                                                            *
-********************************* Copyright (c) 2014-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Threading.Tasks;
 using System.Web.Http;

@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Data transfer object that holds data about a real estate partition or subdivision.            *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Land.Registration {

@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : SEDATU Real Estate model with location, cadastral and owners data.                            *
 *                                                                                                            *
-********************************** Copyright(c) 2016-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Land.Registration;

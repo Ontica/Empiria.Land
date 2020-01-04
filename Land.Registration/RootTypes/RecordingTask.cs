@@ -8,7 +8,7 @@
 *  Summary   : Contains data about a recording instruction. A recording task it's needed to create           *
 *              recording acts. RecordingTasks generally are filled by the user services.                     *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Land.Registration {

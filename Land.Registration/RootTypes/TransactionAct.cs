@@ -8,7 +8,7 @@
 *  Summary   : Transaction act that serves only for payment and control functions.                           *
 *              Transaction are not recordable.                                                               *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System.Data;
 
 namespace Empiria.Land.Registration {

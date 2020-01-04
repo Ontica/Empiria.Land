@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Represents a processed and ready to use document image set.                                   *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Documents;

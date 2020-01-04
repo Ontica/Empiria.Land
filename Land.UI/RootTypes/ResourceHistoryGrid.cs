@@ -7,7 +7,7 @@
 *                                                                                                             *
 *  Summary   : Generates a grid HTML content that displays the full resource's history.                       *
 *                                                                                                             *
-********************************** Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************** Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Land.Registration;

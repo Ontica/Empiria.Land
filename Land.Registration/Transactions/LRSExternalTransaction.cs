@@ -8,7 +8,7 @@
 *  Summary   : Acts as an abstract class that holds data for an external transaction request, that may be    *
 *              integrated into an Empiria Land transaction.                                                  *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Contacts;

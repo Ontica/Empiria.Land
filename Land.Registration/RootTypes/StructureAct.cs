@@ -8,7 +8,7 @@
 *  Summary   : Recording act that represents the changes on measures and limits of real estates,             *
 *              as well as the creation of new properties through fusions and divisons.                       *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Land.Registration {

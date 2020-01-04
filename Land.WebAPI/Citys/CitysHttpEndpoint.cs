@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Describes an Http endpoint used to invoke a web API from a client app.                        *
 *                                                                                                            *
-********************************* Copyright (c) 2004-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Land.WebApi.Citys {

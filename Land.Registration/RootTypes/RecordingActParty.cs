@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Represents a roled association between a recording act and a party.                           *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Data;
 

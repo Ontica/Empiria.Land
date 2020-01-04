@@ -8,7 +8,7 @@
 *  Summary   : Describes the conditions and business rules that have to be fulfilled                         *
 *              when a RecordingAct is registered.                                                            *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Json;

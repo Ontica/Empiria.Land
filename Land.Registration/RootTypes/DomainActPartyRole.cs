@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Describes the role that plays a party with respect a domain recording act.                    *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Land.Registration {

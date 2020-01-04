@@ -8,7 +8,7 @@
 *  Summary   : Represents a no-property or document resource. Wills, testaments and some contracts are       *
 *              kinds of No-property resources.                                                               *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Land.Data;

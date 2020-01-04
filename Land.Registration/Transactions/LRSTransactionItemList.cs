@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : List of transaction items or lines. Can be used to hold lines of one or many transactions.    *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
 

@@ -8,7 +8,7 @@
 *  Summary   : Candidate images are processed images that not necessarily will become to a recording image,  *
 *              because sometimes some of them are unreadable and must be replaced.                           *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
