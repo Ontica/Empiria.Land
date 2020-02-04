@@ -22,6 +22,8 @@ namespace Empiria.Land.Registration.Transactions {
   ///  integrated into an Empiria Land transaction.</summary>
   public class LRSExternalTransaction {
 
+    static private readonly decimal BASE_SALARY_VALUE = ConfigurationData.Get<decimal>("BaseSalaryValue");
+
     #region Constructors and parsers
 
     protected LRSExternalTransaction() {
@@ -107,14 +109,14 @@ namespace Empiria.Land.Registration.Transactions {
 
     private void ApplyItemsRuleToTransaction(LRSTransaction transaction) {
       if (this.TransactionType.Id == 699 && this.DocumentType.Id == 708) {
-        transaction.AddItem(RecordingActType.Parse(2284), LRSLawArticle.Parse(874), 146.00m);
-        transaction.AddItem(RecordingActType.Parse(2114), LRSLawArticle.Parse(859), 146.00m);
+        transaction.AddItem(RecordingActType.Parse(2284), LRSLawArticle.Parse(874), BASE_SALARY_VALUE * 2);
+        transaction.AddItem(RecordingActType.Parse(2114), LRSLawArticle.Parse(859), BASE_SALARY_VALUE * 2);
       } else if (this.TransactionType.Id == 702 && this.DocumentType.Id == 713) {
-        transaction.AddItem(RecordingActType.Parse(2114), LRSLawArticle.Parse(859), 146.00m);
+        transaction.AddItem(RecordingActType.Parse(2114), LRSLawArticle.Parse(859), BASE_SALARY_VALUE * 2);
       } else if (this.TransactionType.Id == 702 && this.DocumentType.Id == 710) {
-        transaction.AddItem(RecordingActType.Parse(2111), LRSLawArticle.Parse(859), 146.00m);
+        transaction.AddItem(RecordingActType.Parse(2111), LRSLawArticle.Parse(859), BASE_SALARY_VALUE * 2);
       } else if (this.TransactionType.Id == 702 && this.DocumentType.Id == 711) {
-        transaction.AddItem(RecordingActType.Parse(2112), LRSLawArticle.Parse(859), 146.00m);
+        transaction.AddItem(RecordingActType.Parse(2112), LRSLawArticle.Parse(859), BASE_SALARY_VALUE * 2);
       }
     }
 

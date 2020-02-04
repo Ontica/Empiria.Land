@@ -22,7 +22,7 @@ namespace Empiria.Land.Integration {
 
     #region Fields
 
-    static private readonly decimal BASE_SALARY_VALUE = 84.50m;
+    static private readonly decimal BASE_SALARY_VALUE = ConfigurationData.Get<decimal>("BaseSalaryValue");
 
     #endregion Fields
 
@@ -39,6 +39,8 @@ namespace Empiria.Land.Integration {
 
 
     public IPayable CreateTransaction(EFilingRequest filingRequest) {
+      Assertion.AssertObject(filingRequest, "filingRequest");
+
       var transactionType = LRSTransactionType.Parse(699);
 
       var transaction = new LRSTransaction(transactionType);
@@ -83,6 +85,14 @@ namespace Empiria.Land.Integration {
       return transaction;
     }
 
+
+    public void MarkAsReceived(string transactionUID) {
+      Assertion.AssertObject(transactionUID, "transactionUID");
+
+      var transaction = LRSTransaction.TryParse(transactionUID, true);
+
+      transaction.Workflow.DeliveredElectronicallyToAgency();
+    }
 
     public IFilingTransaction SetPayment(string transactionUID, string receiptNo) {
       Assertion.AssertObject(transactionUID, "transactionUID");
