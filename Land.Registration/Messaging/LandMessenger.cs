@@ -18,6 +18,9 @@ using Empiria.StateEnums;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
+using Empiria.Land.Integration;
+
+
 namespace Empiria.Land.Messaging {
 
   public class LandMessenger {
@@ -268,6 +271,12 @@ namespace Empiria.Land.Messaging {
 
 
     static private void NotifyAgency(LRSTransaction transaction, TransactionEventType eventType) {
+      if (transaction.ComesFromAgencyExternalFilingSystem) {
+        NotifyAgencyExternalFilingSystem(transaction, eventType);
+
+        return;
+      }
+
       if (eventType == TransactionEventType.TransactionReceived) {
         return;
       }
@@ -279,6 +288,13 @@ namespace Empiria.Land.Messaging {
 
         EnqueueNotification(sendTo, transaction, notificationType);
       }
+    }
+
+
+    private static void NotifyAgencyExternalFilingSystem(LRSTransaction transaction, TransactionEventType eventType) {
+      var externalFilingProvider = ExternalProviders.GetEFilingProvider();
+
+      externalFilingProvider.NotifyEvent(transaction.ExternalTransactionNo, eventType.ToString());
     }
 
 

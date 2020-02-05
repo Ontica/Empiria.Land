@@ -129,6 +129,14 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Public methods
 
+
+    public void DeliveredElectronicallyToAgency() {
+      this.Close(LRSTransactionStatus.Delivered,
+                 "Entregado a través del sistema para notarías.",
+                 LRSWorkflowRules.InterestedContact, DateTime.Now);
+    }
+
+
     public void DeliverElectronically(string messageUID) {
       if (!IsReadyForElectronicDelivery(messageUID)) {
         throw new LandRegistrationException(LandRegistrationException.Msg.NotReadyForElectronicalDelivery,

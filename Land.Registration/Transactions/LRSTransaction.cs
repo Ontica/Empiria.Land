@@ -126,22 +126,34 @@ namespace Empiria.Land.Registration.Transactions {
       set;
     }
 
+
+    public bool ComesFromAgencyExternalFilingSystem {
+      get {
+        return !String.IsNullOrWhiteSpace(this.ExternalTransactionNo) && !this.Agency.IsEmptyInstance;
+      }
+    }
+
+
+    public bool ComesFromCitysFilingSystem {
+      get {
+        return !String.IsNullOrWhiteSpace(this.ExternalTransactionNo) && !this.ExternalTransaction.IsEmptyInstance
+               && this.DocumentDescriptor.StartsWith("CITyS");
+      }
+    }
+
+
     [DataField("ExternalTransactionNo")]
     public string ExternalTransactionNo {
       get;
       internal set;
     }
+
+
     public LRSTransactionExtData ExtensionData {
       get;
       private set;
     }
 
-
-    public bool IsExternalTransaction {
-      get {
-        return !this.ExternalTransaction.IsEmptyInstance;
-      }
-    }
 
     public LRSExternalTransaction ExternalTransaction {
       get {
@@ -149,11 +161,13 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
     [DataField("TransactionKeywords")]
     public string Keywords {
       get;
       private set;
     }
+
 
     [DataField("PresentationTime", Default = "ExecutionServer.DateMaxValue")]
     public DateTime PresentationTime {
@@ -161,11 +175,13 @@ namespace Empiria.Land.Registration.Transactions {
       internal set;
     }
 
+
     [DataField("ExpectedDelivery")]
     public DateTime ExpectedDelivery {
       get;
       private set;
     }
+
 
     [DataField("LastReentryTime")]
     public DateTime LastReentryTime {
@@ -173,11 +189,13 @@ namespace Empiria.Land.Registration.Transactions {
       internal set;
     }
 
+
     [DataField("ClosingTime")]
     public DateTime ClosingTime {
       get;
       internal set;
     }
+
 
     [DataField("LastDeliveryTime")]
     public DateTime LastDeliveryTime {
@@ -185,17 +203,20 @@ namespace Empiria.Land.Registration.Transactions {
       internal set;
     }
 
+
     [DataField("NonWorkingTime")]
     public int NonWorkingTime {
       get;
       private set;
     }
 
+
     [DataField("ComplexityIndex")]
     public decimal ComplexityIndex {
       get;
       private set;
     }
+
 
     public DateTime EstimatedDueTime {
       get {
@@ -212,6 +233,7 @@ namespace Empiria.Land.Registration.Transactions {
         return date;
       }
     }
+
 
     [DataField("IsArchived")]
     public bool IsArchived {
@@ -540,11 +562,13 @@ namespace Empiria.Land.Registration.Transactions {
       this.SetPaymentOrderData(PaymentOrderDTO.Empty);
     }
 
+
     public PaymentOrderDTO PaymentOrderData {
       get {
         return this.ExtensionData.PaymentOrderData;
       }
     }
+
 
     public void SetPaymentOrderData(PaymentOrderDTO paymentOrderData) {
       this.ExtensionData.PaymentOrderData = paymentOrderData;
@@ -553,6 +577,7 @@ namespace Empiria.Land.Registration.Transactions {
         this.Save();
       }
     }
+
 
     public PaymentOrderDTO TryGetPaymentOrderData() {
       if (!this.ExtensionData.PaymentOrderData.IsEmptyInstance) {

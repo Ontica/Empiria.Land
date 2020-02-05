@@ -91,8 +91,11 @@ namespace Empiria.Land.Integration {
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
+      Assertion.AssertObject(transaction, "transaction");
+
       transaction.Workflow.DeliveredElectronicallyToAgency();
     }
+
 
     public IFilingTransaction SetPayment(string transactionUID, string receiptNo) {
       Assertion.AssertObject(transactionUID, "transactionUID");
