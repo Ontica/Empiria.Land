@@ -18,6 +18,7 @@ using Empiria.OnePoint.EPayments;
 
 using Empiria.Land.Certification;
 using Empiria.Land.Data;
+using Empiria.Land.Registration.Forms;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -394,6 +395,12 @@ namespace Empiria.Land.Registration.Transactions {
       Assertion.Assert(this.Workflow.CurrentStatus == LRSTransactionStatus.Payment,
                        "The transaction's status doesn't permit aggregate new payments.");
     }
+
+
+    public IForm GetForm(LandSystemFormType formType) {
+      return FormsProvider.GetForm(this, formType);
+    }
+
 
     public void RemoveItem(LRSTransactionItem item) {
       this.Items.Remove(item);
