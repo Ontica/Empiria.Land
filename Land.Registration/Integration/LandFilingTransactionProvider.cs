@@ -8,12 +8,15 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Collections.Generic;
 
 using Empiria.OnePoint.EFiling;
+using Empiria.OnePoint.EPayments;
 
+using Empiria.Land.Certification;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
-using Empiria.OnePoint.EPayments;
+
 
 namespace Empiria.Land.Integration {
 
@@ -23,6 +26,9 @@ namespace Empiria.Land.Integration {
     #region Fields
 
     static private readonly decimal BASE_SALARY_VALUE = ConfigurationData.Get<decimal>("BaseSalaryValue");
+
+    private static readonly string PRINT_SERVICES_SERVER_BASE_ADDRESS =
+                                        ConfigurationData.Get<string>("PrintServicesServerBaseAddress");
 
     #endregion Fields
 
@@ -63,6 +69,35 @@ namespace Empiria.Land.Integration {
       ApplyItemsRuleToTransaction(transaction);
 
       return transaction;
+    }
+
+
+    public FixedList<EFilingDocumentDTO> GetOutputDocuments(string transactionUID) {
+      Assertion.AssertObject(transactionUID, "transactionUID");
+
+      var transaction = LRSTransaction.TryParse(transactionUID, true);
+
+      if (!transaction.Workflow.DeliveredOrReturned) {
+        return new FixedList<EFilingDocumentDTO>();
+      }
+
+      var document = transaction.Document;
+
+      List<EFilingDocumentDTO> list = new List<EFilingDocumentDTO>();
+
+      if (document.Security.Signed()) {
+        list.Add(MapToEFilingDocumentDTO(document));
+      }
+
+      var certificates = transaction.GetIssuedCertificates();
+
+      foreach (var certificate in certificates) {
+        if (certificate.Signed()) {
+          list.Add(MapToEFilingDocumentDTO(certificate));
+        }
+      }
+
+      return list.ToFixedList();
     }
 
 
@@ -190,6 +225,37 @@ namespace Empiria.Land.Integration {
     }
 
 
+    static private EFilingDocumentDTO MapToEFilingDocumentDTO(Certificate certificate) {
+      return new EFilingDocumentDTO() {
+        uid = certificate.UID,
+        type = certificate.CertificateType.Name,
+        typeName = $"Certificado de {certificate.CertificateType.DisplayName}",
+        name = $"Certificado {certificate.UID} del trámite {certificate.Transaction.UID}",
+        contentType = "text/html",
+        uri = $"{PRINT_SERVICES_SERVER_BASE_ADDRESS}/certificate.aspx?uid={certificate.UID}&" +
+              $"externalTransaction={certificate.Transaction.ExternalTransactionNo}"
+      };
+    }
+
+
+    static private EFilingDocumentDTO MapToEFilingDocumentDTO(RecordingDocument document) {
+      return new EFilingDocumentDTO() {
+        uid = document.UID,
+        type = document.Subtype.Name,
+        typeName = "Sello registral",
+        name = $"Sello registral {document.UID} del trámite {document.GetTransaction().UID}.",
+        contentType = "text/html",
+        uri = $"{PRINT_SERVICES_SERVER_BASE_ADDRESS}/recording.seal.aspx?uid={document.UID}&" +
+              $"externalTransaction={document.GetTransaction().ExternalTransactionNo}"
+      };
+    }
+
+
+    #endregion Utility methods
+
+
+    #region Inner class FilingTransactionDTO
+
     private class FilingTransactionDTO : IFilingTransaction {
 
       internal FilingTransactionDTO(LRSTransaction transaction) {
@@ -221,8 +287,8 @@ namespace Empiria.Land.Integration {
 
     }
 
+    #endregion Inner class FilingTransactionDTO
 
-    #endregion Utility methods
 
   }  // class LandFilingTransactionProvider
 
