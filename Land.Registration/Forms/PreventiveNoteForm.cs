@@ -17,7 +17,7 @@ using Empiria.OnePoint.EFiling;
 namespace Empiria.Land.Registration.Forms {
 
   /// <summary>Preventive Note Registration Request data form.</summary>
-  public class PreventiveNoteForm : IForm {
+  public class PreventiveNoteForm : IForm, INotaryForm {
 
     #region Constructors and parsers
 
