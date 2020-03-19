@@ -47,14 +47,16 @@ namespace Empiria.Land.Integration {
     public IPayable CreateTransaction(EFilingRequest filingRequest) {
       Assertion.AssertObject(filingRequest, "filingRequest");
 
-      var transactionType = LRSTransactionType.Parse(699);
+      Procedure procedure = filingRequest.Procedure;
+
+      var transactionType = LRSTransactionType.Parse(procedure.TransactionTypeId);
 
       var transaction = new LRSTransaction(transactionType);
 
-      transaction.DocumentType = LRSDocumentType.Parse(744);
+      transaction.DocumentType = LRSDocumentType.Parse(procedure.DocumentTypeId);
       transaction.RequestedBy = filingRequest.RequestedBy.name;
       transaction.Agency = filingRequest.Agency;
-      transaction.RecorderOffice = RecorderOffice.Parse(96);
+      transaction.RecorderOffice = RecorderOffice.Parse(procedure.AuthorityOfficeId);
       transaction.ExternalTransactionNo = filingRequest.UID;
 
       if (filingRequest.RequestedBy.rfc.Length != 0) {
@@ -65,8 +67,6 @@ namespace Empiria.Land.Integration {
       }
 
       transaction.Save();
-
-      ApplyItemsRuleToTransaction(transaction);
 
       return transaction;
     }
@@ -205,19 +205,6 @@ namespace Empiria.Land.Integration {
 
 
     #region Utility methods
-
-    static private void ApplyItemsRuleToTransaction(LRSTransaction transaction) {
-      if (transaction.TransactionType.Id == 699 && transaction.DocumentType.Id == 708) {
-        transaction.AddItem(RecordingActType.Parse(2284), LRSLawArticle.Parse(874), BASE_SALARY_VALUE * 2);
-        transaction.AddItem(RecordingActType.Parse(2114), LRSLawArticle.Parse(859), BASE_SALARY_VALUE * 2);
-      } else if (transaction.TransactionType.Id == 702 && transaction.DocumentType.Id == 713) {
-        transaction.AddItem(RecordingActType.Parse(2114), LRSLawArticle.Parse(859), BASE_SALARY_VALUE * 2);
-      } else if (transaction.Id == 702 && transaction.DocumentType.Id == 710) {
-        transaction.AddItem(RecordingActType.Parse(2111), LRSLawArticle.Parse(859), BASE_SALARY_VALUE * 2);
-      } else if (transaction.TransactionType.Id == 702 && transaction.DocumentType.Id == 711) {
-        transaction.AddItem(RecordingActType.Parse(2112), LRSLawArticle.Parse(859), BASE_SALARY_VALUE * 2);
-      }
-    }
 
 
     static private IFilingTransaction ConvertToDTOInterface(LRSTransaction transaction) {
