@@ -16,6 +16,8 @@ namespace Empiria.Land.Registration.Forms {
 
     PreventiveNoteRegistrationForm,
 
+    DefinitiveNoteRegistrationForm,
+
   }  // enum LandSystemFormType
 
 }  // namespace Empiria.Land.Registration.Forms

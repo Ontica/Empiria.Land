@@ -26,8 +26,13 @@ namespace Empiria.Land.Registration.Forms {
 
       if (request.Procedure.NamedKey == "AvisoPreventivo") {
         return PreventiveNoteForm.Parse(request);
+
+      } else if (request.Procedure.NamedKey == "SegundoAvisoDefinitivo") {
+        return DefinitiveNoteForm.Parse(request);
+
       } else {
         throw new NotImplementedException();
+
       }
     }
 
