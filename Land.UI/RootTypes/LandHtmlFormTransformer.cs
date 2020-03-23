@@ -31,6 +31,10 @@ namespace Empiria.Land.UI {
         case LandSystemFormType.PreventiveNoteRegistrationForm:
           return TransformPreventiveNoteRegistrationForm((PreventiveNoteForm) this._form);
 
+
+        case LandSystemFormType.DefinitiveNoteRegistrationForm:
+          return TransformDefinitiveNoteRegistrationForm((DefinitiveNoteForm) this._form);
+
         default:
           throw Assertion.AssertNoReachThisCode(
                 $"There is not defined an HTML handler for forms of type {this._form.FormType.ToString()}.");
@@ -40,6 +44,22 @@ namespace Empiria.Land.UI {
 
     #region Private methods
 
+
+    private string TransformDefinitiveNoteRegistrationForm(DefinitiveNoteForm form) {
+      string html = GetTemplate(_form.FormType.ToString());
+
+      html = html.Replace("{{PREPARED.BY.SECTION}}", TransformPreparedBySection(form));
+
+      html = html.Replace("{{REAL.PROPERTY.SECTION}}", TransformRealPropertySection(form));
+
+      html = html.Replace("{{OPERATION}}", form.Operation);
+      html = html.Replace("{{GRANTORS}}", form.Grantors);
+      html = html.Replace("{{GRANTEES}}", form.Grantees);
+      html = html.Replace("{{OBSERVATIONS}}", form.Observations);
+
+      return html;
+
+    }
 
     private string TransformPreventiveNoteRegistrationForm(PreventiveNoteForm form) {
       string html = GetTemplate(_form.FormType.ToString());
@@ -59,7 +79,7 @@ namespace Empiria.Land.UI {
     }
 
 
-    private string TransformPreparedBySection(PreventiveNoteForm form) {
+    private string TransformPreparedBySection(INotaryForm form) {
       string html = GetTemplate("PreparedBySection");
 
       html = html.Replace("{{NOTARY.NAME}}", form.Notary.FullName);
@@ -71,7 +91,7 @@ namespace Empiria.Land.UI {
     }
 
 
-    private string TransformRealPropertySection(PreventiveNoteForm form) {
+    private string TransformRealPropertySection(INotaryForm form) {
       if (form.RealPropertyDescription.OverRegistredPropertyUID) {
         var realEstate = RealEstate.TryParseWithUID(form.RealPropertyDescription.PropertyUID);
 
