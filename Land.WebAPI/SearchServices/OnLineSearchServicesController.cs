@@ -679,8 +679,7 @@ namespace Empiria.Land.WebApi {
 
       var items = new List<PropertyBagItem>(8);
 
-      bool transactionHasErrors = (!transaction.Workflow.DeliveredOrReturned &&
-                                    transaction.Workflow.CurrentStatus != LRSTransactionStatus.Archived) ||
+      bool transactionHasErrors = !transaction.Workflow.IsFinished ||
                                   (transaction.Payments.Count == 0 &&
                                   transaction.Items.TotalFee.Total > 0 && !transaction.IsFeeWaiverApplicable);
 
@@ -714,17 +713,16 @@ namespace Empiria.Land.WebApi {
         items.Add(new PropertyBagItem("Pago de derechos", "Este trámite no pagó derechos.", "warning-status-text"));
       }
 
-      if (transaction.Workflow.DeliveredOrReturned) {
+      if (transaction.Workflow.IsFinished) {
         items.Add(new PropertyBagItem("Estado del trámite", transaction.Workflow.CurrentStatusName, "ok-status-text"));
 
-      } else if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Archived) {
-        items.Add(new PropertyBagItem("Estado del trámite",
-                                      transaction.Workflow.CurrentStatusName, "ok-status-text"));
-        items.Add(new PropertyBagItem("Fecha de entrega",
-                                      "Por su naturaleza, este trámite se procesa pero no se entrega al interesado en ventanilla."));
+        if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Archived) {
+          items.Add(new PropertyBagItem("Fecha de entrega",
+                                        "Por su naturaleza, este trámite se procesa pero no se entrega al interesado en ventanilla."));
+        }
 
       } else {
-        var msg = $"Este trámite aún no ha sido marcado como entregado al interesado.<br/><br/>" +
+        var msg = $"Este trámite aún NO ha sido marcado como entregado al interesado.<br/><br/>" +
                   $"Su estado actual es '{transaction.Workflow.CurrentStatusName}'.<br/><br/>" +
                   $"Debido a lo anterior, <u>usted corre el riesgo</u> de que los documentos registrados " +
                   $"o certificados expedidos en el trámite <u>puedan ser alterados sin previo aviso</u>.<br/><br/>" +
