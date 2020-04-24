@@ -72,20 +72,33 @@ namespace Empiria.Land.Integration {
     }
 
 
+    public void EventProcessed(string transactionUID, string eventName) {
+      Assertion.AssertObject(transactionUID, "transactionUID");
+
+      var transaction = LRSTransaction.TryParse(transactionUID, true);
+
+      Assertion.AssertObject(transaction, "transaction");
+
+      if (transaction.Workflow.IsReadyForDeliveryOrReturn) {
+        transaction.Workflow.DeliveredElectronicallyToAgency();
+      }
+    }
+
+
     public FixedList<EFilingDocumentDTO> GetOutputDocuments(string transactionUID) {
       Assertion.AssertObject(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      if (!transaction.Workflow.DeliveredOrReturned) {
+      if (!transaction.Workflow.IsFinished) {
         return new FixedList<EFilingDocumentDTO>();
       }
 
+      var list = new List<EFilingDocumentDTO>();
+
       var document = transaction.Document;
 
-      List<EFilingDocumentDTO> list = new List<EFilingDocumentDTO>();
-
-      if (document.Security.Signed()) {
+      if (!document.IsEmptyInstance && document.Security.Signed()) {
         list.Add(MapToEFilingDocumentDTO(document));
       }
 
@@ -118,17 +131,6 @@ namespace Empiria.Land.Integration {
       Assertion.AssertObject(transaction, "transaction");
 
       return transaction;
-    }
-
-
-    public void MarkAsReceived(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
-
-      var transaction = LRSTransaction.TryParse(transactionUID, true);
-
-      Assertion.AssertObject(transaction, "transaction");
-
-      transaction.Workflow.DeliveredElectronicallyToAgency();
     }
 
 

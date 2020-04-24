@@ -85,6 +85,15 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
+    public bool DeliveredOrReturned {
+      get {
+        return (this.CurrentStatus == LRSTransactionStatus.Delivered ||
+                this.CurrentStatus == LRSTransactionStatus.Returned);
+      }
+    }
+
+
     public bool IsArchivable {
       get {
         return LRSWorkflowRules.IsArchivable(_transaction.TransactionType,
@@ -98,6 +107,15 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
+    public bool IsFinished {
+      get {
+        return (this.DeliveredOrReturned ||
+                this.CurrentStatus == LRSTransactionStatus.Archived);
+      }
+    }
+
+
     public bool IsReadyForDeliveryOrReturn {
       get {
         return (this.CurrentStatus == LRSTransactionStatus.ToDeliver ||
@@ -106,18 +124,12 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public bool DeliveredOrReturned {
-      get {
-        return (this.CurrentStatus == LRSTransactionStatus.Delivered ||
-                this.CurrentStatus == LRSTransactionStatus.Returned);
-      }
-    }
-
     public bool IsReadyForReentry {
       get {
         return LRSWorkflowRules.IsReadyForReentry(_transaction);
       }
     }
+
 
     public LRSWorkflowTaskList Tasks {
       get {
@@ -131,9 +143,23 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     public void DeliveredElectronicallyToAgency() {
-      this.Close(LRSTransactionStatus.Delivered,
-                 "Entregado a través del sistema para notarías.",
-                 LRSWorkflowRules.InterestedContact, DateTime.Now);
+      Assertion.Assert(this.IsReadyForDeliveryOrReturn,
+        $"Transaction {_transaction.UID} is not ready to be electronically delivered to the agency.");
+
+      if (this.CurrentStatus == LRSTransactionStatus.ToDeliver) {
+        this.Close(LRSTransactionStatus.Delivered,
+                   "Entregado a través del sistema de notarías.",
+                   LRSWorkflowRules.InterestedContact, DateTime.Now);
+
+      } else if (this.CurrentStatus == LRSTransactionStatus.ToReturn) {
+        this.Close(LRSTransactionStatus.Returned,
+                   "Devuelto a través del sistema de notarías.",
+                   LRSWorkflowRules.InterestedContact, DateTime.Now);
+
+      } else {
+        throw Assertion.AssertNoReachThisCode();
+
+      }
     }
 
 
