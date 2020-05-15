@@ -101,6 +101,7 @@ namespace Empiria.Land.Registration {
                                                   (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
     }
 
+
     public FixedList<RecordingBook> GetRecordingBooks(RecordingSection sectionType) {
       return RecordingBooksData.GetRecordingBooksInSection(this, sectionType);
     }
@@ -116,6 +117,7 @@ namespace Empiria.Land.Registration {
       }
       return FilesFolder.Empty;
     }
+
 
     #endregion Public methods
 

@@ -9,7 +9,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
 using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration {
@@ -31,6 +30,7 @@ namespace Empiria.Land.Registration {
       get { return BaseObject.ParseEmpty<RecordingSection>(); }
     }
 
+
     static public FixedList<RecordingSection> GetList() {
       var list = GeneralObject.GetList<RecordingSection>();
 
@@ -39,17 +39,39 @@ namespace Empiria.Land.Registration {
       return list;
     }
 
+
+    static public FixedList<RecordingSection> GetListForOwnershipRecordings(RecorderOffice recorderOffice) {
+      var list = GeneralObject.GetList<RecordingSection>();
+
+      list = list.FindAll(x => x.ContainsOwnershipActs);
+
+      list.Sort((x, y) => x.NamedKey.CompareTo(y.NamedKey));
+
+      return list;
+    }
+
     #endregion Constructors and parsers
+
 
     #region Properties
 
-    public bool UsePerpetualNumbering {
+
+    public bool ContainsOwnershipActs {
       get {
-        return (this.Id == 1050);
+        return base.ExtendedDataField.Get("ContainsOwnershipActs", false);
       }
     }
 
+
+    public bool UsesPerpetualNumbering {
+      get {
+        return base.ExtendedDataField.Get("UsesPerpetualNumbering", false);
+      }
+    }
+
+
     #endregion Properties
+
 
     #region Methods
 
@@ -62,6 +84,7 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Methods
+
 
   } // class RecordingSection
 

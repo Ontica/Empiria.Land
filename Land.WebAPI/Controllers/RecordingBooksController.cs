@@ -17,6 +17,7 @@ using Empiria.WebApi;
 
 using Empiria.Land.Registration;
 
+
 namespace Empiria.Land.WebApi {
 
 
@@ -26,6 +27,23 @@ namespace Empiria.Land.WebApi {
     #region Public APIs
 
 
+    [HttpGet, AllowAnonymous]
+    [Route("v2/catalogues/recorder-offices/{recorderOfficeId}/ownership-recording-sections")]
+    public CollectionModel GetOwnershipRecordingSections([FromUri] int recorderOfficeId) {
+      try {
+
+        var recorderOffice = RecorderOffice.Parse(recorderOfficeId);
+
+        FixedList<RecordingSection> list = RecordingSection.GetListForOwnershipRecordings(recorderOffice);
+
+        return new CollectionModel(base.Request, list.ToIdResponse(x => x.Name),
+                                   typeof(RecordingSection).FullName);
+
+      } catch (Exception e) {
+        throw base.CreateHttpException(e);
+      }
+    }
+
 
     [HttpGet, AllowAnonymous]
     [Route("v2/catalogues/real-estate-types")]
@@ -33,7 +51,7 @@ namespace Empiria.Land.WebApi {
       try {
         FixedList<RealEstateType> list = RealEstateType.GetList();
 
-        return new CollectionModel(base.Request, list.ToIdentifiableResponse(x => x.Name),
+        return new CollectionModel(base.Request, list.ToIdResponse(x => x.Name),
                                    typeof(RealEstateType).FullName);
 
       } catch (Exception e) {
@@ -58,12 +76,12 @@ namespace Empiria.Land.WebApi {
 
 
     [HttpGet, AllowAnonymous]
-    [Route("v2/catalogues/recorder-offices/{recorderOfficeId}/domain-recording-books")]
-    public CollectionModel GetRecorderOfficeDomainRecordingBooksList(int recorderOfficeId) {
+    [Route("v2/catalogues/recorder-offices/{recorderOfficeId}/recording-books/{sectionId}")]
+    public CollectionModel GetRecorderOfficeSectionRecordingBooksList(int recorderOfficeId, int sectionId) {
       try {
         var recorderOffice = RecorderOffice.Parse(recorderOfficeId);
+        var section = RecordingSection.Parse(sectionId);
 
-        var section = RecordingSection.Parse(1051);
         FixedList<RecordingBook> list = recorderOffice.GetRecordingBooks(section);
 
         return new CollectionModel(base.Request, list.ToIdentifiableResponse(x => x.AsText),
@@ -109,18 +127,6 @@ namespace Empiria.Land.WebApi {
         return new PagedCollectionModel(base.Request,
                                         this.GetRecordingBooksList(sectionId, recordingOfficeId),
                                         "Empiria.Land.RecordingBooksList");
-      } catch (Exception e) {
-        throw base.CreateHttpException(e);
-      }
-    }
-
-
-    [HttpGet, AllowAnonymous]
-    [Route("v1/books/sections")]
-    public CollectionModel GetRecordingSections() {
-      try {
-        return new CollectionModel(base.Request, this.GetSectionsList(),
-                                   "Empiria.Land.RecordingSectionList");
       } catch (Exception e) {
         throw base.CreateHttpException(e);
       }

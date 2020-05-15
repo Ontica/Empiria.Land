@@ -187,7 +187,7 @@ namespace Empiria.Land.Registration {
 
     public bool UsePerpetualNumbering {
       get {
-        return this.RecordingSection.UsePerpetualNumbering;
+        return this.RecordingSection.UsesPerpetualNumbering;
       }
     }
 

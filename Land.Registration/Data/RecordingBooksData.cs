@@ -32,12 +32,14 @@ namespace Empiria.Land.Data {
       return DataReader.GetDataTable(DataOperation.Parse(sql));
     }
 
+
     static internal int GetLastBookRecordingNumber(RecordingBook book) {
       string sql = "SELECT MAX(RecordingNumber) FROM LRSRecordings" +
                    " WHERE RecordingBookId = " + book.Id.ToString() +
                    " AND RecordingStatus <> 'X'";
       return int.Parse(DataReader.GetScalar<string>(DataOperation.Parse(sql), "0"));
     }
+
 
     static internal int GetNextRecordingNumberWithReuse(RecordingBook book) {
       DataTable table = GetBookRecordingNumbers(book);
@@ -62,6 +64,7 @@ namespace Empiria.Land.Data {
       return indexValue;
     }
 
+
     static internal int GetNextRecordingNumberWithNoReuse(RecordingBook book) {
       int currentRecordNumber = GetLastBookRecordingNumber(book);
       if (currentRecordNumber > 0) {
@@ -75,28 +78,6 @@ namespace Empiria.Land.Data {
       }
     }
 
-    //static internal RecordingBook GetOpenedBook(RecorderOffice office, RecordingSection recordingSection) {
-    //  string sql = "SELECT * FROM LRSRecordingBooks WHERE RecordingBookType = 'V'" +
-    //               " AND (RecordingsClassId = {C}) and RecorderOfficeId = {O} AND (RecordingBookStatus = 'O')";
-    //  sql = sql.Replace("{C}", recordingSection.Id.ToString());
-    //  sql = sql.Replace("{O}", office.Id.ToString());
-
-    //  DataRow row = DataReader.GetDataRow(DataOperation.Parse(sql));
-
-    //  return BaseObject.ParseDataRow<RecordingBook>(row);
-    //}
-
-    static internal int GetBookTotalSheets(RecordingBook book) {
-      throw new NotImplementedException();
-
-      //object result = DataReader.GetFieldValue(DataOperation.Parse("rptLRSRecordingBooksStats", book.Id),
-      //                                         "DocumentSheets");
-      //if (result == null || result == DBNull.Value) {
-      //  return 0;
-      //} else {
-      //  return (int) result;
-      //}
-    }
 
     static public FixedList<RecorderOffice> GetRecorderOffices(RecordingSection sectionType) {
       string sql = "SELECT DISTINCT Contacts.* FROM LRSPhysicalBooks INNER JOIN Contacts" +
@@ -107,6 +88,7 @@ namespace Empiria.Land.Data {
       return DataReader.GetList<RecorderOffice>(DataOperation.Parse(sql),
                                                (x) => BaseObject.ParseList<RecorderOffice>(x)).ToFixedList();
     }
+
 
     static internal FixedList<Recording> GetRecordings(RecordingDocument document,
                                                        LRSTransaction transaction) {
@@ -119,12 +101,14 @@ namespace Empiria.Land.Data {
                                            (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
     }
 
+
     static public FixedList<RecordingBook> GetRecordingBooks(string filter, string sort = "BookAsText") {
       string sql = "SELECT * FROM LRSPhysicalBooks" +  GeneralDataOperations.GetFilterSortSqlString(filter, sort);
 
       return DataReader.GetList<RecordingBook>(DataOperation.Parse(sql),
                                               (x) => BaseObject.ParseList<RecordingBook>(x)).ToFixedList();
     }
+
 
     static public FixedList<RecordingBook> GetRecordingBooks(RecorderOffice recorderOffice) {
       string filter = "RecorderOfficeId = " + recorderOffice.Id.ToString();
@@ -135,6 +119,7 @@ namespace Empiria.Land.Data {
       return DataReader.GetList<RecordingBook>(DataOperation.Parse(sql),
                                               (x) => BaseObject.ParseList<RecordingBook>(x)).ToFixedList();
     }
+
 
     static public FixedList<RecordingBook> GetRecordingBooksInSection(RecorderOffice recorderOffice,
                                                                       RecordingSection sectionType) {
@@ -148,6 +133,7 @@ namespace Empiria.Land.Data {
                                               (x) => BaseObject.ParseList<RecordingBook>(x)).ToFixedList();
     }
 
+
     static public FixedList<Recording> GetRecordings(RecordingBook recordingBook) {
       var operation = DataOperation.Parse("qryLRSPhysicalBookRecordings", recordingBook.Id);
 
@@ -155,19 +141,12 @@ namespace Empiria.Land.Data {
                                           (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
     }
 
-    //static public FixedList<Recording> GetRecordingsOnImageRangeList(RecordingBook recordingBook,
-    //                                                          int imageStartIndex, int imageEndIndex) {
-    //  var operation = DataOperation.Parse("qryLRSRecordingsOnImageRange", recordingBook.Id,
-    //                                      imageStartIndex, imageEndIndex);
-
-    //  return DataReader.GetList<Recording>(operation,
-    //                                      (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
-    //}
 
     static public DataRow GetRecordingWithRecordingNumber(RecordingBook recordingBook, string recordingNumber) {
       return DataReader.GetDataRow(DataOperation.Parse("getLRSRecordingWithRecordingNumber",
                                                        recordingBook.Id, recordingNumber));
     }
+
 
     static internal Recording FindRecording(RecordingBook recordingBook, string filter) {
       string sql = "SELECT * FROM LRSPhysicalRecordings WHERE " +
@@ -188,12 +167,14 @@ namespace Empiria.Land.Data {
       return DataReader.GetDataView(DataOperation.Parse("rptLRSVolumeBooks", recorderOffice.Id, (char) status), filter, sort);
     }
 
+
     static internal void UpdateRecordingsImageIndex(RecordingBook recordingBook, int startImageIndex, int offset) {
       DataOperation dataOperation = DataOperation.Parse("doLRSUpdateRecordingsImageIndexes",
                                                         recordingBook.Id, startImageIndex, offset);
 
       DataWriter.Execute(dataOperation);
     }
+
 
     static internal void WriteRecording(Recording o) {
       Assertion.Assert(o.MainDocument.Id > 0,
@@ -207,13 +188,14 @@ namespace Empiria.Land.Data {
       DataWriter.Execute(op);
     }
 
-    static internal void WriteRecordingBook(RecordingBook o) {
-      var operation = DataOperation.Parse("writeLRSPhysicalBook", o.Id, o.RecorderOffice.Id, o.RecordingSection.Id,
-                                           o.BookNumber, o.AsText, o.ExtensionData.ToString(), o.Keywords,
-                                           o.StartRecordingIndex, o.EndRecordingIndex, (char) o.Status,
-                                           o.RecordIntegrityHashCode);
 
-      DataWriter.Execute(operation);
+    static internal void WriteRecordingBook(RecordingBook o) {
+      var op = DataOperation.Parse("writeLRSPhysicalBook", o.Id, o.RecorderOffice.Id, o.RecordingSection.Id,
+                                   o.BookNumber, o.AsText, o.ExtensionData.ToString(), o.Keywords,
+                                   o.StartRecordingIndex, o.EndRecordingIndex, (char) o.Status,
+                                   o.RecordIntegrityHashCode);
+
+      DataWriter.Execute(op);
     }
 
 
