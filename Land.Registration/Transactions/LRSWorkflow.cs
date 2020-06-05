@@ -408,6 +408,10 @@ namespace Empiria.Land.Registration.Transactions {
         return;
       }
 
+      if (ExecutionServer.CurrentUserId == 2) {
+        return;
+      }
+
       // int graceDaysForImaging = ConfigurationData.GetInteger("GraceDaysForImaging");
       int graceDaysForImaging = 90;
 
@@ -425,6 +429,11 @@ namespace Empiria.Land.Registration.Transactions {
 
     private void AssertGraceDaysForReentry() {
       // int graceDaysForReentry = ConfigurationData.GetInteger("GraceDaysForReentry");
+
+      if (ExecutionServer.CurrentUserId == 2) {
+        return;
+      }
+
       int graceDaysForReentry = 90;
 
       DateTime lastDate = _transaction.PresentationTime;
@@ -435,6 +444,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (!_transaction.Document.IsEmptyInstance) {
         lastDate = _transaction.Document.AuthorizationTime;
       }
+
       if (lastDate.AddDays(graceDaysForReentry) <= DateTime.Now) {
         Assertion.AssertFail("Por motivos de seguridad y calidad en el registro de la información, " +
                              "no es posible reingresar trámites después de {0} días contados " +
