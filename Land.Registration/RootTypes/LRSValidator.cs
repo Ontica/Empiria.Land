@@ -80,12 +80,12 @@ namespace Empiria.Land.Registration {
 
     static public LandRegistrationException ValidateRecordingDates(RecordingBook recordingBook, Recording recording,
                                                                    DateTime presentationTime, DateTime authorizationDate) {
-      if (!recordingBook.RecordingsControlTimePeriod.IsInRange(presentationTime)) {
+      if (!recordingBook.RecordingsControlTimePeriod.Includes(presentationTime)) {
         return new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingPresentationTime,
                                              recordingBook.RecordingsControlTimePeriod.StartTime.ToString("dd/MMM/yyyy"),
                                              recordingBook.RecordingsControlTimePeriod.EndTime.ToString("dd/MMM/yyyy"), recordingBook.AsText);
       }
-      if (!recordingBook.RecordingsControlTimePeriod.IsInRange(authorizationDate)) {
+      if (!recordingBook.RecordingsControlTimePeriod.Includes(authorizationDate)) {
         return new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingAuthorizationDate,
                                              recordingBook.RecordingsControlTimePeriod.StartTime.ToString("dd/MMM/yyyy"),
                                              recordingBook.RecordingsControlTimePeriod.EndTime.ToString("dd/MMM/yyyy"), recordingBook.AsText);
