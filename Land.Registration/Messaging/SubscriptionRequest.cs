@@ -10,7 +10,7 @@
 using System;
 
 using Empiria.Json;
-using Empiria.Messaging;
+using Empiria.Messaging.EMailDelivery;
 
 namespace Empiria.Land.Messaging {
 

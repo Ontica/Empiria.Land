@@ -175,7 +175,6 @@ namespace Empiria.Land.Registration {
         return Data.DocumentsData.GetDigitalSignature(this.Document)
                                  .Substring(0, 64);
       }
-
     }
 
 
@@ -202,6 +201,7 @@ namespace Empiria.Land.Registration {
 
 
     #endregion Public methods
+
 
     #region Integrity methods
 

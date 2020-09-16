@@ -10,6 +10,8 @@
 using System;
 using System.Collections.Generic;
 
+using Empiria.Messaging.EMailDelivery;
+
 using Empiria.OnePoint.EFiling;
 using Empiria.OnePoint.EPayments;
 
@@ -63,7 +65,7 @@ namespace Empiria.Land.Integration {
         transaction.ExtensionData.RFC = filingRequest.RequestedBy.rfc;
       }
       if (filingRequest.RequestedBy.email.Length != 0) {
-        transaction.ExtensionData.SendTo = new Empiria.Messaging.SendTo(filingRequest.RequestedBy.email);
+        transaction.ExtensionData.SendTo = new SendTo(filingRequest.RequestedBy.email);
       }
 
       transaction.Save();
@@ -192,9 +194,9 @@ namespace Empiria.Land.Integration {
       }
 
       if (filingRequest.RequestedBy.email.Length != 0) {
-        transaction.ExtensionData.SendTo = new Empiria.Messaging.SendTo(filingRequest.RequestedBy.email);
+        transaction.ExtensionData.SendTo = new SendTo(filingRequest.RequestedBy.email);
       } else {
-        transaction.ExtensionData.SendTo = Empiria.Messaging.SendTo.Empty;
+        transaction.ExtensionData.SendTo = SendTo.Empty;
       }
 
       transaction.Save();

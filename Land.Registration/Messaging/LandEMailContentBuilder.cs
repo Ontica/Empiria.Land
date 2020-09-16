@@ -10,9 +10,11 @@
 using System;
 
 using Empiria.Messaging;
+using Empiria.Messaging.EMailDelivery;
 
 using Empiria.Land.Registration.Transactions;
 using Empiria.Land.Registration;
+
 
 namespace Empiria.Land.Messaging {
 
@@ -52,7 +54,7 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    internal EMailContent BuildForTransactionReadyToDelivery(Message message) {
+    internal EMailContent BuildForTransactionReadyToDelivery(FormerMessage message) {
       var transaction = GetTransaction(message);
 
       var body = GetTemplate(NotificationType.TransactionReadyToDelivery);
@@ -64,7 +66,7 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    internal EMailContent BuildForTransactionReceived(Message message) {
+    internal EMailContent BuildForTransactionReceived(FormerMessage message) {
       var transaction = GetTransaction(message);
 
       var body = GetTemplate(NotificationType.TransactionReceived);
@@ -76,7 +78,7 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    internal EMailContent BuildForTransactionReentered(Message message) {
+    internal EMailContent BuildForTransactionReentered(FormerMessage message) {
       var transaction = GetTransaction(message);
 
       var body = GetTemplate(NotificationType.TransactionReentered);
@@ -89,7 +91,7 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    internal EMailContent BuildForTransactionReturned(Message message) {
+    internal EMailContent BuildForTransactionReturned(FormerMessage message) {
       var transaction = GetTransaction(message);
 
       var body = GetTemplate(NotificationType.TransactionReturned);
@@ -115,7 +117,7 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    static private LRSTransaction GetTransaction(Message message) {
+    static private LRSTransaction GetTransaction(FormerMessage message) {
       var transaction = LRSTransaction.TryParse(message.UnitOfWorkUID);
 
       Assertion.AssertObject(transaction,
@@ -125,7 +127,7 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    static private string SetMessageFields(string body, Message message) {
+    static private string SetMessageFields(string body, FormerMessage message) {
       body = body.Replace("{{MESSAGE-UID}}", message.UID);
 
       return body;

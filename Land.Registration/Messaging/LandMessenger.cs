@@ -12,8 +12,10 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Empiria.Json;
-using Empiria.Messaging;
 using Empiria.StateEnums;
+
+using Empiria.Messaging;
+using Empiria.Messaging.EMailDelivery;
 
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
@@ -107,7 +109,7 @@ namespace Empiria.Land.Messaging {
     #region Message queue execution methods
 
 
-    private static bool IsMessageReadyToProcess(Message message) {
+    private static bool IsMessageReadyToProcess(FormerMessage message) {
       if (!message.IsInProcessStatus) {
         return false;
       }
@@ -118,7 +120,7 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    static private async Task ProcessQueuedMessage(Message message) {
+    static private async Task ProcessQueuedMessage(FormerMessage message) {
       var json = new JsonObject();
 
       try {
@@ -138,7 +140,7 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    static private async Task SendEmail(Message message) {
+    static private async Task SendEmail(FormerMessage message) {
       var notificationType = message.MessageData.Get<NotificationType>("NotificationType");
 
       var emailContentBuilder = new LandEMailContentBuilder();
@@ -206,7 +208,7 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    static private int WaitMinutesToProcessMessage(Message message) {
+    static private int WaitMinutesToProcessMessage(FormerMessage message) {
       var notificationType = message.MessageData.Get<NotificationType>("NotificationType");
 
       int IMMEDIATELY = ConfigurationData.Get("Immediately.Execution.Minutes", 0);
@@ -251,7 +253,7 @@ namespace Empiria.Land.Messaging {
       data.Add("NotificationType", notificationType.ToString());
       data.Add("SendTo", sendTo.ToJson());
 
-      var newMessage = new Message(data);
+      var newMessage = new FormerMessage(data);
 
       MESSAGE_QUEUE.AddMessage(newMessage, transaction.UID);
     }
@@ -264,7 +266,7 @@ namespace Empiria.Land.Messaging {
       data.Add("NotificationType", notificationType.ToString());
       data.Add("SendTo", subscription.SendTo.ToJson());
 
-      var newMessage = new Message(data);
+      var newMessage = new FormerMessage(data);
 
       MESSAGE_QUEUE.AddMessage(newMessage, subscription.UID);
     }
@@ -326,7 +328,7 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    static private Resource GetResource(Message message) {
+    static private Resource GetResource(FormerMessage message) {
       var resource = Resource.TryParseWithUID(message.UnitOfWorkUID);
 
       Assertion.AssertObject(resource,
@@ -336,7 +338,7 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    static private LRSTransaction GetTransaction(Message message) {
+    static private LRSTransaction GetTransaction(FormerMessage message) {
       var transaction = LRSTransaction.TryParse(message.UnitOfWorkUID);
 
       Assertion.AssertObject(transaction,
