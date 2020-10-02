@@ -187,6 +187,11 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Public methods
 
+    public void SetReceipt(string receiptNo, decimal receiptTotal) {
+      this.ReceiptNo = receiptNo;
+      this.ReceiptTotal = receiptTotal;
+    }
+
     protected override void OnSave() {
       if (base.IsNew) {
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);

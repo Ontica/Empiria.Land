@@ -372,28 +372,27 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public LRSPayment AddPayment(string receiptNo, decimal receiptTotal) {
-      this.AssertAddPayment();
-
+    public LRSPayment SetPayment(string receiptNo, decimal receiptTotal) {
       LRSPayment payment = null;
+
       if (this.Payments.Count == 0) {
         payment = new LRSPayment(this, receiptNo, receiptTotal);
+
         this.Payments.Add(payment);
+
       } else {
         payment = this.Payments[0];
+
+        payment.SetReceipt(receiptNo, receiptTotal);
       }
       payment.Save();
 
       return payment;
     }
 
+
     public void ApplyFeeWaiver() {
       this.Payments.Add(LRSPayment.FeeWaiver);
-    }
-
-    private void AssertAddPayment() {
-      Assertion.Assert(this.Workflow.CurrentStatus == LRSTransactionStatus.Payment,
-                       "The transaction's status doesn't permit aggregate new payments.");
     }
 
 

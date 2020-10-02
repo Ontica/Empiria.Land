@@ -163,7 +163,7 @@ namespace Empiria.Land.Registration.Transactions {
 
       this.ApplyItemsRuleToTransaction(transaction);
 
-      transaction.AddPayment(this.PaymentReceiptNo, this.PaymentAmount);
+      transaction.SetPayment(this.PaymentReceiptNo, this.PaymentAmount);
 
       transaction.Workflow.Receive("Recibido automáticamente desde el sistema externo de trámites.");
 
