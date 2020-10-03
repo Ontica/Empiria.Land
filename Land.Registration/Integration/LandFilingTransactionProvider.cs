@@ -56,16 +56,16 @@ namespace Empiria.Land.Integration {
       var transaction = new LRSTransaction(transactionType);
 
       transaction.DocumentType = LRSDocumentType.Parse(procedure.DocumentTypeId);
-      transaction.RequestedBy = filingRequest.RequestedBy.name;
+      transaction.RequestedBy = filingRequest.RequestedBy.Name;
       transaction.Agency = filingRequest.Agency;
       transaction.RecorderOffice = RecorderOffice.Parse(procedure.AuthorityOfficeId);
       transaction.ExternalTransactionNo = filingRequest.UID;
 
-      if (filingRequest.RequestedBy.rfc.Length != 0) {
-        transaction.ExtensionData.RFC = filingRequest.RequestedBy.rfc;
+      if (filingRequest.RequestedBy.Rfc.Length != 0) {
+        transaction.ExtensionData.RFC = filingRequest.RequestedBy.Rfc;
       }
-      if (filingRequest.RequestedBy.email.Length != 0) {
-        transaction.ExtensionData.SendTo = new SendTo(filingRequest.RequestedBy.email);
+      if (filingRequest.RequestedBy.Email.Length != 0) {
+        transaction.ExtensionData.SendTo = new SendTo(filingRequest.RequestedBy.Email);
       }
 
       transaction.Save();
@@ -87,16 +87,16 @@ namespace Empiria.Land.Integration {
     }
 
 
-    public FixedList<EFilingDocumentDTO> GetOutputDocuments(string transactionUID) {
+    public FixedList<EFilingDocument> GetOutputDocuments(string transactionUID) {
       Assertion.AssertObject(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
       if (!transaction.Workflow.IsFinished) {
-        return new FixedList<EFilingDocumentDTO>();
+        return new FixedList<EFilingDocument>();
       }
 
-      var list = new List<EFilingDocumentDTO>();
+      var list = new List<EFilingDocument>();
 
       var document = transaction.Document;
 
@@ -141,7 +141,7 @@ namespace Empiria.Land.Integration {
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      transaction.AddPayment(receiptNo, transaction.Items.TotalFee.Total);
+      transaction.SetPayment(receiptNo, transaction.Items.TotalFee.Total);
 
       return ConvertToDTOInterface(transaction);
     }
@@ -149,7 +149,7 @@ namespace Empiria.Land.Integration {
 
 
     public IFilingTransaction SetPaymentOrder(IPayable transaction,
-                                              OnePoint.EPayments.PaymentOrderDTO paymentOrderData) {
+                                              PaymentOrderDTO paymentOrderData) {
       Assertion.AssertObject(transaction, "transaction");
       Assertion.AssertObject(paymentOrderData, "paymentOrderData");
 
@@ -170,31 +170,37 @@ namespace Empiria.Land.Integration {
     }
 
 
-    public OnePoint.EPayments.PaymentOrderDTO TryGetPaymentOrderData(string transactionUID) {
+    public PaymentOrderDTO TryGetPaymentOrderData(string transactionUID) {
       Assertion.AssertObject(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      return transaction.TryGetPaymentOrderData();
+      var paymentOrder = transaction.TryGetPaymentOrderData();
+
+      if (paymentOrder != null) {
+        paymentOrder.PaymentTotal = transaction.Items.TotalFee.Total;
+      }
+
+      return paymentOrder;
     }
 
 
     public IFilingTransaction UpdateTransaction(EFilingRequest filingRequest) {
       Assertion.AssertObject(filingRequest, "filingRequest");
-      Assertion.AssertObject(filingRequest.TransactionUID, "filingRequest.TransactionUID");
+      Assertion.Assert(filingRequest.HasTransaction, "filingRequest.HasTransaction must be true.");
 
-      var transaction = LRSTransaction.TryParse(filingRequest.TransactionUID, true);
+      var transaction = LRSTransaction.TryParse(filingRequest.Transaction.UID, true);
 
-      transaction.RequestedBy = filingRequest.RequestedBy.name;
+      transaction.RequestedBy = filingRequest.RequestedBy.Name;
 
-      if (filingRequest.RequestedBy.rfc.Length != 0) {
-        transaction.ExtensionData.RFC = filingRequest.RequestedBy.rfc;
+      if (filingRequest.RequestedBy.Rfc.Length != 0) {
+        transaction.ExtensionData.RFC = filingRequest.RequestedBy.Rfc;
       } else {
         transaction.ExtensionData.RFC = String.Empty;
       }
 
-      if (filingRequest.RequestedBy.email.Length != 0) {
-        transaction.ExtensionData.SendTo = new SendTo(filingRequest.RequestedBy.email);
+      if (filingRequest.RequestedBy.Email.Length != 0) {
+        transaction.ExtensionData.SendTo = new SendTo(filingRequest.RequestedBy.Email);
       } else {
         transaction.ExtensionData.SendTo = SendTo.Empty;
       }
@@ -216,28 +222,28 @@ namespace Empiria.Land.Integration {
     }
 
 
-    static private EFilingDocumentDTO MapToEFilingDocumentDTO(Certificate certificate) {
-      return new EFilingDocumentDTO() {
-        uid = certificate.UID,
-        type = certificate.CertificateType.Name,
-        typeName = $"Certificado de {certificate.CertificateType.DisplayName}",
-        name = $"Certificado {certificate.UID} del trámite {certificate.Transaction.UID}",
-        contentType = "text/html",
-        uri = $"{PRINT_SERVICES_SERVER_BASE_ADDRESS}/certificate.aspx?uid={certificate.UID}&" +
-              $"externalTransaction={certificate.Transaction.ExternalTransactionNo}"
+    static private EFilingDocument MapToEFilingDocumentDTO(Certificate certificate) {
+      return new EFilingDocument() {
+        UID = certificate.UID,
+        Type = certificate.CertificateType.Name,
+        TypeName = $"Certificado de {certificate.CertificateType.DisplayName}",
+        Name = $"Certificado {certificate.UID} del trámite {certificate.Transaction.UID}",
+        ContentType = "text/html",
+        Uri = $"{PRINT_SERVICES_SERVER_BASE_ADDRESS}/certificate.aspx?uid={certificate.UID}&" +
+              $"externalUID={certificate.Transaction.ExternalTransactionNo}"
       };
     }
 
 
-    static private EFilingDocumentDTO MapToEFilingDocumentDTO(RecordingDocument document) {
-      return new EFilingDocumentDTO() {
-        uid = document.UID,
-        type = document.Subtype.Name,
-        typeName = "Sello registral",
-        name = $"Sello registral {document.UID} del trámite {document.GetTransaction().UID}.",
-        contentType = "text/html",
-        uri = $"{PRINT_SERVICES_SERVER_BASE_ADDRESS}/recording.seal.aspx?uid={document.UID}&" +
-              $"externalTransaction={document.GetTransaction().ExternalTransactionNo}"
+    static private EFilingDocument MapToEFilingDocumentDTO(RecordingDocument document) {
+      return new EFilingDocument() {
+        UID = document.UID,
+        Type = document.Subtype.Name,
+        TypeName = "Sello registral",
+        Name = $"Sello registral {document.UID} del trámite {document.GetTransaction().UID}.",
+        ContentType = "text/html",
+        Uri = $"{PRINT_SERVICES_SERVER_BASE_ADDRESS}/recording.seal.aspx?uid={document.UID}&" +
+              $"externalUID={document.GetTransaction().ExternalTransactionNo}"
       };
     }
 
