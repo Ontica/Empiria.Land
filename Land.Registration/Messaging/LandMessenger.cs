@@ -52,7 +52,9 @@ namespace Empiria.Land.Messaging {
 
 
     /// <summary>Notifies messenger about a workflow status change of a land transaction.</summary>
-    static internal void Notify(SubscriptionEventType eventType, Subscription subscription) {
+    static internal void Notify(SubscriptionEventType eventType,
+                                Subscription subscription) {
+
       Assertion.AssertObject(subscription, "subscription");
       NotificationType notificationType = ConvertToNotificationType(eventType);
 
@@ -293,10 +295,11 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    private static void NotifyAgencyExternalFilingSystem(LRSTransaction transaction, TransactionEventType eventType) {
+    static private async void NotifyAgencyExternalFilingSystem(LRSTransaction transaction,
+                                                               TransactionEventType eventType) {
       var externalFilingProvider = ExternalProviders.GetEFilingProvider();
 
-      externalFilingProvider.NotifyEvent(transaction.ExternalTransactionNo, eventType.ToString());
+      await externalFilingProvider.NotifyEvent(transaction.ExternalTransactionNo, eventType.ToString());
     }
 
 
