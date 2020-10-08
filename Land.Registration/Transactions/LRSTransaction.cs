@@ -396,8 +396,8 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public IForm GetForm(LandSystemFormType formType) {
-      return FormsProvider.GetForm(this, formType);
+    public IForm GetForm() {
+      return FormsProvider.GetForm(this);
     }
 
 
@@ -414,9 +414,6 @@ namespace Empiria.Land.Registration.Transactions {
       copy.DocumentDescriptor = this.DocumentDescriptor;
       copy.DocumentType = this.DocumentType;
       copy.RequestedBy = this.RequestedBy;
-
-
-      //copy.ExtensionData.RequesterNotes = this.ExtensionData.RequesterNotes;
 
       if (this.IsFeeWaiverApplicable) {
         copy.ApplyFeeWaiver();

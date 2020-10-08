@@ -7,7 +7,6 @@
 *  Summary  : Describes a Land System data form.                                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 namespace Empiria.Land.Registration.Forms {
 
@@ -16,6 +15,6 @@ namespace Empiria.Land.Registration.Forms {
 
     LandSystemFormType FormType { get; }
 
-  }  // interface IForm
+  }
 
 }  // namespace Empiria.Land.Registration.Forms

@@ -7,32 +7,32 @@
 *  Summary  : Provides data forms for transactions.                                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.OnePoint.EFiling;
 
 using Empiria.Land.Integration;
 using Empiria.Land.Registration.Transactions;
 
+
 namespace Empiria.Land.Registration.Forms {
 
   /// <summary>Provides data forms for transactions.</summary>
-  internal class FormsProvider {
+  static internal class FormsProvider {
 
-    internal static IForm GetForm(LRSTransaction transaction, LandSystemFormType formType) {
+    static internal IForm GetForm(LRSTransaction transaction) {
       var eFilingProvider = ExternalProviders.GetEFilingProvider();
 
       EFilingRequest request = eFilingProvider.GetEFilingRequest(transaction.ExternalTransactionNo);
 
-      if (request.Procedure.NamedKey == "AvisoPreventivo") {
-        return PreventiveNoteForm.Parse(request);
+      switch (request.Procedure.NamedKey) {
+        case "AvisoPreventivo":
+          return PreventiveNoteForm.Parse(request);
 
-      } else if (request.Procedure.NamedKey == "SegundoAvisoDefinitivo") {
-        return DefinitiveNoteForm.Parse(request);
+        case "SegundoAvisoDefinitivo":
+          return DefinitiveNoteForm.Parse(request);
 
-      } else {
-        throw new NotImplementedException();
-
+        default:
+          throw Assertion.AssertNoReachThisCode($"Unrecognized external procedure: '{request.Procedure.NamedKey}'.");
       }
     }
 

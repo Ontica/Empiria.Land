@@ -17,7 +17,7 @@ namespace Empiria.Land.UI {
   /// <summary>Transforms data forms to their HTML representation.</summary>
   public class LandHtmlFormTransformer {
 
-    private IForm _form;
+    private readonly IForm _form;
 
 
     public LandHtmlFormTransformer(IForm form) {
@@ -37,9 +37,8 @@ namespace Empiria.Land.UI {
 
         default:
           throw Assertion.AssertNoReachThisCode(
-                $"There is not defined an HTML handler for forms of type {this._form.FormType.ToString()}.");
+                $"There is not defined an HTML handler for forms of type {this._form.FormType}.");
       }
-
     }
 
     #region Private methods
@@ -79,7 +78,7 @@ namespace Empiria.Land.UI {
     }
 
 
-    private string TransformPreparedBySection(INotaryForm form) {
+    private string TransformPreparedBySection(NotaryForm form) {
       string html = GetTemplate("PreparedBySection");
 
       html = html.Replace("{{NOTARY.NAME}}", form.Notary.FullName);
@@ -91,7 +90,7 @@ namespace Empiria.Land.UI {
     }
 
 
-    private string TransformRealPropertySection(INotaryForm form) {
+    private string TransformRealPropertySection(IRealPropertyForm form) {
       if (form.RealPropertyDescription.OverRegistredPropertyUID) {
         var realEstate = RealEstate.TryParseWithUID(form.RealPropertyDescription.PropertyUID);
 
@@ -147,7 +146,6 @@ namespace Empiria.Land.UI {
 
       return template;
     }
-
 
     #endregion Private methods
 

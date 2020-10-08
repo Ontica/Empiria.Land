@@ -11,19 +11,17 @@ using System;
 
 using Empiria.Json;
 
-using Empiria.Contacts;
 using Empiria.OnePoint.EFiling;
 
 namespace Empiria.Land.Registration.Forms {
 
   /// <summary>Definitive Note Registration Request data form.</summary>
-  public class DefinitiveNoteForm : IForm, INotaryForm {
+  public class DefinitiveNoteForm : NotaryForm, IRealPropertyForm {
 
     #region Constructors and parsers
 
-
-    private DefinitiveNoteForm(EFilingRequest request) {
-      Load(request);
+    protected internal DefinitiveNoteForm(EFilingRequest request) : base(request) {
+      // no-op
     }
 
 
@@ -34,29 +32,21 @@ namespace Empiria.Land.Registration.Forms {
     }
 
 
-    private void Load(EFilingRequest request) {
-      JsonObject json = request.ApplicationForm;
+    protected override void LoadApplicationFormData(JsonObject appFormAsJson) {
+      this.RealPropertyDescription = RealPropertyDescription.Parse(appFormAsJson.Slice("propertyData"));
 
-      this.RealPropertyDescription = RealPropertyDescription.Parse(json.Slice("propertyData"));
-
-      this.Operation = json.Get<string>("operation");
-      this.Grantees = json.Get<string>("grantees");
-      this.Grantors = json.Get<string>("grantors");
-      this.Observations = json.Get("observations", String.Empty);
-
-      this.Notary = request.Agent;
-      this.NotaryOffice = request.Agency;
-      this.ESign = request.ElectronicSign;
-      this.AuthorizationTime = request.AuthorizationTime;
+      this.Operation = appFormAsJson.Get<string>("operation");
+      this.Grantees = appFormAsJson.Get<string>("grantees");
+      this.Grantors = appFormAsJson.Get<string>("grantors");
+      this.Observations = appFormAsJson.Get("observations", String.Empty);
     }
+
 
     #endregion Constructors and parsers
 
-
     #region Properties
 
-
-    public LandSystemFormType FormType {
+    public override LandSystemFormType FormType {
       get {
         return LandSystemFormType.DefinitiveNoteRegistrationForm;
       }
@@ -85,37 +75,6 @@ namespace Empiria.Land.Registration.Forms {
       get;
       private set;
     } = String.Empty;
-
-
-
-    public string Observations {
-      get;
-      private set;
-    } = String.Empty;
-
-
-    public Contact NotaryOffice {
-      get;
-      private set;
-    }
-
-
-    public Contact Notary {
-      get;
-      private set;
-    }
-
-
-    public string ESign {
-      get;
-      private set;
-    }
-
-
-    public DateTime AuthorizationTime {
-      get;
-      private set;
-    }
 
 
     #endregion Properties
