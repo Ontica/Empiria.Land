@@ -9,10 +9,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Data;
 
 using Empiria.Contacts;
 using Empiria.DataTypes;
+using Empiria.DataTypes.Time;
 
 using Empiria.Land.Data;
 

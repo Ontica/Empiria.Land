@@ -11,7 +11,7 @@
 using System;
 
 using Empiria.Contacts;
-using Empiria.DataTypes;
+using Empiria.DataTypes.Time;
 using Empiria.Geography;
 using Empiria.Ontology;
 

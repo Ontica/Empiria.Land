@@ -11,7 +11,7 @@
 using System;
 
 using Empiria.Contacts;
-using Empiria.DataTypes;
+using Empiria.DataTypes.Time;
 using Empiria.Json;
 
 using Empiria.Land.Data;
@@ -363,7 +363,7 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    //Default = TimePeriod.Default;
+
     private TimeFrame _timePeriod = TimeFrame.Default;
     public TimeFrame RecordingsControlTimePeriod {
       get { return _timePeriod; }

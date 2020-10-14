@@ -12,7 +12,7 @@ using System;
 using System.IO;
 
 using Empiria.Contacts;
-using Empiria.DataTypes;
+using Empiria.DataTypes.Time;
 using Empiria.Documents.IO;
 using Empiria.Ontology;
 using Empiria.Security;
