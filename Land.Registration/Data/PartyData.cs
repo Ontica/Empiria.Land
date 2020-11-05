@@ -125,10 +125,9 @@ namespace Empiria.Land.Data {
 
     static public DataTable GetInvolvedParties(ObjectTypeInfo partyType, RecordingAct recordingAct,
                                                string keywords) {
-      DataTable table = new DataTable();
-
       return new DataTable();
     }
+
 
     static public DataTable GetParties(PartyFilterType partyFilterType, ObjectTypeInfo partyType,
                                        RecordingAct recordingAct, string keywords) {

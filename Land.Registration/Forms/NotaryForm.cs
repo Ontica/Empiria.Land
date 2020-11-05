@@ -28,7 +28,7 @@ namespace Empiria.Land.Registration.Forms {
     private void Load(EFilingRequest request) {
       this.Notary = request.Agent;
       this.NotaryOffice = request.Agency;
-      this.ESign = request.ElectronicSign;
+      this.ESign = request.SecurityData.ElectronicSign;
       this.AuthorizationTime = request.AuthorizationTime;
 
       this.LoadApplicationFormData(request.ApplicationForm);

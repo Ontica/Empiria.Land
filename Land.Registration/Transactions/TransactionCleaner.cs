@@ -224,10 +224,6 @@ namespace Empiria.Land.Registration.Transactions {
           continue;
         }
 
-        var currentTask = transaction.Workflow.GetCurrentTask();
-        DateTime date = currentTask.CheckOutTime == ExecutionServer.DateMaxValue ? currentTask.CheckInTime : currentTask.CheckOutTime;
-
-
         CleanTransaction(transaction);
       } // foreach
 

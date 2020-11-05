@@ -7,12 +7,10 @@
 *  Summary  : Provides data forms for transactions.                                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
 using Empiria.OnePoint.EFiling;
 
 using Empiria.Land.Integration;
 using Empiria.Land.Registration.Transactions;
-
 
 namespace Empiria.Land.Registration.Forms {
 
