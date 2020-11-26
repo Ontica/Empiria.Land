@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                     System   : Land Web API                      *
 *  Namespace : Empiria.Land.WebApi                              Assembly : Empiria.Land.WebApi.dll           *
-*  Type      : CertificatesController                           Pattern  : Web API                           *
+*  Type      : ManualCertificatesController                     Pattern  : Web API                           *
 *  Version   : 3.0                                              License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Contains services for land certificates emission.                                             *
+*  Summary   : Contains services for manual land certificates issuing                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -17,8 +17,8 @@ using Empiria.Land.Certification;
 
 namespace Empiria.Land.WebApi {
 
-  /// <summary>Contains services for land certificates emission.</summary>
-  public class CertificatesController : WebApiController {
+  /// <summary>Contains services for manual land certificates issuing.</summary>
+  public class ManualCertificatesController : WebApiController {
 
     #region Public APIs
 
@@ -204,6 +204,6 @@ namespace Empiria.Land.WebApi {
 
     #endregion Private methods
 
-  }  // class CertificatesController
+  }  // class ManualCertificatesController
 
 }  // namespace Empiria.Land.WebApi
