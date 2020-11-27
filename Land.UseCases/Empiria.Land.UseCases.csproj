@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Company>Ontica</Company>
-    <Product>Empiria Land Web Api</Product>
-    <Description>Empiria Land Http/Json web services interface.</Description>
-    <Copyright>(c) 2009-2020. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
-    <Version>4.0.0</Version>
-    <AssemblyVersion>4.0.0</AssemblyVersion>
-    <FileVersion>4.0.0.0</FileVersion>
+    <Product>Empiria Land</Product>
+    <Description>Empiria Land Use Cases Layer Module.</Description>
+    <Copyright>(c) 2009-2021. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
+    <Version>5.0.0</Version>
+    <AssemblyVersion>5.0.0</AssemblyVersion>
+    <FileVersion>5.0.0.0</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Land/blob/master/Land.WebApi/LICENSE.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/Ontica/Empiria.Land/tree/master/Land.WebApi</PackageProjectUrl>
-    <PackageIconUrl>http://www.ontica.org/land/empiria-land.logo.png</PackageIconUrl>
-    <PackageTags>registros públicos, catastro, sistema catastral, land recording, administración territorial, impuesto predial, notarías, sedatu, méxico</PackageTags>
+    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Land/blob/master/Land.UseCases/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Ontica/Empiria.Land/tree/master/Land.UseCases</PackageProjectUrl>
+    <PackageIconUrl>http://www.ontica.org/logo.ontica.png</PackageIconUrl>
+    <PackageTags />
     <RepositoryUrl>https://github.com/Ontica/Empiria.Land</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Authors>Ontica</Authors>
@@ -20,8 +20,10 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
+    <AssemblyName>Empiria.Land.UseCases</AssemblyName>
+    <RootNamespace>Empiria.Land.UseCases</RootNamespace>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Multisolutions|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)'=='Multisolutions|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -51,19 +53,12 @@
     <NoWarn />
     <WarningsAsErrors />
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
-    <ProjectReference Include="..\Land.UseCases\Empiria.Land.UseCases.csproj" />
-  </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
-    <PackageReference Include="Empiria.WebApi" Version="2.0.0" />
-    <PackageReference Include="Empiria.WebApi.Client" Version="2.0.0" />
+    <PackageReference Include="Empiria.Core" Version="7.0.0" />
+    <PackageReference Include="Empiria.Services" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
-    <ProjectReference Include="..\..\extensions\WebApi\Empiria.WebApi.csproj" />
-    <ProjectReference Include="..\..\extensions\WebApi.Client\Empiria.WebApi.Client.csproj" />
+    <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />
+    <ProjectReference Include="..\..\extensions\Services\Empiria.Services.csproj" />
   </ItemGroup>
 </Project>
