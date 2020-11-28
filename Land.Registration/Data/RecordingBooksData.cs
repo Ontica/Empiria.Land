@@ -90,15 +90,15 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal FixedList<Recording> GetRecordings(RecordingDocument document,
+    static internal FixedList<PhysicalRecording> GetRecordings(RecordingDocument document,
                                                        LRSTransaction transaction) {
       string sql = "SELECT * FROM LRSRecordings WHERE TransactionId = {T} " +
                    "AND DocumentId = {D} AND RecordingStatus <> 'X' ORDER BY RecordingId";
       sql = sql.Replace("{T}", transaction.Id.ToString());
       sql = sql.Replace("{D}", document.Id.ToString());
 
-      return DataReader.GetList<Recording>(DataOperation.Parse(sql),
-                                           (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
+      return DataReader.GetList<PhysicalRecording>(DataOperation.Parse(sql),
+                                           (x) => BaseObject.ParseList<PhysicalRecording>(x)).ToFixedList();
     }
 
 
@@ -134,11 +134,11 @@ namespace Empiria.Land.Data {
     }
 
 
-    static public FixedList<Recording> GetRecordings(RecordingBook recordingBook) {
+    static public FixedList<PhysicalRecording> GetRecordings(RecordingBook recordingBook) {
       var operation = DataOperation.Parse("qryLRSPhysicalBookRecordings", recordingBook.Id);
 
-      return DataReader.GetList<Recording>(operation,
-                                          (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
+      return DataReader.GetList<PhysicalRecording>(operation,
+                                          (x) => BaseObject.ParseList<PhysicalRecording>(x)).ToFixedList();
     }
 
 
@@ -148,7 +148,7 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal Recording FindRecording(RecordingBook recordingBook, string filter) {
+    static internal PhysicalRecording FindRecording(RecordingBook recordingBook, string filter) {
       string sql = "SELECT * FROM LRSPhysicalRecordings WHERE " +
                    "(PhysicalBookId = " + recordingBook.Id.ToString() + " AND RecordingStatus <> 'X')";
       if (!String.IsNullOrWhiteSpace(filter)) {
@@ -156,9 +156,9 @@ namespace Empiria.Land.Data {
       }
       DataRow row = DataReader.GetDataRow(DataOperation.Parse(sql));
       if (row != null) {
-        return BaseObject.ParseDataRow<Recording>(row);
+        return BaseObject.ParseDataRow<PhysicalRecording>(row);
       } else {
-        return Recording.Empty;
+        return PhysicalRecording.Empty;
       }
     }
 
@@ -176,7 +176,7 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal void WriteRecording(Recording o) {
+    static internal void WriteRecording(PhysicalRecording o) {
       Assertion.Assert(o.MainDocument.Id > 0,
                        "Wrong data for physical recording. MainDocument was missed.");
 

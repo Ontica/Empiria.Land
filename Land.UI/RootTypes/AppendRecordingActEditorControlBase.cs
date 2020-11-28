@@ -46,7 +46,7 @@ namespace Empiria.Land.UI {
       private set;
     }
 
-    public Recording HistoricRecording {
+    public PhysicalRecording HistoricRecording {
       get;
       private set;
     }
@@ -69,7 +69,7 @@ namespace Empiria.Land.UI {
       if (this.IsHistoricEdition) {
         this.HistoricRecording = this.Document.TryGetHistoricRecording();
       } else {
-        this.HistoricRecording = Recording.Empty;
+        this.HistoricRecording = PhysicalRecording.Empty;
       }
 
       if (this.IsHistoricEdition) {

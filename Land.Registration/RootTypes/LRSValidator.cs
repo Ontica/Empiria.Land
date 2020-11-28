@@ -65,11 +65,11 @@ namespace Empiria.Land.Registration {
       return null;
     }
 
-    static public LandRegistrationException ValidateRecordingNumber(RecordingBook recordingBook, Recording recording,
+    static public LandRegistrationException ValidateRecordingNumber(RecordingBook recordingBook, PhysicalRecording recording,
                                                                     string recordingNumberToValidate) {
       string recordingNo = RecordingBook.FormatRecordingNumber(recordingNumberToValidate);
       string filter = "PhysicalRecordingId <> " + recording.Id + " AND RecordingNo = '" + recordingNo + "'";
-      Recording findResult = RecordingBooksData.FindRecording(recordingBook, filter);
+      PhysicalRecording findResult = RecordingBooksData.FindRecording(recordingBook, filter);
 
       if (!findResult.IsEmptyInstance) {
         return new LandRegistrationException(LandRegistrationException.Msg.RecordingNumberAlreadyExists, recordingNo);
@@ -78,7 +78,7 @@ namespace Empiria.Land.Registration {
       return null;
     }
 
-    static public LandRegistrationException ValidateRecordingDates(RecordingBook recordingBook, Recording recording,
+    static public LandRegistrationException ValidateRecordingDates(RecordingBook recordingBook, PhysicalRecording recording,
                                                                    DateTime presentationTime, DateTime authorizationDate) {
       if (!recordingBook.RecordingsControlTimePeriod.Includes(presentationTime)) {
         return new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingPresentationTime,

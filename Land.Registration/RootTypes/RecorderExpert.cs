@@ -281,7 +281,7 @@ namespace Empiria.Land.Registration {
     }
 
     private RecordingAct CreateTargetRecordingAct(Resource resource) {
-      Recording recording = Task.TargetActInfo.PhysicalRecording;
+      PhysicalRecording recording = Task.TargetActInfo.PhysicalRecording;
 
       RecordingDocument document = null;
 
@@ -447,7 +447,7 @@ namespace Empiria.Land.Registration {
       precedentAct.Save();
     }
 
-    private Recording AttachResourceToNewPhysicalRecording(Resource resource) {
+    private PhysicalRecording AttachResourceToNewPhysicalRecording(Resource resource) {
       Assertion.Assert(this.CreateResourceOnNewPhysicalRecording,
                        "Resource was already created on physical recording.");
 
@@ -455,7 +455,7 @@ namespace Empiria.Land.Registration {
 
       RecordingBook recordingBook = Task.PrecedentRecordingBook;
 
-      Recording newPhysicalRecording = recordingBook.AddRecording(Task.QuickAddRecordingNumber);
+      PhysicalRecording newPhysicalRecording = recordingBook.AddRecording(Task.QuickAddRecordingNumber);
       var precedentAct = new InformationAct(RecordingActType.Empty, newPhysicalRecording.MainDocument,
                                             resource, newPhysicalRecording);
       precedentAct.Save();

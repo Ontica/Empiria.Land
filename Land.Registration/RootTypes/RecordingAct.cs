@@ -41,7 +41,7 @@ namespace Empiria.Land.Registration {
     }
 
     protected RecordingAct(RecordingActType recordingActType, RecordingDocument document,
-                           Recording physicalRecording) : base(recordingActType) {
+                           PhysicalRecording physicalRecording) : base(recordingActType) {
       Assertion.AssertObject(recordingActType, "recordingActType");
       Assertion.AssertObject(document, "document");
       Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance.");
@@ -57,7 +57,7 @@ namespace Empiria.Land.Registration {
     static internal RecordingAct Create(RecordingActType recordingActType,
                                         RecordingDocument document, Resource resource,
                                         RecordingAct amendmentOf, int index,
-                                        Recording physicalRecording) {
+                                        PhysicalRecording physicalRecording) {
       Assertion.AssertObject(recordingActType, "recordingActType");
       Assertion.AssertObject(document, "document");
       Assertion.AssertObject(resource, "resource");
@@ -135,13 +135,13 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("PhysicalRecordingId")]
-    private LazyInstance<Recording> _physicalRecording = LazyInstance<Recording>.Empty;
-    public Recording PhysicalRecording {
+    private LazyInstance<PhysicalRecording> _physicalRecording = LazyInstance<PhysicalRecording>.Empty;
+    public PhysicalRecording PhysicalRecording {
       get {
         return _physicalRecording.Value;
       }
       private set {
-        _physicalRecording = LazyInstance<Recording>.Parse(value);
+        _physicalRecording = LazyInstance<PhysicalRecording>.Parse(value);
       }
     }
 

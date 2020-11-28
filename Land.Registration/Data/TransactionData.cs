@@ -83,7 +83,7 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal List<LRSPayment> GetLRSRecordingPayments(Recording recording) {
+    static internal List<LRSPayment> GetLRSRecordingPayments(PhysicalRecording recording) {
       if (recording.IsEmptyInstance) {
         return new List<LRSPayment>();
       }

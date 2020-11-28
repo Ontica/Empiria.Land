@@ -152,12 +152,12 @@ namespace Empiria.Land.UI {
     }
 
     static public string GetRecordingsSummaryTable(RecordingBook recordingBook, int pageSize, int pageIndex) {
-      FixedList<Recording> recordings = RecordingBooksData.GetRecordings(recordingBook);
+      FixedList<PhysicalRecording> recordings = RecordingBooksData.GetRecordings(recordingBook);
 
       return GetRecordingsSummaryTable(recordings, pageSize, pageIndex);
     }
 
-    static public string GetRecordingsSummaryTable(FixedList<Recording> recordings, int pageSize, int pageIndex) {
+    static public string GetRecordingsSummaryTable(FixedList<PhysicalRecording> recordings, int pageSize, int pageIndex) {
       PagedDataSource pageView = GetPagedDataSource(recordings, pageSize, pageIndex);
 
       const string header = @"<table id='tblRecordingsViewer' class='details' style='width:658px'>" +
@@ -272,7 +272,7 @@ namespace Empiria.Land.UI {
       return template.Replace("{{ID}}", recordingAct.Id.ToString());
     }
 
-    public static string GetPhysicalRecordingActsGrid(Recording recording) {
+    public static string GetPhysicalRecordingActsGrid(PhysicalRecording recording) {
       string html = String.Empty;
 
       var document = recording.MainDocument;

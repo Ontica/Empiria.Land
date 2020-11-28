@@ -30,12 +30,12 @@ namespace Empiria.Land.Registration {
       this.PhysicalBook = RecordingBook.Parse(physicalBookId);
 
       if (physicalRecordingId != -1) {
-        this.PhysicalRecording = Recording.Parse(physicalRecordingId);
+        this.PhysicalRecording = PhysicalRecording.Parse(physicalRecordingId);
       } else if (recordingNumber != String.Empty) {
         this.PhysicalRecording = this.PhysicalBook.AddRecording(recordingNumber);
         this.PhysicalRecordingWasCreated = true;
       } else {
-        this.PhysicalRecording = Recording.Empty;
+        this.PhysicalRecording = PhysicalRecording.Empty;
       }
     }
 
@@ -43,7 +43,7 @@ namespace Empiria.Land.Registration {
       this.RecordingActId = -1;
       this.RecordingActType = RecordingActType.Empty;
       this.PhysicalBook = RecordingBook.Empty;
-      this.PhysicalRecording = Recording.Empty;
+      this.PhysicalRecording = PhysicalRecording.Empty;
     }
 
     static public RecordingActInfoDTO Empty {
@@ -75,7 +75,7 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    public Recording PhysicalRecording {
+    public PhysicalRecording PhysicalRecording {
       get;
       private set;
     }

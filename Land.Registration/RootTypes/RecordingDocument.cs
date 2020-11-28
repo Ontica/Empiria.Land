@@ -43,11 +43,15 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<RecordingDocument>(id);
     }
 
+    static public RecordingDocument Parse(string uid) {
+      return BaseObject.ParseKey<RecordingDocument>(uid);
+    }
+
     static public RecordingDocument TryParse(string documentUID, bool reload = false) {
       return BaseObject.TryParse<RecordingDocument>("DocumentUID = '" + documentUID + "'", reload);
     }
 
-    static internal RecordingDocument TryParse(Recording recording) {
+    static internal RecordingDocument TryParse(PhysicalRecording recording) {
       DataRow dataRow = DocumentsData.GetRecordingMainDocument(recording);
       if (dataRow != null) {
         return BaseObject.ParseDataRow<RecordingDocument>(dataRow);
@@ -273,9 +277,9 @@ namespace Empiria.Land.Registration {
 
     public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Resource resource,
                                            RecordingAct amendmentOf = null,
-                                           Recording physicalRecording = null) {
+                                           PhysicalRecording physicalRecording = null) {
       amendmentOf = amendmentOf ?? RecordingAct.Empty;
-      physicalRecording = physicalRecording ?? Recording.Empty;
+      physicalRecording = physicalRecording ?? PhysicalRecording.Empty;
 
       Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance.");
       Assertion.Assert(this.IsHistoricDocument || !this.IsClosed,
@@ -425,11 +429,11 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public Recording TryGetHistoricRecording() {
+    public PhysicalRecording TryGetHistoricRecording() {
       if (!this.IsHistoricDocument) {
         return null;
       }
-      Recording historicRecording = this.RecordingActs[0].PhysicalRecording;
+      PhysicalRecording historicRecording = this.RecordingActs[0].PhysicalRecording;
 
       Assertion.Assert(!historicRecording.IsEmptyInstance,
                       "historicRecording can't be the empty instance.");

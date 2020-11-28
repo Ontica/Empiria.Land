@@ -41,7 +41,7 @@ namespace Empiria.Land.Registration.Transactions {
       return new LRSPaymentList(list);
     }
 
-    static internal LRSPaymentList Parse(Recording recording) {
+    static internal LRSPaymentList Parse(PhysicalRecording recording) {
       List<LRSPayment> list = TransactionData.GetLRSRecordingPayments(recording);
 
       return new LRSPaymentList(list);

@@ -31,7 +31,7 @@ namespace Empiria.Land.Registration {
     }
 
     internal InformationAct(RecordingActType recordingActType, RecordingDocument document,
-                            Resource resource, Recording physicalRecording)
+                            Resource resource, PhysicalRecording physicalRecording)
                                       : base(recordingActType, document, physicalRecording) {
       recordingActType.AssertIsApplicableResource(resource);
       this.AttachResource(resource);

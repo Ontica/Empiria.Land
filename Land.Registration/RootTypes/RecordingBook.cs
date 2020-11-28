@@ -37,7 +37,7 @@ namespace Empiria.Land.Registration {
     static public bool UseBookAttachments = ConfigurationData.GetBoolean("RecordingBook.UseAttachments");
     static public bool UseBookLevel = ConfigurationData.GetBoolean("RecordingBookType.UseBookLevel");
 
-    private FixedList<Recording> recordings = null;
+    private FixedList<PhysicalRecording> recordings = null;
 
     #endregion Fields
 
@@ -170,7 +170,7 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    public FixedList<Recording> Recordings {
+    public FixedList<PhysicalRecording> Recordings {
       get {
         if (recordings == null) {
           recordings = RecordingBooksData.GetRecordings(this);
@@ -195,12 +195,12 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public Recording AddRecording(RecordingDTO dto) {
+    public PhysicalRecording AddRecording(RecordingDTO dto) {
       Assertion.AssertObject(dto, "dto");
 
       this.AssertValidDTOForAppend(dto);
 
-      var recording = new Recording(dto);
+      var recording = new PhysicalRecording(dto);
 
       recording.Save();
 
@@ -208,22 +208,22 @@ namespace Empiria.Land.Registration {
     }
 
     /// <summary>Adds a new recording to the book, creating a main empty document.</summary>
-    public Recording AddRecording(string recordingNumber) {
+    public PhysicalRecording AddRecording(string recordingNumber) {
       Assertion.AssertObject(recordingNumber, "recordingNumber");
 
       var newDocument = new RecordingDocument(RecordingDocumentType.Empty);
 
-      return new Recording(this, newDocument, RecordingBook.FormatRecordingNumber(recordingNumber));
+      return new PhysicalRecording(this, newDocument, RecordingBook.FormatRecordingNumber(recordingNumber));
     }
 
-    public Recording AddRecording(RecordingDocument document, string recordingNumber) {
+    public PhysicalRecording AddRecording(RecordingDocument document, string recordingNumber) {
       Assertion.AssertObject(document, "document");
       Assertion.AssertObject(recordingNumber, "recordingNumber");
 
       Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance.");
       Assertion.Assert(!document.IsEmptyDocumentType, "document can't be the special empty document.");
 
-      return new Recording(this, document, RecordingBook.FormatRecordingNumber(recordingNumber));
+      return new PhysicalRecording(this, document, RecordingBook.FormatRecordingNumber(recordingNumber));
     }
 
     public bool ExistsRecording(string recordingNumber) {
@@ -232,7 +232,7 @@ namespace Empiria.Land.Registration {
       return Recordings.Contains((x) => x.Number == recordingNo);
     }
 
-    public Recording FindRecording(string recordingNumber) {
+    public PhysicalRecording FindRecording(string recordingNumber) {
       string recordingNo = RecordingBook.FormatRecordingNumber(recordingNumber);
 
       return Recordings.Find((x) => x.Number == recordingNo);
@@ -273,12 +273,12 @@ namespace Empiria.Land.Registration {
       bisSuffixTag = (parts.Length == 2) ? parts[1] : String.Empty;
     }
 
-    public Recording GetNewRecording() {
-      return new Recording(this, new RecordingDocument(RecordingDocumentType.Empty), "Nueva partida");
+    public PhysicalRecording GetNewRecording() {
+      return new PhysicalRecording(this, new RecordingDocument(RecordingDocumentType.Empty), "Nueva partida");
     }
 
-    public Recording GetRecording(int recordingId) {
-      Recording recording = Recording.Parse(recordingId);
+    public PhysicalRecording GetRecording(int recordingId) {
+      PhysicalRecording recording = PhysicalRecording.Parse(recordingId);
 
       if (recording.RecordingBook.Equals(this)) {
         return recording;
@@ -288,14 +288,14 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public Recording GetFirstRecording() {
+    public PhysicalRecording GetFirstRecording() {
       if (Recordings.Count == 0) {
         return null;
       }
       return Recordings[0];
     }
 
-    public Recording GetNextRecording(Recording recording) {
+    public PhysicalRecording GetNextRecording(PhysicalRecording recording) {
       if (Recordings.Count == 0) {
         return null;
       }
@@ -308,11 +308,11 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public FixedList<Recording> GetRecordings() {
+    public FixedList<PhysicalRecording> GetRecordings() {
       return RecordingBooksData.GetRecordings(this);
     }
 
-    public Recording GetPreviousRecording(Recording recording) {
+    public PhysicalRecording GetPreviousRecording(PhysicalRecording recording) {
       if (Recordings.Count == 0) {
         return null;
       }
@@ -324,7 +324,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public Recording GetLastRecording() {
+    public PhysicalRecording GetLastRecording() {
       if (Recordings.Count != 0) {
         return Recordings[Recordings.Count - 1];
       } else {

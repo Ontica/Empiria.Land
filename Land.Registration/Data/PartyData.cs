@@ -94,7 +94,7 @@ namespace Empiria.Land.Data {
     }
 
     static public DataTable GetPartiesOnRecording(ObjectTypeInfo partyType,
-                                                  Recording recording, string keywords) {
+                                                  PhysicalRecording recording, string keywords) {
       var operation = DataOperation.Parse("qryLRSPartiesOnRecording", recording.Id);
 
       string filter = SearchExpression.ParseAndLikeWithNoiseWords("PartyKeywords", keywords);

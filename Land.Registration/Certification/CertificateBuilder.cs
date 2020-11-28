@@ -118,7 +118,7 @@ namespace Empiria.Land.Certification {
       }
     }
 
-    private string GetPhysicalRecording(Recording physicalRecording) {
+    private string GetPhysicalRecording(PhysicalRecording physicalRecording) {
       const string template =
               "Que bajo la partida {{NUMBER}} de la Sección {{SECTION}} Volumen {{BOOK}} " +
               "del Distrito Judicial de {{DISTRICT}} de fecha {{DATE}}";

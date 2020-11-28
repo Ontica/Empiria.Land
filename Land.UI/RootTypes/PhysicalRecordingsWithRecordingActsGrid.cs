@@ -40,7 +40,7 @@ namespace Empiria.Land.UI {
     #region Private methods
 
     private string GetHtml() {
-      FixedList<Recording> physicalRecordingsList = _recordingBook.GetRecordings();
+      FixedList<PhysicalRecording> physicalRecordingsList = _recordingBook.GetRecordings();
 
       string html = this.GetTitle() + this.GetHeader();
       for (int i = 0; i < physicalRecordingsList.Count; i++) {
@@ -76,7 +76,7 @@ namespace Empiria.Land.UI {
       return template;
     }
 
-    private string GetRow(Recording physicalRecording, int index) {
+    private string GetRow(PhysicalRecording physicalRecording, int index) {
       const string template =
            "<tr class='{{CLASS}}'>" +
              "<td style='white-space:nowrap'>" +

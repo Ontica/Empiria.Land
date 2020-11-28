@@ -22,7 +22,7 @@ namespace Empiria.Land.Data {
 
     #region Public methods
 
-    static public FixedList<RecordingAct> GetPhysicalRecordingRecordedActs(Recording recording) {
+    static public FixedList<RecordingAct> GetPhysicalRecordingRecordedActs(PhysicalRecording recording) {
       if (recording.IsEmptyInstance) {
         return new FixedList<RecordingAct>();
       }

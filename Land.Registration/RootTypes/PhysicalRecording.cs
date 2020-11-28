@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Registration System            *
 *  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : Recording                                      Pattern  : Empiria Object Type                 *
+*  Type      : PhysicalRecording                              Pattern  : Empiria Object Type                 *
 *  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Represents a general recording in Land Registration System.                                   *
@@ -20,7 +20,7 @@ using Empiria.Land.Registration.Transactions;
 namespace Empiria.Land.Registration {
 
   /// <summary>Represents a general recording in Land Registration System.</summary>
-  public class Recording : BaseObject, IProtected {
+  public class PhysicalRecording : BaseObject, IProtected {
 
     #region Fields
 
@@ -31,12 +31,12 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private Recording() {
+    private PhysicalRecording() {
       // Required by Empiria Framework.
     }
 
-    internal Recording(RecordingBook recordingBook,
-                       RecordingDocument mainDocument, string recordingNumber) {
+    internal PhysicalRecording(RecordingBook recordingBook,
+                               RecordingDocument mainDocument, string recordingNumber) {
       Assertion.AssertObject(recordingBook, "recordingBook");
       Assertion.AssertObject(mainDocument, "mainDocument");
       Assertion.AssertObject(recordingNumber, "recordingNumber");
@@ -49,7 +49,7 @@ namespace Empiria.Land.Registration {
       this.Number = recordingNumber;
     }
 
-    internal Recording(RecordingDTO dto) : this(dto?.RecordingBook, dto?.MainDocument, dto?.Number) {
+    internal PhysicalRecording(RecordingDTO dto) : this(dto?.RecordingBook, dto?.MainDocument, dto?.Number) {
       LoadData(dto);
     }
 
@@ -64,14 +64,14 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public Recording Parse(int id) {
-      return BaseObject.ParseId<Recording>(id);
+    static public PhysicalRecording Parse(int id) {
+      return BaseObject.ParseId<PhysicalRecording>(id);
     }
 
-    static private readonly Recording _empty = BaseObject.ParseEmpty<Recording>();
-    static public Recording Empty {
+    static private readonly PhysicalRecording _empty = BaseObject.ParseEmpty<PhysicalRecording>();
+    static public PhysicalRecording Empty {
       get {
-        return _empty.Clone<Recording>();
+        return _empty.Clone<PhysicalRecording>();
       }
     }
 
@@ -356,6 +356,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Private methods
 
-  } // class Recording
+  } // class PhysicalRecording
 
 } // namespace Empiria.Land.Registration

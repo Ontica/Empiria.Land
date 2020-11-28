@@ -28,7 +28,7 @@ namespace Empiria.Land.Data {
       return (DataReader.Count(operation) != 0);
     }
 
-    static internal FixedList<Resource> GetPhysicalRecordingResources(Recording recording) {
+    static internal FixedList<Resource> GetPhysicalRecordingResources(PhysicalRecording recording) {
       var operation = DataOperation.Parse("qryLRSPhysicalRecordingResources", recording.Id);
 
       return DataReader.GetList<Resource>(operation,

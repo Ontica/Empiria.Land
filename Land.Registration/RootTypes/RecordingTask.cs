@@ -45,7 +45,7 @@ namespace Empiria.Land.Registration {
       this.ResourceName = EmpiriaString.TrimAll(resourceName);
       this.CadastralKey = cadastralKey;
       this.PrecedentRecordingBook = RecordingBook.Parse(precedentRecordingBookId);
-      this.PrecedentRecording = Recording.Parse(precedentRecordingId);
+      this.PrecedentRecording = PhysicalRecording.Parse(precedentRecordingId);
 
       if (precedentResourceId == 0) {
         var data = new RealEstateExtData() { CadastralKey = cadastralKey };
@@ -105,7 +105,7 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    public Recording PrecedentRecording {
+    public PhysicalRecording PrecedentRecording {
       get;
       internal set;
     }

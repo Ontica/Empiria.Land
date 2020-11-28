@@ -43,10 +43,10 @@ namespace Empiria.Land.Registration.Transactions {
 
     /// <summary>Initialize payment for recording. Used for historic recordings
     /// without a transaction.</summary>
-    internal LRSPayment(Recording recording, string receiptNo,
+    internal LRSPayment(PhysicalRecording recording, string receiptNo,
                         decimal receiptTotal) {
       Assertion.AssertObject(recording, "recording");
-      Assertion.Assert(recording != Recording.Empty, "recording shouldn't be the empty instance.");
+      Assertion.Assert(recording != PhysicalRecording.Empty, "recording shouldn't be the empty instance.");
       Assertion.AssertObject(receiptNo, "receiptNo");
       Assertion.Assert(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
 
@@ -85,11 +85,11 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     [DataField("PhysicalRecordingId")]
-    LazyInstance<Recording> _recording = LazyInstance<Recording>.Empty;
-    public Recording Recording {
+    LazyInstance<PhysicalRecording> _recording = LazyInstance<PhysicalRecording>.Empty;
+    public PhysicalRecording Recording {
       get { return _recording.Value; }
       private set {
-        _recording = LazyInstance<Recording>.Parse(value);
+        _recording = LazyInstance<PhysicalRecording>.Parse(value);
       }
     }
 

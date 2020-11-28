@@ -106,7 +106,7 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal DataRow GetRecordingMainDocument(Recording recording) {
+    static internal DataRow GetRecordingMainDocument(PhysicalRecording recording) {
       return DataReader.GetDataRow(DataOperation.Parse("getLRSRecordingMainDocument", recording.Id));
     }
 

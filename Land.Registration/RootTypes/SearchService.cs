@@ -95,13 +95,13 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public FixedList<Recording> PhysicalRecordings(string keywords, string sort = "") {
+    static public FixedList<PhysicalRecording> PhysicalRecordings(string keywords, string sort = "") {
       string filter = FilterExpression("RecordingKeywords", keywords);
       sort = SortExpression(sort, "RecordingAsText");
       string sql = EntitySqlString("LRSPhysicalRecordings", "RecordingStatus", filter, sort, 50);
 
       return DataReader.GetList(DataOperation.Parse(sql),
-                                (x) => BaseObject.ParseList<Recording>(x)).ToFixedList();
+                                (x) => BaseObject.ParseList<PhysicalRecording>(x)).ToFixedList();
     }
 
 

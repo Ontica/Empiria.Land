@@ -91,7 +91,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public Recording GetLastPhysicalRecording() {
+    public PhysicalRecording GetLastPhysicalRecording() {
       return this.FirstRecordingAct.PhysicalRecording;
     }
 
