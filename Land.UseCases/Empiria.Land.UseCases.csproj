@@ -61,4 +61,11 @@
     <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />
     <ProjectReference Include="..\..\extensions\Services\Empiria.Services.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CertificatesIssuing\" />
+    <Folder Include="Transactions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
+  </ItemGroup>
 </Project>
