@@ -30,6 +30,10 @@ namespace Empiria.Land.Recording.UseCases {
       get; internal set;
     }
 
+    public FixedList<RecordingActDto> RecordingActs {
+      get; internal set;
+    }
+
   }  // class RecordedDocumentDto
 
-}  // namespace Empiria.Land.UseCases
+}  // namespace Empiria.Land.Recording.UseCases

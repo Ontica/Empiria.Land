@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Extranet Services                            Component : Web Api                               *
+*  Module   : Documents Recording                          Component : Web Api                               *
 *  Assembly : Empiria.Land.WebApi.dll                      Pattern   : Controller                            *
 *  Type     : RecordableDocumentsController                License   : Please read LICENSE.txt file          *
 *                                                                                                            *
@@ -24,7 +24,7 @@ namespace Empiria.Land.Recording.WebApi {
     [Route("v5/land/recorded-documents/{documentUID:length(20)}")]
     public SingleObjectModel GetRecordedDocument([FromUri] string documentUID) {
 
-      using (var usecases = RecordedDocumentsUseCases.GetUseCaseInteractor()) {
+      using (var usecases = RecordedDocumentsUseCases.UseCaseInteractor()) {
         RecordedDocumentDto documentDto = usecases.GetRecordedDocument(documentUID);
 
         return new SingleObjectModel(this.Request, documentDto);

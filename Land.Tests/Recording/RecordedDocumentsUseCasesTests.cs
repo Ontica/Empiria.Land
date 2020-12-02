@@ -22,13 +22,12 @@ namespace Empiria.Land.Recording.UseCases.Tests {
 
     #endregion Fields
 
-
     #region Initialization
 
     public RecordedDocumentsUseCasesTests() {
       _RECORDED_DOCUMENT_UID = "RP73RX-94ZF28-HN34E7";
 
-      _usecases = RecordedDocumentsUseCases.GetUseCaseInteractor();
+      _usecases = RecordedDocumentsUseCases.UseCaseInteractor();
     }
 
 

@@ -7,6 +7,7 @@
 *  Summary  : Contains methods to map from RecordedDocument to RecorderDocumentDTO objects.                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using Empiria.Land.Registration;
 
 namespace Empiria.Land.Recording.UseCases {
@@ -15,8 +16,10 @@ namespace Empiria.Land.Recording.UseCases {
   static internal class RecordedDocumentMapper {
 
 
-    static internal FixedList<RecordedDocumentDto> Map(FixedList<RecordingDocument> source) {
-      return new FixedList<RecordedDocumentDto>(source.Select((x) => Map(x)));
+    static internal FixedList<RecordedDocumentDto> Map(FixedList<RecordingDocument> list) {
+      var mappedItems = list.Select((x) => Map(x));
+
+      return new FixedList<RecordedDocumentDto>(mappedItems);
     }
 
 
@@ -28,9 +31,10 @@ namespace Empiria.Land.Recording.UseCases {
       dto.Subtype = document.Subtype.Name;
       dto.Summary = document.Notes;
 
+      dto.RecordingActs = RecordingActMapper.Map(document.RecordingActs);
+
       return dto;
     }
-
 
   }  // class RecordedDocumentMapper
 

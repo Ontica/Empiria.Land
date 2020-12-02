@@ -1,12 +1,12 @@
 ﻿{
-  "appName": "Empiria Land Web API",
-  "version": "0.0",
-  "date": "2016-03-28",
+  "appName": "Empiria Land Web API Local Development. JMC",
+  "version": "5.0",
+  "date": "2020-11-27",
   "settings": [
     {
       "type": "",
       "key": "ApplicationKey",
-      "value": "d5AF4FyqLXG50hNCekZFwUf8Odlq8n2birEbW3rvOXrF2256bUCvEFthHDxFQnGW"
+      "value": "land-intranet"
     },
     {
       "type": "",
@@ -31,22 +31,7 @@
     {
       "type": "Land",
       "key": "Templates.Path",
-      "value": "E:\\empiria.files\\tlaxcala\\"
-    },
-    {
-      "type": "Land.WebApi",
-      "key": "PendingNoteRequest.NotariesArray",
-      "value": "54~71~72~73~74~75~77~79~80~409"
-    },
-    {
-      "type": "Land.WebApi",
-      "key": "PendingNoteRequest.ProjectedActsArray",
-      "value": "2203~2206~2207~2208~2209~2214~2335~2371~2787"
-    },
-    {
-      "type": "Land.WebApi",
-      "key": "Citys.NewTransactionsEnabled",
-      "value": false
+      "value": "E:\\empiria.files\\land\\"
     },
     {
       "type": "Land.WebApi",

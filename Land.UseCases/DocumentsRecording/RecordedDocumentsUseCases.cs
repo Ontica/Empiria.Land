@@ -1,12 +1,13 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Documents Recording                        Component : Use cases Layer                         *
-*  Assembly : Empiria.Land.UseCases.dll                  Pattern   : Use cases class                         *
+*  Assembly : Empiria.Land.UseCases.dll                  Pattern   : Use case interactor class               *
 *  Type     : RecordedDocumentsUseCases                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Use cases for documents recording.                                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using Empiria.Services;
 
 using Empiria.Land.Registration;
@@ -22,7 +23,7 @@ namespace Empiria.Land.Recording.UseCases {
       // no-op
     }
 
-    static public RecordedDocumentsUseCases GetUseCaseInteractor() {
+    static public RecordedDocumentsUseCases UseCaseInteractor() {
       return UseCase.CreateInstance<RecordedDocumentsUseCases>();
     }
 
