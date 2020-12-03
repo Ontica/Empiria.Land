@@ -72,6 +72,14 @@ namespace Empiria.Land.Data {
       return dataset;
     }
 
+    static internal FixedList<LRSTransaction> GetTransactionsList(string filter, string orderBy, int pageSize) {
+      string sql = $"SELECT TOP {pageSize} * FROM LRSTransactions WHERE {filter} ORDER BY {orderBy}";
+
+      var operation = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<LRSTransaction>(operation);
+    }
+
 
     static public LRSTransactionItemList GetLRSTransactionItemsList(LRSTransaction transaction) {
       var operation = DataOperation.Parse("qryLRSTransactionItems", transaction.Id);

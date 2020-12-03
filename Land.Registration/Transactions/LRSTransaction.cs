@@ -49,8 +49,16 @@ namespace Empiria.Land.Registration.Transactions {
       return BaseObject.ParseId<LRSTransaction>(id);
     }
 
+    static public LRSTransaction Parse(string uid) {
+      return BaseObject.ParseKey<LRSTransaction>(uid);
+    }
+
     static public LRSTransaction TryParse(string transactionUID, bool reload = false) {
       return BaseObject.TryParse<LRSTransaction>("TransactionUID = '" + transactionUID + "'", reload);
+    }
+
+    public static FixedList<LRSTransaction> GetList(string filter, string orderBy, int pageSize) {
+      return TransactionData.GetTransactionsList(filter, orderBy, pageSize);
     }
 
     static public LRSTransaction Empty {
