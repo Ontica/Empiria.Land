@@ -1,22 +1,104 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  System   : Empiria Land                                 Module  : Recording Services                      *
-*  Assembly : Empiria.Land.Registration.dll                Pattern : Utility methods                         *
-*  Type     : UIDGenerators                                License : Please read LICENSE.txt file            *
+*  Module   : Land Core                                  Component : Integration Layer                       *
+*  Assembly : Empiria.Land.dll                           Pattern   : Provider implementation                 *
+*  Type     : UniqueIDGeneratorProvider                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Utility methods used generate entities' unique IDs.                                            *
+*  Summary  : Provides unique ID generation services for land-related documents and objects.                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land.Data {
+using Empiria.Land.Certification;
+using Empiria.Land.Registration;
+using Empiria.Land.Registration.Transactions;
 
-  /// <summary>Utility methods used generate entities' unique IDs.</summary>
-  static internal class UIDGenerators {
+namespace Empiria.Land.Providers {
+
+  /// <summary>Provides unique ID generation services for land-related documents and objects.</summary>
+  public class UniqueIDGeneratorProvider : IUniqueIDGeneratorProvider {
 
     #region Public methods
 
-    static internal string CreateAssociationUID() {
+    public string GenerateAssociationUID() {
+      while (true) {
+        string newAssociationUID = UniqueIDGeneratorProvider.CreateAssociationUID();
+
+        var checkIfExistAssociation = Resource.TryParseWithUID(newAssociationUID);
+
+        if (checkIfExistAssociation == null) {
+          return newAssociationUID;
+        }
+      }
+    }
+
+
+    public string GenerateCertificateUID() {
+      while (true) {
+        string newCertificateUID = UniqueIDGeneratorProvider.CreateCertificateUID();
+
+        var checkIfExistCertificate = Certificate.TryParse(newCertificateUID);
+
+        if (checkIfExistCertificate == null) {
+          return newCertificateUID;
+        }
+      }
+    }
+
+
+    public string GenerateDocumentUID() {
+      while (true) {
+        string newDocumentUID = UniqueIDGeneratorProvider.CreateDocumentUID();
+
+        var checkIfExistDocument = RecordingDocument.TryParse(newDocumentUID);
+
+        if (checkIfExistDocument == null) {
+          return newDocumentUID;
+        }
+      }
+    }
+
+
+    public string GenerateNoPropertyResourceUID() {
+      while (true) {
+        string newNoPropertyUID = UniqueIDGeneratorProvider.CreateNoPropertyResourceUID();
+
+        var checkIfExistNoPropertyResource = Resource.TryParseWithUID(newNoPropertyUID);
+
+        if (checkIfExistNoPropertyResource == null) {
+          return newNoPropertyUID;
+        }
+      }
+    }
+
+
+    public string GeneratePropertyUID() {
+      while (true) {
+        string newPropertyUID = UniqueIDGeneratorProvider.CreatePropertyUID();
+
+        var checkIfExistProperty = Resource.TryParseWithUID(newPropertyUID);
+
+        if (checkIfExistProperty == null) {
+          return newPropertyUID;
+        }
+      }
+    }
+
+
+    public string GenerateTransactionUID() {
+      while (true) {
+        string newTransactionUID = UniqueIDGeneratorProvider.CreateTransactionUID();
+
+        var checkIfExistTransaction = LRSTransaction.TryParse(newTransactionUID);
+
+        if (checkIfExistTransaction == null) {
+          return newTransactionUID;
+        }
+      }
+    }
+
+
+    static private string CreateAssociationUID() {
       string temp = "TL-SC-";
 
       temp += EmpiriaMath.GetRandomCharacter(temp);
@@ -37,7 +119,7 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal string CreateCertificateUID() {
+    static private string CreateCertificateUID() {
       string temp = String.Empty;
       int hashCode = 0;
       bool useLetters = false;
@@ -63,7 +145,7 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal string CreateDocumentUID() {
+    static private string CreateDocumentUID() {
       string temp = String.Empty;
       int hashCode = 0;
       bool useLetters = false;
@@ -92,7 +174,7 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal string CreateNoPropertyResourceUID() {
+    static private string CreateNoPropertyResourceUID() {
       string temp = "TL-DOC-";
 
       temp += EmpiriaMath.GetRandomDigit(temp);
@@ -113,8 +195,9 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal string CreatePropertyUID() {
+    static private string CreatePropertyUID() {
       string temp = "TL";
+
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomCharacter(temp);
@@ -139,7 +222,7 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal string CreateTransactionUID() {
+    static private string CreateTransactionUID() {
       string temp = String.Empty;
       int hashCode = 0;
       bool useLetters = false;
@@ -169,11 +252,12 @@ namespace Empiria.Land.Data {
 
     static private string GetChecksumCharacterCode(int hashCode) {
       string hashCodeConvertionRule = "NAXMT1C5WZ7J3HE489RLGV6F2PUQKYD0BS";
+
       return hashCodeConvertionRule.Substring(hashCode % hashCodeConvertionRule.Length, 1);
     }
 
     #endregion Private methods
 
-  } // class DocumentsData
+  } // class UniqueIDGeneratorProvider
 
-} // namespace Empiria.Land.Data
+} // namespace Empiria.Land.Providers

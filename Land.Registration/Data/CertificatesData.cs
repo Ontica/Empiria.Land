@@ -7,7 +7,6 @@
 *  Summary  : Provides database read and write methods for land certificates.                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Data;
 using Empiria.Contacts;
@@ -22,19 +21,6 @@ namespace Empiria.Land.Data {
   static internal class CertificatesData {
 
     #region Public methods
-
-    static internal string BuildCertificateUID() {
-      while (true) {
-        string newCertificateUID = UIDGenerators.CreateCertificateUID();
-
-        var checkIfExistCertificate = Certificate.TryParse(newCertificateUID);
-
-        if (checkIfExistCertificate == null) {
-          return newCertificateUID;
-        }
-      }
-    }
-
 
     static internal FixedList<Certificate> GetTransactionIssuedCertificates(LRSTransaction transaction) {
       if (transaction.IsEmptyInstance) {

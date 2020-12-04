@@ -9,9 +9,9 @@
 *              kinds of No-property resources.                                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Land.Data;
+using Empiria.Land.Providers;
 
 namespace Empiria.Land.Registration {
 
@@ -34,7 +34,7 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     protected override string GenerateResourceUID() {
-      return TransactionData.GenerateNoPropertyResourceUID();
+      return ExternalProviders.UniqueIDGeneratorProvider.GenerateNoPropertyResourceUID();
     }
 
     protected override void OnSave() {

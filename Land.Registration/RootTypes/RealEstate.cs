@@ -15,6 +15,7 @@ using Empiria.DataTypes;
 using Empiria.Geography;
 
 using Empiria.Land.Data;
+using Empiria.Land.Providers;
 
 namespace Empiria.Land.Registration {
 
@@ -227,7 +228,7 @@ namespace Empiria.Land.Registration {
     }
 
     protected override string GenerateResourceUID() {
-      return TransactionData.GeneratePropertyUID();
+      return ExternalProviders.UniqueIDGeneratorProvider.GeneratePropertyUID();
     }
 
     public FixedList<RecordingAct> GetHardLimitationActs() {

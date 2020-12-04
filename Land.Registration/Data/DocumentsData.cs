@@ -23,19 +23,6 @@ namespace Empiria.Land.Data {
 
     #region Public methods
 
-    static internal string GenerateDocumentUID() {
-      while (true) {
-        string newDocumentUID = UIDGenerators.CreateDocumentUID();
-
-        var checkIfExistDocument = RecordingDocument.TryParse(newDocumentUID);
-
-        if (checkIfExistDocument == null) {
-          return newDocumentUID;
-        }
-      }
-    }
-
-
     static internal LRSTransaction GetDocumentTransaction(RecordingDocument document) {
       if (document.IsEmptyInstance) {
         return LRSTransaction.Empty;

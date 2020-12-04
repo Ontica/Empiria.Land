@@ -16,6 +16,8 @@ using Empiria.Ontology;
 using Empiria.Security;
 
 using Empiria.Land.Data;
+using Empiria.Land.Providers;
+
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
@@ -433,7 +435,7 @@ namespace Empiria.Land.Certification {
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
-        this._certificateUID = CertificatesData.BuildCertificateUID();
+        this._certificateUID = ExternalProviders.UniqueIDGeneratorProvider.GenerateCertificateUID();
       }
     }
 

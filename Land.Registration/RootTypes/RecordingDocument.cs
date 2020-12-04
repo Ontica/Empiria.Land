@@ -17,6 +17,8 @@ using Empiria.Geography;
 using Empiria.Ontology;
 
 using Empiria.Land.Data;
+using Empiria.Land.Providers;
+
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {
@@ -400,7 +402,7 @@ namespace Empiria.Land.Registration {
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
-        this._documentUID = DocumentsData.GenerateDocumentUID();
+        this._documentUID = ExternalProviders.UniqueIDGeneratorProvider.GenerateDocumentUID();
       }
     }
 

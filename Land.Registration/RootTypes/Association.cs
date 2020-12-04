@@ -8,10 +8,10 @@
 *  Summary   : Represents a social association or organization.                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 using System.Data;
 
 using Empiria.Land.Data;
+using Empiria.Land.Providers;
 
 namespace Empiria.Land.Registration {
 
@@ -66,7 +66,7 @@ namespace Empiria.Land.Registration {
     }
 
     protected override string GenerateResourceUID() {
-      return TransactionData.GenerateAssociationUID();
+      return ExternalProviders.UniqueIDGeneratorProvider.GenerateAssociationUID();
     }
 
     public string GetAssociationTypeName() {
