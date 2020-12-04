@@ -63,7 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CertificatesIssuing\" />
-    <Folder Include="Transactions\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
