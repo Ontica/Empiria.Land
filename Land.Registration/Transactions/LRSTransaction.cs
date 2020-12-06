@@ -16,8 +16,10 @@ using Empiria.Security;
 
 using Empiria.OnePoint.EPayments;
 
-using Empiria.Land.Certification;
 using Empiria.Land.Data;
+using Empiria.Land.Providers;
+
+using Empiria.Land.Certification;
 using Empiria.Land.Registration.Forms;
 
 namespace Empiria.Land.Registration.Transactions {
@@ -58,7 +60,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public static FixedList<LRSTransaction> GetList(string filter, string orderBy, int pageSize) {
-      return TransactionData.GetTransactionsList(filter, orderBy, pageSize);
+      return ExternalProviders.TransactionRepository.GetTransactionsList(filter, orderBy, pageSize);
     }
 
     static public LRSTransaction Empty {
@@ -529,7 +531,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     protected override void OnBeforeSave() {
       if (base.IsNew) {
-        this._transactionUID = TransactionData.GenerateTransactionUID();
+        this._transactionUID = ExternalProviders.UniqueIDGeneratorProvider.GenerateTransactionUID();
       }
     }
 

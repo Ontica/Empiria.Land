@@ -11,7 +11,7 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.Land.Data;
+using Empiria.Land.Providers;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -31,18 +31,12 @@ namespace Empiria.Land.Registration.Transactions {
       this.CalculateTotals();
     }
 
-    internal LRSPaymentList(List<LRSPayment> list) : base(list) {
+    internal LRSPaymentList(IEnumerable<LRSPayment> list) : base(list) {
       this.CalculateTotals();
     }
 
     static internal LRSPaymentList Parse(LRSTransaction transaction) {
-      List<LRSPayment> list = TransactionData.GetLRSTransactionPayments(transaction);
-
-      return new LRSPaymentList(list);
-    }
-
-    static internal LRSPaymentList Parse(PhysicalRecording recording) {
-      List<LRSPayment> list = TransactionData.GetLRSRecordingPayments(recording);
+      FixedList<LRSPayment> list = ExternalProviders.TransactionRepository.GetTransactionPayments(transaction);
 
       return new LRSPaymentList(list);
     }
@@ -53,7 +47,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public override LRSPayment this[int index] {
       get {
-        return (LRSPayment) base[index];
+        return base[index];
       }
     }
 

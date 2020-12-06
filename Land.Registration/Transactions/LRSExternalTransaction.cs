@@ -14,7 +14,7 @@ using System;
 using Empiria.Contacts;
 using Empiria.Json;
 
-using Empiria.Land.Data;
+using Empiria.Land.Providers;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -143,7 +143,9 @@ namespace Empiria.Land.Registration.Transactions {
         "La fecha y hora del trámite externo no puede ser mayor a la fecha y hora actual: {0}",
         this.ExternalTransactionTime);
 
-      Assertion.Assert(!TransactionData.ExistsExternalTransactionNo(this.ExternalTransactionNo),
+      var repository = ExternalProviders.TransactionRepository;
+
+      Assertion.Assert(!repository.ExistsExternalTransactionNo(this.ExternalTransactionNo),
                        "Ya tengo registrado otro trámite externo con el mismo número: '{0}'",
                        this.ExternalTransactionNo);
 

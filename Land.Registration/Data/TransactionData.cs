@@ -8,12 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Data;
 
-using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Data {
@@ -22,16 +20,6 @@ namespace Empiria.Land.Data {
   static public class TransactionData {
 
     #region Public methods
-
-    static internal bool ExistsExternalTransactionNo(string externalTransactionNo) {
-      var sql = "SELECT * FROM LRSTransactions " +
-                $"WHERE ExternalTransactionNo = '{externalTransactionNo}'";
-
-      var operation = DataOperation.Parse(sql);
-
-      return (DataReader.Count(operation) > 0);
-    }
-
 
     static public DataView GetLRSTransactionsForUI(string filter, string sort) {
       string sql = "SELECT TOP 200 * FROM vwLRSTransactionsAndCurrentTrack";
@@ -45,137 +33,6 @@ namespace Empiria.Land.Data {
         // no-op
       }
       return DataReader.GetDataView(DataOperation.Parse(sql));
-    }
-
-
-    static public DataSet GetLRSTransactionWithKey(string transactionKey) {
-      DataSet dataset = new DataSet("LRSTransaction");
-
-      string sql = "SELECT * FROM vwLRSTransactionForWS " +
-                   $"WHERE TransactionKey = '{transactionKey}'";
-
-      DataTable table = DataReader.GetDataTable(DataOperation.Parse(sql), "Header");
-
-      dataset.Tables.Add(table);
-      int transactionId = 0;
-
-      if (table.Rows.Count != 0) {
-        transactionId = (int) table.Rows[0]["TransactionId"];
-      }
-      sql = "SELECT * FROM vwLRSTransactionItemsForWS " +
-            $"WHERE TransactionId = {transactionId}";
-
-      table = DataReader.GetDataTable(DataOperation.Parse(sql), "Items");
-
-      dataset.Tables.Add(table);
-
-      return dataset;
-    }
-
-    static internal FixedList<LRSTransaction> GetTransactionsList(string filter, string orderBy, int pageSize) {
-      string sql = $"SELECT TOP {pageSize} * FROM LRSTransactions WHERE {filter} ORDER BY {orderBy}";
-
-      var operation = DataOperation.Parse(sql);
-
-      return DataReader.GetFixedList<LRSTransaction>(operation);
-    }
-
-
-    static public LRSTransactionItemList GetLRSTransactionItemsList(LRSTransaction transaction) {
-      var operation = DataOperation.Parse("qryLRSTransactionItems", transaction.Id);
-
-      var list = DataReader.GetList<LRSTransactionItem>(operation,
-                                                       (x) => BaseObject.ParseList<LRSTransactionItem>(x));
-
-      return new LRSTransactionItemList(list);
-    }
-
-
-    static internal List<LRSPayment> GetLRSRecordingPayments(PhysicalRecording recording) {
-      if (recording.IsEmptyInstance) {
-        return new List<LRSPayment>();
-      }
-
-      var operation = DataOperation.Parse("qryLRSRecordingPayments", recording.Id);
-
-      return DataReader.GetList<LRSPayment>(operation, (x) => BaseObject.ParseList<LRSPayment>(x));
-    }
-
-
-    static internal List<LRSPayment> GetLRSTransactionPayments(LRSTransaction transaction) {
-      if (transaction.IsEmptyInstance) {
-        return new List<LRSPayment>();
-      }
-
-      var operation = DataOperation.Parse("qryLRSTransactionPayments", transaction.Id);
-
-      return DataReader.GetList<LRSPayment>(operation, (x) => BaseObject.ParseList<LRSPayment>(x));
-    }
-
-
-    static internal string GenerateAssociationUID() {
-      while (true) {
-        string newAssociationUID = UIDGenerators.CreateAssociationUID();
-
-        var checkIfExistAssociation = Resource.TryParseWithUID(newAssociationUID);
-
-        if (checkIfExistAssociation == null) {
-          return newAssociationUID;
-        }
-      }
-    }
-
-
-    static internal string GenerateNoPropertyResourceUID() {
-      while (true) {
-        string newNoPropertyUID = UIDGenerators.CreateNoPropertyResourceUID();
-
-        var checkIfExistNoPropertyResource = Resource.TryParseWithUID(newNoPropertyUID);
-
-        if (checkIfExistNoPropertyResource == null) {
-          return newNoPropertyUID;
-        }
-      }
-    }
-
-
-    static internal string GeneratePropertyUID() {
-      while (true) {
-        string newPropertyUID = UIDGenerators.CreatePropertyUID();
-
-        var checkIfExistProperty = Resource.TryParseWithUID(newPropertyUID);
-
-        if (checkIfExistProperty == null) {
-          return newPropertyUID;
-        }
-      }
-    }
-
-
-    static internal string GenerateTransactionUID() {
-      while (true) {
-        string newTransactionUID = UIDGenerators.CreateTransactionUID();
-
-        var checkIfExistTransaction = LRSTransaction.TryParse(newTransactionUID);
-
-        if (checkIfExistTransaction == null) {
-          return newTransactionUID;
-        }
-      }
-    }
-
-
-    static internal int GetLastControlNumber(RecorderOffice recorderOffice) {
-      string sql = "SELECT MAX(ControlNumber) FROM vwLRSTransactions " +
-                   $"WHERE RecorderOfficeId = {recorderOffice.Id.ToString()}";
-
-      string max = DataReader.GetScalar<String>(DataOperation.Parse(sql), String.Empty);
-
-      if (max != null && max.Length != 0) {
-        return int.Parse(max);
-      } else {
-        return 1;
-      }
     }
 
 
