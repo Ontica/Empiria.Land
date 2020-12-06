@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Integration Services                       Component : Empiria Land Transaction Services       *
-*  Assembly : Empiria.Land.Registration.dll              Pattern   : Service provider                        *
+*  Module   : Transaction Management                     Component : Integration Layer                       *
+*  Assembly : Empiria.Land.dll                           Pattern   : Provider implementation                 *
 *  Type     : LandFilingTransactionProvider              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides land transaction services through external electronic filing requests.                *
@@ -19,8 +19,7 @@ using Empiria.Land.Certification;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
-
-namespace Empiria.Land.Integration {
+namespace Empiria.Land.Providers {
 
   /// <summary>Provides land transaction services through external electronic filing requests.</summary>
   public class LandFilingTransactionProvider: IFilingTransactionProvider {
@@ -41,7 +40,6 @@ namespace Empiria.Land.Integration {
     }
 
     #endregion Constructors and parsers
-
 
     #region Methods
 
@@ -289,4 +287,4 @@ namespace Empiria.Land.Integration {
 
   }  // class LandFilingTransactionProvider
 
-}  // namespace Empiria.Land.Integration
+}  // namespace Empiria.Land.Providers

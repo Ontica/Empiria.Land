@@ -17,15 +17,15 @@ using Empiria.StateEnums;
 using Empiria.Messaging;
 using Empiria.Messaging.EMailDelivery;
 
+using Empiria.Land.Providers;
+
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
-
-using Empiria.Land.Integration;
 
 
 namespace Empiria.Land.Messaging {
 
-  public class LandMessenger {
+  static public class LandMessenger {
 
     #region Fields
 
@@ -297,9 +297,8 @@ namespace Empiria.Land.Messaging {
 
     static private async void NotifyAgencyExternalFilingSystem(LRSTransaction transaction,
                                                                TransactionEventType eventType) {
-      var externalFilingProvider = ExternalProviders.GetEFilingProvider();
-
-      await externalFilingProvider.NotifyEvent(transaction.ExternalTransactionNo, eventType.ToString());
+      await ExternalProviders.EFilingProvider.NotifyEvent(transaction.ExternalTransactionNo,
+                                                          eventType.ToString());
     }
 
 

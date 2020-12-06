@@ -9,7 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Empiria.OnePoint.EFiling;
 
-using Empiria.Land.Integration;
+using Empiria.Land.Providers;
+
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration.Forms {
@@ -18,9 +19,9 @@ namespace Empiria.Land.Registration.Forms {
   static internal class FormsProvider {
 
     static internal IForm GetForm(LRSTransaction transaction) {
-      var eFilingProvider = ExternalProviders.GetEFilingProvider();
+      IFilingServices provider = ExternalProviders.EFilingProvider;
 
-      EFilingRequest request = eFilingProvider.GetEFilingRequest(transaction.ExternalTransactionNo);
+      EFilingRequest request = provider.GetEFilingRequest(transaction.ExternalTransactionNo);
 
       switch (request.Procedure.NamedKey) {
         case "AvisoPreventivo":
@@ -30,7 +31,9 @@ namespace Empiria.Land.Registration.Forms {
           return DefinitiveNoteForm.Parse(request);
 
         default:
-          throw Assertion.AssertNoReachThisCode($"Unrecognized external procedure: '{request.Procedure.NamedKey}'.");
+          throw Assertion.AssertNoReachThisCode(
+            $"Unrecognized external procedure: '{request.Procedure.NamedKey}'."
+          );
       }
     }
 
