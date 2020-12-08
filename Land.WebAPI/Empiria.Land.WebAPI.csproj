@@ -54,16 +54,16 @@
   <ItemGroup>
     <Reference Include="System.Net.Http" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
-    <ProjectReference Include="..\Land.UseCases\Empiria.Land.UseCases.csproj" />
-  </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.WebApi" Version="2.0.0" />
     <PackageReference Include="Empiria.WebApi.Client" Version="2.0.0" />
+    <PackageReference Include="Empiria.Land.Registration" Version="4.0.0" />
+    <PackageReference Include="Empiria.Land.UseCases" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\extensions\WebApi\Empiria.WebApi.csproj" />
     <ProjectReference Include="..\..\extensions\WebApi.Client\Empiria.WebApi.Client.csproj" />
+    <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
+    <ProjectReference Include="..\Land.UseCases\Empiria.Land.UseCases.csproj" />
   </ItemGroup>
 </Project>

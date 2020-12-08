@@ -62,6 +62,8 @@
     <ProjectReference Include="..\..\extensions\Documents\Empiria.Documents.csproj" />
     <ProjectReference Include="..\..\extensions\Geography\Empiria.Geography.csproj" />
     <ProjectReference Include="..\..\extensions\Messaging\Empiria.Messaging.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\onepoint\EFiling.Core\Empiria.OnePoint.EFiling.csproj" />
     <ProjectReference Include="..\..\onepoint\EPayments.Core\Empiria.OnePoint.EPayments.csproj" />
   </ItemGroup>
