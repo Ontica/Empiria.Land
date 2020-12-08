@@ -15,7 +15,6 @@ using Empiria.Contacts;
 using Empiria.Security;
 
 using Empiria.Land.Data;
-using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {
 
@@ -25,7 +24,6 @@ namespace Empiria.Land.Registration {
     #region Fields
 
     private Lazy<FixedList<RecordingAct>> recordingActList = null;
-    private Lazy<LRSPaymentList> payments = null;
 
     #endregion Fields
 
@@ -55,7 +53,6 @@ namespace Empiria.Land.Registration {
 
     protected override void OnInitialize() {
       recordingActList = new Lazy<FixedList<RecordingAct>>(() => RecordingActsData.GetPhysicalRecordingRecordedActs(this));
-      payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
       this.ExtendedData = new RecordingExtData();
     }
 
@@ -175,12 +172,6 @@ namespace Empiria.Land.Registration {
     public RecordableObjectStatus Status {
       get;
       private set;
-    }
-
-    public LRSPaymentList Payments {
-      get {
-        return payments.Value;
-      }
     }
 
     public FixedList<RecordingAct> RecordingActs {
