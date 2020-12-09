@@ -3,10 +3,10 @@
     <Company>Ontica</Company>
     <Product>Empiria Land User Interface Services</Product>
     <Description>Server-side user interface reusable components for Empiria Land solutions.</Description>
-    <Copyright>(c) 2009-2020. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
-    <Version>4.0.0</Version>
-    <AssemblyVersion>4.0.0</AssemblyVersion>
-    <FileVersion>4.0.0.0</FileVersion>
+    <Copyright>(c) 2009-2021. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
+    <Version>5.0.0</Version>
+    <AssemblyVersion>5.0.0</AssemblyVersion>
+    <FileVersion>5.0.0.0</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://github.com/Ontica/Empiria.Land/blob/master/Land.UI/LICENSE.txt</PackageLicenseUrl>
@@ -54,13 +54,12 @@
   <ItemGroup>
     <Reference Include="System.Web" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
-  </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Presentation.Web" Version="7.0.0" />
-   </ItemGroup>
+    <PackageReference Include="Empiria.Land.Registration" Version="5.0.0" />
+  </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\extensions\Presentation.Web\Empiria.Presentation.Web.csproj" />
+    <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
   </ItemGroup>
 </Project>

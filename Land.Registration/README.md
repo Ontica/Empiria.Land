@@ -2,10 +2,10 @@
 
 Land titles and documents recording system.
 
-# License
+## License
 
 This system is distributed by the GNU AFFERO GENERAL PUBLIC LICENSE.
 
-# Copyright
+## Copyright
 
-Copyright © 2009-2020. La Vía Óntica SC, Ontica LLC and colaborators.
+Copyright © 2009-2021. La Vía Óntica SC, Ontica LLC and colaborators.
