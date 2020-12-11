@@ -11,14 +11,14 @@ using Xunit;
 
 namespace Empiria.Land.Instruments.UseCases.Tests {
 
-  /// <summary>TTest cases for legal instruments retrieving.</summary>
+  /// <summary>Test cases for legal instruments retrieving.</summary>
   public class GetInstrumentsUseCasesTests {
 
     #region Fields
 
     private readonly string _INSTRUMENT_UID;
 
-    private readonly InstrumentsUseCases _usecases;
+    private readonly GetInstrumentsUseCases _usecases;
 
     #endregion Fields
 
@@ -27,7 +27,7 @@ namespace Empiria.Land.Instruments.UseCases.Tests {
     public GetInstrumentsUseCasesTests() {
       _INSTRUMENT_UID = "RP73RX-94ZF28-HN34E7";
 
-      _usecases = InstrumentsUseCases.UseCaseInteractor();
+      _usecases = GetInstrumentsUseCases.UseCaseInteractor();
     }
 
 

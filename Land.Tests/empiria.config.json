@@ -1,8 +1,8 @@
 ﻿{
   "appName": "Empiria Land Tests",
   "description": "Environment settings",
-  "version": "1.0",
-  "date": "2018-03-23",
+  "version": "5.0",
+  "date": "2020-12-10",
   "settings": [
     {
       "type": "",
@@ -25,9 +25,14 @@
       "value": "{{TESTING-SESSION-TOKEN}}"
     },
     {
-      "type": "Land.Tests",
+      "type": "Land.Providers.Tests",
       "key": "Testing.FilingUID",
       "value": "{{TESTING-FILING-UID}}"
+    },
+    {
+      "type": "Land.Providers.Tests",
+      "key": "Testing.SignedDocumentUID",
+      "value": "{{TESTING-SIGNED-DOCUMENT-UID}}"
     }
   ]
 }

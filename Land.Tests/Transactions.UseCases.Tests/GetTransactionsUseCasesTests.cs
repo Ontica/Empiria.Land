@@ -49,7 +49,7 @@ namespace Empiria.Land.Transactions.UseCases.Tests {
 
     [Fact]
     public void Should_Search_And_Get_A_TransactionList() {
-      var searchCommand = new SearchTransactionCommand() {
+      var searchCommand = new SearchTransactionCommand {
         Stage = TransactionStage.Completed,
         PageSize = 100,
       };
@@ -60,7 +60,7 @@ namespace Empiria.Land.Transactions.UseCases.Tests {
 
       int count = list.Count;
 
-      searchCommand = new SearchTransactionCommand() {
+      searchCommand = new SearchTransactionCommand {
         Stage = TransactionStage.Completed,
         Keywords = "josé",
         PageSize = 100,
