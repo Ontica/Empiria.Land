@@ -1,17 +1,17 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Documents Recording                        Component : Interface adapters                      *
+*  Module   : Legal Instruments                          Component : Interface adapters                      *
 *  Assembly : Empiria.Land.UseCases.dll                  Pattern   : Data Transfer Object                    *
-*  Type     : RecordedDocumentDto                        License   : Please read LICENSE.txt file            *
+*  Type     : InstrumentDto                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Holds data related to a recorded document.                                                     *
+*  Summary  : Holds data related to a legal instrument.                                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Recording.UseCases {
+namespace Empiria.Land.Instruments.UseCases {
 
-  /// <summary>Holds data related to a recorded document.</summary>
-  public class RecordedDocumentDto {
+  /// <summary>Holds data related to a legal instrument.</summary>
+  public class InstrumentDto {
 
     public string UID {
       get; internal set;
@@ -30,10 +30,6 @@ namespace Empiria.Land.Recording.UseCases {
       get; internal set;
     }
 
-    public FixedList<RecordingActDto> RecordingActs {
-      get; internal set;
-    }
+  }
 
-  }  // class RecordedDocumentDto
-
-}  // namespace Empiria.Land.Recording.UseCases
+}
