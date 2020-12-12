@@ -1,16 +1,17 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Interface adapters                      *
-*  Assembly : Empiria.Land.UseCases.dll                  Pattern   : Data Transfer Object                    *
+*  Assembly : Empiria.Land.Instruments.dll               Pattern   : Data Transfer Object                    *
 *  Type     : InstrumentDto                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Holds data related to a legal instrument.                                                      *
+*  Summary  : Output DTO with data representing a legal instrument.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
 
 namespace Empiria.Land.Instruments.UseCases {
 
-  /// <summary>Holds data related to a legal instrument.</summary>
+  /// <summary>Output DTO with data representing a legal instrument.</summary>
   public class InstrumentDto {
 
     public string UID {
@@ -22,11 +23,46 @@ namespace Empiria.Land.Instruments.UseCases {
     }
 
     public string Subtype {
-      get;
-      internal set;
+      get; internal set;
     }
 
     public string Summary {
+      get; internal set;
+    }
+
+    public string TypeName {
+      get; internal set;
+    }
+
+    public string CategoryUID {
+      get; internal set;
+    }
+
+    public string CategoryName {
+      get; internal set;
+    }
+
+    public DateTime IssueDate {
+      get; internal set;
+    }
+
+    public IssuerDto Issuer {
+      get; internal set;
+    }
+
+    public int SheetsCount {
+      get; internal set;
+    }
+
+    public string DocumentNo {
+      get; internal set;
+    }
+
+    public string CaseNo {
+      get; internal set;
+    }
+
+    public object Media {
       get; internal set;
     }
 

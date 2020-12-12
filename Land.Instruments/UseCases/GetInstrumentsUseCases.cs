@@ -9,8 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Empiria.Services;
 
-using Empiria.Land.Registration;
-
 namespace Empiria.Land.Instruments.UseCases {
 
   /// <summary>Use cases for legal instruments retrieving.</summary>
@@ -33,7 +31,7 @@ namespace Empiria.Land.Instruments.UseCases {
     public InstrumentDto GetInstrument(string instrumentUID) {
       Assertion.AssertObject(instrumentUID, "instrumentUID");
 
-      var document = RecordingDocument.Parse(instrumentUID);
+      var document = Instrument.Parse(instrumentUID);
 
       return InstrumentMapper.Map(document);
     }
