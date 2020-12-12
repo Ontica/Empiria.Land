@@ -68,11 +68,25 @@
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\land.tlaxcala\connectors\Empiria.Land.Connectors.csproj" />
-    <ProjectReference Include="..\..\onepoint\EPayments.Core\Empiria.OnePoint.EPayments.csproj" />
+  <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
+    <PackageReference Include="Empiria.Land.Instruments" Version="5.0.0" />
+    <PackageReference Include="Empiria.Land.Registration" Version="5.0.0" />
+    <PackageReference Include="Empiria.Land.UseCases" Version="5.0.0" />
+    <PackageReference Include="Empiria.Land.Providers" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
+    <ProjectReference Include="..\Land.Instruments\Empiria.Land.Instruments.csproj" />
     <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
     <ProjectReference Include="..\Land.UseCases\Empiria.Land.UseCases.csproj" />
+    <ProjectReference Include="..\Land.Providers\Empiria.Land.Providers.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
+    <PackageReference Include="Empiria.Land.Connectors" Version="4.0.0" />
+    <PackageReference Include="Empiria.OnePoint.EPayments" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
+    <ProjectReference Include="..\..\land.tlaxcala\connectors\Empiria.Land.Connectors.csproj" />
+    <ProjectReference Include="..\..\onepoint\EPayments.Core\Empiria.OnePoint.EPayments.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="empiria.config.json">
