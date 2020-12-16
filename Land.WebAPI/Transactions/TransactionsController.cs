@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Transaction Management                       Component : Web Api                               *
 *  Assembly : Empiria.Land.WebApi.dll                      Pattern   : Controller                            *
-*  Type     : GetTransactionsController                    License   : Please read LICENSE.txt file          *
+*  Type     : TransactionsController                       License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API to search and retrieve transactions                                                    *
+*  Summary  : Web API used to work with transactions.                                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System.Web.Http;
@@ -15,8 +15,8 @@ using Empiria.Land.Transactions.UseCases;
 
 namespace Empiria.Land.Transactions.WebApi {
 
-  /// <summary>Web API to search and retrieve transactions.</summary>
-  public class GetTransactionsController : WebApiController {
+  /// <summary>Web API used to work with transactions.</summary>
+  public class TransactionsController : WebApiController {
 
     #region Public methods
 
@@ -24,7 +24,7 @@ namespace Empiria.Land.Transactions.WebApi {
     [Route("v5/land/transactions/{transactionUID:length(16)}")]
     public SingleObjectModel GetTransaction([FromUri] string transactionUID) {
 
-      using (var usecases = GetTransactionsUseCases.UseCaseInteractor()) {
+      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
         TransactionDto transactionDto = usecases.GetTransaction(transactionUID);
 
         return new SingleObjectModel(this.Request, transactionDto);
@@ -36,7 +36,7 @@ namespace Empiria.Land.Transactions.WebApi {
     [Route("v5/land/transactions")]
     public CollectionModel SearchTransactions([FromUri] SearchTransactionCommand searchCommand) {
 
-      using (var usecases = GetTransactionsUseCases.UseCaseInteractor()) {
+      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
         FixedList<TransactionListItemDto> list = usecases.SearchTransactions(searchCommand);
 
         return new CollectionModel(this.Request, list);
@@ -45,6 +45,6 @@ namespace Empiria.Land.Transactions.WebApi {
 
     #endregion Public methods
 
-  }  // class GetTransactionsController
+  }  // class TransactionsController
 
 }  //namespace Empiria.Land.Transactions.WebApi

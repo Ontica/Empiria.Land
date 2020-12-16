@@ -2,36 +2,36 @@
 *                                                                                                            *
 *  Module   : Transaction Management                     Component : Test cases                              *
 *  Assembly : Empiria.Land.Tests.dll                     Pattern   : Test class                              *
-*  Type     : GetTransactionsUseCasesTests               License   : Please read LICENSE.txt file            *
+*  Type     : TransactionUseCasesTests                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Test cases for transaction searching and retrieving.                                           *
+*  Summary  : Test cases for transaction related use cases.                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Xunit;
 
 namespace Empiria.Land.Transactions.UseCases.Tests {
 
-  /// <summary>Test cases for transaction searching and retrieving.</summary>
-  public class GetTransactionsUseCasesTests {
+  /// <summary>Test cases for transaction related use cases.</summary>
+  public class TransactionUseCasesTests {
 
     #region Fields
 
     private readonly string _TRANSACTION_UID;
 
-    private readonly GetTransactionsUseCases _usecases;
+    private readonly TransactionUseCases _usecases;
 
     #endregion Fields
 
     #region Initialization
 
-    public GetTransactionsUseCasesTests() {
+    public TransactionUseCasesTests() {
       _TRANSACTION_UID = "TR-78AY2-3NH94-8";
 
-      _usecases = GetTransactionsUseCases.UseCaseInteractor();
+      _usecases = TransactionUseCases.UseCaseInteractor();
     }
 
 
-    ~GetTransactionsUseCasesTests() {
+    ~TransactionUseCasesTests() {
       _usecases.Dispose();
     }
 
@@ -58,22 +58,18 @@ namespace Empiria.Land.Transactions.UseCases.Tests {
 
       Assert.NotEmpty(list);
 
-      int count = list.Count;
+      int moreGeneralListItemsCount = list.Count;
 
-      searchCommand = new SearchTransactionCommand {
-        Stage = TransactionStage.Completed,
-        Keywords = "josé",
-        PageSize = 100,
-      };
+      searchCommand.Keywords = "josé";
 
       list = _usecases.SearchTransactions(searchCommand);
 
-      Assert.True(list.Count <= count,
+      Assert.True(list.Count <= moreGeneralListItemsCount,
                  "Search transactions by keyword must return the same or fewer items.");
     }
 
     #endregion Facts
 
-  }  // class GetTransactionsUseCasesTests
+  }  // class TransactionUseCasesTests
 
 }  // namespace Empiria.Land.Transactions.UseCases.Tests

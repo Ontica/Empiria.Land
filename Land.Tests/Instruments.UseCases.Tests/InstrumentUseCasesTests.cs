@@ -2,36 +2,36 @@
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Test cases                              *
 *  Assembly : Empiria.Land.Tests.dll                     Pattern   : Test class                              *
-*  Type     : GetInstrumentsUseCasesTests                License   : Please read LICENSE.txt file            *
+*  Type     : InstrumentUseCasesTests                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Test cases for legal instruments retrieving.                                                   *
+*  Summary  : Test cases for legal instruments.                                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Xunit;
 
 namespace Empiria.Land.Instruments.UseCases.Tests {
 
-  /// <summary>Test cases for legal instruments retrieving.</summary>
-  public class GetInstrumentsUseCasesTests {
+  /// <summary>Test cases for legal instruments.</summary>
+  public class InstrumentUseCasesTests {
 
     #region Fields
 
     private readonly string _INSTRUMENT_UID;
 
-    private readonly GetInstrumentsUseCases _usecases;
+    private readonly InstrumentUseCases _usecases;
 
     #endregion Fields
 
     #region Initialization
 
-    public GetInstrumentsUseCasesTests() {
+    public InstrumentUseCasesTests() {
       _INSTRUMENT_UID = "RP73RX-94ZF28-HN34E7";
 
-      _usecases = GetInstrumentsUseCases.UseCaseInteractor();
+      _usecases = InstrumentUseCases.UseCaseInteractor();
     }
 
 
-    ~GetInstrumentsUseCasesTests() {
+    ~InstrumentUseCasesTests() {
       _usecases.Dispose();
     }
 
@@ -40,14 +40,15 @@ namespace Empiria.Land.Instruments.UseCases.Tests {
     #region Facts
 
     [Fact]
-    public void Should_Read_Instrument() {
+    public void Should_Read_An_Instrument() {
       InstrumentDto instrument = _usecases.GetInstrument(_INSTRUMENT_UID);
 
       Assert.Equal(_INSTRUMENT_UID, instrument.UID);
     }
 
+
     #endregion Facts
 
-  }
+  }  // class InstrumentUseCasesTests
 
-}
+}  // namespace Empiria.Land.Instruments.UseCases.Tests

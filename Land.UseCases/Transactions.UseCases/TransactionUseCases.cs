@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Transaction Management                     Component : Use cases Layer                         *
 *  Assembly : Empiria.Land.UseCases.dll                  Pattern   : Use case interactor class               *
-*  Type     : GetTransactionsUseCases                    License   : Please read LICENSE.txt file            *
+*  Type     : TransactionUseCases                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Use cases for transaction searching and retrieving.                                            *
 *                                                                                                            *
@@ -14,16 +14,16 @@ using Empiria.Land.Registration.Transactions;
 namespace Empiria.Land.Transactions.UseCases {
 
   /// <summary>Use cases for transaction searching and retrieving.</summary>
-  public class GetTransactionsUseCases : UseCase {
+  public class TransactionUseCases : UseCase {
 
     #region Constructors and parsers
 
-    protected GetTransactionsUseCases() {
+    protected TransactionUseCases() {
       // no-op
     }
 
-    static public GetTransactionsUseCases UseCaseInteractor() {
-      return UseCase.CreateInstance<GetTransactionsUseCases>();
+    static public TransactionUseCases UseCaseInteractor() {
+      return UseCase.CreateInstance<TransactionUseCases>();
     }
 
     #endregion Constructors and parsers
@@ -50,8 +50,9 @@ namespace Empiria.Land.Transactions.UseCases {
       return TransactionListItemDtoMapper.Map(list);
     }
 
+
     #endregion Query Use cases
 
-  }  // class GetTransactionsUseCases
+  }  // class TransactionUseCases
 
 }  // namespace Empiria.Land.Transactions.UseCases
