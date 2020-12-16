@@ -42,6 +42,10 @@ namespace Empiria.Land.Instruments {
       return BaseObject.ParseKey<Issuer>(uid);
     }
 
+    static public FixedList<Issuer> GetList(IssuersSearchCommand searchCommand) {
+      return IssuersData.GetList(searchCommand);
+    }
+
     #endregion Constructors and parsers
 
     #region Properties
