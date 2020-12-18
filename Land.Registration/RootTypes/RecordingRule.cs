@@ -55,7 +55,7 @@ namespace Empiria.Land.Registration {
 
     private void Load() {
       try {
-        var json = JsonObject.Parse(recordingActType.ExtensionData);
+        var json = recordingActType.ExtensionData;
 
         this.AppliesTo = json.Get<RecordingRuleApplication>("AppliesTo", RecordingRuleApplication.Undefined);
         this.AutoCancel = json.Get<Int32>("AutoCancel", 0);

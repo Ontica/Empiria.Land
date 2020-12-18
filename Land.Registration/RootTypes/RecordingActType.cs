@@ -9,7 +9,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Linq;
 
 using Empiria.Land.Registration.Transactions;
 using Empiria.Ontology;
@@ -154,7 +153,7 @@ namespace Empiria.Land.Registration {
     }
 
     public FixedList<RecordingActType> GetAppliesToRecordingActTypesList() {
-      var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
+      var json = base.ExtensionData;
 
       var list = json.GetList<RecordingActType>("RecordingActTypes", false);
       list.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
@@ -166,13 +165,13 @@ namespace Empiria.Land.Registration {
     /// for this recording act type.</summary>
     /// <returns>The default fee units or -1 if the fee depends on each case.</returns>
     public decimal GetFeeUnits() {
-      var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
+      var json = base.ExtensionData;
 
       return json.Get<decimal>("FeeUnits", -1);
     }
 
     public FixedList<LRSLawArticle> GetFinancialLawArticles() {
-      var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
+      var json = base.ExtensionData;
 
       var list = json.GetList<LRSLawArticle>("FinancialConcepts");
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
@@ -181,7 +180,7 @@ namespace Empiria.Land.Registration {
     }
 
     public FixedList<DomainActPartyRole> GetRoles() {
-      var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
+      var json = base.ExtensionData;
 
       var list = json.GetList<DomainActPartyRole>("Roles", false);
       list.Sort((x, y) => x.Name.CompareTo(y.Name));

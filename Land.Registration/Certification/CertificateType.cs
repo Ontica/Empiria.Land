@@ -43,7 +43,7 @@ namespace Empiria.Land.Certification {
     #region Methods
 
     public string GetHtmlTemplateFileName() {
-      var json = Empiria.Json.JsonObject.Parse(base.ExtensionData);
+      var json = base.ExtensionData;
 
       return json.Get<String>("HtmlTemplateFileName");
     }
