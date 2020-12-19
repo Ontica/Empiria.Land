@@ -165,11 +165,11 @@ namespace Empiria.Land.Registration {
       string filter = String.Empty;
 
       if (searchAsIs) {
-        filter = SearchExpression.ParseLike(fieldName, keywords, true);
+        filter = SearchExpression.ParseLike(fieldName, keywords);
       } else {
         keywords = EmpiriaString.RemovePunctuation(keywords);
         if (!keywords.Contains(" ")) {
-          filter = SearchExpression.ParseLike(fieldName, keywords, true);
+          filter = SearchExpression.ParseLike(fieldName, keywords);
         } else {
           filter = SearchExpression.ParseAndLike(fieldName, keywords);
         }

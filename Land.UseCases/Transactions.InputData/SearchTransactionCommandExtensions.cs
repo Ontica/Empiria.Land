@@ -25,19 +25,16 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     static internal string MapToFilterString(this SearchTransactionCommand command) {
-      string filter = String.Empty;
+      string stageStatusFilter = BuildStageStatusFilter(command.Stage, command.Status);
+      string keywordsFilter = BuildKeywordsFilter(command.Keywords);
 
-      filter = BuildStageStatusFilter(command.Stage, command.Status);
+      var filter = new Filter(stageStatusFilter);
 
-      if (!String.IsNullOrWhiteSpace(command.Keywords)) {
-        if (filter.Length != 0) {
-          filter += " AND ";
-        }
-        filter += SearchExpression.ParseAndLikeKeywords("TransactionKeywords", command.Keywords);
-      }
+      filter.AppendAnd(keywordsFilter);
 
-      return filter;
+      return filter.ToString();
     }
+
 
     static internal string MapToSortString(this SearchTransactionCommand command) {
       if (!String.IsNullOrWhiteSpace(command.OrderBy)) {
@@ -50,6 +47,11 @@ namespace Empiria.Land.Transactions.UseCases {
     #endregion Extension methods
 
     #region Private methods
+
+    static private string BuildKeywordsFilter(string keywords) {
+      return SearchExpression.ParseAndLikeKeywords("TransactionKeywords", keywords);
+    }
+
 
     static private string BuildStageStatusFilter(TransactionStage stage, TransactionStatus status) {
       if (status != TransactionStatus.All) {

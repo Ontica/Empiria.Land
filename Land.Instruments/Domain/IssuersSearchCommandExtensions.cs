@@ -37,43 +37,15 @@ namespace Empiria.Land.Instruments {
       string onDateFilter = BuildOnDateFilter(command.OnDate);
       string keywordsFilter = SearchExpression.ParseAndLikeKeywords("IssuerKeywords", command.Keywords);
 
-      string filter = String.Empty;
 
-      if (EmpiriaString.NotIsEmpty(issuerTypeStatusFilter)) {
-        filter = issuerTypeStatusFilter;
-      }
+      Filter filter = new Filter(issuerTypeStatusFilter);
 
-      if (EmpiriaString.NotIsEmpty(instrumentTypeFilter)) {
-        if (filter.Length != 0) {
-          filter += " AND ";
-        }
-        filter += instrumentTypeFilter;
-      }
+      filter.AppendAnd(instrumentTypeFilter);
+      filter.AppendAnd(instrumentKindFilter);
+      filter.AppendAnd(onDateFilter);
+      filter.AppendAnd(keywordsFilter);
 
-      if (EmpiriaString.NotIsEmpty(instrumentKindFilter)) {
-        if (filter.Length != 0) {
-          filter += " AND ";
-        }
-        filter += instrumentKindFilter;
-      }
-
-      if (EmpiriaString.NotIsEmpty(onDateFilter)) {
-        if (filter.Length != 0) {
-          filter += " AND ";
-        }
-        filter += onDateFilter;
-      }
-
-      if (EmpiriaString.NotIsEmpty(keywordsFilter)) {
-        if (filter.Length != 0) {
-          filter += " AND ";
-        }
-        filter += keywordsFilter;
-      }
-
-      EmpiriaLog.Trace(filter);
-
-      return filter;
+      return filter.ToString();
     }
 
 
