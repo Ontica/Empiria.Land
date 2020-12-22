@@ -86,6 +86,7 @@ namespace Empiria.Land.Registration.Transactions {
     [DataField("TransactionUID", IsOptional = false)]
     private string _transactionUID = "Nuevo trámite";
 
+
     public override string UID {
       get {
         return _transactionUID;
@@ -157,6 +158,11 @@ namespace Empiria.Land.Registration.Transactions {
     public string ExternalTransactionNo {
       get;
       internal set;
+    }
+
+
+    public string GetInstrumentUID() {
+      return TransactionData.GetTransactionInstrumentUID(this);
     }
 
 

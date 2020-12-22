@@ -23,9 +23,9 @@ namespace Empiria.Land.Instruments.WebApi {
     public SingleObjectModel GetInstrument([FromUri] string instrumentUID) {
 
       using (var usecases = InstrumentUseCases.UseCaseInteractor()) {
-        InstrumentDto instrument = usecases.GetInstrument(instrumentUID);
+        var instrumentDto = usecases.GetInstrument(instrumentUID);
 
-        return new SingleObjectModel(this.Request, instrument);
+        return new SingleObjectModel(this.Request, instrumentDto);
       }
     }
 

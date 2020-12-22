@@ -36,6 +36,17 @@ namespace Empiria.Land.Data {
     }
 
 
+    static internal string GetTransactionInstrumentUID(LRSTransaction transaction) {
+      var sql = $"SELECT InstrumentUID " +
+                $"FROM LRSInstruments " +
+                $"WHERE (InstrumentId = {transaction.Document.Id})";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetScalar<string>(op, "Empty");
+    }
+
+
     static internal void WritePayment(LRSPayment o) {
       var op = DataOperation.Parse("writeLRSPayment", o.Id, o.Transaction.Id,
                                    o.PaymentOffice.Id, o.ReceiptNo, o.ReceiptTotal, o.ReceiptIssuedTime,
@@ -71,6 +82,7 @@ namespace Empiria.Land.Data {
 
       DataWriter.Execute(op);
     }
+
 
     #endregion Public methods
 

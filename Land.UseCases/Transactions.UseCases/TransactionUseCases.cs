@@ -7,9 +7,13 @@
 *  Summary  : Use cases for transaction searching and retrieving.                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using Empiria.Services;
 
+using Empiria.Land.Instruments.Adapters;
+using Empiria.Land.Instruments.UseCases;
 using Empiria.Land.Registration.Transactions;
+using System;
 
 namespace Empiria.Land.Transactions.UseCases {
 
@@ -39,7 +43,21 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
+    public InstrumentDto GetTransactionInstrument(string transactionUID) {
+      Assertion.AssertObject(transactionUID, "transactionUID");
+
+      using (var usecase = InstrumentUseCases.UseCaseInteractor()) {
+
+        string instrumentUID = GetTransactionInstrumentUID(transactionUID);
+
+        return usecase.GetInstrument(instrumentUID);
+      }
+    }
+
+
     public FixedList<TransactionListItemDto> SearchTransactions(SearchTransactionCommand searchCommand) {
+      Assertion.AssertObject(searchCommand, "searchCommand");
+
       searchCommand.EnsureIsValid();
 
       string filter = searchCommand.MapToFilterString();
@@ -51,7 +69,27 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
+    public InstrumentDto UpdateTransactionInstrument(string transactionUID, InstrumentFields fields) {
+      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.AssertObject(fields, "fields");
+
+      using (var usecase = InstrumentUseCases.UseCaseInteractor()) {
+
+        string instrumentUID = GetTransactionInstrumentUID(transactionUID);
+
+        return usecase.UpdateInstrument(instrumentUID, fields);
+      }
+    }
+
+
     #endregion Query Use cases
+
+
+    static private string GetTransactionInstrumentUID(string transactionUID) {
+      var transaction = LRSTransaction.Parse(transactionUID);
+
+      return transaction.GetInstrumentUID();
+    }
 
   }  // class TransactionUseCases
 
