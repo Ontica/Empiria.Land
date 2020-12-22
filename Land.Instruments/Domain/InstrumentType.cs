@@ -7,8 +7,8 @@
 *  Summary  : Power type that defines a legal instrument type: deed, contract, court order, etc.             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
 using System;
+
 using Empiria.Ontology;
 
 namespace Empiria.Land.Instruments {
@@ -48,7 +48,7 @@ namespace Empiria.Land.Instruments {
 
     static public InstrumentType Empty {
       get {
-        return InstrumentType.Parse("ObjectType.LegalInstrument.Empty");
+        return InstrumentType.Parse("ObjectType.LegalInstrument");
       }
     }
 
@@ -69,6 +69,13 @@ namespace Empiria.Land.Instruments {
         var json = base.ExtensionData;
 
         return json.GetList<IssuerType>("IssuerTypes", false).ToArray();
+      }
+    }
+
+
+    public string AsEnumString {
+      get {
+        return this.Name.Replace("ObjectTypeInfo.LegalInstrument", string.Empty).Trim('.');
       }
     }
 
