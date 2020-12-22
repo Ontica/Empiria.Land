@@ -10,6 +10,8 @@
 
 using Empiria.Services;
 
+using Empiria.Land.Instruments.Adapters;
+
 namespace Empiria.Land.Instruments.UseCases {
 
   /// <summary>Use cases used to interact with legal instrument issuers: notaries,

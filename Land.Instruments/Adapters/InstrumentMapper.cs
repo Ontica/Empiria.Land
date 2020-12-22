@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Instruments.UseCases {
+namespace Empiria.Land.Instruments.Adapters {
 
   /// <summary>Methods to map legal instruments to InstrumentDto objects.</summary>
   static internal class InstrumentMapper {
@@ -22,20 +22,25 @@ namespace Empiria.Land.Instruments.UseCases {
 
     static internal InstrumentDto Map(Instrument instrument) {
       var issuerDto = IssuerMapper.Map(instrument.Issuer);
-      var mediaDto = IssuerMapper.Map(instrument.Issuer);
+      var mediaDto = new object[0];
 
       var dto = new InstrumentDto {
         UID = instrument.UID,
-        Type = instrument.InstrumentType.Name,
+        Type = instrument.InstrumentType.AsEnumString,
         TypeName = instrument.InstrumentType.DisplayName,
-        CategoryUID = instrument.Category.UID,
-        CategoryName = instrument.Category.Name,
-        IssueDate = instrument.IssueDate,
+        Kind = instrument.Kind,
+        ControlID = instrument.ControlID,
         Issuer = issuerDto,
+        IssueDate = instrument.IssueDate,
+        Summary = instrument.Summary,
+        AsText = instrument.AsText,
+        InstrumentNo = instrument.InstrumentNo,
+        BinderNo = instrument.BinderNo,
+        Folio = instrument.Folio,
+        EndFolio = instrument.EndFolio,
         SheetsCount = instrument.SheetsCount,
-        DocumentNo = instrument.DocumentNo,
-        CaseNo = instrument.CaseNo,
-        Media = mediaDto
+        Media = mediaDto,
+        Status = instrument.Status.ToString()
       };
 
       return dto;
@@ -43,4 +48,4 @@ namespace Empiria.Land.Instruments.UseCases {
 
   }  // class InstrumentMapper
 
-}  // namespace Empiria.Land.Instruments.UseCases
+}  // namespace Empiria.Land.Instruments.Adapters

@@ -10,6 +10,8 @@
 
 using Empiria.Services;
 
+using Empiria.Land.Instruments.Adapters;
+
 namespace Empiria.Land.Instruments.UseCases {
 
   /// <summary>Use cases to interact with legal instruments.</summary>
@@ -29,12 +31,28 @@ namespace Empiria.Land.Instruments.UseCases {
 
     #region Use cases
 
+
     public InstrumentDto GetInstrument(string instrumentUID) {
       Assertion.AssertObject(instrumentUID, "instrumentUID");
 
-      var document = Instrument.Parse(instrumentUID);
+      var instrument = Instrument.Parse(instrumentUID);
 
-      return InstrumentMapper.Map(document);
+      return InstrumentMapper.Map(instrument);
+    }
+
+
+    public InstrumentDto UpdateInstrument(string instrumentUID,
+                                          InstrumentFields fields) {
+      Assertion.AssertObject(instrumentUID, "instrumentUID");
+      Assertion.AssertObject(fields, "fields");
+
+      var instrument = Instrument.Parse(instrumentUID);
+
+      instrument.Update(fields);
+
+      instrument.Save();
+
+      return InstrumentMapper.Map(instrument);
     }
 
 
@@ -43,4 +61,3 @@ namespace Empiria.Land.Instruments.UseCases {
   }  // class InstrumentUseCases
 
 }  // namespace Empiria.Land.Instruments.UseCases
-
