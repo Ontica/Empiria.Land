@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Test cases                              *
-*  Assembly : Empiria.Land.Tests.dll                     Pattern   : Test class                              *
+*  Assembly : Empiria.Land.Tests.dll                     Pattern   : Use cases tests class                   *
 *  Type     : InstrumentTypeUseCasesTests                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Test cases that retrive configuration data for legal instrument types.                         *
@@ -25,19 +25,13 @@ namespace Empiria.Land.Tests.Instruments {
 
     #region Initialization
 
-    public InstrumentTypeUseCasesTests() {
-      _usecases = InstrumentTypeUseCases.UseCaseInteractor();
-    }
+    public InstrumentTypeUseCasesTests() => _usecases = InstrumentTypeUseCases.UseCaseInteractor();
 
-
-    ~InstrumentTypeUseCasesTests() {
-      _usecases.Dispose();
-    }
+    ~InstrumentTypeUseCasesTests() => _usecases.Dispose();
 
     #endregion Initialization
 
     #region Facts
-
 
     [Fact]
     public void Should_Read_Instrument_Kinds() {

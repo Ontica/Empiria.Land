@@ -1,26 +1,27 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  System   : Empiria Land                                 Module  : Tests                                   *
-*  Assembly : Empiria.Land.Tests.dll                       Pattern : Static class                            *
-*  Type     : CommonMethods                                License : Please read LICENSE.txt file            *
+*  Module   : Empiria Land Tests                         Component : Test Helpers                            *
+*  Assembly : Empiria.Land.Tests.dll                     Pattern   : Common Testing Methods                  *
+*  Type     : CommonMethods                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Auxiliary common methods used by unit tests.                                                   *
+*  Summary  : Provides Empiria Land common testing methods.                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+using System.Threading;
 
 using Empiria.Security;
 
 namespace Empiria.Land.Tests {
 
-  static internal class CommonMethods {
+  /// <summary>Provides Empiria Land common testing methods.</summary>
+  static public class CommonMethods {
 
     #region Auxiliary methods
 
-    static internal void Authenticate() {
-      string sessionToken = ConfigurationData.GetString("Testing.SessionToken");
+    static public void Authenticate() {
+      string sessionToken = TestingConstants.SESSION_TOKEN;
 
-      System.Threading.Thread.CurrentPrincipal = AuthenticationService.Authenticate(sessionToken);
+      Thread.CurrentPrincipal = AuthenticationService.Authenticate(sessionToken);
     }
 
     #endregion Auxiliary methods

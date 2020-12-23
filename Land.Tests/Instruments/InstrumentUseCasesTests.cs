@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Test cases                              *
-*  Assembly : Empiria.Land.Tests.dll                     Pattern   : Test class                              *
+*  Assembly : Empiria.Land.Tests.dll                     Pattern   : Use cases tests class                   *
 *  Type     : InstrumentUseCasesTests                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Test cases for legal instruments.                                                              *
@@ -19,7 +19,7 @@ namespace Empiria.Land.Tests.Instruments {
 
     #region Fields
 
-    private readonly string _INSTRUMENT_UID;
+    private readonly string _INSTRUMENT_UID = TestingConstants.INSTRUMENT_UID;
 
     private readonly InstrumentUseCases _usecases;
 
@@ -27,16 +27,9 @@ namespace Empiria.Land.Tests.Instruments {
 
     #region Initialization
 
-    public InstrumentUseCasesTests() {
-      _INSTRUMENT_UID = ConfigurationData.Get<string>("Testing.InstrumentUID");
+    public InstrumentUseCasesTests() => _usecases = InstrumentUseCases.UseCaseInteractor();
 
-      _usecases = InstrumentUseCases.UseCaseInteractor();
-    }
-
-
-    ~InstrumentUseCasesTests() {
-      _usecases.Dispose();
-    }
+    ~InstrumentUseCasesTests() => _usecases.Dispose();
 
     #endregion Initialization
 
@@ -48,7 +41,6 @@ namespace Empiria.Land.Tests.Instruments {
 
       Assert.Equal(_INSTRUMENT_UID, instrument.UID);
     }
-
 
     #endregion Facts
 

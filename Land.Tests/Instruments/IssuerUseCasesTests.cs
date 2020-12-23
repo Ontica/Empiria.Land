@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Test cases                              *
-*  Assembly : Empiria.Land.Tests.dll                     Pattern   : Test class                              *
+*  Assembly : Empiria.Land.Tests.dll                     Pattern   : Use cases tests class                   *
 *  Type     : IssuerUseCasesTests                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Test cases for legal instruments issuers.                                                      *
@@ -26,14 +26,9 @@ namespace Empiria.Land.Tests.Instruments {
 
     #region Initialization
 
-    public IssuerUseCasesTests() {
-      _usecases = IssuerUseCases.UseCaseInteractor();
-    }
+    public IssuerUseCasesTests() => _usecases = IssuerUseCases.UseCaseInteractor();
 
-
-    ~IssuerUseCasesTests() {
-      _usecases.Dispose();
-    }
+    ~IssuerUseCasesTests() => _usecases.Dispose();
 
     #endregion Initialization
 
@@ -66,7 +61,6 @@ namespace Empiria.Land.Tests.Instruments {
       Assert.True(list.Count <= moreGeneralListItemsCount,
                  "Search issuers by keyword must return the same or fewer items.");
     }
-
 
     #endregion Facts
 

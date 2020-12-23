@@ -21,6 +21,11 @@
     },
     {
       "type": "Land.Tests",
+      "key": "Testing.TransactionUID",
+      "value": "{{TESTING-TRANSACTION-UID}}"
+    },
+    {
+      "type": "Land.Tests",
       "key": "Testing.InstrumentUID",
       "value": "{{TESTING-INSTRUMENT-UID}}"
     },
@@ -30,12 +35,12 @@
       "value": "{{TESTING-SESSION-TOKEN}}"
     },
     {
-      "type": "Land.Tests.Providers",
+      "type": "Land.Tests",
       "key": "Testing.FilingUID",
       "value": "{{TESTING-FILING-UID}}"
     },
     {
-      "type": "Land.Tests.Providers",
+      "type": "Land.Tests",
       "key": "Testing.SignedDocumentUID",
       "value": "{{TESTING-SIGNED-DOCUMENT-UID}}"
     }

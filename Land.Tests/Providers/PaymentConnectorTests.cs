@@ -20,20 +20,21 @@ namespace Empiria.Land.Tests.Providers {
   /// <summary>Integration tests with the payments connector service.</summary>
   public class PaymentConnectorTests {
 
-    private readonly string PAYABLE_UID = ConfigurationData.Get<string>("Testing.FilingUID");
+    private readonly string _PAYABLE_UID = TestingConstants.EFILING_UID;
 
-    private readonly int PAYMENT_ORDER_ROUTE_NUMBER_LENGTH = 20;
+    private readonly int _PAYMENT_ORDER_ROUTE_NUMBER_LENGTH =
+                            TestingConstants.PAYMENT_ORDER_ROUTE_NUMBER_LENGTH;
 
 
     [Fact]
     public async Task Should_Get_PaymentOrderData() {
       CommonMethods.Authenticate();
 
-      IPayable payable = LRSTransaction.Parse(PAYABLE_UID);
+      IPayable payable = LRSTransaction.Parse(_PAYABLE_UID);
 
       PaymentOrderDTO paymentOrderData = await EPaymentsUseCases.RequestPaymentOrderData(payable);
 
-      Assert.Equal(PAYMENT_ORDER_ROUTE_NUMBER_LENGTH, paymentOrderData.RouteNumber.Length);
+      Assert.Equal(_PAYMENT_ORDER_ROUTE_NUMBER_LENGTH, paymentOrderData.RouteNumber.Length);
     }
 
 

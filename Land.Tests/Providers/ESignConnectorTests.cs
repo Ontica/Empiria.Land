@@ -18,7 +18,7 @@ namespace Empiria.Land.Tests.Providers {
   /// <summary>Integration tests for the electronic sign services connector.</summary>
   public class ESignConnectorTests {
 
-    private readonly string SIGNED_DOCUMENT_UID = ConfigurationData.Get<string>("Testing.SignedDocumentUID");
+    private readonly string _SIGNED_DOCUMENT_UID = TestingConstants.SIGNED_DOCUMENT_UID;
 
     [Fact]
     public async Task Should_Get_Sign_Request_ByDocumentNumber() {
@@ -26,7 +26,7 @@ namespace Empiria.Land.Tests.Providers {
 
       var connector = new ESignConnector();
 
-      var signRequest = await connector.GetRequestByDocumentNumber(SIGNED_DOCUMENT_UID);
+      var signRequest = await connector.GetRequestByDocumentNumber(_SIGNED_DOCUMENT_UID);
 
       Assert.Equal("Signed", signRequest.SignStatus);
     }

@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Transaction Management                     Component : Test cases                              *
-*  Assembly : Empiria.Land.Tests.dll                     Pattern   : Test class                              *
+*  Assembly : Empiria.Land.Tests.dll                     Pattern   : Use cases tests class                   *
 *  Type     : TransactionUseCasesTests                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Test cases for transaction related use cases.                                                  *
@@ -20,7 +20,7 @@ namespace Empiria.Land.Tests.Transactions {
 
     #region Fields
 
-    private readonly string _TRANSACTION_UID;
+    private readonly string _TRANSACTION_UID = TestingConstants.TRANSACTION_UID;
 
     private readonly TransactionUseCases _usecases;
 
@@ -28,16 +28,9 @@ namespace Empiria.Land.Tests.Transactions {
 
     #region Initialization
 
-    public TransactionUseCasesTests() {
-      _TRANSACTION_UID = "TR-78AY2-3NH94-8";
+    public TransactionUseCasesTests() => _usecases = TransactionUseCases.UseCaseInteractor();
 
-      _usecases = TransactionUseCases.UseCaseInteractor();
-    }
-
-
-    ~TransactionUseCasesTests() {
-      _usecases.Dispose();
-    }
+    ~TransactionUseCasesTests() => _usecases.Dispose();
 
     #endregion Initialization
 
