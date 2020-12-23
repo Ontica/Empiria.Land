@@ -24,6 +24,6 @@ namespace Empiria.Land.Instruments {
 
     All
 
-  }
+  }  // enum IssuerTypeEnum
 
-}
+}  // namespace Empiria.Land.Instruments

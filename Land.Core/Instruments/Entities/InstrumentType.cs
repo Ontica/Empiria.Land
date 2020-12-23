@@ -23,18 +23,9 @@ namespace Empiria.Land.Instruments {
       // Empiria powertype types always have this constructor.
     }
 
-    static public new InstrumentType Parse(int typeId) {
-      if (typeId != -1) {
-        return ObjectTypeInfo.Parse<InstrumentType>(typeId);
-      } else {
-        return InstrumentType.Empty;
-      }
-    }
+    static public new InstrumentType Parse(int typeId) => ObjectTypeInfo.Parse<InstrumentType>(typeId);
 
-    static internal new InstrumentType Parse(string typeName) {
-      return InstrumentType.Parse<InstrumentType>(typeName);
-    }
-
+    static internal new InstrumentType Parse(string typeName) => InstrumentType.Parse<InstrumentType>(typeName);
 
     static internal InstrumentType Parse(InstrumentTypeEnum instrumentTypeName) {
       Assertion.Assert(instrumentTypeName != InstrumentTypeEnum.All,
@@ -45,12 +36,7 @@ namespace Empiria.Land.Instruments {
       return InstrumentType.Parse(fullTypeName);
     }
 
-
-    static public InstrumentType Empty {
-      get {
-        return InstrumentType.Parse("ObjectType.LegalInstrument");
-      }
-    }
+    static public InstrumentType Empty => InstrumentType.Parse("ObjectType.LegalInstrument");
 
     #endregion Constructors and parsers
 

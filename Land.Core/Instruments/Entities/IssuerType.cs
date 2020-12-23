@@ -24,12 +24,17 @@ namespace Empiria.Land.Instruments {
       // Empiria powertype types always have this constructor.
     }
 
-    static public new IssuerType Parse(int typeId) {
-      return ObjectTypeInfo.Parse<IssuerType>(typeId);
-    }
+    static public new IssuerType Parse(int typeId) => ObjectTypeInfo.Parse<IssuerType>(typeId);
 
-    static public new IssuerType Parse(string typeName) {
-      return ObjectTypeInfo.Parse<IssuerType>(typeName);
+    static public new IssuerType Parse(string typeName) => ObjectTypeInfo.Parse<IssuerType>(typeName);
+
+    static internal IssuerType Parse(IssuerTypeEnum issuerTypeName) {
+      Assertion.Assert(issuerTypeName != IssuerTypeEnum.All,
+                       "issuerTypeName can not be equal to 'All'.");
+
+      var fullTypeName = $"ObjectTypeInfo.LegalInstrumentIssuer.{issuerTypeName}";
+
+      return IssuerType.Parse(fullTypeName);
     }
 
     #endregion Constructors and parsers
@@ -39,15 +44,6 @@ namespace Empiria.Land.Instruments {
     /// <summary>Factory method to create issuers instances of this issuer type.</summary>
     internal Issuer CreateInstance() {
       return base.CreateObject<Issuer>();
-    }
-
-    static internal InstrumentType Parse(IssuerTypeEnum issuerTypeName) {
-      Assertion.Assert(issuerTypeName != IssuerTypeEnum.All,
-                       "issuerTypeName can not be equal to 'All'.");
-
-      var fullTypeName = $"ObjectTypeInfo.LegalInstrument.{issuerTypeName}";
-
-      return InstrumentType.Parse(fullTypeName);
     }
 
     #endregion Public methods

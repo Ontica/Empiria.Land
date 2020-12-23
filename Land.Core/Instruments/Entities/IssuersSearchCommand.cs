@@ -56,7 +56,6 @@ namespace Empiria.Land.Instruments {
 
     #endregion Properties
 
-
   }  // class IssuersSearchCommand
 
 }  // namespace Empiria.Land.Instruments
