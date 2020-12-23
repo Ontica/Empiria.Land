@@ -9,9 +9,11 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Xunit;
 
+using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
+using Empiria.Land.Instruments.UseCases;
 
-namespace Empiria.Land.Instruments.UseCases.Tests {
+namespace Empiria.Land.Tests.Instruments {
 
   /// <summary>Test cases for legal instruments issuers.</summary>
   public class IssuerUseCasesTests {
@@ -70,4 +72,4 @@ namespace Empiria.Land.Instruments.UseCases.Tests {
 
   }  // class IssuerUseCasesTests
 
-}  // namespace Empiria.Land.Instruments.UseCases.Tests
+}  // namespace Empiria.Land.Tests.Instruments

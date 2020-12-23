@@ -1,20 +1,19 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Electronic Sign Connector                  Component : Test cases                              *
+*  Module   : Empiria Land Providers                     Component : Test cases                              *
 *  Assembly : Empiria.Land.Tests.dll                     Pattern   : Test class                              *
 *  Type     : ESignConnectorTests                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Integration tests for the electronic sign services connector.                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System.Threading.Tasks;
 using Xunit;
+
+using System.Threading.Tasks;
 
 using Empiria.Land.Integration;
 
-using Empiria.Land.Tests;
-
-namespace Empiria.Land.Providers.Tests {
+namespace Empiria.Land.Tests.Providers {
 
   /// <summary>Integration tests for the electronic sign services connector.</summary>
   public class ESignConnectorTests {
@@ -32,6 +31,6 @@ namespace Empiria.Land.Providers.Tests {
       Assert.Equal("Signed", signRequest.SignStatus);
     }
 
-  }
+  }  // class ESignConnectorTests
 
-}
+}  // namespace Empiria.Land.Tests.Providers

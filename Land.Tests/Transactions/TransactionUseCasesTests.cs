@@ -9,9 +9,11 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Xunit;
 
+using Empiria.Land.Transactions;
 using Empiria.Land.Transactions.Adapters;
+using Empiria.Land.Transactions.UseCases;
 
-namespace Empiria.Land.Transactions.UseCases.Tests {
+namespace Empiria.Land.Tests.Transactions {
 
   /// <summary>Test cases for transaction related use cases.</summary>
   public class TransactionUseCasesTests {
@@ -74,4 +76,4 @@ namespace Empiria.Land.Transactions.UseCases.Tests {
 
   }  // class TransactionUseCasesTests
 
-}  // namespace Empiria.Land.Transactions.UseCases.Tests
+}  // namespace Empiria.Land.Tests.Transactions

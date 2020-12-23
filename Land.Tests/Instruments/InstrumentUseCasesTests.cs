@@ -10,8 +10,9 @@
 using Xunit;
 
 using Empiria.Land.Instruments.Adapters;
+using Empiria.Land.Instruments.UseCases;
 
-namespace Empiria.Land.Instruments.UseCases.Tests {
+namespace Empiria.Land.Tests.Instruments {
 
   /// <summary>Test cases for legal instruments.</summary>
   public class InstrumentUseCasesTests {
@@ -27,7 +28,7 @@ namespace Empiria.Land.Instruments.UseCases.Tests {
     #region Initialization
 
     public InstrumentUseCasesTests() {
-      _INSTRUMENT_UID = "RP73RX-94ZF28-HN34E7";
+      _INSTRUMENT_UID = ConfigurationData.Get<string>("Testing.InstrumentUID");
 
       _usecases = InstrumentUseCases.UseCaseInteractor();
     }
@@ -53,4 +54,4 @@ namespace Empiria.Land.Instruments.UseCases.Tests {
 
   }  // class InstrumentUseCasesTests
 
-}  // namespace Empiria.Land.Instruments.UseCases.Tests
+}  // namespace Empiria.Land.Tests.Instruments

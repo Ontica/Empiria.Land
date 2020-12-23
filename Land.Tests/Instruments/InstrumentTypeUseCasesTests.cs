@@ -4,14 +4,17 @@
 *  Assembly : Empiria.Land.Tests.dll                     Pattern   : Test class                              *
 *  Type     : InstrumentTypeUseCasesTests                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Test cases that retrive configuration data of legal instrument types.                          *
+*  Summary  : Test cases that retrive configuration data for legal instrument types.                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Xunit;
 
-namespace Empiria.Land.Instruments.UseCases.Tests {
+using Empiria.Land.Instruments;
+using Empiria.Land.Instruments.UseCases;
 
-  /// <summary>Test cases that retrive configuration data of legal instrument types.</summary>
+namespace Empiria.Land.Tests.Instruments {
+
+  /// <summary>Test cases that retrive configuration data for legal instrument types.</summary>
   public class InstrumentTypeUseCasesTests {
 
     #region Fields
@@ -59,4 +62,4 @@ namespace Empiria.Land.Instruments.UseCases.Tests {
 
   }  // class InstrumentTypeUseCasesTests
 
-}  // namespace Empiria.Land.Instruments.UseCases.Tests
+}  // namespace Empiria.Land.Tests.Instruments

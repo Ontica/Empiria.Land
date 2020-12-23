@@ -1,18 +1,19 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Messenger Connector                        Component : Test cases                              *
+*  Module   : Empiria Land Providers                     Component : Test cases                              *
 *  Assembly : Empiria.Land.Tests.dll                     Pattern   : Test class                              *
 *  Type     : MessengerConnectorTests                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Integration tests for the messenger connector service.                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 using Xunit;
+
+using System;
 
 using Empiria.Land.Messaging;
 
-namespace Empiria.Land.Providers.Tests {
+namespace Empiria.Land.Tests.Providers {
 
   /// <summary>Integration tests for the messenger connector service.</summary>
   public class MessengerConnectorTests {
@@ -31,6 +32,6 @@ namespace Empiria.Land.Providers.Tests {
       Assert.Null(e);
     }
 
-  }
+  }  // class MessengerConnectorTests
 
-}
+}  // namespace Empiria.Land.Tests.Providers
