@@ -42,17 +42,14 @@ Empiria Land includes the following software components:
 7.  **User Interface Services**  
     Provides Html parsing services especially tailored to display and reuse Empiria Land user interfaces.
 
-8.  **Use Cases**  
-    Use cases layer for Empiria Land.
-
-9.  **Providers**  
+8.  **Providers**  
     Separated providers implementation layer used by Empiria Land components.
 
-10.  **Web API (HTTP/REST-based)**  
+9.  **Web API (HTTP/REST-based)**  
      Http/Json RESTful type web services used to communicate with third party systems, to emit certificates and perform data searching operations.
 
-11.  **Tests**  
-     Unit and integration test cases for Empiria Land.
+10. **Tests**  
+    Unit and integration test cases for Empiria Land.
 
 ## Documentation
 
@@ -64,7 +61,7 @@ There, `database.scripts.sql` file contains the full database script for SQL Ser
 
 This system is distributed by the GNU AFFERO GENERAL PUBLIC LICENSE.
 
-Óntica always delivers **open source** information systems, and we consider that it is specially
+Óntica always delivers open source information systems, and we consider that it is specially
 important in the case of public utility or government systems.
 
 ## Copyright

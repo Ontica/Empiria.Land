@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Xunit;
 
+using Empiria.Land.Transactions.Adapters;
+
 namespace Empiria.Land.Transactions.UseCases.Tests {
 
   /// <summary>Test cases for transaction related use cases.</summary>

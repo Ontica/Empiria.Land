@@ -1,8 +1,8 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Transaction Management                     Component : Interface adapters                      *
-*  Assembly : Empiria.Land.UseCases.dll                  Pattern   : Mapper class                            *
-*  Type     : TransactionListItemDtoMapper               License   : Please read LICENSE.txt file            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
+*  Type     : TransactionListItemMapper                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Contains methods to map from LRSTransaction objects to TransactionListItem DTOs.               *
 *                                                                                                            *
@@ -10,19 +10,18 @@
 
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Transactions.UseCases {
+namespace Empiria.Land.Transactions.Adapters {
 
   /// <summary>Contains methods to map from RecordedDocument to RecorderDocumentDTO objects.</summary>
-  static internal class TransactionListItemDtoMapper {
+  static internal class TransactionDtoMapper {
 
-    static internal FixedList<TransactionListItemDto> Map(FixedList<LRSTransaction> list) {
-      var mappedItems = list.Select((x) => Map(x));
-
-      return new FixedList<TransactionListItemDto>(mappedItems);
+    static internal FixedList<TransactionDto> Map(FixedList<LRSTransaction> list) {
+      return new FixedList<TransactionDto>(list.Select((x) => Map(x)));
     }
 
-    static internal TransactionListItemDto Map(LRSTransaction transaction) {
-      var dto = new TransactionListItemDto();
+
+    static internal TransactionDto Map(LRSTransaction transaction) {
+      var dto = new TransactionDto();
 
       dto.UID = transaction.UID;
       dto.TransactionID = transaction.UID;
@@ -30,13 +29,12 @@ namespace Empiria.Land.Transactions.UseCases {
       dto.Subtype = transaction.DocumentType.Name;
       dto.RequestedBy = transaction.RequestedBy;
       dto.PresentationTime = transaction.PresentationTime;
-      dto.Stage = "InProgress";
       dto.Status = transaction.Workflow.CurrentStatus.ToString();
       dto.StatusName = transaction.Workflow.CurrentStatusName;
 
       return dto;
     }
 
-  }  // class TransactionListItemDtoMapper
+  }  // class TransactionListItemMapper
 
-}  // namespace Empiria.Land.Transactions.UseCases
+}  // namespace Empiria.Land.Transactions.Adapters

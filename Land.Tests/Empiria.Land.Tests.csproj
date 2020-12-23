@@ -71,13 +71,11 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Land.Core" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Registration" Version="5.0.0" />
-    <PackageReference Include="Empiria.Land.UseCases" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Providers" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\Land.Core\Empiria.Land.Core.csproj" />
     <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
-    <ProjectReference Include="..\Land.UseCases\Empiria.Land.UseCases.csproj" />
     <ProjectReference Include="..\Land.Providers\Empiria.Land.Providers.csproj" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
