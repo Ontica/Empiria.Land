@@ -11,6 +11,7 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
+using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Instruments.UseCases;
 
 namespace Empiria.Land.Instruments.WebApi {

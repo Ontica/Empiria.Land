@@ -38,7 +38,7 @@ namespace Empiria.Land.Instruments.Data {
                   o.EntityName, o.OfficialPosition, o.OfficeName, o.PlaceName,
                   o.ExtData.ToString(), o.Keywords,
                   o.RelatedContact.Id, o.RelatedEntity.Id, o.RelatedOffice.Id, o.RelatedPlace.Id,
-                  o.FromDate, o.ToDate, (char) o.Status, o.PostedBy.Id, o.PostingTime, String.Empty);
+                  o.FromDate, o.ToDate, (char) o.Status, o.PostedById, o.PostingTime, String.Empty);
 
       DataWriter.Execute(op);
     }

@@ -34,13 +34,11 @@ namespace Empiria.Land.Instruments {
       this.LoadData(data);
     }
 
-    static public Issuer Parse(int id) {
-      return BaseObject.ParseId<Issuer>(id);
-    }
+    static public Issuer Parse(int id) => BaseObject.ParseId<Issuer>(id);
 
-    static public Issuer Parse(string uid) {
-      return BaseObject.ParseKey<Issuer>(uid);
-    }
+    static public Issuer Parse(string uid) => BaseObject.ParseKey<Issuer>(uid);
+
+    static public Issuer Empty => BaseObject.ParseEmpty<Issuer>();
 
     static public FixedList<Issuer> GetList(IssuersSearchCommand searchCommand) {
       return IssuersData.GetList(searchCommand);
@@ -144,7 +142,7 @@ namespace Empiria.Land.Instruments {
 
 
     [DataField("PostedById")]
-    internal Contact PostedBy {
+    internal int PostedById {
       get; private set;
     }
 

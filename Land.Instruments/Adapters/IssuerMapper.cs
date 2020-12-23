@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Instruments.UseCases {
+namespace Empiria.Land.Instruments.Adapters {
 
   static internal class IssuerMapper {
 
@@ -37,4 +37,4 @@ namespace Empiria.Land.Instruments.UseCases {
 
   }  // class IssuerMapper
 
-}  // namespace Empiria.Land.Instruments.UseCases
+}  // namespace Empiria.Land.Instruments.Adapters
