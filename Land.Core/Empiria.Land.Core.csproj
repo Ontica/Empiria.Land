@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Company>Ontica</Company>
     <Product>Empiria Land</Product>
-    <Description>Empiria Land Legal Instruments Module.</Description>
+    <Description>Empiria Land Core Module.</Description>
     <Copyright>(c) 2009-2021. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
     <Version>5.0.0</Version>
     <AssemblyVersion>5.0.0</AssemblyVersion>
     <FileVersion>5.0.0.0</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Land/blob/master/Land.Instruments/LICENSE.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/Ontica/Empiria.Land/tree/master/Land.Instruments</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Land/blob/master/Land.Core/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Ontica/Empiria.Land/tree/master/Land.Core</PackageProjectUrl>
     <PackageIconUrl>http://www.ontica.org/logo.ontica.png</PackageIconUrl>
     <PackageTags />
     <RepositoryUrl>https://github.com/Ontica/Empiria.Land</RepositoryUrl>
@@ -20,8 +20,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
-    <AssemblyName>Empiria.Land.Instruments</AssemblyName>
-    <RootNamespace>Empiria.Land.Instruments</RootNamespace>
+    <AssemblyName>Empiria.Land.Core</AssemblyName>
+    <RootNamespace>Empiria.Land</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)'=='Multisolutions|AnyCPU' ">
     <OutputPath>bin\</OutputPath>

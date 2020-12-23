@@ -21,34 +21,37 @@ The project can be compiled using Visual Studio 2019 Community Edition.
 
 Empiria Land includes the following software components:
 
-1.  **Registration Services**  
+1.  **Core Services**  
+    Classes and other types used for instruments and recording acts registration.
+
+2.  **Registration Services**  
     Classes and other types used for document and recording acts registration.
 
-2.  **Certification Services**  
+3.  **Certification Services**  
     Contains types to manage and emit official certificates related to land ownership.
 
-3.  **Transaction Services**  
+4.  **Transaction Services**  
     Services to manage customer's front-desk and external system transactions.
 
-4.  **Form Filing Services**  
+5.  **Form Filing Services**  
     Services to validate, manage and process data forms realted with procedures in Land recording offices.
 
-5.  **Documentation Services**  
+6.  **Documentation Services**  
     Code to control imaging processing for recording books and scanned documents.
 
-6.  **User Interface Services**  
+7.  **User Interface Services**  
     Provides Html parsing services especially tailored to display and reuse Empiria Land user interfaces.
 
-7.  **Use Cases**  
+8.  **Use Cases**  
     Use cases layer for Empiria Land.
 
-8.  **Providers**  
+9.  **Providers**  
     Separated providers implementation layer used by Empiria Land components.
 
-9. **Web API (HTTP/REST-based)**  
-    Http/Json RESTful type web services used to communicate with third party systems, to emit certificates and perform data searching operations.
+10.  **Web API (HTTP/REST-based)**  
+     Http/Json RESTful type web services used to communicate with third party systems, to emit certificates and perform data searching operations.
 
-10.  **Tests**  
+11.  **Tests**  
      Unit and integration test cases for Empiria Land.
 
 ## Documentation

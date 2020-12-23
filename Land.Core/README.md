@@ -1,6 +1,6 @@
-﻿# Empiria Land Legal Instruments
+﻿# Empiria Land Core Module
 
-Empiria Land Legal Instruments Module.
+Empiria Land Core Module.
 
 ## License
 
