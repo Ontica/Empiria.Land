@@ -31,7 +31,6 @@ namespace Empiria.Land.Instruments.UseCases {
 
     #region Use cases
 
-
     public InstrumentDto GetInstrument(string instrumentUID) {
       Assertion.AssertObject(instrumentUID, "instrumentUID");
 
@@ -39,22 +38,6 @@ namespace Empiria.Land.Instruments.UseCases {
 
       return InstrumentMapper.Map(instrument);
     }
-
-
-    public InstrumentDto UpdateInstrument(string instrumentUID,
-                                          InstrumentFields fields) {
-      Assertion.AssertObject(instrumentUID, "instrumentUID");
-      Assertion.AssertObject(fields, "fields");
-
-      var instrument = Instrument.Parse(instrumentUID);
-
-      instrument.Update(fields);
-
-      instrument.Save();
-
-      return InstrumentMapper.Map(instrument);
-    }
-
 
     #endregion Use cases
 

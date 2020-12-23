@@ -9,10 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Empiria.Services;
 
-using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Transactions.Adapters;
-
-using Empiria.Land.Instruments.UseCases;
 
 using Empiria.Land.Registration.Transactions;
 
@@ -33,7 +30,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
     #endregion Constructors and parsers
 
-    #region Query Use cases
+    #region Use cases
 
     public TransactionDto GetTransaction(string transactionUID) {
       Assertion.AssertObject(transactionUID, "transactionUID");
@@ -41,18 +38,6 @@ namespace Empiria.Land.Transactions.UseCases {
       var document = LRSTransaction.Parse(transactionUID);
 
       return TransactionDtoMapper.Map(document);
-    }
-
-
-    public InstrumentDto GetTransactionInstrument(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
-
-      using (var usecase = InstrumentUseCases.UseCaseInteractor()) {
-
-        string instrumentUID = GetTransactionInstrumentUID(transactionUID);
-
-        return usecase.GetInstrument(instrumentUID);
-      }
     }
 
 
@@ -70,27 +55,7 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
-    public InstrumentDto UpdateTransactionInstrument(string transactionUID, InstrumentFields fields) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
-      Assertion.AssertObject(fields, "fields");
-
-      using (var usecase = InstrumentUseCases.UseCaseInteractor()) {
-
-        string instrumentUID = GetTransactionInstrumentUID(transactionUID);
-
-        return usecase.UpdateInstrument(instrumentUID, fields);
-      }
-    }
-
-
-    #endregion Query Use cases
-
-
-    static private string GetTransactionInstrumentUID(string transactionUID) {
-      var transaction = LRSTransaction.Parse(transactionUID);
-
-      return transaction.GetInstrumentUID();
-    }
+    #endregion Use cases
 
   }  // class TransactionUseCases
 

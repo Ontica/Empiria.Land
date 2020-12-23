@@ -7,7 +7,6 @@
 *  Summary  : Use cases used to interact with legal instrument issuers: notaries, judges or authorities.     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
 using Empiria.Services;
 
 using Empiria.Land.Instruments.Adapters;

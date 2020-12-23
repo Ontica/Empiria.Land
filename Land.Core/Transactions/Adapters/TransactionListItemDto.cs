@@ -4,14 +4,14 @@
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : TransactionListItemDto                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Holds data related to a transaction.                                                           *
+*  Summary  : Output DTO that holds minimal transaction data to be used as list items.                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Land.Transactions.Adapters {
 
-  /// <summary>Holds data related to a transaction list item.</summary>
+  /// <summary>Output DTO that holds minimal transaction data to be used as list items.</summary>
   public class TransactionListItemDto {
 
     public string UID {

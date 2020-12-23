@@ -18,6 +18,8 @@ namespace Empiria.Land.Instruments.WebApi {
   /// <summary>Public API used to retrieve configuration data about legal instruments types.</summary>
   public class InstrumentTypeController : WebApiController {
 
+    #region Web Apis
+
     [HttpGet]
     [Route("v5/land/instrument-types/{instrumentTypeName}/instrument-kinds")]
     public CollectionModel GetInstrumentKinds([FromUri] InstrumentTypeEnum instrumentTypeName) {
@@ -28,6 +30,8 @@ namespace Empiria.Land.Instruments.WebApi {
         return new CollectionModel(this.Request, instrumentKinds);
       }
     }
+
+    #endregion Web Apis
 
   }  // class InstrumentTypeController
 

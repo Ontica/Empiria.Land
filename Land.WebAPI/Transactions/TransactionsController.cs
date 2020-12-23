@@ -11,9 +11,7 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Transactions.Adapters;
-
 using Empiria.Land.Transactions.UseCases;
 
 namespace Empiria.Land.Transactions.WebApi {
@@ -21,7 +19,7 @@ namespace Empiria.Land.Transactions.WebApi {
   /// <summary>Web API used to work with transactions.</summary>
   public class TransactionsController : WebApiController {
 
-    #region Public methods
+    #region Web Apis
 
     [HttpGet]
     [Route("v5/land/transactions/{transactionUID:length(16)}")]
@@ -36,20 +34,10 @@ namespace Empiria.Land.Transactions.WebApi {
 
 
     [HttpGet]
-    [Route("v5/land/transactions/{transactionUID:length(16)}/instrument")]
-    public SingleObjectModel GetTransactionInstrument([FromUri] string transactionUID) {
-
-      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
-        InstrumentDto instrumentDto = usecases.GetTransactionInstrument(transactionUID);
-
-        return new SingleObjectModel(this.Request, instrumentDto);
-      }
-    }
-
-
-    [HttpGet]
     [Route("v5/land/transactions")]
     public CollectionModel SearchTransactions([FromUri] SearchTransactionCommand searchCommand) {
+
+      Assertion.AssertObject(searchCommand, "searchCommand");
 
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
         FixedList<TransactionListItemDto> list = usecases.SearchTransactions(searchCommand);
@@ -58,22 +46,7 @@ namespace Empiria.Land.Transactions.WebApi {
       }
     }
 
-
-    [HttpPut, HttpPatch]
-    [Route("v5/land/transactions/{transactionUID:length(16)}/instrument")]
-    public SingleObjectModel UpdateInstrument([FromUri] string transactionUID,
-                                              [FromBody] InstrumentFields fields) {
-
-
-      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
-        var instrumentDto = usecases.UpdateTransactionInstrument(transactionUID, fields);
-
-        return new SingleObjectModel(this.Request, instrumentDto);
-      }
-    }
-
-
-    #endregion Public methods
+    #endregion Web Apis
 
   }  // class TransactionsController
 

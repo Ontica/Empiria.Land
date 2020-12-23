@@ -18,6 +18,8 @@ namespace Empiria.Land.Instruments.WebApi {
   /// <summary>Public API to retrieve legal instruments like titles, mortgages, deeds or contracts.</summary>
   public class InstrumentsController : WebApiController {
 
+    #region Web Apis
+
     [HttpGet]
     [Route("v5/land/instruments/{instrumentUID:length(20)}")]
     public SingleObjectModel GetInstrument([FromUri] string instrumentUID) {
@@ -28,6 +30,8 @@ namespace Empiria.Land.Instruments.WebApi {
         return new SingleObjectModel(this.Request, instrumentDto);
       }
     }
+
+    #endregion Web Apis
 
   }  // class InstrumentsController
 

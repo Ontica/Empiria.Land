@@ -20,6 +20,8 @@ namespace Empiria.Land.Instruments.WebApi {
   /// judges and other authorities.</summary>
   public class IssuersController : WebApiController {
 
+    #region Web Apis
+
     [HttpGet]
     [Route("v5/land/instrument-issuers")]
     public CollectionModel SearchIssuers([FromUri] IssuersSearchCommand searchCommand) {
@@ -33,6 +35,8 @@ namespace Empiria.Land.Instruments.WebApi {
         return new CollectionModel(this.Request, list);
       }
     }
+
+    #endregion Web Apis
 
   }  // class IssuersController
 

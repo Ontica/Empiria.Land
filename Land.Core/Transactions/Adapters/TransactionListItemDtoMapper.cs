@@ -12,7 +12,7 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Transactions.Adapters {
 
-  /// <summary>Contains methods to map from RecordedDocument to RecorderDocumentDTO objects.</summary>
+  /// <summary>Contains methods to map from LRSTransaction objects to TransactionListItem DTOs.</summary>
   static internal class TransactionListItemDtoMapper {
 
     static internal FixedList<TransactionListItemDto> Map(FixedList<LRSTransaction> list) {
