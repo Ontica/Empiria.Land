@@ -12,6 +12,7 @@ using System.Data;
 
 using Empiria.Data;
 
+using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Data {
@@ -20,6 +21,32 @@ namespace Empiria.Land.Data {
   static public class TransactionData {
 
     #region Public methods
+
+    static internal bool ExistsExternalTransactionNo(string externalTransactionNo) {
+      var sql = "SELECT * " +
+                "FROM LRSTransactions " +
+               $"WHERE ExternalTransactionNo = '{externalTransactionNo}'";
+
+      var operation = DataOperation.Parse(sql);
+
+      return (DataReader.Count(operation) > 0);
+    }
+
+
+    static internal int GetLastControlNumber(RecorderOffice recorderOffice) {
+      string sql = "SELECT MAX(ControlNumber) " +
+                   "FROM vwLRSTransactions " +
+                   $"WHERE RecorderOfficeId = {recorderOffice.Id}";
+
+      string max = DataReader.GetScalar(DataOperation.Parse(sql), String.Empty);
+
+      if (max != null && max.Length != 0) {
+        return int.Parse(max);
+      } else {
+        return 1;
+      }
+    }
+
 
     static public DataView GetLRSTransactionsForUI(string filter, string sort) {
       string sql = "SELECT TOP 200 * FROM vwLRSTransactionsAndCurrentTrack";
@@ -44,6 +71,35 @@ namespace Empiria.Land.Data {
       var op = DataOperation.Parse(sql);
 
       return DataReader.GetScalar<string>(op, "Empty");
+    }
+
+
+    static internal FixedList<LRSTransaction> GetTransactionsList(string filter, string orderBy, int pageSize) {
+      string sql = $"SELECT TOP {pageSize} * " +
+                    "FROM LRSTransactions " +
+                   $"WHERE {filter} ORDER BY {orderBy}";
+
+      var operation = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<LRSTransaction>(operation);
+    }
+
+
+    static internal FixedList<LRSTransactionItem> GetTransactionItemsList(LRSTransaction transaction) {
+      var operation = DataOperation.Parse("qryLRSTransactionItems", transaction.Id);
+
+      return DataReader.GetFixedList<LRSTransactionItem>(operation);
+    }
+
+
+    static internal FixedList<LRSPayment> GetTransactionPayments(LRSTransaction transaction) {
+      if (transaction.IsEmptyInstance) {
+        return new FixedList<LRSPayment>();
+      }
+
+      var operation = DataOperation.Parse("qryLRSTransactionPayments", transaction.Id);
+
+      return DataReader.GetFixedList<LRSPayment>(operation);
     }
 
 

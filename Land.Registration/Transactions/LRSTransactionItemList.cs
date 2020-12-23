@@ -11,7 +11,7 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.Land.Providers;
+using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static internal LRSTransactionItemList Parse(LRSTransaction transaction) {
-      var items = ExternalProviders.TransactionRepository.GetTransactionItemsList(transaction);
+      var items = TransactionData.GetTransactionItemsList(transaction);
 
       return new LRSTransactionItemList(items);
     }

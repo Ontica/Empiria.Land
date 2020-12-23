@@ -60,7 +60,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public static FixedList<LRSTransaction> GetList(string filter, string orderBy, int pageSize) {
-      return ExternalProviders.TransactionRepository.GetTransactionsList(filter, orderBy, pageSize);
+      return TransactionData.GetTransactionsList(filter, orderBy, pageSize);
     }
 
     static public LRSTransaction Empty {

@@ -163,8 +163,10 @@ namespace Empiria.Land.Data {
     }
 
 
-    static public DataView GetVolumeRecordingBooks(RecorderOffice recorderOffice, RecordingBookStatus status, string filter, string sort) {
-      return DataReader.GetDataView(DataOperation.Parse("rptLRSVolumeBooks", recorderOffice.Id, (char) status), filter, sort);
+    static public DataView GetVolumeRecordingBooks(RecorderOffice recorderOffice, RecordingBookStatus status,
+                                                   string filter, string sort) {
+      return DataReader.GetDataView(DataOperation.Parse("rptLRSVolumeBooks", recorderOffice.Id, (char) status),
+                                                        filter, sort);
     }
 
 

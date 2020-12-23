@@ -19,12 +19,6 @@ namespace Empiria.Land.Registration {
   [Powertype(typeof(RecordingAct))]
   public sealed class RecordingActType : Powertype {
 
-    #region Fields
-
-    //private RecordingSection registerSectionType = RecordingSection.Empty;
-
-    #endregion Fields
-
     #region Constructors and parsers
 
     private RecordingActType() {

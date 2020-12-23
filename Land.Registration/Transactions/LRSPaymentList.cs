@@ -11,7 +11,7 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.Land.Providers;
+using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static internal LRSPaymentList Parse(LRSTransaction transaction) {
-      FixedList<LRSPayment> list = ExternalProviders.TransactionRepository.GetTransactionPayments(transaction);
+      FixedList<LRSPayment> list = TransactionData.GetTransactionPayments(transaction);
 
       return new LRSPaymentList(list);
     }

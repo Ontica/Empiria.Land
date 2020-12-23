@@ -16,10 +16,10 @@ using Empiria.OnePoint.EFiling;
 namespace Empiria.Land.Providers {
 
   /// <summary>Factory that provide object instances used to access external services.</summary>
-  static internal class ExternalProviders {
+  static public class ExternalProviders {
 
 
-    static internal IFilingServices EFilingProvider {
+    static public IFilingServices EFilingProvider {
       get {
         Type type = ObjectFactory.GetType("Empiria.OnePoint.EFiling",
                                           "Empiria.OnePoint.EFiling.EFilingServices");
@@ -27,17 +27,6 @@ namespace Empiria.Land.Providers {
         return (IFilingServices) ObjectFactory.CreateObject(type);
       }
     }
-
-
-    static internal ITransactionRepository TransactionRepository {
-      get {
-        Type type = ObjectFactory.GetType("Empiria.Land.Providers",
-                                          "Empiria.Land.Providers.TransactionRepository");
-
-        return (ITransactionRepository) ObjectFactory.CreateObject(type);
-      }
-    }
-
 
     static public IUniqueIDGeneratorProvider UniqueIDGeneratorProvider {
       get {

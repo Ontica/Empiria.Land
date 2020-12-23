@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Land Core                                  Component : Integration Layer                       *
-*  Assembly : Empiria.Land.dll                           Pattern   : Provider implementation                 *
+*  Assembly : Empiria.Land.Providers.dll                 Pattern   : Provider implementation                 *
 *  Type     : UniqueIDGeneratorProvider                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides unique ID generation services for land-related documents and objects.                 *
@@ -258,6 +258,6 @@ namespace Empiria.Land.Providers {
 
     #endregion Private methods
 
-  } // class UniqueIDGeneratorProvider
+  }
 
-} // namespace Empiria.Land.Providers
+}
