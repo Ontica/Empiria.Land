@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Instruments.dll               Pattern   : Power typed Information Holder          *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Power typed Information Holder          *
 *  Type     : Instrument                                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Represents a legal instrument like a deed, contract, mortgage, court order or prevention note. *

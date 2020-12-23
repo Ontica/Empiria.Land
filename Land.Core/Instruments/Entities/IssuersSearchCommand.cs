@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Instruments.dll               Pattern   : Command payload                         *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Command payload                         *
 *  Type     : IssuersSearchCommand                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Use cases to retrive legal instrument issuers: notaries, judges, authorities, etc.             *

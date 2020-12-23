@@ -1,14 +1,14 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Instruments.dll               Pattern   : Power type                              *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Power type                              *
 *  Type     : IssuerType                                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Power type that defines a legal instrument issuer: notary, judge, local authority, etc.        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
 using System;
+
 using Empiria.Ontology;
 
 namespace Empiria.Land.Instruments {

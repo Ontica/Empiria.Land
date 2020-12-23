@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Instruments.dll               Pattern   : Input Data Holder                       *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Input Data Holder                       *
 *  Type     : InstrumentFields                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Data structure that serves as an adapter to update instruments data.                           *

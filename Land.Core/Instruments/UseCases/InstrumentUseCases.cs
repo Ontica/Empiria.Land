@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Use cases Layer                         *
-*  Assembly : Empiria.Land.UseCases.dll                  Pattern   : Use case interactor class               *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Use case interactor class               *
 *  Type     : InstrumentUseCases                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Use cases to interact with legal instruments.                                                  *

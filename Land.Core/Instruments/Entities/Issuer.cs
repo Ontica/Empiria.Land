@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Instruments.dll               Pattern   : Power typed Information Holder          *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Power-typed Information Holder          *
 *  Type     : Issuer                                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Represents a legal instrument issuer or attester, like a notary, judge or official authority.  *
@@ -154,7 +154,6 @@ namespace Empiria.Land.Instruments {
 
 
     #endregion Properties
-
 
     #region Methods
 

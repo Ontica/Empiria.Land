@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Data Access Layer                       *
-*  Assembly : Empiria.Land.Instruments.dll               Pattern   : Data Services                           *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Services                           *
 *  Type     : IssuersData                                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Data read and write services for legal instrument issuers.                                     *

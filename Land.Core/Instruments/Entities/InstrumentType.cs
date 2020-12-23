@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Instruments.dll               Pattern   : Power type                              *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Power type                              *
 *  Type     : Instrument                                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Power type that defines a legal instrument type: deed, contract, court order, etc.             *

@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Instruments.dll               Pattern   : Type Extension methods                  *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Type Extension methods                  *
 *  Type     : IssuersSearchCommandExtensions             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Extension methods for type IssuersSearchCommand.                                               *

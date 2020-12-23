@@ -1,10 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Empiria Land Legal Instruments             Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Instruments.dll               Pattern   : Assembly Attributes File                *
+*  Module   : Empiria Land Core                          Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Assembly Attributes File                *
 *  Type     : None                                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Empiria Land Legal Instruments Module.                                                         *
+*  Summary  : Empiria Land Core Module.                                                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;

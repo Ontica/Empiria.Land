@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Instruments.dll               Pattern   : Data Transfer Object                    *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : InstrumentDto                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO with data representing a legal instrument.                                          *

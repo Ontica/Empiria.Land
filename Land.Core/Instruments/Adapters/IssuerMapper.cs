@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Instruments.dll               Pattern   : Mapper class                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
 *  Type     : IssuerMapper                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Methods used to map legal instruments issuers to IssuerDto objects.                            *
