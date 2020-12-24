@@ -34,6 +34,21 @@ namespace Empiria.Land.Transactions.WebApi {
     }
 
 
+    [HttpPost]
+    [Route("v5/land/transactions/{transactionUID:length(16)}/instrument")]
+    public SingleObjectModel CreateTransactionInstrument([FromUri] string transactionUID,
+                                                         [FromBody] InstrumentFields fields) {
+
+      base.RequireBody(fields);
+
+      using (var usecases = TransactionInstrumentUseCases.UseCaseInteractor()) {
+        var instrumentDto = usecases.CreateTransactionInstrument(transactionUID, fields);
+
+        return new SingleObjectModel(this.Request, instrumentDto);
+      }
+    }
+
+
     [HttpPut, HttpPatch]
     [Route("v5/land/transactions/{transactionUID:length(16)}/instrument")]
     public SingleObjectModel UpdateTransactionInstrument([FromUri] string transactionUID,

@@ -66,7 +66,7 @@ namespace Empiria.Land.Data {
     static internal string GetTransactionInstrumentUID(LRSTransaction transaction) {
       var sql = $"SELECT InstrumentUID " +
                 $"FROM LRSInstruments " +
-                $"WHERE (InstrumentId = {transaction.Document.Id})";
+                $"WHERE (InstrumentId = {transaction.InstrumentId})";
 
       var op = DataOperation.Parse(sql);
 
@@ -100,6 +100,14 @@ namespace Empiria.Land.Data {
       var operation = DataOperation.Parse("qryLRSTransactionPayments", transaction.Id);
 
       return DataReader.GetFixedList<LRSPayment>(operation);
+    }
+
+    static internal void SetTransactionInstrument(LRSTransaction transaction, IIdentifiable instrument) {
+      var sql = $"UPDATE LRSTransactions SET InstrumentId = {instrument.Id} WHERE TransactionId = {transaction.Id}";
+
+      var op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
     }
 
 

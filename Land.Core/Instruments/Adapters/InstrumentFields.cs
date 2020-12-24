@@ -14,7 +14,7 @@ namespace Empiria.Land.Instruments.Adapters {
   /// <summary>Data structure used to update instruments data.</summary>
   public class InstrumentFields {
 
-    public InstrumentTypeEnum Type {
+    public InstrumentTypeEnum? Type {
       get; set;
     }
 

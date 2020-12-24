@@ -7,8 +7,11 @@
 *  Summary  : Test cases for transaction instrument use cases.                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
+
 using Xunit;
 
+using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Transactions.UseCases;
 
@@ -19,7 +22,7 @@ namespace Empiria.Land.Tests.Transactions {
 
     #region Fields
 
-    private readonly string _TRANSACTION_UID = TestingConstants.TRANSACTION_UID;
+    private readonly string TRANSACTION_UID = TestingConstants.TRANSACTION_UID;
 
     private readonly TransactionInstrumentUseCases _usecases;
 
@@ -37,10 +40,9 @@ namespace Empiria.Land.Tests.Transactions {
 
     [Fact]
     public void Should_Get_A_Transaction_Instrument() {
-      InstrumentDto instrument = _usecases.GetTransactionInstrument(_TRANSACTION_UID);
+      InstrumentDto instrument = _usecases.GetTransactionInstrument(TRANSACTION_UID);
 
       Assert.NotNull(instrument.UID);
-      Assert.NotNull(instrument.Type);
       Assert.NotNull(instrument.TypeName);
       Assert.NotNull(instrument.Issuer);
       Assert.NotNull(instrument.Issuer.Name);
@@ -48,22 +50,38 @@ namespace Empiria.Land.Tests.Transactions {
 
 
     [Fact]
-    public void Should_Update_A_Transaction_Instrument() {
-      var newSummary = EmpiriaString.BuildRandomString(3200);
-      var newBinderNo = EmpiriaString.BuildRandomString(48);
-      var newFolioNo = EmpiriaString.BuildRandomString(16);
-
+    public void Should_Create_A_Transaction_Instrument() {
       var fields = new InstrumentFields {
-        Summary = newSummary,
-        BinderNo = newBinderNo,
-        Folio = newFolioNo
+        Type = InstrumentTypeEnum.EscrituraPublica,
+        Summary = EmpiriaString.BuildRandomString(1760),
+        BinderNo = EmpiriaString.BuildRandomString(64),
+        Folio = EmpiriaString.BuildRandomString(48),
+        IssueDate = DateTime.Parse("2018-10-05")
       };
 
-      InstrumentDto changed = _usecases.UpdateTransactionInstrument(_TRANSACTION_UID, fields);
+      InstrumentDto created = _usecases.CreateTransactionInstrument(TRANSACTION_UID, fields);
 
-      Assert.Equal(newSummary, changed.Summary);
-      Assert.Equal(newBinderNo, changed.BinderNo);
-      Assert.Equal(newFolioNo, changed.Folio);
+      Assert.Equal(fields.Type, created.Type);
+      Assert.Equal(fields.Summary, created.Summary);
+      Assert.Equal(fields.BinderNo, created.BinderNo);
+      Assert.Equal(fields.Folio, created.Folio);
+      Assert.Equal(fields.IssueDate, created.IssueDate);
+    }
+
+
+    [Fact]
+    public void Should_Update_A_Transaction_Instrument() {
+      var fields = new InstrumentFields {
+        Summary = EmpiriaString.BuildRandomString(3200),
+        BinderNo = EmpiriaString.BuildRandomString(48),
+        Folio = EmpiriaString.BuildRandomString(16)
+      };
+
+      InstrumentDto changed = _usecases.UpdateTransactionInstrument(TRANSACTION_UID, fields);
+
+      Assert.Equal(fields.Summary, changed.Summary);
+      Assert.Equal(fields.BinderNo, changed.BinderNo);
+      Assert.Equal(fields.Folio, changed.Folio);
     }
 
     #endregion Facts

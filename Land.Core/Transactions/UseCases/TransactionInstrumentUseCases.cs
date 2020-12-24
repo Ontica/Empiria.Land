@@ -7,6 +7,8 @@
 *  Summary  : Use cases for transaction instrument edition and retrieving.                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
+
 using Empiria.Services;
 
 using Empiria.Land.Instruments;
@@ -36,9 +38,26 @@ namespace Empiria.Land.Transactions.UseCases {
     public InstrumentDto GetTransactionInstrument(string transactionUID) {
       Assertion.AssertObject(transactionUID, "transactionUID");
 
-      string instrumentUID = GetTransactionInstrumentUID(transactionUID);
+      Instrument instrument = ParseTransactionInstrument(transactionUID);
 
-      var instrument = Instrument.Parse(instrumentUID);
+      return InstrumentMapper.Map(instrument);
+    }
+
+
+    public InstrumentDto CreateTransactionInstrument(string transactionUID, InstrumentFields fields) {
+      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.AssertObject(fields, "fields");
+      Assertion.Assert(fields.Type.HasValue, "Instrument.Type value is required.");
+
+      var transaction = LRSTransaction.Parse(transactionUID);
+
+      var instrumentType = InstrumentType.Parse(fields.Type.Value);
+
+      var instrument = new Instrument(instrumentType, fields);
+
+      instrument.Save();
+
+      transaction.SetInstrument(instrument);
 
       return InstrumentMapper.Map(instrument);
     }
@@ -48,9 +67,7 @@ namespace Empiria.Land.Transactions.UseCases {
       Assertion.AssertObject(transactionUID, "transactionUID");
       Assertion.AssertObject(fields, "fields");
 
-      string instrumentUID = GetTransactionInstrumentUID(transactionUID);
-
-      var instrument = Instrument.Parse(instrumentUID);
+      Instrument instrument = ParseTransactionInstrument(transactionUID);
 
       instrument.Update(fields);
 
@@ -64,10 +81,10 @@ namespace Empiria.Land.Transactions.UseCases {
 
     #region Helper methods
 
-    static private string GetTransactionInstrumentUID(string transactionUID) {
+    static private Instrument ParseTransactionInstrument(string transactionUID) {
       var transaction = LRSTransaction.Parse(transactionUID);
 
-      return transaction.GetInstrumentUID();
+      return Instrument.Parse(transaction.InstrumentId);
     }
 
     #endregion Helper methods

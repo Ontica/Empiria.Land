@@ -59,6 +59,7 @@ namespace Empiria.Land.Registration.Transactions {
       return BaseObject.TryParse<LRSTransaction>("TransactionUID = '" + transactionUID + "'", reload);
     }
 
+
     public static FixedList<LRSTransaction> GetList(string filter, string orderBy, int pageSize) {
       return TransactionData.GetTransactionsList(filter, orderBy, pageSize);
     }
@@ -114,6 +115,12 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+    [DataField("InstrumentId")]
+    public int InstrumentId {
+      get;
+      private set;
+    }
+
     public Resource BaseResource {
       get {
         return this.ExtensionData.BaseResource;
@@ -163,6 +170,13 @@ namespace Empiria.Land.Registration.Transactions {
 
     public string GetInstrumentUID() {
       return TransactionData.GetTransactionInstrumentUID(this);
+    }
+
+
+    public void SetInstrument(IIdentifiable instrument) {
+      this.InstrumentId = instrument.Id;
+
+      TransactionData.SetTransactionInstrument(this, instrument);
     }
 
 
@@ -587,7 +601,6 @@ namespace Empiria.Land.Registration.Transactions {
         return this.ExtensionData.PaymentOrderData;
       }
     }
-
 
     public void SetPaymentOrderData(PaymentOrderDTO paymentOrderData) {
       this.ExtensionData.PaymentOrderData = paymentOrderData;

@@ -18,7 +18,7 @@ namespace Empiria.Land.Instruments.Adapters {
       get; internal set;
     }
 
-    public string Type {
+    public InstrumentTypeEnum Type {
       get; internal set;
     }
 

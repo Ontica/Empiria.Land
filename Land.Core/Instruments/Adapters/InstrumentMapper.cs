@@ -26,7 +26,7 @@ namespace Empiria.Land.Instruments.Adapters {
 
       var dto = new InstrumentDto {
         UID = instrument.UID,
-        Type = instrument.InstrumentType.AsEnumString,
+        Type = instrument.InstrumentType.ToInstrumentTypeEnum(),
         TypeName = instrument.InstrumentType.DisplayName,
         Kind = instrument.Kind,
         ControlID = instrument.ControlID,
