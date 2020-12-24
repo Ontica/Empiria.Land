@@ -59,9 +59,15 @@ namespace Empiria.Land.Instruments {
     }
 
 
-    public string AsEnumString {
-      get {
-        return this.Name.Replace("ObjectTypeInfo.LegalInstrument", string.Empty).Trim('.');
+    public InstrumentTypeEnum ToInstrumentTypeEnum() {
+      string typeName = this.Name.Replace("ObjectTypeInfo.LegalInstrument.", string.Empty);
+
+      InstrumentTypeEnum result;
+
+      if (Enum.TryParse<InstrumentTypeEnum>(typeName, out result)) {
+        return result;
+      } else {
+        throw Assertion.AssertNoReachThisCode($"Cannot convert type name '{typeName}' to InstrumentTypeEnum.");
       }
     }
 

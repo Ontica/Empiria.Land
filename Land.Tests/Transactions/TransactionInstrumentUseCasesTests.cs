@@ -39,6 +39,26 @@ namespace Empiria.Land.Tests.Transactions {
     #region Facts
 
     [Fact]
+    public void Should_Change_A_Transaction_Instrument_Type() {
+      InstrumentDto instrument = _usecases.GetTransactionInstrument(TRANSACTION_UID);
+
+      var fields = new InstrumentFields {
+        Type = instrument.Type == InstrumentTypeEnum.DocumentoJuzgado ?
+                            InstrumentTypeEnum.EscrituraPublica : InstrumentTypeEnum.DocumentoJuzgado,
+        BinderNo = EmpiriaString.BuildRandomString(48)
+      };
+
+      InstrumentDto changed = _usecases.UpdateTransactionInstrument(TRANSACTION_UID, fields);
+
+      Assert.Equal(fields.Type, changed.Type);
+      Assert.Equal(fields.BinderNo, changed.BinderNo);
+
+      Assert.Equal(instrument.IssueDate, changed.IssueDate);
+      Assert.Equal(instrument.Issuer.UID, changed.Issuer.UID);
+    }
+
+
+    [Fact]
     public void Should_Get_A_Transaction_Instrument() {
       InstrumentDto instrument = _usecases.GetTransactionInstrument(TRANSACTION_UID);
 

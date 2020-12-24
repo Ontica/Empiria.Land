@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Legal Instruments                          Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Power typed Information Holder          *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Partitioned Type / Information Holder   *
 *  Type     : Instrument                                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Represents a legal instrument like a deed, contract, mortgage, court order or prevention note. *
@@ -58,6 +58,7 @@ namespace Empiria.Land.Instruments {
     public string Kind {
       get; private set;
     }
+
 
     [DataField("InstrumentControlID")]
     public string ControlID {
@@ -172,6 +173,19 @@ namespace Empiria.Land.Instruments {
 
     #region Methods
 
+    private void ChangeInstrumentTypeIfRequired(InstrumentFields data) {
+      if (!data.Type.HasValue) {
+        return;
+      }
+
+      var instrumentType = InstrumentType.Parse(data.Type.Value);
+
+      if (!instrumentType.Equals(this.InstrumentType)) {
+        base.ReclassifyAs(instrumentType);
+      }
+    }
+
+
     private void LoadData(InstrumentFields data) {
       Kind = data.Kind ?? Kind;
       Summary = data.Summary ?? Summary;
@@ -186,6 +200,10 @@ namespace Empiria.Land.Instruments {
 
 
     public void Update(InstrumentFields data) {
+      Assertion.AssertObject(data, "data");
+
+      this.ChangeInstrumentTypeIfRequired(data);
+
       this.LoadData(data);
     }
 
