@@ -31,7 +31,7 @@ namespace Empiria.Land.Instruments {
 
     static internal InstrumentType Parse(InstrumentTypeEnum instrumentTypeName) {
       Assertion.Assert(instrumentTypeName != InstrumentTypeEnum.All,
-                       "instrumentTypeName can not be equal to 'All'.");
+                      "instrumentTypeName can not be equal to 'All'.");
 
       var fullTypeName = $"ObjectTypeInfo.LegalInstrument.{instrumentTypeName}";
 
@@ -62,14 +62,14 @@ namespace Empiria.Land.Instruments {
 
 
     public InstrumentTypeEnum ToInstrumentTypeEnum() {
-      string typeName = this.Name.Replace("ObjectTypeInfo.LegalInstrument.", string.Empty);
+      string typeNamedKey = this.NamedKey;
 
       InstrumentTypeEnum result;
 
-      if (Enum.TryParse<InstrumentTypeEnum>(typeName, out result)) {
+      if (Enum.TryParse<InstrumentTypeEnum>(typeNamedKey, out result)) {
         return result;
       } else {
-        throw Assertion.AssertNoReachThisCode($"Cannot convert type name '{typeName}' to InstrumentTypeEnum.");
+        throw Assertion.AssertNoReachThisCode($"Cannot convert type name '{typeNamedKey}' to InstrumentTypeEnum.");
       }
     }
 

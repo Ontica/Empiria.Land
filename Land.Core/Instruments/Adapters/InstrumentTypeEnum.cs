@@ -23,6 +23,8 @@ namespace Empiria.Land.Instruments.Adapters {
 
     DocumentoTerceros,
 
+    Empty,
+
     All
 
   }  // enum InstrumentTypeEnum
