@@ -7,8 +7,11 @@
 *  Summary  : Use cases used to retrieve configuration data of legal instrument types.                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
 
 using Empiria.Services;
+
+using Empiria.Land.Instruments.Adapters;
 
 namespace Empiria.Land.Instruments.UseCases {
 

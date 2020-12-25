@@ -7,9 +7,10 @@
 *  Summary  : Test cases for transaction related use cases.                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
+
 using Xunit;
 
-using Empiria.Land.Transactions;
 using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Transactions.UseCases;
 

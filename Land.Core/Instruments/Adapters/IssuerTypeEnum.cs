@@ -1,30 +1,30 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Legal Instruments                          Component : Domain Layer                            *
+*  Module   : Legal Instruments                          Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Type Instances Enumeration              *
-*  Type     : InstrumentTypeEnum                         License   : Please read LICENSE.txt file            *
+*  Type     : IssuerTypeEnum                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Enumerates the different instrument types.                                                     *
+*  Summary  : Enumerates the instrument issuers types.                                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Instruments {
+namespace Empiria.Land.Instruments.Adapters {
 
-  /// <summary>Enumerates the different instrument types.</summary>
-  public enum InstrumentTypeEnum {
+  /// <summary>Enumerates the instrument issuers types.</summary>
+  public enum IssuerTypeEnum {
 
-    EscrituraPublica,
+    Notary,
 
-    OficioNotaria,
+    Judge,
 
-    TituloPropiedad,
+    PropertyTitleIssuer,
 
-    DocumentoJuzgado,
+    AdministrativeAuthority,
 
-    DocumentoTerceros,
+    ThirdParty,
 
     All
 
-  }  // enum InstrumentTypeEnum
+  }  // enum IssuerTypeEnum
 
-}  // namespace Empiria.Land.Instruments
+}  // namespace Empiria.Land.Instruments.Adapters

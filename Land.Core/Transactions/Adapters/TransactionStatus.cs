@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Domain Layer                            *
+*  Module   : Transaction Management                     Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Enumeration                             *
 *  Type     : TransactionStatus                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Transactions {
+namespace Empiria.Land.Transactions.Adapters {
 
   /// <summary>Enumerates the possible statuses of a transaction with respect of the office workflow.</summary>
   public enum TransactionStatus {
@@ -51,4 +51,4 @@ namespace Empiria.Land.Transactions {
 
   }  // enum TransactionStatus
 
-} // namespace Empiria.Land.Transactions
+} // namespace Empiria.Land.Transactions.Adapters

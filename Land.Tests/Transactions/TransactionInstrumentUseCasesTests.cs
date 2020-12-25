@@ -11,7 +11,6 @@ using System;
 
 using Xunit;
 
-using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Transactions.UseCases;
 

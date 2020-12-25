@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Domain Layer                            *
+*  Module   : Transaction Management                     Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Command payload                         *
 *  Type     : SearchTransactionCommand                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land.Transactions {
+namespace Empiria.Land.Transactions.Adapters {
 
   /// <summary>Command payload used for transaction searching.</summary>
   public class SearchTransactionCommand {
@@ -51,4 +51,4 @@ namespace Empiria.Land.Transactions {
 
   }  // class SearchTransactionCommand
 
-}  // namespace Empiria.Land.Transactions
+}  // namespace Empiria.Land.Transactions.Adapters

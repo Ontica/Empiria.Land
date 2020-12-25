@@ -7,9 +7,10 @@
 *  Summary  : Test cases for legal instruments issuers.                                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
+
 using Xunit;
 
-using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Instruments.UseCases;
 

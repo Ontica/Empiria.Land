@@ -11,6 +11,8 @@ using System;
 
 using Empiria.Ontology;
 
+using Empiria.Land.Instruments.Adapters;
+
 namespace Empiria.Land.Instruments {
 
   /// <summary>Power type that defines a legal instrument type: deed, contract, court order, etc.</summary>

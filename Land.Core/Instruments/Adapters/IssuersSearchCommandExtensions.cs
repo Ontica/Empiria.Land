@@ -8,9 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using System.Linq;
 
-namespace Empiria.Land.Instruments {
+namespace Empiria.Land.Instruments.Adapters {
 
   /// <summary>Extension methods for type IssuersSearchCommand.</summary>
   static internal class IssuersSearchCommandExtensions {
@@ -75,7 +76,7 @@ namespace Empiria.Land.Instruments {
         return String.Empty;
       }
 
-      var instrumentType = Instruments.InstrumentType.Parse(typeName);
+      var instrumentType = InstrumentType.Parse(typeName);
 
       var issuersIdsArray = instrumentType.IssuerTypes.Select(x => x.Id).ToArray();
 
@@ -112,4 +113,4 @@ namespace Empiria.Land.Instruments {
 
   }  // class IssuersSearchCommandExtensions
 
-}  // namespace Empiria.Land.Instruments
+}  // namespace Empiria.Land.Instruments.Adapters

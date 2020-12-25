@@ -11,6 +11,8 @@ using System;
 
 using Empiria.Data;
 
+using Empiria.Land.Instruments.Adapters;
+
 namespace Empiria.Land.Instruments.Data {
 
   /// <summary>Data read and write services for legal instrument issuers.</summary>

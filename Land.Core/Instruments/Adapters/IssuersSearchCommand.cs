@@ -1,16 +1,17 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Legal Instruments                          Component : Domain Layer                            *
+*  Module   : Legal Instruments                          Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Command payload                         *
 *  Type     : IssuersSearchCommand                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases to retrive legal instrument issuers: notaries, judges, authorities, etc.             *
+*  Summary  : Command payload used to search instrument issuers.                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land.Instruments {
+namespace Empiria.Land.Instruments.Adapters {
 
+  /// <summary>Command payload used to search instrument issuers.</summary>
   public class IssuersSearchCommand {
 
     #region Properties
@@ -58,4 +59,4 @@ namespace Empiria.Land.Instruments {
 
   }  // class IssuersSearchCommand
 
-}  // namespace Empiria.Land.Instruments
+}  // namespace Empiria.Land.Instruments.Adapters
