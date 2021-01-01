@@ -76,7 +76,7 @@ namespace Empiria.Land.Data {
 
     static internal FixedList<LRSTransaction> GetTransactionsList(string filter, string orderBy, int pageSize) {
       string sql = $"SELECT TOP {pageSize} * " +
-                    "FROM LRSTransactions " +
+                    "FROM vwLRSTransactionsAndCurrentTrack " +
                    $"WHERE {filter} ORDER BY {orderBy}";
 
       var operation = DataOperation.Parse(sql);

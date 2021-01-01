@@ -7,8 +7,10 @@
 *  Summary  : Provides Empiria Land common testing methods.                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
 using System.Threading;
 
+using Empiria.Contacts;
 using Empiria.Security;
 
 namespace Empiria.Land.Tests {
@@ -22,6 +24,10 @@ namespace Empiria.Land.Tests {
       string sessionToken = TestingConstants.SESSION_TOKEN;
 
       Thread.CurrentPrincipal = AuthenticationService.Authenticate(sessionToken);
+    }
+
+    static public Contact GetCurrentUser() {
+      return Contact.Parse(ExecutionServer.CurrentUserId);
     }
 
     #endregion Auxiliary methods

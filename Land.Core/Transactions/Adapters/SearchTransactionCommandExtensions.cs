@@ -71,6 +71,9 @@ namespace Empiria.Land.Transactions.Adapters {
         case TransactionStage.All:
           return "TransactionStatus <> 'X'";
 
+        case TransactionStage.MyInbox:
+          return $"ResponsibleId = {ExecutionServer.CurrentUserId}";
+
         case TransactionStage.Completed:
           return "TransactionStatus IN ('D', 'C', 'H')";
 

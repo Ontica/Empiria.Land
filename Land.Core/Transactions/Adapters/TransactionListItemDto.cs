@@ -51,6 +51,14 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
+    public string AssignedToUID {
+      get; internal set;
+    }
+
+    public string AssignedToName {
+      get; internal set;
+    }
+
   }  // class TransactionListItemDto
 
 }  // namespace Empiria.Land.Transactions.Adapters

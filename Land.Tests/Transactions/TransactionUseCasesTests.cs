@@ -29,7 +29,12 @@ namespace Empiria.Land.Tests.Transactions {
 
     #region Initialization
 
-    public TransactionUseCasesTests() => _usecases = TransactionUseCases.UseCaseInteractor();
+    public TransactionUseCasesTests() {
+      CommonMethods.Authenticate();
+
+      _usecases = TransactionUseCases.UseCaseInteractor();
+    }
+
 
     ~TransactionUseCasesTests() => _usecases.Dispose();
 
@@ -42,6 +47,23 @@ namespace Empiria.Land.Tests.Transactions {
       TransactionDto transaction = _usecases.GetTransaction(_TRANSACTION_UID);
 
       Assert.Equal(_TRANSACTION_UID, transaction.UID);
+    }
+
+
+    [Fact]
+    public void Should_Get_MyInbox_TransactionList() {
+      var myInboxCommand = new SearchTransactionCommand {
+        Stage = TransactionStage.MyInbox,
+        PageSize = 100,
+      };
+
+      FixedList<TransactionListItemDto> list = _usecases.SearchTransactions(myInboxCommand);
+
+      Assert.NotEmpty(list);
+
+      var currentUser = CommonMethods.GetCurrentUser();
+
+      Assert.Equal(list.Count, list.CountAll(x => x.AssignedToUID == currentUser.UID));
     }
 
 

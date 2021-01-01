@@ -13,6 +13,8 @@ namespace Empiria.Land.Transactions.Adapters {
   /// <summary>Enumerates the different workflow stages for a transaction.</summary>
   public enum TransactionStage {
 
+    MyInbox,
+
     Pending,
 
     InProgress,

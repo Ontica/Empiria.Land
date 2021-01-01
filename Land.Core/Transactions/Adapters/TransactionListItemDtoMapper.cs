@@ -24,6 +24,8 @@ namespace Empiria.Land.Transactions.Adapters {
     static internal TransactionListItemDto Map(LRSTransaction transaction) {
       var dto = new TransactionListItemDto();
 
+      var currentTask = transaction.Workflow.GetCurrentTask();
+
       dto.UID = transaction.UID;
       dto.TransactionID = transaction.UID;
       dto.Type = transaction.TransactionType.Name;
@@ -31,8 +33,10 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.RequestedBy = transaction.RequestedBy;
       dto.PresentationTime = transaction.PresentationTime;
       dto.Stage = "InProgress";
-      dto.Status = transaction.Workflow.CurrentStatus.ToString();
-      dto.StatusName = transaction.Workflow.CurrentStatusName;
+      dto.Status = currentTask.CurrentStatus.ToString();
+      dto.StatusName = currentTask.CurrentStatusName;
+      dto.AssignedToUID = currentTask.Responsible.UID;
+      dto.AssignedToName = currentTask.Responsible.Alias;
 
       return dto;
     }
