@@ -21,9 +21,12 @@ namespace Empiria.Land.Transactions.Adapters {
 
 
     static internal TransactionTypeDto Map(LRSTransactionType transactionType) {
+      var subtypes = transactionType.GetDocumentTypes();
+
       var dto = new TransactionTypeDto {
         UID = transactionType.UID,
-        Name = transactionType.Name
+        Name = transactionType.Name,
+        Subtypes = subtypes.MapToNamedEntityArray(),
       };
 
       return dto;

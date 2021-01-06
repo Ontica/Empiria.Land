@@ -21,6 +21,10 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
+    public NamedEntityDto[] Subtypes {
+      get; internal set;
+    }
+
   }  // class TransactionTypeDto
 
 }  // namespace Empiria.Land.Transactions.Adapters

@@ -7,8 +7,6 @@
 *  Summary  : Test cases for transaction types use cases.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-
 using Xunit;
 
 using Empiria.Land.Transactions.Adapters;
@@ -42,11 +40,20 @@ namespace Empiria.Land.Tests.Transactions {
     #region Facts
 
     [Fact]
-    public void Should_Get_A_Transaction() {
+    public void Should_Get_The_Transaction_Types_List() {
       FixedList<TransactionTypeDto> list = _usecases.GetTransactionTypes();
 
       Assert.NotEmpty(list);
-    }  
+
+      foreach (var item in list) {
+        Assert.NotEmpty(item.UID);
+
+        Assert.NotEmpty(item.Subtypes);
+
+        Assert.All(item.Subtypes, x => { Assert.NotEmpty(x.UID); } );
+      }
+
+    }
 
     #endregion Facts
 
