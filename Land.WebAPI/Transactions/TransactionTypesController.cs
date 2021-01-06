@@ -22,6 +22,30 @@ namespace Empiria.Land.Transactions.WebApi {
     #region Web Apis
 
     [HttpGet]
+    [Route("v5/land/agencies")]
+    public CollectionModel GetAgenciesList() {
+
+      using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> agencies = usecases.GetAgencies();
+
+        return new CollectionModel(this.Request, agencies);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v5/land/recorder-offices")]
+    public CollectionModel GetRecorderOfficesList() {
+
+      using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> offices = usecases.GetRecorderOffices();
+
+        return new CollectionModel(this.Request, offices);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v5/land/transaction-types")]
     public CollectionModel GetTransactionTypesList() {
 

@@ -40,6 +40,26 @@ namespace Empiria.Land.Tests.Transactions {
     #region Facts
 
     [Fact]
+    public void Should_Get_The_Agencies_List() {
+      FixedList<NamedEntityDto> list = _usecases.GetAgencies();
+
+      Assert.NotEmpty(list);
+
+      Assert.All(list, x => { Assert.NotEmpty(x.UID); });
+    }
+
+
+    [Fact]
+    public void Should_Get_The_Recorder_Offices_List() {
+      FixedList<NamedEntityDto> list = _usecases.GetRecorderOffices();
+
+      Assert.NotEmpty(list);
+
+      Assert.All(list, x => { Assert.NotEmpty(x.UID); });
+    }
+
+
+    [Fact]
     public void Should_Get_The_Transaction_Types_List() {
       FixedList<TransactionTypeDto> list = _usecases.GetTransactionTypes();
 
@@ -50,10 +70,10 @@ namespace Empiria.Land.Tests.Transactions {
 
         Assert.NotEmpty(item.Subtypes);
 
-        Assert.All(item.Subtypes, x => { Assert.NotEmpty(x.UID); } );
+        Assert.All(item.Subtypes, x => { Assert.NotEmpty(x.UID); });
       }
-
     }
+
 
     #endregion Facts
 

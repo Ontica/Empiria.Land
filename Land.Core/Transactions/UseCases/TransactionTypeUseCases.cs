@@ -11,7 +11,10 @@ using Empiria.Services;
 
 using Empiria.Land.Transactions.Adapters;
 
+using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
+
+using Empiria.Contacts;
 
 namespace Empiria.Land.Transactions.UseCases {
 
@@ -31,6 +34,20 @@ namespace Empiria.Land.Transactions.UseCases {
     #endregion Constructors and parsers
 
     #region Use cases
+
+    public FixedList<NamedEntityDto> GetAgencies() {
+      FixedList<Contact> list = LRSTransaction.GetAgenciesList();
+
+      return list.MapToNamedEntityList();
+    }
+
+
+    public FixedList<NamedEntityDto> GetRecorderOffices() {
+      FixedList<RecorderOffice> list = RecorderOffice.GetList();
+
+      return list.MapToNamedEntityList();
+    }
+
 
     public FixedList<TransactionTypeDto> GetTransactionTypes() {
       FixedList<LRSTransactionType> list = LRSTransactionType.GetList();
