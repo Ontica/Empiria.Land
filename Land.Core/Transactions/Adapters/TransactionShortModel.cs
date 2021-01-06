@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Transaction Management                     Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
-*  Type     : TransactionListItemDto                     License   : Please read LICENSE.txt file            *
+*  Type     : TransactionShortModel                      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO that holds minimal transaction data to be used as list items.                       *
 *                                                                                                            *
@@ -12,7 +12,7 @@ using System;
 namespace Empiria.Land.Transactions.Adapters {
 
   /// <summary>Output DTO that holds minimal transaction data to be used as list items.</summary>
-  public class TransactionListItemDto {
+  public class TransactionShortModel {
 
     public string UID {
       get; internal set;
@@ -59,6 +59,6 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
-  }  // class TransactionListItemDto
+  }  // class TransactionShortModel
 
 }  // namespace Empiria.Land.Transactions.Adapters

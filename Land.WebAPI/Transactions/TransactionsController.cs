@@ -40,7 +40,7 @@ namespace Empiria.Land.Transactions.WebApi {
       Assertion.AssertObject(searchCommand, "searchCommand");
 
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
-        FixedList<TransactionListItemDto> list = usecases.SearchTransactions(searchCommand);
+        FixedList<TransactionShortModel> list = usecases.SearchTransactions(searchCommand);
 
         return new CollectionModel(this.Request, list);
       }

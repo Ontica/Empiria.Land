@@ -57,7 +57,7 @@ namespace Empiria.Land.Tests.Transactions {
         PageSize = 100,
       };
 
-      FixedList<TransactionListItemDto> list = _usecases.SearchTransactions(myInboxCommand);
+      FixedList<TransactionShortModel> list = _usecases.SearchTransactions(myInboxCommand);
 
       Assert.NotEmpty(list);
 
@@ -74,7 +74,7 @@ namespace Empiria.Land.Tests.Transactions {
         PageSize = 100,
       };
 
-      FixedList<TransactionListItemDto> list = _usecases.SearchTransactions(searchCommand);
+      FixedList<TransactionShortModel> list = _usecases.SearchTransactions(searchCommand);
 
       Assert.NotEmpty(list);
 

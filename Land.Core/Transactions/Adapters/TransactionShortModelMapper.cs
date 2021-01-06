@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Transaction Management                     Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
-*  Type     : TransactionListItemDtoMapper               License   : Please read LICENSE.txt file            *
+*  Type     : TransactionShortModelMapper                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Contains methods to map from LRSTransaction objects to TransactionListItem DTOs.               *
+*  Summary  : Contains methods to map from LRSTransaction objects to TransactionShortModel DTOs.             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -12,17 +12,17 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Transactions.Adapters {
 
-  /// <summary>Contains methods to map from LRSTransaction objects to TransactionListItem DTOs.</summary>
-  static internal class TransactionListItemDtoMapper {
+  /// <summary>Contains methods to map from LRSTransaction objects to TransactionShortModel DTOs.</summary>
+  static internal class TransactionShortModelMapper {
 
-    static internal FixedList<TransactionListItemDto> Map(FixedList<LRSTransaction> list) {
+    static internal FixedList<TransactionShortModel> Map(FixedList<LRSTransaction> list) {
       var mappedItems = list.Select((x) => Map(x));
 
-      return new FixedList<TransactionListItemDto>(mappedItems);
+      return new FixedList<TransactionShortModel>(mappedItems);
     }
 
-    static internal TransactionListItemDto Map(LRSTransaction transaction) {
-      var dto = new TransactionListItemDto();
+    static internal TransactionShortModel Map(LRSTransaction transaction) {
+      var dto = new TransactionShortModel();
 
       var currentTask = transaction.Workflow.GetCurrentTask();
 
@@ -41,6 +41,6 @@ namespace Empiria.Land.Transactions.Adapters {
       return dto;
     }
 
-  }  // class TransactionListItemDtoMapper
+  }  // class TransactionShortModelMapper
 
 }  // namespace Empiria.Land.Transactions.Adapters

@@ -41,7 +41,7 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
-    public FixedList<TransactionListItemDto> SearchTransactions(SearchTransactionCommand searchCommand) {
+    public FixedList<TransactionShortModel> SearchTransactions(SearchTransactionCommand searchCommand) {
       Assertion.AssertObject(searchCommand, "searchCommand");
 
       searchCommand.EnsureIsValid();
@@ -51,7 +51,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       var list = LRSTransaction.GetList(filter, sort, searchCommand.PageSize);
 
-      return TransactionListItemDtoMapper.Map(list);
+      return TransactionShortModelMapper.Map(list);
     }
 
 
