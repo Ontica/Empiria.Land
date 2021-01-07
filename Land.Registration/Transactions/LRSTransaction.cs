@@ -21,6 +21,7 @@ using Empiria.Land.Providers;
 
 using Empiria.Land.Certification;
 using Empiria.Land.Registration.Forms;
+using Empiria.Land.Transactions.Adapters;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -45,6 +46,12 @@ namespace Empiria.Land.Registration.Transactions {
 
     public LRSTransaction(LRSTransactionType transactionType) {
       this.TransactionType = transactionType;
+    }
+
+    public LRSTransaction(TransactionFields fields) {
+      this.EnsureFieldsAreValid(fields);
+
+      this.LoadFields(fields);
     }
 
     static public LRSTransaction Parse(int id) {
@@ -115,11 +122,11 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    [DataField("InstrumentId")]
+    [DataField("InstrumentId", Default = -1)]
     public int InstrumentId {
       get;
       private set;
-    }
+    } = -1;
 
     public Resource BaseResource {
       get {
@@ -588,6 +595,73 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     #endregion Public methods
+
+    #region TransactionFields related methods
+
+    public void Update(TransactionFields fields) {
+      this.UpdateFields(fields);
+    }
+
+    private void EnsureFieldsAreValid(TransactionFields fields) {
+      Assertion.AssertObject(fields, "fields");
+
+      Assertion.AssertObject(fields.TypeUID, "fields.TypeUID");
+      Assertion.AssertObject(fields.SubtypeUID, "fields.SubtypeUID");
+      Assertion.AssertObject(fields.RecorderOfficeUID, "fields.RecorderOfficeUID");
+      Assertion.AssertObject(fields.AgencyUID, "fields.AgencyUID");
+      Assertion.AssertObject(fields.RequestedBy, "fields.RequestedBy");
+    }
+
+    private void LoadFields(TransactionFields fields) {
+      this.TransactionType = LRSTransactionType.Parse(fields.TypeUID);
+      this.DocumentType = LRSDocumentType.Parse(fields.SubtypeUID);
+
+      Assertion.Assert(this.TransactionType.GetDocumentTypes().Contains(this.DocumentType),
+            $"The transaction subtype '{this.TransactionType.Name}' is not related with the " +
+            $"given transaction type '{this.DocumentType.Name}'.");
+
+      this.Agency = Contact.Parse(fields.AgencyUID);
+      this.RecorderOffice = RecorderOffice.Parse(fields.RecorderOfficeUID);
+
+      this.RequestedBy = EmpiriaString.TrimAll(fields.RequestedBy);
+      Assertion.AssertObject(RequestedBy, "fields.RequestedBy");
+
+      this.DocumentDescriptor = EmpiriaString.TrimAll(fields.InstrumentDescriptor);
+
+      this.ExtensionData.Load(fields);
+    }
+
+    private void UpdateFields(TransactionFields fields) {
+      this.TransactionType = PatchField(fields.TypeUID, this.TransactionType);
+      this.DocumentType = PatchField(fields.SubtypeUID, this.DocumentType);
+
+      this.RecorderOffice = PatchField(fields.RecorderOfficeUID, this.RecorderOffice);
+      this.Agency = PatchField(fields.AgencyUID, this.Agency);
+
+      this.RequestedBy = PatchField(fields.RequestedBy, this.RequestedBy);
+      this.RequestedBy = EmpiriaString.TrimAll(this.RequestedBy);
+
+      Assertion.AssertObject(RequestedBy, "RequestedBy");
+
+      this.ExtensionData.Update(fields);
+    }
+
+    private string PatchField(string newValue, string defaultValue) {
+      if (!String.IsNullOrWhiteSpace(newValue)) {
+        return newValue;
+      }
+      return defaultValue;
+    }
+
+    private U PatchField<U>(string newValue, U defaultValue) where U : BaseObject {
+      if (!String.IsNullOrWhiteSpace(newValue)) {
+        return BaseObject.ParseKey<U>(newValue);
+      }
+      return defaultValue;
+    }
+
+    #endregion TransactionFields related methods
+
 
     #region IPayable implementation
 

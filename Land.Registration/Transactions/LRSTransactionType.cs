@@ -33,6 +33,10 @@ namespace Empiria.Land.Registration.Transactions {
       return BaseObject.ParseId<LRSTransactionType>(id);
     }
 
+    static public LRSTransactionType Parse(string uid) {
+      return BaseObject.ParseKey<LRSTransactionType>(uid);
+    }
+
     static public FixedList<LRSTransactionType> GetList() {
       return GeneralObject.GetList<LRSTransactionType>();
     }

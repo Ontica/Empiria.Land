@@ -11,6 +11,7 @@
 using System;
 
 using Empiria.Json;
+using Empiria.Land.Transactions.Adapters;
 using Empiria.Messaging.EMailDelivery;
 
 using Empiria.OnePoint.EPayments;
@@ -137,6 +138,26 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     #endregion Methods
+
+    #region TransactionFields related methods
+
+    internal void Load(TransactionFields fields) {
+      Assertion.AssertObject(fields, "fields");
+
+      if (!String.IsNullOrWhiteSpace(fields.RequestedByEmail)) {
+        this.SendTo = new SendTo(fields.RequestedByEmail);
+      }
+    }
+
+
+    internal void Update(TransactionFields fields) {
+      if (!String.IsNullOrWhiteSpace(fields.RequestedByEmail)) {
+        this.SendTo = new SendTo(fields.RequestedByEmail);
+      }
+    }
+
+
+    #endregion TransactionFields related methods
 
   }  // class LRSTransactionExtData
 

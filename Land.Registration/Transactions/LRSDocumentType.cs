@@ -35,6 +35,10 @@ namespace Empiria.Land.Registration.Transactions {
       return BaseObject.ParseId<LRSDocumentType>(id);
     }
 
+    static public LRSDocumentType Parse(string uid) {
+      return BaseObject.ParseKey<LRSDocumentType>(uid);
+    }
+
     static public FixedList<LRSDocumentType> GetList() {
       return GeneralObject.GetList<LRSDocumentType>();
     }

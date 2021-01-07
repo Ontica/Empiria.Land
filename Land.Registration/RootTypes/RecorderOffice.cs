@@ -36,6 +36,10 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<RecorderOffice>(id);
     }
 
+    static public new RecorderOffice Parse(string uid) {
+      return BaseObject.ParseKey<RecorderOffice>(uid);
+    }
+
     static public FixedList<RecorderOffice> GetList() {
       return MainRecorderOffice.GetLinks<RecorderOffice>("RecorderOffice->SubRecorderOffices",
                                                          (x, y) => x.Number.CompareTo(y.Number));
