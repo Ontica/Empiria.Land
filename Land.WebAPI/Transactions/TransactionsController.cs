@@ -35,6 +35,18 @@ namespace Empiria.Land.Transactions.WebApi {
     }
 
 
+    [HttpDelete]
+    [Route("v5/land/transactions/{transactionUID:length(16)}")]
+    public NoDataModel DeleteTransaction([FromUri] string transactionUID) {
+
+      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
+        usecases.DeleteTransaction(transactionUID);
+
+        return new NoDataModel(this.Request);
+      }
+    }
+
+
     [HttpGet]
     [Route("v5/land/transactions/{transactionUID:length(16)}")]
     public SingleObjectModel GetTransaction([FromUri] string transactionUID) {

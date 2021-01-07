@@ -403,6 +403,16 @@ namespace Empiria.Land.Registration.Transactions {
       return item;
     }
 
+    public bool CanBeDeleted {
+      get {
+        return (this.Workflow.CanBeDeleted);
+      }
+    }
+
+    public void Delete() {
+      this.Workflow.Delete();
+    }
+
     public bool IsFeeWaiverApplicable {
       get {
         return LRSPaymentRules.IsFeeWaiverApplicable(this);
@@ -599,6 +609,8 @@ namespace Empiria.Land.Registration.Transactions {
     #region TransactionFields related methods
 
     public void Update(TransactionFields fields) {
+      Assertion.AssertObject(fields, "fields");
+
       this.UpdateFields(fields);
     }
 
@@ -675,6 +687,7 @@ namespace Empiria.Land.Registration.Transactions {
         return this.ExtensionData.PaymentOrderData;
       }
     }
+
 
     public void SetPaymentOrderData(PaymentOrderDTO paymentOrderData) {
       this.ExtensionData.PaymentOrderData = paymentOrderData;

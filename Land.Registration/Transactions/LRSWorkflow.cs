@@ -137,9 +137,23 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+    public bool CanBeDeleted {
+      get {
+        return (this.CurrentStatus == LRSTransactionStatus.Payment);
+      }
+    }
+
     #endregion Properties
 
     #region Public methods
+
+    internal void Delete() {
+      Assertion.Assert(this.CanBeDeleted, "This transaction can not be deleted.");
+
+      this.Close(LRSTransactionStatus.Deleted,
+            $"Deleted by user {ExecutionServer.CurrentIdentity.User.FullName} on {DateTime.Now}.");
+
+    }
 
 
     public void DeliveredElectronicallyToAgency() {
@@ -355,7 +369,6 @@ namespace Empiria.Land.Registration.Transactions {
         LandMessenger.Notify(_transaction, TransactionEventType.TransactionReturned);
       }
     }
-
 
     public void Undelete() {
       LRSWorkflowTask currentTask = this.GetCurrentTask();

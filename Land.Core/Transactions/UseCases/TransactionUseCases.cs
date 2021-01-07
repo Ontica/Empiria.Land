@@ -44,6 +44,18 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
+    public void DeleteTransaction(string transactionUID) {
+      Assertion.AssertObject(transactionUID, "transactionUID");
+
+      var transaction = LRSTransaction.Parse(transactionUID);
+
+      Assertion.Assert(transaction.CanBeDeleted,
+                       $"Transaction {transaction.UID} can not be deleted.");
+
+      transaction.Delete();
+    }
+
+
     public TransactionDto GetTransaction(string transactionUID) {
       Assertion.AssertObject(transactionUID, "transactionUID");
 

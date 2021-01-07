@@ -43,6 +43,7 @@ namespace Empiria.Land.Tests.Transactions {
 
     #region Facts
 
+
     [Fact]
     public void Should_Create_A_Transaction() {
       TransactionFields fields = TransactionRandomizer.CreateRandomTransactionFields();
@@ -59,6 +60,27 @@ namespace Empiria.Land.Tests.Transactions {
 
       Assert.NotEmpty(created.TransactionID);
       Assert.Equal(ExecutionServer.DateMaxValue, created.PresentationTime);
+    }
+
+
+    [Fact]
+    public void Should_Delete_A_Transaction() {
+      TransactionDto transaction = TransactionRandomizer.GetRandomUpdatableTransaction();
+
+      _usecases.DeleteTransaction(transaction.UID);
+
+      transaction = _usecases.GetTransaction(transaction.UID);
+
+      Assert.Equal("Deleted", transaction.Status);
+
+      var searchCommand = new SearchTransactionCommand {
+        Stage = TransactionStage.Pending,
+        Keywords = transaction.UID
+      };
+
+      FixedList<TransactionShortModel> list = _usecases.SearchTransactions(searchCommand);
+
+      Assert.Empty(list);
     }
 
 
