@@ -35,12 +35,32 @@ namespace Empiria.Land.Tests.Transactions {
       _usecases = TransactionUseCases.UseCaseInteractor();
     }
 
-
-    ~TransactionUseCasesTests() => _usecases.Dispose();
+    ~TransactionUseCasesTests() {
+       _usecases.Dispose();
+    }
 
     #endregion Initialization
 
     #region Facts
+
+    [Fact]
+    public void Should_Create_A_Transaction() {
+      TransactionFields fields = TransactionRandomizer.CreateRandomTransactionFields();
+
+      TransactionDto created = _usecases.CreateTransaction(fields);
+
+      Assert.Equal(fields.TypeUID, created.Type.UID);
+      Assert.Equal(fields.SubtypeUID, created.Subtype.UID);
+      Assert.Equal(fields.RecorderOfficeUID, created.RecorderOffice.UID);
+      Assert.Equal(fields.AgencyUID, created.Agency.UID);
+      Assert.Equal(fields.RequestedBy, created.RequestedBy.Name);
+      Assert.Equal(fields.RequestedByEmail, created.RequestedBy.Email);
+      Assert.Equal(EmpiriaString.TrimAll(fields.InstrumentDescriptor), created.InstrumentDescriptor);
+
+      Assert.NotEmpty(created.TransactionID);
+      Assert.Equal(ExecutionServer.DateMaxValue, created.PresentationTime);
+    }
+
 
     [Fact]
     public void Should_Get_A_Transaction() {
@@ -86,6 +106,30 @@ namespace Empiria.Land.Tests.Transactions {
 
       Assert.True(list.Count <= moreGeneralListItemsCount,
                  "Search transactions by keyword must return the same or fewer items.");
+    }
+
+
+    [Fact]
+    public void Should_Update_A_Transaction() {
+      TransactionDto transaction = TransactionRandomizer.GetRandomUpdatableTransaction();
+
+      var fields = new TransactionFields {
+        SubtypeUID = TransactionRandomizer.GetRandomSubtype(transaction.Type.UID).UID,
+        RequestedBy = EmpiriaString.BuildRandomString(20, 340)
+      };
+
+      TransactionDto updated = _usecases.UpdateTransaction(transaction.UID, fields);
+
+      Assert.Equal(transaction.UID, updated.UID);
+      Assert.Equal(transaction.TransactionID, updated.TransactionID);
+
+      Assert.Equal(transaction.Type.UID, updated.Type.UID);
+      Assert.Equal(fields.SubtypeUID, updated.Subtype.UID);
+
+      Assert.Equal(fields.RequestedBy, updated.RequestedBy.Name);
+      Assert.Equal(transaction.RequestedBy.Email, updated.RequestedBy.Email);
+
+      Assert.Equal(ExecutionServer.DateMaxValue, updated.PresentationTime);
     }
 
     #endregion Facts

@@ -21,6 +21,20 @@ namespace Empiria.Land.Transactions.WebApi {
 
     #region Web Apis
 
+    [HttpPost]
+    [Route("v5/land/transactions")]
+    public SingleObjectModel CreateTransaction([FromBody] TransactionFields fields) {
+
+      base.RequireBody(fields);
+
+      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
+        TransactionDto transactionDto = usecases.CreateTransaction(fields);
+
+        return new SingleObjectModel(this.Request, transactionDto);
+      }
+    }
+
+
     [HttpGet]
     [Route("v5/land/transactions/{transactionUID:length(16)}")]
     public SingleObjectModel GetTransaction([FromUri] string transactionUID) {
@@ -43,6 +57,21 @@ namespace Empiria.Land.Transactions.WebApi {
         FixedList<TransactionShortModel> list = usecases.SearchTransactions(searchCommand);
 
         return new CollectionModel(this.Request, list);
+      }
+    }
+
+
+    [HttpPut, HttpPatch]
+    [Route("v5/land/transactions/{transactionUID:length(16)}")]
+    public SingleObjectModel UpdateTransaction([FromUri] string transactionUID,
+                                               [FromBody] TransactionFields fields) {
+
+      base.RequireBody(fields);
+
+      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
+        TransactionDto transactionDto = usecases.UpdateTransaction(transactionUID, fields);
+
+        return new SingleObjectModel(this.Request, transactionDto);
       }
     }
 

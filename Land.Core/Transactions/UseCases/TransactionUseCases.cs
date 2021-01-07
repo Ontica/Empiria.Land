@@ -12,6 +12,7 @@ using Empiria.Services;
 using Empiria.Land.Transactions.Adapters;
 
 using Empiria.Land.Registration.Transactions;
+using System;
 
 namespace Empiria.Land.Transactions.UseCases {
 
@@ -32,12 +33,23 @@ namespace Empiria.Land.Transactions.UseCases {
 
     #region Use cases
 
+    public TransactionDto CreateTransaction(TransactionFields fields) {
+      Assertion.AssertObject(fields, "fields");
+
+      var transaction = new LRSTransaction(fields);
+
+      transaction.Save();
+
+      return TransactionDtoMapper.Map(transaction);
+    }
+
+
     public TransactionDto GetTransaction(string transactionUID) {
       Assertion.AssertObject(transactionUID, "transactionUID");
 
-      var document = LRSTransaction.Parse(transactionUID);
+      var transaction = LRSTransaction.Parse(transactionUID);
 
-      return TransactionDtoMapper.Map(document);
+      return TransactionDtoMapper.Map(transaction);
     }
 
 
@@ -54,6 +66,19 @@ namespace Empiria.Land.Transactions.UseCases {
       return TransactionShortModelMapper.Map(list);
     }
 
+
+    public TransactionDto UpdateTransaction(string transactionUID, TransactionFields fields) {
+      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.AssertObject(fields, "fields");
+
+      var transaction = LRSTransaction.Parse(transactionUID);
+
+      transaction.Update(fields);
+
+      transaction.Save();
+
+      return TransactionDtoMapper.Map(transaction);
+    }
 
     #endregion Use cases
 

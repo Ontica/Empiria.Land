@@ -15,6 +15,7 @@ using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
 using Empiria.Contacts;
+using System;
 
 namespace Empiria.Land.Transactions.UseCases {
 
@@ -49,11 +50,21 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
+    public TransactionTypeDto GetTransactionType(string transactionTypeUID) {
+      Assertion.AssertObject(transactionTypeUID, "transactionTypeUID");
+
+      var transactionType = LRSTransactionType.Parse(transactionTypeUID);
+
+      return TransactionTypeDtoMapper.Map(transactionType);
+    }
+
+
     public FixedList<TransactionTypeDto> GetTransactionTypes() {
       FixedList<LRSTransactionType> list = LRSTransactionType.GetList();
 
       return TransactionTypeDtoMapper.Map(list);
     }
+
 
     #endregion Use cases
 
