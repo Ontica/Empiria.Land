@@ -461,10 +461,12 @@ namespace Empiria.Land.Registration.Transactions {
       copy.DocumentDescriptor = this.DocumentDescriptor;
       copy.DocumentType = this.DocumentType;
       copy.RequestedBy = this.RequestedBy;
+      copy.Agency = this.Agency;
 
       if (this.IsFeeWaiverApplicable) {
         copy.ApplyFeeWaiver();
       }
+
       copy.Save();
 
       foreach (LRSTransactionItem item in this.Items) {

@@ -70,6 +70,21 @@ namespace Empiria.Land.Tests {
       }
     }
 
+    static internal TransactionDto GetRandomTransaction() {
+      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
+
+        var command = new SearchTransactionCommand {
+          Keywords = "ez"
+        };
+
+        var transactions = usecases.SearchTransactions(command);
+
+        var index = EmpiriaMath.GetRandom(0, transactions.Count - 1);
+
+        return usecases.GetTransaction(transactions[index].UID);
+      }
+    }
+
 
     static internal TransactionTypeDto GetRandomTransactionType() {
       using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {

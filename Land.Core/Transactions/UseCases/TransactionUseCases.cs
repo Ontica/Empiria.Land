@@ -33,6 +33,19 @@ namespace Empiria.Land.Transactions.UseCases {
 
     #region Use cases
 
+    public TransactionDto CloneTransaction(string baseTransactionUID) {
+      Assertion.AssertObject(baseTransactionUID, "baseTransactionUID");
+
+      var transaction = LRSTransaction.Parse(baseTransactionUID);
+
+      var clone = transaction.MakeCopy();
+
+      clone.Save();
+
+      return TransactionDtoMapper.Map(clone);
+    }
+
+
     public TransactionDto CreateTransaction(TransactionFields fields) {
       Assertion.AssertObject(fields, "fields");
 

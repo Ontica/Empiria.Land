@@ -198,6 +198,7 @@ namespace Empiria.Land.Registration.Transactions {
       newItem.OperationValue = this.OperationValue;
       newItem.Quantity = this.Quantity;
       newItem.Notes = this.Notes;
+      newItem.Fee = this.Fee;
 
       return newItem;
     }

@@ -135,6 +135,10 @@ namespace Empiria.Land.Data {
 
 
     static internal void WriteTransactionItem(LRSTransactionItem o) {
+      Assertion.AssertObject(o.ExtensionData, "o.ExtensionData");
+      Assertion.AssertObject(o.Fee, "o.Fee");
+      Assertion.AssertObject(o.Payment, "o.Payment");
+
       var op = DataOperation.Parse("writeLRSTransactionItem", o.Id, o.Transaction.Id,
                                     o.TransactionItemType.Id, o.TreasuryCode.Id,
                                     o.Payment.Id, o.Quantity.Amount, o.Quantity.Unit.Id,

@@ -43,6 +43,25 @@ namespace Empiria.Land.Tests.Transactions {
 
     #region Facts
 
+    [Fact]
+    public void Should_Clone_A_Transaction() {
+      TransactionDto baseTransaction = TransactionRandomizer.GetRandomTransaction();
+
+      var clone = _usecases.CloneTransaction(baseTransaction.UID);
+
+      Assert.Equal("Payment", clone.Status);
+      Assert.NotEmpty(clone.TransactionID);
+      Assert.NotEqual(baseTransaction.TransactionID, clone.TransactionID);
+      Assert.Equal(ExecutionServer.DateMaxValue, clone.PresentationTime);
+
+      Assert.Equal(baseTransaction.Type.UID, clone.Type.UID);
+      Assert.Equal(baseTransaction.Subtype.UID, clone.Subtype.UID);
+      Assert.Equal(baseTransaction.RecorderOffice.UID, clone.RecorderOffice.UID);
+      Assert.Equal(baseTransaction.Agency.UID, clone.Agency.UID);
+      Assert.Equal(baseTransaction.RequestedBy.Name, clone.RequestedBy.Name);
+      Assert.Equal(baseTransaction.RequestedBy.Email, clone.RequestedBy.Email);
+    }
+
 
     [Fact]
     public void Should_Create_A_Transaction() {
