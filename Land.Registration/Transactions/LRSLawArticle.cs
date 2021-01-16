@@ -40,7 +40,9 @@ namespace Empiria.Land.Registration.Transactions {
     #endregion Constructors and parsers
 
     public string FinancialConceptCode {
-      get { return base.NamedKey; }
+      get {
+        return base.ExtendedDataField.Get("FinancialConceptCode", String.Empty);
+      }
     }
 
   } // class LRSLawArticle

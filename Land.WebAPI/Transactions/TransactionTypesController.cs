@@ -34,6 +34,18 @@ namespace Empiria.Land.Transactions.WebApi {
 
 
     [HttpGet]
+    [Route("v5/land/provided-services")]
+    public CollectionModel GetProvidedServices() {
+
+      using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
+        FixedList<ProvidedServiceGroupDto> list = usecases.GetProvidedServices();
+
+        return new CollectionModel(this.Request, list);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v5/land/recorder-offices")]
     public CollectionModel GetRecorderOfficesList() {
 

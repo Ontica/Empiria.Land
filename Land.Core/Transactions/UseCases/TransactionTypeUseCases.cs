@@ -9,13 +9,13 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Empiria.Services;
 
+using Empiria.Contacts;
+
 using Empiria.Land.Transactions.Adapters;
 
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
-using Empiria.Contacts;
-using System;
 
 namespace Empiria.Land.Transactions.UseCases {
 
@@ -43,6 +43,14 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
+    public FixedList<ProvidedServiceGroupDto> GetProvidedServices() {
+      FixedList<RecordingActTypeCategory> list =
+                  RecordingActTypeCategory.GetList("TransactionActTypesCategories.List");
+
+      return ProvidedServiceDtoMapper.Map(list);
+    }
+
+
     public FixedList<NamedEntityDto> GetRecorderOffices() {
       FixedList<RecorderOffice> list = RecorderOffice.GetList();
 
@@ -64,7 +72,6 @@ namespace Empiria.Land.Transactions.UseCases {
 
       return TransactionTypeDtoMapper.Map(list);
     }
-
 
     #endregion Use cases
 

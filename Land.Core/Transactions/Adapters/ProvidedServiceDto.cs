@@ -2,61 +2,33 @@
 *                                                                                                            *
 *  Module   : Transaction Management                     Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
-*  Type     : RequestedServiceDto                        License   : Please read LICENSE.txt file            *
+*  Type     : ProvidedServiceDto                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO that represents data about a transaction requested service.                         *
+*  Summary  : Output DTO that represents data about a government organization provided service.              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria.Land.Transactions.Adapters {
 
-  /// <summary>Output DTO that represents data about a transaction requested service.</summary>
-  public class RequestedServiceDto {
+  /// <summary>Output DTO that represents data about a government organization provided service.</summary>
+  public class ProvidedServiceDto {
 
     public string UID {
       get; internal set;
     }
 
-    public string Type {
+    public string Name {
       get; internal set;
     }
 
-    public string TypeName {
+    public NamedEntityDto Unit {
       get; internal set;
     }
 
-    public string TreasuryCode {
+    public FeeConceptDto[] FeeConcepts {
       get; internal set;
     }
 
-    public string LegalBasis {
-      get; internal set;
-    }
+  }  // class ProvidedServiceDto
 
-    public string Notes {
-      get; internal set;
-    }
-
-    public decimal TaxableBase {
-      get; internal set;
-    }
-
-    public string Unit {
-      get; internal set;
-    }
-
-    public string UnitName {
-      get; internal set;
-    }
-
-    public decimal Quantity {
-      get; internal set;
-    }
-
-    public decimal Subtotal {
-      get; internal set;
-    }
-
-  }  // class RequestedServiceDto
-
-} // namespace Empiria.Land.Transactions.Adapters
+}  // namespace Empiria.Land.Transactions.Adapters

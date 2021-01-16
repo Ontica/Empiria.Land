@@ -167,7 +167,8 @@ namespace Empiria.Land.Registration {
     public FixedList<LRSLawArticle> GetFinancialLawArticles() {
       var json = base.ExtensionData;
 
-      var list = json.GetList<LRSLawArticle>("FinancialConcepts");
+      var list = json.GetList<LRSLawArticle>("FinancialConcepts", false);
+
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
       return list.ToFixedList();

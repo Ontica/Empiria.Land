@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Xunit;
 
+
 using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Transactions.UseCases;
 
@@ -38,6 +39,31 @@ namespace Empiria.Land.Tests.Transactions {
     #endregion Initialization
 
     #region Facts
+
+    [Fact]
+    public void Should_Get_Groups_Of_Provided_Services() {
+      FixedList<ProvidedServiceGroupDto> list = _usecases.GetProvidedServices();
+
+      Assert.NotEmpty(list);
+
+      foreach (var item in list) {
+        Assert.NotEmpty(item.UID);
+
+        Assert.NotEmpty(item.Services);
+
+        Assert.All(item.Services, x => { Assert.NotEmpty(x.UID); });
+
+
+        foreach (var service in item.Services) {
+          Assert.NotEmpty(service.FeeConcepts);
+
+          Assert.All(service.FeeConcepts, x => { Assert.NotEmpty(x.UID); });
+          Assert.All(service.FeeConcepts, x => { Assert.NotEmpty(x.LegalBasis); });
+        }
+
+      }
+    }
+
 
     [Fact]
     public void Should_Get_The_Agencies_List() {
@@ -73,7 +99,6 @@ namespace Empiria.Land.Tests.Transactions {
         Assert.All(item.Subtypes, x => { Assert.NotEmpty(x.UID); });
       }
     }
-
 
     #endregion Facts
 

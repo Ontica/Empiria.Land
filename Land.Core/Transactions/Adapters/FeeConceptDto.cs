@@ -2,30 +2,18 @@
 *                                                                                                            *
 *  Module   : Transaction Management                     Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
-*  Type     : RequestedServiceDto                        License   : Please read LICENSE.txt file            *
+*  Type     : FeeConceptDto                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO that represents data about a transaction requested service.                         *
+*  Summary  : Output DTO with data related to a transaction concept fee.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria.Land.Transactions.Adapters {
 
-  /// <summary>Output DTO that represents data about a transaction requested service.</summary>
-  public class RequestedServiceDto {
+  /// <summary>Output DTO with data related to a transaction concept fee.</summary>
+  public class FeeConceptDto {
 
     public string UID {
-      get; internal set;
-    }
-
-    public string Type {
-      get; internal set;
-    }
-
-    public string TypeName {
-      get; internal set;
-    }
-
-    public string TreasuryCode {
       get; internal set;
     }
 
@@ -33,30 +21,14 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
-    public string Notes {
+    public string FinancialCode {
       get; internal set;
     }
 
-    public decimal TaxableBase {
+    public bool RequiresTaxableBase {
       get; internal set;
     }
 
-    public string Unit {
-      get; internal set;
-    }
+  }  // public class FeeConceptDto
 
-    public string UnitName {
-      get; internal set;
-    }
-
-    public decimal Quantity {
-      get; internal set;
-    }
-
-    public decimal Subtotal {
-      get; internal set;
-    }
-
-  }  // class RequestedServiceDto
-
-} // namespace Empiria.Land.Transactions.Adapters
+}  // namespace Empiria.Land.Transactions.Adapters

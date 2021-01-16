@@ -78,10 +78,17 @@ namespace Empiria.Land.Transactions.Adapters {
 
     private static RequestedServiceDto GetRequestedServiceDto(LRSTransactionItem service) {
       return new RequestedServiceDto {
-        UID = service.UID,
+        UID = service.Id.ToString(),
         Type = service.TransactionItemType.Name,
         TypeName = service.TransactionItemType.DisplayName,
         TreasuryCode = service.TreasuryCode.FinancialConceptCode,
+        LegalBasis = service.TreasuryCode.Name,
+        Notes = service.Notes,
+        Unit = service.Quantity.Unit.UID,
+        UnitName = service.Quantity.Unit.Name,
+        Quantity = service.Quantity.Amount,
+        TaxableBase = service.OperationValue.Amount,
+        Subtotal = service.Fee.Total
       };
     }
 
