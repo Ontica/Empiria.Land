@@ -110,10 +110,10 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
-    //[DataField("Notes")]
+    [DataField("Notes")]
     public string Notes {
       get;
-      set;
+      internal set;
     }
 
     [DataField("TransactionItemExtData")]

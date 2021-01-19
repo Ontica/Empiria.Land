@@ -75,8 +75,9 @@ namespace Empiria.Land.Data {
 
 
     static internal FixedList<LRSTransaction> GetTransactionsList(string filter, string orderBy, int pageSize) {
-      string sql = $"SELECT TOP {pageSize} * " +
-                    "FROM vwLRSTransactionsAndCurrentTrack " +
+      string sql = $"SELECT TOP {pageSize} LRSTransactions.* " +
+                    "FROM LRSTransactions INNER JOIN vwLRSLastTransactionTrack " +
+                    "ON LRSTransactions.TransactionId = vwLRSLastTransactionTrack.TransactionId " +
                    $"WHERE {filter} ORDER BY {orderBy}";
 
       var operation = DataOperation.Parse(sql);
@@ -139,13 +140,13 @@ namespace Empiria.Land.Data {
       Assertion.AssertObject(o.Fee, "o.Fee");
       Assertion.AssertObject(o.Payment, "o.Payment");
 
-      var op = DataOperation.Parse("writeLRSTransactionItem", o.Id, o.Transaction.Id,
+      var op = DataOperation.Parse("writeLRSTransactionItem", o.Id, o.UID, o.Transaction.Id,
                                     o.TransactionItemType.Id, o.TreasuryCode.Id,
                                     o.Payment.Id, o.Quantity.Amount, o.Quantity.Unit.Id,
                                     o.OperationValue.Amount, o.OperationValue.Currency.Id,
                                     o.Fee.RecordingRights, o.Fee.SheetsRevision,
                                     o.Fee.ForeignRecordingFee, o.Fee.Discount.Amount,
-                                    o.ExtensionData.ToString(), o.Status,
+                                    o.Notes, o.ExtensionData.ToString(), o.Status,
                                     o.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(op);
