@@ -125,6 +125,8 @@ namespace Empiria.Land.Tests.Transactions {
       var currentUser = CommonMethods.GetCurrentUser();
 
       Assert.Equal(list.Count, list.CountAll(x => x.AssignedToUID == currentUser.UID));
+
+      Assert.All(list, x => { Assert.True(x.Status != "Deleted"); });
     }
 
 

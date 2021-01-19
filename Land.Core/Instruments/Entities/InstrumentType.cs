@@ -42,7 +42,6 @@ namespace Empiria.Land.Instruments {
 
     #endregion Constructors and parsers
 
-
     public string[] InstrumentKinds {
       get {
         var json = base.ExtensionData;

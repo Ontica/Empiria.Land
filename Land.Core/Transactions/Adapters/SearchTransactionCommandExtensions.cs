@@ -59,14 +59,14 @@ namespace Empiria.Land.Transactions.Adapters {
       }
 
       if (stage != TransactionStage.All) {
-        return GetStageTransactionStatusList(stage);
+        return GetStageTransactionStatusListFilter(stage);
       }
 
-      return GetStageTransactionStatusList(TransactionStage.All);
+      return GetStageTransactionStatusListFilter(TransactionStage.All);
     }
 
 
-    static private string GetStageTransactionStatusList(TransactionStage stage) {
+    static private string GetStageTransactionStatusListFilter(TransactionStage stage) {
       switch (stage) {
         case TransactionStage.All:
           return "TransactionStatus <> 'X'";

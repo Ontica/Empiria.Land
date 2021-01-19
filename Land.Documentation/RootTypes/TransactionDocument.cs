@@ -197,7 +197,6 @@ namespace Empiria.Land.Documentation {
 
     #region Private methods
 
-
     private string BuildFileName() {
       string fileName = this.Transaction.UID;
 
