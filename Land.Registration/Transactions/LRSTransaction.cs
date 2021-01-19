@@ -273,6 +273,13 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
+    public bool AllowsServiceEdition {
+      get {
+        return this.Workflow.CanBeDeleted;
+      }
+    }
+
+
     [DataField("IsArchived")]
     public bool IsArchived {
       get;
@@ -365,14 +372,36 @@ namespace Empiria.Land.Registration.Transactions {
       var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
                                         Money.Zero, Quantity.One,
                                         new LRSFee() { RecordingRights = recordingRights });
-      this.Items.Add(item);
 
-      item.Save();
-
-      this.ClearPaymentOrder();
-
-      return item;
+      return this.PerformAddItem(item);
     }
+
+
+    public LRSTransactionItem AddItem(RequestedServiceFields requestedService) {
+      this.AssertAddItem();
+
+      var service = RecordingActType.Parse(requestedService.ServiceUID);
+      var treasuryCode = LRSLawArticle.Parse(requestedService.FeeConceptUID);
+      var operationValue = Money.Parse(requestedService.TaxableBase);
+      var quantity = Quantity.Parse(Unit.Parse(requestedService.UnitUID),
+                                    requestedService.Quantity);
+
+      var fee = new LRSFee {
+        RecordingRights = requestedService.Subtotal
+      };
+
+      var item = new LRSTransactionItem(this, service, treasuryCode,
+                                        operationValue, quantity, fee);
+
+      if (requestedService.Notes.Length != 0) {
+        item.Notes = requestedService.Notes;
+
+        item.Save();
+      }
+
+      return this.PerformAddItem(item);
+    }
+
 
     public LRSTransactionItem AddItem(RecordingActType transactionItemType,
                                       LRSLawArticle treasuryCode, Money operationValue,
@@ -380,28 +409,33 @@ namespace Empiria.Land.Registration.Transactions {
       this.AssertAddItem();
       var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
                                         operationValue, quantity, fee);
-      this.Items.Add(item);
 
-      item.Save();
-
-      this.ClearPaymentOrder();
-
-      return item;
+      return this.PerformAddItem(item);
     }
+
 
     public LRSTransactionItem AddItem(RecordingActType transactionItemType,
                                       LRSLawArticle treasuryCode, Quantity quantity,
                                       Money operationValue) {
       this.AssertAddItem();
+
       var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
                                         operationValue, quantity);
+
+      return this.PerformAddItem(item);
+    }
+
+
+    private LRSTransactionItem PerformAddItem(LRSTransactionItem item) {
       this.Items.Add(item);
+
       item.Save();
 
       this.ClearPaymentOrder();
 
       return item;
     }
+
 
     public bool CanBeDeleted {
       get {
@@ -689,7 +723,6 @@ namespace Empiria.Land.Registration.Transactions {
         return this.ExtensionData.PaymentOrderData;
       }
     }
-
 
     public void SetPaymentOrderData(PaymentOrderDTO paymentOrderData) {
       this.ExtensionData.PaymentOrderData = paymentOrderData;
