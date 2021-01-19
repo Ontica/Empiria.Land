@@ -8,11 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Threading.Tasks;
 
 using Empiria.Services;
 
 using Empiria.Land.Transactions.Adapters;
-
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Transactions.UseCases {
@@ -52,22 +52,29 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
-    public TransactionDto RequestService(string transactionUID,
-                                         RequestedServiceFields requestedServiceFields) {
+    public async Task<TransactionDto> RequestService(string transactionUID,
+                                                     RequestedServiceFields requestedServiceFields) {
       Assertion.AssertObject(requestedServiceFields, "requestedServiceFields");
 
       requestedServiceFields.AssertValid();
 
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
+      requestedServiceFields.Subtotal = await CalculateServiceSubtotal(requestedServiceFields);
+
       transaction.AddItem(requestedServiceFields);
 
       return TransactionDtoMapper.Map(transaction);
     }
 
+
     #endregion Use cases
 
     #region Helper methods
+
+    private Task<decimal> CalculateServiceSubtotal(RequestedServiceFields requestedServiceFields) {
+      return Task.FromResult(125 * requestedServiceFields.Quantity);
+    }
 
     private LRSTransaction ParseTransaction(string transactionUID) {
       Assertion.AssertObject(transactionUID, "transactionUID");

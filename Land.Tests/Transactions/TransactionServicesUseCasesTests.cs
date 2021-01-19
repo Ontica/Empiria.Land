@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Xunit;
 
@@ -43,13 +44,13 @@ namespace Empiria.Land.Tests.Transactions {
     #region Facts
 
     [Fact]
-    public void Should_Add_A_Service_To_A_Transaction() {
+    public async Task Should_Add_A_Service_To_A_Transaction() {
       TransactionDto transaction = TransactionRandomizer.GetRandomEditableTransaction();
 
       RequestedServiceFields requestedServiceFields =
             TransactionRandomizer.CreateRandomRequestedServiceFields();
 
-      TransactionDto updated = _usecases.RequestService(transaction.UID, requestedServiceFields);
+      TransactionDto updated = await _usecases.RequestService(transaction.UID, requestedServiceFields);
 
       Assert.Equal(transaction.UID, updated.UID);
       Assert.Equal(transaction.RequestedServices.Length + 1, updated.RequestedServices.Length);
