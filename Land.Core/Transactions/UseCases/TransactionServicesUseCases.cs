@@ -13,7 +13,10 @@ using System.Threading.Tasks;
 using Empiria.Services;
 
 using Empiria.Land.Transactions.Adapters;
+using Empiria.Land.Transactions.Providers;
+
 using Empiria.Land.Registration.Transactions;
+
 
 namespace Empiria.Land.Transactions.UseCases {
 
@@ -84,7 +87,7 @@ namespace Empiria.Land.Transactions.UseCases {
       Assertion.AssertObject(transaction,
           $"A transaction with uid = '{transactionUID}' was not found.");
 
-      Assertion.Assert(transaction.AllowsServiceEdition,
+      Assertion.Assert(transaction.ControlData.CanEditServices,
           $"Transaction '{transactionUID}' is in a status that doesn't allow its service's edition.");
 
       return transaction;

@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Json;
 using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
 
@@ -39,16 +40,43 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.InstrumentDescriptor = transaction.DocumentDescriptor;
       dto.RecordableTarget = GetRecordableTargetDto(transaction);
       dto.RequestedServices = GetRequestedServicesDtoArray(transaction);
-      dto.Payment = GetPaymentInfoDto(transaction);
+      dto.PaymentOrder = GetPaymentOrderInfoDto(transaction);
       dto.PresentationTime = transaction.PresentationTime;
       dto.Status = transaction.Workflow.CurrentStatus.ToString();
       dto.StatusName = transaction.Workflow.CurrentStatusName;
+      dto.Actions = GetActions(transaction);
 
       return dto;
     }
 
+    private static dynamic GetActions(LRSTransaction transaction) {
+      var flags = new JsonObject();
 
-    private static PaymentInfoDto GetPaymentInfoDto(LRSTransaction transaction) {
+      TransactionControlData controlData = transaction.ControlData;
+
+      flags.Set("can/edit", controlData.CanEdit);
+      flags.Set("can/delete", controlData.CanDelete);
+      flags.Set("can/submit", controlData.CanSubmit);
+      flags.Set("can/editServices", controlData.CanEditServices);
+      flags.Set("can/generatePaymentOrder", controlData.CanGeneratePaymentOrder);
+      flags.Set("can/editPaymentReceipt", controlData.CanEditPaymentReceipt);
+      flags.Set("can/uploadDocuments", controlData.CanUploadDocuments);
+      flags.Set("can/editInstrument", controlData.CanEditInstrument);
+      flags.Set("can/editRecordingActs", controlData.CanEditRecordingActs);
+      flags.Set("can/editCertificates", controlData.CanEditCertificates);
+
+      flags.Set("show/serviceEditor", controlData.ShowServiceEditor);
+      flags.Set("show/paymentReceiptEditor", controlData.ShowPaymentReceiptEditor);
+      flags.Set("show/uploadDocumentsTab", controlData.ShowUploadDocumentsTab);
+      flags.Set("show/instrumentRecordingTab", controlData.ShowInstrumentRecordingTab);
+      flags.Set("show/certificatesEmissionTab", controlData.ShowCertificatesEmissionTab);
+
+      return flags.ToDictionary();
+    }
+
+    #region Private methods
+
+    static private PaymentInfoDto GetPaymentOrderInfoDto(LRSTransaction transaction) {
       if (transaction.Payments.Count == 0) {
         return null;
       }
@@ -56,14 +84,14 @@ namespace Empiria.Land.Transactions.Adapters {
       var payment = transaction.Payments[0];
 
       return new PaymentInfoDto {
-        ReceiptNo = payment.ReceiptNo,
+        PaymentReceiptNo = payment.ReceiptNo,
         Total = payment.ReceiptTotal,
         MediaUri = String.Empty
       };
     }
 
 
-    private static RequestedServiceDto[] GetRequestedServicesDtoArray(LRSTransaction transaction) {
+    static private RequestedServiceDto[] GetRequestedServicesDtoArray(LRSTransaction transaction) {
       var servicesList = transaction.Items;
 
       RequestedServiceDto[] array = new RequestedServiceDto[servicesList.Count];
@@ -76,7 +104,7 @@ namespace Empiria.Land.Transactions.Adapters {
     }
 
 
-    private static RequestedServiceDto GetRequestedServiceDto(LRSTransactionItem service) {
+    static private RequestedServiceDto GetRequestedServiceDto(LRSTransactionItem service) {
       return new RequestedServiceDto {
         UID = service.UID,
         Type = service.TransactionItemType.Name,
@@ -92,7 +120,8 @@ namespace Empiria.Land.Transactions.Adapters {
       };
     }
 
-    private static RecordableEntityShortModel GetRecordableTargetDto(LRSTransaction transaction) {
+
+    static private RecordableEntityShortModel GetRecordableTargetDto(LRSTransaction transaction) {
       var resource = transaction.BaseResource;
 
       if (resource.IsEmptyInstance) {
@@ -108,7 +137,8 @@ namespace Empiria.Land.Transactions.Adapters {
       };
     }
 
-    private static InstrumentDto GetInstrumentDto(LRSTransaction transaction) {
+
+    static private InstrumentDto GetInstrumentDto(LRSTransaction transaction) {
       if (transaction.InstrumentId == -1) {
         return null;
       }
@@ -119,12 +149,14 @@ namespace Empiria.Land.Transactions.Adapters {
     }
 
 
-    private static RequestedByDto GetRequestedByDto(LRSTransaction transaction) {
+    static private RequestedByDto GetRequestedByDto(LRSTransaction transaction) {
       return new RequestedByDto {
         Name = transaction.RequestedBy,
         Email = transaction.ExtensionData.SendTo.Address
       };
     }
+
+    #endregion Private methods
 
   }  // class TransactionDtoMapper
 

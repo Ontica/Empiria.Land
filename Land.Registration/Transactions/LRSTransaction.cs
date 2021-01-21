@@ -22,6 +22,7 @@ using Empiria.Land.Providers;
 using Empiria.Land.Certification;
 using Empiria.Land.Registration.Forms;
 using Empiria.Land.Transactions.Adapters;
+using Empiria.Land.Transactions;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -272,13 +273,11 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-
-    public bool AllowsServiceEdition {
+    public TransactionControlData ControlData {
       get {
-        return this.Workflow.CanBeDeleted;
+        return new TransactionControlData(this);
       }
     }
-
 
     [DataField("IsArchived")]
     public bool IsArchived {
@@ -434,13 +433,6 @@ namespace Empiria.Land.Registration.Transactions {
       this.ClearPaymentOrder();
 
       return item;
-    }
-
-
-    public bool CanBeDeleted {
-      get {
-        return (this.Workflow.CanBeDeleted);
-      }
     }
 
     public void Delete() {
@@ -709,7 +701,6 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     #endregion TransactionFields related methods
-
 
     #region IPayable implementation
 
