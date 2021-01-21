@@ -291,6 +291,36 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+    public bool HasInstrument {
+      get {
+        return this.InstrumentId != 1;
+      }
+    }
+
+    public bool HasCertificates {
+      get {
+        return this.GetIssuedCertificates().Count != 0;
+      }
+    }
+
+    public bool HasPayment {
+      get {
+        return (this.Payments.Count != 0);
+      }
+    }
+
+    public bool HasPaymentOrder {
+      get {
+        return (this.PaymentOrderData.RouteNumber.Length != 0);
+      }
+    }
+
+    public bool HasServices {
+      get {
+        return this.Items.Count != 0;
+      }
+    }
+
     public LRSPaymentList Payments {
       get {
         return payments.Value;

@@ -26,62 +26,166 @@ namespace Empiria.Land.Transactions {
 
     public bool CanDelete {
       get {
-        return _transaction.Workflow.CanBeDeleted;
+        return CanEdit;
       }
     }
 
     public bool CanEdit {
       get {
-        return _transaction.Workflow.CanBeDeleted;
-      }
-    }
+        if (_transaction.IsNew) {
+          return false;
+        }
 
-    public bool CanSubmit {
-      get {
-        return this.CanEditServices && _transaction.Payments.Count > 0;
-      }
-    }
+        if (IsSubmitted) {
+          return false;
+        }
 
-    public bool CanEditServices {
-      get {
-        return _transaction.Workflow.CanBeDeleted;
-      }
-    }
+        if (_transaction.HasPaymentOrder || _transaction.HasPayment) {
+          return false;
+        }
 
-    public bool CanGeneratePaymentOrder {
-      get {
-        return this.CanEditServices && _transaction.Items.Count > 0;
-      }
-    }
-
-    public bool CanEditPaymentReceipt {
-      get {
-        return _transaction.PaymentOrderData.RouteNumber.Length != 0;
-      }
-    }
-
-    public bool CanUploadDocuments {
-      get {
-        return false;
-      }
-    }
-
-    public bool CanEditInstrument {
-      get {
-        return false;
-      }
-    }
-
-
-    public bool CanEditRecordingActs {
-      get {
-        return false;
+        return true;
       }
     }
 
     public bool CanEditCertificates {
       get {
-        return false;
+        if (!this.ShowCertificatesEmissionTab) {
+          return false;
+        }
+
+        if (!this.IsAssignedToUser) {
+          return false;
+        }
+
+        if (!IsTransactionInStatus(LRSTransactionStatus.Elaboration,
+                                   LRSTransactionStatus.Recording)) {
+          return false;
+        }
+
+        if (!IsUserInRole("LRSTransaction.Register",
+                          "LRSTransaction.Certificates")) {
+          return false;
+        }
+
+        return true;
+      }
+    }
+
+    public bool CanEditInstrument {
+      get {
+        if (!ShowInstrumentRecordingTab) {
+          return false;
+        }
+
+        if (!IsAssignedToUser) {
+          return false;
+        }
+
+        if (!IsTransactionInStatus(LRSTransactionStatus.Recording)) {
+          return false;
+        }
+
+        if (!IsUserInRole("LRSTransaction.Register")) {
+          return false;
+        }
+
+        return true;
+      }
+    }
+
+    public bool CanEditRecordingActs {
+      get {
+        if (!CanEditInstrument) {
+          return false;
+        }
+
+        if (!_transaction.HasInstrument) {
+          return false;
+        }
+
+        // ToDo: if instrument is open and has recording go
+
+        return true;
+      }
+    }
+
+    public bool CanEditPaymentReceipt {
+      get {
+        if (IsSubmitted) {
+          return false;
+        }
+
+        if (!_transaction.HasPaymentOrder) {
+          return false;
+        }
+
+        if (!IsUserInRole("LRSTransaction.ReceiveTransaction")) {
+          return false;
+        }
+
+        return true;
+      }
+    }
+
+    public bool CanEditServices {
+      get {
+        if (!ShowServiceEditor) {
+          return false;
+        }
+
+        if (!CanEdit) {
+          return false;
+        }
+
+        return true;
+      }
+    }
+
+    public bool CanGeneratePaymentOrder {
+      get {
+        if (!CanEditServices) {
+          return false;
+        }
+
+        if (_transaction.IsFeeWaiverApplicable) {
+          return false;
+        }
+
+        return (_transaction.HasServices && !_transaction.HasPaymentOrder);
+      }
+    }
+
+    public bool CanSubmit {
+      get {
+        if (IsSubmitted) {
+          return false;
+        }
+
+        if (!IsUserInRole("LRSTransaction.ReceiveTransaction")) {
+          return false;
+        }
+
+        if (!LRSWorkflowRules.IsEmptyItemsTransaction(_transaction) &&
+            !_transaction.HasPaymentOrder) {
+          return false;
+        }
+
+        return true;
+      }
+    }
+
+    public bool CanUploadDocuments {
+      get {
+        if (!ShowUploadDocumentsTab) {
+          return false;
+        }
+
+        if (!IsTransactionInStatus(LRSTransactionStatus.Digitalization)) {
+          return false;
+        }
+
+        return IsUserInRole("LRSTransaction.Digitalizer");
       }
     }
 
@@ -90,37 +194,104 @@ namespace Empiria.Land.Transactions {
 
     #region Flags used to control the user interface
 
-    public bool ShowServiceEditor {
+    public bool ShowCertificatesEmissionTab {
       get {
-        return true;
-      }
-    }
+        if (!IsSubmitted) {
+          return false;
+        }
 
-    public bool ShowPaymentReceiptEditor {
-      get {
-        return false;
-      }
-    }
+        if (_transaction.HasCertificates) {
+          return true;
+        }
 
-    public bool ShowUploadDocumentsTab {
-      get {
-        return false;
+        return LRSWorkflowRules.IsCertificateIssueCase(_transaction.TransactionType,
+                                                       _transaction.DocumentType);
       }
     }
 
     public bool ShowInstrumentRecordingTab {
       get {
+        if (!IsSubmitted) {
+          return false;
+        }
+
+        if (_transaction.HasInstrument) {
+          return true;
+        }
+
+        return LRSWorkflowRules.IsRecordingDocumentCase(_transaction.TransactionType,
+                                                        _transaction.DocumentType);
+      }
+    }
+
+    public bool ShowPaymentReceiptEditor {
+      get {
+        if (_transaction.HasPayment) {
+          return true;
+        }
+
         return false;
       }
     }
 
-    public bool ShowCertificatesEmissionTab {
+    public bool ShowServiceEditor {
       get {
-        return false;
+        if (_transaction.HasServices) {
+          return true;
+        }
+
+        return !LRSWorkflowRules.IsEmptyItemsTransaction(_transaction);
+      }
+    }
+
+    public bool ShowUploadDocumentsTab {
+      get {
+        if (!IsSubmitted) {
+          return false;
+        }
+
+        // ToDo: Check if has uploaded documents
+
+        return LRSWorkflowRules.IsDigitalizable(_transaction.TransactionType,
+                                                _transaction.DocumentType);
       }
     }
 
     #endregion Flags used to control the user interface
+
+    #region Helper methods
+
+    private bool IsAssignedToUser {
+      get {
+        return (_transaction.Workflow.GetCurrentTask().Responsible.Id == ExecutionServer.CurrentUserId);
+      }
+    }
+
+    private bool IsSubmitted {
+      get {
+        return !IsTransactionInStatus(LRSTransactionStatus.Payment);
+      }
+    }
+
+    private bool IsTransactionInStatus(params LRSTransactionStatus[] statusList) {
+      foreach (var status in statusList) {
+        if (_transaction.Workflow.CurrentStatus == status) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    private bool IsUserInRole(params string[] rolesList) {
+      foreach (var role in rolesList) {
+        if (ExecutionServer.CurrentPrincipal.IsInRole(role)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    #endregion Helper methods
 
   }  // class TransactionControlData
 
