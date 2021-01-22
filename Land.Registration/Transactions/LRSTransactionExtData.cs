@@ -16,6 +16,8 @@ using Empiria.Messaging.EMailDelivery;
 
 using Empiria.OnePoint.EPayments;
 
+using Empiria.Land.Transactions;
+
 namespace Empiria.Land.Registration.Transactions {
 
   /// <summary>Contains extensible data for a land registration system transaction.</summary>
@@ -48,8 +50,12 @@ namespace Empiria.Land.Registration.Transactions {
 
       extData.RFC = json.Get<string>("RFC", String.Empty);
 
-      if (json.Contains("PaymentOrder")) {
-        extData.PaymentOrderData = PaymentOrderDTO.Parse(json.Slice("PaymentOrder"));
+      if (json.Contains("paymentOrder")) {
+        extData.PaymentOrder = PaymentOrder.Parse(json.Slice("paymentOrder"));
+      }
+
+      if (json.Contains("formerPaymentOrder")) {
+        extData.FormerPaymentOrderData = FormerPaymentOrderDTO.Parse(json.Slice("formerPaymentOrder"));
       }
 
       if (json.Contains("ExternalTransaction")) {
@@ -91,17 +97,22 @@ namespace Empiria.Land.Registration.Transactions {
     } = LRSExternalTransaction.Empty;
 
 
-    public PaymentOrderDTO PaymentOrderData {
+    public PaymentOrder PaymentOrder {
       get;
       internal set;
-    } = PaymentOrderDTO.Empty;
+    } = PaymentOrder.Empty;
+
+
+    public FormerPaymentOrderDTO FormerPaymentOrderData {
+      get;
+      internal set;
+    } = FormerPaymentOrderDTO.Empty;
 
 
     public SendTo SendTo {
       get;
       set;
     } = SendTo.Empty;
-
 
     #endregion Properties
 
@@ -118,8 +129,12 @@ namespace Empiria.Land.Registration.Transactions {
 
       json.AddIfValue("RFC", this.RFC);
 
-      if (this.PaymentOrderData.RouteNumber != String.Empty) {
-        json.Add("PaymentOrder", this.PaymentOrderData.ToJson());
+      if (this.FormerPaymentOrderData.RouteNumber != String.Empty) {
+        json.Add("formerPaymentOrder", this.FormerPaymentOrderData.ToJson());
+      }
+
+      if (!this.PaymentOrder.IsEmpty) {
+        json.Add("paymentOrder", this.PaymentOrder.ToJson());
       }
 
       if (!this.ExternalTransaction.IsEmptyInstance) {

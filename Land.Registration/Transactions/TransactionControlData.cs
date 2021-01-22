@@ -230,7 +230,7 @@ namespace Empiria.Land.Transactions {
           return true;
         }
 
-        return false;
+        return _transaction.HasPaymentOrder;
       }
     }
 

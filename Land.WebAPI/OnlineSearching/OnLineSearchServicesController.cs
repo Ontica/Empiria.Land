@@ -411,9 +411,9 @@ namespace Empiria.Land.WebApi {
                                             "Este trámite no ha sido ingresado en ventanilla.", "warning-status-text"));
       }
 
-      if (!transaction.PaymentOrderData.IsEmptyInstance) {
+      if (!transaction.FormerPaymentOrderData.IsEmptyInstance) {
         propertyBag.Add(new PropertyBagItem("Línea de captura",
-                                            transaction.PaymentOrderData.RouteNumber, "bold-text"));
+                                            transaction.FormerPaymentOrderData.RouteNumber, "bold-text"));
       } else {
         propertyBag.Add(new PropertyBagItem("Boleta de pago", transaction.Payments.ReceiptNumbers));
       }
@@ -692,9 +692,9 @@ namespace Empiria.Land.WebApi {
       items.Add(new PropertyBagItem("Solicitado por", transaction.RequestedBy));
       items.Add(new PropertyBagItem("Fecha de presentación", GetDateTime(transaction.PresentationTime), "date-time"));
 
-      if (!transaction.PaymentOrderData.IsEmptyInstance) {
+      if (!transaction.FormerPaymentOrderData.IsEmptyInstance) {
         items.Add(new PropertyBagItem("Línea de captura",
-                                       transaction.PaymentOrderData.RouteNumber, "bold-text"));
+                                       transaction.FormerPaymentOrderData.RouteNumber, "bold-text"));
       } else {
         items.Add(new PropertyBagItem("Boleta de pago", transaction.Payments.ReceiptNumbers));
       }

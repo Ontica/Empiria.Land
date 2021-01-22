@@ -147,11 +147,11 @@ namespace Empiria.Land.Providers {
 
 
     public IFilingTransaction SetPaymentOrder(IPayable transaction,
-                                              PaymentOrderDTO paymentOrderData) {
+                                              FormerPaymentOrderDTO paymentOrderData) {
       Assertion.AssertObject(transaction, "transaction");
       Assertion.AssertObject(paymentOrderData, "paymentOrderData");
 
-      transaction.SetPaymentOrderData(paymentOrderData);
+      transaction.SetFormerPaymentOrderData(paymentOrderData);
 
       return ConvertToDTOInterface((LRSTransaction) transaction);
     }
@@ -168,12 +168,12 @@ namespace Empiria.Land.Providers {
     }
 
 
-    public PaymentOrderDTO TryGetPaymentOrderData(string transactionUID) {
+    public FormerPaymentOrderDTO TryGetPaymentOrderData(string transactionUID) {
       Assertion.AssertObject(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      var paymentOrder = transaction.TryGetPaymentOrderData();
+      var paymentOrder = ((IPayable) transaction).TryGetFormerPaymentOrderData();
 
       if (paymentOrder != null) {
         paymentOrder.PaymentTotal = transaction.Items.TotalFee.Total;

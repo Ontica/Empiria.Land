@@ -32,7 +32,7 @@ namespace Empiria.Land.Tests.Providers {
 
       IPayable payable = LRSTransaction.Parse(_PAYABLE_UID);
 
-      PaymentOrderDTO paymentOrderData = await EPaymentsUseCases.RequestPaymentOrderData(payable);
+      FormerPaymentOrderDTO paymentOrderData = await EPaymentsUseCases.RequestPaymentOrderData(payable);
 
       Assert.Equal(_PAYMENT_ORDER_ROUTE_NUMBER_LENGTH, paymentOrderData.RouteNumber.Length);
     }

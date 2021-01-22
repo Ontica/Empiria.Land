@@ -24,6 +24,8 @@ using Empiria.Land.Registration.Forms;
 using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Transactions;
 
+using Empiria.Land.Integration.PaymentServices;
+
 namespace Empiria.Land.Registration.Transactions {
 
   /// <summary>Represents a transaction or process on a land registration office.</summary>
@@ -311,7 +313,8 @@ namespace Empiria.Land.Registration.Transactions {
 
     public bool HasPaymentOrder {
       get {
-        return (this.PaymentOrderData.RouteNumber.Length != 0);
+        return (!this.PaymentOrder.IsEmpty ||
+                this.FormerPaymentOrderData.RouteNumber.Length != 0);
       }
     }
 
@@ -735,28 +738,44 @@ namespace Empiria.Land.Registration.Transactions {
     #region IPayable implementation
 
     private void ClearPaymentOrder() {
-      this.SetPaymentOrderData(PaymentOrderDTO.Empty);
+      this.SetPaymentOrder(PaymentOrder.Empty);
+      ((IPayable) this).SetFormerPaymentOrderData(FormerPaymentOrderDTO.Empty);
     }
 
 
-    public PaymentOrderDTO PaymentOrderData {
+    public PaymentOrder PaymentOrder {
       get {
-        return this.ExtensionData.PaymentOrderData;
+        return this.ExtensionData.PaymentOrder;
       }
     }
 
-    public void SetPaymentOrderData(PaymentOrderDTO paymentOrderData) {
-      this.ExtensionData.PaymentOrderData = paymentOrderData;
+    public FormerPaymentOrderDTO FormerPaymentOrderData {
+      get {
+        return this.ExtensionData.FormerPaymentOrderData;
+      }
+    }
+
+    /// <summary>Version 5. Zacatecas.</summary>
+    public void SetPaymentOrder(IPaymentOrder paymentOrder) {
+      this.ExtensionData.PaymentOrder = new PaymentOrder(paymentOrder);
 
       if (!this.IsNew) {
         this.Save();
       }
     }
 
+    /// <summary>Version 4. Tlaxcala.</summary>
+    void IPayable.SetFormerPaymentOrderData(FormerPaymentOrderDTO paymentOrderData) {
+      this.ExtensionData.FormerPaymentOrderData = paymentOrderData;
 
-    public PaymentOrderDTO TryGetPaymentOrderData() {
-      if (!this.ExtensionData.PaymentOrderData.IsEmptyInstance) {
-        return this.ExtensionData.PaymentOrderData;
+      if (!this.IsNew) {
+        this.Save();
+      }
+    }
+
+    FormerPaymentOrderDTO IPayable.TryGetFormerPaymentOrderData() {
+      if (!this.ExtensionData.FormerPaymentOrderData.IsEmptyInstance) {
+        return this.ExtensionData.FormerPaymentOrderData;
       } else {
         return null;
       }

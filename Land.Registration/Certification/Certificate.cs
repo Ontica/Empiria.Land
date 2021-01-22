@@ -319,8 +319,8 @@ namespace Empiria.Land.Certification {
       var seal = new StringBuilder("||1|" + this.UID +
                                       "|" + this.Transaction.UID);
 
-      if (!this.Transaction.PaymentOrderData.IsEmptyInstance) {
-        seal.Append("|" + this.Transaction.PaymentOrderData.RouteNumber);
+      if (!this.Transaction.FormerPaymentOrderData.IsEmptyInstance) {
+        seal.Append("|" + this.Transaction.FormerPaymentOrderData.RouteNumber);
       } else {
         seal.Append("|" + this.Transaction.Payments.ReceiptNumbers);
       }
