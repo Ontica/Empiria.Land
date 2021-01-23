@@ -65,6 +65,18 @@ namespace Empiria.Land.Tests.Transactions {
 
 
     [Fact]
+    public async Task Should_Generate_A_Transaction_Payment_Order() {
+      TransactionDto transaction = TransactionRandomizer.GetRandomEditableTransaction();
+
+      TransactionDto withPaymentOrder = await _usecases.GeneratePaymentOrder(transaction.UID);
+
+      Assert.Equal(transaction.UID, withPaymentOrder.UID);
+      Assert.False(String.IsNullOrWhiteSpace(withPaymentOrder.PaymentOrder.UID));
+
+    }
+
+
+    [Fact]
     public void Should_Delete_A_Transaction_Service() {
       var (transaction, toDeleteService) =
                   TransactionRandomizer.GetAnEditableTransactionWithARequestedService();

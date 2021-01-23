@@ -42,6 +42,9 @@ namespace Empiria.Land.Transactions.UseCases {
 
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
+      Assertion.Assert(transaction.ControlData.CanEditServices,
+                       $"Can not delete services for transaction '{transactionUID}'.");
+
       LRSTransactionItem item = transaction.Items.Find((x) => x.UID == requestedServiceUID);
 
       Assertion.AssertObject(item,
@@ -55,6 +58,26 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
+    public async Task<TransactionDto> GeneratePaymentOrder(string transactionUID) {
+      LRSTransaction transaction = ParseTransaction(transactionUID);
+
+      Assertion.Assert(!transaction.HasPaymentOrder,
+          $"A payment order has already been generated for transaction '{transactionUID}'.");
+
+      Assertion.Assert(transaction.ControlData.CanGeneratePaymentOrder,
+          "Payment order can not be generated because business rules restrict it, " +
+          "or the user account does not has enough privileges.");
+
+      var connector = new PaymentServicesConnector();
+
+      var paymentOrderData = await connector.GeneratePaymentOrder(transaction);
+
+      transaction.SetPaymentOrder(paymentOrderData);
+
+      return TransactionDtoMapper.Map(transaction);
+    }
+
+
     public async Task<TransactionDto> RequestService(string transactionUID,
                                                      RequestedServiceFields requestedServiceFields) {
       Assertion.AssertObject(requestedServiceFields, "requestedServiceFields");
@@ -62,6 +85,9 @@ namespace Empiria.Land.Transactions.UseCases {
       requestedServiceFields.AssertValid();
 
       LRSTransaction transaction = ParseTransaction(transactionUID);
+
+      Assertion.Assert(transaction.ControlData.CanEditServices,
+                 $"Can not request services on transaction '{transactionUID}'.");
 
       requestedServiceFields.Subtotal = await CalculateServiceSubtotal(requestedServiceFields);
 
@@ -86,9 +112,6 @@ namespace Empiria.Land.Transactions.UseCases {
 
       Assertion.AssertObject(transaction,
           $"A transaction with uid = '{transactionUID}' was not found.");
-
-      Assertion.Assert(transaction.ControlData.CanEditServices,
-          $"Transaction '{transactionUID}' is in a status that doesn't allow its service's edition.");
 
       return transaction;
     }

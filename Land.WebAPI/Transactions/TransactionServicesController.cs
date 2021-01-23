@@ -36,6 +36,18 @@ namespace Empiria.Land.Transactions.WebApi {
 
 
     [HttpPost]
+    [Route("v5/land/transactions/{transactionUID:length(16)}/generate-payment-order")]
+    public async Task<SingleObjectModel> GeneratePaymentOrder([FromUri] string transactionUID) {
+
+      using (var usecases = TransactionServicesUseCases.UseCaseInteractor()) {
+        TransactionDto transactionDto = await usecases.GeneratePaymentOrder(transactionUID);
+
+        return new SingleObjectModel(this.Request, transactionDto);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v5/land/transactions/{transactionUID:length(16)}/requested-services")]
     public async Task<SingleObjectModel> RequestService([FromUri] string transactionUID,
                                                         [FromBody] RequestedServiceFields fields) {

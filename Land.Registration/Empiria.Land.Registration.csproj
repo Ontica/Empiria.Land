@@ -65,4 +65,7 @@
     <ProjectReference Include="..\..\onepoint\EFiling.Core\Empiria.OnePoint.EFiling.csproj" />
     <ProjectReference Include="..\..\onepoint\EPayments.Core\Empiria.OnePoint.EPayments.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Land.Integration\Empiria.Land.Integration.csproj" />
+  </ItemGroup>
 </Project>

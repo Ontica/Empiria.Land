@@ -65,7 +65,7 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
-    public PaymentInfoDto Payment {
+    public PaymentOrder PaymentOrder {
       get; internal set;
     }
 

@@ -65,4 +65,10 @@
     <ProjectReference Include="..\..\extensions\Geography\Empiria.Geography.csproj" />
     <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Transactions\Entities\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Land.Integration\Empiria.Land.Integration.csproj" />
+  </ItemGroup>
 </Project>

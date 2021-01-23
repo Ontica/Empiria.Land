@@ -76,18 +76,12 @@ namespace Empiria.Land.Transactions.Adapters {
 
     #region Private methods
 
-    static private PaymentInfoDto GetPaymentOrderInfoDto(LRSTransaction transaction) {
-      if (transaction.Payments.Count == 0) {
+    static private PaymentOrder GetPaymentOrderInfoDto(LRSTransaction transaction) {
+      if (!transaction.HasPaymentOrder) {
         return null;
       }
 
-      var payment = transaction.Payments[0];
-
-      return new PaymentInfoDto {
-        PaymentReceiptNo = payment.ReceiptNo,
-        Total = payment.ReceiptTotal,
-        MediaUri = String.Empty
-      };
+      return transaction.PaymentOrder;
     }
 
 
