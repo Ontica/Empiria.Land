@@ -77,7 +77,7 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
-    public dynamic Actions {
+    public TransactionControlDataDto Actions {
       get; internal set;
     }
 

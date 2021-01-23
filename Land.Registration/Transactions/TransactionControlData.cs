@@ -24,6 +24,15 @@ namespace Empiria.Land.Transactions {
 
     #region User's action flags
 
+    public bool CanCancelPaymentOrder {
+      get {
+        if (IsSubmitted) {
+          return false;
+        }
+        return (_transaction.HasPaymentOrder && !_transaction.HasPayment);
+      }
+    }
+
     public bool CanDelete {
       get {
         return CanEdit;

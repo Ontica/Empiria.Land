@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Json;
 using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
 
@@ -44,37 +43,38 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.PresentationTime = transaction.PresentationTime;
       dto.Status = transaction.Workflow.CurrentStatus.ToString();
       dto.StatusName = transaction.Workflow.CurrentStatusName;
-      dto.Actions = GetActions(transaction);
+      dto.Actions = GetControlDataDto(transaction);
 
       return dto;
     }
 
-    private static dynamic GetActions(LRSTransaction transaction) {
-      var flags = new JsonObject();
+    #region Private methods
 
+    static private TransactionControlDataDto GetControlDataDto(LRSTransaction transaction) {
       TransactionControlData controlData = transaction.ControlData;
+      TransactionControlDataDto dto = new TransactionControlDataDto();
 
-      flags.Set("can/edit", controlData.CanEdit);
-      flags.Set("can/delete", controlData.CanDelete);
-      flags.Set("can/submit", controlData.CanSubmit);
-      flags.Set("can/editServices", controlData.CanEditServices);
-      flags.Set("can/generatePaymentOrder", controlData.CanGeneratePaymentOrder);
-      flags.Set("can/editPaymentReceipt", controlData.CanEditPaymentReceipt);
-      flags.Set("can/uploadDocuments", controlData.CanUploadDocuments);
-      flags.Set("can/editInstrument", controlData.CanEditInstrument);
-      flags.Set("can/editRecordingActs", controlData.CanEditRecordingActs);
-      flags.Set("can/editCertificates", controlData.CanEditCertificates);
+      dto.Can.Edit = controlData.CanEdit;
+      dto.Can.Delete = controlData.CanDelete;
+      dto.Can.Submit = controlData.CanSubmit;
+      dto.Can.EditServices = controlData.CanEditServices;
+      dto.Can.GeneratePaymentOrder = controlData.CanGeneratePaymentOrder;
+      dto.Can.CancelPaymentOrder = controlData.CanCancelPaymentOrder;
+      dto.Can.EditPaymentReceipt = controlData.CanEditPaymentReceipt;
+      dto.Can.UploadDocuments = controlData.CanUploadDocuments;
+      dto.Can.EditInstrument = controlData.CanEditInstrument;
+      dto.Can.EditRecordingActs = controlData.CanEditRecordingActs;
+      dto.Can.EditCertificates = controlData.CanEditCertificates;
 
-      flags.Set("show/serviceEditor", controlData.ShowServiceEditor);
-      flags.Set("show/paymentReceiptEditor", controlData.ShowPaymentReceiptEditor);
-      flags.Set("show/uploadDocumentsTab", controlData.ShowUploadDocumentsTab);
-      flags.Set("show/instrumentRecordingTab", controlData.ShowInstrumentRecordingTab);
-      flags.Set("show/certificatesEmissionTab", controlData.ShowCertificatesEmissionTab);
+      dto.Show.ServiceEditor = controlData.ShowServiceEditor;
+      dto.Show.PaymentReceiptEditor = controlData.ShowPaymentReceiptEditor;
+      dto.Show.UploadDocumentsTab = controlData.ShowUploadDocumentsTab;
+      dto.Show.InstrumentRecordingTab = controlData.ShowInstrumentRecordingTab;
+      dto.Show.CertificatesEmissionTab = controlData.ShowCertificatesEmissionTab;
 
-      return flags.ToDictionary();
+      return dto;
     }
 
-    #region Private methods
 
     static private PaymentOrder GetPaymentOrderInfoDto(LRSTransaction transaction) {
       if (!transaction.HasPaymentOrder) {
