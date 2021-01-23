@@ -399,7 +399,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public LRSTransactionItem AddItem(RecordingActType transactionItemType,
                                       LRSLawArticle treasuryCode, decimal recordingRights) {
-      this.AssertAddItem();
+      this.EnsureCanEditServices();
 
       var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
                                         Money.Zero, Quantity.One,
@@ -410,7 +410,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     public LRSTransactionItem AddItem(RequestedServiceFields requestedService) {
-      this.AssertAddItem();
+      this.EnsureCanEditServices();
 
       var service = RecordingActType.Parse(requestedService.ServiceUID);
       var treasuryCode = LRSLawArticle.Parse(requestedService.FeeConceptUID);
@@ -438,7 +438,7 @@ namespace Empiria.Land.Registration.Transactions {
     public LRSTransactionItem AddItem(RecordingActType transactionItemType,
                                       LRSLawArticle treasuryCode, Money operationValue,
                                       Quantity quantity, LRSFee fee) {
-      this.AssertAddItem();
+      this.EnsureCanEditServices();
       var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
                                         operationValue, quantity, fee);
 
@@ -449,7 +449,7 @@ namespace Empiria.Land.Registration.Transactions {
     public LRSTransactionItem AddItem(RecordingActType transactionItemType,
                                       LRSLawArticle treasuryCode, Quantity quantity,
                                       Money operationValue) {
-      this.AssertAddItem();
+      this.EnsureCanEditServices();
 
       var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
                                         operationValue, quantity);
@@ -462,8 +462,6 @@ namespace Empiria.Land.Registration.Transactions {
       this.Items.Add(item);
 
       item.Save();
-
-      this.ClearPaymentOrder();
 
       return item;
     }
@@ -508,10 +506,10 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     public void RemoveItem(LRSTransactionItem item) {
+      EnsureCanEditServices();
+
       this.Items.Remove(item);
       item.Delete();
-
-      this.ClearPaymentOrder();
     }
 
     public LRSTransaction MakeCopy() {
@@ -737,7 +735,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region IPayable implementation
 
-    private void ClearPaymentOrder() {
+    public void CancelPaymentOrder() {
       this.SetPaymentOrder(PaymentOrder.Empty);
       ((IPayable) this).SetFormerPaymentOrderData(FormerPaymentOrderDTO.Empty);
     }
@@ -755,8 +753,9 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    /// <summary>Version 5. Zacatecas.</summary>
     public void SetPaymentOrder(IPaymentOrder paymentOrder) {
+      Assertion.AssertObject(paymentOrder, "paymentOrder");
+
       this.ExtensionData.PaymentOrder = new PaymentOrder(paymentOrder);
 
       if (!this.IsNew) {
@@ -764,7 +763,8 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    /// <summary>Version 4. Tlaxcala.</summary>
+
+    /// <summary>Former Version 4. Tlaxcala.</summary>
     void IPayable.SetFormerPaymentOrderData(FormerPaymentOrderDTO paymentOrderData) {
       this.ExtensionData.FormerPaymentOrderData = paymentOrderData;
 
@@ -772,6 +772,7 @@ namespace Empiria.Land.Registration.Transactions {
         this.Save();
       }
     }
+
 
     FormerPaymentOrderDTO IPayable.TryGetFormerPaymentOrderData() {
       if (!this.ExtensionData.FormerPaymentOrderData.IsEmptyInstance) {
@@ -790,12 +791,6 @@ namespace Empiria.Land.Registration.Transactions {
         this.AddItem(item, item.GetFinancialLawArticles()[0],
                      BaseSalaryValue * item.GetFeeUnits());
       }
-      this.ClearPaymentOrder();
-    }
-
-    private void AssertAddItem() {
-      Assertion.Assert(this.Workflow.CurrentStatus == LRSTransactionStatus.Payment,
-              "The transaction's status doesn't permit aggregate new services or products.");
     }
 
     private string BuildControlNumber() {
@@ -809,6 +804,15 @@ namespace Empiria.Land.Registration.Transactions {
 
       //return current.ToString();
     }
+
+
+    private void EnsureCanEditServices() {
+      Assertion.Assert(this.ControlData.CanEditServices,
+          "The transaction is in a status that doesn't permit aggregate new services or products," +
+          "or the user doesn't have enough privileges.");
+
+    }
+
 
     private void UpdateComplexityIndex() {
       this.ComplexityIndex = 0;

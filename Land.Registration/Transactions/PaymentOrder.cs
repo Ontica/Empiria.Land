@@ -24,7 +24,7 @@ namespace Empiria.Land.Transactions {
     #region Constructors and parsers
 
     private PaymentOrder() {
-
+      this._attributes = new Dictionary<string, object>();
     }
 
 

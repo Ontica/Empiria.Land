@@ -57,6 +57,20 @@ namespace Empiria.Land.Transactions.UseCases {
       return TransactionDtoMapper.Map(transaction);
     }
 
+    public Task<TransactionDto> CancelPaymentOrder(string transactionUID) {
+      LRSTransaction transaction = ParseTransaction(transactionUID);
+
+      Assertion.Assert(transaction.HasPaymentOrder,
+                $"Transaction '{transactionUID}' has not a payment order.");
+
+      Assertion.Assert(transaction.ControlData.CanCancelPaymentOrder,
+            "The payment order can not be canceled because business rules restrict it, " +
+            "or the user account does not has enough privileges.");
+
+      transaction.CancelPaymentOrder();
+
+      return Task.FromResult(TransactionDtoMapper.Map(transaction));
+    }
 
     public async Task<TransactionDto> GeneratePaymentOrder(string transactionUID) {
       LRSTransaction transaction = ParseTransaction(transactionUID);
@@ -65,14 +79,14 @@ namespace Empiria.Land.Transactions.UseCases {
           $"A payment order has already been generated for transaction '{transactionUID}'.");
 
       Assertion.Assert(transaction.ControlData.CanGeneratePaymentOrder,
-          "Payment order can not be generated because business rules restrict it, " +
+          "The payment order can not be generated because business rules restrict it, " +
           "or the user account does not has enough privileges.");
 
       var connector = new PaymentServicesConnector();
 
-      var paymentOrderData = await connector.GeneratePaymentOrder(transaction);
+      var paymentOrder = await connector.GeneratePaymentOrder(transaction);
 
-      transaction.SetPaymentOrder(paymentOrderData);
+      transaction.SetPaymentOrder(paymentOrder);
 
       return TransactionDtoMapper.Map(transaction);
     }

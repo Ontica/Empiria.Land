@@ -22,6 +22,18 @@ namespace Empiria.Land.Transactions.WebApi {
 
     #region Web Apis
 
+    [HttpPost]
+    [Route("v5/land/transactions/{transactionUID:length(16)}/cancel-payment-order")]
+    public async Task<SingleObjectModel> CancelPaymentOrder([FromUri] string transactionUID) {
+
+      using (var usecases = TransactionServicesUseCases.UseCaseInteractor()) {
+        TransactionDto transactionDto = await usecases.CancelPaymentOrder(transactionUID);
+
+        return new SingleObjectModel(this.Request, transactionDto);
+      }
+    }
+
+
     [HttpDelete]
     [Route("v5/land/transactions/{transactionUID:length(16)}/requested-services/{requestedServiceUID:guid}")]
     public SingleObjectModel DeleteService([FromUri] string transactionUID,

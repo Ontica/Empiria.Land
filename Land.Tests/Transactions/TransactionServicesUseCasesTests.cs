@@ -44,8 +44,8 @@ namespace Empiria.Land.Tests.Transactions {
     #region Facts
 
     [Fact]
-    public async Task Should_Add_A_Service_To_A_Transaction() {
-      TransactionDto transaction = TransactionRandomizer.GetRandomEditableTransaction();
+    public async Task Should_Add_A_Transaction_Service() {
+      TransactionDto transaction = TransactionRandomizer.TryGetAServiceEditableTransaction(false);
 
       RequestedServiceFields requestedServiceFields =
             TransactionRandomizer.CreateRandomRequestedServiceFields();
@@ -65,25 +65,39 @@ namespace Empiria.Land.Tests.Transactions {
 
 
     [Fact]
-    public async Task Should_Generate_A_Transaction_Payment_Order() {
-      TransactionDto transaction = TransactionRandomizer.GetRandomEditableTransaction();
+    public async Task Should_Generate_And_Then_Cancel_A_Transaction_Payment_Order() {
+      TransactionDto transaction = TransactionRandomizer.TryGetAServiceEditableTransaction(true);
+
+      if (transaction == null) {
+        Assert.True(false, "I didn't find any transaction ready to payment order generation.");
+      }
 
       TransactionDto withPaymentOrder = await _usecases.GeneratePaymentOrder(transaction.UID);
 
       Assert.Equal(transaction.UID, withPaymentOrder.UID);
       Assert.False(String.IsNullOrWhiteSpace(withPaymentOrder.PaymentOrder.UID));
+      Assert.True(withPaymentOrder.PaymentOrder.IssueTime >= DateTime.Now.AddMinutes(-1));
+      Assert.False(withPaymentOrder.Actions.Can.GeneratePaymentOrder);
+      Assert.True(withPaymentOrder.Actions.Can.CancelPaymentOrder);
 
+      TransactionDto withCanceledPaymentOrder = await _usecases.CancelPaymentOrder(transaction.UID);
+
+      Assert.Equal(transaction.UID, withCanceledPaymentOrder.UID);
+      Assert.Null(withCanceledPaymentOrder.PaymentOrder);
+      Assert.True(withCanceledPaymentOrder.Actions.Can.GeneratePaymentOrder);
+      Assert.False(withCanceledPaymentOrder.Actions.Can.CancelPaymentOrder);
     }
 
 
     [Fact]
     public void Should_Delete_A_Transaction_Service() {
-      var (transaction, toDeleteService) =
-                  TransactionRandomizer.GetAnEditableTransactionWithARequestedService();
+      var transaction = TransactionRandomizer.TryGetAServiceEditableTransaction(true);
 
       if (transaction == null) {
         Assert.True(false, "I didn't find any editable transaction with one or more services to delete.");
       }
+
+      var toDeleteService = TransactionRandomizer.GetRandomTransactionService(transaction);
 
       TransactionDto updated = _usecases.DeleteService(transaction.UID, toDeleteService.UID);
 

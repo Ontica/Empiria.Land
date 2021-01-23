@@ -53,21 +53,6 @@ namespace Empiria.Land.Tests {
     }
 
 
-    static internal Tuple<TransactionDto, RequestedServiceDto> GetAnEditableTransactionWithARequestedService() {
-      for (int i = 0; i < 20; i++) {
-        TransactionDto transaction = TransactionRandomizer.GetRandomEditableTransaction();
-
-        if (transaction.RequestedServices.Length > 0) {
-          int indexOfServiceToDelete = EmpiriaMath.GetRandom(0, transaction.RequestedServices.Length - 1);
-          RequestedServiceDto service = transaction.RequestedServices[indexOfServiceToDelete];
-
-          return new Tuple<TransactionDto, RequestedServiceDto>(transaction, service);
-        }
-      }
-      return new Tuple<TransactionDto, RequestedServiceDto>(null, null);
-    }
-
-
     static internal NamedEntityDto GetRandomAgency() {
       using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
         var agencies = usecases.GetAgencies();
@@ -155,6 +140,13 @@ namespace Empiria.Land.Tests {
     }
 
 
+    static internal RequestedServiceDto GetRandomTransactionService(TransactionDto transaction) {
+      int index = EmpiriaMath.GetRandom(0, transaction.RequestedServices.Length - 1);
+
+      return transaction.RequestedServices[index];
+    }
+
+
     static internal TransactionTypeDto GetRandomTransactionType() {
       using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
         var transactionTypesList = usecases.GetTransactionTypes();
@@ -177,6 +169,26 @@ namespace Empiria.Land.Tests {
 
         return usecases.GetTransaction(transactions[index].UID);
       }
+    }
+
+
+    static internal TransactionDto TryGetAServiceEditableTransaction(bool withOneOrMoreServices = false) {
+      for (int i = 0; i < 20; i++) {
+        TransactionDto transaction = TransactionRandomizer.GetRandomEditableTransaction();
+
+        if (!transaction.Actions.Can.EditServices) {
+          continue;
+        }
+
+        if (!withOneOrMoreServices) {
+          return transaction;
+        }
+
+        if (transaction.RequestedServices.Length != 0) {
+          return transaction;
+        }
+      }
+      return null;
     }
 
   }  // class TransactionRandomizer
