@@ -39,7 +39,8 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.InstrumentDescriptor = transaction.DocumentDescriptor;
       dto.RecordableTarget = GetRecordableTargetDto(transaction);
       dto.RequestedServices = GetRequestedServicesDtoArray(transaction);
-      dto.PaymentOrder = GetPaymentOrderInfoDto(transaction);
+      dto.PaymentOrder = GetPaymentOrderDto(transaction);
+      dto.Payment = GetPaymentDto(transaction);
       dto.PresentationTime = transaction.PresentationTime;
       dto.Status = transaction.Workflow.CurrentStatus.ToString();
       dto.StatusName = transaction.Workflow.CurrentStatusName;
@@ -76,11 +77,23 @@ namespace Empiria.Land.Transactions.Adapters {
     }
 
 
-    static private PaymentOrder GetPaymentOrderInfoDto(LRSTransaction transaction) {
+    static private PaymentFields GetPaymentDto(LRSTransaction transaction) {
+      if (!transaction.HasPayment) {
+        return null;
+      }
+      var payment = transaction.Payments[0];
+
+      return new PaymentFields {
+        ReceiptNo = payment.ReceiptNo,
+        Total = payment.ReceiptTotal,
+        Status = transaction.PaymentOrder.Status
+      };
+    }
+
+    static private PaymentOrder GetPaymentOrderDto(LRSTransaction transaction) {
       if (!transaction.HasPaymentOrder) {
         return null;
       }
-
       return transaction.PaymentOrder;
     }
 

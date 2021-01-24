@@ -47,6 +47,15 @@ namespace Empiria.Land.Integration.PaymentServices {
       return o;
     }
 
+
+    public Task<string> GetPaymentStatus(IPaymentOrder paymentOrder) {
+      if (paymentOrder.IssueTime.AddMinutes(10) <= DateTime.Now) {
+        return Task.FromResult("Confirmado");
+      } else {
+        return Task.FromResult("Pendiente");
+      }
+    }
+
   }  // class FakePaymentService
 
 }  // namespace Empiria.Land.Integration.PaymentServices

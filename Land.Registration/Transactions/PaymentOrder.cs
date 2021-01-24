@@ -45,6 +45,7 @@ namespace Empiria.Land.Transactions {
       this.IssueTime = json.Get("issueTime", this.IssueTime);
       this.DueDate = json.Get("dueDate", this.DueDate);
       this.Total = json.Get("total", this.Total);
+      this.Status = json.Get("status", this.Status);
 
       if (json.Contains("attributes")) {
         var attributes = json.Slice("attributes", false);
@@ -91,6 +92,11 @@ namespace Empiria.Land.Transactions {
     }
 
 
+    public string Status {
+      get; internal set;
+    } = string.Empty;
+
+
     public IDictionary<string, object> Attributes {
       get {
         return _attributes;
@@ -119,12 +125,14 @@ namespace Empiria.Land.Transactions {
       json.Add("issueTime", this.IssueTime);
       json.Add("dueDate", this.DueDate);
       json.Add("total", this.Total);
+      json.Add("status", this.Status);
 
       if (this.Attributes.Count == 0) {
         return json;
       }
 
       var jsonAttributes = new JsonObject();
+
       foreach (var attribute in this.Attributes) {
         jsonAttributes.Add(attribute.Key, attribute.Value);
       }

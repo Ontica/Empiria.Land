@@ -15,6 +15,7 @@ using Empiria.Reflection;
 using Empiria.Land.Registration.Transactions;
 
 using Empiria.Land.Integration.PaymentServices;
+using Empiria.Land.Transactions.Adapters;
 
 namespace Empiria.Land.Transactions.Providers {
 
@@ -29,6 +30,19 @@ namespace Empiria.Land.Transactions.Providers {
 
     #region Services
 
+    internal Task<decimal> CalculateFee(RequestedServiceFields requestedServiceFields) {
+      requestedServiceFields.AssertValid();
+
+      if (requestedServiceFields.TaxableBase != decimal.Zero) {
+        return this.CalculateVariableFee(requestedServiceFields.ServiceUID,
+                                         requestedServiceFields.TaxableBase);
+      } else {
+        return this.CalculateFixedFee(requestedServiceFields.ServiceUID,
+                                      requestedServiceFields.Quantity);
+      }
+    }
+
+
     internal Task<decimal> CalculateFixedFee(string serviceUID, decimal quantity) {
       return _externalService.CalculateFixedFee(serviceUID, quantity);
     }
@@ -40,10 +54,20 @@ namespace Empiria.Land.Transactions.Providers {
 
 
     internal Task<IPaymentOrder> GeneratePaymentOrder(LRSTransaction transaction) {
+      Assertion.AssertObject(transaction, "transaction");
+
       PaymentOrderRequestDto paymentOrderRequest = MapToPaymentOrderRequest(transaction);
 
       return _externalService.GeneratePaymentOrderFor(paymentOrderRequest);
     }
+
+
+    internal Task<string> GetPaymentStatus(PaymentOrder paymentOrder) {
+      Assertion.AssertObject(paymentOrder, "paymentOrder");
+
+      return _externalService.GetPaymentStatus(paymentOrder);
+    }
+
 
     #endregion Services
 

@@ -71,6 +71,19 @@ namespace Empiria.Land.Transactions.WebApi {
       }
     }
 
+
+    [HttpPost]
+    [Route("v5/land/transactions/{transactionUID:length(16)}/set-payment")]
+    public async Task<SingleObjectModel> SetPayment([FromUri] string transactionUID,
+                                                    [FromBody] PaymentFields fields) {
+
+      using (var usecases = TransactionServicesUseCases.UseCaseInteractor()) {
+        TransactionDto transactionDto = await usecases.SetPayment(transactionUID, fields);
+
+        return new SingleObjectModel(this.Request, transactionDto);
+      }
+    }
+
     #endregion Web Apis
 
   }  // class TransactionServicesController

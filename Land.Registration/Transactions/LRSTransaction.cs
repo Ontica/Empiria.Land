@@ -476,7 +476,16 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public LRSPayment SetPayment(string receiptNo, decimal receiptTotal) {
+    public void SetPayment(PaymentFields paymentFields) {
+      this.SetPayment(paymentFields.ReceiptNo, paymentFields.Total);
+
+      this.PaymentOrder.Status = paymentFields.Status;
+
+      this.Save();
+    }
+
+
+    public void SetPayment(string receiptNo, decimal receiptTotal) {
       LRSPayment payment = null;
 
       if (this.Payments.Count == 0) {
@@ -489,9 +498,8 @@ namespace Empiria.Land.Registration.Transactions {
 
         payment.SetReceipt(receiptNo, receiptTotal);
       }
-      payment.Save();
 
-      return payment;
+      payment.Save();
     }
 
 

@@ -20,6 +20,8 @@ namespace Empiria.Land.Integration.PaymentServices {
 
     Task<IPaymentOrder> GeneratePaymentOrderFor(PaymentOrderRequestDto paymentOrderRequest);
 
+    Task<string> GetPaymentStatus(IPaymentOrder paymentOrder);
+
   }  // interface IPaymentService
 
 }  // namespace Empiria.Land.Integration.PaymentServices

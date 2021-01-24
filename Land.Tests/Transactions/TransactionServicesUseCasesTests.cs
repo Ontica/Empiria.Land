@@ -90,6 +90,32 @@ namespace Empiria.Land.Tests.Transactions {
 
 
     [Fact]
+    public async Task Should_Generate_A_Payment_Order_And_Then_Set_Its_Payment() {
+      TransactionDto transaction = TransactionRandomizer.TryGetAServiceEditableTransaction(true);
+
+      if (transaction == null) {
+        Assert.True(false, "I didn't find any transaction ready to payment order generation.");
+      }
+
+      TransactionDto withPaymentOrder = await _usecases.GeneratePaymentOrder(transaction.UID);
+
+      var payment = new PaymentFields {
+        ReceiptNo = EmpiriaString.BuildRandomString(8, 20),
+        Total = withPaymentOrder.PaymentOrder.Total
+      };
+
+      TransactionDto withPayment = await _usecases.SetPayment(transaction.UID, payment);
+
+      Assert.Equal(transaction.UID, withPayment.UID);
+      Assert.False(withPayment.Actions.Can.GeneratePaymentOrder);
+      Assert.NotNull(withPayment.PaymentOrder);
+      Assert.NotNull(withPayment.Payment);
+      Assert.True(!string.IsNullOrEmpty(withPayment.Payment.Status));
+      Assert.Equal(withPaymentOrder.PaymentOrder.Total, withPayment.Payment.Total);
+    }
+
+
+    [Fact]
     public void Should_Delete_A_Transaction_Service() {
       var transaction = TransactionRandomizer.TryGetAServiceEditableTransaction(true);
 

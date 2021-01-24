@@ -57,7 +57,8 @@ namespace Empiria.Land.Transactions.UseCases {
       return TransactionDtoMapper.Map(transaction);
     }
 
-    public Task<TransactionDto> CancelPaymentOrder(string transactionUID) {
+
+    public async Task<TransactionDto> CancelPaymentOrder(string transactionUID) {
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
       Assertion.Assert(transaction.HasPaymentOrder,
@@ -69,8 +70,9 @@ namespace Empiria.Land.Transactions.UseCases {
 
       transaction.CancelPaymentOrder();
 
-      return Task.FromResult(TransactionDtoMapper.Map(transaction));
+      return await Task.FromResult(TransactionDtoMapper.Map(transaction));
     }
+
 
     public async Task<TransactionDto> GeneratePaymentOrder(string transactionUID) {
       LRSTransaction transaction = ParseTransaction(transactionUID);
@@ -103,7 +105,11 @@ namespace Empiria.Land.Transactions.UseCases {
       Assertion.Assert(transaction.ControlData.CanEditServices,
                  $"Can not request services on transaction '{transactionUID}'.");
 
-      requestedServiceFields.Subtotal = await CalculateServiceSubtotal(requestedServiceFields);
+      var connector = new PaymentServicesConnector();
+
+      decimal fee = await connector.CalculateFee(requestedServiceFields);
+
+      requestedServiceFields.Subtotal = fee;
 
       transaction.AddItem(requestedServiceFields);
 
@@ -111,13 +117,34 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
+    public async Task<TransactionDto> SetPayment(string transactionUID,
+                                                 PaymentFields paymentFields) {
+      Assertion.AssertObject(paymentFields, "paymentFields");
+
+      paymentFields.AssertValid();
+
+      LRSTransaction transaction = ParseTransaction(transactionUID);
+
+      Assertion.Assert(transaction.ControlData.CanEditPaymentReceipt,
+                       $"Can not set payment for transaction '{transactionUID}'.");
+
+      Assertion.Assert(transaction.PaymentOrder.Total >= paymentFields.Total,
+                      $"Payment total must be less or equal than payment order total.");
+
+      var connector = new PaymentServicesConnector();
+
+      string status = await connector.GetPaymentStatus(transaction.PaymentOrder);
+
+      paymentFields.Status = status;
+
+      transaction.SetPayment(paymentFields);
+
+      return TransactionDtoMapper.Map(transaction);
+    }
+
     #endregion Use cases
 
     #region Helper methods
-
-    private Task<decimal> CalculateServiceSubtotal(RequestedServiceFields requestedServiceFields) {
-      return Task.FromResult(125 * requestedServiceFields.Quantity);
-    }
 
     private LRSTransaction ParseTransaction(string transactionUID) {
       Assertion.AssertObject(transactionUID, "transactionUID");

@@ -69,6 +69,10 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
+    public PaymentFields Payment {
+      get; internal set;
+    }
+
     public string Status {
       get; internal set;
     }
