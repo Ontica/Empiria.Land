@@ -42,7 +42,8 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.PaymentOrder = GetPaymentOrderDto(transaction);
       dto.Payment = GetPaymentDto(transaction);
       dto.PresentationTime = transaction.PresentationTime;
-      dto.Status = transaction.Workflow.CurrentStatus.ToString();
+      dto.InternalControlNo = transaction.InternalControlNo;
+      dto.Status = MapStatus(transaction.Workflow.CurrentStatus);
       dto.StatusName = transaction.Workflow.CurrentStatusName;
       dto.Actions = GetControlDataDto(transaction);
 
@@ -50,6 +51,10 @@ namespace Empiria.Land.Transactions.Adapters {
     }
 
     #region Private methods
+
+    private static TransactionStatus MapStatus(LRSTransactionStatus currentStatus) {
+      return ((TransactionStatus) (char) currentStatus);
+    }
 
     static private TransactionControlDataDto GetControlDataDto(LRSTransaction transaction) {
       TransactionControlData controlData = transaction.ControlData;

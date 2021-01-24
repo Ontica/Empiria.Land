@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System.Web.Http;
+using System.Threading.Tasks;
 
 using Empiria.WebApi;
 
@@ -81,6 +82,18 @@ namespace Empiria.Land.Transactions.WebApi {
         FixedList<TransactionShortModel> list = usecases.SearchTransactions(searchCommand);
 
         return new CollectionModel(this.Request, list);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v5/land/transactions/{transactionUID:length(16)}/submit")]
+    public async Task<SingleObjectModel> SubmitTransaction([FromUri] string transactionUID) {
+
+      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
+        TransactionDto transactionDto = await usecases.SubmitTransaction(transactionUID);
+
+        return new SingleObjectModel(this.Request, transactionDto);
       }
     }
 

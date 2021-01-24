@@ -8,11 +8,13 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Threading.Tasks;
 
 using Xunit;
 
 using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Transactions.UseCases;
+
 
 namespace Empiria.Land.Tests.Transactions {
 
@@ -49,7 +51,7 @@ namespace Empiria.Land.Tests.Transactions {
 
       var clone = _usecases.CloneTransaction(baseTransaction.UID);
 
-      Assert.Equal("Payment", clone.Status);
+      Assert.Equal(TransactionStatus.Payment, clone.Status);
       Assert.NotEmpty(clone.TransactionID);
       Assert.NotEqual(baseTransaction.TransactionID, clone.TransactionID);
       Assert.Equal(ExecutionServer.DateMaxValue, clone.PresentationTime);
@@ -90,7 +92,7 @@ namespace Empiria.Land.Tests.Transactions {
 
       transaction = _usecases.GetTransaction(transaction.UID);
 
-      Assert.Equal("Deleted", transaction.Status);
+      Assert.Equal(TransactionStatus.Deleted, transaction.Status);
 
       var searchCommand = new SearchTransactionCommand {
         Stage = TransactionStage.Pending,
@@ -149,6 +151,51 @@ namespace Empiria.Land.Tests.Transactions {
 
       Assert.True(list.Count <= moreGeneralListItemsCount,
                  "Search transactions by keyword must return the same or fewer items.");
+    }
+
+
+    [Fact]
+    public async Task Should_Create_And_Submit_A_Transaction() {
+      TransactionFields transactionFields = TransactionRandomizer.CreateRandomTransactionFields();
+
+      TransactionDto transaction = _usecases.CreateTransaction(transactionFields);
+
+      if (transaction.Actions.Can.EditServices) {
+        for (int i = 0; i < 3; i++) {
+          RequestedServiceFields serviceFields = TransactionRandomizer.CreateRandomRequestedServiceFields();
+          transaction = await _usecases.RequestService(transaction.UID, serviceFields);
+        }
+      }
+
+      if (transaction.Actions.Can.GeneratePaymentOrder) {
+        Assert.False(transaction.Actions.Can.Submit);
+        transaction = await _usecases.GeneratePaymentOrder(transaction.UID);
+        Assert.True(transaction.Actions.Can.EditPayment);
+
+        PaymentFields paymentFields =
+          TransactionRandomizer.GetRandomPaymentFields(transaction.PaymentOrder.Total);
+
+        transaction = await _usecases.SetPayment(transaction.UID, paymentFields);
+        Assert.False(transaction.Actions.Can.GeneratePaymentOrder);
+      }
+
+      Assert.True(transaction.Actions.Can.Submit);
+
+      TransactionDto submitted = await _usecases.SubmitTransaction(transaction.UID);
+
+      Assert.Equal(transaction.UID, submitted.UID);
+
+      Assert.True(DateTime.Now.AddSeconds(-2) <= submitted.PresentationTime &&
+                  submitted.PresentationTime <= DateTime.Now);
+
+      Assert.NotEqual(TransactionStatus.Payment, submitted.Status);
+
+      Assert.False(submitted.Actions.Can.Submit);
+      Assert.False(submitted.Actions.Can.CancelPayment);
+      Assert.False(submitted.Actions.Can.CancelPaymentOrder);
+      Assert.False(submitted.Actions.Can.EditServices);
+      Assert.False(submitted.Actions.Can.Edit);
+      Assert.False(submitted.Actions.Can.Delete);
     }
 
 

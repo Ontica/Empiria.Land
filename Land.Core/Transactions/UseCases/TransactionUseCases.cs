@@ -7,17 +7,19 @@
 *  Summary  : Use cases for transaction searching and retrieving.                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
+using System.Threading.Tasks;
+
 using Empiria.Services;
 
 using Empiria.Land.Transactions.Adapters;
 
 using Empiria.Land.Registration.Transactions;
 
-
 namespace Empiria.Land.Transactions.UseCases {
 
   /// <summary>Use cases for transaction searching and retrieving.</summary>
-  public class TransactionUseCases : UseCase {
+  public partial class TransactionUseCases : UseCase {
 
     #region Constructors and parsers
 
@@ -52,6 +54,8 @@ namespace Empiria.Land.Transactions.UseCases {
       var transaction = new LRSTransaction(fields);
 
       transaction.Save();
+
+      transaction.AddPreconfiguredServicesIfApplicable();
 
       return TransactionDtoMapper.Map(transaction);
     }
@@ -89,6 +93,17 @@ namespace Empiria.Land.Transactions.UseCases {
       var list = LRSTransaction.GetList(filter, sort, searchCommand.PageSize);
 
       return TransactionShortModelMapper.Map(list);
+    }
+
+
+    public async Task<TransactionDto> SubmitTransaction(string transactionUID) {
+      Assertion.AssertObject(transactionUID, "transactionUID");
+
+      var transaction = LRSTransaction.Parse(transactionUID);
+
+      transaction.Workflow.Receive(string.Empty);
+
+      return await Task.FromResult(TransactionDtoMapper.Map(transaction));
     }
 
 

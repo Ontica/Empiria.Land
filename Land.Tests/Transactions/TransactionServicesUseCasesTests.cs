@@ -23,7 +23,7 @@ namespace Empiria.Land.Tests.Transactions {
 
     #region Fields
 
-    private readonly TransactionServicesUseCases _usecases;
+    private readonly TransactionUseCases _usecases;
 
     #endregion Fields
 
@@ -32,7 +32,7 @@ namespace Empiria.Land.Tests.Transactions {
     public TransactionServicesUseCasesTests() {
       CommonMethods.Authenticate();
 
-      _usecases = TransactionServicesUseCases.UseCaseInteractor();
+      _usecases = TransactionUseCases.UseCaseInteractor();
     }
 
     ~TransactionServicesUseCasesTests() {
@@ -99,10 +99,9 @@ namespace Empiria.Land.Tests.Transactions {
 
       TransactionDto withPaymentOrder = await _usecases.GeneratePaymentOrder(transaction.UID);
 
-      var payment = new PaymentFields {
-        ReceiptNo = EmpiriaString.BuildRandomString(8, 20),
-        Total = withPaymentOrder.PaymentOrder.Total
-      };
+
+      PaymentFields payment =
+            TransactionRandomizer.GetRandomPaymentFields(withPaymentOrder.PaymentOrder.Total);
 
       TransactionDto withPayment = await _usecases.SetPayment(transaction.UID, payment);
 

@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Transaction Management                     Component : Use cases Layer                         *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Use case interactor class               *
-*  Type     : TransactionServicesUseCases                License   : Please read LICENSE.txt file            *
+*  Type     : TransactionServicesUseCases (Partial)      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases for transaction requested services.                                                  *
+*  Summary  : Partial class with use cases for transaction requested services.                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -20,20 +20,8 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Transactions.UseCases {
 
-  /// <summary>Use cases for transaction requested services.</summary>
-  public class TransactionServicesUseCases : UseCase {
-
-    #region Constructors and parsers
-
-    protected TransactionServicesUseCases() {
-      // no-op
-    }
-
-    static public TransactionServicesUseCases UseCaseInteractor() {
-      return UseCase.CreateInstance<TransactionServicesUseCases>();
-    }
-
-    #endregion Constructors and parsers
+  /// <summary>Partial class with use cases for transaction requested services.</summary>
+  public partial class TransactionUseCases {
 
     #region Use cases
 

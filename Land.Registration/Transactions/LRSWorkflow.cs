@@ -208,13 +208,17 @@ namespace Empiria.Land.Registration.Transactions {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
                                             _transaction.UID);
       }
-      if (_transaction.Payments.Count == 0 && !this.IsEmptyItemsTransaction) {
+      if (_transaction.Payments.Count == 0 && !_transaction.IsFeeWaiverApplicable
+          && !this.IsEmptyItemsTransaction) {
         throw new NotImplementedException("Este trámite todavía no tiene registrada una boleta de pago.");
       }
 
+
       //    using (var context = StorageContext.Open()) {
+      _transaction.SetInternalControlNo();
       _transaction.PresentationTime = DateTime.Now;
       _transaction.ClosingTime = ExecutionServer.DateMaxValue;
+
       this.CurrentStatus = LRSTransactionStatus.Received;
 
       LRSWorkflowTask currentTask = this.GetCurrentTask();

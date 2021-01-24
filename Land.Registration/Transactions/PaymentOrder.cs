@@ -94,7 +94,7 @@ namespace Empiria.Land.Transactions {
 
     public string Status {
       get; internal set;
-    } = string.Empty;
+    } = "Pendiente de pago";
 
 
     public IDictionary<string, object> Attributes {

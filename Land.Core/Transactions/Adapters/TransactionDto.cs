@@ -37,6 +37,10 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
+    public string InternalControlNo {
+      get; internal set;
+    }
+
     public RequestedByDto RequestedBy {
       get; internal set;
     }
@@ -73,7 +77,7 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
-    public string Status {
+    public TransactionStatus Status {
       get; internal set;
     }
 

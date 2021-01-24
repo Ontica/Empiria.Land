@@ -181,8 +181,8 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!LRSWorkflowRules.IsEmptyItemsTransaction(_transaction) &&
-            !_transaction.HasPaymentOrder) {
+        if (!_transaction.IsFeeWaiverApplicable &&
+            !_transaction.HasPayment) {
           return false;
         }
 

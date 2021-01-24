@@ -97,12 +97,26 @@ namespace Empiria.Land.Registration.Transactions {
     [DataField("TransactionUID", IsOptional = false)]
     private string _transactionUID = "Nuevo trámite";
 
-
     public override string UID {
       get {
         return _transactionUID;
       }
     }
+
+
+    [DataField("TransactionGUID")]
+    public string GUID {
+      get;
+      private set;
+    }
+
+
+    [DataField("InternalControlNo")]
+    public string InternalControlNo {
+      get;
+      private set;
+    }
+
 
     [DataField("DocumentTypeId")]
     public LRSDocumentType DocumentType {
@@ -399,6 +413,17 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Public methods
 
+    public void AddPreconfiguredServicesIfApplicable() {
+      if (!this.ControlData.CanEditServices || this.Items.Count > 0) {
+        return;
+      }
+
+      foreach (var item in this.DocumentType.DefaultRecordingActs) {
+        this.AddItem(item, item.GetFinancialLawArticles()[0],
+                     BaseSalaryValue * item.GetFeeUnits());
+      }
+    }
+
     public LRSTransactionItem AddItem(RecordingActType transactionItemType,
                                       LRSLawArticle treasuryCode, decimal recordingRights) {
       this.EnsureCanEditServices();
@@ -581,6 +606,11 @@ namespace Empiria.Land.Registration.Transactions {
       this.Save();
     }
 
+
+    internal void SetInternalControlNo() {
+      this.InternalControlNo = this.BuildControlNumber();
+    }
+
     public void RemoveDocument() {
       Assertion.Assert(!this.IsEmptyInstance && !this.IsNew,
                        "Document can't be detached from a new or empty transaction.");
@@ -662,6 +692,9 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     protected override void OnSave() {
+      if (base.IsNew) {
+        this.GUID = Guid.NewGuid().ToString();
+      }
       this.Keywords = EmpiriaString.BuildKeywords(this.UID, this.Document.UID,
                                                   this.DocumentDescriptor, this.RequestedBy,
                                                   this.Agency.FullName,
@@ -672,7 +705,7 @@ namespace Empiria.Land.Registration.Transactions {
         var newWorkflow = LRSWorkflow.Create(this);
         workflow = new Lazy<LRSWorkflow>(() => newWorkflow);
 
-        this.AddAutomaticItems();
+        // this.AddAutomaticItems();
       }
     }
 
@@ -816,23 +849,12 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Private methods
 
-    private void AddAutomaticItems() {
-      foreach (var item in this.DocumentType.DefaultRecordingActs) {
-        this.AddItem(item, item.GetFinancialLawArticles()[0],
-                     BaseSalaryValue * item.GetFeeUnits());
-      }
-    }
-
     private string BuildControlNumber() {
-      return String.Empty;
+      int current = TransactionData.GetLastControlNumber(this.RecorderOffice);
 
-      // Uncomment this code in order to generate a transaction's consecutive control number
+      current++;
 
-      //int current = TransactionData.GetLastControlNumber(this.RecorderOffice);
-
-      //current++;
-
-      //return current.ToString();
+      return current.ToString();
     }
 
 

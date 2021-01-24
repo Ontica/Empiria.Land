@@ -34,8 +34,8 @@ namespace Empiria.Land.Data {
 
 
     static internal int GetLastControlNumber(RecorderOffice recorderOffice) {
-      string sql = "SELECT MAX(ControlNumber) " +
-                   "FROM vwLRSTransactions " +
+      string sql = "SELECT MAX(InternalControlNo) " +
+                   "FROM LRSTransactions " +
                    $"WHERE RecorderOfficeId = {recorderOffice.Id}";
 
       string max = DataReader.GetScalar(DataOperation.Parse(sql), String.Empty);
@@ -123,10 +123,10 @@ namespace Empiria.Land.Data {
 
 
     static internal void WriteTransaction(LRSTransaction o) {
-      var op = DataOperation.Parse("writeLRSTransaction", o.Id, o.TransactionType.Id, o.UID,
+      var op = DataOperation.Parse("writeLRSTransaction", o.Id, o.TransactionType.Id, o.GUID, o.UID,
                   o.DocumentType.Id, o.DocumentDescriptor, o.Document.Id, o.BaseResource.Id,
                   o.RecorderOffice.Id, o.RequestedBy, o.Agency.Id,
-                  o.ExternalTransactionNo, o.ExtensionData.ToString(),
+                  o.ExternalTransactionNo, o.InternalControlNo, o.ExtensionData.ToString(),
                   o.Keywords, o.PresentationTime, o.ExpectedDelivery, o.LastReentryTime, o.ClosingTime,
                   o.LastDeliveryTime, o.NonWorkingTime, o.ComplexityIndex, o.IsArchived,
                   (char) o.Workflow.CurrentStatus, o.Integrity.GetUpdatedHashCode());

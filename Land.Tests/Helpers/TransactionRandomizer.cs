@@ -108,6 +108,13 @@ namespace Empiria.Land.Tests {
     }
 
 
+    internal static PaymentFields GetRandomPaymentFields(decimal total = -1) {
+      return new PaymentFields {
+        ReceiptNo = EmpiriaString.BuildRandomString(8, 20),
+        Total = total != -1 ? total : EmpiriaMath.GetRandom(1, 20) * 200
+      };
+    }
+
     static internal ProvidedServiceDto GetRandomProvidedService() {
       using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
 
