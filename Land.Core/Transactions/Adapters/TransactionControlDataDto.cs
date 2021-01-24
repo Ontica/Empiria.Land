@@ -53,7 +53,11 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
-    public bool EditPaymentReceipt {
+    public bool EditPayment {
+      get; internal set;
+    }
+
+    public bool CancelPayment {
       get; internal set;
     }
 

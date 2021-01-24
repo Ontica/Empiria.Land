@@ -90,7 +90,7 @@ namespace Empiria.Land.Tests.Transactions {
 
 
     [Fact]
-    public async Task Should_Generate_A_Payment_Order_And_Then_Set_Its_Payment() {
+    public async Task Should_Generate_A_Payment_Order_And_Then_Set_AndCancel_Its_Payment() {
       TransactionDto transaction = TransactionRandomizer.TryGetAServiceEditableTransaction(true);
 
       if (transaction == null) {
@@ -108,10 +108,21 @@ namespace Empiria.Land.Tests.Transactions {
 
       Assert.Equal(transaction.UID, withPayment.UID);
       Assert.False(withPayment.Actions.Can.GeneratePaymentOrder);
+      Assert.True(withPayment.Actions.Can.EditPayment);
+      Assert.True(withPayment.Actions.Can.CancelPayment);
       Assert.NotNull(withPayment.PaymentOrder);
       Assert.NotNull(withPayment.Payment);
       Assert.True(!string.IsNullOrEmpty(withPayment.Payment.Status));
       Assert.Equal(withPaymentOrder.PaymentOrder.Total, withPayment.Payment.Total);
+
+      TransactionDto withCanceledPayment = await _usecases.CancelPayment(transaction.UID);
+
+      Assert.Equal(transaction.UID, withCanceledPayment.UID);
+      Assert.True(withCanceledPayment.Actions.Can.EditPayment);
+      Assert.False(withCanceledPayment.Actions.Can.CancelPayment);
+      Assert.False(withCanceledPayment.Actions.Can.GeneratePaymentOrder);
+      Assert.NotNull(withCanceledPayment.PaymentOrder);
+      Assert.Null(withCanceledPayment.Payment);
     }
 
 

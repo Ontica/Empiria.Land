@@ -119,7 +119,7 @@ namespace Empiria.Land.Transactions {
       }
     }
 
-    public bool CanEditPaymentReceipt {
+    public bool CanEditPayment {
       get {
         if (IsSubmitted) {
           return false;
@@ -134,6 +134,12 @@ namespace Empiria.Land.Transactions {
         }
 
         return true;
+      }
+    }
+
+    public bool CanCancelPayment {
+      get {
+        return _transaction.HasPayment && CanEditPayment;
       }
     }
 

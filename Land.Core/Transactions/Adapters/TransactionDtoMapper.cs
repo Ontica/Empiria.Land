@@ -61,7 +61,8 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.Can.EditServices = controlData.CanEditServices;
       dto.Can.GeneratePaymentOrder = controlData.CanGeneratePaymentOrder;
       dto.Can.CancelPaymentOrder = controlData.CanCancelPaymentOrder;
-      dto.Can.EditPaymentReceipt = controlData.CanEditPaymentReceipt;
+      dto.Can.EditPayment = controlData.CanEditPayment;
+      dto.Can.CancelPayment = controlData.CanCancelPayment;
       dto.Can.UploadDocuments = controlData.CanUploadDocuments;
       dto.Can.EditInstrument = controlData.CanEditInstrument;
       dto.Can.EditRecordingActs = controlData.CanEditRecordingActs;

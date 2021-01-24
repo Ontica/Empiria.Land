@@ -116,7 +116,7 @@ namespace Empiria.Land.Data {
       var op = DataOperation.Parse("writeLRSPayment", o.Id, o.Transaction.Id,
                                    o.PaymentOffice.Id, o.ReceiptNo, o.ReceiptTotal, o.ReceiptIssuedTime,
                                    o.ExtensionData.ToString(), o.Recording.Id, o.PostingTime,
-                                   o.PostedBy.Id, 'C', String.Empty);
+                                   o.PostedBy.Id, (char) o.Status, String.Empty);
 
       DataWriter.Execute(op);
     }

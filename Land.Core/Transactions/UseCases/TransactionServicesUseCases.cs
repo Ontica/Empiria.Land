@@ -37,6 +37,14 @@ namespace Empiria.Land.Transactions.UseCases {
 
     #region Use cases
 
+    public async Task<TransactionDto> CancelPayment(string transactionUID) {
+      LRSTransaction transaction = ParseTransaction(transactionUID);
+
+      transaction.CancelPayment();
+
+      return await Task.FromResult(TransactionDtoMapper.Map(transaction));
+    }
+
     public TransactionDto DeleteService(string transactionUID, string requestedServiceUID) {
       Assertion.AssertObject(requestedServiceUID, "requestedServiceUID");
 
@@ -125,7 +133,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
-      Assertion.Assert(transaction.ControlData.CanEditPaymentReceipt,
+      Assertion.Assert(transaction.ControlData.CanEditPayment,
                        $"Can not set payment for transaction '{transactionUID}'.");
 
       Assertion.Assert(transaction.PaymentOrder.Total >= paymentFields.Total,

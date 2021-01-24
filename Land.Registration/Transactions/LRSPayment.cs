@@ -13,6 +13,7 @@ using System;
 using Empiria.Contacts;
 using Empiria.Json;
 using Empiria.Security;
+using Empiria.StateEnums;
 
 using Empiria.Land.Data;
 
@@ -77,6 +78,8 @@ namespace Empiria.Land.Registration.Transactions {
 
     [DataField("TransactionId")]
     LazyInstance<LRSTransaction> _transaction = LazyInstance<LRSTransaction>.Empty;
+
+
     public LRSTransaction Transaction {
       get { return _transaction.Value; }
       private set {
@@ -154,6 +157,13 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
+    [DataField("PaymentStatus", Default = OpenCloseStatus.Closed)]
+    public OpenCloseStatus Status {
+      get;
+      private set;
+    } = OpenCloseStatus.Closed;
+
+
     int IProtected.CurrentDataIntegrityVersion {
       get {
         return 1;
@@ -186,6 +196,12 @@ namespace Empiria.Land.Registration.Transactions {
     #endregion Public properties
 
     #region Public methods
+
+    internal void Delete() {
+      this.Status = OpenCloseStatus.Deleted;
+
+      this.Save();
+    }
 
     public void SetReceipt(string receiptNo, decimal receiptTotal) {
       this.ReceiptNo = receiptNo;

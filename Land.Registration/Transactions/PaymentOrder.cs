@@ -125,7 +125,7 @@ namespace Empiria.Land.Transactions {
       json.Add("issueTime", this.IssueTime);
       json.Add("dueDate", this.DueDate);
       json.Add("total", this.Total);
-      json.Add("status", this.Status);
+      json.AddIfValue("status", this.Status);
 
       if (this.Attributes.Count == 0) {
         return json;

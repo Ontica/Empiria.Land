@@ -125,6 +125,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
     [DataField("InstrumentId", Default = -1)]
     public int InstrumentId {
       get;
@@ -307,7 +308,8 @@ namespace Empiria.Land.Registration.Transactions {
 
     public bool HasPayment {
       get {
-        return (this.Payments.Count != 0);
+        return (this.Payments.Count != 0 &&
+                this.Payments[0].ReceiptNo.Length != 0);
       }
     }
 
@@ -476,6 +478,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
     public void SetPayment(PaymentFields paymentFields) {
       this.SetPayment(paymentFields.ReceiptNo, paymentFields.Total);
 
@@ -500,6 +503,25 @@ namespace Empiria.Land.Registration.Transactions {
       }
 
       payment.Save();
+    }
+
+
+    public void CancelPayment() {
+      Assertion.Assert(this.HasPayment,
+                       $"There are not any registered payments for transaction '{this.UID}'.");
+
+      Assertion.Assert(this.ControlData.CanCancelPayment,
+                       $"Can not cancel the payment for transaction '{this.UID}'.");
+
+      var payment = this.Payments[0];
+
+      this.Payments.Remove(payment);
+
+      payment.Delete();
+
+      this.PaymentOrder.Status = String.Empty;
+
+      this.Save();
     }
 
 
