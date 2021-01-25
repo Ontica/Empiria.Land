@@ -145,7 +145,6 @@ namespace Empiria.Land.Providers {
     }
 
 
-
     public IFilingTransaction SetPaymentOrder(IPayable transaction,
                                               FormerPaymentOrderDTO paymentOrderData) {
       Assertion.AssertObject(transaction, "transaction");

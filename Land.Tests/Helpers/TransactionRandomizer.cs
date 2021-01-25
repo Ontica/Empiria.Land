@@ -64,7 +64,7 @@ namespace Empiria.Land.Tests {
     }
 
 
-    static internal TransactionDto GetRandomEditableTransaction() {
+    static internal TransactionDto GetRandomOnPendingStageTransaction() {
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
 
         var command = new SearchTransactionCommand {
@@ -114,6 +114,7 @@ namespace Empiria.Land.Tests {
         Total = total != -1 ? total : EmpiriaMath.GetRandom(1, 20) * 200
       };
     }
+
 
     static internal ProvidedServiceDto GetRandomProvidedService() {
       using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
@@ -179,9 +180,37 @@ namespace Empiria.Land.Tests {
     }
 
 
-    static internal TransactionDto TryGetAServiceEditableTransaction(bool withOneOrMoreServices = false) {
+    internal static TransactionDto TryGetAReadyForPaymentOrderGenerationTransaction() {
       for (int i = 0; i < 20; i++) {
-        TransactionDto transaction = TransactionRandomizer.GetRandomEditableTransaction();
+        TransactionDto transaction = TryGetAReadyForServiceEditionTransaction(true);
+
+        if (transaction == null) {
+          continue;
+        }
+
+        if (transaction.Actions.Can.GeneratePaymentOrder) {
+          return transaction;
+        }
+      }
+      return null;
+    }
+
+
+    internal static TransactionDto TryGetAReadyForPaymentTransaction() {
+      for (int i = 0; i < 20; i++) {
+        TransactionDto transaction = TransactionRandomizer.GetRandomOnPendingStageTransaction();
+
+        if (transaction.Actions.Can.EditPayment) {
+          return transaction;
+        }
+      }
+      return null;
+    }
+
+
+    static internal TransactionDto TryGetAReadyForServiceEditionTransaction(bool withOneOrMoreServices = false) {
+      for (int i = 0; i < 20; i++) {
+        TransactionDto transaction = TransactionRandomizer.GetRandomOnPendingStageTransaction();
 
         if (!transaction.Actions.Can.EditServices) {
           continue;

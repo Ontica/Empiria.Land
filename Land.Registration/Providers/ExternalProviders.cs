@@ -18,7 +18,6 @@ namespace Empiria.Land.Providers {
   /// <summary>Factory that provide object instances used to access external services.</summary>
   static public class ExternalProviders {
 
-
     static public IFilingServices EFilingProvider {
       get {
         Type type = ObjectFactory.GetType("Empiria.OnePoint.EFiling",

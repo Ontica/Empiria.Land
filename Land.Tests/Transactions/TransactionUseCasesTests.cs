@@ -160,24 +160,9 @@ namespace Empiria.Land.Tests.Transactions {
 
       TransactionDto transaction = _usecases.CreateTransaction(transactionFields);
 
-      if (transaction.Actions.Can.EditServices) {
-        for (int i = 0; i < 3; i++) {
-          RequestedServiceFields serviceFields = TransactionRandomizer.CreateRandomRequestedServiceFields();
-          transaction = await _usecases.RequestService(transaction.UID, serviceFields);
-        }
-      }
+      transaction = await this.AddServicesIfApplicable(transaction);
 
-      if (transaction.Actions.Can.GeneratePaymentOrder) {
-        Assert.False(transaction.Actions.Can.Submit);
-        transaction = await _usecases.GeneratePaymentOrder(transaction.UID);
-        Assert.True(transaction.Actions.Can.EditPayment);
-
-        PaymentFields paymentFields =
-          TransactionRandomizer.GetRandomPaymentFields(transaction.PaymentOrder.Total);
-
-        transaction = await _usecases.SetPayment(transaction.UID, paymentFields);
-        Assert.False(transaction.Actions.Can.GeneratePaymentOrder);
-      }
+      transaction = await this.GeneratePaymentOrderAndPaymentIfApplicable(transaction);
 
       Assert.True(transaction.Actions.Can.Submit);
 
@@ -223,6 +208,36 @@ namespace Empiria.Land.Tests.Transactions {
     }
 
     #endregion Facts
+
+    #region Helper methods
+
+    internal async Task<TransactionDto> AddServicesIfApplicable(TransactionDto transaction) {
+      if (transaction.Actions.Can.EditServices) {
+        for (int i = 0; i < 3; i++) {
+          RequestedServiceFields serviceFields = TransactionRandomizer.CreateRandomRequestedServiceFields();
+          transaction = await _usecases.RequestService(transaction.UID, serviceFields);
+        }
+      }
+      return transaction;
+    }
+
+    internal async Task<TransactionDto> GeneratePaymentOrderAndPaymentIfApplicable(TransactionDto transaction) {
+      if (transaction.Actions.Can.GeneratePaymentOrder) {
+        Assert.False(transaction.Actions.Can.Submit);
+        transaction = await _usecases.GeneratePaymentOrder(transaction.UID);
+        Assert.True(transaction.Actions.Can.EditPayment);
+
+        PaymentFields paymentFields =
+              TransactionRandomizer.GetRandomPaymentFields(transaction.PaymentOrder.Total);
+
+        transaction = await _usecases.SetPayment(transaction.UID, paymentFields);
+
+        Assert.False(transaction.Actions.Can.GeneratePaymentOrder);
+      }
+      return transaction;
+    }
+
+    #endregion Helper methods
 
   }  // class TransactionUseCasesTests
 

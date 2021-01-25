@@ -45,7 +45,7 @@ namespace Empiria.Land.Tests.Transactions {
 
     [Fact]
     public async Task Should_Add_A_Transaction_Service() {
-      TransactionDto transaction = TransactionRandomizer.TryGetAServiceEditableTransaction(false);
+      TransactionDto transaction = TransactionRandomizer.TryGetAReadyForServiceEditionTransaction(false);
 
       RequestedServiceFields requestedServiceFields =
             TransactionRandomizer.CreateRandomRequestedServiceFields();
@@ -66,7 +66,7 @@ namespace Empiria.Land.Tests.Transactions {
 
     [Fact]
     public async Task Should_Generate_And_Then_Cancel_A_Transaction_Payment_Order() {
-      TransactionDto transaction = TransactionRandomizer.TryGetAServiceEditableTransaction(true);
+      TransactionDto transaction = TransactionRandomizer.TryGetAReadyForPaymentOrderGenerationTransaction();
 
       if (transaction == null) {
         Assert.True(false, "I didn't find any transaction ready to payment order generation.");
@@ -90,18 +90,11 @@ namespace Empiria.Land.Tests.Transactions {
 
 
     [Fact]
-    public async Task Should_Generate_A_Payment_Order_And_Then_Set_AndCancel_Its_Payment() {
-      TransactionDto transaction = TransactionRandomizer.TryGetAServiceEditableTransaction(true);
-
-      if (transaction == null) {
-        Assert.True(false, "I didn't find any transaction ready to payment order generation.");
-      }
-
-      TransactionDto withPaymentOrder = await _usecases.GeneratePaymentOrder(transaction.UID);
-
+    public async Task Should_Set_And_Cancel_A_Transaction_Payment() {
+      TransactionDto transaction = TransactionRandomizer.TryGetAReadyForPaymentTransaction();
 
       PaymentFields payment =
-            TransactionRandomizer.GetRandomPaymentFields(withPaymentOrder.PaymentOrder.Total);
+            TransactionRandomizer.GetRandomPaymentFields(transaction.PaymentOrder.Total);
 
       TransactionDto withPayment = await _usecases.SetPayment(transaction.UID, payment);
 
@@ -112,7 +105,7 @@ namespace Empiria.Land.Tests.Transactions {
       Assert.NotNull(withPayment.PaymentOrder);
       Assert.NotNull(withPayment.Payment);
       Assert.True(!string.IsNullOrEmpty(withPayment.Payment.Status));
-      Assert.Equal(withPaymentOrder.PaymentOrder.Total, withPayment.Payment.Total);
+      Assert.Equal(transaction.PaymentOrder.Total, withPayment.Payment.Total);
 
       TransactionDto withCanceledPayment = await _usecases.CancelPayment(transaction.UID);
 
@@ -127,7 +120,7 @@ namespace Empiria.Land.Tests.Transactions {
 
     [Fact]
     public void Should_Delete_A_Transaction_Service() {
-      var transaction = TransactionRandomizer.TryGetAServiceEditableTransaction(true);
+      var transaction = TransactionRandomizer.TryGetAReadyForServiceEditionTransaction(true);
 
       if (transaction == null) {
         Assert.True(false, "I didn't find any editable transaction with one or more services to delete.");
