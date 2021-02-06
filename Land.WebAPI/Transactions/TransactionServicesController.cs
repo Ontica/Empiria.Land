@@ -23,7 +23,7 @@ namespace Empiria.Land.Transactions.WebApi {
     #region Web Apis
 
     [HttpPost]
-    [Route("v5/land/transactions/{transactionUID:length(16)}/cancel-payment")]
+    [Route("v5/land/transactions/{transactionUID:length(19)}/cancel-payment")]
     public async Task<SingleObjectModel> CancelPayment([FromUri] string transactionUID) {
 
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
@@ -35,7 +35,7 @@ namespace Empiria.Land.Transactions.WebApi {
 
 
     [HttpPost]
-    [Route("v5/land/transactions/{transactionUID:length(16)}/cancel-payment-order")]
+    [Route("v5/land/transactions/{transactionUID:length(19)}/cancel-payment-order")]
     public async Task<SingleObjectModel> CancelPaymentOrder([FromUri] string transactionUID) {
 
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
@@ -47,7 +47,7 @@ namespace Empiria.Land.Transactions.WebApi {
 
 
     [HttpDelete]
-    [Route("v5/land/transactions/{transactionUID:length(16)}/requested-services/{requestedServiceUID:guid}")]
+    [Route("v5/land/transactions/{transactionUID:length(19)}/requested-services/{requestedServiceUID:guid}")]
     public SingleObjectModel DeleteService([FromUri] string transactionUID,
                                            [FromUri] string requestedServiceUID) {
 
@@ -60,7 +60,7 @@ namespace Empiria.Land.Transactions.WebApi {
 
 
     [HttpPost]
-    [Route("v5/land/transactions/{transactionUID:length(16)}/generate-payment-order")]
+    [Route("v5/land/transactions/{transactionUID:length(19)}/generate-payment-order")]
     public async Task<SingleObjectModel> GeneratePaymentOrder([FromUri] string transactionUID) {
 
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
@@ -72,7 +72,7 @@ namespace Empiria.Land.Transactions.WebApi {
 
 
     [HttpPost]
-    [Route("v5/land/transactions/{transactionUID:length(16)}/requested-services")]
+    [Route("v5/land/transactions/{transactionUID:length(19)}/requested-services")]
     public async Task<SingleObjectModel> RequestService([FromUri] string transactionUID,
                                                         [FromBody] RequestedServiceFields fields) {
 
@@ -85,7 +85,7 @@ namespace Empiria.Land.Transactions.WebApi {
 
 
     [HttpPost]
-    [Route("v5/land/transactions/{transactionUID:length(16)}/set-payment")]
+    [Route("v5/land/transactions/{transactionUID:length(19)}/set-payment")]
     public async Task<SingleObjectModel> SetPayment([FromUri] string transactionUID,
                                                     [FromBody] PaymentFields fields) {
 

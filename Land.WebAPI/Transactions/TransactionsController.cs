@@ -23,7 +23,7 @@ namespace Empiria.Land.Transactions.WebApi {
     #region Web Apis
 
     [HttpPost]
-    [Route("v5/land/transactions/{transactionUID:length(16)}/clone")]
+    [Route("v5/land/transactions/{transactionUID:length(19)}/clone")]
     public SingleObjectModel CloneTransaction([FromUri] string transactionUID) {
 
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
@@ -49,7 +49,7 @@ namespace Empiria.Land.Transactions.WebApi {
 
 
     [HttpDelete]
-    [Route("v5/land/transactions/{transactionUID:length(16)}")]
+    [Route("v5/land/transactions/{transactionUID:length(19)}")]
     public NoDataModel DeleteTransaction([FromUri] string transactionUID) {
 
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
@@ -61,7 +61,7 @@ namespace Empiria.Land.Transactions.WebApi {
 
 
     [HttpGet]
-    [Route("v5/land/transactions/{transactionUID:length(16)}")]
+    [Route("v5/land/transactions/{transactionUID:length(19)}")]
     public SingleObjectModel GetTransaction([FromUri] string transactionUID) {
 
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
@@ -87,7 +87,7 @@ namespace Empiria.Land.Transactions.WebApi {
 
 
     [HttpPost]
-    [Route("v5/land/transactions/{transactionUID:length(16)}/submit")]
+    [Route("v5/land/transactions/{transactionUID:length(19)}/submit")]
     public async Task<SingleObjectModel> SubmitTransaction([FromUri] string transactionUID) {
 
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
@@ -99,7 +99,7 @@ namespace Empiria.Land.Transactions.WebApi {
 
 
     [HttpPut, HttpPatch]
-    [Route("v5/land/transactions/{transactionUID:length(16)}")]
+    [Route("v5/land/transactions/{transactionUID:length(19)}")]
     public SingleObjectModel UpdateTransaction([FromUri] string transactionUID,
                                                [FromBody] TransactionFields fields) {
 

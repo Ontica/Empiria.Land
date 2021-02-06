@@ -21,7 +21,7 @@ namespace Empiria.Land.Instruments.WebApi {
     #region Web Apis
 
     [HttpGet]
-    [Route("v5/land/instruments/{instrumentUID:length(20)}")]
+    [Route("v5/land/instruments/{instrumentUID:guid}")]
     public SingleObjectModel GetInstrument([FromUri] string instrumentUID) {
 
       using (var usecases = InstrumentUseCases.UseCaseInteractor()) {
