@@ -21,7 +21,7 @@ namespace Empiria.Land.Instruments {
   /// <summary>Represents a legal instrument like deeds, contracts, mortgages, court orders, prevention notes,
   /// and other kind of legally issued or attested instruments.</summary>
   [PartitionedType(typeof(InstrumentType))]
-  internal class Instrument : BaseObject {
+  internal partial class Instrument : BaseObject {
 
     #region Constructors and parsers
 
@@ -184,7 +184,6 @@ namespace Empiria.Land.Instruments {
         base.ReclassifyAs(instrumentType);
       }
     }
-
 
     private void LoadData(InstrumentFields data) {
       Kind = data.Kind ?? Kind;

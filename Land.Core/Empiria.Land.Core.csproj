@@ -56,19 +56,18 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Core" Version="7.0.0" />
     <PackageReference Include="Empiria.Services" Version="1.0.0" />
+    <PackageReference Include="Empiria.Storage" Version="2.0.0" />
     <PackageReference Include="Empiria.Geography" Version="7.0.0" />
     <PackageReference Include="Empiria.Land.Registration" Version="5.0.0" />
+    <PackageReference Include="Empiria.Land.Integration" Version="5.0.0" />
+    <PackageReference Include="Empiria.Land.Documentation" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />
     <ProjectReference Include="..\..\extensions\Services\Empiria.Services.csproj" />
+    <ProjectReference Include="..\..\extensions\Storage\Empiria.Storage.csproj" />
     <ProjectReference Include="..\..\extensions\Geography\Empiria.Geography.csproj" />
     <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Transactions\Entities\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Land.Integration\Empiria.Land.Integration.csproj" />
   </ItemGroup>
 </Project>

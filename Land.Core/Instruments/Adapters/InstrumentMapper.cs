@@ -7,6 +7,9 @@
 *  Summary  : Methods to map legal instruments to InstrumentDto objects.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
+
+using Empiria.Land.Media.Adapters;
 
 namespace Empiria.Land.Instruments.Adapters {
 
@@ -22,7 +25,8 @@ namespace Empiria.Land.Instruments.Adapters {
 
     static internal InstrumentDto Map(Instrument instrument) {
       var issuerDto = IssuerMapper.Map(instrument.Issuer);
-      var mediaDto = new object[0];
+
+      var mediaFiles = LandMediaFileMapper.Map(instrument.GetMediaFileSet());
 
       var dto = new InstrumentDto {
         UID = instrument.UID,
@@ -39,13 +43,16 @@ namespace Empiria.Land.Instruments.Adapters {
         Folio = instrument.Folio,
         EndFolio = instrument.EndFolio,
         SheetsCount = instrument.SheetsCount,
-        Media = mediaDto,
+        Media = mediaFiles,
         Status = instrument.Status.ToString()
       };
 
       return dto;
     }
 
+    internal static object Map(object instrument) {
+      throw new NotImplementedException();
+    }
   }  // class InstrumentMapper
 
 }  // namespace Empiria.Land.Instruments.Adapters
