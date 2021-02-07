@@ -50,6 +50,27 @@ namespace Empiria.Land.Transactions.Adapters {
       return dto;
     }
 
+    static internal TransactionPreprocessingDto Map(TransactionPreprocessingData data) {
+      var dto = new TransactionPreprocessingDto();
+
+      dto.Actions.Can.EditInstrument = data.CanEditInstrument;
+      dto.Actions.Can.UploadInstrumentFiles = data.CanUploadInstrumentFiles;
+      dto.Actions.Can.SetAntecedent = data.CanSetAntecedent;
+      dto.Actions.Can.CreateAntecedent = data.CanCreateAntecedent;
+      dto.Actions.Can.EditAntecedentRecordingActs = data.CanEditAntecedentRecordingActs;
+
+      dto.Actions.Show.Instrument = data.ShowInstrument;
+      dto.Actions.Show.InstrumentFiles = data.ShowInstrumentFiles;
+      dto.Actions.Show.Antecedent = data.ShowAntecedent;
+      dto.Actions.Show.AntecedentRecordingActs = data.ShowAntecedentRecordingActs;
+
+      dto.Instrument = InstrumentMapper.Map(data.Instrument);
+      dto.Antecedent = data.Antecedent;
+      dto.AntecedentRecordingActs = data.AntecedentRecordingActs;
+
+      return dto;
+    }
+
     #region Private methods
 
     private static TransactionStatus MapStatus(LRSTransactionStatus currentStatus) {
@@ -75,13 +96,12 @@ namespace Empiria.Land.Transactions.Adapters {
 
       dto.Show.ServiceEditor = controlData.ShowServiceEditor;
       dto.Show.PaymentReceiptEditor = controlData.ShowPaymentReceiptEditor;
-      dto.Show.UploadDocumentsTab = controlData.ShowUploadDocumentsTab;
+      dto.Show.PreprocessingTab = controlData.ShowPreprocessingTab;
       dto.Show.InstrumentRecordingTab = controlData.ShowInstrumentRecordingTab;
       dto.Show.CertificatesEmissionTab = controlData.ShowCertificatesEmissionTab;
 
       return dto;
     }
-
 
     static private PaymentFields GetPaymentDto(LRSTransaction transaction) {
       if (!transaction.HasPayment) {

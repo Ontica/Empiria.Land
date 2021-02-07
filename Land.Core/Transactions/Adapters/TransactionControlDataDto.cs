@@ -91,7 +91,7 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
-    public bool UploadDocumentsTab {
+    public bool PreprocessingTab {
       get; internal set;
     }
 
