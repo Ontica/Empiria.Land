@@ -71,11 +71,15 @@ namespace Empiria.Land.Transactions.Adapters {
       return dto;
     }
 
-    #region Private methods
+    static internal LRSTransactionStatus MapStatus(TransactionStatus currentStatus) {
+      return ((LRSTransactionStatus) (char) currentStatus);
+    }
 
-    private static TransactionStatus MapStatus(LRSTransactionStatus currentStatus) {
+    static internal TransactionStatus MapStatus(LRSTransactionStatus currentStatus) {
       return ((TransactionStatus) (char) currentStatus);
     }
+
+    #region Private methods
 
     static private TransactionControlDataDto GetControlDataDto(LRSTransaction transaction) {
       TransactionControlData controlData = transaction.ControlData;

@@ -13,6 +13,8 @@ namespace Empiria.Land.Transactions.Adapters {
   /// <summary>Enumerates the possible statuses of a transaction with respect of the office workflow.</summary>
   public enum TransactionStatus {
 
+    Undefined,
+
     Payment = 'Y',
 
     Received = 'R',
