@@ -769,13 +769,15 @@ namespace Empiria.Land.Registration.Transactions {
       this.TransactionType = PatchField(fields.TypeUID, this.TransactionType);
       this.DocumentType = PatchField(fields.SubtypeUID, this.DocumentType);
 
-      this.RecorderOffice = PatchField(fields.RecorderOfficeUID, this.RecorderOffice);
       this.Agency = PatchField(fields.AgencyUID, this.Agency);
+      this.RecorderOffice = PatchField(fields.RecorderOfficeUID, this.RecorderOffice);
 
       this.RequestedBy = PatchField(fields.RequestedBy, this.RequestedBy);
       this.RequestedBy = EmpiriaString.TrimAll(this.RequestedBy);
 
       Assertion.AssertObject(RequestedBy, "RequestedBy");
+
+      this.DocumentDescriptor = EmpiriaString.TrimAll(fields.InstrumentDescriptor);
 
       this.ExtensionData.Update(fields);
     }
