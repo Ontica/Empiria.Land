@@ -37,6 +37,11 @@ namespace Empiria.Land.Integration.PaymentServices {
     }
 
 
+    public string Status {
+      get; set;
+    }
+
+
     public bool IsEmpty {
       get {
         return string.IsNullOrEmpty(this.UID);

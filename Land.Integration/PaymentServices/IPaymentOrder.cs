@@ -23,6 +23,8 @@ namespace Empiria.Land.Integration.PaymentServices {
 
     decimal Total { get; }
 
+    string Status { get; }
+
     IDictionary<string, object> Attributes { get; }
 
   }  // interface IPaymentOrder

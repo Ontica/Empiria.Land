@@ -33,23 +33,29 @@ namespace Empiria.Land.Transactions.Providers {
     internal Task<decimal> CalculateFee(RequestedServiceFields requestedServiceFields) {
       requestedServiceFields.AssertValid();
 
+      var concept = LRSLawArticle.Parse(requestedServiceFields.FeeConceptUID);
+
+      if (String.IsNullOrWhiteSpace(concept.FinancialConceptCode)) {
+        return Task.FromResult(0m);
+      }
+
       if (requestedServiceFields.TaxableBase != decimal.Zero) {
-        return this.CalculateVariableFee(requestedServiceFields.ServiceUID,
+        return this.CalculateVariableFee(concept.FinancialConceptCode,
                                          requestedServiceFields.TaxableBase);
       } else {
-        return this.CalculateFixedFee(requestedServiceFields.ServiceUID,
+        return this.CalculateFixedFee(concept.FinancialConceptCode,
                                       requestedServiceFields.Quantity);
       }
     }
 
 
-    internal Task<decimal> CalculateFixedFee(string serviceUID, decimal quantity) {
-      return _externalService.CalculateFixedFee(serviceUID, quantity);
+    private Task<decimal> CalculateFixedFee(string financialConceptCode, decimal quantity) {
+      return _externalService.CalculateFixedFee(financialConceptCode, quantity);
     }
 
 
-    internal Task<decimal> CalculateVariableFee(string serviceUID, decimal taxableBase) {
-      return _externalService.CalculateVariableFee(serviceUID, taxableBase);
+    private Task<decimal> CalculateVariableFee(string financialConceptCode, decimal taxableBase) {
+      return _externalService.CalculateVariableFee(financialConceptCode, taxableBase);
     }
 
 
@@ -119,6 +125,9 @@ namespace Empiria.Land.Transactions.Providers {
     static private IPaymentService GetPaymentOrderService() {
       Type type = ObjectFactory.GetType("Empiria.Land.Integration",
                                         "Empiria.Land.Integration.PaymentServices.FakePaymentService");
+
+      // Type type = ObjectFactory.GetType("SIT.Finanzas.Connector",
+      //                                   "Empiria.Zacatecas.Integration.SITFinanzasConnector.PaymentService");
 
       return (IPaymentService) ObjectFactory.CreateObject(type);
     }

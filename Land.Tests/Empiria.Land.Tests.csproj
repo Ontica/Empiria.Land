@@ -81,10 +81,12 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Land.Connectors" Version="4.0.0" />
     <PackageReference Include="Empiria.OnePoint.EPayments" Version="2.0.0" />
+    <PackageReference Include="SIT.Finanzas.Connector" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\land.tlaxcala\connectors\Empiria.Land.Connectors.csproj" />
     <ProjectReference Include="..\..\onepoint\EPayments.Core\Empiria.OnePoint.EPayments.csproj" />
+    <ProjectReference Include="..\..\land.zacatecas\Integration\SIT.Finanzas\SIT.Finanzas.Connector.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="empiria.config.json">

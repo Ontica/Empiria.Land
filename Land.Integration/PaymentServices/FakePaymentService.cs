@@ -22,7 +22,7 @@ namespace Empiria.Land.Integration.PaymentServices {
 
 
     public Task<decimal> CalculateVariableFee(string serviceUID, decimal taxableBase) {
-      return Task.FromResult(taxableBase * 1.075m);
+      return Task.FromResult(taxableBase * 0.075m);
     }
 
 
@@ -42,11 +42,13 @@ namespace Empiria.Land.Integration.PaymentServices {
       }
 
       o.Attributes.Add("controlTag", Guid.NewGuid().ToString().Substring(0, 8));
-      o.Attributes.Add("url", $"https://fakeUrl.net/rpp/payment-orders/{o.UID}");
+      //o.Attributes.Add("url", $"https://registropublico.tlaxcala.gob.mx/intranet/land.registration.system.transactions/bank.payment.order.aspx?uid=TR-42NF7-9WD83-0&externalUID=f60d9364-313e-46b9-99f9-8b0089ba07b1");
+      o.Attributes.Add("url",
+        $"https://registropublico.tlaxcala.gob.mx/intranet/land.registration.system.transactions/orden.de.pago.fake.pdf");
+      o.Attributes.Add("mediaType", "application/pdf");
 
       return o;
     }
-
 
     public Task<string> GetPaymentStatus(IPaymentOrder paymentOrder) {
       if (paymentOrder.IssueTime.AddMinutes(10) <= DateTime.Now) {

@@ -48,11 +48,17 @@ namespace Empiria.Land.Transactions.Adapters {
     static private ProvidedServiceDto GetProvidedServiceDto(RecordingActType service) {
       FixedList<LRSLawArticle> lawArticles = service.GetFinancialLawArticles();
 
+      Empiria.DataTypes.Unit unit = Empiria.DataTypes.Unit.Empty;
+
+      if (lawArticles.Count != 0) {
+        unit = lawArticles[0].Unit;
+      }
+
       var dto = new ProvidedServiceDto();
 
       dto.UID = service.UID;
       dto.Name = service.DisplayName;
-      dto.Unit = new NamedEntityDto("JuridicActRecording", "Registro de acto jurídico");
+      dto.Unit = unit.MapToNamedEntity();
       dto.FeeConcepts = GetApplicableFeeConceptsDtoArray(lawArticles);
 
       return dto;
@@ -70,12 +76,12 @@ namespace Empiria.Land.Transactions.Adapters {
     }
 
 
-    static private FeeConceptDto GetApplicableFeeConceptDto(LRSLawArticle lRSLawArticle) {
+    static private FeeConceptDto GetApplicableFeeConceptDto(LRSLawArticle feeConcept) {
       return new FeeConceptDto {
-        UID = lRSLawArticle.UID,
-        LegalBasis = lRSLawArticle.Name,
-        FinancialCode = lRSLawArticle.FinancialConceptCode,
-        RequiresTaxableBase = true
+        UID = feeConcept.UID,
+        LegalBasis = feeConcept.Name,
+        FinancialCode = feeConcept.FinancialConceptCode,
+        RequiresTaxableBase = feeConcept.CalculatedOverTaxableBase
       };
     }
 

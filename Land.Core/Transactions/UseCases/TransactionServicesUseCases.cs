@@ -10,8 +10,6 @@
 using System;
 using System.Threading.Tasks;
 
-using Empiria.Services;
-
 using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Transactions.Providers;
 

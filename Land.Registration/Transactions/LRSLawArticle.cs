@@ -9,6 +9,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using Empiria.DataTypes;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -45,10 +46,21 @@ namespace Empiria.Land.Registration.Transactions {
 
     public string FinancialConceptCode {
       get {
-        return base.ExtendedDataField.Get("FinancialConceptCode", String.Empty);
+        return base.ExtendedDataField.Get("FinancialConcept", String.Empty);
       }
     }
 
+    public bool CalculatedOverTaxableBase {
+      get {
+        return base.ExtendedDataField.Get("RequiresTaxableBase", false);
+      }
+    }
+
+    public Unit Unit {
+      get {
+        return base.ExtendedDataField.Get("Unit", Unit.Empty);
+      }
+    }
   } // class LRSLawArticle
 
 } // namespace Empiria.Land.Registration.Transactions

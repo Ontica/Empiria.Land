@@ -28,6 +28,11 @@ namespace Empiria.Land.Integration.PaymentServices {
     } = decimal.Zero;
 
 
+    public decimal UnitCost {
+      get; set;
+    } = 1m;
+
+
     public decimal Total {
       get; set;
     } = decimal.Zero;
