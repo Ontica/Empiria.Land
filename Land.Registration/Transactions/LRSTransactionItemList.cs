@@ -69,16 +69,35 @@ namespace Empiria.Land.Registration.Transactions {
       this.CalculateTotals();
     }
 
+
     public new bool Contains(LRSTransactionItem item) {
       return base.Contains(item);
     }
+
 
     public bool Contains(RecordingActType item) {
       return base.Contains((x) => x.TransactionItemType.Equals(item));
     }
 
+
     public new bool Contains(Predicate<LRSTransactionItem> match) {
       return (base.Find(match) != null);
+    }
+
+
+    public bool ContainsPayableItems() {
+      var payable = new Predicate<LRSTransactionItem>(x => x.IsPayable);
+
+      return (base.Find(payable) != null);
+    }
+
+
+    public FixedList<LRSTransactionItem> PayableItems {
+      get {
+        var payable = new Predicate<LRSTransactionItem>(x => x.IsPayable);
+
+        return base.FindAll(payable);
+      }
     }
 
     public override void CopyTo(LRSTransactionItem[] array, int index) {

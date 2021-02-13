@@ -110,6 +110,7 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
+
     [DataField("Notes")]
     public string Notes {
       get;
@@ -147,6 +148,26 @@ namespace Empiria.Land.Registration.Transactions {
         } else {
           return this.Quantity.Amount;
         }
+      }
+    }
+
+
+    public bool IsNotPayable {
+      get {
+        if (this.TreasuryCode.IsEmptyInstance) {
+          return true;
+        }
+        if (String.IsNullOrWhiteSpace(this.TreasuryCode.FinancialConceptCode)) {
+          return true;
+        }
+        return false;
+      }
+    }
+
+
+    public bool IsPayable {
+      get {
+        return !this.IsNotPayable;
       }
     }
 

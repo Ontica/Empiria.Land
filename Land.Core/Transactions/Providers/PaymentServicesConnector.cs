@@ -62,7 +62,9 @@ namespace Empiria.Land.Transactions.Providers {
     internal Task<IPaymentOrder> GeneratePaymentOrder(LRSTransaction transaction) {
       Assertion.AssertObject(transaction, "transaction");
 
-      PaymentOrderRequestDto paymentOrderRequest = MapToPaymentOrderRequest(transaction);
+      var payableItems = transaction.Items.PayableItems;
+
+      PaymentOrderRequestDto paymentOrderRequest = MapToPaymentOrderRequest(transaction, payableItems);
 
       return _externalService.GeneratePaymentOrderFor(paymentOrderRequest);
     }
@@ -79,7 +81,8 @@ namespace Empiria.Land.Transactions.Providers {
 
     #region Mapper methods
 
-    private PaymentOrderRequestDto MapToPaymentOrderRequest(LRSTransaction transaction) {
+    private PaymentOrderRequestDto MapToPaymentOrderRequest(LRSTransaction transaction,
+                                                            FixedList<LRSTransactionItem> items) {
       var po = new PaymentOrderRequestDto();
 
       po.BaseTransactionUID = transaction.UID;
@@ -90,13 +93,13 @@ namespace Empiria.Land.Transactions.Providers {
         po.RFC = "XAXX010101000";
       }
 
-      po.Concepts = MapToPaymentOrderRequestConceptsArray(transaction.Items);
+      po.Concepts = MapToPaymentOrderRequestConceptsArray(items);
 
       return po;
     }
 
 
-    private PaymentOrderRequestConceptDto[] MapToPaymentOrderRequestConceptsArray(LRSTransactionItemList items) {
+    private PaymentOrderRequestConceptDto[] MapToPaymentOrderRequestConceptsArray(FixedList<LRSTransactionItem> items) {
       var conceptsArray = new PaymentOrderRequestConceptDto[items.Count];
 
       for (int i = 0; i < items.Count; i++) {
@@ -123,11 +126,11 @@ namespace Empiria.Land.Transactions.Providers {
     #region Helper methods
 
     static private IPaymentService GetPaymentOrderService() {
-      Type type = ObjectFactory.GetType("Empiria.Land.Integration",
-                                        "Empiria.Land.Integration.PaymentServices.FakePaymentService");
+      //Type type = ObjectFactory.GetType("Empiria.Land.Integration",
+      //                                  "Empiria.Land.Integration.PaymentServices.FakePaymentService");
 
-      // Type type = ObjectFactory.GetType("SIT.Finanzas.Connector",
-      //                                   "Empiria.Zacatecas.Integration.SITFinanzasConnector.PaymentService");
+      Type type = ObjectFactory.GetType("SIT.Finanzas.Connector",
+                                        "Empiria.Zacatecas.Integration.SITFinanzasConnector.PaymentService");
 
       return (IPaymentService) ObjectFactory.CreateObject(type);
     }

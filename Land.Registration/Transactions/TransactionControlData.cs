@@ -167,7 +167,15 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        return (_transaction.HasServices && !_transaction.HasPaymentOrder);
+        if (!_transaction.HasServices) {
+          return false;
+        }
+
+        if (!_transaction.Items.ContainsPayableItems()) {
+          return false;
+        }
+
+        return (!_transaction.HasPaymentOrder);
       }
     }
 
@@ -190,9 +198,23 @@ namespace Empiria.Land.Transactions {
       }
     }
 
+    public bool CanRegisterAntecedent {
+      get {
+        if (!ShowPreprocessingTab) {
+          return false;
+        }
+
+        if (!IsTransactionInStatus(LRSTransactionStatus.Digitalization)) {
+          return false;
+        }
+
+        return IsUserInRole("LRSTransaction.Digitalizer");
+      }
+    }
+
     public bool CanUploadDocuments {
       get {
-        if (!ShowUploadDocumentsTab) {
+        if (!ShowPreprocessingTab) {
           return false;
         }
 
@@ -259,7 +281,7 @@ namespace Empiria.Land.Transactions {
       }
     }
 
-    public bool ShowUploadDocumentsTab {
+    public bool ShowPreprocessingTab {
       get {
         if (!IsSubmitted) {
           return false;
@@ -267,8 +289,10 @@ namespace Empiria.Land.Transactions {
 
         // ToDo: Check if has uploaded documents
 
-        return LRSWorkflowRules.IsDigitalizable(_transaction.TransactionType,
-                                                _transaction.DocumentType);
+        return true;
+
+        //return LRSWorkflowRules.IsDigitalizable(_transaction.TransactionType,
+        //                                        _transaction.DocumentType);
       }
     }
 
