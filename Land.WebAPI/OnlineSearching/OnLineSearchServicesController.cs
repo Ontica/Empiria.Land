@@ -429,7 +429,7 @@ namespace Empiria.Land.WebApi {
       } else if (transaction.IsFeeWaiverApplicable) {
         propertyBag.Add(new PropertyBagItem("Pago de derechos", "Este trámite no requiere pago alguno."));
       } else {
-        propertyBag.Add(new PropertyBagItem("Pago de derechos", "Este trámite no pagó derechos", "warning-status-text"));
+        // propertyBag.Add(new PropertyBagItem("Pago de derechos", "Este trámite no pagó derechos", "warning-status-text"));
 
       }
 
@@ -486,22 +486,26 @@ namespace Empiria.Land.WebApi {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
                                             transaction.Workflow.CurrentStatusName, "in-process-status-text"));
 
-        if (transaction.EstimatedDueTime < DateTime.Today) {
-          propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada",
-                                              transaction.EstimatedDueTime.ToString("dd/MMM/yyyy") + " (atrasado)<br/>" +
-                                              "Lo sentimos, este trámite nos ha llevado hacerlo un poco más de lo normal.",
-                                              "warning-status-text"));
-        } else {
-          propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada",
-                                              transaction.EstimatedDueTime.ToString("dd/MMM/yyyy")));
-        }
+        propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada", "Por COVID-19, desafortunadamente no podemos determinarla."));
+
+        //if (transaction.EstimatedDueTime < DateTime.Today) {
+        //  propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada",
+        //                                      transaction.EstimatedDueTime.ToString("dd/MMM/yyyy") + " (atrasado)<br/>" +
+        //                                      "Lo sentimos, este trámite nos ha llevado hacerlo un poco más de lo normal.",
+        //                                      "warning-status-text"));
+        //} else {
+        //  propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada",
+        //                                      transaction.EstimatedDueTime.ToString("dd/MMM/yyyy")));
+        //}
       }
 
       if (transaction.Items.Count > 0) {
         propertyBag.Add(new PropertyBagItem("Conceptos", String.Empty, "section"));
         foreach (var item in transaction.Items) {
+          string value = item.Fee.Total == 0m ? item.TreasuryCode.Name : item.Fee.Total.ToString("C2");
+
           propertyBag.Add(new PropertyBagItem(item.TransactionItemType.DisplayName,
-                                              item.Fee.Total.ToString("C2")));
+                                              value));
         }
       }
 
