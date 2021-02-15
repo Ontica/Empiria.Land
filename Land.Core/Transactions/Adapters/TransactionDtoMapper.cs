@@ -12,6 +12,9 @@ using System;
 using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
 
+using Empiria.Land.Media;
+using Empiria.Land.Media.Adapters;
+
 using Empiria.Land.RecordableEntities.Adapters;
 
 using Empiria.Land.Registration.Transactions;
@@ -41,6 +44,7 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.RequestedServices = GetRequestedServicesDtoArray(transaction);
       dto.PaymentOrder = GetPaymentOrderDto(transaction);
       dto.Payment = GetPaymentDto(transaction);
+      dto.SubmissionReceipt = GetSubmissionReceiptDto(transaction);
       dto.PresentationTime = transaction.PresentationTime;
       dto.InternalControlNo = transaction.InternalControlNo;
       dto.Status = MapStatus(transaction.Workflow.CurrentStatus);
@@ -49,6 +53,7 @@ namespace Empiria.Land.Transactions.Adapters {
 
       return dto;
     }
+
 
     static internal TransactionPreprocessingDto Map(TransactionPreprocessingData data) {
       var dto = new TransactionPreprocessingDto();
@@ -88,6 +93,7 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.Can.Edit = controlData.CanEdit;
       dto.Can.Delete = controlData.CanDelete;
       dto.Can.Submit = controlData.CanSubmit;
+      dto.Can.PrintSubmissionReceipt = controlData.CanPrintSubmissionReceipt;
       dto.Can.EditServices = controlData.CanEditServices;
       dto.Can.GeneratePaymentOrder = controlData.CanGeneratePaymentOrder;
       dto.Can.CancelPaymentOrder = controlData.CanCancelPaymentOrder;
@@ -174,6 +180,15 @@ namespace Empiria.Land.Transactions.Adapters {
       };
     }
 
+    private static MediaDto GetSubmissionReceiptDto(LRSTransaction transaction) {
+      if (!transaction.ControlData.CanPrintSubmissionReceipt) {
+        return null;
+      }
+
+      var mediaBuilder = new LandMediaBuilder(LandMediaContent.TransactionSubmissionReceipt, transaction);
+
+      return mediaBuilder.GetMediaDto();
+    }
 
     static private InstrumentDto GetInstrumentDto(LRSTransaction transaction) {
       if (transaction.InstrumentId == -1) {

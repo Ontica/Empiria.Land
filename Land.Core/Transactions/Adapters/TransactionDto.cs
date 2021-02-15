@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Land.Instruments.Adapters;
+using Empiria.Land.Media.Adapters;
 using Empiria.Land.RecordableEntities.Adapters;
 
 namespace Empiria.Land.Transactions.Adapters {
@@ -74,6 +75,10 @@ namespace Empiria.Land.Transactions.Adapters {
     }
 
     public PaymentFields Payment {
+      get; internal set;
+    }
+
+    public MediaDto SubmissionReceipt {
       get; internal set;
     }
 

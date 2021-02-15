@@ -1,30 +1,29 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Land Media Files Management                Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Enumeration                             *
-*  Type     : LandMediaContent                           License   : Please read LICENSE.txt file            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
+*  Type     : MediaDto                                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Media content strings for Land media files.                                                    *
+*  Summary  : Data structure with media data.                                                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
 
 namespace Empiria.Land.Media.Adapters {
 
-  /// <summary>Media content strings for Land media files.</summary>
-  public enum LandMediaContent {
+  /// <summary>Data structure with media data.</summary>
+  public class MediaDto {
 
-    Unknown,
+    public string Url {
+      get; internal set;
+    } = string.Empty;
 
-    TransactionSubmissionReceipt,
 
-    TransactionPaymentOrder,
+    public string MediaType {
+      get; internal set;
+    } = string.Empty;
 
-    InstrumentMainFile,
 
-    InstrumentAuxiliaryFile,
+  }  // public class MediaDto
 
-    ReturnDocumentFile,
-
-  }  // enum LandMediaContent
-
-} // namespace Empiria.Land.Media
+}  // namespace Empiria.Land.Transactions.Adapters

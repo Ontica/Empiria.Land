@@ -206,6 +206,15 @@ namespace Empiria.Land.Transactions {
       }
     }
 
+    public bool CanPrintSubmissionReceipt {
+      get {
+        if (!IsSubmitted) {
+          return false;
+        }
+        return true;
+      }
+    }
+
 
     public bool CanRegisterAntecedent {
       get {
