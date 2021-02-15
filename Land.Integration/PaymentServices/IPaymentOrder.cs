@@ -17,6 +17,10 @@ namespace Empiria.Land.Integration.PaymentServices {
 
     string UID { get; }
 
+    string Issuer { get; }
+
+    string Version { get; }
+
     DateTime IssueTime { get; }
 
     DateTime DueDate { get; }

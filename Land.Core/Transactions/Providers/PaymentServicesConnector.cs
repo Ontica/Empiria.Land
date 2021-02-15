@@ -22,9 +22,15 @@ namespace Empiria.Land.Transactions.Providers {
   /// <summary>Connector used to gain access to transaction payment order services.</summary>
   internal class PaymentServicesConnector {
 
+    private readonly static string PAYMENT_ORDER_URL = ConfigurationData.GetString("PaymentOrder.Url");
+
+    private readonly bool ConnectedToPaymentOrderServices;
+
     private readonly IPaymentService _externalService;
 
     internal PaymentServicesConnector() {
+      ConnectedToPaymentOrderServices = TransactionControlData.ConnectedToPaymentOrderServices;
+
       _externalService = GetPaymentOrderService();
     }
 
@@ -49,18 +55,12 @@ namespace Empiria.Land.Transactions.Providers {
     }
 
 
-    private Task<decimal> CalculateFixedFee(string financialConceptCode, decimal quantity) {
-      return _externalService.CalculateFixedFee(financialConceptCode, quantity);
-    }
-
-
-    private Task<decimal> CalculateVariableFee(string financialConceptCode, decimal taxableBase) {
-      return _externalService.CalculateVariableFee(financialConceptCode, taxableBase);
-    }
-
-
     internal Task<IPaymentOrder> GeneratePaymentOrder(LRSTransaction transaction) {
       Assertion.AssertObject(transaction, "transaction");
+
+      if (!ConnectedToPaymentOrderServices) {
+        return Task.FromResult(GetDisconnectedPaymentOrder(transaction));
+      }
 
       var payableItems = transaction.Items.PayableItems;
 
@@ -71,6 +71,10 @@ namespace Empiria.Land.Transactions.Providers {
 
 
     internal Task<string> GetPaymentStatus(PaymentOrder paymentOrder) {
+      if (!ConnectedToPaymentOrderServices) {
+        return Task.FromResult("Desconocido");
+      }
+
       Assertion.AssertObject(paymentOrder, "paymentOrder");
 
       return _externalService.GetPaymentStatus(paymentOrder);
@@ -80,6 +84,40 @@ namespace Empiria.Land.Transactions.Providers {
     #endregion Services
 
     #region Mapper methods
+
+    private Task<decimal> CalculateFixedFee(string financialConceptCode, decimal quantity) {
+      if (!ConnectedToPaymentOrderServices) {
+        return Task.FromResult(0m);
+      }
+
+      return _externalService.CalculateFixedFee(financialConceptCode, quantity);
+    }
+
+
+    private Task<decimal> CalculateVariableFee(string financialConceptCode, decimal taxableBase) {
+      if (!ConnectedToPaymentOrderServices) {
+        return Task.FromResult(0m);
+      }
+
+      return _externalService.CalculateVariableFee(financialConceptCode, taxableBase);
+    }
+
+
+    private static IPaymentOrder GetDisconnectedPaymentOrder(LRSTransaction transaction) {
+      var po = new PaymentOrderDto {
+        UID = Guid.NewGuid().ToString(),
+        Issuer = "Empiria.Land",
+        Version = "5.0",
+        IssueTime = DateTime.Now,
+        DueDate = DateTime.Now.AddDays(15)
+      };
+
+      po.AddAttribute("url", $"{PAYMENT_ORDER_URL}/payment.order.aspx?uid={transaction.UID}");
+      po.AddAttribute("mediaType", "text/html");
+
+      return po;
+    }
+
 
     private PaymentOrderRequestDto MapToPaymentOrderRequest(LRSTransaction transaction,
                                                             FixedList<LRSTransactionItem> items) {
@@ -126,9 +164,6 @@ namespace Empiria.Land.Transactions.Providers {
     #region Helper methods
 
     static private IPaymentService GetPaymentOrderService() {
-      //Type type = ObjectFactory.GetType("Empiria.Land.Integration",
-      //                                  "Empiria.Land.Integration.PaymentServices.FakePaymentService");
-
       Type type = ObjectFactory.GetType("SIT.Finanzas.Connector",
                                         "Empiria.Zacatecas.Integration.SITFinanzasConnector.PaymentService");
 

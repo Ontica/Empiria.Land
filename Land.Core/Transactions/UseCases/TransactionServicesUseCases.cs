@@ -31,6 +31,7 @@ namespace Empiria.Land.Transactions.UseCases {
       return await Task.FromResult(TransactionDtoMapper.Map(transaction));
     }
 
+
     public TransactionDto DeleteService(string transactionUID, string requestedServiceUID) {
       Assertion.AssertObject(requestedServiceUID, "requestedServiceUID");
 
@@ -122,7 +123,8 @@ namespace Empiria.Land.Transactions.UseCases {
       Assertion.Assert(transaction.ControlData.CanEditPayment,
                        $"Can not set payment for transaction '{transactionUID}'.");
 
-      Assertion.Assert(transaction.PaymentOrder.Total >= paymentFields.Total,
+      Assertion.Assert(transaction.PaymentOrder.Total == 0 ||
+                       transaction.PaymentOrder.Total >= paymentFields.Total,
                       $"Payment total must be less or equal than payment order total.");
 
       var connector = new PaymentServicesConnector();

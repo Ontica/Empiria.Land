@@ -16,6 +16,9 @@ namespace Empiria.Land.Transactions {
   /// <summary>Provides edition and other control data for a Transaction for the current user.</summary>
   public class TransactionControlData {
 
+    public static readonly bool ConnectedToPaymentOrderServices =
+                                  ConfigurationData.Get("ConnectedToPaymentOrderServices", false);
+
     private readonly LRSTransaction _transaction;
 
     internal TransactionControlData(LRSTransaction transaction) {
@@ -119,6 +122,7 @@ namespace Empiria.Land.Transactions {
       }
     }
 
+
     public bool CanEditPayment {
       get {
         if (IsSubmitted) {
@@ -137,11 +141,13 @@ namespace Empiria.Land.Transactions {
       }
     }
 
+
     public bool CanCancelPayment {
       get {
         return _transaction.HasPayment && CanEditPayment;
       }
     }
+
 
     public bool CanEditServices {
       get {
@@ -156,6 +162,7 @@ namespace Empiria.Land.Transactions {
         return true;
       }
     }
+
 
     public bool CanGeneratePaymentOrder {
       get {
@@ -179,6 +186,7 @@ namespace Empiria.Land.Transactions {
       }
     }
 
+
     public bool CanSubmit {
       get {
         if (IsSubmitted) {
@@ -198,6 +206,7 @@ namespace Empiria.Land.Transactions {
       }
     }
 
+
     public bool CanRegisterAntecedent {
       get {
         if (!ShowPreprocessingTab) {
@@ -211,6 +220,7 @@ namespace Empiria.Land.Transactions {
         return IsUserInRole("LRSTransaction.Digitalizer");
       }
     }
+
 
     public bool CanUploadDocuments {
       get {
@@ -270,6 +280,7 @@ namespace Empiria.Land.Transactions {
         return _transaction.HasPaymentOrder;
       }
     }
+
 
     public bool ShowServiceEditor {
       get {

@@ -32,6 +32,8 @@ namespace Empiria.Land.Transactions {
       Assertion.AssertObject(paymentOrder, "paymentOrder");
 
       this.UID = paymentOrder.UID;
+      this.Issuer = paymentOrder.Issuer;
+      this.Version = paymentOrder.Version;
       this.IssueTime = paymentOrder.IssueTime;
       this.DueDate = paymentOrder.DueDate;
       this.Total = paymentOrder.Total;
@@ -42,6 +44,8 @@ namespace Empiria.Land.Transactions {
 
     private PaymentOrder(JsonObject json) {
       this.UID = json.Get("uid", this.UID);
+      this.Issuer = json.Get("issuer", this.Issuer);
+      this.Version = json.Get("version", this.Version);
       this.IssueTime = json.Get("issueTime", this.IssueTime);
       this.DueDate = json.Get("dueDate", this.DueDate);
       this.Total = json.Get("total", this.Total);
@@ -73,6 +77,16 @@ namespace Empiria.Land.Transactions {
     #region Fields
 
     public string UID {
+      get; internal set;
+    } = string.Empty;
+
+
+    public string Issuer {
+      get; internal set;
+    } = string.Empty;
+
+
+    public string Version {
       get; internal set;
     } = string.Empty;
 
@@ -122,6 +136,8 @@ namespace Empiria.Land.Transactions {
       var json = new JsonObject();
 
       json.Add("uid", this.UID);
+      json.Add("issuer", this.Issuer);
+      json.Add("version", this.Version);
       json.Add("issueTime", this.IssueTime);
       json.Add("dueDate", this.DueDate);
       json.Add("total", this.Total);

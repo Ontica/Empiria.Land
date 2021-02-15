@@ -22,6 +22,16 @@ namespace Empiria.Land.Integration.PaymentServices {
     } = string.Empty;
 
 
+    public string Issuer {
+      get; set;
+    } = string.Empty;
+
+
+    public string Version {
+      get; set;
+    } = string.Empty;
+
+
     public DateTime IssueTime {
       get; set;
     }
