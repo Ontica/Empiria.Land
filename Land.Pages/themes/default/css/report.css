@@ -1,0 +1,180 @@
+﻿html, body {
+	border: none;	
+	background: transparent;
+	color: #000000;
+	font-family: Arial, Sans-serif;
+	font-size: 8pt;
+	padding: 0pt 0pt 0pt 0pt;
+	margin: 0px 0px 0px 0px;
+	width: 100%;
+}
+.mainTable {
+	border-bottom: #000046 6pt solid;
+}
+table
+{
+	padding: 0pt 0pt 0pt 0pt;
+	margin: 0px 0px 0px 0px;
+}
+.verticalText {
+  writing-mode: tb-rl;
+  filter: flipv fliph;
+}
+.reportRow td {
+	border-bottom: #000046 1pt solid;
+	padding: 0pt 0pt 4pt 0pt;
+	margin: 0px;
+}
+.tableLevel0 {
+  margin-left : 2%;
+	margin-right: 2%;
+	padding: 8pt 8pt 8pt 8pt;
+	border: none;
+  width: 90%;	
+}
+.tableLevel1 {
+	margin-left: 2%;
+	margin-right: 2%;
+	width: 95%;	
+}
+.tableLevel1 tr td {
+	padding: 4pt 4pt 4pt 4pt;
+}
+.tableHeader {
+	padding: 4pt 4pt 4pt 4pt;
+	font-family: Tahoma, Arial, Sans-serif;
+	border: none;
+	background-color: #e8e8e8;
+	border-collapse: collapse;	
+}
+h2 {
+	padding: 8pt 4pt 4pt 4pt;
+	font-size: 12px;
+	font-family: Verdana, Tahoma, Arial, Sans-serif;
+	width: 100%;
+	margin: 12pt 0pt 0pt 0pt;
+	color: #001553;	
+}
+.title {
+	background: transparent;
+	font-family: Arial, Sans-serif;		
+	font-size: 14pt;
+	font-weight: bold;
+	color: #001553;
+  vertical-align: middle;	
+}
+.subTitle {
+	font-family: Arial, Sans-serif;		
+	background: transparent;
+	font-size: 10pt;
+	font-weight: bold;
+	color: #001553;
+}
+.reportItemHeader {
+  background: transparent;	
+	border-bottom: #001553 1px solid;
+	color: #001553;
+	font-size: 10pt;	
+	font-weight: bold;	
+	font-family:  Arial, Sans-serif;
+	padding-top: 28pt;	
+}
+.reportItemSubHeader {
+	background: transparent;
+	color: #8b4513;
+	padding-top: 12pt;
+	padding-bottom: 8pt;
+	margin-top: 10pt;
+	font-weight: bold;
+	font-size: 8pt;
+	font-family: Tahoma;
+}
+.reportItemSection {
+  background: transparent;	
+	border-bottom: #001553 1px solid;
+	color: #001553;
+	font-size: 10pt;
+	font-family:  Arial, Sans-serif;
+	padding: 4pt 4pt 4pt 4pt;
+}
+.label {
+  background: transparent;
+  color: #6a6a6a;
+  height: 18px;
+  white-space: nowrap;
+}
+table td {
+  vertical-align: top;
+}
+table.reportTable {
+  font-family:  Tahoma, Arial, Sans-serif;
+  padding: 0pt;
+  margin: 0pt;
+  border: none;
+  white-space: nowrap;
+  width: 100%;
+  font-size: 8pt;
+  border-spacing: 0pt;
+  border-collapse: collapse;
+  vertical-align: middle;
+}
+.reportTableHeader td {
+  background-color: #c4c4c4;
+  color: #0d245f;
+  font-family: Arial, Sans-serif;
+  font-size: 8pt;
+  margin: 0pt;
+  height:16pt;
+  border: none;
+  vertical-align: middle;
+  border-collapse: collapse;
+  border-spacing: 0pt;
+  padding: 2pt;
+  border-top: #192d5c 2px solid;
+  border-bottom: #192d5c 1px solid;
+}
+
+.reportTableTotals td {
+  background-color: #cecece;
+  color: #0d245f;
+  font-family: Tahoma, Arial, Sans-serif;
+  padding: 2pt 2pt 2pt 2pt;
+  border: none;
+  border-collapse: collapse;
+  vertical-align: middle;
+  height:22pt;
+  border-bottom: #192d5c 2px solid;
+}
+.detailsItem td {
+	background: transparent;
+  height: 16pt;
+  vertical-align: middle;
+  padding: 2pt;
+  font-size: 8pt;
+}
+
+.detailsOddItem td {
+  background: transparent;
+  background-color: #efefef;
+  height: 16pt;
+  vertical-align: middle;
+  padding: 2pt;
+  border-top: #192d5c 1px solid;
+  border-bottom: #192d5c 1px solid;
+  font-size: 8pt;
+}
+
+.separator td {
+	border-bottom: #a0a0a0 1pt solid;
+	padding-top: 8pt;
+	padding-bottom: 12pt;
+	padding-right: 8pt;
+	background-color: #f8f8f8;
+}
+.breakpage {
+	page-break-after: always;
+}
+table.internalTable {
+	margin: 0px 6px 0px -6px;
+  width: 100%;
+}

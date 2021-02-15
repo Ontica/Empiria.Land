@@ -1,0 +1,57 @@
+﻿{
+  "appName": "Empiria Land Pages",
+  "version": "5.0",
+  "date": "2021-02-14",
+  "settings": [
+    {
+      "type": "",
+      "key": "ApplicationKey",
+      "value": "land-backend-dev_L241G8dvRb8^q7fX5PsGh65^+se=b_Z3GI2o$I&5hDpWD-GrXAbSi8@?++pBT5c!"
+    },
+    {
+      "type": "",
+      "key": "GlobalConfigurationFile",
+      "value": "E:\\empiria.files\\config.data\\empiria.land.zacatecas.development.json"
+    },
+    {
+      "type": "Presentation.Web",
+      "key": "Server.RootPath",
+      "value": "http://empiria.land/intranet/"
+    },
+    {
+      "type": "Land.WebApp",
+      "key": "CertificatesSystem.Url",
+      "value": "http://empiria.land/certificates/"
+    },
+    {
+      "type": "Data",
+      "key": "IsObjectIdGeneratorServer",
+      "value": false
+    },
+    {
+      "type": "",
+      "key": "DisplayVedaElectoralUI",
+      "value": false
+    },
+    {
+      "type": "Land",
+      "key": "PrintServicesServerBaseAddress",
+      "value": "http://empiria.land/intranet/land.registration.system"
+    },
+    {
+      "type": "Land",
+      "key": "SearchServicesServerBaseAddress",
+      "value": "https://registropublico.zacatecas.gob.mx/consultas"
+    },
+    {
+      "type": "WebApi",
+      "key": "IsPassThroughServer",
+      "value": false
+    },
+    {
+      "type": "Land.WebApi",
+      "key": "Target.WebApi.Server",
+      "value": "NONE"
+    }
+  ]
+}

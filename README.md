@@ -42,13 +42,16 @@ Empiria Land includes the following software components:
 7.  **User Interface Services**  
     Provides Html parsing services especially tailored to display and reuse Empiria Land user interfaces.
 
-8.  **Providers**  
+8.  **Pages**  
+    Server generated forms, slips, documents and reports.
+
+9.  **Providers**  
     Separated providers implementation layer used by Empiria Land components.
 
-9.  **Web API (HTTP/REST-based)**  
-     Http/Json RESTful type web services used to communicate with third party systems, to emit certificates and perform data searching operations.
+10.  **Web API (HTTP/REST-based)**  
+    Http/Json RESTful type web services used to communicate with third party systems, to emit certificates and perform data searching operations.
 
-10. **Tests**  
+11. **Tests**  
     Unit and integration test cases for Empiria Land.
 
 ## Documentation
