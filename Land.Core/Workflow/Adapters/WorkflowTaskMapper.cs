@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Interface adapters                      *
+*  Module   : Workflow Management                        Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
 *  Type     : WorkflowTaskMapper                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -9,9 +9,11 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Land.Transactions.Adapters;
+
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Transactions.Adapters {
+namespace Empiria.Land.Workflow.Adapters {
 
   /// <summary>Mapping methods from TransactionType instances to TransactionTypeDto models.</summary>
   static internal class WorkflowTaskMapper {
@@ -39,4 +41,4 @@ namespace Empiria.Land.Transactions.Adapters {
 
   }  // class WorkflowTaskMapper
 
-}  // namespace Empiria.Land.Transactions.Adapters
+}  // namespace Empiria.Land.Workflow.Adapters

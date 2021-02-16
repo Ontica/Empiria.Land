@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Use cases Layer                         *
+*  Module   : Workflow Management                        Component : Use cases Layer                         *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Use case interactor class               *
 *  Type     : WorkflowUseCases                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -8,15 +8,15 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Collections.Generic;
 
 using Empiria.Services;
 
 using Empiria.Land.Transactions.Adapters;
-
+using Empiria.Land.Workflow.Adapters;
 using Empiria.Land.Registration.Transactions;
-using Empiria.Contacts;
 
-namespace Empiria.Land.Transactions.UseCases {
+namespace Empiria.Land.Workflow.UseCases {
 
   /// <summary>Use cases for get transaction workflow and invoke commands on it.</summary>
   public partial class WorkflowUseCases : UseCase {
@@ -46,32 +46,28 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
-    public TransactionDto ExecuteWorkflowCommand(WorkflowCommand command) {
+    public FixedList<WorkflowTaskDto> ExecuteWorkflowCommand(WorkflowCommand command) {
       ValidateCommand(command);
 
-      var transaction = LRSTransaction.Parse(command.Payload.TransactionUID[0]);
+      var changesList = new List<WorkflowTaskDto>(command.Payload.TransactionUID.Length);
 
-      return TransactionDtoMapper.Map(transaction);
-    }
+      foreach (var transactionUID in command.Payload.TransactionUID) {
+        var transaction = LRSTransaction.Parse(transactionUID);
 
+        var workflow = transaction.Workflow;
 
-    public WorkflowTaskDto ExecuteWorkflowCommand(string transactionUID, WorkflowCommand command) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
-      ValidateCommand(command);
+        var status = TransactionDtoMapper.MapStatus(command.Payload.NextStatus);
 
-      command.Payload.TransactionUID = new string[] { transactionUID };
+        var assignTo = command.Payload.AssignTo;
 
-      var transaction = LRSTransaction.Parse(command.Payload.TransactionUID[0]);
+        workflow.SetNextStatus(status, assignTo, command.Payload.Note);
 
-      var workflow = transaction.Workflow;
+        var mapped = WorkflowTaskMapper.Map(workflow.GetCurrentTask());
 
-      var status = TransactionDtoMapper.MapStatus(command.Payload.NextStatus);
+        changesList.Add(mapped);
+      }
 
-      var assignTo = command.Payload.AssignTo;
-
-      workflow.SetNextStatus(status, assignTo, command.Payload.Note);
-
-      return WorkflowTaskMapper.Map(workflow.GetCurrentTask());
+      return changesList.ToFixedList();
     }
 
 
@@ -95,10 +91,11 @@ namespace Empiria.Land.Transactions.UseCases {
       Assertion.Assert(command.Payload.NextStatus != TransactionStatus.Undefined &&
                        command.Payload.NextStatus != TransactionStatus.All,
         $"Unrecognized value '{command.Payload.NextStatus}' for command.payload.nextStatus.");
+
     }
 
     #endregion Helpers
 
   }  // class WorkflowUseCases
 
-}  // namespace Empiria.Land.Transactions.UseCases
+}  // namespace Empiria.Land.Workflow.UseCases

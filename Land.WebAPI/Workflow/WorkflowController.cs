@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                       Component : Web Api                               *
+*  Module   : Workflow Management                          Component : Web Api                               *
 *  Assembly : Empiria.Land.WebApi.dll                      Pattern   : Controller                            *
 *  Type     : WorkflowController                           License   : Please read LICENSE.txt file          *
 *                                                                                                            *
@@ -11,10 +11,10 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.Land.Transactions.Adapters;
-using Empiria.Land.Transactions.UseCases;
+using Empiria.Land.Workflow.Adapters;
+using Empiria.Land.Workflow.UseCases;
 
-namespace Empiria.Land.Transactions.WebApi {
+namespace Empiria.Land.Workflow.WebApi {
 
   /// <summary>Web API used to retrive transaction workflow data and invoke commands on it.</summary>
   public class WorkflowController : WebApiController {
@@ -52,22 +52,37 @@ namespace Empiria.Land.Transactions.WebApi {
       base.RequireBody(command);
 
       using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
-        WorkflowTaskDto currentWorkflowTask = usecases.ExecuteWorkflowCommand(transactionUID, command);
+        command.Payload.TransactionUID = new string[] { transactionUID };
 
-        return new SingleObjectModel(this.Request, currentWorkflowTask);
+        FixedList<WorkflowTaskDto> currentWorkflowTask = usecases.ExecuteWorkflowCommand(command);
+
+        return new SingleObjectModel(this.Request, currentWorkflowTask[0]);
       }
     }
 
 
     [HttpPost]
     [Route("v5/land/workflow/execute-command")]
-    public SingleObjectModel ExecuteWorkflowCommandForMultipleTransactions([FromBody] WorkflowCommand command) {
+    public CollectionModel ExecuteWorkflowCommandForMultipleTransactions([FromBody] WorkflowCommand command) {
       base.RequireBody(command);
 
       using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
-        TransactionDto transactionDto = usecases.ExecuteWorkflowCommand(command);
+        FixedList<WorkflowTaskDto> workflowTasks = usecases.ExecuteWorkflowCommand(command);
 
-        return new SingleObjectModel(this.Request, transactionDto);
+        return new CollectionModel(this.Request, workflowTasks);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v5/land/workflow/available-operations")]
+    public CollectionModel GetAvailableOperationsForMultipleTransactions([FromBody] string[] transactions) {
+      base.RequireBody(transactions);
+
+      using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
+        // FixedList<WorkflowTaskDto> workflowTasks = usecases.ExecuteWorkflowCommand(command);
+
+        return new CollectionModel(this.Request, transactions);
       }
     }
 
@@ -75,4 +90,4 @@ namespace Empiria.Land.Transactions.WebApi {
 
   }  // class WorkflowController
 
-}  //namespace Empiria.Land.Transactions.WebApi
+}  //namespace Empiria.Land.Workflow.WebApi
