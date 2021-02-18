@@ -35,6 +35,26 @@ namespace Empiria.Land.Workflow.UseCases {
 
     #region Use cases
 
+
+    public FixedList<ApplicableCommandDto> ApplicableCommands(string[] transactionUIDs) {
+      if (transactionUIDs == null || transactionUIDs.Length == 0) {
+        return new FixedList<ApplicableCommandDto>();
+      }
+
+      var user = ExecutionServer.CurrentIdentity.User.AsContact();
+
+      var aggregator = new WorkflowCommandsAggregator(user);
+
+      foreach (var uid in transactionUIDs) {
+        var transaction = LRSTransaction.Parse(uid);
+
+        aggregator.Aggregate(transaction);
+      }
+
+      return aggregator.GetApplicableCommands();
+    }
+
+
     public WorkflowTaskDto CurrentTask(string transactionUID) {
       Assertion.AssertObject(transactionUID, "transactionUID");
 
@@ -58,7 +78,7 @@ namespace Empiria.Land.Workflow.UseCases {
 
         var status = TransactionDtoMapper.MapStatus(command.Payload.NextStatus);
 
-        var assignTo = command.Payload.AssignTo;
+        var assignTo = command.Payload.AssignTo();
 
         workflow.SetNextStatus(status, assignTo, command.Payload.Note);
 

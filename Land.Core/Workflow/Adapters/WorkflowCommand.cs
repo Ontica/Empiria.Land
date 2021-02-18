@@ -4,15 +4,16 @@
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Command payload                         *
 *  Type     : WorkflowCommand                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Defines a transaction workflow command.                                                        *
+*  Summary  : Contains information about a transaction workflow command than can be executed.                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using Empiria.Contacts;
+using System;
 
 using Empiria.Land.Transactions.Adapters;
 
 namespace Empiria.Land.Workflow.Adapters {
 
+  /// <summary>Contains information about a transaction workflow command than can be executed.</summary>
   public class WorkflowCommand {
 
     public WorkflowCommandType Type {
@@ -27,29 +28,17 @@ namespace Empiria.Land.Workflow.Adapters {
   }  // class WorkflowCommand
 
 
-
-  public enum WorkflowCommandType {
-
-    Undefined,
-
-    SetNextStatus,
-
-    Take,
-
-    ReturnToMe,
-
-    PullToControlDesk,
-
-    Reentry
-
-  }  // enum WorkflowCommandType
-
-
+  /// <summary>Holds data needed to execute a given workflow command.</summary>
   public class WorkflowPayload {
 
     public string[] TransactionUID {
       get; set;
     } = new string[0];
+
+
+    public string AssignToUID {
+      get; set;
+    } = string.Empty;
 
 
     public TransactionStatus NextStatus {
@@ -61,20 +50,6 @@ namespace Empiria.Land.Workflow.Adapters {
       get; set;
     } = string.Empty;
 
-
-    public string AssignToUID {
-      get; set;
-    } = string.Empty;
-
-
-    internal Contact AssignTo {
-      get {
-        if (!string.IsNullOrWhiteSpace(this.AssignToUID)) {
-          return Contact.Parse(this.AssignToUID);
-        }
-        return Contact.Empty;
-      }
-    }
 
   }  // class WorkflowPayload
 

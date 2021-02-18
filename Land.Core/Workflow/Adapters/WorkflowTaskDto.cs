@@ -41,8 +41,7 @@ namespace Empiria.Land.Workflow.Adapters {
     }
 
     public TransactionStatus NextTask {
-      get;
-      internal set;
+      get; internal set;
     }
 
     public string NextTaskName {

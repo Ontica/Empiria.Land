@@ -21,6 +21,20 @@ namespace Empiria.Land.Workflow.WebApi {
 
     #region Web Apis
 
+    [HttpPost]
+    [Route("v5/land/workflow/applicable-commands")]
+    [Route("v5/land/workflow/applicable-command-types")]
+    public CollectionModel ApplicableCommandTypes([FromBody] string[] transactions) {
+      base.RequireBody(transactions);
+
+      using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
+        FixedList<ApplicableCommandDto> commandTypes = usecases.ApplicableCommands(transactions);
+
+        return new CollectionModel(this.Request, commandTypes);
+      }
+    }
+
+
     [HttpGet]
     [Route("v5/land/workflow/{transactionUID:length(19)}/current-task")]
     public SingleObjectModel GetTransactionCurrentWorkflowTask([FromUri] string transactionUID) {
@@ -70,19 +84,6 @@ namespace Empiria.Land.Workflow.WebApi {
         FixedList<WorkflowTaskDto> workflowTasks = usecases.ExecuteWorkflowCommand(command);
 
         return new CollectionModel(this.Request, workflowTasks);
-      }
-    }
-
-
-    [HttpPost]
-    [Route("v5/land/workflow/available-operations")]
-    public CollectionModel GetAvailableOperationsForMultipleTransactions([FromBody] string[] transactions) {
-      base.RequireBody(transactions);
-
-      using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
-        // FixedList<WorkflowTaskDto> workflowTasks = usecases.ExecuteWorkflowCommand(command);
-
-        return new CollectionModel(this.Request, transactions);
       }
     }
 

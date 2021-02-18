@@ -15,7 +15,7 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Workflow.Adapters {
 
-  /// <summary>Mapping methods from TransactionType instances to TransactionTypeDto models.</summary>
+  /// <summary>Mapping methods from WorkflowTask instances to WorkflowTaskDto models.</summary>
   static internal class WorkflowTaskMapper {
 
     static internal FixedList<WorkflowTaskDto> Map(LRSWorkflowTaskList list) {
