@@ -15,6 +15,8 @@ using Empiria.StateEnums;
 
 using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Instruments.Data;
+using Empiria.Land.Registration;
+using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Instruments {
 
@@ -140,7 +142,7 @@ namespace Empiria.Land.Instruments {
       get {
         return EmpiriaString.BuildKeywords(this.InstrumentType.DisplayName, this.Kind,
                                            this.InstrumentNo, this.BinderNo, this.Folio,
-                                           this.Summary) +  " " + this.Issuer.Keywords;
+                                           this.Summary) + " " + this.Issuer.Keywords;
       }
     }
 
@@ -169,6 +171,33 @@ namespace Empiria.Land.Instruments {
     }
 
 
+    public InstrumentControlData ControlData {
+      get {
+         return new InstrumentControlData(this);
+      }
+    }
+
+
+    public bool HasPhysicalRecordings {
+      get {
+        return (this.PhysicalRecordings.Count != 0);
+      }
+    }
+
+
+    public FixedList<PhysicalRecording> PhysicalRecordings {
+      get {
+        var document = this.TryGetRecordingDocument();
+
+        if (document != null) {
+          return PhysicalRecording.GetDocumentRecordings(document.Id);
+        } else {
+          return new FixedList<PhysicalRecording>();
+        }
+      }
+    }
+
+
     #endregion Properties
 
     #region Methods
@@ -185,6 +214,47 @@ namespace Empiria.Land.Instruments {
       }
     }
 
+
+    private void CreateRecordingDocument() {
+      Assertion.Assert(_recordingDocument == null, "RecordingDocument already exists.");
+
+      _recordingDocument = RecordingDocument.CreateFromInstrument(this.Id, InstrumentType.Id, this.Kind);
+
+      SaveRecordingDocument();
+
+      var transaction = GetTransaction();
+
+      transaction.AttachDocument(_recordingDocument);
+    }
+
+
+    internal void EnsureHasRecordingDocument() {
+      if (!this.IsNew && this.TryGetRecordingDocument() == null) {
+        CreateRecordingDocument();
+      }
+    }
+
+
+    private void FillRecordingDocument() {
+      _recordingDocument.Notes = this.Summary;
+      _recordingDocument.ExpedientNo = this.BinderNo;
+      _recordingDocument.IssueDate = this.IssueDate;
+      _recordingDocument.IssuedBy = this.Issuer.RelatedContact;
+      _recordingDocument.IssueOffice = this.Issuer.RelatedEntity;
+      _recordingDocument.IssuePlace = this.Issuer.RelatedPlace;
+      _recordingDocument.SheetsCount = this.SheetsCount;
+    }
+
+
+    private LRSTransaction _transaction;
+    internal LRSTransaction GetTransaction() {
+      if (_transaction == null) {
+        _transaction = LRSTransaction.TryParseForInstrument(this.Id);
+      }
+      return _transaction;
+    }
+
+
     private void LoadData(InstrumentFields data) {
       Kind = data.Kind ?? Kind;
       Summary = data.Summary ?? Summary;
@@ -198,17 +268,45 @@ namespace Empiria.Land.Instruments {
     }
 
 
+    protected override void OnSave() {
+      bool needsDocumentCreation = false;
+
+      if (TryGetRecordingDocument() == null) {
+        needsDocumentCreation = true;
+      }
+
+      InstrumentsData.WriteInstrument(this);
+
+      if (needsDocumentCreation) {
+        this.EnsureHasRecordingDocument();
+      } else {
+        SaveRecordingDocument();
+      }
+    }
+
+
+    private void SaveRecordingDocument() {
+      FillRecordingDocument();
+
+      _recordingDocument.Save();
+    }
+
+
+    private RecordingDocument _recordingDocument;
+    internal RecordingDocument TryGetRecordingDocument() {
+      if (_recordingDocument == null) {
+        _recordingDocument = RecordingDocument.TryParseForInstrument(this.Id);
+      }
+      return _recordingDocument;
+    }
+
+
     public void Update(InstrumentFields data) {
       Assertion.AssertObject(data, "data");
 
       this.ChangeInstrumentTypeIfRequired(data);
 
       this.LoadData(data);
-    }
-
-
-    protected override void OnSave() {
-      InstrumentsData.WriteInstrument(this);
     }
 
     #endregion Methods
