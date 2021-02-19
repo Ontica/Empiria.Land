@@ -16,13 +16,13 @@ using Empiria.Land.Registration.Transactions;
 
 using Empiria.Land.Integration.PaymentServices;
 using Empiria.Land.Transactions.Adapters;
+using Empiria.Land.Media.Adapters;
+using Empiria.Land.Media;
 
 namespace Empiria.Land.Transactions.Providers {
 
   /// <summary>Connector used to gain access to transaction payment order services.</summary>
   internal class PaymentServicesConnector {
-
-    private readonly static string PAYMENT_ORDER_URL = ConfigurationData.GetString("PaymentOrder.Url");
 
     private readonly bool ConnectedToPaymentOrderServices;
 
@@ -112,8 +112,12 @@ namespace Empiria.Land.Transactions.Providers {
         DueDate = DateTime.Now.AddDays(15)
       };
 
-      po.AddAttribute("url", $"{PAYMENT_ORDER_URL}/payment.order.aspx?uid={transaction.UID}");
-      po.AddAttribute("mediaType", "text/html");
+      var builder = new LandMediaBuilder(LandMediaContent.TransactionPaymentOrder, transaction);
+
+      var mediaDto = builder.GetMediaDto();
+
+      po.AddAttribute("url", mediaDto.Url);
+      po.AddAttribute("mediaType", mediaDto.MediaType);
 
       return po;
     }

@@ -9,6 +9,9 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Land.Registration.Adapters;
+using Empiria.Land.PhysicalBooks.Adapters;
+
 namespace Empiria.Land.Instruments.Adapters {
 
   /// <summary>Output DTO with data representing a legal instrument.</summary>
@@ -77,6 +80,20 @@ namespace Empiria.Land.Instruments.Adapters {
     public string Status {
       get; internal set;
     }
+
+    public FixedList<PhysicalRecordingDto> PhysicalRecordings {
+      get; internal set;
+    } = new FixedList<PhysicalRecordingDto>();
+
+
+    public RegistrationDto Registration {
+      get; internal set;
+    } = new RegistrationDto();
+
+
+    public InstrumentControlDataDto Actions {
+      get; internal set;
+    } = new InstrumentControlDataDto();
 
 
   }  // class InstrumentDto

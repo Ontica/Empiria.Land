@@ -25,6 +25,10 @@ namespace Empiria.Land.Media.Adapters {
 
     ReturnDocumentFile,
 
+    RegistrationStamp,
+
+    PhysicalRegistrationStamp,
+
   }  // enum LandMediaContent
 
 } // namespace Empiria.Land.Media

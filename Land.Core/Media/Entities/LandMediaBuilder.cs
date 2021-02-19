@@ -13,13 +13,12 @@ using Empiria.Land.Media.Adapters;
 
 using Empiria.Land.Registration.Transactions;
 
-
 namespace Empiria.Land.Media {
 
   /// <summary>Builds internal media files like payment orders or transaction submission receipts.</summary>
   internal class LandMediaBuilder {
 
-    private readonly static string MEDIA_URL = ConfigurationData.GetString("PaymentOrder.Url");
+    private readonly static string MEDIA_URL = ConfigurationData.GetString("LandMediaBuilder.DefaultUrl");
 
     internal LandMediaBuilder(LandMediaContent mediaContent, LRSTransaction transaction) {
       this.MediaContent = mediaContent;
@@ -35,16 +34,29 @@ namespace Empiria.Land.Media {
     }
 
 
-    internal MediaDto GetMediaDto() {
+    internal MediaDto GetMediaDto(string param = "") {
       var dto = new MediaDto();
 
       switch (this.MediaContent) {
-        case LandMediaContent.TransactionSubmissionReceipt:
 
-          dto.Url = $"{MEDIA_URL}/transaction.receipt.aspx?uid={Transaction.UID}";
+        case LandMediaContent.TransactionPaymentOrder:
+          dto.Url = $"{MEDIA_URL}/receipts/payment.order.aspx?uid={Transaction.UID}";
           dto.MediaType = $"text/html";
 
           return dto;
+
+        case LandMediaContent.TransactionSubmissionReceipt:
+          dto.Url = $"{MEDIA_URL}/receipts/transaction.receipt.aspx?uid={Transaction.UID}";
+          dto.MediaType = $"text/html";
+
+          return dto;
+
+        case LandMediaContent.PhysicalRegistrationStamp:
+          dto.Url = $"{MEDIA_URL}/recording-stamps/physical-recording.stamp.aspx?id={param}&transactionId={Transaction.Id}";
+          dto.MediaType = $"text/html";
+
+          return dto;
+
         default:
           throw Assertion.AssertNoReachThisCode($"GetMediaDto() method can't process files of " +
                                                 $"media content {this.MediaContent}.");
