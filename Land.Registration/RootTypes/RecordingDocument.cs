@@ -41,8 +41,13 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     static public RecordingDocument Parse(int id) {
       return BaseObject.ParseId<RecordingDocument>(id);
+    }
+
+    static public RecordingDocument Parse(int id, bool reload) {
+      return BaseObject.ParseId<RecordingDocument>(id, reload);
     }
 
     static public RecordingDocument Parse(string uid) {
@@ -50,8 +55,13 @@ namespace Empiria.Land.Registration {
     }
 
     static public RecordingDocument TryParse(string documentUID, bool reload = false) {
-      return BaseObject.TryParse<RecordingDocument>("DocumentUID = '" + documentUID + "'", reload);
+      return BaseObject.TryParse<RecordingDocument>($"DocumentUID = '{documentUID }'", reload);
     }
+
+    static public RecordingDocument TryParse(int id, bool reload = false) {
+      return BaseObject.TryParse<RecordingDocument>($"DocumentId = {id}", reload);
+    }
+
 
     static internal RecordingDocument TryParse(PhysicalRecording recording) {
       DataRow dataRow = DocumentsData.GetRecordingMainDocument(recording);
@@ -62,6 +72,10 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    static public RecordingDocument TryParseForInstrument(int instrumentId) {
+      return BaseObject.TryParse<RecordingDocument>($"InstrumentId = {instrumentId}", true);
+    }
+
     static public RecordingDocument Empty {
       get { return BaseObject.ParseEmpty<RecordingDocument>(); }
     }
@@ -70,9 +84,34 @@ namespace Empiria.Land.Registration {
       return DocumentsData.SearchClosedDocuments(filter, keywords);
     }
 
+    public static RecordingDocument CreateFromInstrument(int instrumentId,
+                                                         int instrumentTypeId,
+                                                         string kind) {
+      var documentType = RecordingDocumentType.ParseFromInstrumentTypeId(instrumentTypeId);
+      var doc = new RecordingDocument(documentType);
+
+      doc.GUID = Guid.NewGuid().ToString().ToLower();
+      doc.InstrumentId = instrumentId;
+      doc.Subtype = LRSDocumentType.ParseFromInstrumentKind(kind);
+
+      return doc;
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
+
+    [DataField("DocumentGuid")]
+    public string GUID {
+      get;
+      private set;
+    }
+
+    [DataField("InstrumentId")]
+    public int InstrumentId {
+      get;
+      private set;
+    }
 
     public RecordingDocumentType DocumentType {
       get {
@@ -146,6 +185,7 @@ namespace Empiria.Land.Registration {
     [DataField("IssuedById")]
     private LazyInstance<Contact> _issuedBy = LazyInstance<Contact>.Empty;
 
+
     public Contact IssuedBy {
       get { return _issuedBy.Value; }
       set {
@@ -158,6 +198,7 @@ namespace Empiria.Land.Registration {
       get;
       set;
     }
+
 
     public string Number {
       get {
@@ -204,7 +245,7 @@ namespace Empiria.Land.Registration {
       get {
         return EmpiriaString.BuildKeywords(this.UID,
                     !this.Subtype.IsEmptyInstance ? this.AsText : this.DocumentType.DisplayName,
-                    this.AsText);
+                    this.Notes);
       }
     }
 

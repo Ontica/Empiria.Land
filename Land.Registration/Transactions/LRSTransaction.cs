@@ -69,6 +69,9 @@ namespace Empiria.Land.Registration.Transactions {
       return BaseObject.TryParse<LRSTransaction>("TransactionUID = '" + transactionUID + "'", reload);
     }
 
+    static public LRSTransaction TryParseForInstrument(int instrumentId) {
+      return BaseObject.TryParse<LRSTransaction>($"InstrumentId = {instrumentId}", true);
+    }
 
     public static FixedList<LRSTransaction> GetList(string filter, string orderBy, int pageSize) {
       return TransactionData.GetTransactionsList(filter, orderBy, pageSize);
@@ -502,7 +505,6 @@ namespace Empiria.Land.Registration.Transactions {
         return LRSPaymentRules.IsFeeWaiverApplicable(this);
       }
     }
-
 
     public void SetPayment(PaymentFields paymentFields) {
       this.SetPayment(paymentFields.ReceiptNo, paymentFields.Total);

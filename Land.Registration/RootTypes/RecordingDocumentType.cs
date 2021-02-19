@@ -38,6 +38,22 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    static internal RecordingDocumentType ParseFromInstrumentTypeId(int instrumentTypeId) {
+      switch (instrumentTypeId) {
+        case 2122:
+          return RecordingDocumentType.Parse(2410);
+        case 2123:
+          return RecordingDocumentType.Parse(2414);
+        case 2124:
+          return RecordingDocumentType.Parse(2411);
+        case 2125:
+          return RecordingDocumentType.Parse(2412);
+        default:
+          return RecordingDocumentType.Parse(2415);
+      }
+    }
+
+
     #endregion Constructors and parsers
 
   } // class RecordingDocumentType
