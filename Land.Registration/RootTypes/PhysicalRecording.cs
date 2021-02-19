@@ -65,6 +65,17 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<PhysicalRecording>(id);
     }
 
+
+    static public PhysicalRecording Parse(string uid) {
+      return BaseObject.ParseKey<PhysicalRecording>(uid);
+    }
+
+
+    static public FixedList<PhysicalRecording> GetDocumentRecordings(int documentId) {
+      return RecordingBooksData.GetPhysicalRecordingsForDocument(documentId);
+    }
+
+
     static private readonly PhysicalRecording _empty = BaseObject.ParseEmpty<PhysicalRecording>();
     static public PhysicalRecording Empty {
       get {
@@ -105,7 +116,7 @@ namespace Empiria.Land.Registration {
 
     public string AsText {
       get {
-        return String.Format("Partida {0} en {1}", this.Number, this.RecordingBook.AsText);
+        return String.Format("Inscripción {0} en {1}", this.Number, this.RecordingBook.AsText);
       }
     }
 
@@ -311,7 +322,8 @@ namespace Empiria.Land.Registration {
     private void Delete(bool publicCall) {
       Assertion.Assert(this.RecordingActs.Count == 0,
                        "This recording can't be deleted because it has recording acts.");
-      Assertion.Assert(!publicCall || this.RecordingBook.IsAvailableForManualEditing,
+      Assertion.Assert(!publicCall || this.RecordingBook.IsAvailableForManualEditing ||
+                        this.RecordingBook.Status == RecordingBookStatus.Opened,
                        "This recording can't be deleted because its recording book is not available for manual editing.");
       this.Status = RecordableObjectStatus.Deleted;
       //this.canceledBy = Contact.Parse(ExecutionServer.CurrentUserId);

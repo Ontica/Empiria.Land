@@ -26,6 +26,12 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<RecordingSection>(id);
     }
 
+
+    static public RecordingSection Parse(string uid) {
+      return BaseObject.ParseKey<RecordingSection>(uid);
+    }
+
+
     static public RecordingSection Empty {
       get { return BaseObject.ParseEmpty<RecordingSection>(); }
     }
@@ -34,10 +40,19 @@ namespace Empiria.Land.Registration {
     static public FixedList<RecordingSection> GetList() {
       var list = GeneralObject.GetList<RecordingSection>();
 
-      list.Sort((x, y) => x.NamedKey.CompareTo(y.NamedKey));
+      list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
       return list;
     }
+
+    static public FixedList<RecordingSection> GetListForRecording() {
+      GeneralList listType = GeneralList.Parse("CreateNextPhysicalRecordingSections.List");
+
+      return listType.GetItems<RecordingSection>();
+    }
+
+
+
 
 
     static public FixedList<RecordingSection> GetListForOwnershipRecordings(RecorderOffice recorderOffice) {

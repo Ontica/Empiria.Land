@@ -63,18 +63,19 @@ namespace Empiria.Land.Registration {
       get { return BaseObject.ParseEmpty<RecordingBook>(); }
     }
 
+
     static public RecordingBook GetAssignedBookForRecording(RecorderOffice office, RecordingSection section,
-                                                            RecordingDocument document) {
-      throw new NotImplementedException();
-      //Assertion.AssertObject(document, "document");
-      //Assertion.Assert(!document.IsEmptyInstance && !document.IsNew,
-      //                 "Document can't be neither an empty or unsaved document.");
-      //RecordingBook openedBook = RecordingBooksData.GetOpenedBook(office, section);
-      //if (openedBook.HasSpaceForRecording(document)) {
-      //  return openedBook;
-      //} else {
-      //  return openedBook.CloseAndCreateNew();
-      //}
+                                                            int sheetsCount) {
+      Assertion.AssertObject(office, "office");
+      Assertion.AssertObject(section, "section");
+      Assertion.Assert(sheetsCount > 0, "sheetsCount");
+
+      RecordingBook openedBook = RecordingBooksData.GetOpenedBook(office, section);
+      if (openedBook.HasSpaceForRecording(sheetsCount)) {
+        return openedBook;
+      } else {
+        return openedBook.CloseAndCreateNew();
+      }
     }
 
     static public FixedList<RecordingBook> GetList(string filter, string sort = "BookAsText") {
@@ -207,6 +208,7 @@ namespace Empiria.Land.Registration {
       return recording;
     }
 
+
     /// <summary>Adds a new recording to the book, creating a main empty document.</summary>
     public PhysicalRecording AddRecording(string recordingNumber) {
       Assertion.AssertObject(recordingNumber, "recordingNumber");
@@ -216,12 +218,23 @@ namespace Empiria.Land.Registration {
       return new PhysicalRecording(this, newDocument, RecordingBook.FormatRecordingNumber(recordingNumber));
     }
 
+
     public PhysicalRecording AddRecording(RecordingDocument document, string recordingNumber) {
       Assertion.AssertObject(document, "document");
       Assertion.AssertObject(recordingNumber, "recordingNumber");
 
       Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance.");
       Assertion.Assert(!document.IsEmptyDocumentType, "document can't be the special empty document.");
+
+      return new PhysicalRecording(this, document, RecordingBook.FormatRecordingNumber(recordingNumber));
+    }
+
+
+    public PhysicalRecording CreateNextRecording(RecordingDocument document) {
+      Assertion.AssertObject(document, "document");
+      Assertion.Assert(document.SheetsCount > 0, "Document field SheetsCount must be greater than zero.");
+
+      int recordingNumber = RecordingBooksData.GetNextRecordingNumberWithReuse(this);
 
       return new PhysicalRecording(this, document, RecordingBook.FormatRecordingNumber(recordingNumber));
     }
@@ -237,6 +250,12 @@ namespace Empiria.Land.Registration {
 
       return Recordings.Find((x) => x.Number == recordingNo);
     }
+
+
+    static public string FormatRecordingNumber(int recordingNumber) {
+      return recordingNumber.ToString("0000");
+    }
+
 
     static public string FormatRecordingNumber(string recordingNumber) {
       try {
@@ -431,9 +450,7 @@ namespace Empiria.Land.Registration {
     }
 
     private int CalculateTotalSheets() {
-      throw new NotImplementedException();
-
-      //return RecordingBooksData.GetBookTotalSheets(this);
+      return RecordingBooksData.GetBookTotalSheets(this);
     }
 
     private RecordingBook Clone() {
@@ -451,52 +468,48 @@ namespace Empiria.Land.Registration {
     }
 
     private RecordingBook CloseAndCreateNew() {
-      throw new NotImplementedException();
+      this.Status = RecordingBookStatus.Closed;
+      this.ClosingDate = DateTime.Now;
+      if (!this.UsePerpetualNumbering) {
+        this.EndRecordingIndex = this.Recordings.Count;
+      }
+      this.Save();
+      RecordingBook newBook = this.Clone();
+      newBook.Status = RecordingBookStatus.Opened;
+      if (newBook.UsePerpetualNumbering) {
+        newBook.StartRecordingIndex = this.StartRecordingIndex + 50;
+        newBook.EndRecordingIndex = this.EndRecordingIndex + 50;
+        newBook.BookNumber = newBook.StartRecordingIndex.ToString("0000") + "-" +
+                             newBook.EndRecordingIndex.ToString("0000");
+      } else {
+        newBook.StartRecordingIndex = 1;
+        newBook.EndRecordingIndex = 250;
+        newBook.BookNumber = (int.Parse(this.BookNumber) + 1).ToString("0000");
+      }
+      newBook.AsText = "Volumen " + newBook.BookNumber;
+      newBook.Save();
 
-      //this.Status = RecordingBookStatus.Closed;
-      //this.ClosingDate = DateTime.Now;
-      //if (!this.UsePerpetualNumbering) {
-      //  this.EndRecordingIndex = this.Recordings.Count;
-      //}
-      //this.Save();
-      //RecordingBook newBook = this.Clone();
-      //newBook.Status = RecordingBookStatus.Opened;
-      //if (newBook.UsePerpetualNumbering) {
-      //  newBook.StartRecordingIndex = this.StartRecordingIndex + 50;
-      //  newBook.EndRecordingIndex = this.EndRecordingIndex + 50;
-      //  newBook.BookNumber = newBook.StartRecordingIndex.ToString("0000") + "-" +
-      //                       newBook.EndRecordingIndex.ToString("0000");
-      //} else {
-      //  newBook.StartRecordingIndex = 1;
-      //  newBook.EndRecordingIndex = 250;
-      //  newBook.BookNumber = (int.Parse(this.BookNumber) + 1).ToString("0000");
-      //}
-      //newBook.AsText = "Volumen " + newBook.BookNumber;
-      //newBook.Save();
-
-      //return newBook;
+      return newBook;
     }
 
-    private bool HasSpaceForRecording(RecordingDocument document) {
-      throw new NotImplementedException();
+    private bool HasSpaceForRecording(int sheetsCount) {
+      if (this.UsePerpetualNumbering) {
+        return (RecordingBooksData.GetLastBookRecordingNumber(this) < this.EndRecordingIndex);
+      }
+      // !UsePerpetualNumbering
+      int currentBookSheets = this.CalculateTotalSheets();
+      int newTotalSheets = currentBookSheets + sheetsCount;
 
-      //if (this.UsePerpetualNumbering) {
-      //  return (RecordingBooksData.GetLastBookRecordingNumber(this) < this.EndRecordingIndex);
-      //}
-      //// !UsePerpetualNumbering
-      //int currentBookSheets = this.CalculateTotalSheets();
-      //int newTotalSheets = currentBookSheets + document.SheetsCount;
+      int lowerBound = 275;
+      int upperBound = 286;
 
-      //int lowerBound = 275;
-      //int upperBound = 286;
-
-      //if (newTotalSheets <= lowerBound) {
-      //  return true;
-      //} else if (currentBookSheets < lowerBound && newTotalSheets <= upperBound) {
-      //  return true;
-      //} else {
-      //  return false;
-      //}
+      if (newTotalSheets <= lowerBound) {
+        return true;
+      } else if (currentBookSheets < lowerBound && newTotalSheets <= upperBound) {
+        return true;
+      } else {
+        return false;
+      }
     }
 
     #endregion Private methods
