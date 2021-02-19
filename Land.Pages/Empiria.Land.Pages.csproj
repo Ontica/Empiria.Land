@@ -106,6 +106,7 @@
     <Content Include="empiria.config.json" />
     <Content Include="receipts\payment.order.aspx" />
     <Content Include="receipts\transaction.receipt.aspx" />
+    <Content Include="recording-stamps\physical-recording.stamp.aspx" />
     <Content Include="scripts\empiria.general.js" />
     <Content Include="themes\default\css\certificates.css" />
     <Content Include="themes\default\css\official.document.css" />
@@ -162,6 +163,13 @@
     </Compile>
     <Compile Include="receipts\transaction.receipt.aspx.designer.cs">
       <DependentUpon>transaction.receipt.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="recording-stamps\physical-recording.stamp.aspx.cs">
+      <DependentUpon>physical-recording.stamp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="recording-stamps\physical-recording.stamp.aspx.designer.cs">
+      <DependentUpon>physical-recording.stamp.aspx</DependentUpon>
     </Compile>
     <Compile Include="user.controls\barcode.aspx.cs">
       <DependentUpon>barcode.aspx</DependentUpon>

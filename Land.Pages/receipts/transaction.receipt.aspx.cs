@@ -197,6 +197,18 @@ namespace Empiria.Land.Pages {
       return html;
     }
 
+
+    protected string GetPaymentTotal() {
+      var payment = LRSPayment.Empty;
+
+      if (transaction.Payments.Count > 0) {
+        payment = transaction.Payments[0];
+      }
+
+      return payment.ReceiptTotal.ToString("C2");
+    }
+
+
     protected string GetRecordingActsWithTotals() {
       const string template = "<tr width='24px'><td>{NUMBER}</td><td>{CONCEPT.CODE}</td>" +
                               "<td style='white-space:normal'>{RECORDING.ACT}&nbsp; &nbsp; &nbsp;</td>" +

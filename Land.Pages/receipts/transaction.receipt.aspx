@@ -84,7 +84,7 @@
 							<td style="white-space:nowrap">Tipo de trámite:</td>
               <td style="white-space:nowrap;width:30%"><b><%=transaction.TransactionType.Name%></b></td>
               <td style="white-space:nowrap">Importe:</td>
-              <td style="white-space:nowrap;width:30%"><b><%=transaction.Items.TotalFee.Total.ToString("C2")%></b>
+              <td style="white-space:nowrap;width:30%"><b><%=GetPaymentTotal()%></b>
                 &nbsp; (R: <b><%=transaction.Payments.ReceiptNumbers%>)</b>
               </td>
             </tr>
