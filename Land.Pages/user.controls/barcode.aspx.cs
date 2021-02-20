@@ -25,6 +25,8 @@ namespace Empiria.Web.UI {
         int height = int.Parse(Request.QueryString["height"] ?? "-1");
         if (height > 0) {
           bc.BarHeight = height;
+        } else {
+          bc.BarHeight = 30;
         }
 
         bool showText = bool.Parse(Request.QueryString["show-text"] ?? "false");

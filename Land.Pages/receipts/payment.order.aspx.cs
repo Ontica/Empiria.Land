@@ -45,7 +45,7 @@ namespace Empiria.Land.Pages {
     }
 
     protected string CustomerOfficeName() {
-      return "Dirección de Catastro<br/> y Registro Público";
+      return "Dirección de Catastro y Registro Público";
     }
 
     protected string GetDistrictName() {

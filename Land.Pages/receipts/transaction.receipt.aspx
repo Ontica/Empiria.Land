@@ -15,21 +15,14 @@
 	      <td style="white-space:nowrap;width:100%">
 		      <table style="width:100%" cellspacing="0" cellpadding="2">
 			      <tr>
-				      <td style="vertical-align:top">
-                <img src="<%=GetDocumentLogo()%>" alt="" title="" style="width:160px;padding-top:6px" />
-					      <table>
-						      <tr>
-							      <td>
-
-							      </td>
-						      </tr>
-					      </table>
+				      <td style="vertical-align:middle">
+                <img src="<%=GetDocumentLogo()%>" alt="" title="" style="width:120px;padding-top:6px" />
 				      </td>
               <td style="vertical-align:top;width:80%;white-space:nowrap">
 			          <table width="100%" cellpadding="0" cellspacing="0">
 						      <tr>
-							      <td style="text-align:center;line-height:18px;">
-								      <h1 style="white-space:normal;font-size:14pt"><%=CustomerOfficeName()%></h1>
+							      <td style="text-align:center">
+								      <h1 style="white-space:normal;font-size:12pt"><%=CustomerOfficeName()%></h1>
 							      </td>
 						      </tr>
                   <% if (base.GetDistrictName().Length != 0) { %>
@@ -56,9 +49,7 @@
 						      <tr>
 							      <td align="right">
                       <img style="margin-left:8pt" alt="" title="" src="../user.controls/barcode.aspx?data=<%=transaction.UID%>" />
-                      <% if (Empiria.ExecutionServer.LicenseName == "Zacatecas") { %>
-                        <br />Control: <b><%=transaction.InternalControlNo%></b>
-                      <% } %>
+                        <br />Control: <b><%=transaction.InternalControlNoFormatted%></b>
 							      </td>
 						      </tr>
 					      </table>
@@ -120,7 +111,7 @@
               <td style="vertical-align:top;width:100px">
                 <img style="margin-left:6pt;margin-top:0" alt="" title=""
                      src="<%=base.QRCodeSourceImage()%>" />
-                <div style="margin-left:0;margin-top:4pt;font-size:8pt;white-space:nowrap;text-align:center">
+                <div style="margin-left:0;margin-top:-8px;font-size:8pt;white-space:nowrap;text-align:center">
                   Consulte este trámite<br />
                   <b><%=base.transaction.UID%></b>
                 </div>
@@ -132,17 +123,17 @@
                 <span style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:12pt">
                   <%=base.transaction.PaymentOrder.UID%>
                 </span>
-                <br />
                 <% } %>
+                <br />
                 <b>Sello electrónico:</b>
                 <br />
                 <%=transaction.GetDigitalSign()%>
                 <br />
-                <br />
+<%--                <br />
                 <b>Códigos de seguridad:</b>
                 <br />
                 ALFA 453 <b>&nbsp;||&nbsp;</b> BETA 128 <b>&nbsp;||&nbsp;</b> GAMMA 412 <b>&nbsp;||&nbsp;</b> DELTA 341 <b>&nbsp;||&nbsp;</b> SIGMA 123847
-                <br />
+                <br />--%>
                 <br />
                 <b>Recibió:</b> <%=transaction.ReceivedBy.FullName%>  &nbsp; | &nbsp; <b>Imprimió:</b> <%=GetCurrentUserInitials()%>, <%=DateTime.Now.ToString("dd/MMM/yyyy HH:mm") %>
                 <div style="font-size:7pt;margin-top:8pt;">

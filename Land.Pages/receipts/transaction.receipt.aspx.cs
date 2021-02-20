@@ -43,7 +43,7 @@ namespace Empiria.Land.Pages {
     }
 
     protected string CustomerOfficeName() {
-      return "Dirección de Catastro<br/> y Registro Público";
+      return "Dirección de Catastro y Registro Público";
     }
 
     protected string GetDistrictName() {
@@ -51,8 +51,8 @@ namespace Empiria.Land.Pages {
     }
 
     protected string QRCodeSourceImage() {
-      var s = $"../user.controls/qrcode.aspx?size=130&amp;data={SEARCH_SERVICES_SERVER_BASE_ADDRESS}" +
-              $"/?v=5.0%26type=transaction%26uid={transaction.UID}%26hash={transaction.QRCodeSecurityHash()}";
+      var s = $"../user.controls/qrcode.aspx?size=120&amp;data={SEARCH_SERVICES_SERVER_BASE_ADDRESS}" +
+              $"/?v=5.0%26s=qr%26type=transaction%26uid={transaction.UID}%26h={transaction.QRCodeSecurityHash()}";
 
       return s;
     }

@@ -15,14 +15,14 @@
 	      <td style="white-space:nowrap;width:100%">
 		      <table style="width:100%" cellspacing="0" cellpadding="2">
 			      <tr>
-				      <td style="vertical-align:top">
-                <img src="<%=GetDocumentLogo()%>" alt="" title="" style="width:160px;padding-top:6px" />
+				      <td style="vertical-align:middle">
+                <img src="<%=GetDocumentLogo()%>" alt="" title="" style="width:120px;padding-top:6px" />
 				      </td>
               <td style="vertical-align:top;width:80%;white-space:nowrap">
 			          <table width="100%" cellpadding="0" cellspacing="0">
 						      <tr>
-							      <td style="text-align:center;line-height:18px;">
-								      <h1 style="white-space:normal;font-size:14pt"><%=CustomerOfficeName()%></h1>
+							      <td style="text-align:center">
+								      <h1 style="white-space:normal;font-size:12pt"><%=CustomerOfficeName()%></h1>
 							      </td>
 						      </tr>
                   <% if (base.GetDistrictName().Length != 0) { %>
@@ -34,7 +34,7 @@
                   <% } %>
 						      <tr>
 							      <td style="text-align:center;">
-								      <h1 style="white-space:normal;font-size:16pt">ORDEN DE PAGO</h1>
+								      <h1 style="white-space:normal;font-size:14pt">ORDEN DE PAGO</h1>
 							      </td>
 						      </tr>
                 </table>
@@ -123,14 +123,14 @@
 	      <td style="white-space:nowrap;width:100%">
 		      <table style="width:100%" cellspacing="0" cellpadding="2">
 			      <tr>
-				      <td style="vertical-align:top">
-                <img src="<%=GetDocumentLogo()%>" alt="" title="" style="width:160px;padding-top:6px" />
+				      <td style="vertical-align:middle">
+                <img src="<%=GetDocumentLogo()%>" alt="" title="" style="width:120px;padding-top:6px" />
 				      </td>
               <td style="vertical-align:top;width:80%;white-space:nowrap">
 			          <table width="100%" cellpadding="0" cellspacing="0">
 						      <tr>
-							      <td style="text-align:center;line-height:18px;">
-								      <h1 style="white-space:normal;font-size:14pt"><%=CustomerOfficeName()%></h1>
+							      <td style="text-align:center">
+								      <h1 style="white-space:normal;font-size:12pt"><%=CustomerOfficeName()%></h1>
 							      </td>
 						      </tr>
                   <% if (base.GetDistrictName().Length != 0) { %>
@@ -142,7 +142,7 @@
                   <% } %>
 						      <tr>
 							      <td style="text-align:center;">
-								      <h1 style="white-space:normal;font-size:16pt">BOLETA DE CONTROL</h1>
+								      <h1 style="white-space:normal;font-size:14pt">BOLETA DE CONTROL</h1>
 							      </td>
 						      </tr>
                 </table>
