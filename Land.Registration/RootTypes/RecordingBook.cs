@@ -234,16 +234,18 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(document, "document");
       Assertion.Assert(document.SheetsCount > 0, "Document field SheetsCount must be greater than zero.");
 
-      int recordingNumber = RecordingBooksData.GetNextRecordingNumberWithReuse(this);
+      int recordingNumber = RecordingBooksData.GetNextRecordingNumberWithNoReuse(this);
 
       return new PhysicalRecording(this, document, RecordingBook.FormatRecordingNumber(recordingNumber));
     }
+
 
     public bool ExistsRecording(string recordingNumber) {
       string recordingNo = RecordingBook.FormatRecordingNumber(recordingNumber);
 
       return Recordings.Contains((x) => x.Number == recordingNo);
     }
+
 
     public PhysicalRecording FindRecording(string recordingNumber) {
       string recordingNo = RecordingBook.FormatRecordingNumber(recordingNumber);

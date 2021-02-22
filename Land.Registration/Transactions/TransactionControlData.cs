@@ -75,8 +75,8 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!IsUserInRole("LRSTransaction.Register",
-                          "LRSTransaction.Certificates")) {
+        if (!IsUserInRole("Land.Registrar",
+                          "Land.Certificator")) {
           return false;
         }
 
@@ -98,7 +98,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!IsUserInRole("LRSTransaction.Register")) {
+        if (!IsUserInRole("Land.Registrar")) {
           return false;
         }
 
@@ -130,10 +130,6 @@ namespace Empiria.Land.Transactions {
         }
 
         if (!_transaction.HasPaymentOrder) {
-          return false;
-        }
-
-        if (!IsUserInRole("LRSTransaction.ReceiveTransaction")) {
           return false;
         }
 
@@ -193,7 +189,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!IsUserInRole("LRSTransaction.ReceiveTransaction")) {
+        if (!IsUserInRole("Land.ReceptionClerk")) {
           return false;
         }
 
@@ -226,7 +222,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        return IsUserInRole("LRSTransaction.Digitalizer");
+        return IsUserInRole("Land.Digitizer");
       }
     }
 
@@ -241,7 +237,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        return IsUserInRole("LRSTransaction.Digitalizer");
+        return IsUserInRole("Land.Digitizer");
       }
     }
 
@@ -309,7 +305,7 @@ namespace Empiria.Land.Transactions {
 
         // ToDo: Check if has uploaded documents
 
-        return true;
+        return false;
 
         //return LRSWorkflowRules.IsDigitalizable(_transaction.TransactionType,
         //                                        _transaction.DocumentType);

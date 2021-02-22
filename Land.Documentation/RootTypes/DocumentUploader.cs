@@ -58,7 +58,7 @@ namespace Empiria.Land.Documentation {
       Assertion.AssertObject(uploadedFile, "uploadedFile");
       Assertion.Assert(uploadedFile.ContentLength > 0, "uploadedFile is an empty file.");
 
-      Assertion.Assert(EmpiriaPrincipal.Current.IsInRole("LRSTransaction.Digitalizer"),
+      Assertion.Assert(EmpiriaPrincipal.Current.IsInRole("Land.Digitizer"),
                        "Current user must be in 'Digitalizer' role to perform this operation.");
     }
 

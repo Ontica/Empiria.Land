@@ -18,6 +18,7 @@ namespace Empiria.Land.Registration.Transactions {
     Received = 'R',
     Reentry = 'N',
     Control = 'K',
+    Qualification = 'F',
     Recording = 'G',
     Elaboration = 'E',
     Revision = 'V',

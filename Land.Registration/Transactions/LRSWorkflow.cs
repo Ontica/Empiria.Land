@@ -286,9 +286,9 @@ namespace Empiria.Land.Registration.Transactions {
                                             _transaction.UID);
       }
 
-      this.AssertGraceDaysForReentry();
-      this.AssertRecordingActsPrelation();
-      this.AssertDigitalizedDocument();
+      // this.AssertGraceDaysForReentry();
+      //this.AssertRecordingActsPrelation();
+      //this.AssertDigitalizedDocument();
 
       this.CurrentStatus = LRSTransactionStatus.Reentry;
       _transaction.ClosingTime = ExecutionServer.DateMaxValue;
@@ -451,7 +451,7 @@ namespace Empiria.Land.Registration.Transactions {
         return;
       }
 
-      int graceDaysForReentry = 90;
+      int graceDaysForReentry = 10;
 
       DateTime lastDate = _transaction.PresentationTime;
 
