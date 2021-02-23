@@ -123,9 +123,9 @@ namespace Empiria.Land.Transactions.UseCases {
       Assertion.Assert(transaction.ControlData.CanEditPayment,
                        $"Can not set payment for transaction '{transactionUID}'.");
 
-      Assertion.Assert(transaction.PaymentOrder.Total == 0 ||
-                       transaction.PaymentOrder.Total >= paymentFields.Total,
-                      $"Payment total must be less or equal than payment order total.");
+      //Assertion.Assert(transaction.PaymentOrder.Total == 0 ||
+      //                 transaction.PaymentOrder.Total >= paymentFields.Total,
+      //                $"Payment total must be less or equal than payment order total.");
 
       var connector = new PaymentServicesConnector();
 

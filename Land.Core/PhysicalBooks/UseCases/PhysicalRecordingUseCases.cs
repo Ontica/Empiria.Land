@@ -45,11 +45,10 @@ namespace Empiria.Land.PhysicalBooks.UseCases {
 
       var instrument = Instrument.Parse(instrumentUID);
 
-      instrument.EnsureHasRecordingDocument();
+      Assertion.AssertObject(instrument.HasDocument,
+                             "This instrument does not have a related recording document.");
 
       var recordingDocument = instrument.TryGetRecordingDocument();
-
-      Assertion.AssertObject(recordingDocument, "recordingDocument");
 
       var office = RecorderOffice.Parse(fields.RecorderOfficeUID);
       var section = RecordingSection.Parse(fields.SectionUID);

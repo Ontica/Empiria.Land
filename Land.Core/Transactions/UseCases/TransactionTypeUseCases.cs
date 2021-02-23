@@ -52,7 +52,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public FixedList<NamedEntityDto> GetRecorderOffices() {
-      FixedList<RecorderOffice> list = RecorderOffice.GetList();
+      var list = new FixedList<RecorderOffice>(new[] { RecorderOffice.Parse(101) });
 
       return list.MapToNamedEntityList();
     }

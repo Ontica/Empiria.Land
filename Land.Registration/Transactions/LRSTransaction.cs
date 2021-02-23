@@ -121,6 +121,28 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
+    public string InternalControlNoFormatted {
+      get {
+        if (this.InternalControlNo.Length == 0) {
+          return string.Empty;
+        }
+        return string.Format("{0:n0}", int.Parse(this.InternalControlNo));
+      }
+    }
+
+    private string OldTransactionUID {
+      get {
+        var temp = this.UID.Replace("TR-ZS-", "ZS");
+
+        temp = temp.Replace("-", string.Empty);
+
+        temp = temp.Substring(0, temp.Length - 2) + "-" + temp.Substring(temp.Length - 1);
+
+        return temp;
+      }
+    }
+
+
     [DataField("DocumentTypeId")]
     public LRSDocumentType DocumentType {
       get;
@@ -697,10 +719,12 @@ namespace Empiria.Land.Registration.Transactions {
       if (base.IsNew) {
         this.GUID = Guid.NewGuid().ToString();
       }
-      this.Keywords = EmpiriaString.BuildKeywords(this.UID, this.Document.UID,
+      this.Keywords = EmpiriaString.BuildKeywords(this.InternalControlNo, this.UID, this.OldTransactionUID,
+                                                  this.Document.UID,
+                                                  this.Payments.Count == 1 ? this.Payments[0].ReceiptNo : string.Empty,
                                                   this.DocumentDescriptor, this.RequestedBy,
                                                   this.Agency.FullName,
-                                                  this.TransactionType.Name,
+                                                  this.DocumentType.Name, this.TransactionType.Name,
                                                   this.RecorderOffice.Alias);
       TransactionData.WriteTransaction(this);
       if (base.IsNew) {
