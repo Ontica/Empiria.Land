@@ -171,9 +171,13 @@ namespace Empiria.Land.Instruments {
     }
 
 
-    public InstrumentControlData ControlData {
+    internal bool HasDocument {
       get {
-         return new InstrumentControlData(this);
+        var document = TryGetRecordingDocument();
+        if (document != null && !document.IsEmptyInstance) {
+          return true;
+        }
+        return false;
       }
     }
 
@@ -187,13 +191,13 @@ namespace Empiria.Land.Instruments {
 
     public FixedList<PhysicalRecording> PhysicalRecordings {
       get {
-        var document = this.TryGetRecordingDocument();
-
-        if (document != null) {
-          return PhysicalRecording.GetDocumentRecordings(document.Id);
-        } else {
+        if (!this.HasDocument) {
           return new FixedList<PhysicalRecording>();
         }
+
+        var document = this.TryGetRecordingDocument();
+
+        return PhysicalRecording.GetDocumentRecordings(document.Id);
       }
     }
 
@@ -221,15 +225,11 @@ namespace Empiria.Land.Instruments {
       _recordingDocument = RecordingDocument.CreateFromInstrument(this.Id, InstrumentType.Id, this.Kind);
 
       SaveRecordingDocument();
-
-      var transaction = GetTransaction();
-
-      transaction.AttachDocument(_recordingDocument);
     }
 
 
-    internal void EnsureHasRecordingDocument() {
-      if (!this.IsNew && this.TryGetRecordingDocument() == null) {
+    private void EnsureHasRecordingDocument() {
+      if (!this.HasDocument) {
         CreateRecordingDocument();
       }
     }
@@ -271,7 +271,7 @@ namespace Empiria.Land.Instruments {
     protected override void OnSave() {
       bool needsDocumentCreation = false;
 
-      if (TryGetRecordingDocument() == null) {
+      if (!this.HasDocument) {
         needsDocumentCreation = true;
       }
 

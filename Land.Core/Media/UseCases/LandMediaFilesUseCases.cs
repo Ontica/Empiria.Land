@@ -64,7 +64,7 @@ namespace Empiria.Land.Media.UseCases {
 
       mediaFileSet.Remove(mediaFileUID);
 
-      return InstrumentMapper.Map(instrument);
+      return InstrumentMapper.Map(instrument, null);
     }
 
 

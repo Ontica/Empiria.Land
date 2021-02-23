@@ -8,15 +8,26 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions;
+
 namespace Empiria.Land.Instruments {
 
   internal class InstrumentControlData {
 
     private readonly Instrument _instrument;
+    private readonly TransactionControlData _transactionControlData;
 
-    internal InstrumentControlData(Instrument instrument) {
+    internal InstrumentControlData(Instrument instrument, LRSTransaction transaction) {
       _instrument = instrument;
+
+      if (transaction != null) {
+        _transactionControlData = transaction.ControlData;
+      } else {
+        _transactionControlData = instrument.GetTransaction().ControlData;
+      }
     }
+
 
     public bool CanDelete {
       get {
@@ -27,7 +38,7 @@ namespace Empiria.Land.Instruments {
 
     public bool CanEdit {
       get {
-        return true;
+        return _transactionControlData.CanEditInstrument;
       }
     }
 
@@ -69,14 +80,17 @@ namespace Empiria.Land.Instruments {
 
     public bool CanCreatePhysicalRecordings {
       get {
-        return (_instrument.TryGetRecordingDocument() != null);
+        if (!CanEdit) {
+          return false;
+        }
+        return (_instrument.HasDocument);
       }
     }
 
 
     public bool CanDeletePhysicalRecordings {
       get {
-        return (_instrument.HasPhysicalRecordings);
+        return CanCreatePhysicalRecordings;
       }
     }
 
@@ -111,7 +125,7 @@ namespace Empiria.Land.Instruments {
 
     public bool ShowPhysicalRecordings {
       get {
-        return (_instrument.TryGetRecordingDocument() != null);
+        return (_instrument.HasDocument);
       }
     }
 

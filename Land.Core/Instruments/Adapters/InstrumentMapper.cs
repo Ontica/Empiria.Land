@@ -23,17 +23,24 @@ namespace Empiria.Land.Instruments.Adapters {
   /// <summary>Methods to map legal instruments to InstrumentDto objects.</summary>
   static internal partial class InstrumentMapper {
 
-    static internal FixedList<InstrumentDto> Map(FixedList<Instrument> list) {
-      var mappedItems = list.Select((x) => Map(x));
+    //static internal FixedList<InstrumentDto> Map(FixedList<Instrument> list) {
+    //  var mappedItems = list.Select((x) => Map(x));
 
-      return new FixedList<InstrumentDto>(mappedItems);
-    }
+    //  return new FixedList<InstrumentDto>(mappedItems);
+    //}
 
 
     static internal InstrumentDto Map(Instrument instrument) {
+      return Map(instrument, null);
+    }
+
+
+      static internal InstrumentDto Map(Instrument instrument, LRSTransaction transaction) {
       var issuerDto = IssuerMapper.Map(instrument.Issuer);
 
       var mediaFiles = LandMediaFileMapper.Map(instrument.GetMediaFileSet());
+
+      var controlData = new InstrumentControlData(instrument, transaction);
 
       var dto = new InstrumentDto {
         UID = instrument.UID,
@@ -54,7 +61,7 @@ namespace Empiria.Land.Instruments.Adapters {
         Status = instrument.Status.ToString(),
         Registration = GetRegistrationDto(instrument),
         PhysicalRecordings = GetPhysicalRecordingListDto(instrument),
-        Actions = GetControlDataDto(instrument)
+        Actions = GetControlDataDto(controlData)
       };
 
       return dto;
@@ -62,8 +69,8 @@ namespace Empiria.Land.Instruments.Adapters {
 
     #region Private methods
 
-    static private InstrumentControlDataDto GetControlDataDto(Instrument instrument) {
-      InstrumentControlData controlData = instrument.ControlData;
+    static private InstrumentControlDataDto GetControlDataDto(InstrumentControlData controlData) {
+      // InstrumentControlData controlData = instrument.ControlData;
 
       var dto = new InstrumentControlDataDto();
 
@@ -92,11 +99,10 @@ namespace Empiria.Land.Instruments.Adapters {
 
       dto.PhysicalRecordings = GetPhysicalRecordingListDto(instrument);
 
-      var document = instrument.TryGetRecordingDocument();
-
-      if (document == null) {
+      if (!instrument.HasDocument) {
         return dto;
       }
+      var document = instrument.TryGetRecordingDocument();
 
       dto.UID = document.GUID;
       dto.RegistrationID = document.UID;

@@ -38,9 +38,11 @@ namespace Empiria.Land.Transactions.UseCases {
     public InstrumentDto GetTransactionInstrument(string transactionUID) {
       Assertion.AssertObject(transactionUID, "transactionUID");
 
-      Instrument instrument = ParseTransactionInstrument(transactionUID);
+      var transaction = LRSTransaction.Parse(transactionUID);
 
-      return InstrumentMapper.Map(instrument);
+      Instrument instrument = Instrument.Parse(transaction.InstrumentId);
+
+      return InstrumentMapper.Map(instrument, transaction);
     }
 
 
@@ -57,9 +59,14 @@ namespace Empiria.Land.Transactions.UseCases {
 
       instrument.Save();
 
+      Assertion.Assert(instrument.HasDocument,
+                        "Instruments must have a recording document to be linked to a transaction.");
+
       transaction.SetInstrument(instrument);
 
-      return InstrumentMapper.Map(instrument);
+      transaction.AttachDocument(instrument.TryGetRecordingDocument());
+
+      return InstrumentMapper.Map(instrument, transaction);
     }
 
 
@@ -67,13 +74,15 @@ namespace Empiria.Land.Transactions.UseCases {
       Assertion.AssertObject(transactionUID, "transactionUID");
       Assertion.AssertObject(fields, "fields");
 
-      Instrument instrument = ParseTransactionInstrument(transactionUID);
+      var transaction = LRSTransaction.Parse(transactionUID);
+
+      Instrument instrument = Instrument.Parse(transaction.InstrumentId);
 
       instrument.Update(fields);
 
       instrument.Save();
 
-      return InstrumentMapper.Map(instrument);
+      return InstrumentMapper.Map(instrument, transaction);
     }
 
 
