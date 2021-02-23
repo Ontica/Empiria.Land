@@ -136,7 +136,7 @@ namespace Empiria.Land.Registration.Transactions {
 
         temp = temp.Replace("-", string.Empty);
 
-        temp = temp.Substring(0, temp.Length - 2) + "-" + temp.Substring(temp.Length - 1);
+        temp = temp.Substring(0, temp.Length - 1) + "-" + temp.Substring(temp.Length - 1);
 
         return temp;
       }
