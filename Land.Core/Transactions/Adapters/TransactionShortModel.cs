@@ -39,6 +39,10 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
+    public string InternalControlNo {
+      get; internal set;
+    }
+
     public string Stage {
       get; internal set;
     }
@@ -51,11 +55,23 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
+    public string NextStatus {
+      get; internal set;
+    }
+
+    public string NextStatusName {
+      get; internal set;
+    }
+
     public string AssignedToUID {
       get; internal set;
     }
 
     public string AssignedToName {
+      get; internal set;
+    }
+
+    public string NextAssignedToName {
       get; internal set;
     }
 

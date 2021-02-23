@@ -19,6 +19,8 @@ namespace Empiria.Land.Transactions.Adapters {
 
     InProgress,
 
+    ControlDesk,
+
     Completed,
 
     Returned,

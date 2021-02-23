@@ -46,7 +46,7 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.Payment = GetPaymentDto(transaction);
       dto.SubmissionReceipt = GetSubmissionReceiptDto(transaction);
       dto.PresentationTime = transaction.PresentationTime;
-      dto.InternalControlNo = transaction.InternalControlNo;
+      dto.InternalControlNo = transaction.InternalControlNoFormatted;
       dto.Status = MapStatus(transaction.Workflow.CurrentStatus);
       dto.StatusName = transaction.Workflow.CurrentStatusName;
       dto.Actions = GetControlDataDto(transaction);
@@ -197,7 +197,7 @@ namespace Empiria.Land.Transactions.Adapters {
 
       var instrument = Instrument.Parse(transaction.InstrumentId);
 
-      return InstrumentMapper.Map(instrument);
+      return InstrumentMapper.Map(instrument, transaction);
     }
 
 

@@ -32,11 +32,16 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.Subtype = transaction.DocumentType.Name;
       dto.RequestedBy = transaction.RequestedBy;
       dto.PresentationTime = transaction.PresentationTime;
+      dto.InternalControlNo = transaction.InternalControlNoFormatted;
       dto.Stage = "InProgress";
       dto.Status = currentTask.CurrentStatus.ToString();
       dto.StatusName = currentTask.CurrentStatusName;
       dto.AssignedToUID = currentTask.Responsible.UID;
       dto.AssignedToName = currentTask.Responsible.Alias;
+
+      dto.NextStatus = currentTask.NextStatus.ToString();
+      dto.NextStatusName = currentTask.NextStatusName;
+      dto.NextAssignedToName = currentTask.NextContact.Alias;
 
       return dto;
     }

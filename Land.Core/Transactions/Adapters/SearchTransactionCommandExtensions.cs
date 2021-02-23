@@ -18,7 +18,7 @@ namespace Empiria.Land.Transactions.Adapters {
 
     static internal void EnsureIsValid(this SearchTransactionCommand command) {
       command.Keywords = command.Keywords ?? String.Empty;
-      command.OrderBy = command.OrderBy ?? "PresentationTime";
+      command.OrderBy = command.OrderBy ?? "TransactionId DESC";
       command.PageSize = command.PageSize <= 0 ? 50 : command.PageSize;
       command.Page = command.Page <= 0 ? 1 : command.Page;
     }
@@ -40,7 +40,7 @@ namespace Empiria.Land.Transactions.Adapters {
       if (!String.IsNullOrWhiteSpace(command.OrderBy)) {
         return command.OrderBy;
       } else {
-        return "PresentationTime";
+        return "TransactionId DESC";
       }
     }
 
@@ -72,13 +72,17 @@ namespace Empiria.Land.Transactions.Adapters {
           return "TransactionStatus <> 'X'";
 
         case TransactionStage.MyInbox:
-          return $"TransactionStatus <> 'X' AND ResponsibleId = {ExecutionServer.CurrentUserId}";
+          return $"ResponsibleId = {ExecutionServer.CurrentUserId} AND " +
+                 $"TransactionStatus IN ('G', 'E', 'S', 'V', 'P', 'J')";
 
         case TransactionStage.Completed:
-          return "TransactionStatus IN ('D', 'C', 'H')";
+          return "TransactionStatus IN ('D', 'C', 'H', 'L', 'Q')";
+
+        case TransactionStage.ControlDesk:
+          return "TransactionStatus IN ('K', 'R', 'N')";
 
         case TransactionStage.InProgress:
-          return "TransactionStatus IN ('R', 'N', 'K', 'G', 'E', 'J', 'P', 'S', 'A')";
+          return "TransactionStatus IN ('G', 'E', 'V', 'P')";
 
         case TransactionStage.OnHold:
           return "TransactionStatus IN ('V', 'J')";
