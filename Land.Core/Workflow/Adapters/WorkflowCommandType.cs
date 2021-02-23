@@ -17,6 +17,8 @@ namespace Empiria.Land.Workflow {
 
     AssignTo,
 
+    Finish,
+
     PullToControlDesk,
 
     Receive,
@@ -29,7 +31,9 @@ namespace Empiria.Land.Workflow {
 
     Sign,
 
-    Unsign
+    Unarchive,
+
+    Unsign,
 
   }  // enum WorkflowCommandType
 

@@ -69,25 +69,13 @@ namespace Empiria.Land.Workflow.UseCases {
     public FixedList<WorkflowTaskDto> ExecuteWorkflowCommand(WorkflowCommand command) {
       ValidateCommand(command);
 
-      var changesList = new List<WorkflowTaskDto>(command.Payload.TransactionUID.Length);
+      var user = ExecutionServer.CurrentIdentity.User.AsContact();
 
-      foreach (var transactionUID in command.Payload.TransactionUID) {
-        var transaction = LRSTransaction.Parse(transactionUID);
+      var workflowEngine = new WorkflowEngine(user);
 
-        var workflow = transaction.Workflow;
+      workflowEngine.Execute(command);
 
-        var status = TransactionDtoMapper.MapStatus(command.Payload.NextStatus);
-
-        var assignTo = command.Payload.AssignTo();
-
-        workflow.SetNextStatus(status, assignTo, command.Payload.Note);
-
-        var mapped = WorkflowTaskMapper.Map(workflow.GetCurrentTask());
-
-        changesList.Add(mapped);
-      }
-
-      return changesList.ToFixedList();
+      return workflowEngine.GetChangesList();
     }
 
 
@@ -108,8 +96,7 @@ namespace Empiria.Land.Workflow.UseCases {
     private void ValidateCommand(WorkflowCommand command) {
       Assertion.AssertObject(command, "command");
 
-      Assertion.Assert(command.Payload.NextStatus != TransactionStatus.Undefined &&
-                       command.Payload.NextStatus != TransactionStatus.All,
+      Assertion.Assert(command.Payload.NextStatus != TransactionStatus.All,
         $"Unrecognized value '{command.Payload.NextStatus}' for command.payload.nextStatus.");
 
     }

@@ -36,14 +36,54 @@ namespace Empiria.Land.Workflow {
       command.Type = commandType;
       command.Name = GetCommandTypeName(commandType);
       command.NextStatus = GetNextStates(commandType);
-      // command.NextUsers = GetNextUsers(commandType);
+      command.NextUsers = GetNextUsers(commandType);
 
       return command;
     }
 
 
     internal bool IsApplicable(WorkflowCommandType commandType) {
-      return true;
+      var task = _transaction.Workflow.GetCurrentTask();
+      var nextStatus = _transaction.Workflow.GetCurrentTask().CurrentStatus;
+
+      switch (commandType) {
+        // case WorkflowCommandType.AssignTo:
+        case WorkflowCommandType.PullToControlDesk:
+        case WorkflowCommandType.Unarchive:
+          return WorkflowUsers.IsInRole(_user, WorkflowRole.ControlClerk);
+
+        case WorkflowCommandType.Receive:
+          if (nextStatus == LRSTransactionStatus.EndPoint) {
+            return false;
+          }
+          if (task.Responsible.Id == _user.Id && task.CurrentStatus != LRSTransactionStatus.Reentry) {
+            return false;
+          }
+          return WorkflowUsers.CanReceiveFor(_user, nextStatus);
+
+        case WorkflowCommandType.Reentry:
+          return WorkflowUsers.IsInRole(_user, WorkflowRole.Supervisor);
+
+        case WorkflowCommandType.ReturnToMe:
+          return task.Responsible.Equals(_user) && nextStatus != LRSTransactionStatus.EndPoint;
+
+        case WorkflowCommandType.SetNextStatus:
+          return true;
+
+        case WorkflowCommandType.Sign:
+        case WorkflowCommandType.Unsign:
+          return WorkflowUsers.IsInRole(_user, WorkflowRole.Signer);
+
+        case WorkflowCommandType.Finish:
+          if ((task.CurrentStatus == LRSTransactionStatus.ToDeliver ||
+              task.CurrentStatus == LRSTransactionStatus.ToReturn)) {
+            return WorkflowUsers.IsInRole(_user, WorkflowRole.DeliveryClerk);
+          }
+          return false;
+
+        default:
+          return false;
+      }
     }
 
 
@@ -55,14 +95,17 @@ namespace Empiria.Land.Workflow {
         case WorkflowCommandType.AssignTo:
           return "Asignar a";
 
+        case WorkflowCommandType.Finish:
+          return "Entregar o devolver al interesado";
+
         case WorkflowCommandType.PullToControlDesk:
           return "Traer a la mesa de control";
 
         case WorkflowCommandType.Receive:
-          return "Recibir documentación";
+          return "Recibir en el siguiente estado";
 
         case WorkflowCommandType.Reentry:
-          return "Reingresar";
+          return "Reingresar el trámite";
 
         case WorkflowCommandType.ReturnToMe:
           return "Regresar a mi bandeja de trabajo";
@@ -72,6 +115,9 @@ namespace Empiria.Land.Workflow {
 
         case WorkflowCommandType.Sign:
           return "Firmar electrónicamente";
+
+        case WorkflowCommandType.Unarchive:
+          return "Desarchivar y moverlo a  la mesa de control";
 
         case WorkflowCommandType.Unsign:
           return "Cancelar firma electrónica";
@@ -88,11 +134,7 @@ namespace Empiria.Land.Workflow {
         return new NextStateDto[0];
       }
 
-      var currentState = _transaction.Workflow.CurrentStatus;
-
-      var nextStateRules = LRSWorkflowRules.GetNextStatusList(_transaction.TransactionType,
-                                                              _transaction.DocumentType,
-                                                              currentState);
+      var nextStateRules = WorkflowRules.GetNextStatusList(_transaction);
 
       var nextStates = new List<NextStateDto>();
 
@@ -117,17 +159,7 @@ namespace Empiria.Land.Workflow {
 
 
     private NamedEntityDto[] GetNextUsers(WorkflowCommandType commandType) {
-      if (!NeedBuildNextUsers(commandType)) {
-        return new NamedEntityDto[0];
-      }
-
-      var users = new List<NamedEntityDto>();
-
-      users.Add(new NamedEntityDto(Contact.Parse(26)));
-      users.Add(new NamedEntityDto(Contact.Parse(12)));
-      users.Add(new NamedEntityDto(Contact.Parse(11)));
-
-      return users.ToArray();
+      return new NamedEntityDto[0];
     }
 
 
