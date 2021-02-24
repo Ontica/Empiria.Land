@@ -169,7 +169,7 @@ namespace Empiria.Land.Registration {
     public string RecordIntegrityHashCode {
       get;
       set;
-    }
+    } = string.Empty;
 
     public FixedList<PhysicalRecording> Recordings {
       get {
