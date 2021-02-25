@@ -105,7 +105,7 @@ namespace Empiria.Land.Pages {
 				return GetAllRecordingsText();
 			}
 
-			const string template = "Registrado bajo el número de <b>inscripción {NUMBER}</b> del <b>{VOL}</b> <b>{SECTION}</b> del <b>Distrito Judicial de {DISTRICT}</b>.";
+			const string template = "Registrado bajo el número de <b>inscripción {NUMBER}</b> del <b>Volumen {VOL}</b> <b>{SECTION}</b> del <b>Distrito Judicial de {DISTRICT}</b>.";
 			string x = String.Empty;
 
 			x = template.Replace("{NUMBER}", baseRecording.Number);
@@ -139,7 +139,7 @@ namespace Empiria.Land.Pages {
 
 			const string docOne = "Registrado bajo la siguiente inscripción:<br/><br/>";
 
-			const string t1 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Inscripción <b>{NUMBER}</b> del <b>{VOL}</b> <b>{SECTION}</b> del <b>Distrito Judicial de {DISTRICT}</b>.<br/>";
+			const string t1 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Inscripción <b>{NUMBER}</b> del <b>Volumen {VOL}</b> <b>{SECTION}</b> del <b>Distrito Judicial de {DISTRICT}</b>.<br/>";
 
 			string html = String.Empty;
 
@@ -211,12 +211,6 @@ namespace Empiria.Land.Pages {
 			decimal centimeters = Math.Max(5.0m, 1.0m);   // transaction.Document.SealUpperPosition
 
 			return (centimeters * 28.3464657m).ToString("G4");
-		}
-
-		protected string GetLeftMargin() {
-			return String.Empty;
-
-			// return "padding-left:2cm;";
 		}
 
 		#endregion Private methods

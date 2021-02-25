@@ -10,7 +10,6 @@
 		body {
 			font-size: 11pt;
 			font-family: Arial, Heveltica, sans-serif;
-			<%=GetLeftMargin()%>
 		}
 		table {
 			font-size: 11pt;
@@ -18,9 +17,9 @@
 		}
 	</style>
 	</head>
-	<body topmargin="0" >
+	<body>
 		<form id="frmEditor" method="post" runat="server">
-			<table cellspacing="0" cellpadding="0" width="100%">
+			<table cellspacing="0" cellpadding="0" style="width:76%;margin-left:102pt">
 				<tr valign="top">
 					<td colspan="2" align="center">
 						<table width="75%">
