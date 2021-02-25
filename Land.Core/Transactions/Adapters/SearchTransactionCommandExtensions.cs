@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Transactions.Adapters {
 
@@ -49,7 +50,20 @@ namespace Empiria.Land.Transactions.Adapters {
     #region Private methods
 
     static private string BuildKeywordsFilter(string keywords) {
-      return SearchExpression.ParseAndLikeKeywords("TransactionKeywords", keywords);
+      if (EmpiriaString.IsInteger(keywords)) {
+        return $"(InternalControlNo = '{keywords}')";
+
+      } else if (LRSTransaction.MatchesWithTransactionUID(keywords)) {
+        return $"(TransactionUID = '{keywords}')";
+
+      } else if (LRSTransaction.MatchesWithTransactionOldKey(keywords)) {
+        keywords = LRSTransaction.GetTransactionUIDFromOldKey(keywords);
+
+        return $"(TransactionUID = '{keywords}')";
+      } else {
+
+        return SearchExpression.ParseAndLikeKeywords("TransactionKeywords", keywords);
+      }
     }
 
 

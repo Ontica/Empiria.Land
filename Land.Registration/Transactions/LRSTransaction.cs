@@ -61,13 +61,28 @@ namespace Empiria.Land.Registration.Transactions {
       return BaseObject.ParseId<LRSTransaction>(id);
     }
 
+
     static public LRSTransaction Parse(string uid) {
       return BaseObject.ParseKey<LRSTransaction>(uid);
     }
 
+
     static public LRSTransaction TryParse(string transactionUID, bool reload = false) {
       return BaseObject.TryParse<LRSTransaction>("TransactionUID = '" + transactionUID + "'", reload);
     }
+
+
+    public static LRSTransaction TryParseWitAnyKey(string transactionKey, bool reload = false) {
+      if (EmpiriaString.IsInteger(transactionKey)) {
+        return BaseObject.TryParse<LRSTransaction>("InternalControlNo = '" + transactionKey + "'", reload);
+      }
+
+      if (MatchesWithTransactionOldKey(transactionKey)) {
+        transactionKey = LRSTransaction.GetTransactionUIDFromOldKey(transactionKey);
+      }
+      return BaseObject.TryParse<LRSTransaction>("TransactionUID = '" + transactionKey + "'", reload);
+    }
+
 
     static public LRSTransaction TryParseForInstrument(int instrumentId) {
       return BaseObject.TryParse<LRSTransaction>($"InstrumentId = {instrumentId}", true);
@@ -81,11 +96,31 @@ namespace Empiria.Land.Registration.Transactions {
       get { return BaseObject.ParseEmpty<LRSTransaction>(); }
     }
 
+
     static public FixedList<Contact> GetAgenciesList() {
       GeneralList listType = GeneralList.Parse("LRSTransaction.ManagementAgencies.List");
 
       return listType.GetItems<Contact>((x, y) => x.Alias.CompareTo(y.Alias));
     }
+
+
+    static public string GetTransactionUIDFromOldKey(string oldTransactionKey) {
+      var temp = "TR-ZS-" + oldTransactionKey.Substring(2);
+
+      return temp.Substring(0, 11) + "-" + temp.Substring(11);
+    }
+
+
+    static public bool MatchesWithTransactionOldKey(string oldTransactionKey) {
+      return (oldTransactionKey.Length == 14 &&
+             oldTransactionKey.StartsWith("ZS") &&
+             oldTransactionKey.Contains("-"));
+    }
+
+    public static bool MatchesWithTransactionUID(string transactionUID) {
+      return (transactionUID.StartsWith("TR-ZS-") && transactionUID.Length == 19);
+    }
+
 
     #endregion Constructors and parsers
 
