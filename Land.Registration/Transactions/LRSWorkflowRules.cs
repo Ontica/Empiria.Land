@@ -198,7 +198,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static private bool NotRecordableDocumentType(LRSDocumentType docType) {
-      return EmpiriaMath.IsMemberOf(docType.Id, new int[] { 722, 723, 730, 731, 732, 733, 734, 735, 736,
+      return EmpiriaMath.IsMemberOf(docType.Id, new int[] { 722, 723, 724, 730, 731, 732, 733, 734, 735, 736,
                                                             751, 752, 753, 754, 755, 756, 757, 758, });
     }
 
