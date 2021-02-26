@@ -13,6 +13,7 @@ using Empiria.WebApi;
 
 using Empiria.Land.Workflow.Adapters;
 using Empiria.Land.Workflow.UseCases;
+using Empiria.Land.Transactions.Adapters;
 
 namespace Empiria.Land.Workflow.WebApi {
 
@@ -20,6 +21,18 @@ namespace Empiria.Land.Workflow.WebApi {
   public class WorkflowController : WebApiController {
 
     #region Web Apis
+
+    [HttpGet]
+    [Route("v5/land/workflow/all-commands")]
+    [Route("v5/land/workflow/all-command-types")]
+    public CollectionModel AllApplicableUserCommandTypes() {
+      using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
+        FixedList<ApplicableCommandDto> commandTypes = usecases.AllApplicableUserCommands();
+
+        return new CollectionModel(this.Request, commandTypes);
+      }
+    }
+
 
     [HttpPost]
     [Route("v5/land/workflow/applicable-commands")]
@@ -31,6 +44,25 @@ namespace Empiria.Land.Workflow.WebApi {
         FixedList<ApplicableCommandDto> commandTypes = usecases.ApplicableCommands(transactions);
 
         return new CollectionModel(this.Request, commandTypes);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v5/land/workflow/search-and-assert-command-execution")]
+    public SingleObjectModel AssertWorkflowCommandExecutionForMultipleTransactions([FromBody] WorkflowCommand command) {
+      base.RequireBody(command);
+
+      Assertion.AssertObject(command.Payload.SearchUID, "payload.searchUID field must be provided.");
+
+      using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
+        TransactionShortModel transaction = usecases.SearchTransaction(command.Payload.SearchUID);
+
+        command.Payload.TransactionUID = new string[] { transaction.UID };
+
+        usecases.AssertWorkflowCommandExecution(command);
+
+        return new SingleObjectModel(this.Request, transaction);
       }
     }
 
@@ -63,6 +95,7 @@ namespace Empiria.Land.Workflow.WebApi {
     [Route("v5/land/workflow/{transactionUID:length(19)}/execute-command")]
     public SingleObjectModel ExecuteWorkflowCommandForATransaction([FromUri] string transactionUID,
                                                                    [FromBody] WorkflowCommand command) {
+
       base.RequireBody(command);
 
       using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
@@ -86,6 +119,7 @@ namespace Empiria.Land.Workflow.WebApi {
         return new CollectionModel(this.Request, workflowTasks);
       }
     }
+
 
     #endregion Web Apis
 

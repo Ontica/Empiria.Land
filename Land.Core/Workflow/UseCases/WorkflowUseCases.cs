@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 
 using Empiria.Services;
 
@@ -35,6 +34,16 @@ namespace Empiria.Land.Workflow.UseCases {
 
     #region Use cases
 
+    public FixedList<ApplicableCommandDto> AllApplicableUserCommands() {
+      var user = ExecutionServer.CurrentIdentity.User.AsContact();
+
+      var workflowRules = new WorkflowRules();
+
+      var aggregator = new WorkflowCommandsAggregator(workflowRules);
+
+      return aggregator.GetAllApplicableUserCommands(user);
+    }
+
 
     public FixedList<ApplicableCommandDto> ApplicableCommands(string[] transactionUIDs) {
       if (transactionUIDs == null || transactionUIDs.Length == 0) {
@@ -43,15 +52,30 @@ namespace Empiria.Land.Workflow.UseCases {
 
       var user = ExecutionServer.CurrentIdentity.User.AsContact();
 
-      var aggregator = new WorkflowCommandsAggregator(user);
+      var workflowRules = new WorkflowRules();
+
+      var aggregator = new WorkflowCommandsAggregator(workflowRules);
 
       foreach (var uid in transactionUIDs) {
         var transaction = LRSTransaction.Parse(uid);
 
-        aggregator.Aggregate(transaction);
+        aggregator.Aggregate(transaction, user);
       }
 
       return aggregator.GetApplicableCommands();
+    }
+
+
+    public void AssertWorkflowCommandExecution(WorkflowCommand command) {
+      ValidateCommand(command);
+
+      var user = ExecutionServer.CurrentIdentity.User.AsContact();
+
+      var workflowRules = new WorkflowRules();
+
+      var assertions = new WorkflowAssertions(workflowRules);
+
+      assertions.AssertExecution(command, user);
     }
 
 
@@ -71,11 +95,26 @@ namespace Empiria.Land.Workflow.UseCases {
 
       var user = ExecutionServer.CurrentIdentity.User.AsContact();
 
-      var workflowEngine = new WorkflowEngine(user);
+      var workflowRules = new WorkflowRules();
 
-      workflowEngine.Execute(command);
+      var workflowEngine = new WorkflowEngine(workflowRules);
+
+      workflowEngine.Execute(command, user);
 
       return workflowEngine.GetChangesList();
+    }
+
+
+    public TransactionShortModel SearchTransaction(string searchUID) {
+      Assertion.AssertObject(searchUID, "searchUID");
+
+      var transaction = LRSTransaction.TryParseWitAnyKey(searchUID);
+
+      if (transaction == null) {
+        throw new ResourceNotFoundException("Transaction.NotFound", $"No encontré un trámite con clave '{searchUID}'.");
+      }
+
+      return TransactionShortModelMapper.Map(transaction);
     }
 
 
