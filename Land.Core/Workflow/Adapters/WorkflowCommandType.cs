@@ -21,7 +21,7 @@ namespace Empiria.Land.Workflow {
 
     PullToControlDesk,
 
-    Receive,
+    Take,
 
     Reentry,
 

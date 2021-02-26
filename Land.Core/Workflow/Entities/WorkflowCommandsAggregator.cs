@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Workflow Management                        Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Aggregator class                        *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Aggregator                              *
 *  Type     : WorkflowCommandsAggregator                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Aggregates a set of commands for a given transaction and user, that can be                     *
@@ -23,20 +23,24 @@ namespace Empiria.Land.Workflow {
   /// executed by the workflow engine.</summary>
   internal class WorkflowCommandsAggregator {
 
-    private readonly List<LRSTransaction> _transactions = new List<LRSTransaction>();
-    private readonly Contact _user;
+    private readonly WorkflowRules _rules;
 
-    private List<ApplicableCommandDto> _actions = new List<ApplicableCommandDto>();
+    private readonly List<LRSTransaction> _transactions = new List<LRSTransaction>();
+
+    private List<ApplicableCommandDto> actions = new List<ApplicableCommandDto>();
+
 
     #region Public methods
 
-    public WorkflowCommandsAggregator(Contact user) {
-      _user = user;
+    public WorkflowCommandsAggregator(WorkflowRules rules) {
+      Assertion.AssertObject(rules, "rules");
+
+      _rules = rules;
     }
 
 
-    internal void Aggregate(LRSTransaction transaction) {
-      var commands = GetApplicableCommandsForTransaction(transaction);
+    internal void Aggregate(LRSTransaction transaction, Contact user) {
+      var commands = GetApplicableCommandsForTransaction(transaction, user);
 
       AppendCommands(commands);
 
@@ -44,8 +48,27 @@ namespace Empiria.Land.Workflow {
     }
 
 
+    internal FixedList<ApplicableCommandDto> GetAllApplicableUserCommands(Contact user) {
+      FixedList<WorkflowCommandType> candidates = _rules.WorkflowCommandTypeCandidates();
+
+      var commandBuilder = new WorkflowCommandBuilder();
+
+      List<ApplicableCommandDto> list = new List<ApplicableCommandDto>(candidates.Count);
+
+      foreach (var candidate in candidates) {
+        if (_rules.IsApplicable(user, candidate)) {
+          var command = commandBuilder.BuildUserActionFor(candidate, user);
+
+          list.Add(command);
+        }
+      }
+
+      return list.ToFixedList();
+    }
+
+
     internal FixedList<ApplicableCommandDto> GetApplicableCommands() {
-      return _actions.ToFixedList();
+      return this.actions.ToFixedList();
     }
 
 
@@ -54,37 +77,37 @@ namespace Empiria.Land.Workflow {
     #region Private methods
 
     private void AppendCommands(List<ApplicableCommandDto> actionsToAppend) {
-      var temp = new List<ApplicableCommandDto>(_actions);
+      var temp = new List<ApplicableCommandDto>(this.actions);
 
-      foreach (var currentAction in _actions) {
+      foreach (var currentAction in this.actions) {
         if (actionsToAppend.Exists(x => x.Type == currentAction.Type)) {
           temp.Remove(currentAction);
         }
       }
 
       foreach (var toAppend in actionsToAppend) {
-        if (!_actions.Exists(x => x.Type == toAppend.Type)) {
+        if (!this.actions.Exists(x => x.Type == toAppend.Type)) {
           temp.Add(toAppend);
         }
 
       }  // foreach
 
-      _actions = temp;
+      this.actions = temp;
     }
 
 
-    private List<ApplicableCommandDto> GetApplicableCommandsForTransaction(LRSTransaction transaction) {
-      var commandTypes = GetCandidates(transaction);
+    private List<ApplicableCommandDto> GetApplicableCommandsForTransaction(LRSTransaction transaction,
+                                                                           Contact user) {
+      var commandTypes = _rules.WorkflowCommandTypeCandidates(transaction);
 
-      var commandBuilder = new WorkflowCommandBuilder(transaction, _user);
+      var commandBuilder = new WorkflowCommandBuilder();
 
       var applicableCommands = new List<ApplicableCommandDto>();
 
-      ApplicableCommandDto action;
-
       foreach (var commandType in commandTypes) {
-        if (commandBuilder.IsApplicable(commandType)) {
-          action = commandBuilder.BuildActionFor(commandType);
+        if (_rules.IsApplicable(commandType, transaction, user)) {
+          ApplicableCommandDto action = commandBuilder.BuildActionFor(commandType, transaction);
+
           applicableCommands.Add(action);
         }
       }
@@ -92,95 +115,8 @@ namespace Empiria.Land.Workflow {
       return applicableCommands;
     }
 
-    private FixedList<WorkflowCommandType> GetCandidates(LRSTransaction transaction) {
-      var currentTask = transaction.Workflow.GetCurrentTask();
-
-      var currentStatus = currentTask.CurrentStatus;
-      var nextStatus = currentTask.NextStatus;
-
-      if (AnyOf(currentStatus, LRSTransactionStatus.Payment, LRSTransactionStatus.Deleted)) {
-        return new FixedList<WorkflowCommandType>();
-      }
-
-      if (AnyOf(currentStatus, LRSTransactionStatus.Returned, LRSTransactionStatus.Delivered)) {
-        return BuildCommandList(WorkflowCommandType.Reentry);
-      }
-
-      if (currentStatus == LRSTransactionStatus.Archived) {
-        return BuildCommandList(WorkflowCommandType.Unarchive);
-      }
-
-      if (AnyOf(currentStatus, LRSTransactionStatus.ToDeliver, LRSTransactionStatus.ToReturn)) {
-        return BuildCommandList(WorkflowCommandType.Finish,
-                                WorkflowCommandType.SetNextStatus);
-      }
-
-      if (currentStatus == LRSTransactionStatus.Control) {
-        return BuildCommandList(WorkflowCommandType.Receive,
-                                WorkflowCommandType.SetNextStatus,
-                                WorkflowCommandType.AssignTo);
-      }
-
-      if (currentStatus == LRSTransactionStatus.Qualification) {
-        return BuildCommandList(WorkflowCommandType.Receive,
-                                WorkflowCommandType.SetNextStatus,
-                                WorkflowCommandType.AssignTo);
-      }
-
-      if (currentStatus == LRSTransactionStatus.OnSign) {
-        return BuildCommandList(WorkflowCommandType.Receive,
-                                WorkflowCommandType.Sign,
-                                WorkflowCommandType.SetNextStatus);
-      }
-
-      if (currentStatus == LRSTransactionStatus.Revision) {
-        return BuildCommandList(WorkflowCommandType.Receive,
-                                WorkflowCommandType.SetNextStatus);
-      }
-
-      if (currentStatus == LRSTransactionStatus.Received) {
-        return BuildCommandList(WorkflowCommandType.Receive,
-                                WorkflowCommandType.SetNextStatus,
-                                WorkflowCommandType.AssignTo);
-      }
-
-      if (currentStatus == LRSTransactionStatus.Reentry) {
-        return BuildCommandList(WorkflowCommandType.Receive,
-                                WorkflowCommandType.SetNextStatus,
-                                WorkflowCommandType.AssignTo);
-      }
-
-      if (AnyOf(currentStatus, LRSTransactionStatus.Recording, LRSTransactionStatus.Elaboration) &&
-          nextStatus == LRSTransactionStatus.EndPoint) {
-        return BuildCommandList(WorkflowCommandType.Receive,
-                                WorkflowCommandType.SetNextStatus);
-      }
-
-      if (nextStatus != LRSTransactionStatus.EndPoint) {
-        return BuildCommandList(WorkflowCommandType.Receive, WorkflowCommandType.ReturnToMe);
-      }
-
-      return new FixedList<WorkflowCommandType>();
-    }
 
     #endregion Private methods
-
-    #region Helper methods
-
-    private bool AnyOf<T>(T value, params T[] matchTo) {
-      foreach (var item in matchTo) {
-        if (value.Equals(item)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    private FixedList<WorkflowCommandType> BuildCommandList(params WorkflowCommandType[] list) {
-      return new FixedList<WorkflowCommandType>(list);
-    }
-
-    #endregion Helper methods
 
   }  // class WorkflowCommandsAggregator
 

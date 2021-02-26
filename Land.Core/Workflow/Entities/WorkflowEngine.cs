@@ -1,10 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Workflow Management                        Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Use case interactor class               *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Coordinator                             *
 *  Type     : WorkflowEngine                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Performs excecution of Empiria Land micro workflow commands.                                   *
+*  Summary  : Performs execution of Empiria Land micro workflow commands.                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System.Collections.Generic;
@@ -17,24 +17,29 @@ using Empiria.Land.Workflow.Adapters;
 
 namespace Empiria.Land.Workflow {
 
-  /// <summary>Performs excecution of Empiria Land micro workflow commands.</summary>
+  /// <summary>Performs execution of Empiria Land micro workflow commands.</summary>
   internal class WorkflowEngine {
 
-    private readonly Contact _user;
+    private readonly WorkflowRules _rules;
 
     private readonly List<WorkflowTaskDto> _changesList = new List<WorkflowTaskDto>(4);
 
 
-    internal WorkflowEngine(Contact user) {
-      _user = user;
+    internal WorkflowEngine(WorkflowRules rules) {
+      Assertion.AssertObject(rules, "rules");
+
+      _rules = rules;
     }
 
 
-    internal void Execute(WorkflowCommand command) {
+    internal void Execute(WorkflowCommand command, Contact user) {
+      var assertions = new WorkflowAssertions(_rules);
+
       foreach (var transactionUID in command.Payload.TransactionUID) {
         var transaction = LRSTransaction.Parse(transactionUID);
 
-        ExecuteForTransaction(transaction, command);
+        assertions.AssertExecution(transaction, command, user);
+        Execute(transaction, command);
       }
     }
 
@@ -43,21 +48,22 @@ namespace Empiria.Land.Workflow {
       return _changesList.ToFixedList();
     }
 
+    #region Private methods
 
-    private void ExecuteForTransaction(LRSTransaction transaction, WorkflowCommand command) {
+
+    private void Execute(LRSTransaction transaction, WorkflowCommand command) {
       var workflow = transaction.Workflow;
-
-      var status = TransactionDtoMapper.MapStatus(command.Payload.NextStatus);
 
       var assignTo = command.Payload.AssignTo();
 
-
       switch (command.Type) {
-        case WorkflowCommandType.Receive:
+        case WorkflowCommandType.Take:
           workflow.Take(command.Payload.Note);
           break;
 
         case WorkflowCommandType.SetNextStatus:
+          var status = TransactionDtoMapper.MapStatus(command.Payload.NextStatus);
+
           workflow.SetNextStatus(status, assignTo, command.Payload.Note);
           break;
 
@@ -94,6 +100,8 @@ namespace Empiria.Land.Workflow {
 
       _changesList.Add(mapped);
     }
+
+    #endregion Private methods
 
   }  // class WorkflowEngine
 

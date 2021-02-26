@@ -46,6 +46,11 @@ namespace Empiria.Land.Workflow.Adapters {
     } = TransactionStatus.Undefined;
 
 
+    public string SearchUID {
+      get; set;
+    } = string.Empty;
+
+
     public string Note {
       get; set;
     } = string.Empty;
