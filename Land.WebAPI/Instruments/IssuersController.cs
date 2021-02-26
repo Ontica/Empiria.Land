@@ -36,6 +36,18 @@ namespace Empiria.Land.Instruments.WebApi {
       }
     }
 
+
+    [HttpPost]
+    [Route("v5/land/instrument-issuers/update-all")]
+    public NoDataModel UpdateAllIssuers() {
+
+      using (var usecases = IssuerUseCases.UseCaseInteractor()) {
+        usecases.UpdateAll();
+
+        return new NoDataModel(this.Request);
+      }
+    }
+
     #endregion Web Apis
 
   }  // class IssuersController

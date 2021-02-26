@@ -7,7 +7,6 @@
 *  Summary  : Data structure that serves to update payment data for a transaction.                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
 using System;
 
 namespace Empiria.Land.Transactions.Adapters {

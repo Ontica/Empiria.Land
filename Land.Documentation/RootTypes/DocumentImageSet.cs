@@ -105,7 +105,8 @@ namespace Empiria.Land.Documentation {
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
       if (version == 1) {
         return new object[] {
-          1, "Id", this.Id, "DocumentUID", this.Document.UID, "ImageSetType", (char) this.DocumentImageType,
+          1, "Id", this.Id, "DocumentUID", this.Document.UID, "ImageSetType",
+          (char) this.DocumentImageType,
           "BaseFolder", this.BaseFolder.Id, "ItemPath", base.ItemPath, "ExtData",
           this.ImagingItemExtData.ToString(), "FilesCount", this.FilesCount
         };

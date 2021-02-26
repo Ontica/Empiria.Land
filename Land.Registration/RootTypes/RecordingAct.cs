@@ -31,6 +31,7 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
+
     protected RecordingAct(RecordingActType recordingActType,
                            RecordingDocument document) : base(recordingActType) {
       Assertion.AssertObject(recordingActType, "recordingActType");
@@ -39,6 +40,7 @@ namespace Empiria.Land.Registration {
 
       this.Document = document;
     }
+
 
     protected RecordingAct(RecordingActType recordingActType, RecordingDocument document,
                            PhysicalRecording physicalRecording) : base(recordingActType) {
@@ -53,6 +55,7 @@ namespace Empiria.Land.Registration {
       this.PhysicalRecording = physicalRecording;
       this.Document = document;
     }
+
 
     static internal RecordingAct Create(RecordingActType recordingActType,
                                         RecordingDocument document, Resource resource,
@@ -94,13 +97,16 @@ namespace Empiria.Land.Registration {
       return recordingAct;
     }
 
+
     static public RecordingAct Parse(int id) {
       return BaseObject.ParseId<RecordingAct>(id);
     }
 
+
     static public FixedList<RecordingAct> GetList(RecordingDocument document) {
       return RecordingActsData.GetDocumentRecordingActs(document).ToFixedList();
     }
+
 
     static private readonly RecordingAct _empty = BaseObject.ParseEmpty<RecordingAct>();
     static public RecordingAct Empty {
@@ -134,6 +140,7 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+
     [DataField("PhysicalRecordingId")]
     private LazyInstance<PhysicalRecording> _physicalRecording = LazyInstance<PhysicalRecording>.Empty;
     public PhysicalRecording PhysicalRecording {
@@ -145,11 +152,13 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     [DataField("RecordingActIndex")]
     public int Index {
       get;
       internal set;
     }
+
 
     public string IndexedName {
       get {
@@ -157,11 +166,13 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     [DataField("ResourceId", Default = "Empiria.Land.Registration.RealEstate.Empty")]
     public Resource Resource {
       get;
       private set;
     }
+
 
     [DataField("ResourceRole", Default = ResourceRole.Informative)]
     public ResourceRole ResourceRole {
@@ -169,11 +180,13 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+
     [DataField("RelatedResourceId", Default = "Empiria.Land.Registration.RealEstate.Empty")]
     public Resource RelatedResource {
       get;
       private set;
     }
+
 
     [DataField("RecordingActPercentage", Default = 1.0)]
     public decimal Percentage {
@@ -187,6 +200,7 @@ namespace Empiria.Land.Registration {
       get;
       set;
     }
+
 
     public RecordingActExtData ExtensionData {
       get;
@@ -206,6 +220,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     internal string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName, this.Document.UID,
@@ -214,6 +229,7 @@ namespace Empiria.Land.Registration {
                                            this.PhysicalRecording.AsText : String.Empty);
       }
     }
+
 
     [DataField("AmendmentOfId")]
     private LazyInstance<RecordingAct> _amendmentOf = LazyInstance<RecordingAct>.Empty;
@@ -226,6 +242,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     [DataField("AmendedById")]
     private LazyInstance<RecordingAct> _amendedBy = LazyInstance<RecordingAct>.Empty;
     public RecordingAct AmendedBy {
@@ -237,17 +254,20 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     [DataField("RegisteredById")]
     public Contact RegisteredBy {
       get;
       private set;
     }
 
+
     [DataField("RegistrationTime", Default = "DateTime.Now")]
     public DateTime RegistrationTime {
       get;
       private set;
     }
+
 
     [DataField("RecordingActStatus", Default = RecordableObjectStatus.Incomplete)]
     public RecordableObjectStatus Status {

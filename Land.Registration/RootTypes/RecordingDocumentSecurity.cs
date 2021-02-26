@@ -202,7 +202,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Public methods
 
-
     #region Integrity methods
 
     int IProtected.CurrentDataIntegrityVersion {
