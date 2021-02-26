@@ -73,13 +73,17 @@ namespace Empiria.Land.UI {
 
     static public string GetTransactionNewStatusComboItems(int typeId, int docTypeId,
                                                           LRSTransactionStatus currentStatus) {
-      List<LRSTransactionStatus> list = Empiria.Land.Workflow.WorkflowRules.GetNextStatusList(LRSTransactionType.Parse(typeId),
-                                                                            LRSDocumentType.Parse(docTypeId),
-                                                                            currentStatus);
+      var rules = new Empiria.Land.Workflow.WorkflowRules();
+
+      List<LRSTransactionStatus> list = rules.NextStatusList(LRSTransactionType.Parse(typeId),
+                                                             LRSDocumentType.Parse(docTypeId),
+                                                             currentStatus);
       string html = String.Empty;
       for (int i = 0; i < list.Count; i++) {
-        html += HtmlSelectContent.GetComboHtmlItem(Convert.ToString((char) list[i]),
-                                                   LRSWorkflowRules.GetStatusName(list[i]));
+        string statusValue = Convert.ToString((char) list[i]);
+        string statusName = LRSWorkflowRules.GetStatusName(list[i]);
+
+        html += HtmlSelectContent.GetComboHtmlItem(statusValue, statusName);
       }
       return html;
     }
