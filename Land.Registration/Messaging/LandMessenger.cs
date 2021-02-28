@@ -61,10 +61,18 @@ namespace Empiria.Land.Messaging {
       EnqueueNotification(notificationType, subscription);
     }
 
+
     #endregion Notification and subscription methods
 
 
     #region Engine methods
+
+
+    static public bool IsRunning {
+      get {
+        return isRunning;
+      }
+    }
 
 
     /// <summary>Starts the execution engine for pending messages in asyncronous mode.</summary>

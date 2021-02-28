@@ -199,7 +199,8 @@ namespace Empiria.Land.Registration.Transactions {
                                             _transaction.DocumentType)) {
         return false;
       }
-      return true;
+      return false;
+      // return true;
     }
 
 
