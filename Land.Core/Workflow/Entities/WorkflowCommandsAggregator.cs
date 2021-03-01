@@ -80,7 +80,7 @@ namespace Empiria.Land.Workflow {
       var temp = new List<ApplicableCommandDto>(this.actions);
 
       foreach (var currentAction in this.actions) {
-        if (actionsToAppend.Exists(x => x.Type == currentAction.Type)) {
+        if (!actionsToAppend.Exists(x => x.Type == currentAction.Type)) {
           temp.Remove(currentAction);
         }
       }
@@ -89,8 +89,7 @@ namespace Empiria.Land.Workflow {
         if (!this.actions.Exists(x => x.Type == toAppend.Type)) {
           temp.Add(toAppend);
         }
-
-      }  // foreach
+      }
 
       this.actions = temp;
     }
