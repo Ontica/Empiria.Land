@@ -13,8 +13,9 @@ using System.Threading.Tasks;
 using Empiria.Services;
 
 using Empiria.Land.Transactions.Adapters;
-
 using Empiria.Land.Registration.Transactions;
+
+using Empiria.Land.Messaging;
 
 namespace Empiria.Land.Transactions.UseCases {
 
@@ -56,6 +57,11 @@ namespace Empiria.Land.Transactions.UseCases {
       transaction.Save();
 
       transaction.AddPreconfiguredServicesIfApplicable();
+
+      // ToDo: Call it in a service or in IIS Application.OnStart()
+      if (!LandMessenger.IsRunning) {
+        LandMessenger.Start();
+      }
 
       return TransactionDtoMapper.Map(transaction);
     }
