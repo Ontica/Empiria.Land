@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Recordable Entities Management             Component : Interface adapters                      *
+*  Module   : Recordable Subjects Management             Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : RecordableEntityShortModel                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.RecordableEntities.Adapters {
+namespace Empiria.Land.RecordableSubjects.Adapters {
 
   /// <summary>Output DTO with a recordable resource short model.</summary>
   public class RecordableEntityShortModel {
@@ -35,4 +35,4 @@ namespace Empiria.Land.RecordableEntities.Adapters {
 
   }  // class RecordableEntityShortModel
 
-}  // namespace Empiria.Land.RecordableEntities.Adapters
+}  // namespace Empiria.Land.RecordableSubjects.Adapters

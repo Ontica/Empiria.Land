@@ -11,7 +11,8 @@ using System;
 
 using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Media.Adapters;
-using Empiria.Land.RecordableEntities.Adapters;
+
+using Empiria.Land.RecordableSubjects.Adapters;
 
 namespace Empiria.Land.Transactions.Adapters {
 
