@@ -63,7 +63,7 @@
             <tr>
               <td style="vertical-align:top;white-space:nowrap">Interesado:</td>
               <td style='white-space:normal;border-bottom: 1px solid' colspan="3">
-                <b style='font-size:9pt'><%=transaction.RequestedBy%></b>
+                <b style='font-size:9pt'><%=Encode(base.transaction.RequestedBy)%></b>
               </td>
               <td style="white-space:nowrap">Distrito:</td>
               <td><b><%=transaction.RecorderOffice.Alias%></b></td>
@@ -74,13 +74,13 @@
               <td style="white-space:nowrap">Emitió:</td><td style="white-space:nowrap;width:30%"><b><%=transaction.PostedBy.Alias%>&nbsp;&nbsp;&nbsp;&nbsp;</b></td>
             </tr>
             <tr>
-              <td style="white-space:nowrap">Instrumento:</td><td><b><%=transaction.DocumentDescriptor%></b></td>
+              <td style="white-space:nowrap">Instrumento:</td><td><b><%=Encode(transaction.DocumentDescriptor)%></b></td>
               <td style="white-space:nowrap">Tipo de documento:</td><td style="white-space:nowrap"><b><%=transaction.DocumentType.Name%></b></td>
               <td style="white-space:nowrap">Emisión:</td><td style="white-space:nowrap"><b><%=transaction.PostingTime.ToString("dd/MMM/yyyy HH:mm")%>&nbsp;&nbsp;&nbsp;&nbsp;</b></td>
             </tr>
             <tr>
               <td style="vertical-align:top;white-space:nowrap">Observaciones:</td>
-              <td style='white-space:normal' colspan="5"><%=transaction.ExtensionData.RequesterNotes%></td>
+              <td style='white-space:normal' colspan="5"><%=Encode(transaction.ExtensionData.RequesterNotes)%></td>
             </tr>
           </table>
         </td>
@@ -171,7 +171,7 @@
             <tr>
               <td style="vertical-align:top;white-space:nowrap">Interesado:</td>
               <td style='white-space:normal;border-bottom: 1px solid' colspan="3">
-                <b style='font-size:9pt'><%=transaction.RequestedBy%></b>
+                <b style='font-size:9pt'><%=Encode(transaction.RequestedBy)%></b>
               </td>
               <td style="white-space:nowrap">Distrito:</td>
               <td><b><%=transaction.RecorderOffice.Alias%></b></td>
@@ -182,13 +182,13 @@
               <td style="white-space:nowrap">Emitió:</td><td style="white-space:nowrap;width:30%"><b><%=transaction.PostedBy.Alias%>&nbsp;&nbsp;&nbsp;&nbsp;</b></td>
             </tr>
             <tr>
-              <td style="white-space:nowrap">Instrumento:</td><td><b><%=transaction.DocumentDescriptor%></b></td>
+              <td style="white-space:nowrap">Instrumento:</td><td><b><%=Encode(transaction.DocumentDescriptor)%></b></td>
               <td style="white-space:nowrap">Tipo de documento:</td><td style="white-space:nowrap"><b><%=transaction.DocumentType.Name%></b></td>
               <td style="white-space:nowrap">Emisión:</td><td style="white-space:nowrap"><b><%=transaction.PostingTime.ToString("dd/MMM/yyyy HH:mm")%>&nbsp;&nbsp;&nbsp;&nbsp;</b></td>
             </tr>
             <tr>
               <td style="vertical-align:top;white-space:nowrap">Observaciones:</td>
-              <td style='white-space:normal' colspan="5"><%=transaction.ExtensionData.RequesterNotes%></td>
+              <td style='white-space:normal' colspan="5"><%=Encode(transaction.ExtensionData.RequesterNotes)%></td>
             </tr>
           </table>
         </td>

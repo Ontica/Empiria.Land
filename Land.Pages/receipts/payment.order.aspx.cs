@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
+using System.Web;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Pages {
@@ -260,6 +260,10 @@ namespace Empiria.Land.Pages {
       temp1 = temp1.Replace("{TOTAL_SPEECH}", EmpiriaString.SpeechMoney(totalFee.Total));
 
       return html + temp1;
+    }
+
+    protected string Encode(string source) {
+      return HttpUtility.HtmlEncode(source);
     }
 
     #endregion Private methods

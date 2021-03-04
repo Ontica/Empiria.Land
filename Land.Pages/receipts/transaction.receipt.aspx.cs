@@ -9,7 +9,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
+using System.Web;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Pages {
@@ -276,6 +276,10 @@ namespace Empiria.Land.Pages {
       } else {
         return "Interesado";
       }
+    }
+
+    protected string Encode(string source) {
+      return HttpUtility.HtmlEncode(source);
     }
 
     #endregion Private methods
