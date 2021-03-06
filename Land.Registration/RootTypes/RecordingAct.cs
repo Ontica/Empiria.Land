@@ -279,9 +279,9 @@ namespace Empiria.Land.Registration {
       get {
         if (!this.RecordingActType.RecordingRule.UseDynamicActNaming) {
           return this.RecordingActType.DisplayName;
-        } else if (this.RecordingActType.AppliesTo != RecordingRuleApplication.RecordingAct) {
+        } else if (!this.RecordingActType.AppliesToARecordingAct) {
           return this.RecordingActType.DisplayName;
-        } else if (this.RecordingActType.AppliesTo == RecordingRuleApplication.RecordingAct) {
+        } else if (this.RecordingActType.AppliesToARecordingAct) {
           return this.RecordingActType.RecordingRule.DynamicActNamePattern + " de " +
                  this.AmendmentOf.RecordingActType.DisplayName.ToLowerInvariant();
         } else {

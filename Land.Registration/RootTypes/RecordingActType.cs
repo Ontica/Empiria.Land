@@ -109,22 +109,23 @@ namespace Empiria.Land.Registration {
 
       switch (this.RecordingRule.AppliesTo) {
         case RecordingRuleApplication.Association:
+        case RecordingRuleApplication.AssociationAct:
           Assertion.Assert(resourceToApply is Association,
-            "This recording act is applicable only to real estate resources.");
+            "This recording act is not applicable to associations.");
           return;
         case RecordingRuleApplication.NoProperty:
+        case RecordingRuleApplication.NoPropertyAct:
           Assertion.Assert(resourceToApply is NoPropertyResource,
             "This recording act is applicable only to documents (no property resources).");
           return;
         case RecordingRuleApplication.RealEstate:
+        case RecordingRuleApplication.RealEstateAct:
           Assertion.Assert(resourceToApply is RealEstate,
             "This recording act is applicable only to real estate resources.");
           return;
-        case RecordingRuleApplication.RecordingAct:
-          return;
         case RecordingRuleApplication.Structure:
           Assertion.Assert(resourceToApply is RealEstate,
-            "Structure acts are only applicable to real estate resources.");
+                           "Structure acts are only applicable to real estate resources.");
           return;
         case RecordingRuleApplication.Undefined:
           Assertion.Assert(this.Equals(InformationAct.Empty.RecordingActType),
@@ -145,6 +146,15 @@ namespace Empiria.Land.Registration {
         return this.RecordingRule.AppliesTo;
       }
     }
+
+    public bool AppliesToARecordingAct {
+      get {
+        return (this.AppliesTo == RecordingRuleApplication.AssociationAct ||
+                this.AppliesTo == RecordingRuleApplication.NoPropertyAct ||
+                this.AppliesTo == RecordingRuleApplication.RealEstateAct);
+      }
+    }
+
 
     public FixedList<RecordingActType> GetAppliesToRecordingActTypesList() {
       var json = base.ExtensionData;

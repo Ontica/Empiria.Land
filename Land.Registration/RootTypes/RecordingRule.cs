@@ -27,12 +27,18 @@ namespace Empiria.Land.Registration {
   /// <summary>Indicates the resource type of which is applicable the recording act.</summary>
   public enum RecordingRuleApplication {
     Undefined,
-    RealEstate,
-    Association,
-    NoProperty,
-    RecordingAct,
+
     Structure,
-    Party,
+    RealEstate,
+    RealEstateAct,
+
+    Association,
+    AssociationAct,
+
+    NoProperty,
+    NoPropertyAct,
+
+    Party
   }
 
   /// <summary>Describes the conditions and business rules that have to be fulfilled

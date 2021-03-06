@@ -210,16 +210,23 @@ namespace Empiria.Land.Registration {
 
     private CancelationAct[] CreateCancelationAct() {
       switch (this.Task.RecordingActType.AppliesTo) {
-        case RecordingRuleApplication.RecordingAct:
+
+        case RecordingRuleApplication.AssociationAct:
+        case RecordingRuleApplication.NoPropertyAct:
+        case RecordingRuleApplication.RealEstateAct:
           return CreateRecordingActCancelationAct();
+
         case RecordingRuleApplication.Association:
         case RecordingRuleApplication.NoProperty:
         case RecordingRuleApplication.RealEstate:
           return this.CreateResourceCancelationAct();
+
         //case RecordingRuleApplication.Document:
         //  return this.CreateDocumentCancelationAct();
+
         case RecordingRuleApplication.Party:
           return this.CreatePartyCancelationAct();
+
         case RecordingRuleApplication.Structure:
           return this.CreateStructureCancelationAct();
 
@@ -230,16 +237,22 @@ namespace Empiria.Land.Registration {
 
     private ModificationAct[] CreateModificationAct() {
       switch (this.Task.RecordingActType.AppliesTo) {
-        case RecordingRuleApplication.RecordingAct:
+        case RecordingRuleApplication.AssociationAct:
+        case RecordingRuleApplication.NoPropertyAct:
+        case RecordingRuleApplication.RealEstateAct:
           return CreateRecordingActModificationAct();
+
         case RecordingRuleApplication.Association:
         case RecordingRuleApplication.NoProperty:
         case RecordingRuleApplication.RealEstate:
           return this.CreateResourceModificationAct();
+
         //case RecordingRuleApplication.Document:
         //  return this.CreateDocumentModificationAct();
+
         case RecordingRuleApplication.Party:
           return this.CreatePartyModificationAct();
+
         case RecordingRuleApplication.Structure:
           return this.CreateStructureModificationAct();
 
@@ -352,15 +365,17 @@ namespace Empiria.Land.Registration {
     private Resource[] GetResources() {
       RecordingRuleApplication appliesTo = this.Task.RecordingActType.RecordingRule.AppliesTo;
 
-      if (appliesTo == RecordingRuleApplication.RecordingAct) {
-        appliesTo = Task.TargetActInfo.RecordingActType.RecordingRule.AppliesTo;
-      }
       switch (appliesTo) {
         case RecordingRuleApplication.Association:
+        case RecordingRuleApplication.AssociationAct:
           return this.GetAssociations();
+
         case RecordingRuleApplication.RealEstate:
+        case RecordingRuleApplication.RealEstateAct:
           return this.GetRealEstates();
+
         case RecordingRuleApplication.NoProperty:
+        case RecordingRuleApplication.NoPropertyAct:
           return this.GetNoPropertyResources();
         default:
           throw Assertion.AssertNoReachThisCode(appliesTo + " application for " + this.Task.RecordingActType.DisplayName);
