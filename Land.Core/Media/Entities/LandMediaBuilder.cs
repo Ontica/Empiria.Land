@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.DataTypes;
 using Empiria.Land.Media.Adapters;
 
 using Empiria.Land.Registration.Transactions;
@@ -34,28 +35,21 @@ namespace Empiria.Land.Media {
     }
 
 
-    internal MediaDto GetMediaDto(string param = "") {
-      var dto = new MediaDto();
-
+    internal MediaData GetMediaDto(string param = "") {
       switch (this.MediaContent) {
 
         case LandMediaContent.TransactionPaymentOrder:
-          dto.Url = $"{MEDIA_URL}/receipts/payment.order.aspx?uid={Transaction.UID}";
-          dto.MediaType = $"text/html";
-
-          return dto;
+          return new MediaData("text/html",
+                                $"{MEDIA_URL}/receipts/payment.order.aspx?uid={Transaction.UID}");
 
         case LandMediaContent.TransactionSubmissionReceipt:
-          dto.Url = $"{MEDIA_URL}/receipts/transaction.receipt.aspx?uid={Transaction.UID}";
-          dto.MediaType = $"text/html";
-
-          return dto;
+          return new MediaData("text/html",
+                                $"{MEDIA_URL}/receipts/transaction.receipt.aspx?uid={Transaction.UID}");
 
         case LandMediaContent.PhysicalRegistrationStamp:
-          dto.Url = $"{MEDIA_URL}/recording-stamps/physical-recording.stamp.aspx?id={param}&transactionId={Transaction.Id}";
-          dto.MediaType = $"text/html";
-
-          return dto;
+          return new MediaData("text/html",
+                              $"{MEDIA_URL}/recording-stamps/physical-recording.stamp.aspx?" +
+                              $"id={param}&transactionId={Transaction.Id}");
 
         default:
           throw Assertion.AssertNoReachThisCode($"GetMediaDto() method can't process files of " +

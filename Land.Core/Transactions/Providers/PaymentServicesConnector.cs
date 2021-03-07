@@ -104,7 +104,7 @@ namespace Empiria.Land.Transactions.Providers {
 
 
     private static IPaymentOrder GetDisconnectedPaymentOrder(LRSTransaction transaction) {
-      var po = new PaymentOrderDto {
+      var po = new Integration.PaymentServices.PaymentOrderDto {
         UID = Guid.NewGuid().ToString(),
         Issuer = "Empiria.Land",
         Version = "5.0",

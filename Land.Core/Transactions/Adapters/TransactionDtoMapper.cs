@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
+using Empiria.DataTypes;
 using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
 
@@ -29,6 +29,8 @@ namespace Empiria.Land.Transactions.Adapters {
     }
 
     static internal TransactionDto Map(LRSTransaction transaction) {
+      var currentTask = transaction.Workflow.GetCurrentTask();
+
       var dto = new TransactionDto();
 
       dto.UID = transaction.UID;
@@ -36,19 +38,19 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.Type = transaction.TransactionType.MapToNamedEntity();
       dto.Subtype = transaction.DocumentType.MapToNamedEntity();
       dto.RequestedBy = GetRequestedByDto(transaction);
+      dto.PresentationTime = transaction.PresentationTime;
+      dto.InternalControlNo = transaction.InternalControlNoFormatted;
       dto.Agency = transaction.Agency.MapToNamedEntity();
       dto.RecorderOffice = transaction.RecorderOffice.MapToNamedEntity();
-      dto.Instrument = GetInstrumentDto(transaction);
       dto.InstrumentDescriptor = transaction.DocumentDescriptor;
-      dto.RecordableTarget = GetRecordableTargetDto(transaction);
       dto.RequestedServices = GetRequestedServicesDtoArray(transaction);
       dto.PaymentOrder = GetPaymentOrderDto(transaction);
       dto.Payment = GetPaymentDto(transaction);
       dto.SubmissionReceipt = GetSubmissionReceiptDto(transaction);
-      dto.PresentationTime = transaction.PresentationTime;
-      dto.InternalControlNo = transaction.InternalControlNoFormatted;
-      dto.Status = MapStatus(transaction.Workflow.CurrentStatus);
-      dto.StatusName = transaction.Workflow.CurrentStatusName;
+      dto.StatusName = currentTask.CurrentStatusName;
+      dto.AssignedTo = currentTask.Responsible.MapToNamedEntity();
+      dto.NextStatusName = currentTask.NextStatusName;
+      dto.NextAssignedTo = currentTask.NextContact.MapToNamedEntity();
       dto.Actions = GetControlDataDto(transaction);
 
       return dto;
@@ -126,11 +128,21 @@ namespace Empiria.Land.Transactions.Adapters {
       };
     }
 
-    static private PaymentOrder GetPaymentOrderDto(LRSTransaction transaction) {
+    static private PaymentOrderDto GetPaymentOrderDto(LRSTransaction transaction) {
       if (!transaction.HasPaymentOrder) {
         return null;
       }
-      return transaction.PaymentOrder;
+
+      var po = transaction.PaymentOrder;
+
+      return new PaymentOrderDto {
+        UID = po.UID,
+        DueDate = po.DueDate,
+        IssueTime = po.IssueTime,
+        Total = po.Total,
+        Status = po.Status,
+        Media = po.Media
+      };
     }
 
 
@@ -180,7 +192,7 @@ namespace Empiria.Land.Transactions.Adapters {
       };
     }
 
-    private static MediaDto GetSubmissionReceiptDto(LRSTransaction transaction) {
+    private static MediaData GetSubmissionReceiptDto(LRSTransaction transaction) {
       if (!transaction.ControlData.CanPrintSubmissionReceipt) {
         return null;
       }

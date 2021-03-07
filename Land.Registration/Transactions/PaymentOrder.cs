@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
-
+using Empiria.DataTypes;
 using Empiria.Json;
 
 using Empiria.Land.Integration.PaymentServices;
@@ -121,6 +121,15 @@ namespace Empiria.Land.Transactions {
     public bool IsEmpty {
       get {
         return String.IsNullOrEmpty(this.UID);
+      }
+    }
+
+    public MediaData Media {
+      get {
+        if (Attributes.ContainsKey("url") && Attributes.ContainsKey("mediaType")) {
+          return new MediaData((string) Attributes["mediaType"], (string) Attributes["url"]);
+        }
+        return MediaData.Empty;
       }
     }
 

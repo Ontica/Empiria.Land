@@ -9,10 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Instruments.Adapters;
-using Empiria.Land.Media.Adapters;
-
-using Empiria.Land.RecordableSubjects.Adapters;
+using Empiria.DataTypes;
 
 namespace Empiria.Land.Transactions.Adapters {
 
@@ -35,15 +32,15 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
+    public RequestedByDto RequestedBy {
+      get; internal set;
+    }
+
     public DateTime PresentationTime {
       get; internal set;
     }
 
     public string InternalControlNo {
-      get; internal set;
-    }
-
-    public RequestedByDto RequestedBy {
       get; internal set;
     }
 
@@ -55,15 +52,7 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
-    public InstrumentDto Instrument {
-      get; internal set;
-    }
-
     public string InstrumentDescriptor {
-      get; internal set;
-    }
-
-    public RecordableEntityShortModel RecordableTarget {
       get; internal set;
     }
 
@@ -71,7 +60,7 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
-    public PaymentOrder PaymentOrder {
+    public PaymentOrderDto PaymentOrder {
       get; internal set;
     }
 
@@ -79,15 +68,23 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
-    public MediaDto SubmissionReceipt {
-      get; internal set;
-    }
-
-    public TransactionStatus Status {
+    public MediaData SubmissionReceipt {
       get; internal set;
     }
 
     public string StatusName {
+      get; internal set;
+    }
+
+    public NamedEntityDto AssignedTo {
+      get; internal set;
+    }
+
+    public string NextStatusName {
+      get; internal set;
+    }
+
+    public NamedEntityDto NextAssignedTo {
       get; internal set;
     }
 

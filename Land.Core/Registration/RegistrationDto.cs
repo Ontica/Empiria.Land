@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Media.Adapters;
+using Empiria.DataTypes;
 
 using Empiria.Land.PhysicalBooks.Adapters;
 
@@ -33,9 +33,9 @@ namespace Empiria.Land.Registration.Adapters {
     } = new FixedList<PhysicalRecordingDto>();
 
 
-    public MediaDto StampMedia {
+    public MediaData StampMedia {
       get; internal set;
-    } = new MediaDto();
+    } = MediaData.Empty;
 
   }  // class RegistrationDto
 

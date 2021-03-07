@@ -2,44 +2,33 @@
 *                                                                                                            *
 *  Module   : Transaction Management                     Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
-*  Type     : TransactionShortModel                      License   : Please read LICENSE.txt file            *
+*  Type     : PaymentOrderDto                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO that holds minimal transaction data to be used as list items.                       *
+*  Summary  : Output DTO for a payment order.                                                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.DataTypes;
+
 namespace Empiria.Land.Transactions.Adapters {
 
-  /// <summary>Output DTO that holds minimal transaction data to be used as list items.</summary>
-  public class TransactionShortModel {
+  /// <summary>Output DTO for a payment order.</summary>
+  public class PaymentOrderDto {
 
     public string UID {
       get; internal set;
     }
 
-    public string Type {
+    public DateTime IssueTime {
       get; internal set;
     }
 
-    public string Subtype {
+    public DateTime DueDate {
       get; internal set;
     }
 
-    public string TransactionID {
-      get;
-      internal set;
-    }
-
-    public string RequestedBy {
-      get; internal set;
-    }
-
-    public DateTime PresentationTime {
-      get; internal set;
-    }
-
-    public string InternalControlNo {
+    public decimal Total {
       get; internal set;
     }
 
@@ -47,30 +36,10 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
-    public string StatusName {
+    public MediaData Media {
       get; internal set;
-    }
+    } = MediaData.Empty;
 
-    public string NextStatus {
-      get; internal set;
-    }
-
-    public string NextStatusName {
-      get; internal set;
-    }
-
-    public string AssignedToUID {
-      get; internal set;
-    }
-
-    public string AssignedToName {
-      get; internal set;
-    }
-
-    public string NextAssignedToName {
-      get; internal set;
-    }
-
-  }  // class TransactionShortModel
+  }  // class PaymentOrderDto
 
 }  // namespace Empiria.Land.Transactions.Adapters
