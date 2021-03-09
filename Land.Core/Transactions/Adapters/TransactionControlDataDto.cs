@@ -69,18 +69,6 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
-    public bool EditInstrument {
-      get; internal set;
-    }
-
-    public bool EditRecordingActs {
-      get; internal set;
-    }
-
-    public bool EditCertificates {
-      get; internal set;
-    }
-
   }  // class TransationCanControlData
 
 

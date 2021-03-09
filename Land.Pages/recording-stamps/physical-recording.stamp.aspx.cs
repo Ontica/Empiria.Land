@@ -39,6 +39,9 @@ namespace Empiria.Land.Pages {
 
 		private void Initialize() {
 			transaction = LRSTransaction.Parse(int.Parse(Request.QueryString["transactionId"]));
+
+			Assertion.Assert(!transaction.Document.IsEmptyInstance, "Transaction does not have a registration document.");
+
 			recordings = PhysicalRecording.GetDocumentRecordings(transaction.Document.Id);
 
 			Assertion.Assert(recordings.Count > 0, "Document does not have recordings.");
