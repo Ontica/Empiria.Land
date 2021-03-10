@@ -79,10 +79,17 @@ namespace Empiria.Land.Registration {
                                                                (x, y) => x.Name.CompareTo(y.Name));
     }
 
+
     public FixedList<Municipality> GetMunicipalities() {
-      return this.GetLinks<Municipality>("RecorderOffice->Municipalities",
-                                         (x, y) => x.Name.CompareTo(y.Name));
+      return base.ExtendedData.GetList<Municipality>("municipalities", false)
+                              .ToFixedList();
     }
+
+
+    public FixedList<RecordingSection> GetRecordingSections() {
+      return RecordingSection.GetListForRecording();
+    }
+
 
     public FixedList<Person> GetRecorderOfficials() {
       return this.GetLinks<Person>("RecorderOffice->RecorderOfficials",
