@@ -52,6 +52,21 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
+    static public FixedList<Unit> LotSizeUnits() {
+      var lotSizeUnitsList = GeneralList.Parse("Land.RealEstate.LotSize.Units");
+
+      return lotSizeUnitsList.GetItems<Unit>();
+    }
+
+
+    static public FixedList<string> RealEstateKinds() {
+      var kindsList = GeneralList.Parse("Land.RealEstate.Kinds");
+
+      return kindsList.GetItems<string>();
+    }
+
+
     static public new RealEstate Empty {
       get {
         return BaseObject.ParseEmpty<RealEstate>();

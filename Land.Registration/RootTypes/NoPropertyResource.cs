@@ -29,6 +29,14 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<NoPropertyResource>(id);
     }
 
+
+    static public FixedList<string> NoPropertyKinds() {
+      var kindsList = GeneralList.Parse("Land.NoProperty.Kinds");
+
+      return kindsList.GetItems<string>();
+    }
+
+
     #endregion Constructors and parsers
 
     #region Public methods

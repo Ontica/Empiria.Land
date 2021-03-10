@@ -34,6 +34,12 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<Association>(id);
     }
 
+    static public FixedList<string> AssociationKinds() {
+      var kindsList = GeneralList.Parse("Land.Associations.Kinds");
+
+      return kindsList.GetItems<string>();
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties

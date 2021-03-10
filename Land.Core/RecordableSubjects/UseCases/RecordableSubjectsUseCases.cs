@@ -35,10 +35,25 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
     #region Use cases
 
 
-    public FixedList<string> RealEstateKinds() {
-      var realEstateKinds = RealEstateType.GetList();
+    public FixedList<string> AssociationKinds() {
+      return Association.AssociationKinds();
+    }
 
-      return RealEstateMapper.MapRealEstateKindsList(realEstateKinds);
+
+    public FixedList<string> NoPropertyKinds() {
+      return NoPropertyResource.NoPropertyKinds();
+    }
+
+
+    public FixedList<string> RealEstateKinds() {
+      return RealEstate.RealEstateKinds();
+    }
+
+
+    public FixedList<NamedEntityDto> RealEstateLotSizeUnits() {
+      var units = RealEstate.LotSizeUnits();
+
+      return new FixedList<NamedEntityDto>(units.Select(x => x.MapToNamedEntity()));
     }
 
 

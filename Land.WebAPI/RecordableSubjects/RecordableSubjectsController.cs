@@ -23,6 +23,30 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
 
 
     [HttpGet]
+    [Route("v5/land/registration/association-kinds")]
+    public CollectionModel AssociationKinds() {
+
+      using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
+        FixedList<string> associationKinds = usecases.AssociationKinds();
+
+        return new CollectionModel(this.Request, associationKinds);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v5/land/registration/no-property-kinds")]
+    public CollectionModel NoPropertyKinds() {
+
+      using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
+        FixedList<string> noPropertyKinds = usecases.NoPropertyKinds();
+
+        return new CollectionModel(this.Request, noPropertyKinds);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v5/land/registration/real-estate-kinds")]
     public CollectionModel RealEstateKinds() {
 
@@ -30,6 +54,18 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
         FixedList<string> realEstateKinds = usecases.RealEstateKinds();
 
         return new CollectionModel(this.Request, realEstateKinds);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v5/land/registration/real-estate-lot-size-units")]
+    public CollectionModel RealEstateLotSizeUnits() {
+
+      using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> lotSizeUnits = usecases.RealEstateLotSizeUnits();
+
+        return new CollectionModel(this.Request, lotSizeUnits);
       }
     }
 
