@@ -171,7 +171,11 @@ namespace Empiria.Land.Transactions.Providers {
       Type type = ObjectFactory.GetType("SIT.Finanzas.Connector",
                                         "Empiria.Zacatecas.Integration.SITFinanzasConnector.PaymentService");
 
-      return (IPaymentService) ObjectFactory.CreateObject(type);
+      string baseAddress = "http://10.113.5.187:8080/sit-ingresos/api/";
+
+      return (IPaymentService) ObjectFactory.CreateObject(type,
+                                                          new Type[] { typeof(String) },
+                                                          new object[] { baseAddress });
     }
 
     #endregion Helper methods

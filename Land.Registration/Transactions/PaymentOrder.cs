@@ -29,7 +29,7 @@ namespace Empiria.Land.Transactions {
 
 
     public PaymentOrder(IPaymentOrder paymentOrder) {
-      Assertion.AssertObject(paymentOrder, "paymentOrder");
+      EnsureIsValid(paymentOrder);
 
       this.UID = paymentOrder.UID;
       this.Issuer = paymentOrder.Issuer;
@@ -136,6 +136,19 @@ namespace Empiria.Land.Transactions {
     #endregion Fields
 
     #region Methods
+
+    static private void EnsureIsValid(IPaymentOrder paymentOrder) {
+      Assertion.AssertObject(paymentOrder, "paymentOrder");
+
+      Assertion.AssertObject(paymentOrder.UID, "paymentOrder.UID");
+      Assertion.AssertObject(paymentOrder.Issuer, "paymentOrder.Issuer");
+      Assertion.AssertObject(paymentOrder.Version, "paymentOrder.Version");
+      Assertion.AssertObject(paymentOrder.IssueTime, "paymentOrder.IssueTime");
+      Assertion.AssertObject(paymentOrder.DueDate, "paymentOrder.DueDate");
+      Assertion.AssertObject(paymentOrder.Total, "paymentOrder.Total");
+      Assertion.AssertObject(paymentOrder.Status, "paymentOrder.Status");
+      Assertion.AssertObject(paymentOrder.Attributes, "paymentOrder.Attributes");
+    }
 
     public virtual JsonObject ToJson() {
       if (this.IsEmpty) {
