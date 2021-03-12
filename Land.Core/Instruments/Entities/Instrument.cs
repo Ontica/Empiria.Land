@@ -228,7 +228,7 @@ namespace Empiria.Land.Instruments {
     }
 
 
-    private void EnsureHasRecordingDocument() {
+    public void EnsureHasRecordingDocument() {
       if (!this.HasDocument) {
         CreateRecordingDocument();
       }

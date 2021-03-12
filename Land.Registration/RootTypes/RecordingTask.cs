@@ -24,11 +24,54 @@ namespace Empiria.Land.Registration {
     selectProperty,
   }
 
+
+  public class RecordingTaskFields {
+
+    public RecordingTaskType RecordingTaskType {
+      get; set;
+    } = RecordingTaskType.actNotApplyToProperty;
+
+
+    public string RecordingDocumentUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string RecordingActTypeUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string RecordableSubjectUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string TargetRecordingActUID {
+      get; set;
+    } = string.Empty;
+
+  }
+
+
   /// <summary>Contains data about a recording instruction. A recording task it's needed to create
   /// recording acts. RecordingTasks generally are filled by the user services.</summary>
   public class RecordingTask {
 
     #region Constructors and parsers
+
+    public RecordingTask(RecordingTaskFields fields) {
+      Assertion.AssertObject(fields, "fields");
+
+      this.RecordingTaskType = fields.RecordingTaskType;
+      this.Document = RecordingDocument.Parse(fields.RecordingDocumentUID);
+      this.RecordingActType = RecordingActType.Parse(fields.RecordingActTypeUID);
+
+      if (fields.RecordableSubjectUID.Length != 0) {
+        this.PrecedentProperty = Resource.Parse(fields.RecordableSubjectUID);
+      }
+    }
+
 
     public RecordingTask(int documentId = -1,
                          int recordingActTypeId = -1,
@@ -39,7 +82,6 @@ namespace Empiria.Land.Registration {
                          string resourceName = "", string cadastralKey = "",
                          RealEstatePartitionDTO partition = null, RecordingActInfoDTO targetActInfo = null) {
       this.Document = RecordingDocument.Parse(documentId);
-      //this.RecordingActTypeCategory = RecordingActTypeCategory.Parse(recordingActTypeCategoryId);
       this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
       this.RecordingTaskType = recordingTaskType;
       this.ResourceName = EmpiriaString.TrimAll(resourceName);
@@ -51,23 +93,31 @@ namespace Empiria.Land.Registration {
         var data = new RealEstateExtData() { CadastralKey = cadastralKey };
 
         this.PrecedentProperty = new RealEstate(data);
+
       } else if (precedentResourceId == -1) {
         this.PrecedentProperty = Resource.Empty;
+
       } else {
         this.PrecedentProperty = Resource.Parse(precedentResourceId);
+
       }
 
       this.QuickAddRecordingNumber = quickAddRecordingNumber;
 
       if (partition != null) {
         this.PartitionInfo = partition;
+
       } else {
         this.PartitionInfo = RealEstatePartitionDTO.Empty;
+
       }
+
       if (targetActInfo != null) {
         this.TargetActInfo = targetActInfo;
+
       } else {
         this.TargetActInfo = RecordingActInfoDTO.Empty;
+
       }
     }
 
@@ -80,11 +130,6 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    //public RecordingActTypeCategory RecordingActTypeCategory {
-    //  get;
-    //  private set;
-    //}
-
     public RecordingActType RecordingActType {
       get;
       private set;
@@ -95,6 +140,7 @@ namespace Empiria.Land.Registration {
       private set;
     } = decimal.One;
 
+
     public RecordingTaskType RecordingTaskType {
       get;
       private set;
@@ -103,42 +149,50 @@ namespace Empiria.Land.Registration {
     public RecordingBook PrecedentRecordingBook {
       get;
       private set;
-    }
+    } = RecordingBook.Empty;
+
 
     public PhysicalRecording PrecedentRecording {
       get;
       internal set;
-    }
+    } = PhysicalRecording.Empty;
+
 
     public string ResourceName {
       get;
       private set;
-    }
+    } = string.Empty;
+
 
     public string CadastralKey {
       get;
       private set;
-    }
+    } = string.Empty;
+
 
     public Resource PrecedentProperty {
       get;
       internal set;
-    }
+    } = Resource.Empty;
+
 
     public string QuickAddRecordingNumber {
       get;
       private set;
-    }
+    } = string.Empty;
+
 
     public RealEstatePartitionDTO PartitionInfo {
       get;
       private set;
-    }
+    } = RealEstatePartitionDTO.Empty;
+
 
     internal RecordingActInfoDTO TargetActInfo {
       get;
       private set;
-    }
+    } = RecordingActInfoDTO.Empty;
+
 
     #endregion Properties
 

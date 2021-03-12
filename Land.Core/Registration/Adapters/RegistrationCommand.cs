@@ -8,9 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 namespace Empiria.Land.Registration.Adapters {
 
-  /// <summary>Command payload used for recording acts registration.</summary>
+  /// <summary>Command used for recording acts registration.</summary>
   public class RegistrationCommand {
 
     public RegistrationCommandType Type {
@@ -23,14 +25,32 @@ namespace Empiria.Land.Registration.Adapters {
     } = new RegistrationCommandPayload();
 
 
+    internal void EnsureIsValid() {
+      Assertion.Assert(Type != RegistrationCommandType.Undefined,
+                       "Unrecognized RegistrationCommand.Type");
+
+      Assertion.AssertObject(Payload, "RegistrationCommand.Payload");
+
+      Assertion.AssertObject(Payload.RecordingActTypeUID, "RegistrationCommand.Payload.RecordingActTypeUID");
+    }
+
   }  // class RegistrationCommand
 
 
-
+  /// <summary>Command payload used for recording acts registration.</summary>
   public class RegistrationCommandPayload {
 
+    public string RecordingActTypeUID {
+      get; set;
+    } = string.Empty;
 
-  }
+
+    public string RecordableSubjectUID {
+      get; set;
+    } = string.Empty;
+
+
+  }  // class RegistrationCommandPayload
 
 
 }  // namespace Empiria.Land.Registration.Adapters
