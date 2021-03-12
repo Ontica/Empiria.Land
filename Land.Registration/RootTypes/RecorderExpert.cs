@@ -385,15 +385,12 @@ namespace Empiria.Land.Registration {
     // Don't call directly. Please use it only in GetResources()
     private Association[] GetAssociations() {
       if (this.CreateNewResource) {
-        var newAssociationData = new AssociationExtData(Task.ResourceName);
-
-        return new Association[] { new Association(newAssociationData) };
+        return new Association[] { new Association() };
       } else if (this.CreateResourceOnNewPhysicalRecording) {
-        var newAssociationData = new AssociationExtData(Task.ResourceName);
-
-        var association = new Association(newAssociationData);
+        var association = new Association();
 
         this.AttachResourceToNewPhysicalRecording(association);
+
         return new Association[] { association };
       } else {
         return new Association[] { (Association) this.Task.PrecedentProperty };

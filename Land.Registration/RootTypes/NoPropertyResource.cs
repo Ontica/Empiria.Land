@@ -41,6 +41,7 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
+
     protected override string GenerateResourceUID() {
       return ExternalProviders.UniqueIDGeneratorProvider.GenerateNoPropertyResourceUID();
     }

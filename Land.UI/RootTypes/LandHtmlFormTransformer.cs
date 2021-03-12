@@ -125,12 +125,12 @@ namespace Empiria.Land.UI {
 
       html = html.Replace("{{REAL.PROPERTY.UID}}", realProperty.UID);
 
-      html = html.Replace("{{DISTRICT.NAME}}", realProperty.District.Alias);
+      html = html.Replace("{{DISTRICT.NAME}}", realProperty.RecorderOffice.Alias);
       html = html.Replace("{{MUNICIPALITY.NAME}}", realProperty.Municipality.Name);
       html = html.Replace("{{CADASTRAL.KEY}}", realProperty.CadastralKey);
-      html = html.Replace("{{REAL.PROPERTY.TYPE}}", realProperty.RealEstateType.Name);
+      html = html.Replace("{{REAL.PROPERTY.TYPE}}", realProperty.Kind);
       html = html.Replace("{{REAL.PROPERTY.NAME}}", realProperty.Name);
-      html = html.Replace("{{LOCATION}}", realProperty.LocationReference);
+      html = html.Replace("{{LOCATION}}", realProperty.Description);
       html = html.Replace("{{METES.AND.BOUNDS}}", realProperty.MetesAndBounds);
       return html;
     }

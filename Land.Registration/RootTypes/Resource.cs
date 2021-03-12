@@ -27,9 +27,16 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
+
     static public Resource Parse(int id) {
       return BaseObject.ParseId<Resource>(id);
     }
+
+
+    static public Resource Parse(string uid) {
+      return BaseObject.ParseKey<Resource>(uid);
+    }
+
 
     static public Resource TryParseWithUID(string propertyUID, bool reload = false) {
       DataRow row = ResourceData.GetResourceWithUID(propertyUID);
@@ -73,6 +80,13 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
+    [DataField("PropertyGUID", IsOptional = false)]
+    public string GUID {
+      get;
+      private set;
+    }
+
+
     [DataField("PropertyUID", IsOptional = false)]
     private string _propertyUID = String.Empty;
 
@@ -82,11 +96,41 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
+    [DataField("PropertyName")]
+    public string Name {
+      get;
+      set;
+    } = string.Empty;
+
+
+    [DataField("PropertyDescription")]
+    public string Description {
+      get;
+      set;
+    }
+
+
+    [DataField("PropertyKind")]
+    public string Kind {
+      get;
+      set;
+    } = string.Empty;
+
+
+    [DataField("RecorderOfficeId")]
+    public RecorderOffice RecorderOffice {
+      get;
+      set;
+    } = RecorderOffice.Empty;
+
+
     internal protected virtual string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.UID);
       }
     }
+
 
     [DataField("PostedById")]
     private LazyInstance<Contact> _postedBy = LazyInstance<Contact>.Empty;
@@ -291,6 +335,7 @@ namespace Empiria.Land.Registration {
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
+        this.GUID = Guid.NewGuid().ToString().ToLower();
         this.AssignUID();
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
         this.PostingTime = DateTime.Now;

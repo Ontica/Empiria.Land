@@ -56,7 +56,7 @@ namespace Empiria.Land.Certification {
       data.StartingYear = 1976;
       data.PropertyUID = property.UID;
       data.PropertyMetesAndBounds = property.MetesAndBounds;
-      data.PropertyLocation = property.LocationReference +
+      data.PropertyLocation = property.Description +
                               " en el municipio de " + property.Municipality.FullName;
       data.PropertyCommonName = property.AsText();
 

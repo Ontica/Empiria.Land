@@ -319,7 +319,7 @@ namespace Empiria.Land.WebApi {
       propertyBag.Add(new PropertyBagItem("Clave catastral",
                                            property.CadastralKey.Length != 0 ?
                                            property.CadastralKey : "Clave catastral no proporcionada.", "bold-text"));
-      propertyBag.Add(new PropertyBagItem("Descripción", property.LocationReference));
+      propertyBag.Add(new PropertyBagItem("Descripción", property.Description));
 
       propertyBag.AddRange(PropertyTractSection(property));
 

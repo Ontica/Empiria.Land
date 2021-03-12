@@ -52,30 +52,30 @@ namespace Empiria.Land.Data {
     }
 
     static internal void WriteAssociation(Association o) {
-      var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
-                                          String.Empty, o.AssociationExtData.ToString(), o.Keywords,
-                                          -1, String.Empty, -1,
-                                          o.PostingTime, o.PostedBy.Id,
-                                          (char) o.Status, o.Integrity.GetUpdatedHashCode());
+      var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.GUID, o.UID,
+                                          o.Name, o.Kind, o.Description, o.RecorderOffice.Id, -1, String.Empty,
+                                          ExecutionServer.DateMinValue, 0, -1,String.Empty,
+                                          o.Keywords, -1, String.Empty, -1,
+                                          o.PostingTime, o.PostedBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(operation);
     }
 
     static internal void WriteNoPropertyResource(NoPropertyResource o) {
-      var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
-                                          String.Empty, String.Empty, o.Keywords,
-                                          -1, String.Empty, -1,
-                                          o.PostingTime, o.PostedBy.Id,
-                                          (char) o.Status, o.Integrity.GetUpdatedHashCode());
+      var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.GUID, o.UID,
+                                           o.Name, o.Kind, o.Description, o.RecorderOffice.Id, -1, String.Empty,
+                                           ExecutionServer.DateMinValue, 0, -1, String.Empty,
+                                           o.Keywords, -1, String.Empty, -1,
+                                           o.PostingTime, o.PostedBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
       DataWriter.Execute(operation);
     }
 
     static internal void WriteRealEstate(RealEstate o) {
-      var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.UID,
-                                          o.CadastralKey, o.RealEstateExtData.ToString(), o.Keywords,
-                                          o.IsPartitionOf.Id, o.PartitionNo, o.MergedInto.Id,
-                                          o.PostingTime, o.PostedBy.Id,
-                                          (char) o.Status, o.Integrity.GetUpdatedHashCode());
+      var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.GUID, o.UID,
+                                          o.Name, o.Kind, o.Description, o.RecorderOffice.Id, o.Municipality.Id, o.CadastralKey,
+                                          o.CadastreLinkingDate, o.LotSize.Amount, o.LotSize.Unit.Id, o.RealEstateExtData.ToString(),
+                                          o.Keywords, o.IsPartitionOf.Id, o.PartitionNo, o.MergedInto.Id,
+                                          o.PostingTime, o.PostedBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(operation);
     }

@@ -21,28 +21,25 @@ namespace Empiria.Land.WebApi.Extranet {
     static internal object ToResponse(this RealEstate realEstate) {
       return new {
         uid = realEstate.UID,
-        name = realEstate.Name,
-        realEstateType = new {
-          uid = realEstate.RealEstateType.Id.ToString(),
-          name = realEstate.RealEstateType.Name
-        },
+        name = realEstate.Description,
+        kind = realEstate.Kind,
         cadastralKey = realEstate.CadastralKey,
         metesAndBounds = realEstate.MetesAndBounds,
         district = new {
-          uid = realEstate.District.Id.ToString(),
-          name = realEstate.District.Alias
+          uid = realEstate.RecorderOffice.Id.ToString(),
+          name = realEstate.RecorderOffice.Alias
         },
         municipality = new {
           uid = realEstate.Municipality.Id.ToString(),
           name = realEstate.Municipality.FullName
         },
-        location = realEstate.LocationReference,
+        location = realEstate.Description,
         lotSize = realEstate.LotSize,
         notes = realEstate.Notes,
         isPartition = realEstate.IsPartition,
         partitionOf = new {
           uid = realEstate.IsPartitionOf.UID,
-          name = realEstate.IsPartitionOf.Name,
+          name = realEstate.IsPartitionOf.Description,
         }
       };
     }

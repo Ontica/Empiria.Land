@@ -83,23 +83,20 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
+    [DataField("CadastreLinkingDate", Default = "Empiria.ExecutionServer.DateMinValue")]
+    public DateTime CadastreLinkingDate {
+      get;
+      internal set;
+    } = Empiria.ExecutionServer.DateMinValue;
+
+
     internal RealEstateExtData RealEstateExtData {
       get;
       private set;
     } = RealEstateExtData.Empty;
 
 
-    public string Name {
-      get {
-        return this.RealEstateExtData.Name;
-      }
-    }
-
-    public RealEstateType RealEstateType {
-      get {
-        return this.RealEstateExtData.RealEstateType;
-      }
-    }
 
     public string MetesAndBounds {
       get {
@@ -107,29 +104,19 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public RecorderOffice District {
-      get {
-        return this.RealEstateExtData.District;
-      }
-    }
 
+    [DataField("MunicipalityId")]
     public Municipality Municipality {
-      get {
-        return this.RealEstateExtData.Municipality;
-      }
+      get;
+      set;
     }
 
-    public string LocationReference {
-      get {
-        return this.RealEstateExtData.LocationReference;
-      }
-    }
 
     public Quantity LotSize {
-      get {
-        return this.RealEstateExtData.LotSize;
-      }
-    }
+      get;
+      set;
+    } = Quantity.Zero;
+
 
     public string Notes {
       get {
@@ -137,11 +124,14 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     internal protected override string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(base.Keywords, this.CadastralKey, this.Name, this.RealEstateType.Name);
+        return EmpiriaString.BuildKeywords(base.Keywords, this.CadastralKey, this.Name, this.Description,
+                                           this.Kind, this.RecorderOffice.Alias, this.RealEstateExtData.MetesAndBounds);
       }
     }
+
 
     public bool IsPartition {
       get {
@@ -178,9 +168,9 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public override void AssertCanBeClosed() {
-      Assertion.Assert(!this.RealEstateType.IsEmptyInstance,
-                       "Se requiere proporcionar la información del predio con folio real {0}.", this.UID);
-      Assertion.Assert(!this.District.IsEmptyInstance,
+      Assertion.AssertObject(this.Kind,
+                             "Se requiere proporcionar la información del predio con folio real {0}.", this.UID);
+      Assertion.Assert(!this.RecorderOffice.IsEmptyInstance,
                       "Predio " + this.UID +
                       ":\nSe requiere proporcionar el Distrito judicial al que pertenece el predio.");
       Assertion.Assert(!this.Municipality.IsEmptyInstance,
@@ -191,14 +181,16 @@ namespace Empiria.Land.Registration {
                       ":\nSe requiere proporcionar la superficie del predio.");
     }
 
+
     public string AsText() {
-      if (this.RealEstateType.IsEmptyInstance) {
+      if (this.Kind.Length == 0) {
         return "Información disponible únicamente en documentos físicos.";
       }
 
       const string template = "predio denominado {0}, de tipo {1}";
-      return String.Format(template, this.Name, this.RealEstateType.Name);
+      return String.Format(template, this.Description, this.Kind);
     }
+
 
     public bool HasHardLimitationActs {
       get {
@@ -211,6 +203,7 @@ namespace Empiria.Land.Registration {
         return lastAct != null;
       }
     }
+
 
     public bool IsFirstDomainAct(RecordingAct recordingAct) {
       var list = base.Tract.GetRecordingActs();
@@ -242,9 +235,11 @@ namespace Empiria.Land.Registration {
       return true;
     }
 
+
     protected override string GenerateResourceUID() {
       return ExternalProviders.UniqueIDGeneratorProvider.GeneratePropertyUID();
     }
+
 
     public FixedList<RecordingAct> GetHardLimitationActs() {
       var tract = base.Tract.GetRecordingActs();
@@ -256,6 +251,7 @@ namespace Empiria.Land.Registration {
       return tract;
     }
 
+
     public RecordingAct LastDomainAct {
       get {
         var tract = base.Tract.GetRecordingActs();
@@ -266,6 +262,7 @@ namespace Empiria.Land.Registration {
         return lastDomainAct;
       }
     }
+
 
     public string CurrentOwners {
       get {
@@ -283,6 +280,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     public FixedList<RecordingActParty> CurrentOwnersList {
       get {
         var parties = this.LastDomainAct.GetParties();
@@ -297,17 +295,23 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     public RealEstate[] GetPartitions() {
       return ResourceData.GetRealEstatePartitions(this);
     }
 
+
     protected override void OnLoadObjectData(DataRow row) {
       this.RealEstateExtData = RealEstateExtData.Parse((string) row["PropertyExtData"]);
+      this.LotSize = Quantity.Parse(Unit.Parse((int) row["LotSizeUnitId"]),
+                                               (decimal) row["LotSize"]);
     }
+
 
     protected override void OnSave() {
       ResourceData.WriteRealEstate(this);
     }
+
 
     public void SetExtData(RealEstateExtData newData) {
       Assertion.AssertObject(newData, "newData");
@@ -317,6 +321,7 @@ namespace Empiria.Land.Registration {
       this.RealEstateExtData = newData;
     }
 
+
     public void SetPartitionNo(string newPartitionNo) {
       Assertion.Assert(this.IsPartition,
                        "This real estate is not a partition of another property.");
@@ -325,6 +330,7 @@ namespace Empiria.Land.Registration {
 
       Assertion.AssertObject(this.PartitionNo, "newPartitionNo");
     }
+
 
     internal RealEstate[] Subdivide(RealEstatePartitionDTO partitionInfo) {
       Assertion.Assert(!this.IsNew, "New properties can't be subdivided.");
@@ -336,6 +342,7 @@ namespace Empiria.Land.Registration {
       }
       return partitions;
     }
+
 
     #endregion Public methods
 

@@ -20,15 +20,10 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private Association() {
+    internal Association() {
       // Required by Empiria Framework
     }
 
-    internal Association(AssociationExtData data) {
-      Assertion.AssertObject(data, "data");
-
-      this.AssociationExtData = data;
-    }
 
     static public new Association Parse(int id) {
       return BaseObject.ParseId<Association>(id);
@@ -44,21 +39,10 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    internal AssociationExtData AssociationExtData {
-      get;
-      private set;
-    } = AssociationExtData.Empty;
-
-
-    public string Name {
-      get {
-        return this.AssociationExtData.Name;
-      }
-    }
 
     internal protected override string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(base.Keywords, this.Name);
+        return EmpiriaString.BuildKeywords(base.Keywords, this.Name, this.Description);
       }
     }
 
@@ -75,30 +59,6 @@ namespace Empiria.Land.Registration {
       return ExternalProviders.UniqueIDGeneratorProvider.GenerateAssociationUID();
     }
 
-    public string GetAssociationTypeName() {
-      RecordingAct incorporationAct = this.GetIncorporationAct();
-
-      if (!incorporationAct.IsEmptyInstance &&
-          incorporationAct.RecordingActType.RecordingRule.ResourceTypeName.Length != 0) {
-        return incorporationAct.RecordingActType.RecordingRule.ResourceTypeName;
-      }
-
-      if (this.Name.EndsWith("S.C.") || this.Name.EndsWith("SC") || this.Name.Contains("sociedad civil")) {
-        return "Sociedad Civil";
-      } else if (this.Name.EndsWith("A.C.") || this.Name.EndsWith("AC") ||
-                 this.Name.Contains("asociacion civil") || this.Name.Contains("asociación civil")) {
-        return "Asociación Civil";
-      } else if (this.Name.EndsWith("A.R.") || this.Name.EndsWith("AR") ||
-                 this.Name.Contains("asociacion religiosa") || this.Name.Contains("asociación religiosa")) {
-        return "Asociación Religiosa";
-      } else if (this.Name.EndsWith("S.S.") || this.Name.EndsWith("S:S.") ||
-                 this.Name.Contains("solidaridad social"))  {
-        return "Sociedad de Solidaridad Social";
-      } else {
-        return "Sociedad";
-      }
-    }
-
     public RecordingAct GetIncorporationAct() {
       FixedList<RecordingAct> tract = base.Tract.GetRecordingActs();
 
@@ -111,16 +71,9 @@ namespace Empiria.Land.Registration {
         return incorporationAct;
       } else if (!tract[0].PhysicalRecording.IsEmptyInstance) {
         return tract[0];
-      }
-      if (incorporationAct != null) {
-          return incorporationAct;
-        } else {
+      } else {
         return RecordingAct.Empty;
       }
-    }
-
-    protected override void OnLoadObjectData(DataRow row) {
-      this.AssociationExtData = AssociationExtData.ParseJson((string) row["PropertyExtData"]);
     }
 
     protected override void OnSave() {
