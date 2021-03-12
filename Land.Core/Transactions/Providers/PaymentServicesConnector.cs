@@ -109,7 +109,8 @@ namespace Empiria.Land.Transactions.Providers {
         Issuer = "Empiria.Land",
         Version = "5.0",
         IssueTime = DateTime.Now,
-        DueDate = DateTime.Now.AddDays(15)
+        DueDate = DateTime.Now.AddDays(15),
+        Status = "Pendiente de pago"
       };
 
       var builder = new LandMediaBuilder(LandMediaContent.TransactionPaymentOrder, transaction);
