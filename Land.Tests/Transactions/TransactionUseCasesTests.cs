@@ -58,7 +58,7 @@ namespace Empiria.Land.Tests.Transactions {
 
       Assert.Equal(baseTransaction.Type.UID, clone.Type.UID);
       Assert.Equal(baseTransaction.Subtype.UID, clone.Subtype.UID);
-      Assert.Equal(baseTransaction.RecorderOffice.UID, clone.RecorderOffice.UID);
+      Assert.Equal(baseTransaction.FilingOffice.UID, clone.FilingOffice.UID);
       Assert.Equal(baseTransaction.Agency.UID, clone.Agency.UID);
       Assert.Equal(baseTransaction.RequestedBy.Name, clone.RequestedBy.Name);
       Assert.Equal(baseTransaction.RequestedBy.Email, clone.RequestedBy.Email);
@@ -73,7 +73,7 @@ namespace Empiria.Land.Tests.Transactions {
 
       Assert.Equal(fields.TypeUID, created.Type.UID);
       Assert.Equal(fields.SubtypeUID, created.Subtype.UID);
-      Assert.Equal(fields.RecorderOfficeUID, created.RecorderOffice.UID);
+      Assert.Equal(fields.FilingOfficeUID, created.FilingOffice.UID);
       Assert.Equal(fields.AgencyUID, created.Agency.UID);
       Assert.Equal(fields.RequestedBy, created.RequestedBy.Name);
       Assert.Equal(fields.RequestedByEmail, created.RequestedBy.Email);

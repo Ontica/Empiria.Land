@@ -802,7 +802,7 @@ namespace Empiria.Land.Registration.Transactions {
 
       Assertion.AssertObject(fields.TypeUID, "fields.TypeUID");
       Assertion.AssertObject(fields.SubtypeUID, "fields.SubtypeUID");
-      Assertion.AssertObject(fields.RecorderOfficeUID, "fields.RecorderOfficeUID");
+      Assertion.AssertObject(fields.FilingOfficeUID, "fields.FilingOfficeUID");
       Assertion.AssertObject(fields.AgencyUID, "fields.AgencyUID");
       Assertion.AssertObject(fields.RequestedBy, "fields.RequestedBy");
     }
@@ -816,7 +816,7 @@ namespace Empiria.Land.Registration.Transactions {
             $"given transaction type '{this.DocumentType.Name}'.");
 
       this.Agency = Contact.Parse(fields.AgencyUID);
-      this.RecorderOffice = RecorderOffice.Parse(fields.RecorderOfficeUID);
+      this.RecorderOffice = RecorderOffice.Parse(fields.FilingOfficeUID);
 
       this.RequestedBy = EmpiriaString.TrimAll(fields.RequestedBy);
       Assertion.AssertObject(RequestedBy, "fields.RequestedBy");
@@ -831,7 +831,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.DocumentType = PatchField(fields.SubtypeUID, this.DocumentType);
 
       this.Agency = PatchField(fields.AgencyUID, this.Agency);
-      this.RecorderOffice = PatchField(fields.RecorderOfficeUID, this.RecorderOffice);
+      this.RecorderOffice = PatchField(fields.FilingOfficeUID, this.RecorderOffice);
 
       this.RequestedBy = PatchField(fields.RequestedBy, this.RequestedBy);
       this.RequestedBy = EmpiriaString.TrimAll(this.RequestedBy);

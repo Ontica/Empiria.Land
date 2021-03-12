@@ -26,9 +26,21 @@ namespace Empiria.Land.Transactions.WebApi {
     public CollectionModel GetAgenciesList() {
 
       using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> agencies = usecases.GetAgencies();
+        FixedList<NamedEntityDto> agencies = usecases.Agencies();
 
         return new CollectionModel(this.Request, agencies);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v5/land/filing-offices")]
+    public CollectionModel GetFilingOfficesList() {
+
+      using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> offices = usecases.FilingOffices();
+
+        return new CollectionModel(this.Request, offices);
       }
     }
 
@@ -38,21 +50,9 @@ namespace Empiria.Land.Transactions.WebApi {
     public CollectionModel GetProvidedServices() {
 
       using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
-        FixedList<ProvidedServiceGroupDto> list = usecases.GetProvidedServices();
+        FixedList<ProvidedServiceGroupDto> list = usecases.ProvidedServices();
 
         return new CollectionModel(this.Request, list);
-      }
-    }
-
-
-    [HttpGet]
-    [Route("v5/land/recorder-offices")]
-    public CollectionModel GetRecorderOfficesList() {
-
-      using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> offices = usecases.GetRecorderOffices();
-
-        return new CollectionModel(this.Request, offices);
       }
     }
 
@@ -62,7 +62,7 @@ namespace Empiria.Land.Transactions.WebApi {
     public CollectionModel GetTransactionTypesList() {
 
       using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
-        FixedList<TransactionTypeDto> list = usecases.GetTransactionTypes();
+        FixedList<TransactionTypeDto> list = usecases.TransactionTypes();
 
         return new CollectionModel(this.Request, list);
       }

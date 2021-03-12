@@ -48,7 +48,7 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto RecorderOffice {
+    public NamedEntityDto FilingOffice {
       get; internal set;
     }
 

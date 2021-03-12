@@ -23,7 +23,7 @@ namespace Empiria.Land.Transactions.Adapters {
     } = string.Empty;
 
 
-    public string RecorderOfficeUID {
+    public string FilingOfficeUID {
       get; set;
     } = string.Empty;
 

@@ -43,7 +43,7 @@ namespace Empiria.Land.Tests {
       var fields = new TransactionFields {
         TypeUID = transactionType.UID,
         SubtypeUID = GetRandomSubtype(transactionType).UID,
-        RecorderOfficeUID = GetRandomRecorderOffice().UID,
+        FilingOfficeUID = GetRandomFilingOffice().UID,
         AgencyUID = GetRandomAgency().UID,
         RequestedBy = EmpiriaString.BuildRandomString(20, 230),
         InstrumentDescriptor = EmpiriaString.BuildRandomString(5, 145),
@@ -55,11 +55,22 @@ namespace Empiria.Land.Tests {
 
     static internal NamedEntityDto GetRandomAgency() {
       using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
-        var agencies = usecases.GetAgencies();
+        var agencies = usecases.Agencies();
 
         var index = EmpiriaMath.GetRandom(0, agencies.Count - 1);
 
         return agencies[index];
+      }
+    }
+
+
+    static internal NamedEntityDto GetRandomFilingOffice() {
+      using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
+        var offices = usecases.FilingOffices();
+
+        var index = EmpiriaMath.GetRandom(0, offices.Count - 1);
+
+        return offices[index];
       }
     }
 
@@ -80,16 +91,6 @@ namespace Empiria.Land.Tests {
       }
     }
 
-
-    static internal NamedEntityDto GetRandomRecorderOffice() {
-      using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
-        var offices = usecases.GetRecorderOffices();
-
-        var index = EmpiriaMath.GetRandom(0, offices.Count - 1);
-
-        return offices[index];
-      }
-    }
 
 
     static internal NamedEntityDto GetRandomSubtype(TransactionTypeDto transactionType) {
@@ -119,7 +120,7 @@ namespace Empiria.Land.Tests {
     static internal ProvidedServiceDto GetRandomProvidedService() {
       using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
 
-        var categories = usecases.GetProvidedServices();
+        var categories = usecases.ProvidedServices();
 
         var categoryIndex = EmpiriaMath.GetRandom(0, categories.Count - 1);
 
@@ -157,7 +158,7 @@ namespace Empiria.Land.Tests {
 
     static internal TransactionTypeDto GetRandomTransactionType() {
       using (var usecases = TransactionTypeUseCases.UseCaseInteractor()) {
-        var transactionTypesList = usecases.GetTransactionTypes();
+        var transactionTypesList = usecases.TransactionTypes();
 
         var index = EmpiriaMath.GetRandom(0, transactionTypesList.Count - 1);
 

@@ -41,7 +41,7 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.PresentationTime = transaction.PresentationTime;
       dto.InternalControlNo = transaction.InternalControlNoFormatted;
       dto.Agency = transaction.Agency.MapToNamedEntity();
-      dto.RecorderOffice = transaction.RecorderOffice.MapToNamedEntity();
+      dto.FilingOffice = transaction.RecorderOffice.MapToNamedEntity();
       dto.InstrumentDescriptor = transaction.DocumentDescriptor;
       dto.RequestedServices = GetRequestedServicesDtoArray(transaction);
       dto.PaymentOrder = GetPaymentOrderDto(transaction);

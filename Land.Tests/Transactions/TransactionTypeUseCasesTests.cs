@@ -42,7 +42,7 @@ namespace Empiria.Land.Tests.Transactions {
 
     [Fact]
     public void Should_Get_Groups_Of_Provided_Services() {
-      FixedList<ProvidedServiceGroupDto> list = _usecases.GetProvidedServices();
+      FixedList<ProvidedServiceGroupDto> list = _usecases.ProvidedServices();
 
       Assert.NotEmpty(list);
 
@@ -67,7 +67,7 @@ namespace Empiria.Land.Tests.Transactions {
 
     [Fact]
     public void Should_Get_The_Agencies_List() {
-      FixedList<NamedEntityDto> list = _usecases.GetAgencies();
+      FixedList<NamedEntityDto> list = _usecases.Agencies();
 
       Assert.NotEmpty(list);
 
@@ -76,8 +76,8 @@ namespace Empiria.Land.Tests.Transactions {
 
 
     [Fact]
-    public void Should_Get_The_Recorder_Offices_List() {
-      FixedList<NamedEntityDto> list = _usecases.GetRecorderOffices();
+    public void Should_Get_The_Filing_Offices_List() {
+      FixedList<NamedEntityDto> list = _usecases.FilingOffices();
 
       Assert.NotEmpty(list);
 
@@ -87,7 +87,7 @@ namespace Empiria.Land.Tests.Transactions {
 
     [Fact]
     public void Should_Get_The_Transaction_Types_List() {
-      FixedList<TransactionTypeDto> list = _usecases.GetTransactionTypes();
+      FixedList<TransactionTypeDto> list = _usecases.TransactionTypes();
 
       Assert.NotEmpty(list);
 

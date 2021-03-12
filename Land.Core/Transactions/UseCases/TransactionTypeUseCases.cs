@@ -36,22 +36,14 @@ namespace Empiria.Land.Transactions.UseCases {
 
     #region Use cases
 
-    public FixedList<NamedEntityDto> GetAgencies() {
+    public FixedList<NamedEntityDto> Agencies() {
       FixedList<Contact> list = LRSTransaction.GetAgenciesList();
 
       return list.MapToNamedEntityList();
     }
 
 
-    public FixedList<ProvidedServiceGroupDto> GetProvidedServices() {
-      FixedList<RecordingActTypeCategory> list =
-                  RecordingActTypeCategory.GetList("TransactionActTypesCategories.List");
-
-      return ProvidedServiceDtoMapper.Map(list);
-    }
-
-
-    public FixedList<NamedEntityDto> GetRecorderOffices() {
+    public FixedList<NamedEntityDto> FilingOffices() {
       var list = new FixedList<RecorderOffice>(new[] { RecorderOffice.Parse(101) });
 
       return list.MapToNamedEntityList();
@@ -67,11 +59,20 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
-    public FixedList<TransactionTypeDto> GetTransactionTypes() {
+    public FixedList<ProvidedServiceGroupDto> ProvidedServices() {
+      FixedList<RecordingActTypeCategory> list =
+                  RecordingActTypeCategory.GetList("TransactionActTypesCategories.List");
+
+      return ProvidedServiceDtoMapper.Map(list);
+    }
+
+
+    public FixedList<TransactionTypeDto> TransactionTypes() {
       FixedList<LRSTransactionType> list = LRSTransactionType.GetList();
 
       return TransactionTypeDtoMapper.Map(list);
     }
+
 
     #endregion Use cases
 
