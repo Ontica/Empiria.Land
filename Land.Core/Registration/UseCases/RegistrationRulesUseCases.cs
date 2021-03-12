@@ -33,6 +33,7 @@ namespace Empiria.Land.Registration.UseCases {
 
     #region Use cases
 
+
     public FixedList<RecordingActTypeGroupDto> RecordingActTypesForInstrument(string instrumentUID) {
       Assertion.AssertObject(instrumentUID, "instrumentUID");
 

@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Land Registration                          Component : Domain Layer                            *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Extension methods library               *
-*  Type     : RecordingActTypeRules                      License   : Please read LICENSE.txt file            *
+*  Type     : RecordingRuleExtensions                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Extension methods library for registration rules.                                              *
 *                                                                                                            *
@@ -106,6 +106,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Helper Methods
 
-  }  // class RecordingActTypeRules
+  }  // class RecordingRuleExtensions
 
 }  // namespace Empiria.Land.Registration

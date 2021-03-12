@@ -21,6 +21,7 @@ namespace Empiria.Land.Registration.WebApi {
 
     #region Web Apis
 
+
     [HttpGet]
     [Route("v5/land/registration/{instrumentUID:guid}/recording-act-types")]
     public CollectionModel GetInstrumentRecordingActTypes([FromUri] string instrumentUID) {

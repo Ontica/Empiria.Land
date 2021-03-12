@@ -26,6 +26,7 @@ namespace Empiria.Land.Workflow.WebApi {
     [Route("v5/land/workflow/all-commands")]
     [Route("v5/land/workflow/all-command-types")]
     public CollectionModel AllApplicableUserCommandTypes() {
+
       using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
         FixedList<ApplicableCommandDto> commandTypes = usecases.AllApplicableUserCommands();
 

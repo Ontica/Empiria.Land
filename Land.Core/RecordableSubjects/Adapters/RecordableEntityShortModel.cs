@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Recordable Subjects Management             Component : Interface adapters                      *
+*  Module   : Recordable Subjects                        Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : RecordableEntityShortModel                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *

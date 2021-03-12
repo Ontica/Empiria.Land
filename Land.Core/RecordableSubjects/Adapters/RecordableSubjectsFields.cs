@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Recordable Subjects Management             Component : Interface adapters                      *
+*  Module   : Recordable Subjects                        Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Input Data Holder                       *
 *  Type     : RecordableSubjectsFields                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
