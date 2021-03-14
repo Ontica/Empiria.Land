@@ -54,6 +54,10 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseKey<RecordingDocument>(uid);
     }
 
+    static public RecordingDocument ParseGuid(string guid) {
+      return BaseObject.TryParse<RecordingDocument>($"DocumentGUID = '{guid}'");
+    }
+
     static public RecordingDocument TryParse(string documentUID, bool reload = false) {
       return BaseObject.TryParse<RecordingDocument>($"DocumentUID = '{documentUID }'", reload);
     }
