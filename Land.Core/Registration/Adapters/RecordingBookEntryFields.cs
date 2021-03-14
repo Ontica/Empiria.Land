@@ -1,19 +1,18 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Physical Registration                      Component : Interface adapters                      *
+*  Module   : Land Registration                          Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Input Data Holder                       *
-*  Type     : CreateNextPhysicalRecordingFields          License   : Please read LICENSE.txt file            *
+*  Type     : RecordingBookEntryFields                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Data structure used to automatically create physical recordings in the next volume entry.      *
+*  Summary  : Data structure used to create recording book entries.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land.PhysicalBooks.Adapters {
+namespace Empiria.Land.Registration.Adapters {
 
-  /// <summary>Data structure used to automatically create physical
-  /// recordings in the next volume entry.</summary>
-  public class CreateNextPhysicalRecordingFields {
+  /// <summary>Data structure used to create recording book entries.</summary>
+  public class RecordingBookEntryFields {
 
     public string RecorderOfficeUID {
       get; set;
@@ -23,6 +22,6 @@ namespace Empiria.Land.PhysicalBooks.Adapters {
       get; set;
     }
 
-  }  // class CreateNextPhysicalRecordingFields
+  }  // class RecordingBookEntryFields
 
-}  // namespace Empiria.Land.PhysicalBooks.Adapters
+}  // namespace Empiria.Land.Registration.Adapters

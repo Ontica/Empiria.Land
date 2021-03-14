@@ -46,7 +46,7 @@ namespace Empiria.Land.Media {
           return new MediaData("text/html",
                                 $"{MEDIA_URL}/receipts/transaction.receipt.aspx?uid={Transaction.UID}");
 
-        case LandMediaContent.PhysicalRegistrationStamp:
+        case LandMediaContent.BookEntryRegistrationStamp:
           return new MediaData("text/html",
                               $"{MEDIA_URL}/recording-stamps/physical-recording.stamp.aspx?" +
                               $"id={param}&transactionId={Transaction.Id}");

@@ -27,7 +27,7 @@ namespace Empiria.Land.Media.Adapters {
 
     RegistrationStamp,
 
-    PhysicalRegistrationStamp,
+    BookEntryRegistrationStamp,
 
   }  // enum LandMediaContent
 

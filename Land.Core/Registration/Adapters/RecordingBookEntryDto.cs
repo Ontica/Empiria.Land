@@ -1,8 +1,8 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Physical Registration                      Component : Interface adapters                      *
+*  Module   : Land Registration                          Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
-*  Type     : PhysicalRecordingDto                       License   : Please read LICENSE.txt file            *
+*  Type     : RecordingBookEntryDto                      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO with a recording registered in a physical book.                                     *
 *                                                                                                            *
@@ -11,9 +11,9 @@ using System;
 
 using Empiria.DataTypes;
 
-namespace Empiria.Land.PhysicalBooks.Adapters {
+namespace Empiria.Land.Registration.Adapters {
 
-  public class PhysicalRecordingDto {
+  public class RecordingBookEntryDto {
 
     public string UID {
       get; internal set;
@@ -54,6 +54,6 @@ namespace Empiria.Land.PhysicalBooks.Adapters {
     } = MediaData.Empty;
 
 
-  }  // class PhysicalRecordingDto
+  }  // class RecordingBookEntryDto
 
-}  // namespace Empiria.Land.PhysicalBooks.Adapters
+}  // namespace Empiria.Land.Registration.Adapters

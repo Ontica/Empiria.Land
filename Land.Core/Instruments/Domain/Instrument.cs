@@ -182,14 +182,14 @@ namespace Empiria.Land.Instruments {
     }
 
 
-    public bool HasPhysicalRecordings {
+    public bool HasRecordingBookEntries {
       get {
-        return (this.PhysicalRecordings.Count != 0);
+        return (this.RecordingBookEntries.Count != 0);
       }
     }
 
 
-    public FixedList<PhysicalRecording> PhysicalRecordings {
+    public FixedList<PhysicalRecording> RecordingBookEntries {
       get {
         if (!this.HasDocument) {
           return new FixedList<PhysicalRecording>();
