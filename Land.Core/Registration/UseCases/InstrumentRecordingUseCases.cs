@@ -1,8 +1,8 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Use cases Layer                         *
+*  Module   : Land Registration                          Component : Use cases Layer                         *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Use case interactor class               *
-*  Type     : TransactionInstrumentUseCases              License   : Please read LICENSE.txt file            *
+*  Type     : InstrumentRecordingUseCases                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Use cases for transaction instrument edition and retrieving.                                   *
 *                                                                                                            *
@@ -14,39 +14,41 @@ using Empiria.Services;
 using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
 
+using Empiria.Land.Registration.Adapters;
+
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Transactions.UseCases {
+namespace Empiria.Land.Registration.UseCases {
 
   /// <summary>Use cases for transaction instrument edition and retrieving.</summary>
-  public class TransactionInstrumentUseCases : UseCase {
+  public class InstrumentRecordingUseCases : UseCase {
 
     #region Constructors and parsers
 
-    protected TransactionInstrumentUseCases() {
+    protected InstrumentRecordingUseCases() {
       // no-op
     }
 
-    static public TransactionInstrumentUseCases UseCaseInteractor() {
-      return UseCase.CreateInstance<TransactionInstrumentUseCases>();
+    static public InstrumentRecordingUseCases UseCaseInteractor() {
+      return UseCase.CreateInstance<InstrumentRecordingUseCases>();
     }
 
     #endregion Constructors and parsers
 
     #region Use cases
 
-    public InstrumentDto GetTransactionInstrument(string transactionUID) {
+    public InstrumentRecordingDto GetTransactionInstrumentRecording(string transactionUID) {
       Assertion.AssertObject(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
-      Instrument instrument = Instrument.Parse(transaction.InstrumentId);
+      RecordingDocument instrumentRecording = transaction.Document;
 
-      return InstrumentMapper.Map(instrument, transaction);
+      return InstrumentRecordingMapper.Map(instrumentRecording, transaction);
     }
 
 
-    public InstrumentDto CreateTransactionInstrument(string transactionUID, InstrumentFields fields) {
+    public InstrumentRecordingDto CreateTransactionInstrumentRecording(string transactionUID, InstrumentFields fields) {
       Assertion.AssertObject(transactionUID, "transactionUID");
       Assertion.AssertObject(fields, "fields");
       Assertion.Assert(fields.Type.HasValue, "Instrument.Type value is required.");
@@ -64,13 +66,15 @@ namespace Empiria.Land.Transactions.UseCases {
 
       transaction.SetInstrument(instrument);
 
-      transaction.AttachDocument(instrument.TryGetRecordingDocument());
+      RecordingDocument recordingDocument = instrument.TryGetRecordingDocument();
 
-      return InstrumentMapper.Map(instrument, transaction);
+      transaction.AttachDocument(recordingDocument);
+
+      return InstrumentRecordingMapper.Map(recordingDocument, transaction);
     }
 
 
-    public InstrumentDto UpdateTransactionInstrument(string transactionUID, InstrumentFields fields) {
+    public InstrumentRecordingDto UpdateTransactionInstrumentRecording(string transactionUID, InstrumentFields fields) {
       Assertion.AssertObject(transactionUID, "transactionUID");
       Assertion.AssertObject(fields, "fields");
 
@@ -82,22 +86,15 @@ namespace Empiria.Land.Transactions.UseCases {
 
       instrument.Save();
 
-      return InstrumentMapper.Map(instrument, transaction);
+      RecordingDocument recordingDocument = instrument.TryGetRecordingDocument();
+
+      return InstrumentRecordingMapper.Map(recordingDocument, transaction);
     }
 
 
     #endregion Use cases
 
-    #region Helper methods
 
-    static private Instrument ParseTransactionInstrument(string transactionUID) {
-      var transaction = LRSTransaction.Parse(transactionUID);
+  }  // class InstrumentRecordingUseCases
 
-      return Instrument.Parse(transaction.InstrumentId);
-    }
-
-    #endregion Helper methods
-
-  }  // class TransactionInstrumentUseCases
-
-}  // namespace Empiria.Land.Transactions.UseCases
+}  // namespace Empiria.Land.Registration.UseCases

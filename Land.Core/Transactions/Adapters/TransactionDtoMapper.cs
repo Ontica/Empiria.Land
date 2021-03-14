@@ -8,14 +8,13 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.DataTypes;
-using Empiria.Land.Instruments;
+
 using Empiria.Land.Instruments.Adapters;
 
 using Empiria.Land.Media;
 using Empiria.Land.Media.Adapters;
-
-using Empiria.Land.RecordableSubjects.Adapters;
 
 using Empiria.Land.Registration.Transactions;
 
@@ -173,22 +172,6 @@ namespace Empiria.Land.Transactions.Adapters {
     }
 
 
-    static private RecordableEntityShortModel GetRecordableTargetDto(LRSTransaction transaction) {
-      var resource = transaction.BaseResource;
-
-      if (resource.IsEmptyInstance) {
-        return null;
-      }
-
-      return new RecordableEntityShortModel {
-        UID = resource.UID,
-        Type = resource.GetEmpiriaType().Name,
-        Subtype = "No determinado",
-        RecordableID = resource.UID,
-        MediaUri = String.Empty
-      };
-    }
-
     private static MediaData GetSubmissionReceiptDto(LRSTransaction transaction) {
       if (!transaction.ControlData.CanPrintSubmissionReceipt) {
         return null;
@@ -198,17 +181,6 @@ namespace Empiria.Land.Transactions.Adapters {
 
       return mediaBuilder.GetMediaDto();
     }
-
-    static private InstrumentDto GetInstrumentDto(LRSTransaction transaction) {
-      if (transaction.InstrumentId == -1) {
-        return null;
-      }
-
-      var instrument = Instrument.Parse(transaction.InstrumentId);
-
-      return InstrumentMapper.Map(instrument, transaction);
-    }
-
 
     static private RequestedByDto GetRequestedByDto(LRSTransaction transaction) {
       return new RequestedByDto {
