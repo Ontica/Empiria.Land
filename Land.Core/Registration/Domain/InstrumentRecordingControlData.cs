@@ -110,7 +110,7 @@ namespace Empiria.Land.Registration {
 
     public bool ShowRecordingBookEntries {
       get {
-        return (_instrument.HasRecordingBookEntries);
+        return (_instrument.HasRecordingBookEntries || UseRecordingBookRegistation);
       }
     }
 
