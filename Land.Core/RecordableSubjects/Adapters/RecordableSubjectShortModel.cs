@@ -2,16 +2,16 @@
 *                                                                                                            *
 *  Module   : Recordable Subjects                        Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
-*  Type     : RecordableEntityShortModel                 License   : Please read LICENSE.txt file            *
+*  Type     : RecordableSubjectShortModel                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO with a recordable entity short model.                                               *
+*  Summary  : Output DTO with a recordable subject short model.                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria.Land.RecordableSubjects.Adapters {
 
-  /// <summary>Output DTO with a recordable resource short model.</summary>
-  public class RecordableEntityShortModel {
+  /// <summary>Output DTO with a recordable subject short model.</summary>
+  public class RecordableSubjectShortModel {
 
     public string UID {
       get; internal set;
@@ -21,18 +21,18 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       get; internal set;
     }
 
-    public string Subtype {
+    public string Name {
       get; internal set;
     }
 
-    public string RecordableID {
+    public string ElectronicID {
       get; internal set;
     }
 
-    public string MediaUri {
+    public string Kind {
       get; internal set;
     }
 
-  }  // class RecordableEntityShortModel
+  }  // class RecordableSubjectShortModel
 
 }  // namespace Empiria.Land.RecordableSubjects.Adapters

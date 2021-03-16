@@ -16,11 +16,13 @@ using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
 
 using Empiria.Land.Registration.Transactions;
+using Empiria.Land.RecordableSubjects.Adapters;
 
 namespace Empiria.Land.Registration.Adapters {
 
   /// <summary>Methods to map legal instruments to InstrumentDto objects.</summary>
   static internal partial class InstrumentRecordingMapper {
+
 
     static internal InstrumentRecordingDto Map(RecordingDocument instrumentRecording,
                                                LRSTransaction transaction) {
@@ -36,6 +38,7 @@ namespace Empiria.Land.Registration.Adapters {
       dto.UID = instrumentRecording.GUID;
       dto.InstrumentRecordingID = instrumentRecording.UID;
       dto.Instrument = Map(instrument);
+      dto.RecordingActs = GetRecordingActsListDto(instrumentRecording);
       dto.BookEntries = GetRecordingBookEntriesListDto(instrument);
       dto.StampMedia = mediaBuilder.GetMediaDto("-1");
       dto.TransactionUID = transaction.UID;
@@ -49,7 +52,6 @@ namespace Empiria.Land.Registration.Adapters {
       var issuerDto = IssuerMapper.Map(instrument.Issuer);
 
       var mediaFiles = LandMediaFileMapper.Map(instrument.GetMediaFileSet());
-
 
       var dto = new InstrumentDto {
         UID = instrument.UID,
@@ -71,6 +73,7 @@ namespace Empiria.Land.Registration.Adapters {
 
       return dto;
     }
+
 
     #region Private methods
 
@@ -94,6 +97,38 @@ namespace Empiria.Land.Registration.Adapters {
       dto.Show.RegistrationStamps = controlData.ShowRegistrationStamps;
 
       return dto;
+    }
+
+
+    static private RecordingActDto GetRecordingActDto(RecordingAct x) {
+      var dto = new RecordingActDto();
+
+      dto.UID = x.UID;
+      dto.Name = x.RecordingActType.DisplayName;
+      dto.RecordableSubject = GetRecordableSubjectDto(x.Resource);
+      dto.Antecedent = "Sin antecedente registral";
+
+      return dto;
+    }
+
+    private static RecordableSubjectShortModel GetRecordableSubjectDto(Resource resource) {
+      var dto = new RecordableSubjectShortModel();
+
+      dto.UID = resource.GUID;
+      dto.Type = resource.GetEmpiriaType().NamedKey;
+      dto.Name = resource.Name;
+      dto.ElectronicID = resource.UID;
+      dto.Kind = resource.Kind;
+
+      return dto;
+    }
+
+    static private FixedList<RecordingActDto> GetRecordingActsListDto(RecordingDocument instrumentRecording) {
+      var list = instrumentRecording.RecordingActs;
+
+      var mappedItems = list.Select((x) => GetRecordingActDto(x));
+
+      return new FixedList<RecordingActDto>(mappedItems);
     }
 
 
