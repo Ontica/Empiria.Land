@@ -31,42 +31,35 @@ namespace Empiria.Land.Registration.UseCases {
     #region Command Use cases
 
 
-    public InstrumentDto RecordingActRegistration(string instrumentUID,
-                                                  RegistrationCommand command) {
-      Assertion.AssertObject(instrumentUID, "instrumentUID");
+    public InstrumentRecordingDto CreateRecordingAct(string instrumentRecordingUID,
+                                                     RegistrationCommand command) {
+      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
       Assertion.AssertObject(command, "command");
 
-      var instrument = Instrument.Parse(instrumentUID);
+      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
-      instrument.EnsureHasRecordingDocument();
-
-      var recordingDocument = instrument.TryGetRecordingDocument();
-
-      var registrationEngine = new RegistrationEngine(recordingDocument);
+      var registrationEngine = new RegistrationEngine(instrumentRecording);
 
       registrationEngine.Execute(command);
 
-      return InstrumentMapper.Map(instrument);
+      return InstrumentRecordingMapper.Map(instrumentRecording,
+                                           instrumentRecording.GetTransaction());
     }
 
 
-    public InstrumentDto RemoveRecordingActRegistation(string instrumentUID,
-                                                       string recordingActUID) {
-      Assertion.AssertObject(instrumentUID, "instrumentUID");
+    public InstrumentRecordingDto RemoveRecordingAct(string instrumentRecordingUID,
+                                                            string recordingActUID) {
+      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
       Assertion.AssertObject(recordingActUID, "recordingActUID");
 
-      throw new NotImplementedException();
-    }
+      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
+      var recordingAct = RecordingAct.Parse(recordingActUID);
 
-    public InstrumentDto UpdateRecordingActRegistration(string instrumentUID,
-                                                        string recordingActUID,
-                                                        RegistrationCommand command) {
-      Assertion.AssertObject(instrumentUID, "instrumentUID");
-      Assertion.AssertObject(recordingActUID, "recordingActUID");
-      Assertion.AssertObject(command, "command");
+      instrumentRecording.RemoveRecordingAct(recordingAct);
 
-      throw new NotImplementedException(command.Type.Name());
+      return InstrumentRecordingMapper.Map(instrumentRecording,
+                                           instrumentRecording.GetTransaction());
     }
 
 
