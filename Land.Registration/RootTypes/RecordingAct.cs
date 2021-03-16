@@ -103,6 +103,11 @@ namespace Empiria.Land.Registration {
     }
 
 
+    static public RecordingAct Parse(string uid) {
+      return BaseObject.ParseKey<RecordingAct>(uid);
+    }
+
+
     static public FixedList<RecordingAct> GetList(RecordingDocument document) {
       return RecordingActsData.GetDocumentRecordingActs(document).ToFixedList();
     }
@@ -124,6 +129,7 @@ namespace Empiria.Land.Registration {
         return (RecordingActType) base.GetEmpiriaType();
       }
     }
+
 
     public bool IsCanceled {
       get {

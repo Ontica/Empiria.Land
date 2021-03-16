@@ -76,7 +76,7 @@ namespace Empiria.Land.Data {
 
     static internal void WriteCertificate(Certificate o) {
       var op = DataOperation.Parse("writeLRSCertificate",
-                          o.Id, o.CertificateType.Id, o.UID,
+                          o.Id, o.CertificateType.Id, o.GUID, o.UID,
                           o.Transaction.Id, o.RecorderOffice.Id, o.Property.Id, o.OwnerName,
                           o.UserNotes, o.ExtensionData.ToJson(), o.AsText, o.Keywords,
                           o.IssueTime, o.IssuedBy.Id, (char) o.IssueMode,

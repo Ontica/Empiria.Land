@@ -65,7 +65,7 @@ namespace Empiria.Land.Data {
       Assertion.Assert(!o.Document.IsEmptyInstance, "Document can't be the empty instance.");
       Assertion.Assert(!o.Document.IsNew, "Document should be saved before add recording acts to it.");
 
-      var op = DataOperation.Parse("writeLRSRecordingAct", o.Id,
+      var op = DataOperation.Parse("writeLRSRecordingAct", o.Id, o.UID,
                       o.RecordingActType.Id, o.Document.Id, o.Index,
                       o.Resource.Id, (char) o.ResourceRole, o.RelatedResource.Id, o.Percentage,
                       o.Notes, o.ExtensionData.ToString(), o.Keywords,
@@ -77,11 +77,11 @@ namespace Empiria.Land.Data {
 
 
     static internal void WriteRecordingActParty(RecordingActParty o) {
-      var op = DataOperation.Parse("writeLRSRecordingActParty", o.Id,
-                    o.RecordingAct.Id, o.Party.Id, o.PartyRole.Id, o.PartyOf.Id,
-                    o.OwnershipPart.Amount, o.OwnershipPart.Unit.Id, o.IsOwnershipStillActive,
-                    o.Notes, o.AsText, o.ExtendedData, o.PostedBy.Id,
-                    (char) o.Status, o.IntegrityHashCode);
+      var op = DataOperation.Parse("writeLRSRecordingActParty", o.Id, o.UID,
+                      o.RecordingAct.Id, o.Party.Id, o.PartyRole.Id, o.PartyOf.Id,
+                      o.OwnershipPart.Amount, o.OwnershipPart.Unit.Id, o.IsOwnershipStillActive,
+                      o.Notes, o.AsText, o.ExtendedData, o.PostedBy.Id,
+                      (char) o.Status, o.IntegrityHashCode);
 
       DataWriter.Execute(op);
     }

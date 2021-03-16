@@ -37,9 +37,16 @@ namespace Empiria.Land.Certification {
       return BaseObject.ParseId<Certificate>(id, true);
     }
 
-    static public Certificate TryParse(string certificateUID, bool reload = false) {
-      return BaseObject.TryParse<Certificate>("CertificateUID = '" + certificateUID + "'", reload);
+
+    static public Certificate ParseGuid(string guid) {
+      return BaseObject.TryParse<Certificate>($"CertificateGUID = '{guid}'");
     }
+
+
+    static public Certificate TryParse(string certificateUID, bool reload = false) {
+      return BaseObject.TryParse<Certificate>($"CertificateUID = '{certificateUID}'", reload);
+    }
+
 
     #endregion Constructors and parsers
 
@@ -50,6 +57,13 @@ namespace Empiria.Land.Certification {
         return (CertificateType) base.GetEmpiriaType();
       }
     }
+
+    [DataField("CertificateGUID", IsOptional = false)]
+    public string GUID {
+      get;
+      private set;
+    }
+
 
     [DataField("CertificateUID", IsOptional = false)]
     private string _certificateUID = String.Empty;
@@ -441,6 +455,7 @@ namespace Empiria.Land.Certification {
 
     protected override void OnSave() {
       if (this.IsNew) {
+        this.GUID = Guid.NewGuid().ToString().ToLower();
         this.PostingTime = DateTime.Now;
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }

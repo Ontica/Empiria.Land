@@ -146,7 +146,7 @@ namespace Empiria.Land.Data {
 
 
     static internal void WriteParty(Party o) {
-      var dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.GetEmpiriaType().Id,
+      var dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.UID, o.GetEmpiriaType().Id,
                                               o.FullName, o.Notes, o.ExtendedData,
                                               o.Keywords, (char) o.Status, String.Empty);
       DataWriter.Execute(dataOperation);

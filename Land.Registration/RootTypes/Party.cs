@@ -54,15 +54,23 @@ namespace Empiria.Land.Registration {
       this.OfficialIDType = officialIDType;
     }
 
+
     static public Party Parse(int id) {
       return BaseObject.ParseId<Party>(id);
     }
+
+
+    static public Party Parse(string uid) {
+      return BaseObject.ParseKey<Party>(uid);
+    }
+
 
     static public Party Empty {
       get {
         return BaseObject.ParseEmpty<HumanParty>();
       }
     }
+
 
     static public FixedList<Party> GetList(ObjectTypeInfo partyType, string keywords) {
       DataTable table = PartyData.GetParties(partyType, keywords);
