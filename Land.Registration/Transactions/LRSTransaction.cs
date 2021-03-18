@@ -862,8 +862,13 @@ namespace Empiria.Land.Registration.Transactions {
     #region IPayable implementation
 
     public void CancelPaymentOrder() {
-      this.SetPaymentOrder(PaymentOrder.Empty);
+      this.ExtensionData.PaymentOrder = PaymentOrder.Empty;
+
       ((IPayable) this).SetFormerPaymentOrderData(FormerPaymentOrderDTO.Empty);
+
+      if (!this.IsNew) {
+        this.Save();
+      }
     }
 
 

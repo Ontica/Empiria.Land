@@ -16,8 +16,10 @@ using Empiria.Land.Registration.Transactions;
 
 using Empiria.Land.Integration.PaymentServices;
 using Empiria.Land.Transactions.Adapters;
-using Empiria.Land.Media.Adapters;
+
 using Empiria.Land.Media;
+using Empiria.Land.Media.Adapters;
+
 
 namespace Empiria.Land.Transactions.Providers {
 
@@ -26,12 +28,8 @@ namespace Empiria.Land.Transactions.Providers {
 
     private readonly bool ConnectedToPaymentOrderServices;
 
-    private readonly IPaymentService _externalService;
-
     internal PaymentServicesConnector() {
       ConnectedToPaymentOrderServices = TransactionControlData.ConnectedToPaymentOrderServices;
-
-      _externalService = GetPaymentOrderService();
     }
 
     #region Services
@@ -64,9 +62,15 @@ namespace Empiria.Land.Transactions.Providers {
 
       var payableItems = transaction.Items.PayableItems;
 
+      if (HasServicesThanCanNotBeAutoCalculated(payableItems)) {
+        return Task.FromResult(GetDisconnectedPaymentOrder(transaction));
+      }
+
       PaymentOrderRequestDto paymentOrderRequest = MapToPaymentOrderRequest(transaction, payableItems);
 
-      return _externalService.GeneratePaymentOrderFor(paymentOrderRequest);
+      IPaymentService externalService = GetPaymentOrderService();
+
+      return externalService.GeneratePaymentOrderFor(paymentOrderRequest);
     }
 
 
@@ -77,7 +81,9 @@ namespace Empiria.Land.Transactions.Providers {
 
       Assertion.AssertObject(paymentOrder, "paymentOrder");
 
-      return _externalService.GetPaymentStatus(paymentOrder);
+      IPaymentService externalService = GetPaymentOrderService();
+
+      return externalService.GetPaymentStatus(paymentOrder);
     }
 
 
@@ -90,7 +96,9 @@ namespace Empiria.Land.Transactions.Providers {
         return Task.FromResult(0m);
       }
 
-      return _externalService.CalculateFixedFee(financialConceptCode, quantity);
+      IPaymentService externalService = GetPaymentOrderService();
+
+      return externalService.CalculateFixedFee(financialConceptCode, quantity);
     }
 
 
@@ -99,7 +107,9 @@ namespace Empiria.Land.Transactions.Providers {
         return Task.FromResult(0m);
       }
 
-      return _externalService.CalculateVariableFee(financialConceptCode, taxableBase);
+      IPaymentService externalService = GetPaymentOrderService();
+
+      return externalService.CalculateVariableFee(financialConceptCode, taxableBase);
     }
 
 
@@ -168,11 +178,17 @@ namespace Empiria.Land.Transactions.Providers {
 
     #region Helper methods
 
+
+    static private bool HasServicesThanCanNotBeAutoCalculated(FixedList<LRSTransactionItem> payableItems) {
+      return payableItems.CountAll(x => !x.TreasuryCode.Autocalculated) > 0;
+    }
+
+
     static private IPaymentService GetPaymentOrderService() {
       Type type = ObjectFactory.GetType("SIT.Finanzas.Connector",
                                         "Empiria.Zacatecas.Integration.SITFinanzasConnector.PaymentService");
 
-      string baseAddress = "http://10.113.5.187:8080/sit-ingresos/api/";
+      string baseAddress = ConfigurationData.GetString("PaymentOrderService.BaseAddress");
 
       return (IPaymentService) ObjectFactory.CreateObject(type,
                                                           new Type[] { typeof(String) },

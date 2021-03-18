@@ -44,6 +44,12 @@ namespace Empiria.Land.Registration.Transactions {
 
     #endregion Constructors and parsers
 
+    public bool Autocalculated {
+      get {
+        return base.ExtendedDataField.Get("Autocalculated", false);
+      }
+    }
+
     public string FinancialConceptCode {
       get {
         return base.ExtendedDataField.Get("FinancialConcept", String.Empty);
@@ -61,6 +67,7 @@ namespace Empiria.Land.Registration.Transactions {
         return base.ExtendedDataField.Get("Unit", Unit.Empty);
       }
     }
+
   } // class LRSLawArticle
 
 } // namespace Empiria.Land.Registration.Transactions

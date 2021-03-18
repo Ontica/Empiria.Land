@@ -127,15 +127,15 @@ namespace Empiria.Land.Transactions.UseCases {
       //                 transaction.PaymentOrder.Total >= paymentFields.Total,
       //                $"Payment total must be less or equal than payment order total.");
 
-      var connector = new PaymentServicesConnector();
+      //var connector = new PaymentServicesConnector();
 
-      string status = await connector.GetPaymentStatus(transaction.PaymentOrder);
+      //string status = await connector.GetPaymentStatus(transaction.PaymentOrder);
 
-      paymentFields.Status = status;
+      //paymentFields.Status = status;
 
       transaction.SetPayment(paymentFields);
 
-      return TransactionDtoMapper.Map(transaction);
+      return await Task.FromResult(TransactionDtoMapper.Map(transaction));
     }
 
     #endregion Use cases
