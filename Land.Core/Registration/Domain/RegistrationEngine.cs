@@ -42,7 +42,7 @@ namespace Empiria.Land.Registration {
       var fields = new RecordingTaskFields();
 
       fields.RecordingTaskType = MapToRecordingTaskType(command.Type);
-      fields.RecordingDocumentUID = _recordingDocument.UID;
+      fields.RecordingDocumentUID = _recordingDocument.GUID;
       fields.RecordingActTypeUID = command.Payload.RecordingActTypeUID;
       fields.RecordableSubjectUID = command.Payload.RecordableSubjectUID;
 

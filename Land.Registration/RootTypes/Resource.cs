@@ -33,8 +33,13 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public Resource Parse(string uid) {
-      return BaseObject.ParseKey<Resource>(uid);
+    static public Resource ParseGuid(string guid) {
+      var resource = BaseObject.TryParse<Resource>($"PropertyGUID = '{guid}'");
+
+      Assertion.AssertObject(resource,
+                             $"There is not registered a recordable subject resource with guid {guid}.");
+
+      return resource;
     }
 
 

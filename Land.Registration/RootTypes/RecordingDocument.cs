@@ -46,21 +46,26 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<RecordingDocument>(id);
     }
 
+
     static public RecordingDocument Parse(int id, bool reload) {
       return BaseObject.ParseId<RecordingDocument>(id, reload);
     }
 
-    static public RecordingDocument Parse(string uid) {
-      return BaseObject.ParseKey<RecordingDocument>(uid);
-    }
 
     static public RecordingDocument ParseGuid(string guid) {
-      return BaseObject.TryParse<RecordingDocument>($"DocumentGUID = '{guid}'");
+      var recordingDocument = BaseObject.TryParse<RecordingDocument>($"DocumentGUID = '{guid}'");
+
+      Assertion.AssertObject(recordingDocument,
+                             $"There is not registered a recording document with guid '{guid}'.");
+
+      return recordingDocument;
     }
+
 
     static public RecordingDocument TryParse(string documentUID, bool reload = false) {
       return BaseObject.TryParse<RecordingDocument>($"DocumentUID = '{documentUID }'", reload);
     }
+
 
     static public RecordingDocument TryParse(int id, bool reload = false) {
       return BaseObject.TryParse<RecordingDocument>($"DocumentId = {id}", reload);
@@ -76,17 +81,21 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     static public RecordingDocument TryParseForInstrument(int instrumentId) {
       return BaseObject.TryParse<RecordingDocument>($"InstrumentId = {instrumentId}", true);
     }
+
 
     static public RecordingDocument Empty {
       get { return BaseObject.ParseEmpty<RecordingDocument>(); }
     }
 
+
     static public FixedList<RecordingDocument> SearchClosed(string filter, string keywords = "") {
       return DocumentsData.SearchClosedDocuments(filter, keywords);
     }
+
 
     public static RecordingDocument CreateFromInstrument(int instrumentId,
                                                          int instrumentTypeId,
@@ -100,6 +109,7 @@ namespace Empiria.Land.Registration {
 
       return doc;
     }
+
 
     #endregion Constructors and parsers
 
@@ -309,7 +319,7 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     /// <summary>Adds a recording act to the document's recording acts collection.</summary>
-    /// <param name="recordingAct">The item to be added to the end of the RecordingActs collection.</param>
+    /// <param name="recordingAct">The item to be added at the end of the RecordingActs collection.</param>
     /// <returns> The recording act's index inside the RecordingActs collection.</returns>
     internal int AddRecordingAct(RecordingAct recordingAct) {
       Assertion.AssertObject(recordingAct, "recordingAct");

@@ -39,7 +39,12 @@ namespace Empiria.Land.Certification {
 
 
     static public Certificate ParseGuid(string guid) {
-      return BaseObject.TryParse<Certificate>($"CertificateGUID = '{guid}'");
+      var certificate = BaseObject.TryParse<Certificate>($"CertificateGUID = '{guid}'");
+
+      Assertion.AssertObject(certificate,
+                             $"There is not registered a certificate with guid {guid}.");
+
+      return certificate;
     }
 
 

@@ -64,11 +64,12 @@ namespace Empiria.Land.Registration {
       Assertion.AssertObject(fields, "fields");
 
       this.RecordingTaskType = fields.RecordingTaskType;
-      this.Document = RecordingDocument.Parse(fields.RecordingDocumentUID);
+      this.Document = RecordingDocument.ParseGuid(fields.RecordingDocumentUID);
+
       this.RecordingActType = RecordingActType.Parse(fields.RecordingActTypeUID);
 
       if (fields.RecordableSubjectUID.Length != 0) {
-        this.PrecedentProperty = Resource.Parse(fields.RecordableSubjectUID);
+        this.PrecedentProperty = Resource.ParseGuid(fields.RecordableSubjectUID);
       }
     }
 
