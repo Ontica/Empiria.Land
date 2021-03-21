@@ -55,6 +55,7 @@ namespace Empiria.Land.Registration {
       //this.FullName = recorderOffice.Alias + " " + this.Parent.BuildChildFullName(recordingBookTag);
     }
 
+
     static public RecordingBook Parse(int id) {
       return BaseObject.ParseId<RecordingBook>(id);
     }
@@ -78,9 +79,19 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    static public FixedList<RecordingBook> GetList(string filter, string sort = "BookAsText") {
+    static public FixedList<RecordingBook> GetList(string filter, string sort = "BookNo, BookAsText") {
       return RecordingBooksData.GetRecordingBooks(filter, sort);
     }
+
+
+    public static FixedList<RecordingBook> GetList(RecorderOffice recorderOffice,
+                                                   RecordingSection recordingSection,
+                                                   string keywords) {
+      return RecordingBooksData.GetRecordingBooksInSection(recorderOffice,
+                                                           recordingSection,
+                                                           keywords);
+    }
+
 
     #endregion Constructors and parsers
 

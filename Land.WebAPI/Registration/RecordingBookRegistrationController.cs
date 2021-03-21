@@ -33,6 +33,23 @@ namespace Empiria.Land.Registration.WebApi {
     }
 
 
+    [HttpGet]
+    [Route("v5/land/registration/recorder-offices/{recorderOfficeUID:guid}/" +
+           "recording-sections/{recordingSectionUID}/recording-books")]
+    public CollectionModel GetRecordingBooksList([FromUri] string recorderOfficeUID,
+                                                 [FromUri] string recordingSectionUID,
+                                                 [FromUri] string keywords = "") {
+
+      using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> recordingBooks = usecases.GetRecordingBooksList(recorderOfficeUID,
+                                                                                  recordingSectionUID,
+                                                                                  keywords);
+
+        return new CollectionModel(this.Request, recordingBooks);
+      }
+    }
+
+
     [HttpPost]
     [Route("v5/land/registration/{instrumentRecordingUID:guid}/book-entries/create-next-book-entry")]
     public SingleObjectModel CreateNextBookEntry([FromUri] string instrumentRecordingUID,

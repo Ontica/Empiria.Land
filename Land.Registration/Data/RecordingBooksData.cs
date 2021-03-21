@@ -134,12 +134,17 @@ namespace Empiria.Land.Data {
 
 
     static public FixedList<RecordingBook> GetRecordingBooksInSection(RecorderOffice recorderOffice,
-                                                                      RecordingSection sectionType) {
+                                                                      RecordingSection sectionType,
+                                                                      string keywords = "") {
       string filter = "RecorderOfficeId = " + recorderOffice.Id.ToString() + " AND " +
                       "RecordingSectionId = " + sectionType.Id.ToString();
 
+      if (!String.IsNullOrWhiteSpace(keywords)) {
+        filter += " AND " + SearchExpression.ParseAndLike("BookKeywords", keywords);
+      }
+
       string sql = "SELECT * FROM LRSPhysicalBooks" +
-                    GeneralDataOperations.GetFilterSortSqlString(filter, "BookAsText");
+                    GeneralDataOperations.GetFilterSortSqlString(filter, "BookNo, BookAsText");
 
       return DataReader.GetFixedList<RecordingBook>(DataOperation.Parse(sql));
     }

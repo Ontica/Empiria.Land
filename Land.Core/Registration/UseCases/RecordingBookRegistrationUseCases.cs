@@ -43,6 +43,24 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
+    public FixedList<NamedEntityDto> GetRecordingBooksList(string recorderOfficeUID,
+                                                           string recordingSectionUID,
+                                                           string keywords) {
+      Assertion.AssertObject(recorderOfficeUID, "recorderOfficeUID");
+      Assertion.AssertObject(recordingSectionUID, "recordingSectionUID");
+
+      keywords = keywords ?? string.Empty;
+
+      var recorderOffice = RecorderOffice.Parse(recorderOfficeUID);
+      var recordingSection = RecordingSection.Parse(recordingSectionUID);
+
+
+      FixedList<RecordingBook> list = RecordingBook.GetList(recorderOffice, recordingSection, keywords);
+
+      return new FixedList<NamedEntityDto>(list.Select(x => new NamedEntityDto(x.UID, x.BookNumber)));
+    }
+
+
     public InstrumentRecordingDto CreateNextBookEntry(string instrumentRecordingUID,
                                                       RecordingBookEntryFields fields) {
       Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
