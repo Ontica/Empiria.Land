@@ -105,14 +105,15 @@ namespace Empiria.Land.Providers {
 
 
     static private string CreateAssociationUID() {
-      string temp = "SC-" + PREFIX + "-";
+      string temp = "PM-" + PREFIX + "-";
 
-      temp += EmpiriaMath.GetRandomCharacter(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomCharacter(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
+      temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
+      temp += "-";
       temp += EmpiriaMath.GetRandomDigit(temp);
+      temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);
 
       int hashCode = 0;
@@ -183,14 +184,15 @@ namespace Empiria.Land.Providers {
 
 
     static private string CreateNoPropertyResourceUID() {
-      string temp = "DC-" + PREFIX + "-";
+      string temp = "RD-" + PREFIX + "-";
 
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomCharacter(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
+      temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
+      temp += "-";
       temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
+      temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);
 
       int hashCode = 0;
@@ -209,15 +211,14 @@ namespace Empiria.Land.Providers {
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
       temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter();
+      temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
+      temp += "-";
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomCharacter(temp);
+      temp += EmpiriaMath.GetRandomDigit(temp);
+      temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);
 
       int hashCode = 0;
@@ -226,7 +227,7 @@ namespace Empiria.Land.Providers {
       }
       temp += GetChecksumCharacterCode(hashCode);
 
-      return temp.Substring(0, 4) + "-" + temp.Substring(4, 4) + "-" + temp.Substring(8, 4) + "-" + temp.Substring(12, 4);
+      return temp;
     }
 
 
@@ -259,7 +260,7 @@ namespace Empiria.Land.Providers {
     #region Private methods
 
     static private string GetChecksumCharacterCode(int hashCode) {
-      string hashCodeConvertionRule = "NAXMT1C5WZ7J3HE489RLGV6F2PUQKYD0BS";
+      string hashCodeConvertionRule = "FSKB8VANXM1TUCR9PG5WLZEH24QYD73J";
 
       return hashCodeConvertionRule.Substring(hashCode % hashCodeConvertionRule.Length, 1);
     }
