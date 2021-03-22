@@ -60,6 +60,12 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<RecordingBook>(id);
     }
 
+
+    static public RecordingBook Parse(string uid) {
+      return BaseObject.ParseKey<RecordingBook>(uid);
+    }
+
+
     static public RecordingBook Empty {
       get { return BaseObject.ParseEmpty<RecordingBook>(); }
     }
