@@ -25,6 +25,12 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<RecordingActTypeCategory>(id);
     }
 
+
+    static public RecordingActTypeCategory Parse(string uid) {
+      return BaseObject.ParseKey<RecordingActTypeCategory>(uid);
+    }
+
+
     static public RecordingActTypeCategory Empty {
       get { return BaseObject.ParseEmpty<RecordingActTypeCategory>(); }
     }

@@ -67,6 +67,13 @@ namespace Empiria.Land.Registration {
     }
 
 
+    static public FixedList<string> RealEstatePartitionKinds() {
+      var kindsList = GeneralList.Parse("Land.RealEstate.Partition.Kinds");
+
+      return kindsList.GetItems<string>();
+    }
+
+
     static public new RealEstate Empty {
       get {
         return BaseObject.ParseEmpty<RealEstate>();

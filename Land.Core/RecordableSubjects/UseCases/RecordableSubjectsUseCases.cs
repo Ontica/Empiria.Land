@@ -50,6 +50,11 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
     }
 
 
+    public FixedList<string> RealEstatePartitionKinds() {
+      return RealEstate.RealEstatePartitionKinds();
+    }
+
+
     public FixedList<NamedEntityDto> RealEstateLotSizeUnits() {
       var units = RealEstate.LotSizeUnits();
 

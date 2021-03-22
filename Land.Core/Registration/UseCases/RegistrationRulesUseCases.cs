@@ -44,6 +44,16 @@ namespace Empiria.Land.Registration.UseCases {
       return RecordingActTypeMapper.Map(recordingActTypesList);
     }
 
+
+    public FixedList<NamedEntityDto> RecordingActTypesList(string listUID) {
+      var category = RecordingActTypeCategory.Parse(listUID);
+
+      var list = category.RecordingActTypes;
+
+      return new FixedList<NamedEntityDto>(list.Select(x => new NamedEntityDto(x.UID, x.DisplayName)));
+    }
+
+
     #endregion Use cases
 
   }  // class RegistrationRulesUseCases

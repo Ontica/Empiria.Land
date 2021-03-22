@@ -59,6 +59,18 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
 
 
     [HttpGet]
+    [Route("v5/land/registration/real-estate-partition-kinds")]
+    public CollectionModel RealEstatePartitionKinds() {
+
+      using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
+        FixedList<string> realEstateKinds = usecases.RealEstatePartitionKinds();
+
+        return new CollectionModel(this.Request, realEstateKinds);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v5/land/registration/real-estate-lot-size-units")]
     public CollectionModel RealEstateLotSizeUnits() {
 
