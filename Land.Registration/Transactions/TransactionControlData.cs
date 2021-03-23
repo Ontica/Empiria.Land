@@ -211,6 +211,22 @@ namespace Empiria.Land.Transactions {
       }
     }
 
+    public bool CanPrintControlVoucher {
+      get {
+        if (IsSubmitted) {
+          return false;
+        }
+        if (_transaction.IsFeeWaiverApplicable) {
+          return true;
+        }
+        if (_transaction.HasPaymentOrder &&
+            _transaction.PaymentOrder.Issuer != "Empiria.Land") {
+          return true;
+        }
+        return false;
+      }
+    }
+
 
     public bool CanRegisterAntecedent {
       get {

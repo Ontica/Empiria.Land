@@ -60,6 +60,10 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
+    public MediaData ControlVoucher {
+      get; internal set;
+    }
+
     public PaymentOrderDto PaymentOrder {
       get; internal set;
     }

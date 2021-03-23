@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="empiria.config.json" />
+    <Content Include="receipts\control.voucher.aspx" />
     <Content Include="receipts\payment.order.aspx" />
     <Content Include="receipts\transaction.receipt.aspx" />
     <Content Include="recording-stamps\physical-recording.stamp.aspx" />
@@ -150,6 +151,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.cs" />
+    <Compile Include="receipts\control.voucher.aspx.cs">
+      <DependentUpon>control.voucher.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="receipts\control.voucher.aspx.designer.cs">
+      <DependentUpon>control.voucher.aspx</DependentUpon>
+    </Compile>
     <Compile Include="receipts\payment.order.aspx.cs">
       <DependentUpon>payment.order.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

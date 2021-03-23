@@ -43,6 +43,7 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.FilingOffice = transaction.RecorderOffice.MapToNamedEntity();
       dto.InstrumentDescriptor = transaction.DocumentDescriptor;
       dto.RequestedServices = GetRequestedServicesDtoArray(transaction);
+      dto.ControlVoucher = GetControlVoucherDto(transaction);
       dto.PaymentOrder = GetPaymentOrderDto(transaction);
       dto.Payment = GetPaymentDto(transaction);
       dto.SubmissionReceipt = GetSubmissionReceiptDto(transaction);
@@ -94,7 +95,10 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.Can.Edit = controlData.CanEdit;
       dto.Can.Delete = controlData.CanDelete;
       dto.Can.Submit = controlData.CanSubmit;
+
       dto.Can.PrintSubmissionReceipt = controlData.CanPrintSubmissionReceipt;
+      dto.Can.PrintControlVoucher = controlData.CanPrintControlVoucher;
+
       dto.Can.EditServices = controlData.CanEditServices;
       dto.Can.GeneratePaymentOrder = controlData.CanGeneratePaymentOrder;
       dto.Can.CancelPaymentOrder = controlData.CanCancelPaymentOrder;
@@ -110,6 +114,18 @@ namespace Empiria.Land.Transactions.Adapters {
 
       return dto;
     }
+
+
+    static private MediaData GetControlVoucherDto(LRSTransaction transaction) {
+      if (!transaction.ControlData.CanPrintControlVoucher) {
+        return null;
+      }
+
+      var mediaBuilder = new LandMediaBuilder(LandMediaContent.TransactionControlVoucher, transaction);
+
+      return mediaBuilder.GetMediaDto();
+    }
+
 
     static private PaymentFields GetPaymentDto(LRSTransaction transaction) {
       if (!transaction.HasPayment) {

@@ -38,6 +38,10 @@ namespace Empiria.Land.Media {
     internal MediaData GetMediaDto(string param = "") {
       switch (this.MediaContent) {
 
+        case LandMediaContent.TransactionControlVoucher:
+          return new MediaData("text/html",
+                                $"{MEDIA_URL}/receipts/control.voucher.aspx?uid={Transaction.UID}");
+
         case LandMediaContent.TransactionPaymentOrder:
           return new MediaData("text/html",
                                 $"{MEDIA_URL}/receipts/payment.order.aspx?uid={Transaction.UID}");

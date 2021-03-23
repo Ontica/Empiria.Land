@@ -61,6 +61,10 @@ namespace Empiria.Land.Transactions.Adapters {
       get; internal set;
     }
 
+    public bool PrintControlVoucher {
+      get; internal set;
+    }
+
     public bool PrintSubmissionReceipt {
       get; internal set;
     }

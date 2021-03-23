@@ -15,6 +15,8 @@ namespace Empiria.Land.Media.Adapters {
 
     Unknown,
 
+    TransactionControlVoucher,
+
     TransactionSubmissionReceipt,
 
     TransactionPaymentOrder,
