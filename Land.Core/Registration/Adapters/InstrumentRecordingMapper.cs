@@ -23,7 +23,6 @@ namespace Empiria.Land.Registration.Adapters {
   /// <summary>Methods to map legal instruments to InstrumentDto objects.</summary>
   static internal partial class InstrumentRecordingMapper {
 
-
     static internal InstrumentRecordingDto Map(RecordingDocument instrumentRecording,
                                                LRSTransaction transaction) {
       var dto = new InstrumentRecordingDto();
@@ -100,28 +99,19 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    static private RecordingActDto GetRecordingActDto(RecordingAct x) {
+    static private RecordingActDto GetRecordingActDto(RecordingAct recordingAct) {
       var dto = new RecordingActDto();
 
-      dto.UID = x.UID;
-      dto.Name = x.RecordingActType.DisplayName;
-      dto.RecordableSubject = GetRecordableSubjectDto(x.Resource);
+      dto.UID = recordingAct.UID;
+      dto.Name = recordingAct.RecordingActType.DisplayName;
+      dto.RecordableSubject = RecordableSubjectsMapper.Map(recordingAct.Resource);
+      dto.RecordableSubject.RecordingContextUID = GetRecordingContext(recordingAct);
+
       dto.Antecedent = "Sin antecedente registral";
 
       return dto;
     }
 
-    private static RecordableSubjectShortModel GetRecordableSubjectDto(Resource resource) {
-      var dto = new RecordableSubjectShortModel();
-
-      dto.UID = resource.GUID;
-      dto.Type = resource.GetEmpiriaType().NamedKey;
-      dto.Name = resource.Name;
-      dto.ElectronicID = resource.UID;
-      dto.Kind = resource.Kind;
-
-      return dto;
-    }
 
     static private FixedList<RecordingActDto> GetRecordingActsListDto(RecordingDocument instrumentRecording) {
       var list = instrumentRecording.RecordingActs;
@@ -159,6 +149,14 @@ namespace Empiria.Land.Registration.Adapters {
       var mappedItems = list.Select((x) => GetRecordingBookEntryDto(x, instrument.GetTransaction()));
 
       return new FixedList<RecordingBookEntryDto>(mappedItems);
+    }
+
+
+    static private RecordingContextDto GetRecordingContext(RecordingAct recordingAct) {
+      return new RecordingContextDto {
+        InstrumentUID = recordingAct.Document.UID,
+        RecordingActUID = recordingAct.UID
+      };
     }
 
     #endregion Private methods

@@ -22,10 +22,9 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     }
 
-    public RecordableSubjectShortModel RecordableSubject {
+    public RecordableSubjectDto RecordableSubject {
       get; internal set;
     }
-
 
     public string Antecedent {
       get; internal set;
