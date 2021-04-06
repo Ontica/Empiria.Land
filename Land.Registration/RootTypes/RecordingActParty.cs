@@ -157,7 +157,7 @@ namespace Empiria.Land.Registration {
         switch (this.Status) {
           case RecordableObjectStatus.Obsolete:
             return "No vigente";
-          case RecordableObjectStatus.NoLegible:
+          case RecordableObjectStatus.NotLegible:
             return "No legible";
           case RecordableObjectStatus.Incomplete:
             return "Incompleto";

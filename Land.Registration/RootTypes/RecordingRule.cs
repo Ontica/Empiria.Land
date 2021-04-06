@@ -78,7 +78,7 @@ namespace Empiria.Land.Registration {
         this.ResourceTypeName = json.Get<string>("ResourceTypeName", String.Empty);
         this.DynamicActNamePattern = json.Get<string>("DynamicActNamePattern", String.Empty);
 
-        this.EditRealEstate = json.Get<bool>("EditRealEstate", false);
+        this.EditResource = json.Get<bool>("EditRealEstate", false);
         this.EditAppraisalAmount = json.Get<bool>("EditAppraisalAmount", false);
         this.EditOperationAmount = json.Get<bool>("EditOperationAmount", false);
         this.AllowNoParties = json.Get<bool>("AllowNoParties", false);
@@ -116,7 +116,7 @@ namespace Empiria.Land.Registration {
       json.Add("SpecialCase", this.SpecialCase);
       json.Add("IsActive", this.IsActive);
 
-      json.Add("EditRealEstate", this.EditRealEstate);
+      json.Add("EditRealEstate", this.EditResource);
       json.Add("EditAppraisalAmount", this.EditAppraisalAmount);
       json.Add("EditOperationAmount", this.EditOperationAmount);
       json.Add("AllowNoParties", this.AllowNoParties);
@@ -224,7 +224,7 @@ namespace Empiria.Land.Registration {
       private set;
     } = false;
 
-    public bool EditRealEstate {
+    public bool EditResource {
       get;
       private set;
     } = false;

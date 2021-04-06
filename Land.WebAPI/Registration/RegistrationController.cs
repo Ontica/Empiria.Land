@@ -9,10 +9,12 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System.Web.Http;
 
+using Empiria.Json;
 using Empiria.WebApi;
 
 using Empiria.Land.Registration.Adapters;
 using Empiria.Land.Registration.UseCases;
+using Empiria.Land.RecordableSubjects.Adapters;
 
 namespace Empiria.Land.Registration.WebApi {
 
@@ -20,18 +22,6 @@ namespace Empiria.Land.Registration.WebApi {
   public class RegistrationController : WebApiController {
 
     #region Web Apis
-
-
-    [HttpGet]
-    [Route("v5/land/registration/recording-acts/{listUID}")]
-    public SingleObjectModel GetRecordingActsList([FromUri] string listUID) {
-
-      using (var usecases = RegistrationRulesUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> recordingActTypes = usecases.RecordingActTypesList(listUID);
-
-        return new SingleObjectModel(this.Request, recordingActTypes);
-      }
-    }
 
 
     [HttpPost]
@@ -64,7 +54,53 @@ namespace Empiria.Land.Registration.WebApi {
     }
 
 
+    [HttpPatch, HttpPut]
+    [Route("v5/land/registration/{instrumentRecordingUID:guid}/" +
+           "recording-acts/{recordingActUID:guid}/update-recordable-subject")]
+    public SingleObjectModel UpdateRecordableSubject([FromUri] string instrumentRecordingUID,
+                                                     [FromUri] string recordingActUID,
+                                                     [FromBody] object body) {
+
+      base.RequireBody(body);
+
+      using (var usecases = RegistrationUseCases.UseCaseInteractor()) {
+        RecordableSubjectFields recordableSubjectFields = MapToRecordableSubjectFields(body);
+
+        InstrumentRecordingDto instrumentRecording =
+                                      usecases.UpdateRecordableSubject(instrumentRecordingUID,
+                                                                       recordingActUID,
+                                                                       recordableSubjectFields);
+
+        return new SingleObjectModel(this.Request, instrumentRecording);
+      }
+    }
+
     #endregion Web Apis
+
+    #region Helper methods
+
+    private RecordableSubjectFields MapToRecordableSubjectFields(object body) {
+      var json = base.GetJsonFromBody(body);
+
+      var subjectType = json.Get<RecordableSubjectType>("type", RecordableSubjectType.None);
+
+      switch (subjectType) {
+        case RecordableSubjectType.Association:
+          return JsonConverter.ToObject<AssociationFields>(json.ToString());
+
+        case RecordableSubjectType.NoProperty:
+          return JsonConverter.ToObject<NoPropertyFields>(json.ToString());
+
+        case RecordableSubjectType.RealEstate:
+          return JsonConverter.ToObject<RealEstateFields>(json.ToString());
+
+        default:
+          throw Assertion.AssertNoReachThisCode($"Unrecognized recordable subject type {subjectType}.");
+      }
+
+    }
+
+    #endregion Helper methods
 
   }  // class RegistrationController
 

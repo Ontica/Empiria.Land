@@ -21,7 +21,6 @@ namespace Empiria.Land.Registration.WebApi {
 
     #region Web Apis
 
-
     [HttpGet]
     [Route("v5/land/registration/{instrumentUID:guid}/recording-act-types")]
     public CollectionModel GetInstrumentRecordingActTypes([FromUri] string instrumentUID) {
@@ -32,6 +31,19 @@ namespace Empiria.Land.Registration.WebApi {
         return new CollectionModel(this.Request, groups);
       }
     }
+
+
+    [HttpGet]
+    [Route("v5/land/registration/recording-act-types/{listUID}")]
+    public SingleObjectModel GetRecordingActTypesList([FromUri] string listUID) {
+
+      using (var usecases = RegistrationRulesUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> recordingActTypes = usecases.RecordingActTypesList(listUID);
+
+        return new SingleObjectModel(this.Request, recordingActTypes);
+      }
+    }
+
 
     #endregion Web Apis
 

@@ -160,6 +160,7 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+
     int IProtected.CurrentDataIntegrityVersion {
       get {
         return 1;
@@ -197,7 +198,7 @@ namespace Empiria.Land.Registration {
         switch (this.Status) {
           case RecordableObjectStatus.Obsolete:
             return "No vigente";
-          case RecordableObjectStatus.NoLegible:
+          case RecordableObjectStatus.NotLegible:
             return "No legible";
           case RecordableObjectStatus.Incomplete:
             return "Incompleto";
@@ -231,14 +232,17 @@ namespace Empiria.Land.Registration {
       return (!this.Tract.FirstRecordingAct.PhysicalRecording.IsEmptyInstance);
     }
 
+
     public virtual void AssertCanBeClosed() {
 
     }
+
 
     public void AssertCanBeAddedTo(RecordingDocument document, RecordingActType newRecordingActType) {
       this.AssertIsLastInPrelationOrder(document, newRecordingActType);
       this.AssertChainedRecordingAct(document, newRecordingActType);
     }
+
 
     private void AssertChainedRecordingAct(RecordingDocument document, RecordingActType newRecordingActType) {
       if (document.IssueDate < DateTime.Parse("2014-01-01") ||
@@ -303,6 +307,7 @@ namespace Empiria.Land.Registration {
                             newRecordingActType.DisplayName, this.UID, chainedRecordingActType.DisplayName);
     }
 
+
     public void AssertIsLastInPrelationOrder(RecordingDocument document, RecordingActType newRecordingActType) {
       // Cancelation acts don't follow prelation rules
       if (newRecordingActType.IsCancelationActType) {
@@ -324,6 +329,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     internal void AssertIsStillAlive(RecordingDocument document) {
       Assertion.Assert(this.Status != RecordableObjectStatus.Deleted,
                        "El folio real '{0}' está marcado como eliminado.", this.UID);
@@ -336,7 +342,9 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     abstract protected string GenerateResourceUID();
+
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
@@ -348,9 +356,11 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(this.UID.Length != 0, "Property UniqueIdentifier can't be an empty string.");
     }
 
+
     protected override void OnSave() {
       Assertion.AssertNoReachThisCode();
     }
+
 
     public string QRCodeSecurityHash() {
       if (!this.IsNew) {
@@ -360,6 +370,10 @@ namespace Empiria.Land.Registration {
       } else {
         return String.Empty;
       }
+    }
+
+    public void SetStatus(RecordableObjectStatus status) {
+      this.Status = status;
     }
 
     internal void TryDelete() {

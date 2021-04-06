@@ -316,6 +316,16 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
+    public bool IsEditable {
+      get {
+        return (this.Status != RecordableObjectStatus.Registered &&
+                this.Status != RecordableObjectStatus.Closed &&
+                this.Document.Status != RecordableObjectStatus.Closed);
+      }
+    }
+
+
     public bool IsHistoric {
       get {
         return !this.PhysicalRecording.IsEmptyInstance;

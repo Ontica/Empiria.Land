@@ -393,10 +393,17 @@ namespace Empiria.Land.Registration {
     }
 
 
+    public RecordingAct GetRecordingAct(string recordingActUID) {
+      RecordingAct recordingAct = this.RecordingActs.Find(x => x.UID == recordingActUID);
+
+      Assertion.AssertObject(recordingAct, "recordingAct");
+
+      return recordingAct;
+    }
+
+
     public List<Contact> GetRecordingOfficials() {
       var recordingOfficials = new List<Contact>();
-
-      string temp = String.Empty;
 
       var recordingActs = this.RecordingActs;
       for (int i = 0; i < recordingActs.Count; i++) {

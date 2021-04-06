@@ -8,12 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.Services;
 
-using Empiria.Land.Instruments;
-using Empiria.Land.Instruments.Adapters;
-
 using Empiria.Land.Registration.Adapters;
+using Empiria.Land.RecordableSubjects.Adapters;
 
 namespace Empiria.Land.Registration.UseCases {
 
@@ -48,13 +47,13 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public InstrumentRecordingDto RemoveRecordingAct(string instrumentRecordingUID,
-                                                            string recordingActUID) {
+                                                     string recordingActUID) {
       Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
       Assertion.AssertObject(recordingActUID, "recordingActUID");
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
-      var recordingAct = RecordingAct.Parse(recordingActUID);
+      RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
 
       instrumentRecording.RemoveRecordingAct(recordingAct);
 
@@ -62,6 +61,25 @@ namespace Empiria.Land.Registration.UseCases {
                                            instrumentRecording.GetTransaction());
     }
 
+
+    public InstrumentRecordingDto UpdateRecordableSubject(string instrumentRecordingUID,
+                                                          string recordingActUID,
+                                                          RecordableSubjectFields fields) {
+      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.AssertObject(recordingActUID, "recordingActUID");
+      Assertion.AssertObject(fields, "fields");
+
+      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+
+      RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
+
+      var updater = new RecordableSubjectUpdater();
+
+      updater.Update(recordingAct, fields);
+
+      return InstrumentRecordingMapper.Map(instrumentRecording,
+                                           instrumentRecording.GetTransaction());
+    }
 
     #endregion Command Use cases
 

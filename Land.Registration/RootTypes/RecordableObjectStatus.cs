@@ -23,7 +23,7 @@ namespace Empiria.Land.Registration {
 
     /// <summary>Element exists and it was noted down, but it can't be recorded because its source
     /// information is no legible. Useful when the data capture is drived by document images.</summary>
-    NoLegible = 'L',
+    NotLegible = 'L',
 
 
     /// <summary>The recordable element exists and it was noted down, but is not worth
