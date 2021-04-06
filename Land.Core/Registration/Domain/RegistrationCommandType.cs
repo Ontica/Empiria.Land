@@ -8,6 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Land.RecordableSubjects.Adapters;
+using Empiria.Land.Registration.Adapters;
+
 namespace Empiria.Land.Registration {
 
   public enum RegistrationCommandType {
@@ -72,6 +75,81 @@ namespace Empiria.Land.Registration {
           throw Assertion.AssertNoReachThisCode($"Unhandled registration command type '{commandType}'.");
       }
     }
+
+
+    static internal RegistrationCommandRuleDto Rules(this RegistrationCommandType commandType) {
+      switch (commandType) {
+        case RegistrationCommandType.Undefined:
+          return new RegistrationCommandRuleDto();
+
+
+        case RegistrationCommandType.CreateAssociation:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.Association
+          };
+
+        case RegistrationCommandType.SelectAssociation:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.Association,
+            SelectSubject = true
+          };
+
+        case RegistrationCommandType.SelectAssociationAct:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.Association,
+            SelectSubject = true,
+            SelectTargetAct = true
+          };
+
+        case RegistrationCommandType.CreateNoProperty:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.NoProperty
+          };
+
+        case RegistrationCommandType.SelectNoProperty:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.NoProperty,
+            SelectSubject = true
+          };
+
+
+        case RegistrationCommandType.SelectNoPropertyAct:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.NoProperty,
+            SelectSubject = true,
+            SelectTargetAct = true
+          };
+
+        case RegistrationCommandType.CreateRealEstate:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.RealEstate
+         };
+
+        case RegistrationCommandType.SelectRealEstate:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.RealEstate,
+            SelectSubject = true
+          };
+
+        case RegistrationCommandType.SelectRealEstatePartition:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.RealEstate,
+            SelectSubject = true,
+            NewPartition = true
+          };
+
+        case RegistrationCommandType.SelectRealEstateAct:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.RealEstate,
+            SelectSubject = true,
+            SelectTargetAct = true
+          };
+
+        default:
+          throw Assertion.AssertNoReachThisCode($"Unhandled registration command type '{commandType}'.");
+      }
+    }
+
 
   }  // class RegistrationCommandTypeExtensions
 

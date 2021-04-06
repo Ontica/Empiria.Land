@@ -39,7 +39,7 @@ namespace Empiria.Land.Registration.Adapters {
       return new RecordingActTypeDto {
         UID = recordingActType.UID,
         Name = recordingActType.DisplayName,
-        SubjectCommands = MapSubjectCommands(recordingActType.SubjectCommandsList())
+        RegistrationCommands = MapRegistrationCommandTypesList(recordingActType.RegistrationCommandTypes())
       };
     }
 
@@ -48,13 +48,17 @@ namespace Empiria.Land.Registration.Adapters {
 
     #region Helper methods
 
-    static private FixedList<NamedEntityDto> MapSubjectCommands(FixedList<RegistrationCommandType> list) {
-      return new FixedList<NamedEntityDto>(list.Select((x) => MapSubjectCommand(x)));
+    static private FixedList<RegistrationCommandDto> MapRegistrationCommandTypesList(FixedList<RegistrationCommandType> list) {
+      return new FixedList<RegistrationCommandDto>(list.Select((x) => MapRegistrationCommandType(x)));
     }
 
 
-    static private NamedEntityDto MapSubjectCommand(RegistrationCommandType commandType) {
-      return new NamedEntityDto(commandType.ToString(), commandType.Name());
+    static private RegistrationCommandDto MapRegistrationCommandType(RegistrationCommandType commandType) {
+      return new RegistrationCommandDto {
+        UID = commandType.ToString(),
+        Name = commandType.Name(),
+        Rules = commandType.Rules()
+      };
     }
 
     #endregion Helper methods

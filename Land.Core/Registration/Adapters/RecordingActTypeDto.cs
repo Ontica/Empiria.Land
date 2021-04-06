@@ -20,7 +20,7 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     }
 
-    public FixedList<NamedEntityDto> SubjectCommands {
+    public FixedList<RegistrationCommandDto> RegistrationCommands {
       get; internal set;
     }
 

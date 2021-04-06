@@ -23,9 +23,9 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     } = string.Empty;
 
 
-    public string Type {
+    public RecordableSubjectType Type {
       get; set;
-    } = string.Empty;
+    } = RecordableSubjectType.None;
 
 
     public string Name {
@@ -62,17 +62,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
 
   /// <summary>Fields input data holder for real estate.</summary>
-  public class RealEstateFields {
-
-    public string RealEstateUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string RealEstateID {
-      get; set;
-    } = string.Empty;
-
+  public class RealEstateFields : RecordableSubjectFields {
 
     public string DistrictUID {
       get; set;
@@ -100,11 +90,6 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
 
     public string Location {
-      get; set;
-    } = string.Empty;
-
-
-    public string Notes {
       get; set;
     } = string.Empty;
 

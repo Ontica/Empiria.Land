@@ -26,7 +26,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static internal FixedList<RegistrationCommandType> SubjectCommandsList(this RecordingActType recordingActType) {
+    static internal FixedList<RegistrationCommandType> RegistrationCommandTypes(this RecordingActType recordingActType) {
       var rule = recordingActType.RecordingRule;
 
       List<RegistrationCommandType> list = new List<RegistrationCommandType>();

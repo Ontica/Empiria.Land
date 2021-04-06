@@ -77,7 +77,8 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
     static private void MapCommonFields(RecordableSubjectDto dto, Resource resource) {
       dto.UID = resource.GUID;
-      dto.Type = resource.GetEmpiriaType().NamedKey;
+      dto.Type = (RecordableSubjectType) Enum.Parse(typeof(RecordableSubjectType),
+                                                    resource.GetEmpiriaType().NamedKey);
       dto.Name = resource.Name;
       dto.ElectronicID = resource.UID;
       dto.Kind = resource.Kind;

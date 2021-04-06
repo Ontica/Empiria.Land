@@ -13,6 +13,19 @@ using Empiria.DataTypes;
 
 namespace Empiria.Land.RecordableSubjects.Adapters {
 
+  public enum RecordableSubjectType {
+
+    None,
+
+    RealEstate,
+
+    Association,
+
+    NoProperty
+
+  }
+
+
   public class RecordingContextDto {
 
     public string InstrumentUID {
@@ -26,6 +39,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
   }  // class RecordingContextDto
 
 
+
   /// <summary>Output DTOs for all recordable subjects: real estate, associations
   /// and no-property subjects.</summary>
   public abstract class RecordableSubjectDto {
@@ -34,7 +48,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       get; internal set;
     }
 
-    public string Type {
+    public RecordableSubjectType Type {
       get; internal set;
     }
 
