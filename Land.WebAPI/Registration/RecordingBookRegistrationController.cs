@@ -51,6 +51,32 @@ namespace Empiria.Land.Registration.WebApi {
 
 
     [HttpGet]
+    [Route("v5/land/registration/recording-books/{recordingBookUID:guid}")]
+    public SingleObjectModel GetRecordingBook([FromUri] string recordingBookUID) {
+
+      using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
+        RecordingBookDto recordingBook = usecases.GetRecordingBook(recordingBookUID);
+
+        return new SingleObjectModel(this.Request, recordingBook);
+      }
+    }
+
+
+
+    [HttpGet]
+    [Route("v5/land/registration/recording-books/instrument-types")]
+    public CollectionModel GetInstrumentTypesForRecordingBooks() {
+
+      using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> instrumentTypes = usecases.InstrumentTypesForRecordingBooks();
+
+        return new CollectionModel(this.Request, instrumentTypes);
+      }
+    }
+
+
+
+    [HttpGet]
     [Route("v5/land/registration/recording-books/{recordingBookUID:guid}/book-entries")]
     public CollectionModel GetRecordingBookEntries([FromUri] string recordingBookUID) {
 
@@ -79,11 +105,11 @@ namespace Empiria.Land.Registration.WebApi {
 
     [HttpDelete]
     [Route("v5/land/registration/{instrumentRecordingUID:guid}/book-entries/{bookEntryUID:guid}")]
-    public SingleObjectModel RemovePhysicalRecording([FromUri] string instrumentRecordingUID,
-                                                     [FromUri] string bookEntryUID) {
+    public SingleObjectModel RemoveBookEntry([FromUri] string instrumentRecordingUID,
+                                             [FromUri] string bookEntryUID) {
       using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
         InstrumentRecordingDto instrumentRecording =
-                              usecases.RemoveBookEntry(instrumentRecordingUID, bookEntryUID);
+                                      usecases.RemoveBookEntry(instrumentRecordingUID, bookEntryUID);
 
         return new SingleObjectModel(this.Request, instrumentRecording);
       }

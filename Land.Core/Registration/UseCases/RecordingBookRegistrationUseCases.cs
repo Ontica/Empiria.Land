@@ -61,6 +61,15 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
+    public RecordingBookDto GetRecordingBook(string recordingBookUID) {
+      Assertion.AssertObject(recordingBookUID, "recordingBookUID");
+
+      var recordingBook = RecordingBook.Parse(recordingBookUID);
+
+      return RecordingBookMapper.Map(recordingBook);
+    }
+
+
     public FixedList<NamedEntityDto> GetRecordingBookEntries(string recordingBookUID) {
       Assertion.AssertObject(recordingBookUID, "recordingBookUID");
 
@@ -69,6 +78,13 @@ namespace Empiria.Land.Registration.UseCases {
       FixedList<PhysicalRecording> bookEntries = recordingBook.GetRecordings();
 
       return new FixedList<NamedEntityDto>(bookEntries.Select(x => new NamedEntityDto(x.UID, x.Number)));
+    }
+
+
+    public FixedList<NamedEntityDto> InstrumentTypesForRecordingBooks() {
+      FixedList<InstrumentType> instrumentTypes = InstrumentType.GetListForRecordingBooks();
+
+      return new FixedList<NamedEntityDto>(instrumentTypes.Select(x => new NamedEntityDto(x.UID, x.DisplayName)));
     }
 
 

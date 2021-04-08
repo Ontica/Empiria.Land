@@ -38,6 +38,14 @@ namespace Empiria.Land.Instruments {
       return InstrumentType.Parse(fullTypeName);
     }
 
+
+    internal static FixedList<InstrumentType> GetListForRecordingBooks() {
+      var listType = GeneralList.Parse("RecordingBooks.InstrumentTypes");
+
+      return listType.GetItems<InstrumentType>();
+    }
+
+
     static public InstrumentType Empty => InstrumentType.Parse("ObjectType.LegalInstrument");
 
     #endregion Constructors and parsers
@@ -79,6 +87,7 @@ namespace Empiria.Land.Instruments {
     internal Instrument CreateInstance() {
       return base.CreateObject<Instrument>();
     }
+
 
     #endregion Public methods
 

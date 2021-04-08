@@ -23,6 +23,8 @@ namespace Empiria.Land.Instruments.Adapters {
 
     DocumentoTerceros,
 
+    Resumen,
+
     Empty,
 
     All

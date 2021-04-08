@@ -29,8 +29,7 @@ namespace Empiria.Land.Registration.Adapters {
 
       Instrument instrument = Instrument.Parse(instrumentRecording.InstrumentId);
 
-      var mediaBuilder = new LandMediaBuilder(LandMediaContent.BookEntryRegistrationStamp,
-                                              transaction);
+      var mediaBuilder = new LandMediaBuilder(LandMediaContent.BookEntryRegistrationStamp);
 
       var actions = new InstrumentRecordingControlData(instrument, transaction);
 
@@ -38,12 +37,37 @@ namespace Empiria.Land.Registration.Adapters {
       dto.InstrumentRecordingID = instrumentRecording.UID;
       dto.Instrument = Map(instrument);
       dto.RecordingActs = GetRecordingActsListDto(instrumentRecording);
-      dto.BookEntries = GetRecordingBookEntriesListDto(instrument);
-      dto.StampMedia = mediaBuilder.GetMediaDto("-1");
+      dto.BookEntries = RecordingBookMapper.MapRecordingBookEntriesListDto(instrument.RecordingBookEntries);
+      dto.StampMedia = mediaBuilder.GetMediaDto("-1", transaction.Id.ToString());
       dto.TransactionUID = transaction.UID;
       dto.Actions = GetControlDataDto(actions);
 
       return dto;
+    }
+
+
+    internal static InstrumentRecordingDto Map(PhysicalRecording bookEntry) {
+      var instrument = Instrument.Parse(bookEntry.MainDocument.InstrumentId);
+
+      var transaction = bookEntry.MainDocument.GetTransaction();
+
+      var dto = new InstrumentRecordingDto();
+
+      var mediaBuilder = new LandMediaBuilder(LandMediaContent.BookEntryRegistrationStamp);
+
+      var actions = new InstrumentRecordingControlData(instrument, transaction);
+
+      dto.UID = bookEntry.MainDocument.GUID;
+      dto.InstrumentRecordingID = bookEntry.MainDocument.UID;
+      dto.Instrument = Map(instrument);
+      dto.RecordingActs = GetRecordingActsListDto(bookEntry.MainDocument);
+      // dto.BookEntries = RecordingBookMapper.MapRecordingBookEntriesListDto(instrument.RecordingBookEntries);
+      dto.StampMedia = mediaBuilder.GetMediaDto("-1", transaction.Id.ToString());
+      dto.TransactionUID = transaction.UID;
+      dto.Actions = GetControlDataDto(actions);
+
+      return dto;
+
     }
 
 
@@ -72,6 +96,7 @@ namespace Empiria.Land.Registration.Adapters {
 
       return dto;
     }
+
 
 
     #region Private methods
@@ -119,36 +144,6 @@ namespace Empiria.Land.Registration.Adapters {
       var mappedItems = list.Select((x) => GetRecordingActDto(x));
 
       return new FixedList<RecordingActDto>(mappedItems);
-    }
-
-
-    static private RecordingBookEntryDto GetRecordingBookEntryDto(PhysicalRecording bookEntry,
-                                                                  LRSTransaction transaction) {
-      var dto = new RecordingBookEntryDto();
-
-      dto.UID = bookEntry.UID;
-      dto.RecordingTime = bookEntry.RecordingTime;
-      dto.RecorderOfficeName = bookEntry.RecordingBook.RecorderOffice.Alias;
-      dto.RecordingSectionName = bookEntry.RecordingBook.RecordingSection.Name;
-      dto.VolumeNo = bookEntry.RecordingBook.BookNumber;
-      dto.RecordingNo = bookEntry.Number;
-      dto.RecordedBy = bookEntry.RecordedBy.Alias;
-
-      var mediaBuilder = new LandMediaBuilder(LandMediaContent.BookEntryRegistrationStamp,
-                                              transaction);
-
-      dto.StampMedia = mediaBuilder.GetMediaDto(bookEntry.Id.ToString());
-
-      return dto;
-    }
-
-
-    static private FixedList<RecordingBookEntryDto> GetRecordingBookEntriesListDto(Instrument instrument) {
-      var list = instrument.RecordingBookEntries;
-
-      var mappedItems = list.Select((x) => GetRecordingBookEntryDto(x, instrument.GetTransaction()));
-
-      return new FixedList<RecordingBookEntryDto>(mappedItems);
     }
 
 

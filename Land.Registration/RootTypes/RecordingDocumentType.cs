@@ -48,6 +48,8 @@ namespace Empiria.Land.Registration {
           return RecordingDocumentType.Parse(2411);
         case 2125:
           return RecordingDocumentType.Parse(2412);
+        case 2127:
+          return RecordingDocumentType.Parse(2417);
         default:
           return RecordingDocumentType.Parse(2415);
       }

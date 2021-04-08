@@ -2,35 +2,27 @@
 *                                                                                                            *
 *  Module   : Registration Services                      Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
-*  Type     : RecordingBookEntryDto                      License   : Please read LICENSE.txt file            *
+*  Type     : RecordingBookDto                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO with a recording registered in a physical book.                                     *
+*  Summary  : Output DTO for recording books and their book entries.                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.DataTypes;
-
 namespace Empiria.Land.Registration.Adapters {
 
-  public class RecordingBookEntryDto {
+  public class RecordingBookDto {
 
     public string UID {
       get; internal set;
     }
 
-
-    public DateTime RecordingTime {
+    public NamedEntityDto RecorderOffice {
       get; internal set;
     }
 
 
-    public string RecorderOfficeName {
-      get; internal set;
-    }
-
-
-    public string RecordingSectionName {
+    public NamedEntityDto RecordingSection {
       get; internal set;
     }
 
@@ -39,33 +31,16 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     }
 
-
-    public string RecordingNo {
-      get; internal set;
-    }
-
-
-    public string RecordedBy {
-      get; internal set;
-    }
-
-
-    public InstrumentRecordingDto InstrumentRecording {
-      get; internal set;
-    }
-
-
-    public RecordableObjectStatus Status {
+    public RecordingBookStatus Status {
       get;
       internal set;
     }
 
+    public FixedList<RecordingBookEntryDto> BookEntries {
+      get;
+      internal set;
+    }
 
-    public MediaData StampMedia {
-      get; internal set;
-    } = MediaData.Empty;
-
-
-  }  // class RecordingBookEntryDto
+  }  // class RecordingBookDto
 
 }  // namespace Empiria.Land.Registration.Adapters
