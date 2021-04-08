@@ -43,6 +43,11 @@ namespace Empiria.Land.Registration {
     }
 
 
+    static public FixedList<T> GetList<T>(string filter, string orderBy, int pageSize) where T: Resource {
+      return ResourceData.SearchResources<T>(filter, orderBy, pageSize);
+    }
+
+
     static public Resource TryParseWithUID(string propertyUID, bool reload = false) {
       DataRow row = ResourceData.GetResourceWithUID(propertyUID);
 
@@ -53,17 +58,27 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
+    static public bool MatchesWithUID(string resourceUID) {
+      return (resourceUID.Length == 19 &&
+             resourceUID.StartsWith("FR-ZS") &&
+             resourceUID.Contains("-"));
+    }
+
+
     static public Resource Empty {
       get {
         return RealEstate.Empty;
       }
     }
 
+
     static public bool IsCancelationRole(ResourceRole resourceRole) {
       return (resourceRole == ResourceRole.Canceled ||
               resourceRole == ResourceRole.MergedInto ||
               resourceRole == ResourceRole.Split);
     }
+
 
     static public bool IsCreationalRole(ResourceRole resourceRole) {
       return (resourceRole == ResourceRole.Created ||
@@ -72,10 +87,12 @@ namespace Empiria.Land.Registration {
               resourceRole == ResourceRole.PartitionOf);
     }
 
+
     static public bool IsInformativeRole(ResourceRole resourceRole) {
       return (resourceRole == ResourceRole.Edited ||
               resourceRole == ResourceRole.Informative);
     }
+
 
     static public bool IsResourceEditingRole(ResourceRole resourceRole) {
       return (IsCreationalRole(resourceRole) || resourceRole == ResourceRole.Edited);

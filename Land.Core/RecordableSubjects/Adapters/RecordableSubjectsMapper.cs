@@ -20,7 +20,12 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
   static internal class RecordableSubjectsMapper {
 
 
-    public static RecordableSubjectDto Map(Resource resource) {
+    static internal FixedList<RecordableSubjectShortDto> Map<T>(FixedList<T> list) where T: Resource {
+      return new FixedList<RecordableSubjectShortDto>(list.Select((x) => MapToShortDto(x)));
+    }
+
+
+    static internal RecordableSubjectDto Map(Resource resource) {
       if (resource is RealEstate realEstate) {
         return Map(realEstate);
 
@@ -83,6 +88,22 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       dto.ElectronicID = resource.UID;
       dto.Kind = resource.Kind;
     }
+
+
+    private static RecordableSubjectShortDto MapToShortDto<T>(T resource) where T : Resource {
+      var dto = new RecordableSubjectShortDto();
+
+      dto.UID = resource.GUID;
+      dto.Type = (RecordableSubjectType) Enum.Parse(typeof(RecordableSubjectType),
+                                                    resource.GetEmpiriaType().NamedKey);
+
+      dto.Name = resource.Name.Length != 0 ? resource.Name : resource.Description;
+      dto.ElectronicID = resource.UID;
+      dto.Kind = resource.Kind;
+
+      return dto;
+    }
+
 
   }  // class RecordableSubjectsMapper
 

@@ -35,7 +35,8 @@ namespace Empiria.Land.Data {
                                           (x) => BaseObject.ParseList<Resource>(x)).ToFixedList();
     }
 
-    internal static RealEstate[] GetRealEstatePartitions(RealEstate property) {
+
+    static internal RealEstate[] GetRealEstatePartitions(RealEstate property) {
       if (property.IsNew || property.IsEmptyInstance) {
         return new RealEstate[0];
       }
@@ -45,11 +46,24 @@ namespace Empiria.Land.Data {
                                           (x) => BaseObject.ParseList<RealEstate>(x)).ToArray();
     }
 
+
     static internal DataRow GetResourceWithUID(string uniqueID) {
       DataOperation operation = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
 
       return DataReader.GetDataRow(operation);
     }
+
+
+    static internal FixedList<T> SearchResources<T>(string filter, string orderBy, int pageSize) where T : Resource {
+      string sql = $"SELECT TOP {pageSize} LRSProperties.* " +
+                   $"FROM LRSProperties " +
+                   $"WHERE {filter} ORDER BY {orderBy}";
+
+      var operation = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<T>(operation);
+    }
+
 
     static internal void WriteAssociation(Association o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.GUID, o.UID,

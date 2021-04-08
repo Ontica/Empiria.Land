@@ -24,7 +24,7 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
 
     [HttpGet]
     [Route("v5/land/registration/association-kinds")]
-    public CollectionModel AssociationKinds() {
+    public CollectionModel GetAssociationKinds() {
 
       using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
         FixedList<string> associationKinds = usecases.AssociationKinds();
@@ -36,7 +36,7 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
 
     [HttpGet]
     [Route("v5/land/registration/no-property-kinds")]
-    public CollectionModel NoPropertyKinds() {
+    public CollectionModel GetNoPropertyKinds() {
 
       using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
         FixedList<string> noPropertyKinds = usecases.NoPropertyKinds();
@@ -48,7 +48,7 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
 
     [HttpGet]
     [Route("v5/land/registration/real-estate-kinds")]
-    public CollectionModel RealEstateKinds() {
+    public CollectionModel GetRealEstateKinds() {
 
       using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
         FixedList<string> realEstateKinds = usecases.RealEstateKinds();
@@ -60,7 +60,7 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
 
     [HttpGet]
     [Route("v5/land/registration/real-estate-partition-kinds")]
-    public CollectionModel RealEstatePartitionKinds() {
+    public CollectionModel GetRealEstatePartitionKinds() {
 
       using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
         FixedList<string> realEstateKinds = usecases.RealEstatePartitionKinds();
@@ -72,7 +72,7 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
 
     [HttpGet]
     [Route("v5/land/registration/real-estate-lot-size-units")]
-    public CollectionModel RealEstateLotSizeUnits() {
+    public CollectionModel GetRealEstateLotSizeUnits() {
 
       using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
         FixedList<NamedEntityDto> lotSizeUnits = usecases.RealEstateLotSizeUnits();
@@ -84,12 +84,26 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
 
     [HttpGet]
     [Route("v5/land/registration/recorder-offices")]
-    public CollectionModel RecorderOfficesList() {
+    public CollectionModel GetRecorderOfficesList() {
 
       using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
         FixedList<RecorderOfficeDto> recorderOffices = usecases.RecorderOffices();
 
         return new CollectionModel(this.Request, recorderOffices);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v5/land/registration/recordable-subjects")]
+    public CollectionModel SearchRecordableSubjects([FromUri] SearchRecordableSubjectsCommand searchCommand) {
+
+      Assertion.AssertObject(searchCommand, "searchCommand");
+
+      using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
+        FixedList<RecordableSubjectShortDto> list = usecases.SearchRecordableSubjects(searchCommand);
+
+        return new CollectionModel(this.Request, list);
       }
     }
 

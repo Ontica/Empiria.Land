@@ -40,6 +40,31 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
 
 
+  public class RecordableSubjectShortDto {
+
+    public string UID {
+      get; internal set;
+    }
+
+    public RecordableSubjectType Type {
+      get; internal set;
+    }
+
+    public string Name {
+      get; internal set;
+    }
+
+    public string ElectronicID {
+      get; internal set;
+    }
+
+    public string Kind {
+      get; internal set;
+    }
+
+  }  // class RecordableSubjectShortDto
+
+
   /// <summary>Output DTOs for all recordable subjects: real estate, associations
   /// and no-property subjects.</summary>
   public abstract class RecordableSubjectDto {
@@ -65,7 +90,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    public RecordingContextDto RecordingContextUID {
+    public RecordingContextDto RecordingContext {
       get; internal set;
     }
 
