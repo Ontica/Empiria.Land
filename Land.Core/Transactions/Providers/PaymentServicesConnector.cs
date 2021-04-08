@@ -20,7 +20,6 @@ using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Media;
 using Empiria.Land.Media.Adapters;
 
-
 namespace Empiria.Land.Transactions.Providers {
 
   /// <summary>Connector used to gain access to transaction payment order services.</summary>
@@ -123,9 +122,9 @@ namespace Empiria.Land.Transactions.Providers {
         Status = "Pendiente de pago"
       };
 
-      var builder = new LandMediaBuilder(LandMediaContent.TransactionPaymentOrder, transaction);
+      var builder = new LandMediaBuilder(LandMediaContent.TransactionPaymentOrder);
 
-      var mediaDto = builder.GetMediaDto();
+      var mediaDto = builder.GetMediaDto(transaction.UID);
 
       po.AddAttribute("url", mediaDto.Url);
       po.AddAttribute("mediaType", mediaDto.MediaType);

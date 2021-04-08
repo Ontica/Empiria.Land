@@ -21,9 +21,8 @@ namespace Empiria.Land.Media {
 
     private readonly static string MEDIA_URL = ConfigurationData.GetString("LandMediaBuilder.DefaultUrl");
 
-    internal LandMediaBuilder(LandMediaContent mediaContent, LRSTransaction transaction) {
+    internal LandMediaBuilder(LandMediaContent mediaContent) {
       this.MediaContent = mediaContent;
-      this.Transaction = transaction;
     }
 
     internal LandMediaContent MediaContent {
@@ -35,25 +34,25 @@ namespace Empiria.Land.Media {
     }
 
 
-    internal MediaData GetMediaDto(string param = "") {
+    internal MediaData GetMediaDto(params string[] parameters) {
       switch (this.MediaContent) {
 
         case LandMediaContent.TransactionControlVoucher:
           return new MediaData("text/html",
-                                $"{MEDIA_URL}/receipts/control.voucher.aspx?uid={Transaction.UID}");
+                                $"{MEDIA_URL}/receipts/control.voucher.aspx?uid={parameters[0]}");
 
         case LandMediaContent.TransactionPaymentOrder:
           return new MediaData("text/html",
-                                $"{MEDIA_URL}/receipts/payment.order.aspx?uid={Transaction.UID}");
+                                $"{MEDIA_URL}/receipts/payment.order.aspx?uid={parameters[0]}");
 
         case LandMediaContent.TransactionSubmissionReceipt:
           return new MediaData("text/html",
-                                $"{MEDIA_URL}/receipts/transaction.receipt.aspx?uid={Transaction.UID}");
+                                $"{MEDIA_URL}/receipts/transaction.receipt.aspx?uid={parameters[0]}");
 
         case LandMediaContent.BookEntryRegistrationStamp:
           return new MediaData("text/html",
                               $"{MEDIA_URL}/recording-stamps/physical-recording.stamp.aspx?" +
-                              $"id={param}&transactionId={Transaction.Id}");
+                              $"id={parameters[0]}&transactionId={parameters[1]}");
 
         default:
           throw Assertion.AssertNoReachThisCode($"GetMediaDto() method can't process files of " +
