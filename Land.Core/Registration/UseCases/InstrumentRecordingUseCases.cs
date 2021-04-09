@@ -37,6 +37,15 @@ namespace Empiria.Land.Registration.UseCases {
 
     #region Use cases
 
+    public InstrumentRecordingDto GetInstrumentRecording(string instrumentRecordingUID) {
+      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
+
+      RecordingDocument instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+
+      return InstrumentRecordingMapper.Map(instrumentRecording, instrumentRecording.GetTransaction());
+    }
+
+
     public InstrumentRecordingDto GetTransactionInstrumentRecording(string transactionUID) {
       Assertion.AssertObject(transactionUID, "transactionUID");
 
