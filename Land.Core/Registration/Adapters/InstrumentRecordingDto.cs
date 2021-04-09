@@ -60,4 +60,27 @@ namespace Empiria.Land.Registration.Adapters {
 
   }  // class InstrumentRecordingDto
 
+
+
+  /// <summary>Short DTO for instrument recordings.</summary>
+  public class InstrumentRecordingShortDto {
+
+    public string UID {
+      get; internal set;
+    } = string.Empty;
+
+
+    public string ControlID {
+      get; internal set;
+    } = string.Empty;
+
+
+    public string AsText {
+      get; internal set;
+    } = string.Empty;
+
+
+  }  // class InstrumentRecordingShortDto
+
+
 }  // namespace Empiria.Land.Registration.Adapters

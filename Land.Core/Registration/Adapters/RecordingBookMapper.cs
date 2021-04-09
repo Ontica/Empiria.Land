@@ -52,7 +52,7 @@ namespace Empiria.Land.Registration.Adapters {
       dto.VolumeNo = bookEntry.RecordingBook.BookNumber;
       dto.RecordingNo = bookEntry.Number;
       dto.RecordedBy = bookEntry.RecordedBy.Alias;
-      dto.InstrumentRecording = InstrumentRecordingMapper.Map(bookEntry);
+      dto.InstrumentRecording = InstrumentRecordingMapper.MapToShort(bookEntry.MainDocument);
       dto.Status = bookEntry.Status;
 
       var mediaBuilder = new LandMediaBuilder(LandMediaContent.BookEntryRegistrationStamp);

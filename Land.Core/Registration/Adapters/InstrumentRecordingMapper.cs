@@ -35,7 +35,7 @@ namespace Empiria.Land.Registration.Adapters {
 
       dto.UID = instrumentRecording.GUID;
       dto.InstrumentRecordingID = instrumentRecording.UID;
-      dto.Instrument = Map(instrument);
+      dto.Instrument = InstrumentMapper.Map(instrument);
       dto.RecordingActs = GetRecordingActsListDto(instrumentRecording);
       dto.BookEntries = RecordingBookMapper.MapRecordingBookEntriesListDto(instrument.RecordingBookEntries);
       dto.StampMedia = mediaBuilder.GetMediaDto("-1", transaction.Id.ToString());
@@ -46,57 +46,15 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    internal static InstrumentRecordingDto Map(PhysicalRecording bookEntry) {
-      var instrument = Instrument.Parse(bookEntry.MainDocument.InstrumentId);
-
-      var transaction = bookEntry.MainDocument.GetTransaction();
-
-      var dto = new InstrumentRecordingDto();
-
-      var mediaBuilder = new LandMediaBuilder(LandMediaContent.BookEntryRegistrationStamp);
-
-      var actions = new InstrumentRecordingControlData(instrument, transaction);
-
-      dto.UID = bookEntry.MainDocument.GUID;
-      dto.InstrumentRecordingID = bookEntry.MainDocument.UID;
-      dto.Instrument = Map(instrument);
-      dto.RecordingActs = GetRecordingActsListDto(bookEntry.MainDocument);
-      // dto.BookEntries = RecordingBookMapper.MapRecordingBookEntriesListDto(instrument.RecordingBookEntries);
-      dto.StampMedia = mediaBuilder.GetMediaDto("-1", transaction.Id.ToString());
-      dto.TransactionUID = transaction.UID;
-      dto.Actions = GetControlDataDto(actions);
-
-      return dto;
-
-    }
-
-
-    static internal InstrumentDto Map(Instrument instrument) {
-      var issuerDto = IssuerMapper.Map(instrument.Issuer);
-
-      var mediaFiles = LandMediaFileMapper.Map(instrument.GetMediaFileSet());
-
-      var dto = new InstrumentDto {
-        UID = instrument.UID,
-        Type = instrument.InstrumentType.ToInstrumentTypeEnum(),
-        TypeName = instrument.InstrumentType.DisplayName,
-        Kind = instrument.Kind,
-        ControlID = instrument.ControlID,
-        Issuer = issuerDto,
-        IssueDate = instrument.IssueDate,
-        Summary = instrument.Summary,
-        AsText = instrument.AsText,
-        InstrumentNo = instrument.InstrumentNo,
-        BinderNo = instrument.BinderNo,
-        Folio = instrument.Folio,
-        EndFolio = instrument.EndFolio,
-        SheetsCount = instrument.SheetsCount,
-        Media = mediaFiles
+    static internal InstrumentRecordingShortDto MapToShort(RecordingDocument instrumentRecording) {
+      var dto = new InstrumentRecordingShortDto() {
+        UID = instrumentRecording.GUID,
+        ControlID = instrumentRecording.UID,
+        AsText = $"AsText {instrumentRecording.Id}"
       };
 
       return dto;
     }
-
 
 
     #region Private methods
