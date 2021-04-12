@@ -53,9 +53,12 @@ namespace Empiria.Land.Registration {
     static private RecordingTaskType MapToRecordingTaskType(RegistrationCommandType commandType) {
       switch (commandType) {
         case RegistrationCommandType.CreateAssociation:
+        case RegistrationCommandType.CreateNoProperty:
           return RecordingTaskType.actNotApplyToProperty;
+
         case RegistrationCommandType.CreateRealEstate:
           return RecordingTaskType.createProperty;
+
         default:
           throw Assertion.AssertNoReachThisCode($"There is not defined a registration rule for commandType '{commandType}'.");
       }

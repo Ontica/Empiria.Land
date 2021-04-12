@@ -386,14 +386,17 @@ namespace Empiria.Land.Registration {
     private Association[] GetAssociations() {
       if (this.CreateNewResource) {
         return new Association[] { new Association() };
+
       } else if (this.CreateResourceOnNewPhysicalRecording) {
         var association = new Association();
 
         this.AttachResourceToNewPhysicalRecording(association);
 
         return new Association[] { association };
+
       } else {
-        return new Association[] { (Association) this.Task.PrecedentProperty };
+
+        return new Association[] { new Association() };
       }
     }
 
@@ -409,7 +412,7 @@ namespace Empiria.Land.Registration {
 
         return new NoPropertyResource[] { noPropertyResource };
       } else {
-        return new NoPropertyResource[] { (NoPropertyResource) this.Task.PrecedentProperty };
+        return new NoPropertyResource[] { new NoPropertyResource() };
       }
     }
 
@@ -433,6 +436,7 @@ namespace Empiria.Land.Registration {
 
         property = new RealEstate(data);
         this.AttachResourceToExistingPhysicalRecording(property);
+
       } else {
         property = (RealEstate) this.Task.PrecedentProperty;
       }
