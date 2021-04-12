@@ -25,24 +25,29 @@ namespace Empiria.Land.Registration.Adapters {
         RecorderOffice = book.RecorderOffice.MapToNamedEntity(),
         RecordingSection = book.RecordingSection.MapToNamedEntity(),
         Status = book.Status,
-        BookEntries = MapRecordingBookEntriesListDto(book.Recordings)
+        BookEntries = MapBookEntriesListDto(book.Recordings)
       };
     }
 
 
-    static internal FixedList<RecordingBookEntryDto> MapRecordingBookEntriesListDto(FixedList<PhysicalRecording> list) {
-      var mappedItems = list.Select((x) => GetRecordingBookEntryDto(x));
+    static internal FixedList<RecordingBookEntryDto> MapBookEntriesListDto(FixedList<PhysicalRecording> list) {
+      var mappedItems = list.Select((x) => MapBookEntry(x));
 
       return new FixedList<RecordingBookEntryDto>(mappedItems);
     }
 
 
+    static internal FixedList<RecordingBookEntryShortDto> MapBookEntriesListShortDto(FixedList<PhysicalRecording> list) {
+      var mappedItems = list.Select((x) => MapBookEntryToShortDto(x));
+
+      return new FixedList<RecordingBookEntryShortDto>(mappedItems);
+    }
+
     #endregion Public methods
 
     #region Helper methods
 
-
-    static private RecordingBookEntryDto GetRecordingBookEntryDto(PhysicalRecording bookEntry) {
+    static private RecordingBookEntryDto MapBookEntry(PhysicalRecording bookEntry) {
       var dto = new RecordingBookEntryDto();
 
       dto.UID = bookEntry.UID;
@@ -62,6 +67,13 @@ namespace Empiria.Land.Registration.Adapters {
       return dto;
     }
 
+    static private RecordingBookEntryShortDto MapBookEntryToShortDto(PhysicalRecording bookEntry) {
+      return new RecordingBookEntryShortDto {
+        UID = bookEntry.UID,
+        RecordingNo = bookEntry.Number,
+        InstrumentRecordingUID = bookEntry.MainDocument.GUID
+      };
+    }
 
     #endregion Helper methods
 

@@ -81,7 +81,7 @@ namespace Empiria.Land.Registration.WebApi {
     public CollectionModel GetRecordingBookEntries([FromUri] string recordingBookUID) {
 
       using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> bookEntries = usecases.GetRecordingBookEntries(recordingBookUID);
+        FixedList<RecordingBookEntryShortDto> bookEntries = usecases.GetRecordingBookEntries(recordingBookUID);
 
         return new CollectionModel(this.Request, bookEntries);
       }

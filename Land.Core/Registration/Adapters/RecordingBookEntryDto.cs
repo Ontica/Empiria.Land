@@ -13,6 +13,22 @@ using Empiria.DataTypes;
 
 namespace Empiria.Land.Registration.Adapters {
 
+  public class RecordingBookEntryShortDto {
+
+    public string UID {
+      get; internal set;
+    }
+
+    public string RecordingNo {
+      get; internal set;
+    }
+
+    public string InstrumentRecordingUID {
+      get; internal set;
+    } = string.Empty;
+
+  }
+
   public class RecordingBookEntryDto {
 
     public string UID {

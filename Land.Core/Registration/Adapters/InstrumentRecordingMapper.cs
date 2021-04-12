@@ -37,7 +37,7 @@ namespace Empiria.Land.Registration.Adapters {
       dto.InstrumentRecordingID = instrumentRecording.UID;
       dto.Instrument = InstrumentMapper.Map(instrument);
       dto.RecordingActs = GetRecordingActsListDto(instrumentRecording);
-      dto.BookEntries = RecordingBookMapper.MapRecordingBookEntriesListDto(instrument.RecordingBookEntries);
+      dto.BookEntries = RecordingBookMapper.MapBookEntriesListDto(instrument.RecordingBookEntries);
       dto.StampMedia = mediaBuilder.GetMediaDto("-1", transaction.Id.ToString());
       dto.TransactionUID = transaction.UID;
       dto.Actions = GetControlDataDto(actions);
