@@ -45,7 +45,7 @@ namespace Empiria.Land.Registration {
 
     private bool CreateNewResource {
       get {
-        return ((this.Task.RecordingTaskType == RecordingTaskType.actAppliesToDocument ||
+        return ((Task.RecordingTaskType == RecordingTaskType.actAppliesToDocument ||
                  Task.RecordingTaskType == RecordingTaskType.createProperty) &&
                  Task.PrecedentProperty.IsEmptyInstance);
       }

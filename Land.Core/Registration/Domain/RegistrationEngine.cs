@@ -59,6 +59,11 @@ namespace Empiria.Land.Registration {
         case RegistrationCommandType.CreateRealEstate:
           return RecordingTaskType.createProperty;
 
+        case RegistrationCommandType.SelectAssociation:
+        case RegistrationCommandType.SelectNoProperty:
+        case RegistrationCommandType.SelectRealEstate:
+          return RecordingTaskType.selectProperty;
+
         default:
           throw Assertion.AssertNoReachThisCode($"There is not defined a registration rule for commandType '{commandType}'.");
       }

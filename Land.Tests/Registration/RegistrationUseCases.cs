@@ -82,6 +82,57 @@ namespace Empiria.Land.Tests.Registration {
     }
 
 
+    [Fact]
+    public void Should_Target_Existing_Association_RecordingAct() {
+      var command = new RegistrationCommand {
+        Type = Land.Registration.RegistrationCommandType.SelectAssociation,
+        Payload = new RegistrationCommandPayload {
+          RecordingActTypeUID = TestingConstants.TARGET_ASSOCIATION_RECORDING_ACT_TYPE_UID,
+          RecordableSubjectUID = TestingConstants.ASSOCATION_UID
+        }
+      };
+
+      InstrumentRecordingDto instrumentRecording =
+               _usecases.CreateRecordingAct(TestingConstants.INSTRUMENT_RECORDING_UID, command);
+
+      Assert.NotNull(instrumentRecording);
+    }
+
+
+    [Fact]
+    public void Should_Target_Existing_NoProperty_RecordingAct() {
+      var command = new RegistrationCommand {
+        Type = Land.Registration.RegistrationCommandType.SelectNoProperty,
+        Payload = new RegistrationCommandPayload {
+          RecordingActTypeUID = TestingConstants.TARGET_NO_PROPERTY_RECORDING_ACT_TYPE_UID,
+          RecordableSubjectUID = TestingConstants.NO_PROPERTY_UID
+        }
+      };
+
+      InstrumentRecordingDto instrumentRecording =
+               _usecases.CreateRecordingAct(TestingConstants.INSTRUMENT_RECORDING_UID, command);
+
+      Assert.NotNull(instrumentRecording);
+    }
+
+
+
+    [Fact]
+    public void Should_Target_Existing_RealEstate_RecordingAct() {
+      var command = new RegistrationCommand {
+        Type = Land.Registration.RegistrationCommandType.SelectRealEstate,
+        Payload = new RegistrationCommandPayload {
+          RecordingActTypeUID = TestingConstants.TARGET_REAL_ESTATE_RECORDING_ACT_TYPE_UID,
+          RecordableSubjectUID = TestingConstants.REAL_ESTATE_UID
+        }
+      };
+
+      InstrumentRecordingDto instrumentRecording =
+               _usecases.CreateRecordingAct(TestingConstants.INSTRUMENT_RECORDING_UID, command);
+
+      Assert.NotNull(instrumentRecording);
+    }
+
     #endregion Facts
 
   }  // class RegistrationUseCasesTests
