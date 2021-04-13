@@ -33,10 +33,18 @@ namespace Empiria.Land.Registration.Adapters {
 
       var actions = new InstrumentRecordingControlData(instrument, transaction);
 
+      var bookEntries = instrument.RecordingBookEntries;
+
       dto.UID = instrumentRecording.GUID;
       dto.InstrumentRecordingID = instrumentRecording.UID;
       dto.Instrument = InstrumentMapper.Map(instrument);
-      dto.RecordingActs = GetRecordingActsListDto(instrumentRecording);
+
+      if (bookEntries.Count > 0) {
+        dto.BookEntries = RecordingBookMapper.MapBookEntriesListDto(instrument.RecordingBookEntries);
+        dto.BookRecordingMode = true;
+      } else {
+        dto.RecordingActs = MapRecordingActsListDto(instrumentRecording.RecordingActs);
+      }
       dto.BookEntries = RecordingBookMapper.MapBookEntriesListDto(instrument.RecordingBookEntries);
       dto.StampMedia = mediaBuilder.GetMediaDto("-1", transaction.Id.ToString());
       dto.TransactionUID = transaction.UID;
@@ -54,6 +62,13 @@ namespace Empiria.Land.Registration.Adapters {
       };
 
       return dto;
+    }
+
+
+    static internal FixedList<RecordingActDto> MapRecordingActsListDto(FixedList<RecordingAct> list) {
+      var mappedItems = list.Select((x) => GetRecordingActDto(x));
+
+      return new FixedList<RecordingActDto>(mappedItems);
     }
 
 
@@ -93,15 +108,6 @@ namespace Empiria.Land.Registration.Adapters {
       dto.Antecedent = "Sin antecedente registral";
 
       return dto;
-    }
-
-
-    static private FixedList<RecordingActDto> GetRecordingActsListDto(RecordingDocument instrumentRecording) {
-      var list = instrumentRecording.RecordingActs;
-
-      var mappedItems = list.Select((x) => GetRecordingActDto(x));
-
-      return new FixedList<RecordingActDto>(mappedItems);
     }
 
 

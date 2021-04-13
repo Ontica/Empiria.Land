@@ -27,10 +27,14 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     } = string.Empty;
 
-
     public InstrumentDto Instrument {
       get; internal set;
     } = null;
+
+
+    public Boolean BookRecordingMode {
+      get; internal set;
+    } = false;
 
 
     public FixedList<RecordingActDto> RecordingActs {

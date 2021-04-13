@@ -58,6 +58,7 @@ namespace Empiria.Land.Registration.Adapters {
       dto.RecordingNo = bookEntry.Number;
       dto.RecordedBy = bookEntry.RecordedBy.Alias;
       dto.InstrumentRecording = InstrumentRecordingMapper.MapToShort(bookEntry.MainDocument);
+      dto.RecordingActs = InstrumentRecordingMapper.MapRecordingActsListDto(bookEntry.RecordingActs);
       dto.Status = bookEntry.Status;
 
       var mediaBuilder = new LandMediaBuilder(LandMediaContent.BookEntryRegistrationStamp);
@@ -74,6 +75,8 @@ namespace Empiria.Land.Registration.Adapters {
         InstrumentRecordingUID = bookEntry.MainDocument.GUID
       };
     }
+
+
 
     #endregion Helper methods
 
