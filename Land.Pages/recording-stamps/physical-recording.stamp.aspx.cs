@@ -38,7 +38,7 @@ namespace Empiria.Land.Pages {
 		#region Private methods
 
 		private void Initialize() {
-			transaction = LRSTransaction.Parse(int.Parse(Request.QueryString["transactionId"]));
+			transaction = GetTransaction();
 
 			Assertion.Assert(!transaction.Document.IsEmptyInstance, "Transaction does not have a registration document.");
 
@@ -56,9 +56,23 @@ namespace Empiria.Land.Pages {
 			Assertion.AssertObject(baseRecording, "We have a problem reading document recording data.");
 		}
 
+
+    private LRSTransaction GetTransaction() {
+			if (String.IsNullOrWhiteSpace(Request.QueryString["transactionId"]) ||
+					Request.QueryString["transactionId"] == "-1") {
+				var physicalRecording = PhysicalRecording.Parse(int.Parse(Request.QueryString["id"]));
+
+				return physicalRecording.MainDocument.GetTransaction();
+			}
+
+			return LRSTransaction.Parse(int.Parse(Request.QueryString["transactionId"]));
+		}
+
+
     protected string CustomerOfficeName() {
 			return "Dirección de Catastro y Registro Público";
     }
+
 
     protected string DistrictName {
       get {
@@ -69,11 +83,13 @@ namespace Empiria.Land.Pages {
       }
     }
 
+
 		protected bool ShowAllRecordings {
 			get {
 				return (int.Parse(Request.QueryString["id"]) == -1);
 			}
 		}
+
 
 		protected string GetPaymentText() {
 			const string t = "Derechos por <b>{AMOUNT}</b> según recibo <b>{RECEIPT}</b> expedido por la Secretaría de Finanzas del Estado, que se archiva.";
@@ -89,6 +105,7 @@ namespace Empiria.Land.Pages {
 			return x;
 		}
 
+
 		protected string GetPrelationText() {
 			const string t = "Presentado para su examen y registro en	{CITY}, el <b>{DATE} a las {TIME} horas</b>, bajo el número de trámite <b>{NUMBER}</b> - Conste";
 
@@ -102,6 +119,7 @@ namespace Empiria.Land.Pages {
 
 			return x;
 		}
+
 
 		protected string GetRecordingsText() {
 			if (this.ShowAllRecordings) {
@@ -121,6 +139,7 @@ namespace Empiria.Land.Pages {
 			return x;
 		}
 
+
     protected string GetRecordingOfficialsInitials() {
       string temp = String.Empty;
 
@@ -136,6 +155,7 @@ namespace Empiria.Land.Pages {
       temp = temp.Trim().ToLowerInvariant();
       return temp.Length != 0 ? "* " + temp : String.Empty;
     }
+
 
 		protected string GetAllRecordingsText() {
 			const string docMulti = "Registrado bajo las siguientes {COUNT} inscripciones:<br/><br/>";
@@ -166,6 +186,7 @@ namespace Empiria.Land.Pages {
 			return html;
 		}
 
+
 		protected string GetRecordingPlaceAndDate() {
 			const string t = "Registrado en {CITY}, a las {TIME} horas del {DATE}. Doy Fe.";
 
@@ -177,13 +198,16 @@ namespace Empiria.Land.Pages {
 			return x;
 		}
 
+
 		protected string GetRecordingSignerPosition() {
 			return "C. Oficial Registrador del Distrito Judicial de Zacatecas";
 		}
 
+
 		protected string GetRecordingSignerName() {
 			return "Lic. Teresa de Jesús Alvarado Ortiz";
 		}
+
 
 		protected string GetDigitalSeal() {
 			string s = "||" + transaction.UID + "|" + transaction.Document.UID;
@@ -198,6 +222,7 @@ namespace Empiria.Land.Pages {
 			return Empiria.Security.Cryptographer.SignTextWithSystemCredentials(s);
 		}
 
+
 		protected string GetDigitalSignature() {
 			string s = "||" + transaction.UID + "|" + transaction.Document.UID;
 			if (this.ShowAllRecordings) {
@@ -209,6 +234,7 @@ namespace Empiria.Land.Pages {
 			}
 			return Empiria.Security.Cryptographer.SignTextWithSystemCredentials(s + "eSign");
 		}
+
 
 		protected string GetUpperMarginPoints() {
 			decimal centimeters = Math.Max(5.0m, 1.0m);   // transaction.Document.SealUpperPosition
