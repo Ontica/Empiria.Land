@@ -28,63 +28,53 @@ namespace Empiria.Land.Registration {
     #region Public properties
 
     public RecordingBook RecordingBook {
-      get;
-      private set;
+      get; private set;
     }
 
 
     public string Number {
-      get;
-      private set;
+      get; private set;
     }
 
 
     public RecordingDocument MainDocument {
-      get;
-      set;
+      get; set;
     } = new RecordingDocument(RecordingDocumentType.Empty);
 
 
     public string Notes {
-      get;
-      set;
+      get; set;
     } = String.Empty;
 
 
     public int StartImageIndex {
-      get;
-      set;
+      get; set;
     } = -1;
 
 
     public int EndImageIndex {
-      get;
-      set;
+      get; set;
     } = -1;
 
 
     public DateTime PresentationTime {
-      get;
-      set;
-    }
+      get; set;
+    } = ExecutionServer.DateMinValue;
 
 
     public DateTime AuthorizationDate {
-      get;
-      set;
-    }
+      get; set;
+    } = ExecutionServer.DateMinValue;
 
 
     public Contact AuthorizedBy {
-      get;
-      set;
-    }
+      get; set;
+    } = Contact.Empty;
 
 
     public RecordableObjectStatus Status {
-      get;
-      set;
-    }
+      get; set;
+    } = RecordableObjectStatus.Incomplete;
 
 
     #endregion Public properties

@@ -88,8 +88,46 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
+    public RecordingBookDto CreateBookEntry(string recordingBookUID,
+                                            CreateManualBookEntryFields fields) {
+      Assertion.AssertObject(recordingBookUID, "recordingBookUID");
+      Assertion.AssertObject(fields, "fields");
+
+      fields.EnsureIsValid();
+
+      var recordingBook = RecordingBook.Parse(recordingBookUID);
+
+      Assertion.Assert(recordingBook.IsAvailableForManualEditing,
+          $"The selected book '{recordingBook.AsText}' is not available for manual editing." +
+          "It is not possible to add it a new book entry.");
+
+      Assertion.Assert(!recordingBook.ExistsRecording(fields.RecordingNo),
+                       $"There is a book entry with the same number {fields.RecordingNo}");
+
+      var instrumentType = InstrumentType.Parse(fields.Instrument.Type.Value);
+
+      var instrument = new Instrument(instrumentType, fields.Instrument);
+
+      instrument.Save();
+
+      Assertion.Assert(instrument.HasDocument,
+                       "Instruments must have a recording document to be linked to a transaction.");
+
+      var document = instrument.TryGetRecordingDocument();
+
+      RecordingDTO recordingDTO = fields.MapToRecordingDTO(recordingBook, document);
+
+      recordingBook.AddRecording(recordingDTO);
+
+      document.Save();
+
+      recordingBook.Refresh();
+
+      return RecordingBookMapper.Map(recordingBook);
+    }
+
     public InstrumentRecordingDto CreateNextBookEntry(string instrumentRecordingUID,
-                                                      RecordingBookEntryFields fields) {
+                                                      CreateNextBookEntryFields fields) {
       Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
       Assertion.AssertObject(fields, "fields");
 
@@ -110,6 +148,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       return InstrumentRecordingMapper.Map(instrumentRecording, instrumentRecording.GetTransaction());
     }
+
 
     public InstrumentRecordingDto RemoveBookEntry(string instrumentRecordingUID,
                                                   string bookEntryUID) {

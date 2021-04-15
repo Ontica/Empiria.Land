@@ -154,13 +154,10 @@ namespace Empiria.Land.Registration {
         if (this.IsEmptyInstance) {
           return false;
         }
-        if (this.DocumentType.Equals(RecordingDocumentType.Empty)) {
-          return true;
-        }
-        if (this.RecordingActs.Count == 0) {
+        if (!this.GetTransaction().IsEmptyInstance) {
           return false;
         }
-        return (!this.RecordingActs[0].PhysicalRecording.IsEmptyInstance);
+        return true;
       }
     }
 
