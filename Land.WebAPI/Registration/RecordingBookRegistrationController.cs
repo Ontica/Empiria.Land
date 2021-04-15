@@ -117,12 +117,24 @@ namespace Empiria.Land.Registration.WebApi {
 
 
     [HttpDelete]
-    [Route("v5/land/registration/{instrumentRecordingUID:guid}/book-entries/{bookEntryUID:guid}")]
-    public SingleObjectModel RemoveBookEntry([FromUri] string instrumentRecordingUID,
+    [Route("v5/land/registration/recording-books/{recordingBookUID:guid}/book-entries/{bookEntryUID:guid}")]
+    public SingleObjectModel RemoveBookEntry([FromUri] string recordingBookUID,
                                              [FromUri] string bookEntryUID) {
       using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
+        RecordingBookDto recordingBook = usecases.RemoveBookEntry(recordingBookUID, bookEntryUID);
+
+        return new SingleObjectModel(this.Request, recordingBook);
+      }
+    }
+
+
+    [HttpDelete]
+    [Route("v5/land/registration/{instrumentRecordingUID:guid}/book-entries/{bookEntryUID:guid}")]
+    public SingleObjectModel RemoveInstrumentBookEntry([FromUri] string instrumentRecordingUID,
+                                                       [FromUri] string bookEntryUID) {
+      using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
         InstrumentRecordingDto instrumentRecording =
-                                      usecases.RemoveBookEntry(instrumentRecordingUID, bookEntryUID);
+                                      usecases.RemoveBookEntryFromInstrument(instrumentRecordingUID, bookEntryUID);
 
         return new SingleObjectModel(this.Request, instrumentRecording);
       }

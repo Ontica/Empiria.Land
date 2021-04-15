@@ -149,9 +149,28 @@ namespace Empiria.Land.Registration.UseCases {
       return InstrumentRecordingMapper.Map(instrumentRecording, instrumentRecording.GetTransaction());
     }
 
+    public RecordingBookDto RemoveBookEntry(string recordingBookUID,
+                                            string bookEntryUID) {
+      Assertion.AssertObject(recordingBookUID, "recordingBookUID");
+      Assertion.AssertObject(bookEntryUID, "bookEntryUID");
 
-    public InstrumentRecordingDto RemoveBookEntry(string instrumentRecordingUID,
-                                                  string bookEntryUID) {
+      var book = RecordingBook.Parse(recordingBookUID);
+
+      var bookEntry = PhysicalRecording.Parse(bookEntryUID);
+
+      Assertion.Assert(book.Recordings.Contains(bookEntry),
+                       $"Book entry '{bookEntryUID}', does not belong to book '{book.AsText}'.");
+
+      bookEntry.Delete();
+
+      book.Refresh();
+
+      return RecordingBookMapper.Map(book);
+    }
+
+
+    public InstrumentRecordingDto RemoveBookEntryFromInstrument(string instrumentRecordingUID,
+                                                                string bookEntryUID) {
       Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
       Assertion.AssertObject(bookEntryUID, "bookEntryUID");
 
