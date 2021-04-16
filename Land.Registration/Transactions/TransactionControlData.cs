@@ -334,6 +334,9 @@ namespace Empiria.Land.Transactions {
 
     private bool IsAssignedToUser {
       get {
+        if (_transaction.IsEmptyInstance) {
+          return false;
+        }
         return (_transaction.Workflow.GetCurrentTask().Responsible.Id == ExecutionServer.CurrentUserId);
       }
     }

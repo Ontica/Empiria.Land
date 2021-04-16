@@ -22,15 +22,18 @@ namespace Empiria.Land.Registration {
 
     private readonly Instrument _instrument;
     private readonly TransactionControlData _transactionControlData;
+    private readonly bool _isHistoricRegistration;
 
     internal InstrumentRecordingControlData(Instrument instrument, LRSTransaction transaction) {
       _instrument = instrument;
 
-      if (transaction != null) {
-        _transactionControlData = transaction.ControlData;
-      } else {
-        _transactionControlData = instrument.GetTransaction().ControlData;
+      if (transaction == null) {
+        transaction = instrument.GetTransaction();
       }
+
+      _transactionControlData = transaction.ControlData;
+
+      _isHistoricRegistration = transaction.IsEmptyInstance;
     }
 
 
@@ -43,6 +46,9 @@ namespace Empiria.Land.Registration {
 
     public bool CanEdit {
       get {
+        if (_isHistoricRegistration) {
+          return true;
+        }
         return _transactionControlData.CanEditInstrument;
       }
     }
@@ -71,8 +77,10 @@ namespace Empiria.Land.Registration {
 
     public bool CanEditRecordingActs {
       get {
-        return this.ShowRecordingActs &&
-               _transactionControlData.CanEditRecordingActs;
+        if (_isHistoricRegistration) {
+          return true;
+        }
+        return (this.ShowRecordingActs && _transactionControlData.CanEditRecordingActs);
       }
     }
 
@@ -117,7 +125,8 @@ namespace Empiria.Land.Registration {
 
     public bool ShowRecordingActs {
       get {
-        return (_instrument.HasDocument &&
+        return (!_isHistoricRegistration &&
+                _instrument.HasDocument &&
                 !_instrument.GetTransaction().IsEmptyInstance &&
                 !_instrument.HasRecordingBookEntries &&
                 !UseRecordingBookRegistation);
