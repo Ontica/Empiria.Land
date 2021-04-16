@@ -28,7 +28,28 @@ namespace Empiria.Land.Registration {
 
       command.EnsureIsValid();
 
-      RecordingTask task = BuildRecordingTask(command);
+      RecordingTaskFields recordingTaskfields = MapToRecordingTaskFields(command);
+
+      RecordingTask task = new RecordingTask(recordingTaskfields);
+
+      RecorderExpert.Execute(task);
+    }
+
+
+    internal void Execute(RecordingBook book, PhysicalRecording bookEntry,
+                          RegistrationCommand command) {
+      Assertion.AssertObject(book, "book");
+      Assertion.AssertObject(bookEntry, "bookEntry");
+      Assertion.AssertObject(command, "command");
+
+      command.EnsureIsValid();
+
+      RecordingTaskFields recordingTaskfields = MapToRecordingTaskFields(command);
+
+      recordingTaskfields.RecordingBookUID = book.UID;
+      recordingTaskfields.BookEntryUID = bookEntry.UID;
+
+      RecordingTask task = new RecordingTask(recordingTaskfields);
 
       RecorderExpert.Execute(task);
     }
@@ -38,7 +59,8 @@ namespace Empiria.Land.Registration {
 
     #region Private methods
 
-    private RecordingTask BuildRecordingTask(RegistrationCommand command) {
+
+    private RecordingTaskFields MapToRecordingTaskFields(RegistrationCommand command) {
       var fields = new RecordingTaskFields();
 
       fields.RecordingTaskType = MapToRecordingTaskType(command.Type);
@@ -46,7 +68,7 @@ namespace Empiria.Land.Registration {
       fields.RecordingActTypeUID = command.Payload.RecordingActTypeUID;
       fields.RecordableSubjectUID = command.Payload.RecordableSubjectUID;
 
-      return new RecordingTask(fields);
+      return fields;
     }
 
 

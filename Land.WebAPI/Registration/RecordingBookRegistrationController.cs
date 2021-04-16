@@ -116,6 +116,24 @@ namespace Empiria.Land.Registration.WebApi {
     }
 
 
+    [HttpPost]
+    [Route("v5/land/registration/recording-books/{recordingBookUID:guid}/" +
+           "book-entries/{bookEntryUID:guid}/recording-acts")]
+    public SingleObjectModel CreateBookEntryRecordingAct([FromUri] string recordingBookUID,
+                                                         [FromUri] string bookEntryUID,
+                                                         [FromBody] RegistrationCommand command) {
+
+      base.RequireBody(command);
+
+      using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
+        InstrumentRecordingDto instrumentRecording =
+                                    usecases.CreateRecordingAct(recordingBookUID, bookEntryUID, command);
+
+        return new SingleObjectModel(this.Request, instrumentRecording);
+      }
+    }
+
+
     [HttpDelete]
     [Route("v5/land/registration/recording-books/{recordingBookUID:guid}/book-entries/{bookEntryUID:guid}")]
     public SingleObjectModel RemoveBookEntry([FromUri] string recordingBookUID,
@@ -139,6 +157,7 @@ namespace Empiria.Land.Registration.WebApi {
         return new SingleObjectModel(this.Request, instrumentRecording);
       }
     }
+
 
     #endregion Web Apis
 

@@ -177,6 +177,7 @@ namespace Empiria.Land.Registration {
       for (int i = 0; i < realEstates.Length; i++) {
         domainActs[i] = new DomainAct(this.Task.RecordingActType,
                                       this.Task.Document, realEstates[i],
+                                      this.Task.PrecedentRecording,
                                       this.Task.RecordingActPercentage);
         domainActs[i].Save();
       }
@@ -189,7 +190,8 @@ namespace Empiria.Land.Registration {
       var informationActs = new InformationAct[resources.Length];
       for (int i = 0; i < resources.Length; i++) {
         informationActs[i] = new InformationAct(this.Task.RecordingActType,
-                                                this.Task.Document, resources[i]);
+                                                this.Task.Document, resources[i],
+                                                this.Task.PrecedentRecording);
         informationActs[i].Save();
       }
       return informationActs;
@@ -202,7 +204,9 @@ namespace Empiria.Land.Registration {
       var recordingActs = new LimitationAct[realEstates.Length];
       for (int i = 0; i < realEstates.Length; i++) {
         recordingActs[i] = new LimitationAct(this.Task.RecordingActType,
-                                             this.Task.Document, realEstates[i]);
+                                             this.Task.Document, realEstates[i],
+                                             this.Task.PrecedentRecording,
+                                             this.Task.RecordingActPercentage);
         recordingActs[i].Save();
       }
       return recordingActs;

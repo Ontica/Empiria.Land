@@ -126,11 +126,11 @@ namespace Empiria.Land.Registration.UseCases {
       return RecordingBookMapper.Map(recordingBook);
     }
 
+
     public InstrumentRecordingDto CreateNextBookEntry(string instrumentRecordingUID,
                                                       CreateNextBookEntryFields fields) {
       Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
       Assertion.AssertObject(fields, "fields");
-
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -148,6 +148,32 @@ namespace Empiria.Land.Registration.UseCases {
 
       return InstrumentRecordingMapper.Map(instrumentRecording, instrumentRecording.GetTransaction());
     }
+
+
+    public InstrumentRecordingDto CreateRecordingAct(string recordingBookUID,
+                                                     string bookEntryUID,
+                                                     RegistrationCommand command) {
+      Assertion.AssertObject(recordingBookUID, "recordingBookUID");
+      Assertion.AssertObject(bookEntryUID, "bookEntryUID");
+      Assertion.AssertObject(command, "command");
+
+      var book = RecordingBook.Parse(recordingBookUID);
+      var bookEntry = PhysicalRecording.Parse(bookEntryUID);
+
+      var instrumentRecording = bookEntry.MainDocument;
+
+      var registrationEngine = new RegistrationEngine(instrumentRecording);
+
+      registrationEngine.Execute(book, bookEntry, command);
+
+      book.Refresh();
+      bookEntry.Refresh();
+
+      return InstrumentRecordingMapper.Map(instrumentRecording,
+                                           instrumentRecording.GetTransaction());
+
+    }
+
 
     public RecordingBookDto RemoveBookEntry(string recordingBookUID,
                                             string bookEntryUID) {
@@ -168,6 +194,11 @@ namespace Empiria.Land.Registration.UseCases {
       return RecordingBookMapper.Map(book);
     }
 
+    public InstrumentRecordingDto RemoveRecordingAct(string recordingBookUID,
+                                                     string bookEntryUID,
+                                                     string recordingActUID) {
+      throw new NotImplementedException();
+    }
 
     public InstrumentRecordingDto RemoveBookEntryFromInstrument(string instrumentRecordingUID,
                                                                 string bookEntryUID) {

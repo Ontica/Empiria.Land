@@ -21,9 +21,10 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
+
     internal LimitationAct(RecordingActType recordingActType,
-                           RecordingDocument document, RealEstate property,
-                           decimal percentage = decimal.One) : base(recordingActType, document) {
+                       RecordingDocument document, RealEstate property,
+                       decimal percentage = decimal.One) : base(recordingActType, document) {
       Assertion.Assert(recordingActType.AppliesTo == RecordingRuleApplication.RealEstate,
                        "{0} doesn't apply to properties (real estate).", recordingActType.DisplayName);
 
@@ -31,6 +32,20 @@ namespace Empiria.Land.Registration {
 
       this.SetRealEstate(property, percentage);
     }
+
+
+    internal LimitationAct(RecordingActType recordingActType,
+                           RecordingDocument document, RealEstate property,
+                           PhysicalRecording physicalRecording,
+                           decimal percentage = decimal.One) : base(recordingActType, document, physicalRecording) {
+      Assertion.Assert(recordingActType.AppliesTo == RecordingRuleApplication.RealEstate,
+                       "{0} doesn't apply to properties (real estate).", recordingActType.DisplayName);
+
+      Assertion.AssertObject(property, "property");
+
+      this.SetRealEstate(property, percentage);
+    }
+
 
     static public new LimitationAct Parse(int id) {
       return BaseObject.ParseId<LimitationAct>(id);

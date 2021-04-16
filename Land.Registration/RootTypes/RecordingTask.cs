@@ -51,6 +51,16 @@ namespace Empiria.Land.Registration {
       get; set;
     } = string.Empty;
 
+
+    public string RecordingBookUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string BookEntryUID {
+      get; set;
+    } = string.Empty;
+
   }
 
 
@@ -68,9 +78,18 @@ namespace Empiria.Land.Registration {
 
       this.RecordingActType = RecordingActType.Parse(fields.RecordingActTypeUID);
 
-      if (fields.RecordableSubjectUID.Length != 0) {
+      if (!String.IsNullOrWhiteSpace(fields.RecordableSubjectUID)) {
         this.PrecedentProperty = Resource.ParseGuid(fields.RecordableSubjectUID);
       }
+
+      if (!String.IsNullOrWhiteSpace(fields.RecordingBookUID)) {
+        this.PrecedentRecordingBook = RecordingBook.Parse(fields.RecordingBookUID);
+      }
+
+      if (!String.IsNullOrWhiteSpace(fields.BookEntryUID)) {
+        this.PrecedentRecording = PhysicalRecording.Parse(fields.BookEntryUID);
+      }
+
     }
 
 

@@ -49,8 +49,8 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance.");
 
       Assertion.AssertObject(physicalRecording, "physicalRecording");
-      Assertion.Assert(!physicalRecording.IsEmptyInstance,
-                       "physicalRecording can't be the empty instance");
+      //Assertion.Assert(!physicalRecording.IsEmptyInstance,
+      //                 "physicalRecording can't be the empty instance");
 
       this.PhysicalRecording = physicalRecording;
       this.Document = document;
