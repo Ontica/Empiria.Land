@@ -88,7 +88,7 @@ namespace Empiria.Land.Registration.Transactions {
       return BaseObject.TryParse<LRSTransaction>($"InstrumentId = {instrumentId}", true);
     }
 
-    public static FixedList<LRSTransaction> GetList(string filter, string orderBy, int pageSize) {
+    static public FixedList<LRSTransaction> GetList(string filter, string orderBy, int pageSize) {
       return TransactionData.GetTransactionsList(filter, orderBy, pageSize);
     }
 

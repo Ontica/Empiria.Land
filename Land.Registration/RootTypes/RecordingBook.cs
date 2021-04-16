@@ -188,6 +188,8 @@ namespace Empiria.Land.Registration {
       set;
     } = string.Empty;
 
+
+
     public FixedList<PhysicalRecording> Recordings {
       get {
         if (recordings == null) {
@@ -196,6 +198,7 @@ namespace Empiria.Land.Registration {
         return recordings;
       }
     }
+
 
     public bool ReuseUnusedRecordingNumbers {
       get {

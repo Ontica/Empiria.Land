@@ -7,7 +7,6 @@
 *  Summary  : Use cases to interact with legal instruments.                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
 using Empiria.Services;
 
 using Empiria.Land.Instruments.Adapters;

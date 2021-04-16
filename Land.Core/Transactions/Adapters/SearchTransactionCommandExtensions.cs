@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Type Extension methods                  *
 *  Type     : SearchTransactionCommandExtensions         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Command payload used for transaction searching.                                                *
+*  Summary  : Extension methods for SearchTransactionCommand interface adapter.                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -12,7 +12,7 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Transactions.Adapters {
 
-  /// <summary>Command payload used for transaction searching.</summary>
+  /// <summary>Extension methods for SearchTransactionCommand interface adapter.</summary>
   static internal class SearchTransactionCommandExtensions {
 
     #region Extension methods

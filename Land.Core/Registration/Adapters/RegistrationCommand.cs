@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Land Registration                          Component : Interface adapters                      *
+*  Module   : Registration Services                      Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Command payload                         *
 *  Type     : RegistrationCommand                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *

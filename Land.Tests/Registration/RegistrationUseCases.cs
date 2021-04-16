@@ -116,7 +116,6 @@ namespace Empiria.Land.Tests.Registration {
     }
 
 
-
     [Fact]
     public void Should_Target_Existing_RealEstate_RecordingAct() {
       var command = new RegistrationCommand {

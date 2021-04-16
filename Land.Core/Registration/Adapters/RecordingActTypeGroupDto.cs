@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Land Registration                          Component : Interface adapters                      *
+*  Module   : Registration Services                      Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : RecordingActTypeGroupDto                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *

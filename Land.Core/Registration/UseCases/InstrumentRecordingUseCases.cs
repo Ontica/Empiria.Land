@@ -42,7 +42,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       RecordingDocument instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
-      return InstrumentRecordingMapper.Map(instrumentRecording, instrumentRecording.GetTransaction());
+      return InstrumentRecordingMapper.Map(instrumentRecording);
     }
 
 

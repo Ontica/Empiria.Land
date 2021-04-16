@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Land Registration                          Component : Interface adapters                      *
+*  Module   : Registration Services                      Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
 *  Type     : RecordingActTypeMapper                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *

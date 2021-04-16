@@ -37,16 +37,6 @@ namespace Empiria.Land.Registration.Adapters {
     } = false;
 
 
-    public FixedList<RecordingActDto> RecordingActs {
-      get; internal set;
-    } = new FixedList<RecordingActDto>();
-
-
-    public FixedList<RecordingBookEntryDto> BookEntries {
-      get; internal set;
-    } = new FixedList<RecordingBookEntryDto>();
-
-
     public MediaData StampMedia {
       get; internal set;
     } = MediaData.Empty;
@@ -60,6 +50,16 @@ namespace Empiria.Land.Registration.Adapters {
     public InstrumentRecordingControlDataDto Actions {
       get; internal set;
     } = new InstrumentRecordingControlDataDto();
+
+
+    public FixedList<RecordingActDto> RecordingActs {
+      get; internal set;
+    } = new FixedList<RecordingActDto>();
+
+
+    public FixedList<RecordingBookEntryDto> BookEntries {
+      get; internal set;
+    } = new FixedList<RecordingBookEntryDto>();
 
 
   }  // class InstrumentRecordingDto

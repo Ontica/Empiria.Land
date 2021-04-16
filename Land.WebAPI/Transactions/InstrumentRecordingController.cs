@@ -23,6 +23,7 @@ namespace Empiria.Land.Registration.WebApi {
 
     #region Web Apis
 
+
     [HttpGet]
     [Route("v5/land/transactions/{transactionUID:length(19)}/instrument-recording")]
     public SingleObjectModel GetTransactionInstrumentRecording([FromUri] string transactionUID) {

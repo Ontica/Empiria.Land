@@ -23,6 +23,11 @@ namespace Empiria.Land.Registration.Adapters {
   /// <summary>Methods to map legal instruments to InstrumentDto objects.</summary>
   static internal partial class InstrumentRecordingMapper {
 
+    static internal InstrumentRecordingDto Map(RecordingDocument instrumentRecording) {
+      return Map(instrumentRecording, instrumentRecording.GetTransaction());
+    }
+
+
     static internal InstrumentRecordingDto Map(RecordingDocument instrumentRecording,
                                                LRSTransaction transaction) {
       var dto = new InstrumentRecordingDto();
@@ -40,12 +45,11 @@ namespace Empiria.Land.Registration.Adapters {
       dto.Instrument = InstrumentMapper.Map(instrument);
 
       if (bookEntries.Count > 0) {
-        dto.BookEntries = RecordingBookMapper.MapBookEntriesListDto(instrument.RecordingBookEntries);
+        dto.BookEntries = RecordingBookMapper.MapBookEntriesListDto(bookEntries);
         dto.BookRecordingMode = true;
       } else {
         dto.RecordingActs = MapRecordingActsListDto(instrumentRecording.RecordingActs);
       }
-      dto.BookEntries = RecordingBookMapper.MapBookEntriesListDto(instrument.RecordingBookEntries);
       dto.StampMedia = mediaBuilder.GetMediaDto("-1", transaction.Id.ToString());
       dto.TransactionUID = transaction.UID;
       dto.Actions = GetControlDataDto(actions);

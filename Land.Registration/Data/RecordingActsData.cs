@@ -28,8 +28,7 @@ namespace Empiria.Land.Data {
       }
       var operation = DataOperation.Parse("qryLRSPhysicalRecordingRecordedActs", recording.Id);
 
-      return DataReader.GetList<RecordingAct>(operation,
-                                              (x) => BaseObject.ParseList<RecordingAct>(x)).ToFixedList();
+      return DataReader.GetFixedList<RecordingAct>(operation);
     }
 
 
