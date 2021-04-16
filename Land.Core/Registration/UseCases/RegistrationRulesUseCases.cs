@@ -33,6 +33,23 @@ namespace Empiria.Land.Registration.UseCases {
 
     #region Use cases
 
+    public FixedList<RecordingActTypeGroupDto> RecordingActTypesForBookEntry(string recordingBookUID,
+                                                                             string bookEntryUID) {
+      Assertion.AssertObject(recordingBookUID, "recordingBookUID");
+      Assertion.AssertObject(bookEntryUID, "bookEntryUID");
+
+      var book = RecordingBook.Parse(recordingBookUID);
+
+      var bookEntry = PhysicalRecording.Parse(bookEntryUID);
+
+      Assertion.Assert(book.Recordings.Contains(bookEntry),
+          $"Book entry '{bookEntry.UID}' does not belong to recording book {book.AsText}");
+
+      FixedList<RecordingActTypeCategory> recordingActTypesList = bookEntry.ApplicableRecordingActTypes();
+
+      return RecordingActTypeMapper.Map(recordingActTypesList);
+    }
+
 
     public FixedList<RecordingActTypeGroupDto> RecordingActTypesForInstrument(string instrumentUID) {
       Assertion.AssertObject(instrumentUID, "instrumentUID");

@@ -26,6 +26,13 @@ namespace Empiria.Land.Registration {
     }
 
 
+    static internal FixedList<RecordingActTypeCategory> ApplicableRecordingActTypes(this PhysicalRecording physicalRecording) {
+      Assertion.AssertObject(physicalRecording, "physicalRecording");
+
+      return RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
+    }
+
+
     static internal FixedList<RegistrationCommandType> RegistrationCommandTypes(this RecordingActType recordingActType) {
       var rule = recordingActType.RecordingRule;
 
