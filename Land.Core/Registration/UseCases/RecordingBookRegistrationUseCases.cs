@@ -14,6 +14,7 @@ using Empiria.Services;
 using Empiria.Land.Instruments;
 
 using Empiria.Land.Registration.Adapters;
+using Empiria.Land.Instruments.Adapters;
 
 namespace Empiria.Land.Registration.UseCases {
 
@@ -244,6 +245,27 @@ namespace Empiria.Land.Registration.UseCases {
 
       return InstrumentRecordingMapper.Map(instrumentRecording);
     }
+
+
+    public InstrumentRecordingDto UpdateBookEntryInstrument(string instrumentRecordingUID,
+                                                            string bookEntryUID,
+                                                            InstrumentFields fields) {
+      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.AssertObject(bookEntryUID, "bookEntryUID");
+      Assertion.AssertObject(fields, "fields");
+
+
+      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+
+      Instrument instrument = Instrument.Parse(instrumentRecording.InstrumentId);
+
+      instrument.Update(fields);
+
+      instrument.Save();
+
+      return InstrumentRecordingMapper.Map(instrumentRecording);
+    }
+
 
     #endregion Command Use cases
 
