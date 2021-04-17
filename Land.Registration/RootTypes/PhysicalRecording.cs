@@ -52,7 +52,7 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnInitialize() {
-      recordingActList = new Lazy<FixedList<RecordingAct>>(() => RecordingActsData.GetPhysicalRecordingRecordedActs(this));
+      recordingActList = GetNewRecordingActListLazyInstance();
       this.ExtendedData = new RecordingExtData();
     }
 
@@ -297,16 +297,16 @@ namespace Empiria.Land.Registration {
     }
 
     public void Refresh() {
-      this.recordingActList = null;
+      this.recordingActList = GetNewRecordingActListLazyInstance();
     }
 
     public void SortRecordingActs() {
-      this.recordingActList = null;
+      this.recordingActList = GetNewRecordingActListLazyInstance();
       for (int i = 0; i < this.RecordingActs.Count; i++) {
         RecordingActs[i].Index = i + 1;
         RecordingActs[i].Save();
       }
-      this.recordingActList = null;
+      this.recordingActList = GetNewRecordingActListLazyInstance();
     }
 
     public void Update(RecordingDTO data) {
@@ -340,6 +340,13 @@ namespace Empiria.Land.Registration {
       }
       this.Delete(false);
     }
+
+
+
+    private Lazy<FixedList<RecordingAct>> GetNewRecordingActListLazyInstance() {
+      return new Lazy<FixedList<RecordingAct>>(() => RecordingActsData.GetPhysicalRecordingRecordedActs(this));
+    }
+
 
     private void LoadData(RecordingDTO dto) {
       if (this.IsNew) {
