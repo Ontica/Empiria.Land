@@ -146,7 +146,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       nextBookEntry.Save();
 
-      return InstrumentRecordingMapper.Map(instrumentRecording, instrumentRecording.GetTransaction());
+      return InstrumentRecordingMapper.Map(instrumentRecording);
     }
 
 
@@ -194,11 +194,37 @@ namespace Empiria.Land.Registration.UseCases {
       return RecordingBookMapper.Map(book);
     }
 
+
     public InstrumentRecordingDto RemoveRecordingAct(string recordingBookUID,
                                                      string bookEntryUID,
                                                      string recordingActUID) {
-      throw new NotImplementedException();
+      Assertion.AssertObject(recordingBookUID, "recordingBookUID");
+      Assertion.AssertObject(bookEntryUID, "bookEntryUID");
+      Assertion.AssertObject(recordingActUID, "recordingActUID");
+
+      var book = RecordingBook.Parse(recordingBookUID);
+
+      var bookEntry = PhysicalRecording.Parse(bookEntryUID);
+
+      var recordingAct = RecordingAct.Parse(recordingActUID);
+
+      var instrumentRecording = recordingAct.Document;
+
+      Assertion.Assert(book.Recordings.Contains(bookEntry),
+                       $"Book entry '{bookEntryUID}', does not belong to book '{book.AsText}'.");
+
+      Assertion.Assert(bookEntry.RecordingActs.Contains(recordingAct),
+                      $"Book entry '{bookEntryUID}', does not contains recording act '{recordingAct.UID}'.");
+
+
+      instrumentRecording.RemoveRecordingAct(recordingAct);
+
+      book.Refresh();
+      bookEntry.Refresh();
+
+      return InstrumentRecordingMapper.Map(instrumentRecording);
     }
+
 
     public InstrumentRecordingDto RemoveBookEntryFromInstrument(string instrumentRecordingUID,
                                                                 string bookEntryUID) {
@@ -216,7 +242,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       bookEntry.Delete();
 
-      return InstrumentRecordingMapper.Map(instrumentRecording, instrumentRecording.GetTransaction());
+      return InstrumentRecordingMapper.Map(instrumentRecording);
     }
 
     #endregion Command Use cases
