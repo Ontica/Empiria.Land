@@ -61,6 +61,16 @@ namespace Empiria.Land.Registration {
       get; set;
     } = string.Empty;
 
+
+    public string PartitionType {
+      get; set;
+    } = string.Empty;
+
+
+    public string PartitionNo {
+      get; set;
+    } = string.Empty;
+
   }
 
 
@@ -90,6 +100,9 @@ namespace Empiria.Land.Registration {
         this.PrecedentRecording = PhysicalRecording.Parse(fields.BookEntryUID);
       }
 
+      if (this.RecordingTaskType == RecordingTaskType.createPartition) {
+        this.PartitionInfo = new RealEstatePartitionDTO(fields.PartitionType, fields.PartitionNo, String.Empty);
+      }
     }
 
 

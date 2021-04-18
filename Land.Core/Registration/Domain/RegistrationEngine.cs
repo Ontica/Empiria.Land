@@ -67,6 +67,8 @@ namespace Empiria.Land.Registration {
       fields.RecordingDocumentUID = _recordingDocument.GUID;
       fields.RecordingActTypeUID = command.Payload.RecordingActTypeUID;
       fields.RecordableSubjectUID = command.Payload.RecordableSubjectUID;
+      fields.PartitionType = command.Payload.PartitionType;
+      fields.PartitionNo = command.Payload.PartitionNo;
 
       return fields;
     }
@@ -85,6 +87,9 @@ namespace Empiria.Land.Registration {
         case RegistrationCommandType.SelectNoProperty:
         case RegistrationCommandType.SelectRealEstate:
           return RecordingTaskType.selectProperty;
+
+        case RegistrationCommandType.SelectRealEstatePartition:
+          return RecordingTaskType.createPartition;
 
         default:
           throw Assertion.AssertNoReachThisCode($"There is not defined a registration rule for commandType '{commandType}'.");

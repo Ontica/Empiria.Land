@@ -134,8 +134,8 @@ namespace Empiria.Land.Registration {
 
     internal protected override string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(base.Keywords, this.CadastralKey, this.Name, this.Description,
-                                           this.Kind, this.RecorderOffice.Alias, this.RealEstateExtData.MetesAndBounds);
+        return EmpiriaString.BuildKeywords(base.Keywords, this.CadastralKey, this.PartitionNo,
+                                           this.Municipality.FullName, this.RealEstateExtData.MetesAndBounds);
       }
     }
 
@@ -342,11 +342,18 @@ namespace Empiria.Land.Registration {
     internal RealEstate[] Subdivide(RealEstatePartitionDTO partitionInfo) {
       Assertion.Assert(!this.IsNew, "New properties can't be subdivided.");
 
-      string[] partitionNames = partitionInfo.GetPartitionNames();
-      RealEstate[] partitions = new RealEstate[partitionNames.Length];
-      for (int i = 0; i < partitionNames.Length; i++) {
-        partitions[i] = this.CreatePartition(partitionNames[i]);
-      }
+      RealEstate[] partitions = new RealEstate[1];
+
+      partitions[0] = this.CreatePartition(partitionInfo);
+
+
+      // Code for lotification creation
+      // string[] partitionNames = partitionInfo.GetPartitionNames();
+      // RealEstate[] partitions = new RealEstate[partitionNames.Length];
+      // for (int i = 0; i < partitionNames.Length; i++) {
+      //  partitions[i] = this.CreatePartition(partitionNames[i]);
+      //}
+
       return partitions;
     }
 
@@ -355,10 +362,14 @@ namespace Empiria.Land.Registration {
 
     #region Private methods
 
-    private RealEstate CreatePartition(string partititionNo) {
+    private RealEstate CreatePartition(RealEstatePartitionDTO partitionInfo) {
       var lot = new RealEstate();
       lot.IsPartitionOf = this;
-      lot.PartitionNo = partititionNo;
+      lot.RecorderOffice = this.RecorderOffice;
+      lot.Municipality = this.Municipality;
+      lot.Kind = partitionInfo.PartitionType;
+      lot.PartitionNo = partitionInfo.PartitionNumber;
+
       lot.Save();
 
       return lot;

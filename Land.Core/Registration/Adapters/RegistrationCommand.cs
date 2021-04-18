@@ -50,6 +50,16 @@ namespace Empiria.Land.Registration.Adapters {
     } = string.Empty;
 
 
+    public string PartitionType {
+      get; set;
+    } = string.Empty;
+
+
+    public string PartitionNo {
+      get; set;
+    } = string.Empty;
+
+
   }  // class RegistrationCommandPayload
 
 
