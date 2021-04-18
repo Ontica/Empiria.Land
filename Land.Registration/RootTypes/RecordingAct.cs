@@ -193,6 +193,34 @@ namespace Empiria.Land.Registration {
     }
 
 
+    [DataField("RecordingActKind")]
+    public string Kind {
+      get;
+      set;
+    }
+
+
+    [DataField("OperationAmount")]
+    public decimal OperationAmount {
+      get;
+      private set;
+    }
+
+
+    [DataField("OperationCurrencyId")]
+    public Currency OperationCurrency {
+      get;
+      private set;
+    }
+
+
+    [DataField("RecordingActSummary")]
+    public string Summary {
+      get;
+      set;
+    }
+
+
     [DataField("RecordingActPercentage", Default = 1.0)]
     public decimal Percentage {
       get;

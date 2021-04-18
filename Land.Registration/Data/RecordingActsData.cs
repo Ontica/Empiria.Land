@@ -67,6 +67,7 @@ namespace Empiria.Land.Data {
       var op = DataOperation.Parse("writeLRSRecordingAct", o.Id, o.UID,
                       o.RecordingActType.Id, o.Document.Id, o.Index,
                       o.Resource.Id, (char) o.ResourceRole, o.RelatedResource.Id, o.Percentage,
+                      o.Kind, o.OperationAmount, o.OperationCurrency.Id, o.Summary,
                       o.Notes, /* o.ResourceExtData, */ o.ExtensionData.ToString(), o.Keywords,
                       o.AmendmentOf.Id, o.AmendedBy.Id, o.PhysicalRecording.Id,
                       o.RegisteredBy.Id, o.RegistrationTime, (char) o.Status, o.Integrity.GetUpdatedHashCode());
