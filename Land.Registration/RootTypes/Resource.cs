@@ -363,6 +363,7 @@ namespace Empiria.Land.Registration {
 
     abstract protected string GenerateResourceUID();
 
+    abstract public ResourceShapshotData GetSnapshotData();
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {

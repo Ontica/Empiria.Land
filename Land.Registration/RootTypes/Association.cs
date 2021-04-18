@@ -5,17 +5,17 @@
 *  Type      : Association                                    Pattern  : Empiria Object Type                 *
 *  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Represents a social association or organization.                                              *
+*  Summary   : Represents an association or organization.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System.Data;
+using System;
 
 using Empiria.Land.Data;
 using Empiria.Land.Providers;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Represents a social association or organization.</summary>
+  /// <summary>Represents an association or organization.</summary>
   public class Association : Resource {
 
     #region Constructors and parsers
@@ -58,6 +58,17 @@ namespace Empiria.Land.Registration {
     protected override string GenerateResourceUID() {
       return ExternalProviders.UniqueIDGeneratorProvider.GenerateAssociationUID();
     }
+
+
+    public override ResourceShapshotData GetSnapshotData() {
+      return new AssociationShapshotData {
+        Kind = this.Kind,
+        Name = this.Name,
+        Description = this.Description,
+        Status = ((char) this.Status).ToString()
+      };
+    }
+
 
     public RecordingAct GetIncorporationAct() {
       FixedList<RecordingAct> tract = base.Tract.GetRecordingActs();

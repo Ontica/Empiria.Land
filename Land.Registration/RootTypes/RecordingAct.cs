@@ -13,6 +13,7 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
+using Empiria.DataTypes;
 using Empiria.Security;
 using Empiria.Ontology;
 
@@ -49,8 +50,6 @@ namespace Empiria.Land.Registration {
       Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance.");
 
       Assertion.AssertObject(physicalRecording, "physicalRecording");
-      //Assertion.Assert(!physicalRecording.IsEmptyInstance,
-      //                 "physicalRecording can't be the empty instance");
 
       this.PhysicalRecording = physicalRecording;
       this.Document = document;
@@ -214,15 +213,17 @@ namespace Empiria.Land.Registration {
     } = RecordingActExtData.Empty;
 
 
-    internal RealEstateExtData ResourceExtData {
+
+    internal ResourceShapshotData ResourceShapshotData {
       get;
       private set;
-    } = RealEstateExtData.Empty;
+    } = ResourceShapshotData.Empty;
+
 
 
     public bool ResourceUpdated {
       get {
-        return (!this.ResourceExtData.IsEmptyInstance);
+        return (!this.ResourceShapshotData.IsEmptyInstance);
       }
     }
 
@@ -569,24 +570,22 @@ namespace Empiria.Land.Registration {
     }
 
     /// <summary>Gets the resource data as it was when it was applied to this recording act.</summary>
-    public RealEstateExtData GetResourceExtData() {
-      if (!this.ResourceExtData.IsEmptyInstance) {
-        return this.ResourceExtData;
+    public ResourceShapshotData GetResourceExtData() {
+      if (!this.ResourceShapshotData.IsEmptyInstance) {
+        return this.ResourceShapshotData;
       }
+
       var tract = this.Resource.Tract.GetRecordingActs();
 
       /// Look for the first recording act with ResourceExtData added before this act in the tract.
       /// If it is found then return it, if not then return the current resource data.
       var lastData = tract.Find((x) => x.Document.PresentationTime > this.Document.PresentationTime &&
-                                       !x.ResourceExtData.IsEmptyInstance);
+                                       !x.ResourceShapshotData.IsEmptyInstance);
       if (lastData != null) {
-        return lastData.ResourceExtData;
+        return lastData.ResourceShapshotData;
       }
-      if (this.Resource is RealEstate) {
-        return ((RealEstate) this.Resource).RealEstateExtData;
-      } else {
-        return RealEstateExtData.Empty;
-      }
+
+      return this.Resource.GetSnapshotData();
     }
 
 
@@ -594,19 +593,23 @@ namespace Empiria.Land.Registration {
       return false;
     }
 
-    public void OnResourceUpdated(RealEstate realEstateUpdatedData) {
-      Assertion.Assert(realEstateUpdatedData.Equals(this.Resource),
+
+    public void OnResourceUpdated(Resource updatedResource) {
+      Assertion.Assert(updatedResource.Equals(this.Resource),
                        "Recording act resource and the updated resource are not the same.");
 
-      this.ResourceExtData = realEstateUpdatedData.RealEstateExtData;
+      this.ResourceShapshotData = updatedResource.GetSnapshotData();
 
-      RecordingActsData.UpdateRecordingActResourceExtData(this);
+      RecordingActsData.UpdateRecordingActResourceSnapshot(this);
     }
+
 
     protected override void OnLoadObjectData(DataRow row) {
       this.ExtensionData = RecordingActExtData.Parse((string) row["RecordingActExtData"]);
-      this.ResourceExtData = RealEstateExtData.Parse((string) row["RecordingActResourceExtData"]);
+
+      this.ResourceShapshotData = ResourceShapshotData.Parse(this.Resource, (string) row["RecordingActResourceExtData"]);
     }
+
 
     protected override void OnSave() {
       // Writes any change to the document and to the related physical recording
@@ -654,6 +657,7 @@ namespace Empiria.Land.Registration {
 
       this.Index = this.Document.AddRecordingAct(this);
     }
+
 
     public bool WasAliveOn(DateTime onDate) {
       if (this.WasCanceledOn(onDate)) {

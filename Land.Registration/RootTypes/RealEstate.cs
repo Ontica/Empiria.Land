@@ -247,6 +247,23 @@ namespace Empiria.Land.Registration {
       return ExternalProviders.UniqueIDGeneratorProvider.GeneratePropertyUID();
     }
 
+    public override ResourceShapshotData GetSnapshotData() {
+      return new RealEstateShapshotData {
+        Kind = this.Kind,
+        Name = this.Name,
+        Description = this.Description,
+        Notes = this.Notes,
+        MunicipalityId = this.Municipality.Id,
+        CadastralKey = this.CadastralKey,
+        CadastreLinkingDate = this.CadastreLinkingDate,
+        LotSize = this.LotSize.Amount,
+        LotSizeUnitId = this.LotSize.Unit.Id,
+        PartitionNo = this.PartitionNo,
+        MetesAndBounds = this.MetesAndBounds,
+        Status = ((char) this.Status).ToString()
+      };
+    }
+
 
     public FixedList<RecordingAct> GetHardLimitationActs() {
       var tract = base.Tract.GetRecordingActs();
@@ -374,6 +391,7 @@ namespace Empiria.Land.Registration {
 
       return lot;
     }
+
 
     #endregion Private methods
 
