@@ -43,13 +43,14 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     private bool CreateNewResource {
       get {
-        return ((Task.RecordingTaskType == RecordingTaskType.actAppliesToDocument ||
-                 Task.RecordingTaskType == RecordingTaskType.createProperty) &&
+        return ((Task.RecordingTaskType == RecordingTaskType.createProperty) &&
                  Task.PrecedentProperty.IsEmptyInstance);
       }
     }
+
 
     private bool CreateResourceOnNewPhysicalRecording {
       get {
@@ -60,6 +61,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     private bool CreateResourceOnExistingPhysicalRecording {
       get {
         return ((Task.RecordingTaskType != RecordingTaskType.createProperty) &&
@@ -69,10 +71,20 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
+    private bool SelectResource {
+      get {
+        return ((Task.RecordingTaskType == RecordingTaskType.selectProperty) &&
+                 !Task.PrecedentProperty.IsEmptyInstance);
+      }
+    }
+
+
     public RecordingTask Task {
       get;
       private set;
     }
+
 
     #endregion Properties
 
@@ -145,6 +157,7 @@ namespace Empiria.Land.Registration {
 
     }
 
+
     private RecordingAct[] ProcessTask() {
       var recordingActType = this.Task.RecordingActType;
 
@@ -169,6 +182,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     private DomainAct[] CreateDomainAct() {
       // Cast because limitation acts supposed to be applicable only to real estates
       RealEstate[] realEstates = (RealEstate[]) this.GetResources();
@@ -184,6 +198,7 @@ namespace Empiria.Land.Registration {
       return domainActs;
     }
 
+
     private InformationAct[] CreateInformationAct() {
       Resource[] resources = this.GetResources();
 
@@ -196,6 +211,7 @@ namespace Empiria.Land.Registration {
       }
       return informationActs;
     }
+
 
     private LimitationAct[] CreateLimitationAct() {
       // Cast because limitation acts supposed to be applicable only to real estates
@@ -211,6 +227,7 @@ namespace Empiria.Land.Registration {
       }
       return recordingActs;
     }
+
 
     private CancelationAct[] CreateCancelationAct() {
       switch (this.Task.RecordingActType.AppliesTo) {
@@ -238,6 +255,7 @@ namespace Empiria.Land.Registration {
           throw Assertion.AssertNoReachThisCode();
       }
     }
+
 
     private ModificationAct[] CreateModificationAct() {
       switch (this.Task.RecordingActType.AppliesTo) {
@@ -273,9 +291,11 @@ namespace Empiria.Land.Registration {
       throw new NotImplementedException();
     }
 
+
     private CancelationAct[] CreatePartyCancelationAct() {
       throw new NotImplementedException();
     }
+
 
     private CancelationAct[] CreateRecordingActCancelationAct() {
       var resource = this.GetOneResource();
@@ -286,6 +306,7 @@ namespace Empiria.Land.Registration {
                                         this.Task.Document, resource, targetAct) };
     }
 
+
     private CancelationAct[] CreateResourceCancelationAct() {
       var resource = this.GetOneResource();
 
@@ -293,9 +314,11 @@ namespace Empiria.Land.Registration {
                                         this.Task.Document, resource) };
     }
 
+
     private CancelationAct[] CreateStructureCancelationAct() {
       throw new NotImplementedException();
     }
+
 
     private RecordingAct CreateTargetRecordingAct(Resource resource) {
       PhysicalRecording recording = Task.TargetActInfo.PhysicalRecording;
@@ -312,6 +335,7 @@ namespace Empiria.Land.Registration {
                                          resource, physicalRecording: recording);
     }
 
+
     private RecordingAct GetTargetRecordingAct(Resource resource) {
       if (this.Task.TargetActInfo.RecordingActId != -1) {
         return RecordingAct.Parse(this.Task.TargetActInfo.RecordingActId);
@@ -319,6 +343,7 @@ namespace Empiria.Land.Registration {
         return this.CreateTargetRecordingAct(resource);
       }
     }
+
 
     private RecordingDocument GetTargetDocument() {
       throw new NotImplementedException();
@@ -332,6 +357,7 @@ namespace Empiria.Land.Registration {
       throw new NotImplementedException();
     }
 
+
     private ModificationAct[] CreateRecordingActModificationAct() {
       var resource = this.GetOneResource();
 
@@ -341,12 +367,14 @@ namespace Empiria.Land.Registration {
                                          this.Task.Document, resource, targetAct) };
     }
 
+
     private ModificationAct[] CreateResourceModificationAct() {
       var resource = this.GetOneResource();
 
       return new[] { new ModificationAct(this.Task.RecordingActType,
                                          this.Task.Document, resource) };
     }
+
 
     private ModificationAct[] CreateStructureModificationAct() {
       throw new NotImplementedException();
@@ -365,6 +393,7 @@ namespace Empiria.Land.Registration {
 
       return resources[0];
     }
+
 
     private Resource[] GetResources() {
       RecordingRuleApplication appliesTo = this.Task.RecordingActType.RecordingRule.AppliesTo;
@@ -386,6 +415,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     // Don't call directly. Please use it only in GetResources()
     private Association[] GetAssociations() {
       if (this.CreateNewResource) {
@@ -398,11 +428,17 @@ namespace Empiria.Land.Registration {
 
         return new Association[] { association };
 
+      } else if (this.SelectResource) {
+
+        return new Association[] { (Association) this.Task.PrecedentProperty };
+
       } else {
 
         return new Association[] { new Association() };
+
       }
     }
+
 
     // Don't call directly. Please use it only in GetResources()
     private NoPropertyResource[] GetNoPropertyResources() {
@@ -415,6 +451,11 @@ namespace Empiria.Land.Registration {
         this.AttachResourceToNewPhysicalRecording(new NoPropertyResource());
 
         return new NoPropertyResource[] { noPropertyResource };
+
+      } else if (this.SelectResource) {
+
+        return new NoPropertyResource[] { (NoPropertyResource) this.Task.PrecedentProperty };
+
       } else {
         return new NoPropertyResource[] { new NoPropertyResource() };
       }
@@ -435,11 +476,15 @@ namespace Empiria.Land.Registration {
 
         property = new RealEstate(data);
         this.AttachResourceToNewPhysicalRecording(property);
+
       } else if (this.CreateResourceOnExistingPhysicalRecording) {
         var data = new RealEstateExtData() { CadastralKey = Task.CadastralKey };
 
         property = new RealEstate(data);
         this.AttachResourceToExistingPhysicalRecording(property);
+
+      } else if (this.SelectResource) {
+        property = (RealEstate) this.Task.PrecedentProperty;
 
       } else {
         property = (RealEstate) this.Task.PrecedentProperty;
