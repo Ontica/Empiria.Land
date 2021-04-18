@@ -34,6 +34,7 @@ namespace Empiria.Land.Registration {
                             Resource resource, PhysicalRecording physicalRecording)
                                       : base(recordingActType, document, physicalRecording) {
       recordingActType.AssertIsApplicableResource(resource);
+
       this.AttachResource(resource);
     }
 
@@ -48,8 +49,15 @@ namespace Empiria.Land.Registration {
     private void AttachResource(Resource resource) {
       if (resource is RealEstate) {
         this.SetRealEstate((RealEstate) resource);
+        return;
+      }
+
+      var tract = resource.Tract.GetRecordingActs();
+
+      if (tract.Count != 0) {     // This is not the first act of the real estate
+        base.SetResource(resource, ResourceRole.Informative);
       } else {
-        base.SetResource(resource);
+        base.SetResource(resource, ResourceRole.Created);
       }
     }
 
