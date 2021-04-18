@@ -57,12 +57,22 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     } = string.Empty;
 
 
+    public string Description {
+      get; set;
+    } = string.Empty;
+
+
   }  // class AssociationFields
 
 
   /// <summary>Fields input data holder for no-property entities like
   /// recordable documents or things.</summary>
   public class NoPropertyFields : RecordableSubjectFields {
+
+    public string Name {
+      get; set;
+    } = string.Empty;
+
 
     public string Description {
       get; set;

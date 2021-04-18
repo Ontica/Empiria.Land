@@ -227,12 +227,12 @@ namespace Empiria.Land.Registration {
     }
 
 
-    internal string Keywords {
+    internal protected virtual string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName, this.Document.UID,
-                                           this.Resource.UID, this.RelatedResource.UID,
                                            !this.PhysicalRecording.IsEmptyInstance ?
-                                           this.PhysicalRecording.AsText : String.Empty);
+                                           this.PhysicalRecording.AsText : String.Empty,
+                                           this.Resource.Keywords);
       }
     }
 

@@ -50,7 +50,6 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       dto.CadastralID = realEstate.CadastralKey;
       dto.CadastreLinkingDate = realEstate.CadastreLinkingDate;
       dto.CadastralCardMedia = MediaData.Empty;
-      dto.RecorderOffice = realEstate.RecorderOffice.MapToNamedEntity();
       dto.Municipality = new NamedEntityDto(realEstate.Municipality.UID,
                                             realEstate.Municipality.Name);
       dto.LotSize = realEstate.LotSize.Amount;
@@ -84,9 +83,11 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       dto.UID = resource.GUID;
       dto.Type = (RecordableSubjectType) Enum.Parse(typeof(RecordableSubjectType),
                                                     resource.GetEmpiriaType().NamedKey);
-      dto.Name = resource.Name;
+      dto.RecorderOffice = resource.RecorderOffice.MapToNamedEntity();
       dto.ElectronicID = resource.UID;
       dto.Kind = resource.Kind;
+      dto.Name = resource.Name;
+      dto.Description = resource.Description;
     }
 
 
@@ -103,7 +104,6 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
       return dto;
     }
-
 
   }  // class RecordableSubjectsMapper
 

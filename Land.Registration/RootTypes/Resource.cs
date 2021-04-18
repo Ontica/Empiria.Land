@@ -149,7 +149,8 @@ namespace Empiria.Land.Registration {
 
     internal protected virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.UID);
+        return EmpiriaString.BuildKeywords(this.UID, this.Kind, this.Name,
+                                           this.Description, this.RecorderOffice.Alias);
       }
     }
 

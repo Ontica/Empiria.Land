@@ -78,6 +78,7 @@ namespace Empiria.Land.Registration {
       association.RecorderOffice = RecorderOffice.Parse(fields.RecorderOfficeUID);
       association.Kind = fields.Kind;
       association.Name = fields.Name;
+      association.Description = fields.Description;
 
       association.Save();
     }
@@ -87,6 +88,7 @@ namespace Empiria.Land.Registration {
                                NoPropertyFields fields) {
       noPropertyResource.RecorderOffice = RecorderOffice.Parse(fields.RecorderOfficeUID);
       noPropertyResource.Kind = fields.Kind;
+      noPropertyResource.Name  = fields.Name;
       noPropertyResource.Description = fields.Description;
 
       noPropertyResource.Save();

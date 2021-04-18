@@ -77,7 +77,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       get; internal set;
     }
 
-    public string Name {
+    public NamedEntityDto RecorderOffice {
       get; internal set;
     }
 
@@ -89,6 +89,13 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       get; internal set;
     }
 
+    public string Name {
+      get; internal set;
+    }
+
+    public string Description {
+      get; internal set;
+    }
 
     public RecordingContextDto RecordingContext {
       get; internal set;
@@ -115,11 +122,6 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    public NamedEntityDto RecorderOffice {
-      get; internal set;
-    }
-
-
     public NamedEntityDto Municipality {
       get; internal set;
     }
@@ -135,11 +137,6 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    public string Description {
-      get; internal set;
-    }
-
-
     public string MetesAndBounds {
       get; internal set;
     }
@@ -151,11 +148,13 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
   /// <summary>Output DTO model for Assocations.</summary>
   public class AssociationDto : RecordableSubjectDto {
 
+
   }  // class AssociationDto
 
 
   /// <summary>Output DTO model for No-property resources.</summary>
   public class NoPropertyDto : RecordableSubjectDto {
+
 
   }  // class NoPropertyDto
 
