@@ -62,6 +62,10 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       get; internal set;
     }
 
+    public string Status {
+      get; internal set;
+    }
+
   }  // class RecordableSubjectShortDto
 
 
@@ -94,6 +98,10 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
     public string Description {
+      get; internal set;
+    }
+
+    public string Status {
       get; internal set;
     }
 

@@ -36,15 +36,14 @@ namespace Empiria.Land.Registration {
         Update(recordingAct.Resource as NoPropertyResource, fields as NoPropertyFields);
 
       } else if (fields is RealEstateFields) {
-        RealEstate realEstate = (RealEstate) recordingAct.Resource;
-
-        Update(realEstate, fields as RealEstateFields);
-
-        recordingAct.OnResourceUpdated(realEstate);
+        Update(recordingAct.Resource as RealEstate, fields as RealEstateFields);
 
       } else {
         throw Assertion.AssertNoReachThisCode($"Unhandled RecordableSubjectFields type {fields.GetType()}.");
       }
+
+      recordingAct.OnResourceUpdated(recordingAct.Resource);
+
     }
 
 
@@ -80,6 +79,8 @@ namespace Empiria.Land.Registration {
       association.Name = fields.Name;
       association.Description = fields.Description;
 
+      association.SetStatus(fields.Status);
+
       association.Save();
     }
 
@@ -90,6 +91,8 @@ namespace Empiria.Land.Registration {
       noPropertyResource.Kind = fields.Kind;
       noPropertyResource.Name  = fields.Name;
       noPropertyResource.Description = fields.Description;
+
+      noPropertyResource.SetStatus(fields.Status);
 
       noPropertyResource.Save();
     }

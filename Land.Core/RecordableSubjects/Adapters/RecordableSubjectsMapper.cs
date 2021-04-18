@@ -88,6 +88,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       dto.Kind = resource.Kind;
       dto.Name = resource.Name;
       dto.Description = resource.Description;
+      dto.Status = resource.Status.ToString();
     }
 
 
@@ -101,6 +102,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       dto.Name = resource.Name.Length != 0 ? resource.Name : resource.Description;
       dto.ElectronicID = resource.UID;
       dto.Kind = resource.Kind;
+      dto.Status = resource.Status.ToString();
 
       return dto;
     }
