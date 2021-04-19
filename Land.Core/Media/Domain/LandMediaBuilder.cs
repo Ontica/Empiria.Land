@@ -11,7 +11,7 @@ using System;
 
 using Empiria.DataTypes;
 using Empiria.Land.Media.Adapters;
-
+using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Media {
@@ -57,6 +57,18 @@ namespace Empiria.Land.Media {
         default:
           throw Assertion.AssertNoReachThisCode($"GetMediaDto() method can't process files of " +
                                                 $"media content {this.MediaContent}.");
+      }
+    }
+
+    internal FixedList<LandMediaFile> GetLandMediaFiles(LandMediaContent mediaContent, BaseObject instance) {
+      var repository = new LandMediaFilesRepository();
+
+      switch (mediaContent) {
+        case LandMediaContent.BookEntryMediaFiles:
+          return repository.GetFiles(mediaContent, instance);
+
+        default:
+          throw Assertion.AssertNoReachThisCode();
       }
     }
 
