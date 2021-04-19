@@ -64,24 +64,26 @@ namespace Empiria.Land.Media {
       Assertion.AssertObject(fields, "fields");
       Assertion.AssertObject(fileStream, "fileStream");
 
-      using (var service = MediaFileServices.ServiceInteractor()) {
-        var storage = service.GetStorageFor(this.Entity);
+      await Task.CompletedTask;
 
-        LandMediaFile mediaFile = await service.CreateMediaFile<LandMediaFile>(storage, fields, fileStream);
+      //using (var service = MediaFileServices.ServiceInteractor()) {
+      //  var storage = service.GetStorageFor(this.Entity);
 
-        service.RelateMediaFile(mediaFile, this.Entity, $"Instrument.File.{fields.MediaContent}");
+      //  LandMediaFile mediaFile = await service.CreateMediaFile<LandMediaFile>(storage, fields, fileStream);
 
-        _mediaFileslist.Add(mediaFile);
-      }
+      //  service.RelateMediaFile(mediaFile, this.Entity, $"Instrument.File.{fields.MediaContent}");
+
+      //  _mediaFileslist.Add(mediaFile);
+      //}
     }
 
 
     internal void AssertCanBeAdded(LandMediaFileFields fields) {
       Assertion.AssertObject(fields, "fields");
 
-      if (_mediaFileslist.Exists(x => x.MediaContent == fields.MediaContent)) {
-        Assertion.AssertFail($"A file with MediaContent '{fields.MediaContent}' already exists for this entity.");
-      }
+      //if (_mediaFileslist.Exists(x => x.MediaContent == fields.MediaContent)) {
+      //  Assertion.AssertFail($"A file with MediaContent '{fields.MediaContent}' already exists for this entity.");
+      //}
     }
 
 
@@ -96,24 +98,25 @@ namespace Empiria.Land.Media {
 
 
     static private List<LandMediaFile> GetEntityMediaFilesList(BaseObject entity) {
-      using (var service = MediaFileServices.ServiceInteractor()) {
-        var files = service.GetRelatedMediaFiles<LandMediaFile>(entity);
+      //using (var service = MediaFileServices.ServiceInteractor()) {
+      //  var files = service.GetRelatedMediaFiles<LandMediaFile>(entity);
 
-        return new List<LandMediaFile>(files);
-      }
+      //  return new List<LandMediaFile>(files);
+      //}
+      return new List<LandMediaFile>();
     }
 
 
     public void Remove(string mediaFileUID) {
       Assertion.AssertObject(mediaFileUID, "mediaFileUID");
 
-      using (var service = MediaFileServices.ServiceInteractor()) {
-        var mediaFileToRemove = _mediaFileslist.Find(x => x.UID == mediaFileUID);
+      //using (var service = MediaFileServices.ServiceInteractor()) {
+      //  var mediaFileToRemove = _mediaFileslist.Find(x => x.UID == mediaFileUID);
 
-        service.RemoveMediaFile(mediaFileToRemove, this.Entity);
+      //  service.RemoveMediaFile(mediaFileToRemove, this.Entity);
 
-        _mediaFileslist.Remove(mediaFileToRemove);
-      }
+      //  _mediaFileslist.Remove(mediaFileToRemove);
+      //}
     }
 
 
@@ -122,15 +125,17 @@ namespace Empiria.Land.Media {
       Assertion.AssertObject(fields, "fields");
       Assertion.AssertObject(fileStream, "fileStream");
 
-      using (var service = MediaFileServices.ServiceInteractor()) {
-        var mediaFileToReplace = _mediaFileslist.Find(x => x.UID == mediaFileUID);
+      //using (var service = MediaFileServices.ServiceInteractor()) {
+      //  var mediaFileToReplace = _mediaFileslist.Find(x => x.UID == mediaFileUID);
 
-        LandMediaFile newMediaFile = await service.ReplaceMediaFile<LandMediaFile>(mediaFileToReplace,
-                                                                                   fields, fileStream);
+      //  LandMediaFile newMediaFile = await service.ReplaceMediaFile<LandMediaFile>(mediaFileToReplace,
+      //                                                                             fields, fileStream);
 
-        _mediaFileslist.Remove(mediaFileToReplace);
-        _mediaFileslist.Add(newMediaFile);
-      }
+      //  _mediaFileslist.Remove(mediaFileToReplace);
+      //  _mediaFileslist.Add(newMediaFile);
+      //}
+
+      await Task.CompletedTask;
     }
 
 

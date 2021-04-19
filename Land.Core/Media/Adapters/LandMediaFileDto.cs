@@ -11,7 +11,7 @@
 namespace Empiria.Land.Media.Adapters {
 
   /// <summary>Output DTO with data representing an Empiria Land system's media file.</summary>
-  internal class LandMediaFileDto {
+  public class LandMediaFileDto {
 
     public string UID {
       get; internal set;
@@ -23,12 +23,12 @@ namespace Empiria.Land.Media.Adapters {
     }
 
 
-    public LandMediaContent Content {
+    public string Name {
       get; internal set;
     }
 
 
-    public string Name {
+    public string Content {
       get; internal set;
     }
 
