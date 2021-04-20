@@ -27,7 +27,7 @@ namespace Empiria.Land.Media.Adapters {
     }
 
 
-    static private LandMediaFileDto Map(LandMediaFile mediaFile) {
+    static public LandMediaFileDto Map(LandMediaFile mediaFile) {
       return new LandMediaFileDto {
         UID = mediaFile.UID,
         Type = mediaFile.MediaType,

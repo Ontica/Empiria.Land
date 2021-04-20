@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.DataTypes;
+
 using Empiria.Land.Media;
 using Empiria.Land.Media.Adapters;
 
@@ -61,12 +63,24 @@ namespace Empiria.Land.Registration.Adapters {
       dto.RecordingActs = InstrumentRecordingMapper.MapRecordingActsListDto(bookEntry.RecordingActs);
       dto.Status = bookEntry.Status;
 
+      dto.MediaFiles = MapBookEntryMediaFiles(bookEntry);
+
       var mediaBuilder = new LandMediaBuilder(LandMediaContent.BookEntryRegistrationStamp);
 
       dto.StampMedia = mediaBuilder.GetMediaDto(bookEntry.Id.ToString(), "-1");
 
       return dto;
     }
+
+
+    static private FixedList<LandMediaFileDto> MapBookEntryMediaFiles(PhysicalRecording bookEntry) {
+      var mediaBuilder = new LandMediaBuilder(LandMediaContent.BookEntryRegistrationStamp);
+
+      var files = mediaBuilder.GetLandMediaFiles(LandMediaContent.BookEntryMediaFiles, bookEntry);
+
+      return new FixedList<LandMediaFileDto>(files.Select(x => LandMediaFileMapper.Map(x)));
+    }
+
 
     static private RecordingBookEntryShortDto MapBookEntryToShortDto(PhysicalRecording bookEntry) {
       return new RecordingBookEntryShortDto {

@@ -11,6 +11,8 @@ using System;
 
 using Empiria.DataTypes;
 
+using Empiria.Land.Media.Adapters;
+
 namespace Empiria.Land.Registration.Adapters {
 
   public class RecordingBookEntryShortDto {
@@ -80,6 +82,11 @@ namespace Empiria.Land.Registration.Adapters {
       get;
       internal set;
     }
+
+
+    public FixedList<LandMediaFileDto> MediaFiles {
+      get; internal set;
+    } = new FixedList<LandMediaFileDto>();
 
 
     public MediaData StampMedia {
