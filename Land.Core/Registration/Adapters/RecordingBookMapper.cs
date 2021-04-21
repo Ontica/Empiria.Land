@@ -53,6 +53,7 @@ namespace Empiria.Land.Registration.Adapters {
       var dto = new RecordingBookEntryDto();
 
       dto.UID = bookEntry.UID;
+      dto.RecordingBookUID = bookEntry.RecordingBook.UID;
       dto.RecordingTime = bookEntry.RecordingTime;
       dto.RecorderOfficeName = bookEntry.RecordingBook.RecorderOffice.Alias;
       dto.RecordingSectionName = bookEntry.RecordingBook.RecordingSection.Name;

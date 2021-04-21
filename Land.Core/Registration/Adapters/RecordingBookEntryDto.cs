@@ -38,6 +38,10 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
+    public string RecordingBookUID {
+      get; internal set;
+    }
+
     public DateTime RecordingTime {
       get; internal set;
     }
