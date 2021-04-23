@@ -33,7 +33,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    static internal new RecordingActType Parse(string typeName) {
+    static public new RecordingActType Parse(string typeName) {
       return RecordingActType.Parse<RecordingActType>(typeName);
     }
 
@@ -159,7 +159,7 @@ namespace Empiria.Land.Registration {
     public FixedList<RecordingActType> GetAppliesToRecordingActTypesList() {
       var json = base.ExtensionData;
 
-      var list = json.GetList<RecordingActType>("RecordingActTypes", false);
+      var list = json.GetList<RecordingActType>("RegistrationRule/RecordingActTypes", false);
       list.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
 
       return list.ToFixedList();

@@ -14,6 +14,7 @@ using Empiria.Services;
 using Empiria.Land.Registration;
 
 using Empiria.Land.RecordableSubjects.Adapters;
+using Empiria.Land.Recording.UseCases;
 
 namespace Empiria.Land.RecordableSubjects.UseCases {
 
@@ -33,6 +34,28 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
     #endregion Constructors and parsers
 
     #region Use cases
+
+    public RecordableSubjectTractIndexDto AmendableRecordingActs(string recordableSubjectUID,
+                                                                 string instrumentRecordingUID,
+                                                                 string amendmentRecordingActTypeUID) {
+      Assertion.AssertObject(recordableSubjectUID, "recordableSubjectUID");
+      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.AssertObject(amendmentRecordingActTypeUID, "amendmentRecordingActTypeUID");
+
+      var amendmentRecordingActType = RecordingActType.Parse(amendmentRecordingActTypeUID);
+
+      var recordableSubject = Resource.ParseGuid(recordableSubjectUID);
+
+      FixedList<RecordingActType> appliesTo = amendmentRecordingActType.GetAppliesToRecordingActTypesList();
+
+      EmpiriaLog.Debug(appliesTo.Count.ToString());
+
+      FixedList<RecordingAct> list = recordableSubject.Tract.GetRecordingActs();
+
+      var amendableActs = list.FindAll((x) => appliesTo.Contains(x.RecordingActType));
+
+      return RecordableSubjectTractIndexMapper.Map(recordableSubject, amendableActs);
+    }
 
 
     public FixedList<string> AssociationKinds() {
@@ -98,6 +121,8 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
           return RecordableSubjectsMapper.Map(list);
       }
     }
+
+
 
     #endregion Use cases
 

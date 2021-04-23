@@ -21,6 +21,23 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
 
     #region Web Apis
 
+    [HttpGet]
+    [Route("v5/land/registration/recordable-subjects/{recordableSubjectUID:guid}/amendable-recording-acts")]
+    public SingleObjectModel GetRecordableSubjectAmendableRecordingActs([FromUri] string recordableSubjectUID,
+                                                                        [FromUri] string instrumentRecordingUID,
+                                                                        [FromUri] string amendmentRecordingActTypeUID) {
+
+      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.AssertObject(amendmentRecordingActTypeUID, "amendmentRecordingActTypeUID");
+
+      using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
+        RecordableSubjectTractIndexDto tractIndex = usecases.AmendableRecordingActs(recordableSubjectUID,
+                                                                                    instrumentRecordingUID,
+                                                                                    amendmentRecordingActTypeUID);
+        return new SingleObjectModel(this.Request, tractIndex);
+      }
+    }
+
 
     [HttpGet]
     [Route("v5/land/registration/association-kinds")]
