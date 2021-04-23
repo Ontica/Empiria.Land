@@ -14,12 +14,15 @@ using System;
 namespace Empiria.Land.Registration {
 
 
-  /// <summary>Used to control the user interface. Describes how the recording act applies to resources.</summary>
+  /// <summary>Used to control the user interface. Describes how the recording act
+  /// applies to resources.</summary>
   public enum RecordingTaskType {
     actAppliesToOtherRecordingAct,
     actNotApplyToProperty,
     actAppliesToDocument,
     createProperty,
+    createPropertyOnAntecedent,
+    createPartitionAndPropertyOnAntecedent,
     createPartition,
     selectProperty,
   }
@@ -33,6 +36,10 @@ namespace Empiria.Land.Registration {
 
 
     public string RecordingDocumentUID {
+      get; set;
+    } = string.Empty;
+
+    public string RecordingBookEntryUID {
       get; set;
     } = string.Empty;
 
@@ -52,12 +59,7 @@ namespace Empiria.Land.Registration {
     } = string.Empty;
 
 
-    public string RecordingBookUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string BookEntryUID {
+    public string PrecedentBookEntryUID {
       get; set;
     } = string.Empty;
 
@@ -86,18 +88,18 @@ namespace Empiria.Land.Registration {
       this.RecordingTaskType = fields.RecordingTaskType;
       this.Document = RecordingDocument.ParseGuid(fields.RecordingDocumentUID);
 
+      if (!String.IsNullOrWhiteSpace(fields.RecordingBookEntryUID)) {
+        this.BookEntry = PhysicalRecording.Parse(fields.RecordingBookEntryUID);
+      }
+
       this.RecordingActType = RecordingActType.Parse(fields.RecordingActTypeUID);
 
       if (!String.IsNullOrWhiteSpace(fields.RecordableSubjectUID)) {
         this.PrecedentProperty = Resource.ParseGuid(fields.RecordableSubjectUID);
       }
 
-      if (!String.IsNullOrWhiteSpace(fields.RecordingBookUID)) {
-        this.PrecedentRecordingBook = RecordingBook.Parse(fields.RecordingBookUID);
-      }
-
-      if (!String.IsNullOrWhiteSpace(fields.BookEntryUID)) {
-        this.PrecedentRecording = PhysicalRecording.Parse(fields.BookEntryUID);
+      if (!String.IsNullOrWhiteSpace(fields.PrecedentBookEntryUID)) {
+        this.PrecedentRecording = PhysicalRecording.Parse(fields.PrecedentBookEntryUID);
       }
 
       if (this.RecordingTaskType == RecordingTaskType.createPartition) {
@@ -109,9 +111,7 @@ namespace Empiria.Land.Registration {
     public RecordingTask(int documentId = -1,
                          int recordingActTypeId = -1,
                          RecordingTaskType recordingTaskType = RecordingTaskType.actNotApplyToProperty,
-                         int precedentRecordingBookId = -1,
                          int precedentRecordingId = -1, int precedentResourceId = -1,
-                         string quickAddRecordingNumber = "",
                          string resourceName = "", string cadastralKey = "",
                          RealEstatePartitionDTO partition = null, RecordingActInfoDTO targetActInfo = null) {
       this.Document = RecordingDocument.Parse(documentId);
@@ -119,7 +119,6 @@ namespace Empiria.Land.Registration {
       this.RecordingTaskType = recordingTaskType;
       this.ResourceName = EmpiriaString.TrimAll(resourceName);
       this.CadastralKey = cadastralKey;
-      this.PrecedentRecordingBook = RecordingBook.Parse(precedentRecordingBookId);
       this.PrecedentRecording = PhysicalRecording.Parse(precedentRecordingId);
 
       if (precedentResourceId == 0) {
@@ -134,8 +133,6 @@ namespace Empiria.Land.Registration {
         this.PrecedentProperty = Resource.Parse(precedentResourceId);
 
       }
-
-      this.QuickAddRecordingNumber = quickAddRecordingNumber;
 
       if (partition != null) {
         this.PartitionInfo = partition;
@@ -163,6 +160,12 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+    public PhysicalRecording BookEntry {
+      get;
+      internal set;
+    } = PhysicalRecording.Empty;
+
+
     public RecordingActType RecordingActType {
       get;
       private set;
@@ -178,11 +181,6 @@ namespace Empiria.Land.Registration {
       get;
       private set;
     }
-
-    public RecordingBook PrecedentRecordingBook {
-      get;
-      private set;
-    } = RecordingBook.Empty;
 
 
     public PhysicalRecording PrecedentRecording {
@@ -207,12 +205,6 @@ namespace Empiria.Land.Registration {
       get;
       internal set;
     } = Resource.Empty;
-
-
-    public string QuickAddRecordingNumber {
-      get;
-      private set;
-    } = string.Empty;
 
 
     public RealEstatePartitionDTO PartitionInfo {
