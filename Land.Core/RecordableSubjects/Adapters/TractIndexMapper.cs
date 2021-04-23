@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Recordable Subjects                        Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
-*  Type     : RecordableSubjectsMapper                   License   : Please read LICENSE.txt file            *
+*  Type     : TractIndexMapper                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Methods to map recordable subjects like real estate, associations and no property subjects.    *
+*  Summary  : Methods used to map the tract index of a real estate or recordable subjects of other kinds.    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,26 +13,26 @@ using Empiria.Land.Registration;
 
 namespace Empiria.Land.RecordableSubjects.Adapters {
 
-  /// <summary>Methods to map recordable subjects like real estate, associations
-  /// and no property subjects.</summary>
-  static internal class RecordableSubjectTractIndexMapper {
+  /// <summary>Methods used to map the tract index of a real estate or recordable
+  /// subjects of other kinds.</summary>
+  static internal class TractIndexMapper {
 
-    static internal RecordableSubjectTractIndexDto Map(Resource recordableSubject,
-                                                       FixedList<RecordingAct> amendableActs) {
-      return new RecordableSubjectTractIndexDto {
+    static internal TractIndexDto Map(Resource recordableSubject,
+                                      FixedList<RecordingAct> amendableActs) {
+      return new TractIndexDto {
         RecordableSubject = RecordableSubjectsMapper.Map(recordableSubject),
         TractIndex = MapTractIndex(amendableActs)
       };
     }
 
 
-    static private FixedList<RecordableSubjectTractIndexEntryDto> MapTractIndex(FixedList<RecordingAct> list) {
-      return new FixedList<RecordableSubjectTractIndexEntryDto>(list.Select((x) => MapTractIndexEntry(x)));
+    static private FixedList<TractIndexEntryDto> MapTractIndex(FixedList<RecordingAct> list) {
+      return new FixedList<TractIndexEntryDto>(list.Select((x) => MapTractIndexEntry(x)));
     }
 
 
-    static private RecordableSubjectTractIndexEntryDto MapTractIndexEntry(RecordingAct recordingAct) {
-      return new RecordableSubjectTractIndexEntryDto {
+    static private TractIndexEntryDto MapTractIndexEntry(RecordingAct recordingAct) {
+      return new TractIndexEntryDto {
         RecordingActUID = recordingAct.UID,
         RecordingActName = recordingAct.DisplayName,
         Antecedent = "Antecedente",
@@ -41,6 +41,6 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       };
     }
 
-  }  // class RecordableSubjectsMapper
+  }  // class TractIndexMapper
 
 }  // namespace Empiria.Land.RecordableSubjects.Adapters

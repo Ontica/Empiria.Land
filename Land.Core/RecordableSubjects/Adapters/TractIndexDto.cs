@@ -2,34 +2,36 @@
 *                                                                                                            *
 *  Module   : Recordable Subjects                        Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
-*  Type     : RecordableSubjectTractIndexDto             License   : Please read LICENSE.txt file            *
+*  Type     : TractIndexDto                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO that returns the whole or partial tract index for a recordable subject.             *
+*  Summary  : Output DTO that returns the tract index of a real estate or other kind of recordable subjects. *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Land.RecordableSubjects.Adapters {
 
-  public class RecordableSubjectTractIndexDto {
+  /// <summary>Output DTO that returns the tract index of a real estate
+  /// or other kind of recordable subjects.</summary>
+  public class TractIndexDto {
 
     public RecordableSubjectDto RecordableSubject {
       get; internal set;
     }
 
 
-    public FixedList<RecordableSubjectTractIndexEntryDto> TractIndex {
+    public FixedList<TractIndexEntryDto> TractIndex {
       get; internal set;
-    } = new FixedList<RecordableSubjectTractIndexEntryDto>();
+    } = new FixedList<TractIndexEntryDto>();
 
 
-  }  // class RecordableSubjectTractIndexDto
+  }  // class TractIndexDto
 
 
   /// <summary>Holds an entry of the recordable subject tract.</summary>
-  public class RecordableSubjectTractIndexEntryDto {
+  public class TractIndexEntryDto {
 
-    internal RecordableSubjectTractIndexEntryDto() {
+    internal TractIndexEntryDto() {
       // no-op
     }
 
@@ -58,6 +60,6 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       get; internal set;
     }
 
-  }  // class RecordableSubjectTractIndexEntryDto
+  }  // class TractIndexEntryDto
 
 }  // namespace Empiria.Land.RecordableSubjects.Adapters

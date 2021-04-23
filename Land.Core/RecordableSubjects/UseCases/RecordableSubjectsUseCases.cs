@@ -35,9 +35,9 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
     #region Use cases
 
-    public RecordableSubjectTractIndexDto AmendableRecordingActs(string recordableSubjectUID,
-                                                                 string instrumentRecordingUID,
-                                                                 string amendmentRecordingActTypeUID) {
+    public TractIndexDto AmendableRecordingActs(string recordableSubjectUID,
+                                                string instrumentRecordingUID,
+                                                string amendmentRecordingActTypeUID) {
       Assertion.AssertObject(recordableSubjectUID, "recordableSubjectUID");
       Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
       Assertion.AssertObject(amendmentRecordingActTypeUID, "amendmentRecordingActTypeUID");
@@ -54,7 +54,7 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
       var amendableActs = list.FindAll((x) => appliesTo.Contains(x.RecordingActType));
 
-      return RecordableSubjectTractIndexMapper.Map(recordableSubject, amendableActs);
+      return TractIndexMapper.Map(recordableSubject, amendableActs);
     }
 
 
