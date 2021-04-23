@@ -132,6 +132,42 @@ namespace Empiria.Land.Tests.Registration {
       Assert.NotNull(instrumentRecording);
     }
 
+
+    [Fact]
+    public void Should_Create_RealEstate_On_Existing_Antecedent() {
+      var command = new RegistrationCommand {
+        Type = Land.Registration.RegistrationCommandType.SelectRealEstateAntecedent,
+        Payload = new RegistrationCommandPayload {
+          RecordingActTypeUID = TestingConstants.REAL_ESTATE_DOMAIN_ACT,
+          RecordingBookUID = TestingConstants.RECORDING_BOOK_FOR_RECORDING_UID,
+          BookEntryUID = TestingConstants.BOOK_ENTRY_FOR_RECORDING_UID
+        }
+      };
+
+      InstrumentRecordingDto instrumentRecording =
+               _usecases.CreateRecordingAct(TestingConstants.INSTRUMENT_RECORDING_UID, command);
+
+      Assert.NotNull(instrumentRecording);
+    }
+
+
+    [Fact]
+    public void Should_Create_RealEstate_On_Unregistered_Antecedent() {
+      var command = new RegistrationCommand {
+        Type = Land.Registration.RegistrationCommandType.SelectRealEstateAntecedent,
+        Payload = new RegistrationCommandPayload {
+          RecordingActTypeUID = TestingConstants.REAL_ESTATE_DOMAIN_ACT,
+          RecordingBookUID = TestingConstants.RECORDING_BOOK_FOR_RECORDING_UID,
+          BookEntryNo = "123"
+        }
+      };
+
+      InstrumentRecordingDto instrumentRecording =
+               _usecases.CreateRecordingAct(TestingConstants.INSTRUMENT_RECORDING_UID, command);
+
+      Assert.NotNull(instrumentRecording);
+    }
+
     #endregion Facts
 
   }  // class RegistrationUseCasesTests

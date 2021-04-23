@@ -41,10 +41,15 @@ namespace Empiria.Land.Tests {
 
     static public string TARGET_NO_PROPERTY_RECORDING_ACT_TYPE_UID => "NotDefined";
 
+    static public string REAL_ESTATE_DOMAIN_ACT => "ObjectType.RecordingAct.DomainAct.00";
+
     static public string TARGET_REAL_ESTATE_RECORDING_ACT_TYPE_UID => "ObjectType.RecordingAct.LimitationAct.01";
 
     static public string TRANSACTION_UID => ConfigurationData.Get<string>("Testing.TransactionUID");
 
+    public static string RECORDING_BOOK_FOR_RECORDING_UID = "4802173c-666d-4ef6-8c11-352281d9d57e";
+
+    public static string BOOK_ENTRY_FOR_RECORDING_UID = "2012d07d-b443-4e46-84a5-0c341b666dad";
 
   }  // class TestingConstants
 
