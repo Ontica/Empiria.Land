@@ -51,8 +51,9 @@ namespace Empiria.Land.Registration {
 
       Assertion.AssertObject(physicalRecording, "physicalRecording");
 
-      this.PhysicalRecording = physicalRecording;
       this.Document = document;
+      this.PhysicalRecording = physicalRecording;
+
     }
 
 

@@ -29,7 +29,6 @@ namespace Empiria.Land.Registration.UseCases {
 
     #region Command Use cases
 
-
     public InstrumentRecordingDto CreateRecordingAct(string instrumentRecordingUID,
                                                      RegistrationCommand command) {
       Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
@@ -41,8 +40,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       registrationEngine.Execute(command);
 
-      return InstrumentRecordingMapper.Map(instrumentRecording,
-                                           instrumentRecording.GetTransaction());
+      return InstrumentRecordingMapper.Map(instrumentRecording);
     }
 
 
@@ -57,8 +55,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       instrumentRecording.RemoveRecordingAct(recordingAct);
 
-      return InstrumentRecordingMapper.Map(instrumentRecording,
-                                           instrumentRecording.GetTransaction());
+      return InstrumentRecordingMapper.Map(instrumentRecording);
     }
 
 
@@ -77,8 +74,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       updater.Update(recordingAct, fields);
 
-      return InstrumentRecordingMapper.Map(instrumentRecording,
-                                           instrumentRecording.GetTransaction());
+      return InstrumentRecordingMapper.Map(instrumentRecording);
     }
 
     #endregion Command Use cases

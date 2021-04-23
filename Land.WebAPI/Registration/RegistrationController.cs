@@ -109,7 +109,6 @@ namespace Empiria.Land.Registration.WebApi {
         default:
           throw Assertion.AssertNoReachThisCode($"Unrecognized recordable subject type {subjectType}.");
       }
-
     }
 
     #endregion Helper methods

@@ -60,6 +60,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     private void AssertNoLimitationActs(FixedList<RecordingAct> tract) {
       //var limitationActs = tract.FindAll((x) => x.RecordingActType.IsLimitationActType);
 

@@ -81,7 +81,7 @@ namespace Empiria.Land.Documentation {
 
     private void ProcessImages() {
       WriteLog(String.Empty);
-      WriteLog("Proceso iniciado a las: " + DateTime.Now.ToLongTimeString());
+      WriteLog($"Proceso iniciado a las: {DateTime.Now.ToLongTimeString()}");
       WriteLog(String.Empty);
 
       asyncResult = BeginProcessImages(EndProcessImages);
@@ -106,7 +106,7 @@ namespace Empiria.Land.Documentation {
       processImagesDelegate.EndInvoke(asyncResult);
 
       WriteLog(String.Empty);
-      WriteLog("Proceso terminado a las: " + DateTime.Now.ToLongTimeString());
+      WriteLog($"Proceso terminado a las: {DateTime.Now.ToLongTimeString()}");
       IsRunning = false;
       WriteLogToDisk();
     }
