@@ -8,7 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
+using Empiria.Land.Instruments;
+using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Registration.Adapters;
 
 namespace Empiria.Land.Registration {
@@ -36,9 +37,8 @@ namespace Empiria.Land.Registration {
     }
 
 
-    internal void Execute(RecordingBook book, PhysicalRecording bookEntry,
+    internal void Execute(PhysicalRecording bookEntry,
                           RegistrationCommand command) {
-      Assertion.AssertObject(book, "book");
       Assertion.AssertObject(bookEntry, "bookEntry");
       Assertion.AssertObject(command, "command");
 
@@ -46,8 +46,7 @@ namespace Empiria.Land.Registration {
 
       RecordingTaskFields recordingTaskfields = MapToRecordingTaskFields(command);
 
-      recordingTaskfields.RecordingBookUID = book.UID;
-      recordingTaskfields.BookEntryUID = bookEntry.UID;
+      recordingTaskfields.RecordingBookEntryUID = bookEntry.UID;
 
       RecordingTask task = new RecordingTask(recordingTaskfields);
 
@@ -70,7 +69,50 @@ namespace Empiria.Land.Registration {
       fields.PartitionType = command.Payload.PartitionType;
       fields.PartitionNo = command.Payload.PartitionNo;
 
+      if (MustCreatePrecedentBookEntry(command)) {
+        var newBookEntry = CreatePrecedentBookEntry(command);
+        fields.PrecedentBookEntryUID = newBookEntry.UID;
+      } else {
+        fields.PrecedentBookEntryUID = command.Payload.BookEntryUID;
+      }
       return fields;
+    }
+
+
+    private PhysicalRecording CreatePrecedentBookEntry(RegistrationCommand command) {
+      var book = RecordingBook.Parse(command.Payload.RecordingBookUID);
+
+      Assertion.Assert(book.IsAvailableForManualEditing,
+          $"El {book.AsText} está cerrado, por lo que no es posible agregarle nuevas inscripciones.");
+
+      var bookEntryNo = EmpiriaString.TrimAll(command.Payload.BookEntryNo);
+
+      if (book.ExistsRecording(bookEntryNo)) {
+        Assertion.AssertFail(
+          "La partida indicada ya existe en el libro seleccionado,\n" +
+          "y no es posible generar más de un folio de predio\n" +
+          "en una misma partida o antecedente.\n\n" +
+          "Si se requiere registrar más de un predio en una partida,\n" +
+          "favor de consultarlo con el área de soporte. Gracias.");
+      }
+
+      var fields = new InstrumentFields();
+
+      fields.Summary = $"Instrumento de la inscripción {bookEntryNo} del {book.AsText}.";
+
+      var instrument = new Instrument(InstrumentType.Parse(InstrumentTypeEnum.Resumen), fields);
+
+      instrument.Save();
+
+      RecordingDocument document = instrument.TryGetRecordingDocument();
+
+      var bookEntry = book.AddRecording(document, bookEntryNo);
+
+      bookEntry.Save();
+
+      book.Refresh();
+
+      return bookEntry;
     }
 
 
@@ -88,8 +130,16 @@ namespace Empiria.Land.Registration {
         case RegistrationCommandType.SelectRealEstate:
           return RecordingTaskType.selectProperty;
 
-        case RegistrationCommandType.SelectRealEstatePartition:
+        case RegistrationCommandType.SelectAssociationAntecedent:
+        case RegistrationCommandType.SelectNoPropertyAntecedent:
+        case RegistrationCommandType.SelectRealEstateAntecedent:
+          return RecordingTaskType.createPropertyOnAntecedent;
+
+        case RegistrationCommandType.CreateRealEstatePartition:
           return RecordingTaskType.createPartition;
+
+        case RegistrationCommandType.CreateRealEstatePartitionForAntecedent:
+          return RecordingTaskType.createPartitionAndPropertyOnAntecedent;
 
         default:
           throw Assertion.AssertNoReachThisCode($"There is not defined a registration rule for commandType '{commandType}'.");
@@ -97,8 +147,22 @@ namespace Empiria.Land.Registration {
     }
 
 
+    static private bool MustCreatePrecedentBookEntry(RegistrationCommand command) {
+      if (String.IsNullOrWhiteSpace(command.Payload.BookEntryNo)) {
+        return false;
+      }
+
+      if (command.Type == RegistrationCommandType.SelectAssociationAntecedent ||
+          command.Type == RegistrationCommandType.SelectNoPropertyAntecedent ||
+          command.Type == RegistrationCommandType.SelectRealEstateAntecedent) {
+        return true;
+      }
+      return false;
+    }
+
+
     #endregion Private methods
 
-  }  // class RegistrationEngine
+    }  // class RegistrationEngine
 
 }  // namespace Empiria.Land.Registration

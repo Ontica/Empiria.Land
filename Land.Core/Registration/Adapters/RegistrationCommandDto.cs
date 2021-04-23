@@ -44,6 +44,9 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     }
 
+    public bool SelectBookEntry {
+      get; internal set;
+    }
 
     public bool SelectTargetAct {
       get; internal set;

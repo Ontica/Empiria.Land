@@ -7,7 +7,6 @@
 *  Summary  : Command payload used for recording acts registration.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
 using System;
 
 namespace Empiria.Land.Registration.Adapters {
@@ -60,7 +59,21 @@ namespace Empiria.Land.Registration.Adapters {
     } = string.Empty;
 
 
-  }  // class RegistrationCommandPayload
+    public string RecordingBookUID {
+      get; set;
+    } = string.Empty;
 
+
+    public string BookEntryUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string BookEntryNo {
+      get; set;
+    } = string.Empty;
+
+
+  }  // class RegistrationCommandPayload
 
 }  // namespace Empiria.Land.Registration.Adapters

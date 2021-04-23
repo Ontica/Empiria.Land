@@ -50,6 +50,7 @@ namespace Empiria.Land.Registration {
           }
           if (RegisteredOrBoth(rule)) {
             list.Add(RegistrationCommandType.SelectAssociation);
+            list.Add(RegistrationCommandType.SelectAssociationAntecedent);
           }
           break;
 
@@ -60,9 +61,11 @@ namespace Empiria.Land.Registration {
           }
           if (RegisteredOrBoth(rule)) {
             list.Add(RegistrationCommandType.SelectRealEstate);
+            list.Add(RegistrationCommandType.SelectRealEstateAntecedent);
           }
           if (rule.AllowsPartitions) {
-            list.Add(RegistrationCommandType.SelectRealEstatePartition);
+            list.Add(RegistrationCommandType.CreateRealEstatePartition);
+            list.Add(RegistrationCommandType.CreateRealEstatePartitionForAntecedent);
           }
           break;
 
@@ -72,6 +75,7 @@ namespace Empiria.Land.Registration {
           }
           if (RegisteredOrBoth(rule)) {
             list.Add(RegistrationCommandType.SelectNoProperty);
+            list.Add(RegistrationCommandType.SelectNoPropertyAntecedent);
           }
           break;
 

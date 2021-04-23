@@ -165,7 +165,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var registrationEngine = new RegistrationEngine(instrumentRecording);
 
-      registrationEngine.Execute(book, bookEntry, command);
+      registrationEngine.Execute(bookEntry, command);
 
       book.Refresh();
       bookEntry.Refresh();

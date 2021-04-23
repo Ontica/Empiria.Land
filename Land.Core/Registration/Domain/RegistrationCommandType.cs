@@ -19,16 +19,22 @@ namespace Empiria.Land.Registration {
 
     CreateAssociation,
     SelectAssociation,
+    SelectAssociationAntecedent,
     SelectAssociationAct,
 
     CreateNoProperty,
     SelectNoProperty,
+    SelectNoPropertyAntecedent,
     SelectNoPropertyAct,
+
 
     CreateRealEstate,
     SelectRealEstate,
+    SelectRealEstateAntecedent,
     SelectRealEstateAct,
-    SelectRealEstatePartition,
+
+    CreateRealEstatePartition,
+    CreateRealEstatePartitionForAntecedent,
 
   }  // enum RegistrationCommandType
 
@@ -41,19 +47,25 @@ namespace Empiria.Land.Registration {
           return "La regla de registro no ha sido definida";
 
         case RegistrationCommandType.CreateAssociation:
-          return "Asociación a inscibirse por primera vez";
+          return "Sociedad civil a inscibirse por primera vez";
 
         case RegistrationCommandType.SelectAssociation:
-          return "Asociación inscrita con folio electrónico";
+          return "Sociedad inscrita con folio electrónico";
+
+        case RegistrationCommandType.SelectAssociationAntecedent:
+          return "Sociedad registrada en antecedente, sin folio electrónico";
 
         case RegistrationCommandType.SelectAssociationAct:
           return "Sobre un acto jurídico de una asociación";
 
         case RegistrationCommandType.CreateNoProperty:
-          return "Otros a inscribirse por primera vez";
+          return "Documento a inscribirse por primera vez";
 
         case RegistrationCommandType.SelectNoProperty:
-          return "Otros inscritos con folio electrónico";
+          return "Documento inscrito con folio electrónico";
+
+        case RegistrationCommandType.SelectNoPropertyAntecedent:
+          return "Documento registrado en antecedente, sin folio electrónico";
 
         case RegistrationCommandType.SelectNoPropertyAct:
           return "Sobre un acto jurídico de documentos y otros";
@@ -64,12 +76,17 @@ namespace Empiria.Land.Registration {
         case RegistrationCommandType.SelectRealEstate:
           return "Predio inscrito con folio real";
 
-        case RegistrationCommandType.SelectRealEstatePartition:
+        case RegistrationCommandType.CreateRealEstatePartition:
           return "Fracción de predio inscrito con folio real";
 
         case RegistrationCommandType.SelectRealEstateAct:
           return "Sobre un acto jurídico de predio con folio real";
 
+        case RegistrationCommandType.SelectRealEstateAntecedent:
+          return "Predio registrado en antecedente, sin folio real";
+
+        case RegistrationCommandType.CreateRealEstatePartitionForAntecedent:
+          return "Crear fracción de predio registrado en antecedente";
 
         default:
           throw Assertion.AssertNoReachThisCode($"Unhandled registration command type '{commandType}'.");
@@ -94,6 +111,12 @@ namespace Empiria.Land.Registration {
             SelectSubject = true
           };
 
+        case RegistrationCommandType.SelectAssociationAntecedent:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.Association,
+            SelectBookEntry = true
+          };
+
         case RegistrationCommandType.SelectAssociationAct:
           return new RegistrationCommandRuleDto {
             SubjectType = RecordableSubjectType.Association,
@@ -110,6 +133,12 @@ namespace Empiria.Land.Registration {
           return new RegistrationCommandRuleDto {
             SubjectType = RecordableSubjectType.NoProperty,
             SelectSubject = true
+          };
+
+        case RegistrationCommandType.SelectNoPropertyAntecedent:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.NoProperty,
+            SelectBookEntry = true
           };
 
 
@@ -131,10 +160,24 @@ namespace Empiria.Land.Registration {
             SelectSubject = true
           };
 
-        case RegistrationCommandType.SelectRealEstatePartition:
+        case RegistrationCommandType.SelectRealEstateAntecedent:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.RealEstate,
+            SelectBookEntry = true
+          };
+
+        case RegistrationCommandType.CreateRealEstatePartition:
           return new RegistrationCommandRuleDto {
             SubjectType = RecordableSubjectType.RealEstate,
             SelectSubject = true,
+            NewPartition = true
+          };
+
+
+        case RegistrationCommandType.CreateRealEstatePartitionForAntecedent:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.RealEstate,
+            SelectBookEntry = true,
             NewPartition = true
           };
 
