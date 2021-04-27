@@ -77,9 +77,9 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    public FixedList<RecordingActDto> RecordingActs {
+    public FixedList<RecordingActEntryDto> RecordingActs {
       get; internal set;
-    } = new FixedList<RecordingActDto>();
+    } = new FixedList<RecordingActEntryDto>();
 
 
     public RecordableObjectStatus Status {

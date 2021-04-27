@@ -27,6 +27,7 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     } = string.Empty;
 
+
     public InstrumentDto Instrument {
       get; internal set;
     } = null;
@@ -52,9 +53,9 @@ namespace Empiria.Land.Registration.Adapters {
     } = new InstrumentRecordingControlDataDto();
 
 
-    public FixedList<RecordingActDto> RecordingActs {
+    public FixedList<RecordingActEntryDto> RecordingActs {
       get; internal set;
-    } = new FixedList<RecordingActDto>();
+    } = new FixedList<RecordingActEntryDto>();
 
 
     public FixedList<RecordingBookEntryDto> BookEntries {

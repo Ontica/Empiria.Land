@@ -69,10 +69,10 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    static internal FixedList<RecordingActDto> MapRecordingActsListDto(FixedList<RecordingAct> list) {
-      var mappedItems = list.Select((x) => GetRecordingActDto(x));
+    static internal FixedList<RecordingActEntryDto> MapRecordingActsListDto(FixedList<RecordingAct> list) {
+      var mappedItems = list.Select((x) => GetRecordingActEntryDto(x));
 
-      return new FixedList<RecordingActDto>(mappedItems);
+      return new FixedList<RecordingActEntryDto>(mappedItems);
     }
 
 
@@ -101,8 +101,8 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    static private RecordingActDto GetRecordingActDto(RecordingAct recordingAct) {
-      var dto = new RecordingActDto();
+    static private RecordingActEntryDto GetRecordingActEntryDto(RecordingAct recordingAct) {
+      var dto = new RecordingActEntryDto();
 
       dto.UID = recordingAct.UID;
       dto.Name = recordingAct.RecordingActType.DisplayName;
