@@ -361,6 +361,18 @@ namespace Empiria.Land.Registration {
       this.AuthorizationTime = authorizationTime;
     }
 
+    public void SetDates(DateTime presentationTime, DateTime authorizationTime) {
+      Assertion.Assert(this.IsHistoricDocument,
+                "Autorization and Presentation dates can be set only over new or historic documents.");
+      Assertion.Assert(!this.IsClosed,
+          "Autorization and Presentation dates can be set only over opened documents.");
+
+      if (!this.HasTransaction) {
+        this.PresentationTime = presentationTime;
+      }
+      this.AuthorizationTime = authorizationTime;
+    }
+
 
     public void ChangeDocumentType(RecordingDocumentType newRecordingDocumentType) {
       if (this.DocumentType.Equals(newRecordingDocumentType)) {
@@ -428,6 +440,16 @@ namespace Empiria.Land.Registration {
         return Resource.Empty;
       }
     }
+
+    public bool HasTransaction {
+      get {
+        if (_transaction != null) {
+          return GetTransaction() != LRSTransaction.Empty;
+        }
+        return _transaction != LRSTransaction.Empty;
+      }
+    }
+
 
     private LRSTransaction _transaction = null;
     public LRSTransaction GetTransaction() {
