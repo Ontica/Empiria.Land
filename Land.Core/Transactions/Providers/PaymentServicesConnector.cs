@@ -141,9 +141,6 @@ namespace Empiria.Land.Transactions.Providers {
       po.RequestedBy = transaction.RequestedBy;
       po.Address = String.Empty;
       po.RFC = transaction.ExtensionData.RFC;
-      if (po.RFC.Length == 0) {
-        po.RFC = "XAXX010101000";
-      }
 
       po.Concepts = MapToPaymentOrderRequestConceptsArray(items);
 
