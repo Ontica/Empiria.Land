@@ -58,9 +58,9 @@ namespace Empiria.Land.Registration.Adapters {
     } = new FixedList<RecordingActEntryDto>();
 
 
-    public FixedList<RecordingBookEntryDto> BookEntries {
+    public FixedList<BookEntryDto> BookEntries {
       get; internal set;
-    } = new FixedList<RecordingBookEntryDto>();
+    } = new FixedList<BookEntryDto>();
 
 
   }  // class InstrumentRecordingDto

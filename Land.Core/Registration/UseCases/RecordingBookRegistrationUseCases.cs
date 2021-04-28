@@ -71,7 +71,7 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
-    public FixedList<RecordingBookEntryShortDto> GetRecordingBookEntries(string recordingBookUID) {
+    public FixedList<BookEntryShortDto> GetRecordingBookEntries(string recordingBookUID) {
       Assertion.AssertObject(recordingBookUID, "recordingBookUID");
 
       var recordingBook = RecordingBook.Parse(recordingBookUID);
@@ -90,7 +90,7 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public RecordingBookDto CreateBookEntry(string recordingBookUID,
-                                            CreateManualBookEntryFields fields) {
+                                            ManualEditBookEntryFields fields) {
       Assertion.AssertObject(recordingBookUID, "recordingBookUID");
       Assertion.AssertObject(fields, "fields");
 
@@ -102,8 +102,8 @@ namespace Empiria.Land.Registration.UseCases {
           $"The selected book '{recordingBook.AsText}' is not available for manual editing." +
           "It is not possible to add it a new book entry.");
 
-      Assertion.Assert(!recordingBook.ExistsRecording(fields.RecordingNo),
-                       $"There is a book entry with the same number {fields.RecordingNo}");
+      Assertion.Assert(!recordingBook.ExistsRecording(fields.BookEntry.RecordingNo),
+                       $"There is a book entry with the same number {fields.BookEntry.RecordingNo}");
 
       var instrumentType = InstrumentType.Parse(fields.Instrument.Type.Value);
 
@@ -249,19 +249,30 @@ namespace Empiria.Land.Registration.UseCases {
 
     public InstrumentRecordingDto UpdateBookEntryInstrument(string instrumentRecordingUID,
                                                             string bookEntryUID,
-                                                            InstrumentFields fields) {
+                                                            ManualEditBookEntryFields fields) {
       Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
       Assertion.AssertObject(bookEntryUID, "bookEntryUID");
       Assertion.AssertObject(fields, "fields");
 
+      fields.EnsureIsValid();
+
+      var bookEntry = PhysicalRecording.Parse(bookEntryUID);
+
+      bookEntry.Update(fields.BookEntry.MapToRecordingDTO(bookEntry.RecordingBook,
+                       bookEntry.MainDocument));
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
       Instrument instrument = Instrument.Parse(instrumentRecording.InstrumentId);
 
-      instrument.Update(fields);
+      instrument.Update(fields.Instrument);
 
       instrument.Save();
+
+      if (!instrumentRecording.HasTransaction) {
+        instrumentRecording.SetDates(fields.BookEntry.PresentationTime,
+                                     fields.BookEntry.AuthorizationDate);
+      }
 
       return InstrumentRecordingMapper.Map(instrumentRecording);
     }

@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Registration Services                      Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
-*  Type     : RecordingBookEntryDto                      License   : Please read LICENSE.txt file            *
+*  Type     : BookEntryDto                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO with a recording registered in a physical book.                                     *
+*  Summary  : Output DTOs with book entry data (physical books entries).                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -15,23 +15,8 @@ using Empiria.Land.Media.Adapters;
 
 namespace Empiria.Land.Registration.Adapters {
 
-  public class RecordingBookEntryShortDto {
-
-    public string UID {
-      get; internal set;
-    }
-
-    public string RecordingNo {
-      get; internal set;
-    }
-
-    public string InstrumentRecordingUID {
-      get; internal set;
-    } = string.Empty;
-
-  }
-
-  public class RecordingBookEntryDto {
+  /// <summary>Output DTO for a book entry (physical book recording).</summary>
+  public class BookEntryDto {
 
     public string UID {
       get; internal set;
@@ -67,6 +52,16 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
+    public DateTime PresentationTime {
+      get; internal set;
+    }
+
+
+    public DateTime AuthorizationDate {
+      get; internal set;
+    }
+
+
     public string RecordedBy {
       get; internal set;
     }
@@ -98,6 +93,26 @@ namespace Empiria.Land.Registration.Adapters {
     } = MediaData.Empty;
 
 
-  }  // class RecordingBookEntryDto
+  }  // class BookEntryDto
+
+
+
+  /// <summary>Minimal data for a book entry.</summary>
+  public class BookEntryShortDto {
+
+    public string UID {
+      get; internal set;
+    }
+
+    public string RecordingNo {
+      get; internal set;
+    }
+
+    public string InstrumentRecordingUID {
+      get; internal set;
+    } = string.Empty;
+
+  }  // BookEntryShortDto
+
 
 }  // namespace Empiria.Land.Registration.Adapters

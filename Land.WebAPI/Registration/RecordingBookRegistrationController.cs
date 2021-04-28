@@ -82,7 +82,7 @@ namespace Empiria.Land.Registration.WebApi {
     public CollectionModel GetRecordingBookEntries([FromUri] string recordingBookUID) {
 
       using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
-        FixedList<RecordingBookEntryShortDto> bookEntries = usecases.GetRecordingBookEntries(recordingBookUID);
+        FixedList<BookEntryShortDto> bookEntries = usecases.GetRecordingBookEntries(recordingBookUID);
 
         return new CollectionModel(this.Request, bookEntries);
       }
@@ -92,7 +92,7 @@ namespace Empiria.Land.Registration.WebApi {
     [HttpPost]
     [Route("v5/land/registration/recording-books/{recordingBookUID:guid}/book-entries")]
     public SingleObjectModel CreateBookEntry([FromUri] string recordingBookUID,
-                                             [FromBody] CreateManualBookEntryFields fields) {
+                                             [FromBody] ManualEditBookEntryFields fields) {
 
       using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
         RecordingBookDto recordingBook = usecases.CreateBookEntry(recordingBookUID, fields);
@@ -180,7 +180,7 @@ namespace Empiria.Land.Registration.WebApi {
     [Route("v5/land/registration/{instrumentRecordingUID:guid}/book-entries/{bookEntryUID:guid}/update-instrument")]
     public SingleObjectModel UpdateBookEntryInstrument([FromUri] string instrumentRecordingUID,
                                                        [FromUri] string bookEntryUID,
-                                                       [FromBody] InstrumentFields fields) {
+                                                       [FromBody] ManualEditBookEntryFields fields) {
 
       base.RequireBody(fields);
 

@@ -9,8 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.DataTypes;
-
 using Empiria.Land.Media;
 using Empiria.Land.Media.Adapters;
 
@@ -32,25 +30,25 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    static internal FixedList<RecordingBookEntryDto> MapBookEntriesListDto(FixedList<PhysicalRecording> list) {
+    static internal FixedList<BookEntryDto> MapBookEntriesListDto(FixedList<PhysicalRecording> list) {
       var mappedItems = list.Select((x) => MapBookEntry(x));
 
-      return new FixedList<RecordingBookEntryDto>(mappedItems);
+      return new FixedList<BookEntryDto>(mappedItems);
     }
 
 
-    static internal FixedList<RecordingBookEntryShortDto> MapBookEntriesListShortDto(FixedList<PhysicalRecording> list) {
+    static internal FixedList<BookEntryShortDto> MapBookEntriesListShortDto(FixedList<PhysicalRecording> list) {
       var mappedItems = list.Select((x) => MapBookEntryToShortDto(x));
 
-      return new FixedList<RecordingBookEntryShortDto>(mappedItems);
+      return new FixedList<BookEntryShortDto>(mappedItems);
     }
 
     #endregion Public methods
 
     #region Helper methods
 
-    static private RecordingBookEntryDto MapBookEntry(PhysicalRecording bookEntry) {
-      var dto = new RecordingBookEntryDto();
+    static private BookEntryDto MapBookEntry(PhysicalRecording bookEntry) {
+      var dto = new BookEntryDto();
 
       dto.UID = bookEntry.UID;
       dto.RecordingBookUID = bookEntry.RecordingBook.UID;
@@ -59,6 +57,8 @@ namespace Empiria.Land.Registration.Adapters {
       dto.RecordingSectionName = bookEntry.RecordingBook.RecordingSection.Name;
       dto.VolumeNo = bookEntry.RecordingBook.BookNumber;
       dto.RecordingNo = bookEntry.Number;
+      dto.PresentationTime = bookEntry.MainDocument.PresentationTime;
+      dto.AuthorizationDate = bookEntry.MainDocument.AuthorizationTime;
       dto.RecordedBy = bookEntry.RecordedBy.Alias;
       dto.InstrumentRecording = InstrumentRecordingMapper.MapToShort(bookEntry.MainDocument);
       dto.RecordingActs = InstrumentRecordingMapper.MapRecordingActsListDto(bookEntry.RecordingActs);
@@ -83,8 +83,8 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    static private RecordingBookEntryShortDto MapBookEntryToShortDto(PhysicalRecording bookEntry) {
-      return new RecordingBookEntryShortDto {
+    static private BookEntryShortDto MapBookEntryToShortDto(PhysicalRecording bookEntry) {
+      return new BookEntryShortDto {
         UID = bookEntry.UID,
         RecordingNo = bookEntry.Number,
         InstrumentRecordingUID = bookEntry.MainDocument.GUID
