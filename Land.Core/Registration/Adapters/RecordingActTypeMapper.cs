@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Linq;
 
 namespace Empiria.Land.Registration.Adapters {
 
@@ -43,6 +44,9 @@ namespace Empiria.Land.Registration.Adapters {
       };
     }
 
+    static internal FixedList<NamedEntityDto> MapToNamedEntityList(FixedList<RecordingActType> list) {
+      return new FixedList<NamedEntityDto>(list.Select((x) => new NamedEntityDto(x.UID, x.DisplayName)));
+    }
 
     #endregion Public methods
 

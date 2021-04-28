@@ -10,7 +10,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
+using Empiria.DataTypes;
 using Empiria.Json;
 
 namespace Empiria.Land.Registration {
@@ -61,7 +61,7 @@ namespace Empiria.Land.Registration {
 
     private void Load() {
       try {
-        var json = recordingActType.ExtensionData;
+        var json = recordingActType.ExtensionData.Slice("RegistrationRule", false);
 
         this.AppliesTo = json.Get<RecordingRuleApplication>("AppliesTo", RecordingRuleApplication.Undefined);
         this.AutoCancel = json.Get<Int32>("AutoCancel", 0);
@@ -71,9 +71,10 @@ namespace Empiria.Land.Registration {
         this.RecordingSection = json.Get<RecordingSection>("RecordingSectionId", RecordingSection.Empty);
         this.SpecialCase = json.Get<string>("SpecialCase", String.Empty);
         this.RecordingActTypes = json.GetList<RecordingActType>("RecordingActTypes", false).ToArray();
+        this.ReplaceableBy = json.GetList<RecordingActType>("ReplaceableBy", false).ToFixedList();
         this.AllowsPartitions = json.Get<bool>("AllowsPartitions", false);
         this.IsEndingAct = json.Get<bool>("IsEndingAct", false);
-        this.IsActive = json.Get<bool>("IsActive", false);
+        this.IsActive = json.Get<bool>("IsActive", json.HasItems);
         this.AskForResourceName = json.Get<bool>("AskForResourceName", false);
         this.ResourceTypeName = json.Get<string>("ResourceTypeName", String.Empty);
         this.DynamicActNamePattern = json.Get<string>("DynamicActNamePattern", String.Empty);
@@ -81,9 +82,14 @@ namespace Empiria.Land.Registration {
         this.EditResource = json.Get<bool>("EditRealEstate", false);
         this.EditAppraisalAmount = json.Get<bool>("EditAppraisalAmount", false);
         this.EditOperationAmount = json.Get<bool>("EditOperationAmount", false);
+
+        this.Kinds = json.GetList<string>("Kinds", false).ToArray();
+        this.Fields = json.GetList<string>("Fields", false).ToArray();
+
         this.AllowNoParties = json.Get<bool>("AllowNoParties", false);
         this.AllowUncompletedResource = json.Get<bool>("AllowUncompletedResource", false);
         this.ChainedRecordingActType = json.Get<RecordingActType>("ChainedAct", RecordingActType.Empty);
+
         this.IsAnnotation = json.Get<bool>("IsAnnotation", false);
         this.IsHardLimitation = json.Get<bool>("IsHardLimitation", false);
         this.SkipPrelation = json.Get<bool>("SkipPrelation", false);
@@ -115,7 +121,6 @@ namespace Empiria.Land.Registration {
       json.Add("ResourceRecordingStatus", this.ResourceRecordingStatus.ToString());
       json.Add("SpecialCase", this.SpecialCase);
       json.Add("IsActive", this.IsActive);
-
       json.Add("EditRealEstate", this.EditResource);
       json.Add("EditAppraisalAmount", this.EditAppraisalAmount);
       json.Add("EditOperationAmount", this.EditOperationAmount);
@@ -180,6 +185,11 @@ namespace Empiria.Land.Registration {
     } = new RecordingActType[0];
 
 
+    public FixedList<RecordingActType> ReplaceableBy {
+      get; private set;
+    } = new FixedList<RecordingActType>();
+
+
     public string SpecialCase {
       get;
       private set;
@@ -189,12 +199,14 @@ namespace Empiria.Land.Registration {
     public bool IsActive {
       get;
       private set;
-    } = false;
+    } = true;
+
 
     public bool IsEndingAct {
       get;
       private set;
     } = false;
+
 
     public string DynamicActNamePattern {
       get;
@@ -219,15 +231,38 @@ namespace Empiria.Land.Registration {
       private set;
     } = false;
 
+
     public bool EditOperationAmount {
       get;
       private set;
     } = false;
 
+
+    public FixedList<Currency> Currencies {
+      get {
+        var currencies = GeneralList.Parse("Land.OperationAmount.CurrenciesList");
+
+        return currencies.GetItems<Currency>();
+      }
+    }
+
+    public string[] Kinds {
+      get;
+      private set;
+    } = new string[0];
+
+
+    public string[] Fields {
+      get;
+      private set;
+    } = new string[0];
+
+
     public bool EditResource {
       get;
       private set;
     } = false;
+
 
     public bool AllowNoParties {
       get;
@@ -270,6 +305,7 @@ namespace Empiria.Land.Registration {
       get;
       private set;
     }
+
 
     #endregion Properties
 

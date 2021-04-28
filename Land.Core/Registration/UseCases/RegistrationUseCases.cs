@@ -44,6 +44,18 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
+    public RecordingActDto GetRecordingAct(string instrumentRecordingUID, string recordingActUID) {
+      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.AssertObject(recordingActUID, "recordingActUID");
+
+      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+
+      RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
+
+      return RecordingActMapper.Map(recordingAct);
+    }
+
+
     public InstrumentRecordingDto RemoveRecordingAct(string instrumentRecordingUID,
                                                      string recordingActUID) {
       Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
@@ -76,6 +88,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       return InstrumentRecordingMapper.Map(instrumentRecording);
     }
+
 
     #endregion Command Use cases
 

@@ -778,7 +778,7 @@ namespace Empiria.Land.Registration {
     private void AssertParties() {
       var rule = this.RecordingActType.RecordingRule;
       var parties = this.GetParties();
-      var roles = this.RecordingActType.GetRoles();
+      var roles = this.RecordingActType.GetPrimaryRoles();
 
       if (roles.Count == 0 || rule.AllowNoParties || roles.Count == 0) {
         return;

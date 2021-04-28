@@ -184,10 +184,10 @@ namespace Empiria.Land.Registration {
       return list.ToFixedList();
     }
 
-    public FixedList<DomainActPartyRole> GetRoles() {
+    public FixedList<DomainActPartyRole> GetPrimaryRoles() {
       var json = base.ExtensionData;
 
-      var list = json.GetList<DomainActPartyRole>("Roles", false);
+      var list = json.GetList<DomainActPartyRole>("RegistrationRule/Roles", false);
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
       return list.ToFixedList();
