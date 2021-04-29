@@ -13,34 +13,6 @@ using Empiria.Land.RecordableSubjects.Adapters;
 namespace Empiria.Land.Registration.Adapters {
 
   /// <summary>Output DTO for a recording act with it associated subject and its participants.</summary>
-  public class RecordingActEntryDto {
-
-    internal RecordingActEntryDto() {
-      // no-op
-    }
-
-    public string UID {
-      get; internal set;
-    }
-
-    public string Name {
-      get; internal set;
-    }
-
-    public string Antecedent {
-      get; internal set;
-    }
-
-    public RecordableSubjectDto RecordableSubject {
-      get; internal set;
-    }
-
-
-  }  // class RecordingActDto
-
-
-
-  /// <summary>Output DTO for a recording act with it associated subject and its participants.</summary>
   public class RecordingActDto {
 
     internal RecordingActDto() {
@@ -79,7 +51,7 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     }
 
-    public FixedList<ParticipantDto> Participants {
+    public FixedList<RecordingActPartyDto> Parties {
       get; internal set;
     }
 
@@ -92,49 +64,6 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
   }  // class RecordingActDto
-
-
-
-  /// <summary>Output DTO for a participant in the context of a recording act.</summary>
-  public class ParticipantDto {
-
-    internal ParticipantDto() {
-      // no-op
-    }
-
-    public string UID {
-      get; internal set;
-    }
-
-    public string Kind {
-      get; internal set;
-    }
-
-    public string FullName {
-      get; internal set;
-    }
-
-    public string CURP {
-      get; internal set;
-    }
-
-    public string RFC {
-      get; internal set;
-    }
-
-    public string Role {
-      get; internal set;
-    }
-
-    public string RoleType {
-      get; internal set;
-    }
-
-    public NamedEntityDto AssociatedWith {
-      get; internal set;
-    }
-
-  }  // RecordingActPartyDto
 
 
 
@@ -161,6 +90,7 @@ namespace Empiria.Land.Registration.Adapters {
   }  // class RecordingActControlDataDto
 
 
+
   /// <summary>Output DTO with values used for recording act edition.</summary>
   public class RecordingActEditionValuesDto {
 
@@ -180,14 +110,41 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     }
 
-    public FixedList<NamedEntityDto> MainParticipantRoles {
+    public FixedList<NamedEntityDto> PrimaryPartyRoles {
       get; internal set;
     }
 
-    public FixedList<NamedEntityDto> SecondaryParticipantRoles {
+    public FixedList<NamedEntityDto> SecondaryPartyRoles {
       get; internal set;
     }
 
   }  // class RecordingActEditionValuesDto
 
-}  // namespace Empiria.Land.UseCases
+
+
+  /// <summary>Output DTO for a recording act with minimal information.</summary>
+  public class RecordingActEntryDto {
+
+    internal RecordingActEntryDto() {
+      // no-op
+    }
+
+    public string UID {
+      get; internal set;
+    }
+
+    public string Name {
+      get; internal set;
+    }
+
+    public string Antecedent {
+      get; internal set;
+    }
+
+    public RecordableSubjectDto RecordableSubject {
+      get; internal set;
+    }
+
+  }  // class RecordingActEntryDto
+
+}  // namespace Empiria.Land.Registration.Adapters

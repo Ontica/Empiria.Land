@@ -30,7 +30,7 @@ static internal class RecordingActMapper {
       dto.CurrencyUID = recordingAct.OperationCurrency.UID;
       dto.RecordableSubject = new NamedEntityDto(recordingAct.Resource.UID,
                                                  recordingAct.Resource.Description);
-      dto.Participants = MapParticipants(recordingAct.GetParties());
+      dto.Parties = MapParticipants(recordingAct.GetParties());
       dto.Status = recordingAct.Status;
       dto.Actions = MapControlData(recordingAct);
 
@@ -101,35 +101,34 @@ static internal class RecordingActMapper {
         return dto;
       }
 
-      dto.MainParticipantRoles = recordingAct.RecordingActType.GetPrimaryRoles()
-                                                              .Select(x => new NamedEntityDto(x.UID, x.Name))
-                                                              .ToList()
-                                                              .ToFixedList();
+      dto.PrimaryPartyRoles = recordingAct.RecordingActType.GetPrimaryRoles()
+                                                           .Select(x => new NamedEntityDto(x.UID, x.Name))
+                                                           .ToList()
+                                                           .ToFixedList();
 
-      dto.SecondaryParticipantRoles = SecondaryPartyRole.GetList()
-                                                        .Select(x => new NamedEntityDto(x.UID, x.Name))
-                                                        .ToList()
-                                                        .ToFixedList();
+      dto.SecondaryPartyRoles = SecondaryPartyRole.GetList()
+                                                  .Select(x => new NamedEntityDto(x.UID, x.Name))
+                                                  .ToList()
+                                                  .ToFixedList();
 
       return dto;
     }
 
 
-    static private FixedList<ParticipantDto> MapParticipants(FixedList<RecordingActParty> list) {
-      return new FixedList<ParticipantDto>(list.Select((x) => MapParticipant(x)));
+    static private FixedList<RecordingActPartyDto> MapParticipants(FixedList<RecordingActParty> list) {
+      return new FixedList<RecordingActPartyDto>(list.Select((x) => MapParticipant(x)));
     }
 
 
-    static private ParticipantDto MapParticipant(RecordingActParty participant) {
-      return new ParticipantDto {
+    static private RecordingActPartyDto MapParticipant(RecordingActParty participant) {
+      return new RecordingActPartyDto {
         UID = participant.UID,
         //CURP = participant.Party.CURP,
         //Kind = participant.Party.Kind,
         //RFC = participant.Party.RFC,
-        AssociatedWith = new NamedEntityDto(participant.PartyOf.UID, participant.PartyOf.FullName),
-        RoleType = participant.PartyRole.UID,
-        Role = participant.PartyRole.Name,
-        FullName = participant.Party.FullName
+        //AssociatedWith = new NamedEntityDto(participant.PartyOf.UID, participant.PartyOf.FullName),
+        //Role = participant.PartyRole.MapToNamedEntity(),
+        Party = new PartyDto()
       };
     }
 
