@@ -92,7 +92,6 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-
     #endregion Helper methods
 
   }  // class RecordingBookMapper

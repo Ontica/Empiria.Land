@@ -100,6 +100,23 @@ namespace Empiria.Land.Registration.WebApi {
       }
     }
 
+
+    [HttpPatch, HttpPut]
+    [Route("v5/land/registration/{instrumentRecordingUID:guid}/recording-acts/{recordingActUID:guid}")]
+    public SingleObjectModel UpdateRecordingAct([FromUri] string instrumentRecordingUID,
+                                                [FromUri] string recordingActUID,
+                                                [FromBody] RecordingActFields fields) {
+      base.RequireBody(fields);
+
+      using (var usecases = RegistrationUseCases.UseCaseInteractor()) {
+        RecordingActDto recordingAct = usecases.UpdateRecordingAct(instrumentRecordingUID,
+                                                                   recordingActUID,
+                                                                   fields);
+
+        return new SingleObjectModel(this.Request, recordingAct);
+      }
+    }
+
     #endregion Web Apis
 
     #region Helper methods

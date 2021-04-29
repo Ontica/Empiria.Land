@@ -90,6 +90,33 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
+    public RecordingActDto UpdateRecordingAct(string instrumentRecordingUID,
+                                              string recordingActUID,
+                                              RecordingActFields fields) {
+      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.AssertObject(recordingActUID, "recordingActUID");
+      Assertion.AssertObject(fields, "fields");
+
+      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+
+      RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
+
+      if (fields.TypeUID.Length != 0) {
+        var newRecordingActType = RecordingActType.Parse(fields.TypeUID);
+
+        if (!newRecordingActType.Equals(recordingAct.RecordingActType)) {
+          recordingAct.ChangeRecordingActType(newRecordingActType);
+        }
+      }
+
+      recordingAct.Update(fields);
+
+      recordingAct.Save();
+
+      return RecordingActMapper.Map(recordingAct);
+    }
+
+
     #endregion Command Use cases
 
   }  // class RegistrationUseCases

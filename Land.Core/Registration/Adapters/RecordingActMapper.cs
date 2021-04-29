@@ -25,7 +25,7 @@ static internal class RecordingActMapper {
       dto.Type = recordingAct.RecordingActType.Name;
       dto.Name = recordingAct.DisplayName;
       dto.Kind = recordingAct.Kind;
-      dto.Description = recordingAct.Notes;
+      dto.Description = recordingAct.Summary;
       dto.OperationAmount = recordingAct.OperationAmount;
       dto.CurrencyUID = recordingAct.OperationCurrency.UID;
       dto.RecordableSubject = new NamedEntityDto(recordingAct.Resource.UID,

@@ -18,6 +18,7 @@ using Empiria.Security;
 using Empiria.Ontology;
 
 using Empiria.Land.Data;
+using Empiria.Land.Registration.Adapters;
 
 namespace Empiria.Land.Registration {
 
@@ -197,7 +198,7 @@ namespace Empiria.Land.Registration {
     [DataField("RecordingActKind")]
     public string Kind {
       get;
-      set;
+      private set;
     }
 
 
@@ -218,7 +219,7 @@ namespace Empiria.Land.Registration {
     [DataField("RecordingActSummary")]
     public string Summary {
       get;
-      set;
+      private set;
     }
 
 
@@ -554,8 +555,8 @@ namespace Empiria.Land.Registration {
 
     public void ChangeRecordingActType(RecordingActType recordingActType) {
       Assertion.AssertObject(recordingActType, "recordingActType");
-      Assertion.Assert(!this.PhysicalRecording.IsEmptyInstance,
-                       "Recording act type changes are possible only are physical recordings.");
+      Assertion.Assert(this.RecordingActType.RecordingRule.ReplaceableBy.Contains(recordingActType),
+          $"El acto jurídico {this.DisplayName} no puede ser reemplazado por {recordingActType.DisplayName}.");
 
       this.ReclassifyAs(recordingActType);
       this.Save();
@@ -687,6 +688,21 @@ namespace Empiria.Land.Registration {
       this.Index = this.Document.AddRecordingAct(this);
     }
 
+    public void Update(RecordingActFields fields) {
+      Assertion.AssertObject(fields, "fields");
+
+      this.Summary = fields.Description;
+
+      if (fields.Kind.Length != 0) {
+        this.Kind = fields.Kind;
+      }
+
+      if (fields.OperationAmount != -1m &&
+          fields.CurrencyUID.Length != 0) {
+        this.OperationAmount = fields.OperationAmount;
+        this.OperationCurrency = Currency.Parse(fields.CurrencyUID);
+      }
+    }
 
     public bool WasAliveOn(DateTime onDate) {
       if (this.WasCanceledOn(onDate)) {
