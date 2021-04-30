@@ -15,6 +15,7 @@ using Empiria.Json;
 using Empiria.Ontology;
 
 using Empiria.Land.Data;
+using Empiria.Land.Registration.Adapters;
 
 namespace Empiria.Land.Registration {
 
@@ -70,9 +71,16 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseList<Party>(table).ToFixedList();
     }
 
+
     static public FixedList<Party> GetList(PartyFilterType partyFilterType, ObjectTypeInfo partyType,
                                            RecordingAct recordingAct, string keywords) {
       DataTable table = PartyData.GetParties(partyFilterType, partyType, recordingAct, keywords);
+
+      return BaseObject.ParseList<Party>(table).ToFixedList();
+    }
+
+    static public FixedList<Party> GetList(SearchPartiesCommand command) {
+      DataTable table = PartyData.GetParties(command);
 
       return BaseObject.ParseList<Party>(table).ToFixedList();
     }

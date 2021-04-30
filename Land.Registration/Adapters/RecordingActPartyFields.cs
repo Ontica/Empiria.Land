@@ -123,4 +123,16 @@ namespace Empiria.Land.Registration.Adapters {
 
   }  // class PartyFields
 
+
+
+  /// <summary>Command used to search parties.</summary>
+  public class SearchPartiesCommand {
+
+    public string Keywords {
+      get; set;
+    } = string.Empty;
+
+  }  // class SearchPartiesCommand
+
+
 }  // namespace Empiria.Land.Registration.Adapters

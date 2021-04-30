@@ -30,7 +30,7 @@ static internal class RecordingActMapper {
       dto.CurrencyUID = recordingAct.OperationCurrency.UID;
       dto.RecordableSubject = new NamedEntityDto(recordingAct.Resource.UID,
                                                  recordingAct.Resource.Description);
-      dto.Parties = MapParticipants(recordingAct.GetParties());
+      dto.Parties = PartyMapper.Map(recordingAct.GetParties());
       dto.Status = recordingAct.Status;
       dto.Actions = MapControlData(recordingAct);
 
@@ -121,39 +121,6 @@ static internal class RecordingActMapper {
       return dto;
     }
 
-
-    static private FixedList<RecordingActPartyDto> MapParticipants(FixedList<RecordingActParty> list) {
-      return new FixedList<RecordingActPartyDto>(list.Select((x) => MapParticipant(x)));
-    }
-
-
-    static private RecordingActPartyDto MapParticipant(RecordingActParty recordingActParty) {
-      return new RecordingActPartyDto {
-        UID = recordingActParty.UID,
-        Type = recordingActParty.RoleType,
-        Party = MapParty(recordingActParty.Party),
-        Role = recordingActParty.PartyRole.MapToNamedEntity(),
-        PartAmount = recordingActParty.OwnershipPart.Amount,
-        PartUnit = recordingActParty.OwnershipPart.Unit.MapToNamedEntity(),
-        AssociatedWith = MapParty(recordingActParty.PartyOf),
-        Notes = recordingActParty.Notes,
-      };
-    }
-
-    private static PartyDto MapParty(Party party) {
-      if (party.IsEmptyInstance) {
-        return null;
-      }
-
-      return new PartyDto {
-        UID = party.UID,
-        FullName = party.FullName,
-        Type = party is HumanParty ? PartyType.Person : PartyType.Organization,
-        RFC = party.RFC,
-        CURP = party is HumanParty ? (party as HumanParty).CURP : string.Empty,
-        Notes = party.Notes
-      };
-    }
 
     #endregion Private methods
 

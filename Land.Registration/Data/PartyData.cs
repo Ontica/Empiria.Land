@@ -15,6 +15,7 @@ using Empiria.Data;
 using Empiria.Ontology;
 
 using Empiria.Land.Registration;
+using Empiria.Land.Registration.Adapters;
 
 namespace Empiria.Land.Data {
 
@@ -52,6 +53,18 @@ namespace Empiria.Land.Data {
 
       return DataReader.GetList(op, (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
     }
+
+
+    static internal DataTable GetParties(SearchPartiesCommand command) {
+      string filter = SearchExpression.ParseAndLikeWithNoiseWords("PartyKeywords", command.Keywords);
+      if (filter.Length != 0) {
+        filter += " AND ";
+      }
+      filter += "(PartyStatus <> 'X')";
+
+      return GeneralDataOperations.GetEntities("LRSParties", filter, "PartyFullName");
+    }
+
 
     static public FixedList<RecordingActParty> GetSecondaryPartiesList(RecordingAct recordingAct) {
       string sql = "SELECT * FROM LRSRecordingActParties " +

@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System.Web.Http;
 
-using Empiria.Json;
 using Empiria.WebApi;
 
 using Empiria.Land.Registration.Adapters;
@@ -22,6 +21,21 @@ namespace Empiria.Land.Registration.WebApi {
 
     #region Web Apis
 
+    [HttpGet]
+    [Route("v5/land/registration/{instrumentRecordingUID:guid}/recording-acts/" +
+           "{recordingActUID:guid}/parties")]
+    public CollectionModel SearchParties([FromUri] string instrumentRecordingUID,
+                                         [FromUri] string recordingActUID,
+                                         [FromUri] SearchPartiesCommand command) {
+
+      using (var usecases = PartiesRegistrationUseCases.UseCaseInteractor()) {
+        FixedList<PartyDto> parties = usecases.SearchParties(instrumentRecordingUID,
+                                                            recordingActUID, command);
+
+        return new CollectionModel(this.Request, parties);
+      }
+    }
+
 
     [HttpPost]
     [Route("v5/land/registration/{instrumentRecordingUID:guid}/recording-acts/{recordingActUID:guid}/parties")]
@@ -31,7 +45,7 @@ namespace Empiria.Land.Registration.WebApi {
 
       base.RequireBody(fields);
 
-      using (var usecases = RegistrationUseCases.UseCaseInteractor()) {
+      using (var usecases = PartiesRegistrationUseCases.UseCaseInteractor()) {
         RecordingActDto recordingAct = usecases.AppendParty(instrumentRecordingUID,
                                                             recordingActUID, fields);
 
@@ -47,7 +61,7 @@ namespace Empiria.Land.Registration.WebApi {
                                          [FromUri] string recordingActUID,
                                          [FromUri] string partyUID) {
 
-      using (var usecases = RegistrationUseCases.UseCaseInteractor()) {
+      using (var usecases = PartiesRegistrationUseCases.UseCaseInteractor()) {
         RecordingActDto recordingAct = usecases.RemoveParty(instrumentRecordingUID,
                                                             recordingActUID, partyUID);
 

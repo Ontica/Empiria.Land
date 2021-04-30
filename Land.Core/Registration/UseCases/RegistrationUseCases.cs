@@ -43,42 +43,7 @@ namespace Empiria.Land.Registration.UseCases {
       return InstrumentRecordingMapper.Map(instrumentRecording);
     }
 
-    public RecordingActDto AppendParty(string instrumentRecordingUID,
-                                       string recordingActUID,
-                                       RecordingActPartyFields partyFields) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(recordingActUID, "recordingActUID");
-      Assertion.AssertObject(partyFields, "partyFields");
-
-      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
-
-      RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
-
-      recordingAct.AppendParty(partyFields);
-
-      return RecordingActMapper.Map(recordingAct);
-    }
-
-
-    public RecordingActDto RemoveParty(string instrumentRecordingUID,
-                                       string recordingActUID,
-                                       string partyUID) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(recordingActUID, "recordingActUID");
-      Assertion.AssertObject(partyUID, "partyUID");
-
-      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
-
-      RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
-
-      var party = RecordingActParty.Parse(partyUID);
-
-      recordingAct.RemoveParty(party);
-
-      return RecordingActMapper.Map(recordingAct);
-    }
-
-
+  
     public RecordingActDto GetRecordingAct(string instrumentRecordingUID, string recordingActUID) {
       Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
       Assertion.AssertObject(recordingActUID, "recordingActUID");
