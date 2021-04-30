@@ -571,11 +571,14 @@ namespace Empiria.Land.Registration {
 
 
     private void LoadRecordingActPartyFields(RecordingActParty recordingActParty,
-                                         RecordingActPartyFields recordingActPartyFields) {
-      recordingActParty.OwnershipPart = Quantity.Parse(Unit.Parse(recordingActPartyFields.PartUnitUID),
-                                                       recordingActPartyFields.PartAmount);
+                                             RecordingActPartyFields recordingActPartyFields) {
+      if (recordingActParty.RoleType == RecordingActPartyType.Primary) {
+        recordingActParty.OwnershipPart = Quantity.Parse(Unit.Parse(recordingActPartyFields.PartUnitUID),
+                                                         recordingActPartyFields.PartAmount);
+      }
       recordingActParty.Notes = recordingActPartyFields.Notes;
     }
+
 
     public void AssertCanBeClosed() {
       var rule = this.RecordingActType.RecordingRule;
