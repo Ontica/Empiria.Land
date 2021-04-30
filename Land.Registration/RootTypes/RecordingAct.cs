@@ -548,10 +548,13 @@ namespace Empiria.Land.Registration {
 
 
     public void RemoveParty(RecordingActParty party) {
-      throw new NotImplementedException();
+      Assertion.AssertObject(party, "party");
+
+      Assertion.Assert(this.GetParties().Exists(x => x.UID == party.UID),
+                       $"Party {party.UID} do not belong to this recording act.");
+
+      party.Delete();
     }
-
-
 
     private Party CreateParty(RecordingActPartyFields recordingActPartyFields) {
       Party party;

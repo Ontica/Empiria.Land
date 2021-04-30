@@ -101,13 +101,20 @@ static internal class RecordingActMapper {
         return dto;
       }
 
+
+      dto.PartUnits = recordingAct.RecordingActType.GetPartyPartUnits()
+                                                   .Select(x => x.MapToNamedEntity())
+                                                   .ToList()
+                                                   .ToFixedList();
+
+
       dto.PrimaryPartyRoles = recordingAct.RecordingActType.GetPrimaryRoles()
-                                                           .Select(x => new NamedEntityDto(x.UID, x.Name))
+                                                           .Select(x => x.MapToNamedEntity())
                                                            .ToList()
                                                            .ToFixedList();
 
       dto.SecondaryPartyRoles = SecondaryPartyRole.GetList()
-                                                  .Select(x => new NamedEntityDto(x.UID, x.Name))
+                                                  .Select(x => x.MapToNamedEntity())
                                                   .ToList()
                                                   .ToFixedList();
 
@@ -120,15 +127,31 @@ static internal class RecordingActMapper {
     }
 
 
-    static private RecordingActPartyDto MapParticipant(RecordingActParty participant) {
+    static private RecordingActPartyDto MapParticipant(RecordingActParty recordingActParty) {
       return new RecordingActPartyDto {
-        UID = participant.UID,
-        //CURP = participant.Party.CURP,
-        //Kind = participant.Party.Kind,
-        //RFC = participant.Party.RFC,
-        //AssociatedWith = new NamedEntityDto(participant.PartyOf.UID, participant.PartyOf.FullName),
-        //Role = participant.PartyRole.MapToNamedEntity(),
-        Party = new PartyDto()
+        UID = recordingActParty.UID,
+        Type = recordingActParty.RoleType,
+        Party = MapParty(recordingActParty.Party),
+        Role = recordingActParty.PartyRole.MapToNamedEntity(),
+        PartAmount = recordingActParty.OwnershipPart.Amount,
+        PartUnit = recordingActParty.OwnershipPart.Unit.MapToNamedEntity(),
+        AssociatedWith = MapParty(recordingActParty.PartyOf),
+        Notes = recordingActParty.Notes,
+      };
+    }
+
+    private static PartyDto MapParty(Party party) {
+      if (party.IsEmptyInstance) {
+        return null;
+      }
+
+      return new PartyDto {
+        UID = party.UID,
+        FullName = party.FullName,
+        Type = party is HumanParty ? PartyType.Person : PartyType.Organization,
+        RFC = party.RFC,
+        CURP = party is HumanParty ? (party as HumanParty).CURP : string.Empty,
+        Notes = party.Notes
       };
     }
 

@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration.Adapters {
 
     public decimal PartAmount {
       get; internal set;
-    } = -1;
+    } = 1m;
 
 
     public NamedEntityDto PartUnit {
@@ -46,7 +46,8 @@ namespace Empiria.Land.Registration.Adapters {
 
     public PartyDto AssociatedWith {
       get; internal set;
-    }
+    } = new PartyDto();
+
 
     public string Notes {
       get; internal set;

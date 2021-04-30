@@ -110,6 +110,10 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     }
 
+    public FixedList<NamedEntityDto> PartUnits {
+      get; internal set;
+    }
+
     public FixedList<NamedEntityDto> PrimaryPartyRoles {
       get; internal set;
     }
