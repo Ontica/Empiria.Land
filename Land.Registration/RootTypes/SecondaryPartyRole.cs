@@ -23,6 +23,12 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
+
+    static public SecondaryPartyRole Parse(string uid) {
+      return BaseObject.ParseKey<SecondaryPartyRole>(uid);
+    }
+
+
     static public FixedList<SecondaryPartyRole> GetList() {
       return GeneralObject.GetList<SecondaryPartyRole>();
     }

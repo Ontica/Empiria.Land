@@ -15,6 +15,7 @@ using Empiria.Contacts;
 using Empiria.DataTypes;
 
 using Empiria.Land.Data;
+using Empiria.Land.Registration.Adapters;
 
 namespace Empiria.Land.Registration {
 
@@ -102,6 +103,17 @@ namespace Empiria.Land.Registration {
     }
 
 
+    public RecordingActPartyType RoleType {
+      get {
+        if (PartyOf.IsEmptyInstance) {
+          return RecordingActPartyType.Primary;
+        } else {
+          return RecordingActPartyType.Secondary;
+        }
+      }
+    }
+
+
     [DataField("PartyOfId")]
     public Party PartyOf {
       get;
@@ -179,6 +191,7 @@ namespace Empiria.Land.Registration {
       get;
       private set;
     } = String.Empty;
+
 
     #endregion Public properties
 

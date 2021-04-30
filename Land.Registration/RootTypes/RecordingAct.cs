@@ -98,7 +98,6 @@ namespace Empiria.Land.Registration {
       return recordingAct;
     }
 
-
     static public RecordingAct Parse(int id) {
       return BaseObject.ParseId<RecordingAct>(id);
     }
@@ -452,6 +451,127 @@ namespace Empiria.Land.Registration {
       var recordingActParty = RecordingActParty.Create(this, party, role);
 
       return recordingActParty;
+    }
+
+    public RecordingActParty AppendParty(RecordingActPartyFields recordingActPartyFields) {
+      Assertion.AssertObject(recordingActPartyFields, "recordingActPartyFields");
+      Assertion.Assert(this.IsEditable,
+                       "This recording act is not editable, so I can not append a party to it.");
+
+      recordingActPartyFields.EnsureValid();
+
+      if (recordingActPartyFields.Type == RecordingActPartyType.Primary &&
+          recordingActPartyFields.Party.UID.Length != 0) {
+        return AppendExistingPrimaryParty(recordingActPartyFields);
+
+      } else if (recordingActPartyFields.Type == RecordingActPartyType.Primary &&
+                 recordingActPartyFields.Party.UID.Length == 0) {
+        return AppendNewPrimaryParty(recordingActPartyFields);
+
+      } else if (recordingActPartyFields.Type == RecordingActPartyType.Secondary &&
+                 recordingActPartyFields.Party.UID.Length != 0 &&
+                 recordingActPartyFields.AssociatedWithUID.Length != 0) {
+        return AppendExistingSecondaryParty(recordingActPartyFields);
+
+      } else if (recordingActPartyFields.Type == RecordingActPartyType.Secondary &&
+                 recordingActPartyFields.Party.UID.Length == 0 &&
+                 recordingActPartyFields.AssociatedWithUID.Length != 0) {
+        return AppendNewSecondaryParty(recordingActPartyFields);
+
+      } else {
+        throw Assertion.AssertNoReachThisCode();
+      }
+    }
+
+
+    private RecordingActParty AppendExistingPrimaryParty(RecordingActPartyFields recordingActPartyFields) {
+      var party = Party.Parse(recordingActPartyFields.Party.UID);
+
+      var role = DomainActPartyRole.Parse(recordingActPartyFields.RoleUID);
+
+      var recordingActParty = this.AppendParty(party, role);
+
+      LoadRecordingActPartyFields(recordingActParty, recordingActPartyFields);
+
+      recordingActParty.Save();
+
+      return recordingActParty;
+    }
+
+
+    private RecordingActParty AppendExistingSecondaryParty(RecordingActPartyFields recordingActPartyFields) {
+      var party = Party.Parse(recordingActPartyFields.Party.UID);
+      var partyOf = Party.Parse(recordingActPartyFields.AssociatedWithUID);
+
+      var role = SecondaryPartyRole.Parse(recordingActPartyFields.RoleUID);
+
+      var recordingActParty = this.AppendParty(party, role, partyOf);
+
+      LoadRecordingActPartyFields(recordingActParty, recordingActPartyFields);
+
+      recordingActParty.Save();
+
+      return recordingActParty;
+    }
+
+
+    private RecordingActParty AppendNewPrimaryParty(RecordingActPartyFields recordingActPartyFields) {
+      Party party = CreateParty(recordingActPartyFields);
+
+      var role = DomainActPartyRole.Parse(recordingActPartyFields.RoleUID);
+
+      var recordingActParty = this.AppendParty(party, role);
+
+      LoadRecordingActPartyFields(recordingActParty, recordingActPartyFields);
+
+      recordingActParty.Save();
+
+      return recordingActParty;
+    }
+
+
+    private RecordingActParty AppendNewSecondaryParty(RecordingActPartyFields recordingActPartyFields) {
+      Party party = CreateParty(recordingActPartyFields);
+
+      var role = SecondaryPartyRole.Parse(recordingActPartyFields.RoleUID);
+
+      var partyOf = Party.Parse(recordingActPartyFields.AssociatedWithUID);
+
+      var recordingActParty = this.AppendParty(party, role, partyOf);
+
+      LoadRecordingActPartyFields(recordingActParty, recordingActPartyFields);
+
+      recordingActParty.Save();
+
+      return recordingActParty;
+    }
+
+
+    public void RemoveParty(RecordingActParty party) {
+      throw new NotImplementedException();
+    }
+
+
+
+    private Party CreateParty(RecordingActPartyFields recordingActPartyFields) {
+      Party party;
+
+      if (recordingActPartyFields.Party.Type == PartyType.Organization) {
+        party = new OrganizationParty(recordingActPartyFields.Party);
+      } else {
+        party = new HumanParty(recordingActPartyFields.Party);
+      }
+      party.Save();
+
+      return party;
+    }
+
+
+    private void LoadRecordingActPartyFields(RecordingActParty recordingActParty,
+                                         RecordingActPartyFields recordingActPartyFields) {
+      recordingActParty.OwnershipPart = Quantity.Parse(Unit.Parse(recordingActPartyFields.PartUnitUID),
+                                                       recordingActPartyFields.PartAmount);
+      recordingActParty.Notes = recordingActPartyFields.Notes;
     }
 
     public void AssertCanBeClosed() {

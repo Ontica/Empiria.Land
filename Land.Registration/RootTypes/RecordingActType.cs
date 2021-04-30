@@ -9,7 +9,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
+using Empiria.DataTypes;
 using Empiria.Land.Registration.Transactions;
 using Empiria.Ontology;
 
@@ -183,6 +183,13 @@ namespace Empiria.Land.Registration {
 
       return list.ToFixedList();
     }
+
+    public FixedList<Unit> GetPartyPartUnits() {
+      var list = GeneralList.Parse("Land.PartyPart.Units");
+
+      return list.GetItems<Unit>();
+    }
+
 
     public FixedList<DomainActPartyRole> GetPrimaryRoles() {
       var json = base.ExtensionData;

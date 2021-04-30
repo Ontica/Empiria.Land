@@ -59,7 +59,7 @@ namespace Empiria.Land.UI {
               "<td colspan='6' style='white-space:normal'>Historial de movimientos <b>{{PARTY}}</b></td>" +
             "</tr>";
 
-      return template.Replace("{{PARTY}}", this._party.ExtendedName);
+      return template.Replace("{{PARTY}}", this._party.FullName);
     }
 
     private string GetHeader() {

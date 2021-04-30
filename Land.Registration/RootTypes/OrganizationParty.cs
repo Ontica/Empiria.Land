@@ -9,6 +9,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using Empiria.Land.Registration.Adapters;
 
 namespace Empiria.Land.Registration {
 
@@ -21,9 +22,9 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    public OrganizationParty(int typeId, string fullName,
-                             string officialID, string officialIDType) : base(fullName, officialID, officialIDType) {
-      base.ReclassifyAs(Ontology.ObjectTypeInfo.Parse(typeId));
+    internal OrganizationParty(PartyFields party): base(party.FullName) {
+      this.RFC = party.RFC;
+      this.Notes = party.Notes;
     }
 
     static public new OrganizationParty Parse(int id) {

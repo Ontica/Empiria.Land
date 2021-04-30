@@ -56,7 +56,6 @@ namespace Empiria.Land.Registration.Adapters {
       get; set;
     }
 
-
     public string RoleUID {
       get; set;
     } = string.Empty;
@@ -64,7 +63,7 @@ namespace Empiria.Land.Registration.Adapters {
 
     public decimal PartAmount {
       get; set;
-    } = -1;
+    } = 1m;
 
 
     public string PartUnitUID {

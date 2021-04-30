@@ -11,6 +11,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Land.Registration.Adapters;
+
 namespace Empiria.Land.Registration {
 
   /// <summary>Represents a human recording act party.</summary>
@@ -22,9 +24,10 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    public HumanParty(string fullName,
-                      string officialID, string officialIDType) : base(fullName, officialID, officialIDType) {
-
+    public HumanParty(PartyFields party) : base(party.FullName) {
+      this.RFC = party.RFC;
+      this.CURP = party.CURP;
+      this.Notes = party.Notes;
     }
 
     static public new HumanParty Parse(int id) {
@@ -32,6 +35,22 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Constructors and parsers
+
+    #region Properties
+
+    [DataField("PartySecondaryID")]
+    public string CURP {
+      get;
+      private set;
+    }
+
+    protected internal override string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(base.Keywords, this.CURP);
+      }
+    }
+
+    #endregion Properties
 
   } // class HumanParty
 
