@@ -34,7 +34,7 @@ namespace Empiria.Land.Registration.Adapters {
 
       Instrument instrument = Instrument.Parse(instrumentRecording.InstrumentId);
 
-      var mediaBuilder = new LandMediaBuilder(LandMediaContent.BookEntryRegistrationStamp);
+      var mediaBuilder = new LandMediaBuilder();
 
       var actions = new InstrumentRecordingControlData(instrument, transaction);
 
@@ -47,10 +47,16 @@ namespace Empiria.Land.Registration.Adapters {
       if (bookEntries.Count > 0) {
         dto.BookEntries = RecordingBookMapper.MapBookEntriesListDto(bookEntries);
         dto.BookRecordingMode = true;
+
+        dto.StampMedia = mediaBuilder.GetMediaDto(LandMediaContent.BookEntryRegistrationStamp,
+                                                  "-1", transaction.Id.ToString());
       } else {
         dto.RecordingActs = MapRecordingActsListDto(instrumentRecording.RecordingActs);
+
+        dto.StampMedia = mediaBuilder.GetMediaDto(LandMediaContent.RegistrationStamp,
+                                                  instrumentRecording.UID);
       }
-      dto.StampMedia = mediaBuilder.GetMediaDto("-1", transaction.Id.ToString());
+
       dto.TransactionUID = transaction.UID;
       dto.Actions = GetControlDataDto(actions);
 

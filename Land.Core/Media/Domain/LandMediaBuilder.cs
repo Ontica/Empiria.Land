@@ -21,21 +21,13 @@ namespace Empiria.Land.Media {
 
     private readonly static string MEDIA_URL = ConfigurationData.GetString("LandMediaBuilder.DefaultUrl");
 
-    internal LandMediaBuilder(LandMediaContent mediaContent) {
-      this.MediaContent = mediaContent;
-    }
-
-    internal LandMediaContent MediaContent {
-      get;
-    }
-
-    internal LRSTransaction Transaction {
-      get;
+    internal LandMediaBuilder() {
+      // no-op
     }
 
 
-    internal MediaData GetMediaDto(params string[] parameters) {
-      switch (this.MediaContent) {
+    internal MediaData GetMediaDto(LandMediaContent mediaContent, params string[] parameters) {
+      switch (mediaContent) {
 
         case LandMediaContent.TransactionControlVoucher:
           return new MediaData("text/html",
@@ -54,9 +46,14 @@ namespace Empiria.Land.Media {
                               $"{MEDIA_URL}/recording-stamps/physical-recording.stamp.aspx?" +
                               $"id={parameters[0]}&transactionId={parameters[1]}");
 
+        case LandMediaContent.RegistrationStamp:
+          return new MediaData("text/html",
+                              $"{MEDIA_URL}/recording-stamps/registration.stamp.aspx?" +
+                              $"uid={parameters[0]}");
+
         default:
           throw Assertion.AssertNoReachThisCode($"GetMediaDto() method can't process files of " +
-                                                $"media content {this.MediaContent}.");
+                                                $"media content {mediaContent}.");
       }
     }
 

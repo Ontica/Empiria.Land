@@ -122,9 +122,9 @@ namespace Empiria.Land.Transactions.Providers {
         Status = "Pendiente de pago"
       };
 
-      var builder = new LandMediaBuilder(LandMediaContent.TransactionPaymentOrder);
+      var builder = new LandMediaBuilder();
 
-      var mediaDto = builder.GetMediaDto(transaction.UID);
+      var mediaDto = builder.GetMediaDto(LandMediaContent.TransactionPaymentOrder, transaction.UID);
 
       po.AddAttribute("url", mediaDto.Url);
       po.AddAttribute("mediaType", mediaDto.MediaType);

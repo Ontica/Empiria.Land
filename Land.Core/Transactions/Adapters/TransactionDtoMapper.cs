@@ -121,9 +121,9 @@ namespace Empiria.Land.Transactions.Adapters {
         return null;
       }
 
-      var mediaBuilder = new LandMediaBuilder(LandMediaContent.TransactionControlVoucher);
+      var mediaBuilder = new LandMediaBuilder();
 
-      return mediaBuilder.GetMediaDto(transaction.UID);
+      return mediaBuilder.GetMediaDto(LandMediaContent.TransactionControlVoucher, transaction.UID);
     }
 
 
@@ -193,9 +193,9 @@ namespace Empiria.Land.Transactions.Adapters {
         return null;
       }
 
-      var mediaBuilder = new LandMediaBuilder(LandMediaContent.TransactionSubmissionReceipt);
+      var mediaBuilder = new LandMediaBuilder();
 
-      return mediaBuilder.GetMediaDto(transaction.UID);
+      return mediaBuilder.GetMediaDto(LandMediaContent.TransactionSubmissionReceipt, transaction.UID);
     }
 
     static private RequestedByDto GetRequestedByDto(LRSTransaction transaction) {
