@@ -51,6 +51,9 @@ namespace Empiria.Land.WebApp {
       transaction = document.GetTransaction();
 
       selectedRecordingAct = RecordingAct.Parse(selectedRecordingActId);
+
+      document.RefreshRecordingActs();
+
       recordingActs = document.RecordingActs;
 
       this.instrument = Instrument.Parse(document.InstrumentId, true);

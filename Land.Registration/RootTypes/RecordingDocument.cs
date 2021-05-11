@@ -486,6 +486,12 @@ namespace Empiria.Land.Registration {
       this.Security = new RecordingDocumentSecurity(this);
     }
 
+
+    public void RefreshRecordingActs() {
+      recordingActList = new Lazy<List<RecordingAct>>(() => RecordingActsData.GetDocumentRecordingActs(this));
+    }
+
+
     protected override void OnLoadObjectData(DataRow row) {
       this.ExtensionData = RecordingDocumentExtData.Parse((string) row["DocumentExtData"]);
     }
