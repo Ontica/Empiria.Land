@@ -108,6 +108,7 @@
     <Content Include="receipts\payment.order.aspx" />
     <Content Include="receipts\transaction.receipt.aspx" />
     <Content Include="recording-stamps\physical-recording.stamp.aspx" />
+    <Content Include="recording-stamps\recording.stamp.aspx" />
     <Content Include="scripts\empiria.general.js" />
     <Content Include="themes\default\css\certificates.css" />
     <Content Include="themes\default\css\official.document.css" />
@@ -179,6 +180,14 @@
     <Compile Include="recording-stamps\physical-recording.stamp.aspx.designer.cs">
       <DependentUpon>physical-recording.stamp.aspx</DependentUpon>
     </Compile>
+    <Compile Include="recording-stamps\recording.stamp.aspx.cs">
+      <DependentUpon>recording.stamp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="recording-stamps\recording.stamp.aspx.designer.cs">
+      <DependentUpon>recording.stamp.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RootTypes\CommonMethods.cs" />
     <Compile Include="user.controls\barcode.aspx.cs">
       <DependentUpon>barcode.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -243,10 +252,6 @@
       <Project>{42b7d25b-356f-4e93-9f17-a2f9422c368d}</Project>
       <Name>Empiria.WebApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\extensions\WebServices\Empiria.WebServices.csproj">
-      <Project>{29b783cb-dc89-4156-b61c-a889365bc93e}</Project>
-      <Name>Empiria.WebServices</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\land\Land.Documentation\Empiria.Land.Documentation.csproj">
       <Project>{7d98c757-6ed4-48d0-b351-a99ce5ed8987}</Project>
       <Name>Empiria.Land.Documentation</Name>
@@ -262,6 +267,10 @@
     <ProjectReference Include="..\..\onepoint\Integration\Empiria.OnePoint.Integration.csproj">
       <Project>{1ac5ddb7-2629-4590-97ef-93dae5791733}</Project>
       <Name>Empiria.OnePoint.Integration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Land.Core\Empiria.Land.Core.csproj">
+      <Project>{0d12aa4b-83bf-4ac8-9d22-1d85ce8975d2}</Project>
+      <Name>Empiria.Land.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
