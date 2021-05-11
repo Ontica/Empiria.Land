@@ -20,35 +20,43 @@ namespace Empiria.Land.Instruments.Adapters {
 
     public string Kind {
       get; set;
-    }
+    } = string.Empty;
+
 
     public string IssuerUID {
       get; set;
     }
 
+
     public DateTime? IssueDate {
       get; set;
     }
 
+
     public string Summary {
       get; set;
-    }
+    } = string.Empty;
+
 
     public string InstrumentNo {
       get; set;
-    }
+    } = string.Empty;
+
 
     public string BinderNo {
       get; set;
-    }
+    } = string.Empty;
+
 
     public string Folio {
       get; set;
-    }
+    } = string.Empty;
+
 
     public string EndFolio {
       get; set;
-    }
+    } = string.Empty;
+
 
     public int? SheetsCount {
       get; set;
