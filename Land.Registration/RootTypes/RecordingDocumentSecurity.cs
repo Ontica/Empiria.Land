@@ -19,6 +19,8 @@ namespace Empiria.Land.Registration {
   /// <summary>Contains security methods used to protect the integrity of recording documents.</summary>
   public class RecordingDocumentSecurity: IProtected {
 
+    private readonly bool USE_E_SIGN = ConfigurationData.Get<bool>("UseESignature", false);
+
     #region Constructors and parsers
 
     internal RecordingDocumentSecurity(RecordingDocument document) {
@@ -36,7 +38,7 @@ namespace Empiria.Land.Registration {
 
     public bool UseESign {
       get {
-        return this.Document.AuthorizationTime >= DateTime.Parse("2018-07-10");
+        return USE_E_SIGN;
       }
     }
 
@@ -182,7 +184,7 @@ namespace Empiria.Land.Registration {
       if (UseESign) {
         return Data.DocumentsData.GetDigitalSignatureSignedBy(this.Document);
       } else {
-        return Person.Parse(36);
+        return this.Document.RecorderOffice.GetSigner();
       }
     }
 

@@ -113,6 +113,15 @@ namespace Empiria.Land.Registration {
     }
 
 
+    public Person GetSigner() {
+      return ExtendedData.Get("recorderOfficerSigner", Person.Empty);
+    }
+
+
+    public string GetPlace() {
+      return ExtendedData.Get("recorderOfficePlace", "Lugar no determinado");
+    }
+
     public FixedList<RecordingBook> GetRecordingBooks(RecordingSection sectionType) {
       return RecordingBooksData.GetRecordingBooksInSection(this, sectionType);
     }

@@ -48,7 +48,7 @@ namespace Empiria.Land.Media {
 
         case LandMediaContent.RegistrationStamp:
           return new MediaData("text/html",
-                              $"{MEDIA_URL}/recording-stamps/registration.stamp.aspx?" +
+                              $"{MEDIA_URL}/recording-stamps/recording.stamp.aspx?" +
                               $"uid={parameters[0]}");
 
         default:

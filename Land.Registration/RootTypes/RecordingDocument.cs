@@ -450,6 +450,15 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public RecorderOffice RecorderOffice {
+      get {
+        if (HasTransaction) {
+          return GetTransaction().RecorderOffice;
+        } else {
+          return RecorderOffice.Empty;
+        }
+      }
+    }
 
     private LRSTransaction _transaction = null;
     public LRSTransaction GetTransaction() {
