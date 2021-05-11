@@ -115,7 +115,7 @@ namespace Empiria.Land.Registration.Adapters {
       dto.RecordableSubject = RecordableSubjectsMapper.Map(recordingAct.Resource);
       dto.RecordableSubject.RecordingContext = GetRecordingContext(recordingAct);
 
-      dto.Antecedent = "Sin antecedente registral";
+      dto.Antecedent = recordingAct.GetRecordingAntecedentText();
 
       return dto;
     }

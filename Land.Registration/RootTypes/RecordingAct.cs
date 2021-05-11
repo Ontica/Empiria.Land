@@ -120,6 +120,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     #endregion Constructors and parsers
 
     #region Public properties
@@ -724,6 +725,70 @@ namespace Empiria.Land.Registration {
     public RecordingAct GetRecordingAntecedent() {
       return this.Resource.Tract.GetRecordingAntecedent(this, true);
     }
+
+    public string GetRecordingAntecedentText() {
+      var antecedentText = GetAntecedentOrTargetText();
+
+      if (antecedentText.Length == 0) {
+        return "Sin antecedente registral";
+      } else {
+        return antecedentText;
+      }
+
+      string GetAntecedentOrTargetText() {
+        if (this.RecordingActType.IsAmendmentActType) {
+          return GetAmendedText();
+        }
+
+        var antecedent = this.GetRecordingAntecedent();
+
+        if (antecedent.IsEmptyInstance) {
+          return String.Empty;
+
+        } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {
+          return antecedent.PhysicalRecording.AsText;
+
+        } else if (!antecedent.Document.Equals(this.Document)) {
+          return antecedent.Document.UID;
+
+        }
+
+        var antecedent2 = antecedent.GetRecordingAntecedent();
+
+        if (antecedent2.IsEmptyInstance) {
+          return "En este mismo documento";
+
+        } else if (!antecedent2.PhysicalRecording.IsEmptyInstance) {
+          return antecedent2.PhysicalRecording.AsText;
+
+        } else {
+          return antecedent.Document.UID;
+        }
+      }  // GetAntecedentOrTarget()
+
+
+      string GetAmendedText() {
+        var amendedAct = this.AmendmentOf;
+
+        if (amendedAct.IsEmptyInstance) {
+          return this.GetRecordingAntecedent().Document.UID;
+
+        } else if (amendedAct.PhysicalRecording.IsEmptyInstance) {
+          return amendedAct.RecordingActType.DisplayName +
+                 (amendedAct.RecordingActType.FemaleGenre ?
+                                              " registrada en " : " registrado en ") +
+                 "Doc: " + amendedAct.Document.UID;
+
+        } else {
+          return amendedAct.RecordingActType.DisplayName +
+                 (amendedAct.RecordingActType.FemaleGenre ?
+                                              " registrada en " : " registrado en ") +
+                 amendedAct.PhysicalRecording.AsText;
+        }
+      }  // GetAmendedItemCell()
+
+    }  // GetRecordingAntecedentText()
+
 
     /// <summary>Gets the resource data as it was when it was applied to this recording act.</summary>
     public ResourceShapshotData GetResourceExtData() {
