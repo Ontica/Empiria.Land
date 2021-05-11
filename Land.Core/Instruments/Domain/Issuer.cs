@@ -24,7 +24,7 @@ namespace Empiria.Land.Instruments {
   /// <summary>Represents a legal instrument issuer or attester, like a notary, judge or
   /// official authority.</summary>
   [PartitionedType(typeof(IssuerType))]
-  internal class Issuer : BaseObject {
+  public class Issuer : BaseObject {
 
     #region Constructors and parsers
 

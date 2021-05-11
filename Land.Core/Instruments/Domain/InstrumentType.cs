@@ -17,7 +17,7 @@ namespace Empiria.Land.Instruments {
 
   /// <summary>Power type that defines a legal instrument type: deed, contract, court order, etc.</summary>
   [Powertype(typeof(Instrument))]
-  internal class InstrumentType : Powertype {
+  public class InstrumentType : Powertype {
 
     #region Constructors and parsers
 

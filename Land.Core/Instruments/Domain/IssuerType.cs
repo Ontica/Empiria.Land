@@ -18,7 +18,7 @@ namespace Empiria.Land.Instruments {
   /// <summary>Power type that defines a legal instrument issuer:
   /// notary, judge, local authority, etc.</summary>
   [Powertype(typeof(Issuer))]
-  internal class IssuerType : Powertype {
+  public class IssuerType : Powertype {
 
     #region Constructors and parsers
 

@@ -14,11 +14,11 @@ using Empiria.Land.Media;
 namespace Empiria.Land.Instruments {
 
   /// <summary>Partial class with legal instrument media related methods.</summary>
-  internal partial class Instrument {
+  public partial class Instrument {
 
     private LandMediaFileSet _mediaFileSet;
 
-    public LandMediaFileSet GetMediaFileSet() {
+    internal LandMediaFileSet GetMediaFileSet() {
       if (_mediaFileSet == null) {
         _mediaFileSet = LandMediaFileSet.GetFor(this);
       }

@@ -23,7 +23,7 @@ namespace Empiria.Land.Instruments {
   /// <summary>Represents a legal instrument like deeds, contracts, mortgages, court orders, prevention notes,
   /// and other kind of legally issued or attested instruments.</summary>
   [PartitionedType(typeof(InstrumentType))]
-  internal partial class Instrument : BaseObject {
+  public partial class Instrument : BaseObject {
 
     #region Constructors and parsers
 
@@ -39,6 +39,8 @@ namespace Empiria.Land.Instruments {
 
 
     static public Instrument Parse(int id) => BaseObject.ParseId<Instrument>(id);
+
+    static public Instrument Parse(int id, bool reload) => BaseObject.ParseId<Instrument>(id, reload);
 
     static public Instrument Parse(string uid) => BaseObject.ParseKey<Instrument>(uid);
 
@@ -86,9 +88,14 @@ namespace Empiria.Land.Instruments {
     }
 
 
-    [DataField("InstrumentAsText")]
+    // [DataField("InstrumentAsText")]
     public string AsText {
-      get; private set;
+      get {
+        if (this.Summary.Length != 0) {
+          return this.Summary;
+        }
+        return "Escritura pública número 34";
+      }
     }
 
 
