@@ -615,21 +615,18 @@ namespace Empiria.Land.Registration {
       var tract = this.Resource.Tract.GetRecordingActs();
 
       var trappedAct = tract.Find((x) => x.Document.PresentationTime < this.Document.PresentationTime &&
-                                  !x.Document.IsClosed);
+                                  !x.Document.IsClosed && !x.Document.IsHistoricDocument);
 
       if (trappedAct != null) {
         Assertion.AssertFail("Este documento no puede ser cerrado, ya que el acto jurídico\n" +
-                             "{0} hace referencia a un folio real que tiene registrado " +
+                             "{0} hace referencia al folio real '{1}' que tiene registrado " +
                              "movimientos en otro documento que está abierto y que tiene una prelación " +
                              "anterior al de este.\n\n" +
                              "Primero debe cerrarse dicho documento para evitar que sus actos " +
                              "queden atrapados en el orden de prelación y luego no pueda cerrarse.\n\n" +
-                             "El documento en cuestión es el: {1}\n" +
-                             "Lo tiene {2}.",
-                             this.IndexedName, trappedAct.Document.UID,
-                             trappedAct.Document.GetTransaction().Workflow.GetCurrentTask().Responsible.Alias);
+                             "El documento en cuestión es el: {2}\n",
+                             this.IndexedName, this.Resource.UID, trappedAct.Document.UID);
       }
-
     }
 
     internal void AssertCanBeOpened() {

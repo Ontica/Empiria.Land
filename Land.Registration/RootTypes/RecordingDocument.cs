@@ -154,10 +154,13 @@ namespace Empiria.Land.Registration {
         if (this.IsEmptyInstance) {
           return false;
         }
-        if (!this.GetTransaction().IsEmptyInstance) {
-          return false;
+        if (this.GetTransaction().IsEmptyInstance) {
+          return true;
         }
-        return true;
+        if (this.IsRegisteredInRecordingBook) {
+          return true;
+        }
+        return false;
       }
     }
 
@@ -282,9 +285,25 @@ namespace Empiria.Land.Registration {
       get {
         Predicate<RecordingAct> match = (x) => x.Status != RecordableObjectStatus.Deleted;
 
-        return recordingActList.Value.FindAll(match).ToFixedList();
+        return recordingActList.Value.FindAll(match)
+                                     .ToFixedList();
       }
     }
+
+
+    public bool HasRecordingActs {
+      get {
+        return (this.RecordingActs.Count > 0);
+      }
+    }
+
+
+    public bool IsRegisteredInRecordingBook {
+      get {
+        return (PhysicalRecording.GetDocumentRecordings(this.Id).Count != 0);
+      }
+    }
+
 
     public bool IsClosed {
       get {
