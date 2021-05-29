@@ -20,11 +20,15 @@ namespace Empiria.Land.Registration {
     static internal readonly bool UseRecordingBookRegistation =
                                         ConfigurationData.Get("UseRecordingBookRegistation", false);
 
+    private readonly RecordingDocument _instrumentRecording;
     private readonly Instrument _instrument;
     private readonly TransactionControlData _transactionControlData;
     private readonly bool _isHistoricRegistration;
 
-    internal InstrumentRecordingControlData(Instrument instrument, LRSTransaction transaction) {
+    internal InstrumentRecordingControlData(RecordingDocument instrumentRecording,
+                                            Instrument instrument,
+                                            LRSTransaction transaction) {
+      _instrumentRecording = instrumentRecording;
       _instrument = instrument;
 
       if (transaction == null) {
@@ -56,14 +60,17 @@ namespace Empiria.Land.Registration {
 
     public bool CanOpen {
       get {
-        return this.CanEdit;
+        return this.CanEdit && _instrumentRecording.IsClosed &&
+               !UseRecordingBookRegistation;
       }
     }
 
 
     public bool CanClose {
       get {
-        return this.CanEdit;
+        return this.CanEdit && !_instrumentRecording.IsClosed &&
+               !UseRecordingBookRegistation &&
+               _instrumentRecording.HasRecordingActs;
       }
     }
 
@@ -135,7 +142,7 @@ namespace Empiria.Land.Registration {
 
     public bool ShowRegistrationStamps {
       get {
-        return _instrument.HasRecordingBookEntries || ShowRecordingActs;
+        return _instrument.HasRecordingBookEntries || _instrumentRecording.HasRecordingActs;
       }
     }
 

@@ -29,9 +29,33 @@ namespace Empiria.Land.Registration.WebApi {
     public SingleObjectModel GetInstrumentRecording([FromUri] string instrumentRecordingUID) {
 
       using (var usecases = InstrumentRecordingUseCases.UseCaseInteractor()) {
-        InstrumentRecordingDto instrumentRecordingDto = usecases.GetInstrumentRecording(instrumentRecordingUID);
+        InstrumentRecordingDto instrumentRecording = usecases.GetInstrumentRecording(instrumentRecordingUID);
 
-        return new SingleObjectModel(this.Request, instrumentRecordingDto);
+        return new SingleObjectModel(this.Request, instrumentRecording);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v5/land/registration/{instrumentRecordingUID:guid}/open-registration")]
+    public SingleObjectModel OpenInstrumentRecording([FromUri] string instrumentRecordingUID) {
+
+      using (var usecases = InstrumentRecordingUseCases.UseCaseInteractor()) {
+        InstrumentRecordingDto instrumentRecording = usecases.OpenInstrumentRecording(instrumentRecordingUID);
+
+        return new SingleObjectModel(this.Request, instrumentRecording);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v5/land/registration/{instrumentRecordingUID:guid}/close-registration")]
+    public SingleObjectModel CloseInstrumentRecording([FromUri] string instrumentRecordingUID) {
+
+      using (var usecases = InstrumentRecordingUseCases.UseCaseInteractor()) {
+        InstrumentRecordingDto instrumentRecording = usecases.CloseInstrumentRecording(instrumentRecordingUID);
+
+        return new SingleObjectModel(this.Request, instrumentRecording);
       }
     }
 

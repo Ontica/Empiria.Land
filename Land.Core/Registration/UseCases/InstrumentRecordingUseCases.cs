@@ -83,6 +83,32 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
+    public InstrumentRecordingDto CloseInstrumentRecording(string instrumentRecordingUID) {
+      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
+
+      RecordingDocument instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+
+      instrumentRecording.Security.AssertCanBeClosed();
+
+      instrumentRecording.Security.Close();
+
+      return InstrumentRecordingMapper.Map(instrumentRecording);
+    }
+
+
+    public InstrumentRecordingDto OpenInstrumentRecording(string instrumentRecordingUID) {
+      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
+
+      RecordingDocument instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+
+      instrumentRecording.Security.AssertCanBeOpened();
+
+      instrumentRecording.Security.Open();
+
+      return InstrumentRecordingMapper.Map(instrumentRecording);
+    }
+
+
     public InstrumentRecordingDto UpdateTransactionInstrumentRecording(string transactionUID, InstrumentFields fields) {
       Assertion.AssertObject(transactionUID, "transactionUID");
       Assertion.AssertObject(fields, "fields");

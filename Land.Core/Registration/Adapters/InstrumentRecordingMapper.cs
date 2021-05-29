@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration.Adapters {
 
       var mediaBuilder = new LandMediaBuilder();
 
-      var actions = new InstrumentRecordingControlData(instrument, transaction);
+      var actions = new InstrumentRecordingControlData(instrumentRecording, instrument, transaction);
 
       var bookEntries = instrument.RecordingBookEntries;
 
