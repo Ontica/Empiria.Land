@@ -88,7 +88,7 @@ namespace Empiria.Land.Instruments {
     }
 
 
-    // [DataField("InstrumentAsText")]
+
     public string AsText {
       get {
         if (this.Summary.Length != 0) {

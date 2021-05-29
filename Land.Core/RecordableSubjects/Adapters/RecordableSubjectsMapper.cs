@@ -79,6 +79,8 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
+    #region Private methods
+
     static private void MapCommonFields(RecordableSubjectDto dto, Resource resource) {
       dto.UID = resource.GUID;
       dto.Type = (RecordableSubjectType) Enum.Parse(typeof(RecordableSubjectType),
@@ -106,6 +108,8 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
       return dto;
     }
+
+    #endregion Private methods
 
   }  // class RecordableSubjectsMapper
 

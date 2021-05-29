@@ -40,6 +40,7 @@ namespace Empiria.Land.Data {
       string sql = "SELECT * FROM LRSRecordingActs " +
                    "WHERE DocumentId = {0} AND RecordingActStatus <> 'X' " +
                    "ORDER BY RecordingActIndex, RegistrationTime";
+
       sql = String.Format(sql, document.Id);
 
       var operation = DataOperation.Parse(sql);

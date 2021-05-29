@@ -610,7 +610,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     public void ApplyFeeWaiver() {
-      this.Payments.Add(LRSPayment.FeeWaiver);
+      // this.Payments.Add(LRSPayment.FeeWaiver);
     }
 
 

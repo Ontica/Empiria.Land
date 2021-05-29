@@ -14,7 +14,6 @@ using Empiria.Services;
 using Empiria.Land.Registration;
 
 using Empiria.Land.RecordableSubjects.Adapters;
-using Empiria.Land.Recording.UseCases;
 
 namespace Empiria.Land.RecordableSubjects.UseCases {
 
@@ -121,8 +120,6 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
           return RecordableSubjectsMapper.Map(list);
       }
     }
-
-
 
     #endregion Use cases
 
