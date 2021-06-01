@@ -23,6 +23,16 @@ namespace Empiria.Land.Registration {
       this.RecordingActType = RecordingAct.Parse(this.RecordingActId).RecordingActType;
     }
 
+
+    public RecordingActInfoDTO(string recordingActUID) {
+      Initialize();
+      var recordingAct = RecordingAct.Parse(recordingActUID);
+
+      this.RecordingActType = recordingAct.RecordingActType;
+      this.RecordingActId = recordingAct.Id;
+    }
+
+
     public RecordingActInfoDTO(int recordingActTypeId, int physicalBookId,
                                int physicalRecordingId = -1, string recordingNumber = "") {
       Initialize();

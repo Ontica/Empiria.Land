@@ -305,8 +305,7 @@ namespace Empiria.Land.Registration {
       if (Task.TargetActInfo.PhysicalRecordingWasCreated) {
         document = recording.MainDocument;
       } else {
-        throw new NotImplementedException();
-        // document = new RecordingDocument(RecordingDocumentType.Empty);
+        document = new RecordingDocument(RecordingDocumentType.Empty);
       }
 
       return document.AppendRecordingAct(Task.TargetActInfo.RecordingActType,

@@ -105,6 +105,10 @@ namespace Empiria.Land.Registration {
       if (this.RecordingTaskType == RecordingTaskType.createPartition) {
         this.PartitionInfo = new RealEstatePartitionDTO(fields.PartitionType, fields.PartitionNo, String.Empty);
       }
+
+      if (!String.IsNullOrWhiteSpace(fields.TargetRecordingActUID)) {
+        this.TargetActInfo = new RecordingActInfoDTO(fields.TargetRecordingActUID);
+      }
     }
 
 
@@ -147,7 +151,6 @@ namespace Empiria.Land.Registration {
 
       } else {
         this.TargetActInfo = RecordingActInfoDTO.Empty;
-
       }
     }
 

@@ -74,6 +74,11 @@ namespace Empiria.Land.Registration.Adapters {
     } = string.Empty;
 
 
+    public string AmendedRecordingActUID {
+      get; set;
+    } = string.Empty;
+
+
   }  // class RegistrationCommandPayload
 
 }  // namespace Empiria.Land.Registration.Adapters

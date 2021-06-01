@@ -75,6 +75,9 @@ namespace Empiria.Land.Registration {
       } else {
         fields.PrecedentBookEntryUID = command.Payload.BookEntryUID;
       }
+
+      fields.TargetRecordingActUID = command.Payload.AmendedRecordingActUID;
+
       return fields;
     }
 
@@ -140,6 +143,11 @@ namespace Empiria.Land.Registration {
 
         case RegistrationCommandType.CreateRealEstatePartitionForAntecedent:
           return RecordingTaskType.createPartitionAndPropertyOnAntecedent;
+
+        case RegistrationCommandType.SelectAssociationAct:
+        case RegistrationCommandType.SelectNoPropertyAct:
+        case RegistrationCommandType.SelectRealEstateAct:
+          return RecordingTaskType.actAppliesToOtherRecordingAct;
 
         default:
           throw Assertion.AssertNoReachThisCode($"There is not defined a registration rule for commandType '{commandType}'.");
