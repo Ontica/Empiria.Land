@@ -161,7 +161,7 @@
              <span class="warning">** ESTE DOCUMENTO NO ES OFICIAL **</span>
              <% } %>
             <br />
-            <b>Firma electrónica avanzada:</b>
+            <b>Firma electrónica:</b>
             <br />
                &#160;&#160;<%=GetDigitalSignature()%>
             <br />

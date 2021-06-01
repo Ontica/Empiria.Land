@@ -414,11 +414,11 @@ namespace Empiria.Land.WebApp {
 
       Resource resource = recordingAct.Resource;
       if (resource is RealEstate) {
-        x = x.Replace("{RESOURCE.DATA}", "sobre el bien inmueble con folio real electrónico " +
+        x = x.Replace("{RESOURCE.DATA}", "sobre el bien inmueble con folio electrónico " +
                       this.GetRealEstateTextWithAntecedentAndCadastralKey(recordingAct));
       } else if (resource is Association) {
         x = x.Replace("{RESOURCE.DATA}", "sobre la sociedad o asociación denominada '" +
-                      ((Association) resource).Name) + "' con folio único <b class='bigger'>" + resource.UID + "</b>";
+                      ((Association) resource).Name) + "' con folio electrónico <b class='bigger'>" + resource.UID + "</b>";
       } else if (resource is NoPropertyResource) {
         x = x.Replace("{RESOURCE.DATA}", "con identificador de inscripción <b class='bigger'>" + resource.UID + "</b>");
       } else {
@@ -484,7 +484,7 @@ namespace Empiria.Land.WebApp {
     private string GetRealEstateActOverTheWhole(RecordingAct recordingAct, int index) {
       const string overTheWhole =
           "{INDEX}.- {RECORDING.ACT} sobre el " +
-          "bien inmueble con folio real electrónico {PROPERTY.UID}.<br/>";
+          "bien inmueble con folio electrónico {PROPERTY.UID}.<br/>";
 
       string x = String.Empty;
 
@@ -524,17 +524,17 @@ namespace Empiria.Land.WebApp {
                                                         RealEstate newPartition, int index) {
       const string overPartition =
           "{INDEX}.- {RECORDING.ACT} sobre la " +
-          "<b>{PARTITION.NUMBER}</b> del bien inmueble con folio real {PARTITION.OF}, misma a la que " +
+          "<b>{PARTITION.NUMBER}</b> del bien inmueble con folio electrónico {PARTITION.OF}, misma a la que " +
           "se le asignó el folio real electrónico {PROPERTY.UID}.<br/>";
 
       const string overPartitionMale =
           "{INDEX}.- {RECORDING.ACT} sobre el " +
-          "<b>{PARTITION.NUMBER}</b> del bien inmueble con folio real {PARTITION.OF}, mismo al que " +
+          "<b>{PARTITION.NUMBER}</b> del bien inmueble con folio electrónico {PARTITION.OF}, mismo al que " +
           "se le asignó el folio real electrónico {PROPERTY.UID}.<br/>";
 
       const string overLot =
           "{INDEX}.- {RECORDING.ACT} sobre el " +
-          "<b>{PARTITION.NUMBER}</b> de la lotificación con folio real {PARTITION.OF}, mismo al que " +
+          "<b>{PARTITION.NUMBER}</b> de la lotificación con folio electrónico {PARTITION.OF}, mismo al que " +
           "se le asignó el folio real electrónico {PROPERTY.UID}.<br/>";
 
       const string overApartment =
@@ -544,7 +544,7 @@ namespace Empiria.Land.WebApp {
 
       const string overHouse =
           "{INDEX}.- {RECORDING.ACT} sobre la " +
-          "<b>{PARTITION.NUMBER}</b> del fraccionamiento con folio real {PARTITION.OF}, misma a la que " +
+          "<b>{PARTITION.NUMBER}</b> del fraccionamiento con folio electrónico {PARTITION.OF}, misma a la que " +
           "se le asignó el folio real electrónico {PROPERTY.UID}.<br/>";
 
       Assertion.Assert(!newPartition.IsPartitionOf.IsEmptyInstance, "Bad call. Property is not a partition.");
@@ -656,17 +656,17 @@ namespace Empiria.Land.WebApp {
       const string incorporationActText =
             "{INDEX}.- <b style='text-transform:uppercase'>CONSTITUCIÓN</b> de " +
             "la {ASSOCIATION.KIND} denominada <b>{ASSOCIATION.NAME}</b>, " +
-            "misma a la que se le asignó el folio único <b class='bigger'>{ASSOCIATION.UID}</b>.<br/>";
+            "misma a la que se le asignó el folio electrónico <b class='bigger'>{ASSOCIATION.UID}</b>.<br/>";
 
       const string overAssociationWithIncorporationActInDigitalRecording =
           "{INDEX}.- <b style='text-transform:uppercase'>{RECORDING.ACT}</b> de " +
           "la {ASSOCIATION.KIND} denominada <b>{ASSOCIATION.NAME}</b>, " +
-          "con folio único <b class='bigger'>{ASSOCIATION.UID}</b>.<br/>";
+          "con folio electrónico <b class='bigger'>{ASSOCIATION.UID}</b>.<br/>";
 
       const string overAssociationWithIncorporationActInPhysicalRecording =
           "{INDEX}.- <b style='text-transform:uppercase'>{RECORDING.ACT}</b> de " +
           "la {ASSOCIATION.KIND} denominada <b>{ASSOCIATION.NAME}</b>, " +
-          "con folio único <b class='bigger'>{ASSOCIATION.UID}</b> y " +
+          "con folio electrónico <b class='bigger'>{ASSOCIATION.UID}</b> y " +
           "antecedente de inscripción en {ANTECEDENT}.<br/>";
 
       RecordingAct incorporationAct = association.GetIncorporationAct();
