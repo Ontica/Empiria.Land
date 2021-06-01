@@ -44,11 +44,13 @@ static internal class RecordingActMapper {
 
       dto.IsEditable = recordingAct.IsEditable;
 
+      dto.EditableFields = MapEditableFields(recordingAct.RecordingActType);
+
       if (!recordingAct.IsEditable) {
         return dto;
       }
 
-      dto.EditableFields = MapEditableFields(recordingAct.RecordingActType);
+
       dto.EditionValues = MapEditionValues(recordingAct, dto.EditableFields);
 
       return dto;
