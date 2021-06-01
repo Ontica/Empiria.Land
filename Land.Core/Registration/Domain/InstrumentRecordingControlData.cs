@@ -87,6 +87,9 @@ namespace Empiria.Land.Registration {
         if (_isHistoricRegistration) {
           return true;
         }
+        if (CanOpen) {
+          return false;
+        }
         return (this.ShowRecordingActs && _transactionControlData.CanEditRecordingActs);
       }
     }
