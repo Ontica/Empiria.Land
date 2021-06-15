@@ -230,6 +230,7 @@ namespace Empiria.Land.WebApp {
         if (recordingAct.RecordingActType.IsAmendmentActType) {
           temp = this.GetAmendmentActText(recordingAct, index);
           html += this.Decorate(recordingAct, temp);
+          html += this.GetPartiesText(recordingAct);
           continue;
         }
 
@@ -237,18 +238,36 @@ namespace Empiria.Land.WebApp {
 
         if (recordingAct.Resource is RealEstate) {
           temp = this.GetRealEstateActText(recordingAct, index);
+
         } else if (recordingAct.Resource is Association) {
           temp = this.GetAssociationActText(recordingAct, (Association) recordingAct.Resource, index);
+
         } else if (recordingAct.Resource is NoPropertyResource) {
           temp = this.GetNoPropertyActText(recordingAct, index);
+
         } else {
           throw Assertion.AssertNoReachThisCode();
+
         }
         html += this.Decorate(recordingAct, temp);
+        html += this.GetPartiesText(recordingAct);
       }
       return html;
     }
 
+    private string GetPartiesText(RecordingAct recordingAct) {
+      const string t = "{PARTY-ROLE}: {PARTY-NAME}<br/>";
+      var parties = recordingAct.GetParties();
+
+      var html = string.Empty;
+
+      foreach (var party in parties) {
+        var temp = t.Replace("{PARTY-ROLE}", party.PartyRole.Name);
+        temp = temp.Replace("{PARTY-NAME}", party.Party.FullName);
+        html += temp;
+      }
+      return html;
+    }
 
     private string Decorate(RecordingAct recordingAct, string text) {
       if (this.selectedRecordingAct.IsEmptyInstance) {
