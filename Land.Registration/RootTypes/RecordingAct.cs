@@ -617,16 +617,16 @@ namespace Empiria.Land.Registration {
       var trappedAct = tract.Find((x) => x.Document.PresentationTime < this.Document.PresentationTime &&
                                   !x.Document.IsClosed && !x.Document.IsHistoricDocument);
 
-      if (trappedAct != null) {
-        Assertion.AssertFail("Este documento no puede ser cerrado, ya que el acto jurídico\n" +
-                             "{0} hace referencia al folio real '{1}' que tiene registrado " +
-                             "movimientos en otro documento que está abierto y que tiene una prelación " +
-                             "anterior al de este.\n\n" +
-                             "Primero debe cerrarse dicho documento para evitar que sus actos " +
-                             "queden atrapados en el orden de prelación y luego no pueda cerrarse.\n\n" +
-                             "El documento en cuestión es el: {2}\n",
-                             this.IndexedName, this.Resource.UID, trappedAct.Document.UID);
-      }
+      //if (trappedAct != null) {
+      //  Assertion.AssertFail("Este documento no puede ser cerrado, ya que el acto jurídico\n" +
+      //                       "{0} hace referencia al folio real '{1}' que tiene registrado " +
+      //                       "movimientos en otro documento que está abierto y que tiene una prelación " +
+      //                       "anterior al de este.\n\n" +
+      //                       "Primero debe cerrarse dicho documento para evitar que sus actos " +
+      //                       "queden atrapados en el orden de prelación y luego no pueda cerrarse.\n\n" +
+      //                       "El documento en cuestión es el: {2}\n",
+      //                       this.IndexedName, this.Resource.UID, trappedAct.Document.UID);
+      //}
     }
 
     internal void AssertCanBeOpened() {
@@ -666,14 +666,14 @@ namespace Empiria.Land.Registration {
       bool wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > this.Document.PresentationTime &&
                                                       x.Document.IsClosed);
 
-      if (wrongPrelation) {
-        Assertion.AssertFail("El acto jurídico " + this.IndexedName +
-                             " hace referencia a un folio real que tiene registrado " +
-                             "cuando menos otro acto jurídico con una prelación posterior " +
-                             "a la de este documento.\n\n" +
-                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
-                             "Favor de revisar la historia del predio involucrado.");
-      }
+      //if (wrongPrelation) {
+      //  Assertion.AssertFail("El acto jurídico " + this.IndexedName +
+      //                       " hace referencia a un folio real que tiene registrado " +
+      //                       "cuando menos otro acto jurídico con una prelación posterior " +
+      //                       "a la de este documento.\n\n" +
+      //                       "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
+      //                       "Favor de revisar la historia del predio involucrado.");
+      //}
 
     }
 

@@ -843,19 +843,6 @@ namespace Empiria.Land.Registration.Transactions {
       this.ExtensionData.Update(fields);
     }
 
-    private string PatchField(string newValue, string defaultValue) {
-      if (!String.IsNullOrWhiteSpace(newValue)) {
-        return newValue;
-      }
-      return defaultValue;
-    }
-
-    private U PatchField<U>(string newValue, U defaultValue) where U : BaseObject {
-      if (!String.IsNullOrWhiteSpace(newValue)) {
-        return BaseObject.ParseKey<U>(newValue);
-      }
-      return defaultValue;
-    }
 
     #endregion TransactionFields related methods
 

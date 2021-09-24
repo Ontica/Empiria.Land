@@ -339,12 +339,12 @@ namespace Empiria.Land.Registration {
       var wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > document.PresentationTime &&
                                                      x.Document.IsClosed);
 
-      if (wrongPrelation) {
-        Assertion.AssertFail("El folio real '{0}' tiene registrado cuando menos otro acto jurídico " +
-                             "con una prelación posterior a la fecha de presentación de este documento.\n\n" +
-                             "Por lo anterior, no es posible agregarlo en este documento.\n\n" +
-                             "Favor de revisar la historia del predio.", this.UID);
-      }
+      //if (wrongPrelation) {
+      //  Assertion.AssertFail("El folio real '{0}' tiene registrado cuando menos otro acto jurídico " +
+      //                       "con una prelación posterior a la fecha de presentación de este documento.\n\n" +
+      //                       "Por lo anterior, no es posible agregarlo en este documento.\n\n" +
+      //                       "Favor de revisar la historia del predio.", this.UID);
+      //}
     }
 
 
