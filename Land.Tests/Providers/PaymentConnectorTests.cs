@@ -7,9 +7,12 @@
 *  Summary  : Integration tests with the payments connector service.                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
+using System.Threading.Tasks;
+
 using Xunit;
 
-using System.Threading.Tasks;
+using Empiria.Tests;
 
 using Empiria.OnePoint.EPayments;
 
@@ -28,7 +31,7 @@ namespace Empiria.Land.Tests.Providers {
 
     [Fact]
     public async Task Should_Get_PaymentOrderData() {
-      CommonMethods.Authenticate();
+      TestsCommonMethods.Authenticate();
 
       IPayable payable = LRSTransaction.Parse(_PAYABLE_UID);
 

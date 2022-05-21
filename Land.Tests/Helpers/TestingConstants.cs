@@ -33,8 +33,6 @@ namespace Empiria.Land.Tests {
 
     static public int PAYMENT_ORDER_ROUTE_NUMBER_LENGTH => 20;
 
-    static internal string SESSION_TOKEN => ConfigurationData.GetString("Testing.SessionToken");
-
     static public string SIGNED_DOCUMENT_UID => ConfigurationData.Get<string>("Testing.SignedDocumentUID");
 
     static public string TARGET_ASSOCIATION_RECORDING_ACT_TYPE_UID => "ObjectType.RecordingAct.InformationAct.07";

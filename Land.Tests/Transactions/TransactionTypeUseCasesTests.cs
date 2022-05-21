@@ -7,8 +7,10 @@
 *  Summary  : Test cases for transaction types use cases.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
 using Xunit;
 
+using Empiria.Tests;
 
 using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Transactions.UseCases;
@@ -27,7 +29,7 @@ namespace Empiria.Land.Tests.Transactions {
     #region Initialization
 
     public TransactionTypeUseCasesTests() {
-      CommonMethods.Authenticate();
+      TestsCommonMethods.Authenticate();
 
       _usecases = TransactionTypeUseCases.UseCaseInteractor();
     }

@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 
 using Xunit;
 
+using Empiria.Tests;
+
 using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Transactions.UseCases;
 
@@ -30,7 +32,7 @@ namespace Empiria.Land.Tests.Transactions {
     #region Initialization
 
     public TransactionServicesUseCasesTests() {
-      CommonMethods.Authenticate();
+      TestsCommonMethods.Authenticate();
 
       _usecases = TransactionUseCases.UseCaseInteractor();
     }

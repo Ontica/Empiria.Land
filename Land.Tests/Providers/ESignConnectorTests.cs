@@ -7,11 +7,15 @@
 *  Summary  : Integration tests for the electronic sign services connector.                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using Xunit;
-
+using System;
 using System.Threading.Tasks;
 
+using Xunit;
+
+using Empiria.Tests;
+
 using Empiria.Land.Integration;
+
 
 namespace Empiria.Land.Tests.Providers {
 
@@ -22,7 +26,7 @@ namespace Empiria.Land.Tests.Providers {
 
     [Fact]
     public async Task Should_Get_Sign_Request_ByDocumentNumber() {
-      CommonMethods.Authenticate();
+      TestsCommonMethods.Authenticate();
 
       var connector = new ESignConnector();
 

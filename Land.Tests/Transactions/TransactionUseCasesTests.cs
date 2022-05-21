@@ -12,9 +12,10 @@ using System.Threading.Tasks;
 
 using Xunit;
 
+using Empiria.Tests;
+
 using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Transactions.UseCases;
-
 
 namespace Empiria.Land.Tests.Transactions {
 
@@ -32,7 +33,7 @@ namespace Empiria.Land.Tests.Transactions {
     #region Initialization
 
     public TransactionUseCasesTests() {
-      CommonMethods.Authenticate();
+      TestsCommonMethods.Authenticate();
 
       _usecases = TransactionUseCases.UseCaseInteractor();
     }
@@ -124,7 +125,7 @@ namespace Empiria.Land.Tests.Transactions {
 
       Assert.NotEmpty(list);
 
-      var currentUser = CommonMethods.GetCurrentUser();
+      var currentUser = TestsCommonMethods.GetCurrentUser();
 
       Assert.Equal(list.Count, list.CountAll(x => x.AssignedToUID == currentUser.UID));
 

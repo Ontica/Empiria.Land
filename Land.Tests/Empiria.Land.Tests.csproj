@@ -89,6 +89,9 @@
     <ProjectReference Include="..\..\land.zacatecas\Integration\SIT.Finanzas\SIT.Finanzas.Connector.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\extensions\Tests\Empiria.Tests.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="empiria.config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
