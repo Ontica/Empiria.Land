@@ -33,19 +33,19 @@ namespace Empiria.Land.Messaging {
 
 
     static public void EnsureIsValid(JsonObject json) {
-      Assertion.AssertObject(json, "json");
+      Assertion.Require(json, "json");
 
-      Assertion.Assert(json.HasValue("command"),
+      Assertion.Require(json.HasValue("command"),
                        "Subscription request must have a 'command' value.");
 
-      Assertion.Assert(json.HasValue("subscriptionType"),
+      Assertion.Require(json.HasValue("subscriptionType"),
                        "Subscription request must have a 'subscriptionType' value.");
 
-      Assertion.Assert(json.HasValue("subscribedObjectUID"),
+      Assertion.Require(json.HasValue("subscribedObjectUID"),
                        "Subscription request must have a 'subscribedObjectUID' that refers to a resource, " +
                        "certificate or recording document.");
 
-      Assertion.Assert(json.HasValue("sendTo"),
+      Assertion.Require(json.HasValue("sendTo"),
                        "Subscription request must have a 'sendTo' value.");
 
     }

@@ -44,7 +44,7 @@ namespace Empiria.Land.Registration {
     #region Private methods
 
     private void AttachRealEstate(RealEstate property, decimal percentage) {
-      Assertion.AssertObject(property, "property");
+      Assertion.Require(property, "property");
 
       var tract = property.Tract.GetRecordingActs();
 

@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration {
     static public Resource ParseGuid(string guid) {
       var resource = BaseObject.TryParse<Resource>($"PropertyGUID = '{guid}'");
 
-      Assertion.AssertObject(resource,
+      Assertion.Require(resource,
                              $"There is not registered a recordable subject resource with guid {guid}.");
 
       return resource;
@@ -317,12 +317,12 @@ namespace Empiria.Land.Registration {
         }
       }
 
-      Assertion.AssertFail("El acto jurídico {0} no puede ser inscrito debido a que el folio real '{1}' " +
-                            "no tiene registrado previamente un acto de: '{2}'.\n\n" +
-                            "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
-                            "Favor de revisar la historia del folio real involucrado. Es posible que el trámite donde " +
-                            "viene el acto faltante aún no haya sido procesado o que el documento esté abierto.",
-                            newRecordingActType.DisplayName, this.UID, chainedRecordingActType.DisplayName);
+      Assertion.RequireFail(
+        $"El acto jurídico {newRecordingActType.DisplayName} no puede ser inscrito debido a que el folio real '{this.UID}' " +
+        $"no tiene registrado previamente un acto de: '{chainedRecordingActType.DisplayName}'.\n\n" +
+        "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
+        "Favor de revisar la historia del folio real involucrado. Es posible que el trámite donde " +
+        "viene el acto faltante aún no haya sido procesado o que el documento esté abierto.");
     }
 
 
@@ -349,14 +349,14 @@ namespace Empiria.Land.Registration {
 
 
     internal void AssertIsStillAlive(RecordingDocument document) {
-      Assertion.Assert(this.Status != RecordableObjectStatus.Deleted,
-                       "El folio real '{0}' está marcado como eliminado.", this.UID);
+      Assertion.Require(this.Status != RecordableObjectStatus.Deleted,
+                       $"El folio real '{this.UID}' está marcado como eliminado.");
 
       var tract = this.Tract.GetRecordingActs();
       if (0 != tract.CountAll((x) => x.RecordingActType.RecordingRule.IsEndingAct &&
                                      x.Document.PresentationTime < document.PresentationTime)) {
-        Assertion.AssertFail("El folio real '{0}' ya fue cancelado, fusionado o dividido en su totalidad. " +
-                             "Ya no es posible agregarlo en este documento.", this.UID);
+        Assertion.RequireFail($"El folio real '{this.UID}' ya fue cancelado, fusionado o dividido en su totalidad. " +
+                             "Ya no es posible agregarlo en este documento.");
       }
     }
 
@@ -372,12 +372,13 @@ namespace Empiria.Land.Registration {
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
         this.PostingTime = DateTime.Now;
       }
-      Assertion.Assert(this.UID.Length != 0, "Property UniqueIdentifier can't be an empty string.");
+
+      Assertion.Ensure(this.UID.Length != 0, "Property UniqueIdentifier can't be an empty string.");
     }
 
 
     protected override void OnSave() {
-      Assertion.AssertNoReachThisCode();
+      Assertion.EnsureNoReachThisCode();
     }
 
 
@@ -408,7 +409,7 @@ namespace Empiria.Land.Registration {
     #region Private methods
 
     private void AssignUID() {
-      Assertion.Assert(this._propertyUID.Length == 0, "Property has already assigned a UniqueIdentifier.");
+      Assertion.Ensure(this._propertyUID.Length == 0, "Property has already assigned a UniqueIdentifier.");
 
       while (true) {
         string temp = this.GenerateResourceUID();
@@ -417,7 +418,8 @@ namespace Empiria.Land.Registration {
           break;
         }
       } // while
-      Assertion.Assert(this._propertyUID.Length != 0, "Property UniqueIdentifier has not been generated.");
+
+      Assertion.Ensure(this._propertyUID.Length != 0, "Property UniqueIdentifier has not been generated.");
     }
 
     private bool HasCompleteInformation() {

@@ -20,7 +20,7 @@ namespace Empiria.Land.Instruments.Adapters {
 
     static internal void EnsureIsValid(this IssuersSearchCommand command) {
       if (EmpiriaString.NotIsEmpty(command.OnDate)) {
-        Assertion.Assert(EmpiriaString.IsDate(command.OnDate),
+        Assertion.Ensure(EmpiriaString.IsDate(command.OnDate),
                          $"Unrecognized onDate search value: '{command.OnDate}'");
       }
 

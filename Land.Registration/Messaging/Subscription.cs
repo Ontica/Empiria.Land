@@ -29,8 +29,8 @@ namespace Empiria.Land.Messaging {
     #region Constructors and parsers
 
     internal Subscription(SubscriptionType subscriptionType, string subscribedObjectUID, SendTo sendTo) {
-      Assertion.AssertObject(subscribedObjectUID, "subscribedObjectUID");
-      Assertion.AssertObject(sendTo, "sendTo");
+      Assertion.Require(subscribedObjectUID, "subscribedObjectUID");
+      Assertion.Require(sendTo, "sendTo");
 
       this.SubscriptionType = subscriptionType;
       this.SubscribedObjectUID = subscribedObjectUID;
@@ -94,7 +94,7 @@ namespace Empiria.Land.Messaging {
 
     /// <summary>Confirms subscription.</summary>
     public void Confirm() {
-      Assertion.Assert(this.Status == SubscriptionStatus.Pending,
+      Assertion.Require(this.Status == SubscriptionStatus.Pending,
                   "Subscriptions can be confirmed only whern they are in pending status.");
       this.Status = SubscriptionStatus.Confirmed;
 
@@ -104,7 +104,7 @@ namespace Empiria.Land.Messaging {
 
     /// <summary>Unsubscribes for resource changes.</summary>
     public void Unsubscribe() {
-      Assertion.Assert(this.Status != SubscriptionStatus.Unsubscribed,
+      Assertion.Require(this.Status != SubscriptionStatus.Unsubscribed,
                   "Subscription its already in Unsubscribed status.");
 
       this.Status = SubscriptionStatus.Unsubscribed;

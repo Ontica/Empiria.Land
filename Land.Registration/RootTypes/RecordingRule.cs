@@ -134,7 +134,7 @@ namespace Empiria.Land.Registration {
     }
 
     static internal RecordingRule Parse(RecordingActType recordingActType) {
-      Assertion.AssertObject(recordingActType, "recordingActType");
+      Assertion.Require(recordingActType, "recordingActType");
 
       return new RecordingRule(recordingActType);
     }

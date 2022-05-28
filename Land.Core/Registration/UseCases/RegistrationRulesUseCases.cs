@@ -35,14 +35,14 @@ namespace Empiria.Land.Registration.UseCases {
 
     public FixedList<RecordingActTypeGroupDto> RecordingActTypesForBookEntry(string recordingBookUID,
                                                                              string bookEntryUID) {
-      Assertion.AssertObject(recordingBookUID, "recordingBookUID");
-      Assertion.AssertObject(bookEntryUID, "bookEntryUID");
+      Assertion.Require(recordingBookUID, "recordingBookUID");
+      Assertion.Require(bookEntryUID, "bookEntryUID");
 
       var book = RecordingBook.Parse(recordingBookUID);
 
       var bookEntry = PhysicalRecording.Parse(bookEntryUID);
 
-      Assertion.Assert(book.Recordings.Contains(bookEntry),
+      Assertion.Require(book.Recordings.Contains(bookEntry),
           $"Book entry '{bookEntry.UID}' does not belong to recording book {book.AsText}");
 
       FixedList<RecordingActTypeCategory> recordingActTypesList = bookEntry.ApplicableRecordingActTypes();
@@ -52,7 +52,7 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public FixedList<RecordingActTypeGroupDto> RecordingActTypesForInstrument(string instrumentUID) {
-      Assertion.AssertObject(instrumentUID, "instrumentUID");
+      Assertion.Require(instrumentUID, "instrumentUID");
 
       var instrument = Instrument.Parse(instrumentUID);
 

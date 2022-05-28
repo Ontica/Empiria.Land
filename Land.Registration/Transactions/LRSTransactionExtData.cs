@@ -157,7 +157,7 @@ namespace Empiria.Land.Registration.Transactions {
     #region TransactionFields related methods
 
     internal void Load(TransactionFields fields) {
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(fields, "fields");
 
       if (!String.IsNullOrWhiteSpace(fields.RequestedByEmail)) {
         this.SendTo = new SendTo(fields.RequestedByEmail);

@@ -31,7 +31,7 @@ namespace Empiria.Land.Registration.Forms {
           return DefinitiveNoteForm.Parse(request);
 
         default:
-          throw Assertion.AssertNoReachThisCode(
+          throw Assertion.EnsureNoReachThisCode(
             $"Unrecognized external procedure: '{request.Procedure.NamedKey}'."
           );
       }

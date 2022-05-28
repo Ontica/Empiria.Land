@@ -53,7 +53,7 @@ namespace Empiria.Land.Transactions.Providers {
 
 
     internal Task<IPaymentOrder> GeneratePaymentOrder(LRSTransaction transaction) {
-      Assertion.AssertObject(transaction, "transaction");
+      Assertion.Require(transaction, "transaction");
 
       if (!ConnectedToPaymentOrderServices) {
         return Task.FromResult(GetDisconnectedPaymentOrder(transaction));
@@ -78,7 +78,7 @@ namespace Empiria.Land.Transactions.Providers {
         return Task.FromResult("Desconocido");
       }
 
-      Assertion.AssertObject(paymentOrder, "paymentOrder");
+      Assertion.Require(paymentOrder, "paymentOrder");
 
       IPaymentService externalService = GetPaymentOrderService();
 

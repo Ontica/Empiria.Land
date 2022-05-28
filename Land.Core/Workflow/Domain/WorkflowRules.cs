@@ -32,8 +32,8 @@ namespace Empiria.Land.Workflow {
 
 
     public bool IsApplicable(Contact user, WorkflowCommandType commandType) {
-      Assertion.AssertObject(user, "user");
-      Assertion.AssertObject(commandType, "commandType");
+      Assertion.Require(user, "user");
+      Assertion.Require(commandType, "commandType");
 
       switch (commandType) {
         // case WorkflowCommandType.AssignTo:
@@ -66,9 +66,9 @@ namespace Empiria.Land.Workflow {
     public bool IsApplicable(WorkflowCommandType commandType,
                              LRSTransaction transaction,
                              Contact user) {
-      Assertion.AssertObject(commandType, "commandType");
-      Assertion.AssertObject(transaction, "transaction");
-      Assertion.AssertObject(user, "user");
+      Assertion.Require(commandType, "commandType");
+      Assertion.Require(transaction, "transaction");
+      Assertion.Require(user, "user");
 
       var task = transaction.Workflow.GetCurrentTask();
       var nextStatus = transaction.Workflow.GetCurrentTask().NextStatus;
@@ -131,7 +131,7 @@ namespace Empiria.Land.Workflow {
 
 
     public FixedList<LRSTransactionStatus> NextStatusList(LRSTransaction transaction) {
-      Assertion.AssertObject(transaction, "transaction");
+      Assertion.Require(transaction, "transaction");
 
       var currentStatus = transaction.Workflow.GetCurrentTask().CurrentStatus;
 
@@ -144,8 +144,8 @@ namespace Empiria.Land.Workflow {
     public List<LRSTransactionStatus> NextStatusList(LRSTransactionType type,
                                                      LRSDocumentType docType,
                                                      LRSTransactionStatus currentStatus) {
-      Assertion.AssertObject(type, "type");
-      Assertion.AssertObject(docType, "docType");
+      Assertion.Require(type, "type");
+      Assertion.Require(docType, "docType");
 
       List<LRSTransactionStatus> list = new List<LRSTransactionStatus>();
 
@@ -312,7 +312,7 @@ namespace Empiria.Land.Workflow {
 
 
     public FixedList<WorkflowCommandType> WorkflowCommandTypeCandidates(LRSTransaction transaction) {
-      Assertion.AssertObject(transaction, "transaction");
+      Assertion.Require(transaction, "transaction");
 
       var currentTask = transaction.Workflow.GetCurrentTask();
 

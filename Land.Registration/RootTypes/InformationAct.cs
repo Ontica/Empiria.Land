@@ -63,7 +63,7 @@ namespace Empiria.Land.Registration {
 
 
     private void SetRealEstate(RealEstate property) {
-      Assertion.AssertObject(property, "property");
+      Assertion.Require(property, "property");
 
       var tract = property.Tract.GetRecordingActs();
 

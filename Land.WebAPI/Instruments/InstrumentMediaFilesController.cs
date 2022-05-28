@@ -82,14 +82,14 @@ namespace Empiria.Land.Media.WebApi {
     #region Helper methods
 
     private void AssertIsValidForUploadInstrumentMediaFile(HttpRequest httpRequest) {
-      Assertion.AssertObject(httpRequest, "httpRequest");
-      Assertion.Assert(httpRequest.Files.Count == 1, "The request does not have the file to be uploaded.");
+      Assertion.Require(httpRequest, "httpRequest");
+      Assertion.Require(httpRequest.Files.Count == 1, "The request does not have the file to be uploaded.");
 
       var form = httpRequest.Form;
 
-      Assertion.AssertObject(form, "The request must be of type 'multipart/form-data'.");
+      Assertion.Require(form, "The request must be of type 'multipart/form-data'.");
 
-      Assertion.AssertObject(form["mediaContent"], "'mediaContent' form field is required");
+      Assertion.Require(form["mediaContent"], "'mediaContent' form field is required");
     }
 
 

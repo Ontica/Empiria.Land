@@ -40,11 +40,11 @@ namespace Empiria.Land.Pages {
 		private void Initialize() {
 			transaction = GetTransaction();
 
-			Assertion.Assert(!transaction.Document.IsEmptyInstance, "Transaction does not have a registration document.");
+			Assertion.Ensure(!transaction.Document.IsEmptyInstance, "Transaction does not have a registration document.");
 
 			recordings = PhysicalRecording.GetDocumentRecordings(transaction.Document.Id);
 
-			Assertion.Assert(recordings.Count > 0, "Document does not have recordings.");
+			Assertion.Ensure(recordings.Count > 0, "Document does not have recordings.");
 
 			int recordingId = int.Parse(Request.QueryString["id"]);
 			if (recordingId != -1) {
@@ -53,7 +53,8 @@ namespace Empiria.Land.Pages {
 				recordings.Sort((x, y) => x.RecordingTime.CompareTo(y.RecordingTime));
 				baseRecording = recordings[recordings.Count - 1];
 			}
-			Assertion.AssertObject(baseRecording, "We have a problem reading document recording data.");
+
+			Assertion.Ensure(baseRecording, "We have a problem reading document recording data.");
 		}
 
 
@@ -205,7 +206,11 @@ namespace Empiria.Land.Pages {
 
 
 		protected string GetRecordingSignerName() {
-			return "Lic. Teresa de Jesús Alvarado Ortiz";
+			if (baseRecording.RecordingTime >= new DateTime(2022, 4, 1)) {
+				return "Lic. Roberto López Arellano";
+			} else {
+				return "Lic. Teresa de Jesús Alvarado Ortiz";
+			}
 		}
 
 

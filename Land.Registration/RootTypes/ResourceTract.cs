@@ -26,7 +26,7 @@ namespace Empiria.Land.Registration {
     }
 
     static internal ResourceTract Parse(Resource resource) {
-      Assertion.AssertObject(resource, "resource");
+      Assertion.Require(resource, "resource");
 
       return new ResourceTract(resource);
     }

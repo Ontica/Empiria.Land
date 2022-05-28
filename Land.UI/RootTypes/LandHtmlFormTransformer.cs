@@ -36,7 +36,7 @@ namespace Empiria.Land.UI {
           return TransformDefinitiveNoteRegistrationForm((DefinitiveNoteForm) this._form);
 
         default:
-          throw Assertion.AssertNoReachThisCode(
+          throw Assertion.EnsureNoReachThisCode(
                 $"There is not defined an HTML handler for forms of type {this._form.FormType}.");
       }
     }

@@ -83,7 +83,7 @@ namespace Empiria.Land.Registration {
     #region Constructors and parsers
 
     public RecordingTask(RecordingTaskFields fields) {
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(fields, "fields");
 
       this.RecordingTaskType = fields.RecordingTaskType;
       this.Document = RecordingDocument.ParseGuid(fields.RecordingDocumentUID);

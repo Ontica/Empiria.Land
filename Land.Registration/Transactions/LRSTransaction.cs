@@ -591,10 +591,10 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     public void CancelPayment() {
-      Assertion.Assert(this.HasPayment,
+      Assertion.Ensure(this.HasPayment,
                        $"There are not any registered payments for transaction '{this.UID}'.");
 
-      Assertion.Assert(this.ControlData.CanCancelPayment,
+      Assertion.Ensure(this.ControlData.CanCancelPayment,
                        $"Can not cancel the payment for transaction '{this.UID}'.");
 
       var payment = this.Payments[0];
@@ -651,10 +651,10 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public void AttachDocument(RecordingDocument documentToAttach) {
-      Assertion.Assert(!this.IsEmptyInstance && !this.IsNew,
+      Assertion.Ensure(!this.IsEmptyInstance && !this.IsNew,
                        "Document can't be attached to a new or empty transaction.");
-      Assertion.Assert(!documentToAttach.IsEmptyInstance, "Attached documents can't be the empty instance.");
-      Assertion.Assert(this.Document.IsEmptyInstance ||
+      Assertion.Ensure(!documentToAttach.IsEmptyInstance, "Attached documents can't be the empty instance.");
+      Assertion.Ensure(this.Document.IsEmptyInstance ||
                        documentToAttach.Equals(this.Document),
                        "Transaction's document should be empty in order to be changed.");
 
@@ -671,11 +671,11 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public void RemoveDocument() {
-      Assertion.Assert(!this.IsEmptyInstance && !this.IsNew,
+      Assertion.Ensure(!this.IsEmptyInstance && !this.IsNew,
                        "Document can't be detached from a new or empty transaction.");
-      Assertion.Assert(!this.Document.IsEmptyInstance,
+      Assertion.Ensure(!this.Document.IsEmptyInstance,
                        "Document can't be removed because it's the empty instance.");
-      Assertion.Assert(this.Document.RecordingActs.Count == 0,
+      Assertion.Ensure(this.Document.RecordingActs.Count == 0,
                        "Document has recording acts. It's not possible to delete it.");
 
       var tempDocument = this.Document;
@@ -781,7 +781,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     internal void SetExternalTransaction(LRSExternalTransaction externalTransaction) {
-      Assertion.AssertObject(externalTransaction, "externalTransaction");
+      Assertion.Require(externalTransaction, "externalTransaction");
 
       this.ExtensionData.ExternalTransaction = externalTransaction;
       this.ExternalTransactionNo = this.ExtensionData.ExternalTransaction.ExternalTransactionNo;
@@ -792,26 +792,26 @@ namespace Empiria.Land.Registration.Transactions {
     #region TransactionFields related methods
 
     public void Update(TransactionFields fields) {
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(fields, "fields");
 
       this.UpdateFields(fields);
     }
 
     private void EnsureFieldsAreValid(TransactionFields fields) {
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(fields, "fields");
 
-      Assertion.AssertObject(fields.TypeUID, "fields.TypeUID");
-      Assertion.AssertObject(fields.SubtypeUID, "fields.SubtypeUID");
-      Assertion.AssertObject(fields.FilingOfficeUID, "fields.FilingOfficeUID");
-      Assertion.AssertObject(fields.AgencyUID, "fields.AgencyUID");
-      Assertion.AssertObject(fields.RequestedBy, "fields.RequestedBy");
+      Assertion.Require(fields.TypeUID, "fields.TypeUID");
+      Assertion.Require(fields.SubtypeUID, "fields.SubtypeUID");
+      Assertion.Require(fields.FilingOfficeUID, "fields.FilingOfficeUID");
+      Assertion.Require(fields.AgencyUID, "fields.AgencyUID");
+      Assertion.Require(fields.RequestedBy, "fields.RequestedBy");
     }
 
     private void LoadFields(TransactionFields fields) {
       this.TransactionType = LRSTransactionType.Parse(fields.TypeUID);
       this.DocumentType = LRSDocumentType.Parse(fields.SubtypeUID);
 
-      Assertion.Assert(this.TransactionType.GetDocumentTypes().Contains(this.DocumentType),
+      Assertion.Ensure(this.TransactionType.GetDocumentTypes().Contains(this.DocumentType),
             $"The transaction subtype '{this.TransactionType.Name}' is not related with the " +
             $"given transaction type '{this.DocumentType.Name}'.");
 
@@ -819,7 +819,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.RecorderOffice = RecorderOffice.Parse(fields.FilingOfficeUID);
 
       this.RequestedBy = EmpiriaString.TrimAll(fields.RequestedBy);
-      Assertion.AssertObject(RequestedBy, "fields.RequestedBy");
+      Assertion.Require(RequestedBy, "fields.RequestedBy");
 
       this.DocumentDescriptor = EmpiriaString.TrimAll(fields.InstrumentDescriptor);
 
@@ -836,7 +836,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.RequestedBy = PatchField(fields.RequestedBy, this.RequestedBy);
       this.RequestedBy = EmpiriaString.TrimAll(this.RequestedBy);
 
-      Assertion.AssertObject(RequestedBy, "RequestedBy");
+      Assertion.Require(RequestedBy, "RequestedBy");
 
       this.DocumentDescriptor = EmpiriaString.TrimAll(fields.InstrumentDescriptor);
 
@@ -872,7 +872,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public void SetPaymentOrder(IPaymentOrder paymentOrder) {
-      Assertion.AssertObject(paymentOrder, "paymentOrder");
+      Assertion.Require(paymentOrder, "paymentOrder");
 
       this.ExtensionData.PaymentOrder = new PaymentOrder(paymentOrder);
 
@@ -914,7 +914,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     private void EnsureCanEditServices() {
-      Assertion.Assert(this.ControlData.CanEditServices,
+      Assertion.Ensure(this.ControlData.CanEditServices,
           "The transaction is in a status that doesn't permit aggregate new services or products," +
           "or the user doesn't have enough privileges.");
 

@@ -41,7 +41,7 @@ namespace Empiria.Land.Certification {
     static public Certificate ParseGuid(string guid) {
       var certificate = BaseObject.TryParse<Certificate>($"CertificateGUID = '{guid}'");
 
-      Assertion.AssertObject(certificate,
+      Assertion.Require(certificate,
                              $"There is not registered a certificate with guid {guid}.");
 
       return certificate;
@@ -204,7 +204,7 @@ namespace Empiria.Land.Certification {
           case CertificateStatus.Pending:
             return "En elaboración";
           default:
-            throw Assertion.AssertNoReachThisCode("Unrecognized certificate status.");
+            throw Assertion.EnsureNoReachThisCode("Unrecognized certificate status.");
         }
       }
     }
@@ -294,7 +294,7 @@ namespace Empiria.Land.Certification {
 
 
     public void Cancel() {
-      Assertion.Assert(this.Status == CertificateStatus.Closed,
+      Assertion.Ensure(this.Status == CertificateStatus.Closed,
                       "The certificate is not closed so it can't be canceled. Use delete instead.");
 
       this.UserNotes += "Cancelado por " + EmpiriaUser.Current.AsContact().Alias +
@@ -307,7 +307,7 @@ namespace Empiria.Land.Certification {
 
 
     public void Close() {
-      Assertion.Assert(this.Status == CertificateStatus.Pending,
+      Assertion.Ensure(this.Status == CertificateStatus.Pending,
                       "This certificate can't be closed. It's not in pending status.");
 
       this.IssueTime = DateTime.Now;
@@ -319,7 +319,7 @@ namespace Empiria.Land.Certification {
 
 
     public void Delete() {
-      Assertion.Assert(this.Status == CertificateStatus.Pending,
+      Assertion.Ensure(this.Status == CertificateStatus.Pending,
                       "This certificate can't be deleted. It's not in pending status.");
 
       this.UserNotes += "Eliminado por " + EmpiriaUser.Current.AsContact().Alias +
@@ -411,7 +411,7 @@ namespace Empiria.Land.Certification {
 
 
     public void Open() {
-      Assertion.Assert(this.Status == CertificateStatus.Closed ||
+      Assertion.Ensure(this.Status == CertificateStatus.Closed ||
                        this.Status == CertificateStatus.Canceled ||
                        this.Status == CertificateStatus.Deleted,
                       "This certificate can't be opened. It's not in closed, " +

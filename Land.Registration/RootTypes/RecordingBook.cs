@@ -73,9 +73,9 @@ namespace Empiria.Land.Registration {
 
     static public RecordingBook GetAssignedBookForRecording(RecorderOffice office, RecordingSection section,
                                                             int sheetsCount) {
-      Assertion.AssertObject(office, "office");
-      Assertion.AssertObject(section, "section");
-      Assertion.Assert(sheetsCount > 0, "sheetsCount");
+      Assertion.Require(office, "office");
+      Assertion.Require(section, "section");
+      Assertion.Require(sheetsCount > 0, "sheetsCount");
 
       RecordingBook openedBook = RecordingBooksData.GetOpenedBook(office, section);
       if (openedBook.HasSpaceForRecording(sheetsCount)) {
@@ -217,7 +217,7 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public PhysicalRecording AddRecording(RecordingDTO dto) {
-      Assertion.AssertObject(dto, "dto");
+      Assertion.Require(dto, "dto");
 
       this.AssertValidDTOForAppend(dto);
 
@@ -231,7 +231,7 @@ namespace Empiria.Land.Registration {
 
     /// <summary>Adds a new recording to the book, creating a main empty document.</summary>
     public PhysicalRecording AddRecording(string recordingNumber) {
-      Assertion.AssertObject(recordingNumber, "recordingNumber");
+      Assertion.Require(recordingNumber, "recordingNumber");
 
       var newDocument = new RecordingDocument(RecordingDocumentType.Empty);
 
@@ -240,19 +240,19 @@ namespace Empiria.Land.Registration {
 
 
     public PhysicalRecording AddRecording(RecordingDocument document, string recordingNumber) {
-      Assertion.AssertObject(document, "document");
-      Assertion.AssertObject(recordingNumber, "recordingNumber");
+      Assertion.Require(document, "document");
+      Assertion.Require(recordingNumber, "recordingNumber");
 
-      Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance.");
-      Assertion.Assert(!document.IsEmptyDocumentType, "document can't be the special empty document.");
+      Assertion.Ensure(!document.IsEmptyInstance, "document can't be the empty instance.");
+      Assertion.Ensure(!document.IsEmptyDocumentType, "document can't be the special empty document.");
 
       return new PhysicalRecording(this, document, RecordingBook.FormatRecordingNumber(recordingNumber));
     }
 
 
     public PhysicalRecording CreateNextRecording(RecordingDocument document) {
-      Assertion.AssertObject(document, "document");
-      Assertion.Assert(document.SheetsCount > 0, "Document field SheetsCount must be greater than zero.");
+      Assertion.Require(document, "document");
+      Assertion.Require(document.SheetsCount > 0, "Document field SheetsCount must be greater than zero.");
 
       int recordingNumber = RecordingBooksData.GetNextRecordingNumberWithNoReuse(this);
 
@@ -306,7 +306,7 @@ namespace Empiria.Land.Registration {
 
     static public void SplitRecordingNumber(string fullRecordingNumber,
                                             out string mainRecordingNumber, out string bisSuffixTag) {
-      Assertion.AssertObject(fullRecordingNumber, "fullRecordingNumber");
+      Assertion.Require(fullRecordingNumber, "fullRecordingNumber");
 
       string[] parts = fullRecordingNumber.Split('-');
 

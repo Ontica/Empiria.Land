@@ -53,8 +53,8 @@ namespace Empiria.Land.Media.UseCases {
 
 
     public InstrumentDto RemoveInstrumentMediaFile(string instrumentUID, string mediaFileUID) {
-      Assertion.AssertObject(instrumentUID, "instrumentUID");
-      Assertion.AssertObject(mediaFileUID, "mediaFileUID");
+      Assertion.Require(instrumentUID, "instrumentUID");
+      Assertion.Require(mediaFileUID, "mediaFileUID");
 
       var instrument = Instrument.Parse(instrumentUID);
 
@@ -72,7 +72,7 @@ namespace Empiria.Land.Media.UseCases {
                                                                 string toReplaceMediaFileUID,
                                                                 LandMediaFileFields fields,
                                                                 Stream fileStream) {
-      Assertion.AssertObject(toReplaceMediaFileUID, "toReplaceMediaFileUID");
+      Assertion.Require(toReplaceMediaFileUID, "toReplaceMediaFileUID");
       ValidateArguments(instrumentUID, fields, fileStream);
 
 
@@ -95,13 +95,13 @@ namespace Empiria.Land.Media.UseCases {
     private void ValidateArguments(string instrumentUID,
                                    LandMediaFileFields fields,
                                    Stream fileStream) {
-      Assertion.AssertObject(instrumentUID, "instrumentUID");
-      Assertion.AssertObject(fileStream, "fileStream");
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(instrumentUID, "instrumentUID");
+      Assertion.Require(fileStream, "fileStream");
+      Assertion.Require(fields, "fields");
 
-      Assertion.Assert(fields.MediaContent == LandMediaContent.InstrumentMainFile ||
+      Assertion.Require(fields.MediaContent == LandMediaContent.InstrumentMainFile ||
                        fields.MediaContent == LandMediaContent.InstrumentAuxiliaryFile,
-                       $"Unrecognized mediaContent value for a legal instument file.");
+                       $"Unrecognized mediaContent value for a legal instrument file.");
     }
 
     #endregion Helper methods

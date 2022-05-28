@@ -38,7 +38,7 @@ namespace Empiria.Land.Registration.UseCases {
     #region Use cases
 
     public InstrumentRecordingDto GetInstrumentRecording(string instrumentRecordingUID) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
 
       RecordingDocument instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -47,7 +47,7 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public InstrumentRecordingDto GetTransactionInstrumentRecording(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
@@ -58,9 +58,9 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public InstrumentRecordingDto CreateTransactionInstrumentRecording(string transactionUID, InstrumentFields fields) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
-      Assertion.AssertObject(fields, "fields");
-      Assertion.Assert(fields.Type.HasValue, "Instrument.Type value is required.");
+      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(fields, "fields");
+      Assertion.Require(fields.Type.HasValue, "Instrument.Type value is required.");
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
@@ -70,8 +70,8 @@ namespace Empiria.Land.Registration.UseCases {
 
       instrument.Save();
 
-      Assertion.Assert(instrument.HasDocument,
-                        "Instruments must have a recording document to be linked to a transaction.");
+      Assertion.Ensure(instrument.HasDocument,
+                       "Instruments must have a recording document to be linked to a transaction.");
 
       transaction.SetInstrument(instrument);
 
@@ -84,7 +84,7 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public InstrumentRecordingDto CloseInstrumentRecording(string instrumentRecordingUID) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
 
       RecordingDocument instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -97,7 +97,7 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public InstrumentRecordingDto OpenInstrumentRecording(string instrumentRecordingUID) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
 
       RecordingDocument instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -110,8 +110,8 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public InstrumentRecordingDto UpdateTransactionInstrumentRecording(string transactionUID, InstrumentFields fields) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(fields, "fields");
 
       var transaction = LRSTransaction.Parse(transactionUID);
 

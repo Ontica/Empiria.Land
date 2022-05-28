@@ -51,7 +51,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public TransactionTypeDto GetTransactionType(string transactionTypeUID) {
-      Assertion.AssertObject(transactionTypeUID, "transactionTypeUID");
+      Assertion.Require(transactionTypeUID, "transactionTypeUID");
 
       var transactionType = LRSTransactionType.Parse(transactionTypeUID);
 

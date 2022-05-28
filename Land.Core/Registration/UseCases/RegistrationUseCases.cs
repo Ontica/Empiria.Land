@@ -31,8 +31,8 @@ namespace Empiria.Land.Registration.UseCases {
 
     public InstrumentRecordingDto CreateRecordingAct(string instrumentRecordingUID,
                                                      RegistrationCommand command) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(command, "command");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(command, "command");
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -45,8 +45,8 @@ namespace Empiria.Land.Registration.UseCases {
 
   
     public RecordingActDto GetRecordingAct(string instrumentRecordingUID, string recordingActUID) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(recordingActUID, "recordingActUID");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(recordingActUID, "recordingActUID");
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -58,8 +58,8 @@ namespace Empiria.Land.Registration.UseCases {
 
     public InstrumentRecordingDto RemoveRecordingAct(string instrumentRecordingUID,
                                                      string recordingActUID) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(recordingActUID, "recordingActUID");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(recordingActUID, "recordingActUID");
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -74,9 +74,9 @@ namespace Empiria.Land.Registration.UseCases {
     public InstrumentRecordingDto UpdateRecordableSubject(string instrumentRecordingUID,
                                                           string recordingActUID,
                                                           RecordableSubjectFields fields) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(recordingActUID, "recordingActUID");
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(recordingActUID, "recordingActUID");
+      Assertion.Require(fields, "fields");
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -93,9 +93,9 @@ namespace Empiria.Land.Registration.UseCases {
     public RecordingActDto UpdateRecordingAct(string instrumentRecordingUID,
                                               string recordingActUID,
                                               RecordingActFields fields) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(recordingActUID, "recordingActUID");
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(recordingActUID, "recordingActUID");
+      Assertion.Require(fields, "fields");
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 

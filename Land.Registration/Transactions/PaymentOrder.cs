@@ -60,7 +60,7 @@ namespace Empiria.Land.Transactions {
 
 
     static internal PaymentOrder Parse(JsonObject json) {
-      Assertion.AssertObject(json, "json");
+      Assertion.Require(json, "json");
 
       return new PaymentOrder(json);
     }
@@ -138,16 +138,16 @@ namespace Empiria.Land.Transactions {
     #region Methods
 
     static private void EnsureIsValid(IPaymentOrder paymentOrder) {
-      Assertion.AssertObject(paymentOrder, "paymentOrder");
+      Assertion.Require(paymentOrder, "paymentOrder");
 
-      Assertion.AssertObject(paymentOrder.UID, "paymentOrder.UID");
-      Assertion.AssertObject(paymentOrder.Issuer, "paymentOrder.Issuer");
-      Assertion.AssertObject(paymentOrder.Version, "paymentOrder.Version");
-      Assertion.AssertObject(paymentOrder.IssueTime, "paymentOrder.IssueTime");
-      Assertion.AssertObject(paymentOrder.DueDate, "paymentOrder.DueDate");
-      Assertion.AssertObject(paymentOrder.Total, "paymentOrder.Total");
-      Assertion.AssertObject(paymentOrder.Status, "paymentOrder.Status");
-      Assertion.AssertObject(paymentOrder.Attributes, "paymentOrder.Attributes");
+      Assertion.Require(paymentOrder.UID, "paymentOrder.UID");
+      Assertion.Require(paymentOrder.Issuer, "paymentOrder.Issuer");
+      Assertion.Require(paymentOrder.Version, "paymentOrder.Version");
+      Assertion.Require(paymentOrder.IssueTime, "paymentOrder.IssueTime");
+      Assertion.Require(paymentOrder.DueDate, "paymentOrder.DueDate");
+      Assertion.Require(paymentOrder.Total, "paymentOrder.Total");
+      Assertion.Require(paymentOrder.Status, "paymentOrder.Status");
+      Assertion.Require(paymentOrder.Attributes, "paymentOrder.Attributes");
     }
 
     public virtual JsonObject ToJson() {

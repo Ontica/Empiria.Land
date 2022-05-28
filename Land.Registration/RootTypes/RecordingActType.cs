@@ -105,34 +105,34 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     internal void AssertIsApplicableResource(Resource resourceToApply) {
-      Assertion.AssertObject(resourceToApply, "resourceToApply");
+      Assertion.Require(resourceToApply, "resourceToApply");
 
       switch (this.RecordingRule.AppliesTo) {
         case RecordingRuleApplication.Association:
         case RecordingRuleApplication.AssociationAct:
-          Assertion.Assert(resourceToApply is Association,
+          Assertion.Require(resourceToApply is Association,
             "This recording act is not applicable to associations.");
           return;
         case RecordingRuleApplication.NoProperty:
         case RecordingRuleApplication.NoPropertyAct:
-          Assertion.Assert(resourceToApply is NoPropertyResource,
+          Assertion.Require(resourceToApply is NoPropertyResource,
             "This recording act is applicable only to documents (no property resources).");
           return;
         case RecordingRuleApplication.RealEstate:
         case RecordingRuleApplication.RealEstateAct:
-          Assertion.Assert(resourceToApply is RealEstate,
+          Assertion.Require(resourceToApply is RealEstate,
             "This recording act is applicable only to real estate resources.");
           return;
         case RecordingRuleApplication.Structure:
-          Assertion.Assert(resourceToApply is RealEstate,
+          Assertion.Require(resourceToApply is RealEstate,
                            "Structure acts are only applicable to real estate resources.");
           return;
         case RecordingRuleApplication.Undefined:
-          Assertion.Assert(this.Equals(InformationAct.Empty.RecordingActType),
+          Assertion.Require(this.Equals(InformationAct.Empty.RecordingActType),
                   "RecordingRuleApplication.Undefined is only applicable to the empty information act.");
           return;
         default:
-          throw Assertion.AssertNoReachThisCode();
+          throw Assertion.EnsureNoReachThisCode();
       }
     }
 

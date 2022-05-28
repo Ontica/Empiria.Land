@@ -24,7 +24,7 @@ namespace Empiria.Land.Certification {
     }
 
     internal CertificateExtData(CertificateDTO data) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
       this.LoadDTOData(data);
     }

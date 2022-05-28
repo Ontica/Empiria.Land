@@ -24,7 +24,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public RecordingAct[] Execute(RecordingTask task) {
-      Assertion.AssertObject(task, "task");
+      Assertion.Require(task, "task");
 
       var expert = new RecorderExpert(task);
 
@@ -92,7 +92,7 @@ namespace Empiria.Land.Registration {
             var msg = "Este acto no puede aplicarse a una nueva fracción ya que requiere " +
                       "previamente un acto de: '" +
                       Task.RecordingActType.RecordingRule.ChainedRecordingActType.DisplayName + "'.";
-            Assertion.AssertFail(msg);
+            Assertion.RequireFail(msg);
           }
         }
         Task.PrecedentProperty.AssertCanBeAddedTo(Task.Document, Task.RecordingActType);
@@ -109,7 +109,7 @@ namespace Empiria.Land.Registration {
                   "pero el sistema no tiene esa información.\n\n" +
                   "Si este es el caso, favor de agregar primero el acto que falta en este documento " +
                   "aclarando dicho asunto en las observaciones.";
-        Assertion.AssertFail(msg);
+        Assertion.RequireFail(msg);
       }
 
 
@@ -129,16 +129,16 @@ namespace Empiria.Land.Registration {
     #region Recording methods
 
     private void AssertIsApplicableResource(Resource resourceToApply) {
-      Assertion.AssertObject(resourceToApply, "resourceToApply");
+      Assertion.Require(resourceToApply, "resourceToApply");
 
       switch (Task.RecordingActType.RecordingRule.AppliesTo) {
         case RecordingRuleApplication.Association:
-          Assertion.Assert(resourceToApply is Association,
+          Assertion.Require(resourceToApply is Association,
             "Este acto sólo es aplicable a asociaciones. El folio real corresponde a un predio.");
           return;
 
         case RecordingRuleApplication.RealEstate:
-          Assertion.Assert(resourceToApply is RealEstate,
+          Assertion.Require(resourceToApply is RealEstate,
             "Este acto sólo es aplicable a predios. El folio real corresponde a una asociación.");
           return;
       }
@@ -236,7 +236,7 @@ namespace Empiria.Land.Registration {
           return this.CreateStructureCancelationAct();
 
         default:
-          throw Assertion.AssertNoReachThisCode();
+          throw Assertion.EnsureNoReachThisCode();
       }
     }
 
@@ -260,7 +260,7 @@ namespace Empiria.Land.Registration {
           return this.CreateStructureModificationAct();
 
         default:
-          throw Assertion.AssertNoReachThisCode();
+          throw Assertion.EnsureNoReachThisCode();
       }
     }
 
@@ -361,7 +361,7 @@ namespace Empiria.Land.Registration {
     private Resource GetOneResource() {
       var resources = this.GetResources();
 
-      Assertion.Assert(resources.Length == 1,
+      Assertion.Require(resources.Length == 1,
                        "Operation failed, too many resources returned by GetOneResource().");
 
       return resources[0];
@@ -385,7 +385,7 @@ namespace Empiria.Land.Registration {
           return this.GetNoPropertyResources();
 
         default:
-          throw Assertion.AssertNoReachThisCode($"{appliesTo} application for {this.Task.RecordingActType.DisplayName}.");
+          throw Assertion.EnsureNoReachThisCode($"{appliesTo} application for {this.Task.RecordingActType.DisplayName}.");
       }
     }
 
@@ -474,7 +474,7 @@ namespace Empiria.Land.Registration {
 
 
     private void AttachResourceToPhysicalRecording(Resource resource) {
-      Assertion.Assert(this.CreateResourceOnPhysicalRecording,
+      Assertion.Ensure(this.CreateResourceOnPhysicalRecording,
                        "Wrong RecordingTask values to execute this method.");
 
       var document = Task.PrecedentRecording.MainDocument;

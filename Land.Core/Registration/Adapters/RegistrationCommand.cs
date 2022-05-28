@@ -25,12 +25,12 @@ namespace Empiria.Land.Registration.Adapters {
 
 
     internal void EnsureIsValid() {
-      Assertion.Assert(Type != RegistrationCommandType.Undefined,
+      Assertion.Require(Type != RegistrationCommandType.Undefined,
                        "Unrecognized RegistrationCommand.Type");
 
-      Assertion.AssertObject(Payload, "RegistrationCommand.Payload");
+      Assertion.Require(Payload, "RegistrationCommand.Payload");
 
-      Assertion.AssertObject(Payload.RecordingActTypeUID, "RegistrationCommand.Payload.RecordingActTypeUID");
+      Assertion.Require(Payload.RecordingActTypeUID, "RegistrationCommand.Payload.RecordingActTypeUID");
     }
 
   }  // class RegistrationCommand

@@ -35,12 +35,12 @@ namespace Empiria.Land.Registration {
 
     internal PhysicalRecording(RecordingBook recordingBook,
                                RecordingDocument mainDocument, string recordingNumber) {
-      Assertion.AssertObject(recordingBook, "recordingBook");
-      Assertion.AssertObject(mainDocument, "mainDocument");
-      Assertion.AssertObject(recordingNumber, "recordingNumber");
+      Assertion.Require(recordingBook, "recordingBook");
+      Assertion.Require(mainDocument, "mainDocument");
+      Assertion.Require(recordingNumber, "recordingNumber");
 
-      Assertion.Assert(!recordingBook.IsEmptyInstance, "recordingBook can't be the empty instance.");
-      Assertion.Assert(!mainDocument.IsEmptyInstance, "mainDocument can't be the empty instance.");
+      Assertion.Ensure(!recordingBook.IsEmptyInstance, "recordingBook can't be the empty instance.");
+      Assertion.Ensure(!mainDocument.IsEmptyInstance, "mainDocument can't be the empty instance.");
 
       this.RecordingBook = recordingBook;
       this.MainDocument = mainDocument;
@@ -245,9 +245,10 @@ namespace Empiria.Land.Registration {
 
     public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Resource resource,
                                            RecordingAct amendmentOf = null) {
-      Assertion.AssertObject(recordingActType, "recordingActType");
-      Assertion.AssertObject(resource, "resource");
-      Assertion.AssertObject(!resource.IsEmptyInstance, "Resource can't be an empty instance.");
+      Assertion.Require(recordingActType, "recordingActType");
+      Assertion.Require(resource, "resource");
+
+      Assertion.Ensure(!resource.IsEmptyInstance, "Resource can't be an empty instance.");
 
       amendmentOf = amendmentOf ?? RecordingAct.Empty;
 
@@ -320,9 +321,9 @@ namespace Empiria.Land.Registration {
     #region Private methods
 
     private void Delete(bool publicCall) {
-      Assertion.Assert(this.RecordingActs.Count == 0,
+      Assertion.Ensure(this.RecordingActs.Count == 0,
                        "This recording can't be deleted because it has recording acts.");
-      Assertion.Assert(!publicCall || this.RecordingBook.IsAvailableForManualEditing ||
+      Assertion.Ensure(!publicCall || this.RecordingBook.IsAvailableForManualEditing ||
                         this.RecordingBook.Status == RecordingBookStatus.Opened,
                        "This recording can't be deleted because its recording book is not available for manual editing.");
       this.Status = RecordableObjectStatus.Deleted;

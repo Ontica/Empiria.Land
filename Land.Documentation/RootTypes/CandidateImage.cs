@@ -41,8 +41,8 @@ namespace Empiria.Land.Documentation {
     }
 
     static public CandidateImage Parse(FileInfo sourceFile) {
-      Assertion.AssertObject(sourceFile, "sourceFile");
-      Assertion.Assert(sourceFile.Exists, "File '{0}' does not exist.", sourceFile.FullName);
+      Assertion.Require(sourceFile, "sourceFile");
+      Assertion.Require(sourceFile.Exists, $"File '{sourceFile.FullName}' does not exist.");
 
       return new CandidateImage(sourceFile);
     }
@@ -123,9 +123,9 @@ namespace Empiria.Land.Documentation {
     }
 
     internal string GetTargetPngFileName(int frameNumber, int totalFrames) {
-      Assertion.Assert(frameNumber >= 0, "frameNumber should be not negative.");
-      Assertion.Assert(totalFrames >= 1, "totalFrames should be greater than zero.");
-      Assertion.Assert(frameNumber < totalFrames, "totalFrames should be greater than frameNumber.");
+      Assertion.Require(frameNumber >= 0, "frameNumber should be not negative.");
+      Assertion.Require(totalFrames >= 1, "totalFrames should be greater than zero.");
+      Assertion.Require(frameNumber < totalFrames, "totalFrames should be greater than frameNumber.");
 
       string fileNameWithoutExtension = this.FileName.TrimEnd(this.SourceFile.Extension.ToCharArray());
 

@@ -26,7 +26,7 @@ namespace Empiria.Land.Workflow {
 
 
     internal WorkflowEngine(WorkflowRules rules) {
-      Assertion.AssertObject(rules, "rules");
+      Assertion.Require(rules, "rules");
 
       _rules = rules;
     }
@@ -93,7 +93,7 @@ namespace Empiria.Land.Workflow {
         case WorkflowCommandType.Unsign:
           break;
         default:
-          throw Assertion.AssertNoReachThisCode();
+          throw Assertion.EnsureNoReachThisCode();
       }
 
       var mapped = WorkflowTaskMapper.Map(workflow.GetCurrentTask());

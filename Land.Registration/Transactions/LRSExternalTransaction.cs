@@ -126,26 +126,24 @@ namespace Empiria.Land.Registration.Transactions {
       this.PaymentReceiptNo = EmpiriaString.TrimAll(this.PaymentReceiptNo);
       this.RequestedBy = EmpiriaString.TrimAll(this.RequestedBy).ToUpperInvariant();
 
-      Assertion.AssertObject(this.ExternalTransactionNo,
+      Assertion.Require(this.ExternalTransactionNo,
         "Requiero el número de trámite CITyS");
-      Assertion.AssertObject(this.RequestedBy,
+      Assertion.Require(this.RequestedBy,
         "Favor de proporcionar el nombre de quien solicita el trámite.");
-      Assertion.Assert(this.RequestedBy.Length >= 10,
+      Assertion.Require(this.RequestedBy.Length >= 10,
         "El campo de quien solicita el trámite es demasiado pequeño (menos de 10 caracteres).");
 
-      Assertion.AssertObject(this.PaymentReceiptNo,
+      Assertion.Require(this.PaymentReceiptNo,
         "Requiero se proporcione el número de recibo.");
-      Assertion.Assert(this.PaymentReceiptNo.Length > 3,
+      Assertion.Require(this.PaymentReceiptNo.Length > 3,
         "El número de recibo debería contener más de 3 caractres.");
-      Assertion.Assert(this.PaymentAmount > 100m,
+      Assertion.Require(this.PaymentAmount > 100m,
         "El importe del trámite debería ser mayor a $100.00.");
-      Assertion.Assert(this.ExternalTransactionTime < DateTime.Now,
-        "La fecha y hora del trámite externo no puede ser mayor a la fecha y hora actual: {0}",
-        this.ExternalTransactionTime);
+      Assertion.Require(this.ExternalTransactionTime < DateTime.Now,
+        $"La fecha y hora del trámite externo no puede ser mayor a la fecha y hora actual: {this.ExternalTransactionTime}");
 
-      Assertion.Assert(!TransactionData.ExistsExternalTransactionNo(this.ExternalTransactionNo),
-                       "Ya tengo registrado otro trámite externo con el mismo número: '{0}'",
-                       this.ExternalTransactionNo);
+      Assertion.Require(!TransactionData.ExistsExternalTransactionNo(this.ExternalTransactionNo),
+                       $"Ya tengo registrado otro trámite externo con el mismo número: '{this.ExternalTransactionNo}'");
 
     }
 

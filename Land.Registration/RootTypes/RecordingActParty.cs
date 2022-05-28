@@ -60,19 +60,19 @@ namespace Empiria.Land.Registration {
 
     static internal RecordingActParty Create(RecordingAct recordingAct, Party party,
                                              DomainActPartyRole role) {
-      Assertion.AssertObject(recordingAct, "recordingAct");
-      Assertion.AssertObject(party, "party");
-      Assertion.AssertObject(role, "role");
+      Assertion.Require(recordingAct, "recordingAct");
+      Assertion.Require(party, "party");
+      Assertion.Require(role, "role");
 
       return new RecordingActParty(recordingAct, party, role, Party.Empty);
     }
 
     static internal RecordingActParty Create(RecordingAct recordingAct, Party party,
                                              SecondaryPartyRole role, Party partyOf) {
-      Assertion.AssertObject(recordingAct, "recordingAct");
-      Assertion.AssertObject(party, "party");
-      Assertion.AssertObject(role, "role");
-      Assertion.AssertObject(partyOf, "partyOf");
+      Assertion.Require(recordingAct, "recordingAct");
+      Assertion.Require(party, "party");
+      Assertion.Require(role, "role");
+      Assertion.Require(partyOf, "partyOf");
 
       return new RecordingActParty(recordingAct, party, role, partyOf);
     }
@@ -217,7 +217,7 @@ namespace Empiria.Land.Registration {
       } else if (this.OwnershipPart.Unit.Id == 624) {
         return (this.OwnershipPart.Amount).ToString("N2") + " ha";
       } else {
-        throw Assertion.AssertNoReachThisCode("Invalid ownership part unit.");
+        throw Assertion.EnsureNoReachThisCode("Invalid ownership part unit.");
       }
     }
 

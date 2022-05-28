@@ -33,16 +33,16 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public TransactionDto DeleteService(string transactionUID, string requestedServiceUID) {
-      Assertion.AssertObject(requestedServiceUID, "requestedServiceUID");
+      Assertion.Require(requestedServiceUID, "requestedServiceUID");
 
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
-      Assertion.Assert(transaction.ControlData.CanEditServices,
+      Assertion.Ensure(transaction.ControlData.CanEditServices,
                        $"Can not delete services for transaction '{transactionUID}'.");
 
       LRSTransactionItem item = transaction.Items.Find((x) => x.UID == requestedServiceUID);
 
-      Assertion.AssertObject(item,
+      Assertion.Ensure(item,
           $"Transaction {transactionUID} do not have a service with uid '{requestedServiceUID}'.");
 
       transaction.RemoveItem(item);
@@ -56,10 +56,10 @@ namespace Empiria.Land.Transactions.UseCases {
     public async Task<TransactionDto> CancelPaymentOrder(string transactionUID) {
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
-      Assertion.Assert(transaction.HasPaymentOrder,
+      Assertion.Ensure(transaction.HasPaymentOrder,
                 $"Transaction '{transactionUID}' has not a payment order.");
 
-      Assertion.Assert(transaction.ControlData.CanCancelPaymentOrder,
+      Assertion.Ensure(transaction.ControlData.CanCancelPaymentOrder,
             "The payment order can not be canceled because business rules restrict it, " +
             "or the user account does not has enough privileges.");
 
@@ -72,10 +72,10 @@ namespace Empiria.Land.Transactions.UseCases {
     public async Task<TransactionDto> GeneratePaymentOrder(string transactionUID) {
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
-      Assertion.Assert(!transaction.HasPaymentOrder,
+      Assertion.Ensure(!transaction.HasPaymentOrder,
           $"A payment order has already been generated for transaction '{transactionUID}'.");
 
-      Assertion.Assert(transaction.ControlData.CanGeneratePaymentOrder,
+      Assertion.Ensure(transaction.ControlData.CanGeneratePaymentOrder,
           "The payment order can not be generated because business rules restrict it, " +
           "or the user account does not has enough privileges.");
 
@@ -91,13 +91,13 @@ namespace Empiria.Land.Transactions.UseCases {
 
     public async Task<TransactionDto> RequestService(string transactionUID,
                                                      RequestedServiceFields requestedServiceFields) {
-      Assertion.AssertObject(requestedServiceFields, "requestedServiceFields");
+      Assertion.Require(requestedServiceFields, "requestedServiceFields");
 
       requestedServiceFields.AssertValid();
 
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
-      Assertion.Assert(transaction.ControlData.CanEditServices,
+      Assertion.Ensure(transaction.ControlData.CanEditServices,
                  $"Can not request services on transaction '{transactionUID}'.");
 
       var connector = new PaymentServicesConnector();
@@ -114,13 +114,13 @@ namespace Empiria.Land.Transactions.UseCases {
 
     public async Task<TransactionDto> SetPayment(string transactionUID,
                                                  PaymentFields paymentFields) {
-      Assertion.AssertObject(paymentFields, "paymentFields");
+      Assertion.Require(paymentFields, "paymentFields");
 
       paymentFields.AssertValid();
 
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
-      Assertion.Assert(transaction.ControlData.CanEditPayment,
+      Assertion.Ensure(transaction.ControlData.CanEditPayment,
                        $"Can not set payment for transaction '{transactionUID}'.");
 
       //Assertion.Assert(transaction.PaymentOrder.Total == 0 ||
@@ -143,11 +143,11 @@ namespace Empiria.Land.Transactions.UseCases {
     #region Helper methods
 
     private LRSTransaction ParseTransaction(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.TryParse(transactionUID);
 
-      Assertion.AssertObject(transaction,
+      Assertion.Require(transaction,
           $"A transaction with uid = '{transactionUID}' was not found.");
 
       return transaction;

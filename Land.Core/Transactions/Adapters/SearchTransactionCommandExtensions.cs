@@ -108,7 +108,7 @@ namespace Empiria.Land.Transactions.Adapters {
           return "TransactionStatus IN ('L', 'Q')";
 
         default:
-          throw Assertion.AssertNoReachThisCode();
+          throw Assertion.EnsureNoReachThisCode();
       }
     }
 

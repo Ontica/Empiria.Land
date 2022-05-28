@@ -80,12 +80,12 @@ namespace Empiria.Land.Registration {
       var rule = recordingAct.RecordingActType.RecordingRule;
 
       if (rule.EditAppraisalAmount) {
-        Assertion.Assert(this.AppraisalAmount != Money.Empty && this.AppraisalAmount != Money.Zero,
+        Assertion.Require(this.AppraisalAmount != Money.Empty && this.AppraisalAmount != Money.Zero,
                          "En el acto jurídico " + recordingAct.IndexedName + " falta el importe del avalúo.");
 
       }
       if (rule.EditOperationAmount) {
-        Assertion.Assert(this.OperationAmount != Money.Empty && this.OperationAmount != Money.Zero,
+        Assertion.Require(this.OperationAmount != Money.Empty && this.OperationAmount != Money.Zero,
                          "En el acto jurídico " + recordingAct.IndexedName + " falta el importe o monto de la operación.");
       }
     }

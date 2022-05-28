@@ -73,7 +73,7 @@ namespace Empiria.Land.Data {
       } else if (currentRecordNumber == 0 && !book.UsePerpetualNumbering) {
         return 1;
       } else {
-        throw Assertion.AssertNoReachThisCode();
+        throw Assertion.EnsureNoReachThisCode();
       }
     }
 
@@ -194,7 +194,7 @@ namespace Empiria.Land.Data {
 
 
     static internal void WriteRecording(PhysicalRecording o) {
-      Assertion.Assert(o.MainDocument.Id > 0,
+      Assertion.Ensure(o.MainDocument.Id > 0,
                        "Wrong data for physical recording. MainDocument was missed.");
 
       var op = DataOperation.Parse("writeLRSPhysicalRecording", o.Id, o.UID, o.RecordingBook.Id,

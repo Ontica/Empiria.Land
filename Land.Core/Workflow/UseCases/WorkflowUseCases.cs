@@ -80,7 +80,7 @@ namespace Empiria.Land.Workflow.UseCases {
 
 
     public WorkflowTaskDto CurrentTask(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
@@ -106,7 +106,7 @@ namespace Empiria.Land.Workflow.UseCases {
 
 
     public TransactionShortModel SearchTransaction(string searchUID) {
-      Assertion.AssertObject(searchUID, "searchUID");
+      Assertion.Require(searchUID, "searchUID");
 
       var transaction = LRSTransaction.TryParseWitAnyKey(searchUID);
 
@@ -119,7 +119,7 @@ namespace Empiria.Land.Workflow.UseCases {
 
 
     public FixedList<WorkflowTaskDto> WorkflowHistory(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
@@ -133,9 +133,9 @@ namespace Empiria.Land.Workflow.UseCases {
     #region Helpers
 
     private void ValidateCommand(WorkflowCommand command) {
-      Assertion.AssertObject(command, "command");
+      Assertion.Require(command, "command");
 
-      Assertion.Assert(command.Payload.NextStatus != TransactionStatus.All,
+      Assertion.Require(command.Payload.NextStatus != TransactionStatus.All,
         $"Unrecognized value '{command.Payload.NextStatus}' for command.payload.nextStatus.");
 
     }

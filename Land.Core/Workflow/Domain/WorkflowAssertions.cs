@@ -25,15 +25,15 @@ namespace Empiria.Land.Workflow {
 
 
     internal WorkflowAssertions(WorkflowRules rules) {
-      Assertion.AssertObject(rules, "rules");
+      Assertion.Require(rules, "rules");
 
       _rules = rules;
     }
 
 
     internal void AssertExecution(WorkflowCommand command, Contact user) {
-      Assertion.AssertObject(command, "command");
-      Assertion.AssertObject(user, "user");
+      Assertion.Require(command, "command");
+      Assertion.Require(user, "user");
 
       foreach (var transactionUID in command.Payload.TransactionUID) {
         var transaction = LRSTransaction.Parse(transactionUID);
@@ -65,16 +65,16 @@ namespace Empiria.Land.Workflow {
       var task = transaction.Workflow.GetCurrentTask();
 
       if (task.NextStatus == LRSTransactionStatus.EndPoint) {
-        Assertion.AssertFail($"El trámite '{transaction.UID}' todavía no está listo para ser recibido.");
+        Assertion.RequireFail($"El trámite '{transaction.UID}' todavía no está listo para ser recibido.");
       }
 
       if (task.Responsible.Id == user.Id && task.CurrentStatus != LRSTransactionStatus.Reentry) {
-        Assertion.AssertFail($"El trámite '{transaction.UID}' todavía no esta listo para ser recibido.");
+        Assertion.RequireFail($"El trámite '{transaction.UID}' todavía no está listo para ser recibido.");
       }
 
       if (!_rules.CanReceiveFor(user, task.NextStatus)) {
-        Assertion.AssertFail($"La cuenta de usuario no tiene permisos para recibir el trámite " +
-                             $"'{transaction.UID}' en el estado '{task.NextStatusName}'.");
+        Assertion.RequireFail($"La cuenta de usuario no tiene permisos para recibir el trámite " +
+                              $"'{transaction.UID}' en el estado '{task.NextStatusName}'.");
       }
     }
 
@@ -88,7 +88,7 @@ namespace Empiria.Land.Workflow {
 
       LRSTransactionStatus mappedStatus = TransactionDtoMapper.MapStatus(nextStatus);
 
-      Assertion.Assert(allNextStatusList.Contains(mappedStatus),
+      Assertion.Require(allNextStatusList.Contains(mappedStatus),
                        $"No es posible mover el trámite '{transaction.UID}' a " +
                        $"'{LRSWorkflowRules.GetStatusName(mappedStatus)}', " +
                        $"debido a que se encuentra en '{task.CurrentStatusName}'.");

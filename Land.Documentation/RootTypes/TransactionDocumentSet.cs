@@ -29,8 +29,9 @@ namespace Empiria.Land.Documentation {
 
 
     static public TransactionDocumentSet ParseFor(LRSTransaction transaction) {
-      Assertion.AssertObject(transaction, "transaction");
-      Assertion.AssertObject(transaction.IsEmptyInstance, "transaction can't be the empty instance.");
+      Assertion.Require(transaction, "transaction");
+
+      Assertion.Ensure(transaction.IsEmptyInstance, "transaction can't be the empty instance.");
 
       return new TransactionDocumentSet(transaction);
     }

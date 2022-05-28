@@ -31,11 +31,11 @@ namespace Empiria.Land.Registration.Transactions {
     /// <summary>Initialize payment for transaction.</summary>
     internal LRSPayment(LRSTransaction transaction, string receiptNo,
                         decimal receiptTotal) {
-      Assertion.AssertObject(transaction, "transaction");
-      Assertion.Assert(!transaction.Equals(LRSTransaction.Empty),
+      Assertion.Require(transaction, "transaction");
+      Assertion.Require(!transaction.Equals(LRSTransaction.Empty),
                         "transaction shouldn't be the empty instance.");
-      Assertion.AssertObject(receiptNo, "receiptNo");
-      Assertion.Assert(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
+      Assertion.Require(receiptNo, "receiptNo");
+      Assertion.Require(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
 
       this.Transaction = transaction;
       this.ReceiptNo = receiptNo;
@@ -46,10 +46,10 @@ namespace Empiria.Land.Registration.Transactions {
     /// without a transaction.</summary>
     internal LRSPayment(PhysicalRecording recording, string receiptNo,
                         decimal receiptTotal) {
-      Assertion.AssertObject(recording, "recording");
-      Assertion.Assert(recording != PhysicalRecording.Empty, "recording shouldn't be the empty instance.");
-      Assertion.AssertObject(receiptNo, "receiptNo");
-      Assertion.Assert(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
+      Assertion.Require(recording, "recording");
+      Assertion.Require(recording != PhysicalRecording.Empty, "recording shouldn't be the empty instance.");
+      Assertion.Require(receiptNo, "receiptNo");
+      Assertion.Require(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
 
       this.Recording = recording;
       this.ReceiptNo = receiptNo;

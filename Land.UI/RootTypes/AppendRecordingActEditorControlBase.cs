@@ -59,7 +59,7 @@ namespace Empiria.Land.UI {
     public abstract RecordingAct[] CreateRecordingActs();
 
     public void Initialize(RecordingDocument document) {
-      Assertion.AssertObject(document, "document");
+      Assertion.Require(document, "document");
 
       this.Document = document;
       this.Transaction = document.GetTransaction();
@@ -73,7 +73,7 @@ namespace Empiria.Land.UI {
       }
 
       if (this.IsHistoricEdition) {
-        Assertion.Assert(this.Transaction.IsEmptyInstance,
+        Assertion.Ensure(this.Transaction.IsEmptyInstance,
                         "For historic documents, transaction should be the empty instance.");
       }
     }

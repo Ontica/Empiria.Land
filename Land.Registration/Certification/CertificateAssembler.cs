@@ -96,7 +96,7 @@ namespace Empiria.Land.Certification {
 
     /// <summary>Creates a certificate with the data contained in a CertificateDTO.</summary>
     static public Certificate Create(CertificateDTO data) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
       var assembler = new CertificateAssembler(data);
 
@@ -108,9 +108,9 @@ namespace Empiria.Land.Certification {
 
     /// <summary>Updates a certificate with the data contained in a CertificateDTO.</summary>
     public void Update(CertificateDTO data) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
-      Assertion.Assert(this.Status == CertificateStatus.Pending,
+      Assertion.Ensure(this.Status == CertificateStatus.Pending,
                        "This certificate can't be updated. It's not in pending status.");
 
       var assembler = new CertificateAssembler(data);

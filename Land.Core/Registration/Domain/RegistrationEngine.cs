@@ -25,7 +25,7 @@ namespace Empiria.Land.Registration {
     }
 
     internal void Execute(RegistrationCommand command) {
-      Assertion.AssertObject(command, "command");
+      Assertion.Require(command, "command");
 
       command.EnsureIsValid();
 
@@ -39,8 +39,8 @@ namespace Empiria.Land.Registration {
 
     internal void Execute(PhysicalRecording bookEntry,
                           RegistrationCommand command) {
-      Assertion.AssertObject(bookEntry, "bookEntry");
-      Assertion.AssertObject(command, "command");
+      Assertion.Require(bookEntry, "bookEntry");
+      Assertion.Require(command, "command");
 
       command.EnsureIsValid();
 
@@ -85,13 +85,13 @@ namespace Empiria.Land.Registration {
     private PhysicalRecording CreatePrecedentBookEntry(RegistrationCommand command) {
       var book = RecordingBook.Parse(command.Payload.RecordingBookUID);
 
-      Assertion.Assert(book.IsAvailableForManualEditing,
+      Assertion.Require(book.IsAvailableForManualEditing,
           $"El {book.AsText} está cerrado, por lo que no es posible agregarle nuevas inscripciones.");
 
       var bookEntryNo = EmpiriaString.TrimAll(command.Payload.BookEntryNo);
 
       if (book.ExistsRecording(bookEntryNo)) {
-        Assertion.AssertFail(
+        Assertion.RequireFail(
           "La partida indicada ya existe en el libro seleccionado,\n" +
           "y no es posible generar más de un folio de predio\n" +
           "en una misma partida o antecedente.\n\n" +
@@ -150,7 +150,7 @@ namespace Empiria.Land.Registration {
           return RecordingTaskType.actAppliesToOtherRecordingAct;
 
         default:
-          throw Assertion.AssertNoReachThisCode($"There is not defined a registration rule for commandType '{commandType}'.");
+          throw Assertion.EnsureNoReachThisCode($"There is not defined a registration rule for commandType '{commandType}'.");
       }
     }
 

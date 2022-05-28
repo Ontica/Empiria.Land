@@ -25,7 +25,7 @@ namespace Empiria.Land.Certification {
     }
 
     internal static string Build(Certificate certificate) {
-      Assertion.AssertObject(certificate, "certificate");
+      Assertion.Require(certificate, "certificate");
 
       var builder = new CertificateBuilder(certificate);
 

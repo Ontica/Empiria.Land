@@ -93,7 +93,7 @@ namespace Empiria.Land.WebApp {
         return document.Security.GetDigitalSignature();
 
       } else {
-        throw Assertion.AssertNoReachThisCode();
+        throw Assertion.EnsureNoReachThisCode();
       }
     }
 
@@ -246,7 +246,7 @@ namespace Empiria.Land.WebApp {
           temp = this.GetNoPropertyActText(recordingAct, index);
 
         } else {
-          throw Assertion.AssertNoReachThisCode();
+          throw Assertion.EnsureNoReachThisCode();
 
         }
         html += this.Decorate(recordingAct, temp);
@@ -412,8 +412,8 @@ namespace Empiria.Land.WebApp {
 
       string x = template.Replace("{INDEX}", index.ToString());
 
-      Assertion.Assert(recordingAct.RecordingActType.IsAmendmentActType,
-                       "Bad code. Recording act is not an amendment act.");
+      Assertion.Ensure(recordingAct.RecordingActType.IsAmendmentActType,
+                       "Recording act is not an amendment act.");
 
       x = x.Replace("{AMENDMENT.ACT}", this.GetAmendmentActTypeDisplayName(recordingAct));
 
@@ -441,14 +441,14 @@ namespace Empiria.Land.WebApp {
       } else if (resource is NoPropertyResource) {
         x = x.Replace("{RESOURCE.DATA}", "con identificador de inscripción <b class='bigger'>" + resource.UID + "</b>");
       } else {
-        throw Assertion.AssertNoReachThisCode("Unknown rule for resources with type {0}.", resource.GetType());
+        throw Assertion.EnsureNoReachThisCode($"Unknown rule for resources with type {resource.GetType()}.");
       }
       return x;
     }
 
 
     private string GetAmendmentActTypeDisplayName(RecordingAct amendmentAct) {
-      Assertion.Assert(amendmentAct.RecordingActType.IsAmendmentActType,
+      Assertion.Require(amendmentAct.RecordingActType.IsAmendmentActType,
                        "amendmentAct.IsAmendment should be true.");
 
       if (!amendmentAct.RecordingActType.RecordingRule.UseDynamicActNaming) {
@@ -484,8 +484,8 @@ namespace Empiria.Land.WebApp {
 
 
     private string GetRealEstateActText(RecordingAct recordingAct, int index) {
-      Assertion.Assert(recordingAct.Resource is RealEstate,
-                       "Type mismatch parsing real estate with id {0}", recordingAct.Resource.Id);
+      Assertion.Require(recordingAct.Resource is RealEstate,
+                       $"Type mismatch parsing real estate with id {recordingAct.Resource.Id}");
 
       RealEstate property = (RealEstate) recordingAct.Resource;
 
@@ -566,7 +566,7 @@ namespace Empiria.Land.WebApp {
           "<b>{PARTITION.NUMBER}</b> del fraccionamiento con folio electrónico {PARTITION.OF}, misma a la que " +
           "se le asignó el folio real electrónico {PROPERTY.UID}.<br/>";
 
-      Assertion.Assert(!newPartition.IsPartitionOf.IsEmptyInstance, "Bad call. Property is not a partition.");
+      Assertion.Ensure(!newPartition.IsPartitionOf.IsEmptyInstance, "Bad call. Property is not a partition.");
 
       string x = String.Empty;
 
@@ -705,7 +705,7 @@ namespace Empiria.Land.WebApp {
         x = x.Replace("{ANTECEDENT}", incorporationAct.PhysicalRecording.AsText);
 
       } else {
-        throw Assertion.AssertNoReachThisCode();
+        throw Assertion.EnsureNoReachThisCode();
 
       }
 

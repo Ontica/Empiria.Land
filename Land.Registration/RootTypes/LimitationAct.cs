@@ -25,10 +25,10 @@ namespace Empiria.Land.Registration {
     internal LimitationAct(RecordingActType recordingActType,
                        RecordingDocument document, RealEstate property,
                        decimal percentage = decimal.One) : base(recordingActType, document) {
-      Assertion.Assert(recordingActType.AppliesTo == RecordingRuleApplication.RealEstate,
-                       "{0} doesn't apply to properties (real estate).", recordingActType.DisplayName);
+      Assertion.Require(recordingActType.AppliesTo == RecordingRuleApplication.RealEstate,
+                       $"{recordingActType.DisplayName} doesn't apply to properties (real estate).");
 
-      Assertion.AssertObject(property, "property");
+      Assertion.Require(property, "property");
 
       this.SetRealEstate(property, percentage);
     }
@@ -38,10 +38,10 @@ namespace Empiria.Land.Registration {
                            RecordingDocument document, RealEstate property,
                            PhysicalRecording physicalRecording,
                            decimal percentage = decimal.One) : base(recordingActType, document, physicalRecording) {
-      Assertion.Assert(recordingActType.AppliesTo == RecordingRuleApplication.RealEstate,
-                       "{0} doesn't apply to properties (real estate).", recordingActType.DisplayName);
+      Assertion.Require(recordingActType.AppliesTo == RecordingRuleApplication.RealEstate,
+                       $"{recordingActType.DisplayName} doesn't apply to properties (real estate).");
 
-      Assertion.AssertObject(property, "property");
+      Assertion.Require(property, "property");
 
       this.SetRealEstate(property, percentage);
     }

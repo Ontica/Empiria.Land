@@ -45,7 +45,7 @@ namespace Empiria.Land.Providers {
 
 
     public IPayable CreateTransaction(EFilingRequest filingRequest) {
-      Assertion.AssertObject(filingRequest, "filingRequest");
+      Assertion.Require(filingRequest, "filingRequest");
 
       Procedure procedure = filingRequest.Procedure;
 
@@ -73,11 +73,11 @@ namespace Empiria.Land.Providers {
 
 
     public void EventProcessed(string transactionUID, string eventName) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      Assertion.AssertObject(transaction, "transaction");
+      Assertion.Ensure(transaction, nameof(transaction));
 
       if (transaction.Workflow.IsReadyForDeliveryOrReturn) {
         transaction.Workflow.DeliveredElectronicallyToAgency();
@@ -86,9 +86,11 @@ namespace Empiria.Land.Providers {
 
 
     public FixedList<EFilingDocument> GetOutputDocuments(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
+
+      Assertion.Ensure(transaction, nameof(transaction));
 
       if (!transaction.Workflow.IsFinished) {
         return new FixedList<EFilingDocument>();
@@ -115,7 +117,7 @@ namespace Empiria.Land.Providers {
 
 
     public IFilingTransaction GetTransaction(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
@@ -124,20 +126,22 @@ namespace Empiria.Land.Providers {
 
 
     public IPayable GetTransactionAsPayable(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      Assertion.AssertObject(transaction, "transaction");
+      Assertion.Ensure(transaction, nameof(transaction));
 
       return transaction;
     }
 
 
     public IFilingTransaction SetPayment(string transactionUID, string receiptNo) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
+
+      Assertion.Ensure(transaction, nameof(transaction));
 
       transaction.SetPayment(receiptNo, transaction.Items.TotalFee.Total);
 
@@ -147,8 +151,8 @@ namespace Empiria.Land.Providers {
 
     public IFilingTransaction SetPaymentOrder(IPayable transaction,
                                               FormerPaymentOrderDTO paymentOrderData) {
-      Assertion.AssertObject(transaction, "transaction");
-      Assertion.AssertObject(paymentOrderData, "paymentOrderData");
+      Assertion.Require(transaction, "transaction");
+      Assertion.Require(paymentOrderData, "paymentOrderData");
 
       transaction.SetFormerPaymentOrderData(paymentOrderData);
 
@@ -157,9 +161,11 @@ namespace Empiria.Land.Providers {
 
 
     public IFilingTransaction SubmitTransaction(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
+
+      Assertion.Ensure(transaction, nameof(transaction));
 
       transaction.Workflow.Receive("Ingresado automáticamente desde el sistema de notarías y grandes usuarios.");
 
@@ -168,9 +174,11 @@ namespace Empiria.Land.Providers {
 
 
     public FormerPaymentOrderDTO TryGetPaymentOrderData(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
+
+      Assertion.Ensure(transaction, nameof(transaction));
 
       var paymentOrder = ((IPayable) transaction).TryGetFormerPaymentOrderData();
 
@@ -183,10 +191,13 @@ namespace Empiria.Land.Providers {
 
 
     public IFilingTransaction UpdateTransaction(EFilingRequest filingRequest) {
-      Assertion.AssertObject(filingRequest, "filingRequest");
-      Assertion.Assert(filingRequest.HasTransaction, "filingRequest.HasTransaction must be true.");
+      Assertion.Require(filingRequest, "filingRequest");
+
+      Assertion.Ensure(filingRequest.HasTransaction, "filingRequest.HasTransaction must be true.");
 
       var transaction = LRSTransaction.TryParse(filingRequest.Transaction.UID, true);
+
+      Assertion.Ensure(transaction, nameof(transaction));
 
       transaction.RequestedBy = filingRequest.RequestedBy.Name;
 

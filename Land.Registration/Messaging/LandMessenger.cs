@@ -43,7 +43,7 @@ namespace Empiria.Land.Messaging {
     /// <summary>Notifies messenger about a workflow status change of a land transaction.</summary>
     static internal void Notify(LRSTransaction transaction,
                                 TransactionEventType eventType) {
-      Assertion.AssertObject(transaction, "transaction");
+      Assertion.Require(transaction, "transaction");
 
       NotifyInterested(transaction, eventType);
       NotifyAgency(transaction, eventType);
@@ -55,7 +55,7 @@ namespace Empiria.Land.Messaging {
     static internal void Notify(SubscriptionEventType eventType,
                                 Subscription subscription) {
 
-      Assertion.AssertObject(subscription, "subscription");
+      Assertion.Require(subscription, "subscription");
       NotificationType notificationType = ConvertToNotificationType(eventType);
 
       EnqueueNotification(notificationType, subscription);
@@ -192,7 +192,7 @@ namespace Empiria.Land.Messaging {
           break;
 
         default:
-          throw Assertion.AssertNoReachThisCode($"Unhandled notificationType {notificationType}.");
+          throw Assertion.EnsureNoReachThisCode($"Unhandled notificationType {notificationType}.");
 
       }
 
@@ -244,7 +244,7 @@ namespace Empiria.Land.Messaging {
           return SOME_WAIT;
 
         default:
-          throw Assertion.AssertNoReachThisCode($"Unhandled notificationType {notificationType}.");
+          throw Assertion.EnsureNoReachThisCode($"Unhandled notificationType {notificationType}.");
 
       }
     }
@@ -334,15 +334,15 @@ namespace Empiria.Land.Messaging {
         return result;
       }
 
-      throw Assertion.AssertNoReachThisCode($"Can't convert to NotificationType from {eventType.GetType().Name} value {eventType}.");
+      throw Assertion.EnsureNoReachThisCode($"Can't convert to NotificationType from {eventType.GetType().Name} value {eventType}.");
     }
 
 
     static private Resource GetResource(FormerMessage message) {
       var resource = Resource.TryParseWithUID(message.UnitOfWorkUID);
 
-      Assertion.AssertObject(resource,
-                            $"Unrecognized resource with UID {message.UnitOfWorkUID}.");
+      Assertion.Ensure(resource,
+                        $"Unrecognized resource with UID {message.UnitOfWorkUID}.");
 
       return resource;
     }
@@ -351,8 +351,8 @@ namespace Empiria.Land.Messaging {
     static private LRSTransaction GetTransaction(FormerMessage message) {
       var transaction = LRSTransaction.TryParse(message.UnitOfWorkUID);
 
-      Assertion.AssertObject(transaction,
-                            $"Unrecognized transaction with UID {message.UnitOfWorkUID}.");
+      Assertion.Ensure(transaction,
+                       $"Unrecognized transaction with UID {message.UnitOfWorkUID}.");
 
       return transaction;
     }

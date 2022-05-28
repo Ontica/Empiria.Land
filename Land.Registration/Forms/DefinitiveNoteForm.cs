@@ -26,7 +26,7 @@ namespace Empiria.Land.Registration.Forms {
 
 
     static internal DefinitiveNoteForm Parse(EFilingRequest request) {
-      Assertion.AssertObject(request, "request");
+      Assertion.Require(request, "request");
 
       return new DefinitiveNoteForm(request);
     }

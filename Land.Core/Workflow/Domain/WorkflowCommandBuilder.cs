@@ -148,7 +148,7 @@ namespace Empiria.Land.Workflow {
           return "Cancelar firma electrónica";
 
         default:
-          throw Assertion.AssertNoReachThisCode();
+          throw Assertion.EnsureNoReachThisCode();
 
       }
     }

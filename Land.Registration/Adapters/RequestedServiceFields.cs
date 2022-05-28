@@ -48,12 +48,12 @@ namespace Empiria.Land.Transactions.Adapters {
 
 
     public void AssertValid() {
-      Assertion.AssertObject(ServiceUID, "ServiceUID");
-      Assertion.AssertObject(FeeConceptUID, "FeeConceptUID");
-      Assertion.AssertObject(UnitUID, "UnitUID");
+      Assertion.Require(ServiceUID, "ServiceUID");
+      Assertion.Require(FeeConceptUID, "FeeConceptUID");
+      Assertion.Require(UnitUID, "UnitUID");
 
-      Assertion.Assert(Quantity > 0, "Quantity must be a positive number.");
-      Assertion.Assert(Subtotal >= 0, "Subtotal must be a non-negative number.");
+      Assertion.Require(Quantity > 0, "Quantity must be a positive number.");
+      Assertion.Require(Subtotal >= 0, "Subtotal must be a non-negative number.");
 
       this.Notes = this.Notes ?? string.Empty;
     }

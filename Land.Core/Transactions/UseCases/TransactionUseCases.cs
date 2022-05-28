@@ -37,7 +37,7 @@ namespace Empiria.Land.Transactions.UseCases {
     #region Use cases
 
     public TransactionDto CloneTransaction(string baseTransactionUID) {
-      Assertion.AssertObject(baseTransactionUID, "baseTransactionUID");
+      Assertion.Require(baseTransactionUID, "baseTransactionUID");
 
       var transaction = LRSTransaction.Parse(baseTransactionUID);
 
@@ -50,7 +50,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public TransactionDto CreateTransaction(TransactionFields fields) {
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(fields, "fields");
 
       var transaction = new LRSTransaction(fields);
 
@@ -68,11 +68,11 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public void DeleteTransaction(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
-      Assertion.Assert(transaction.ControlData.CanDelete,
+      Assertion.Ensure(transaction.ControlData.CanDelete,
                        $"Transaction {transaction.UID} can not be deleted.");
 
       transaction.Delete();
@@ -80,7 +80,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public TransactionPreprocessingDto GetPreprocessingData(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
@@ -91,7 +91,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public TransactionDto GetTransaction(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
@@ -100,7 +100,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public FixedList<TransactionShortModel> SearchTransactions(SearchTransactionCommand searchCommand) {
-      Assertion.AssertObject(searchCommand, "searchCommand");
+      Assertion.Require(searchCommand, "searchCommand");
 
       searchCommand.EnsureIsValid();
 
@@ -114,7 +114,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public async Task<TransactionDto> SubmitTransaction(string transactionUID) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, "transactionUID");
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
@@ -125,8 +125,8 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public TransactionDto UpdateTransaction(string transactionUID, TransactionFields fields) {
-      Assertion.AssertObject(transactionUID, "transactionUID");
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(fields, "fields");
 
       var transaction = LRSTransaction.Parse(transactionUID);
 

@@ -296,7 +296,7 @@ namespace Empiria.Land.WebApi {
       } else if (resource is NoPropertyResource) {
         return BuildNoPropertyStatusResponse((NoPropertyResource) resource);
       } else {
-        throw Assertion.AssertNoReachThisCode("Unrecognized resource type");
+        throw Assertion.EnsureNoReachThisCode("Unrecognized resource type");
       }
     }
 

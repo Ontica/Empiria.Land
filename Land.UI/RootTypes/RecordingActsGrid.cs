@@ -106,7 +106,7 @@ namespace Empiria.Land.UI {
                recordingAct.Resource.UID;
 
       } else {
-        throw Assertion.AssertNoReachThisCode();
+        throw Assertion.EnsureNoReachThisCode();
 
       }
     }

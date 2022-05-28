@@ -29,7 +29,7 @@ namespace Empiria.Land.Registration {
     }
 
     public RealEstate(RealEstateExtData data) {
-      Assertion.AssertObject(data, "data");
+      Assertion.Require(data, "data");
 
       this.RealEstateExtData = data;
     }
@@ -175,15 +175,15 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public override void AssertCanBeClosed() {
-      Assertion.AssertObject(this.Kind,
-                             "Se requiere proporcionar la información del predio con folio real {0}.", this.UID);
-      Assertion.Assert(!this.RecorderOffice.IsEmptyInstance,
+      Assertion.Require(this.Kind,
+          $"Se requiere proporcionar la información del predio con folio real {this.UID}.");
+      Assertion.Require(!this.RecorderOffice.IsEmptyInstance,
                       "Predio " + this.UID +
                       ":\nSe requiere proporcionar el Distrito judicial al que pertenece el predio.");
-      Assertion.Assert(!this.Municipality.IsEmptyInstance,
+      Assertion.Require(!this.Municipality.IsEmptyInstance,
                       "Predio " + this.UID +
                       ":\nSe requiere proporcionar el municipio donde se ubica el predio.");
-      Assertion.Assert(this.LotSize != Quantity.Zero,
+      Assertion.Require(this.LotSize != Quantity.Zero,
                       "Predio " + this.UID  +
                       ":\nSe requiere proporcionar la superficie del predio.");
     }
@@ -230,7 +230,7 @@ namespace Empiria.Land.Registration {
 
       int recordingActIndex = recordingActs.IndexOf(recordingAct);
 
-      Assertion.Assert(recordingActIndex != -1,
+      Assertion.Require(recordingActIndex != -1,
                        "Supplied recordingAct doesn't belong to the property tract.");
 
       for (int i = 0; i < recordingActIndex; i++) {
@@ -338,7 +338,7 @@ namespace Empiria.Land.Registration {
 
 
     public void SetExtData(RealEstateExtData newData) {
-      Assertion.AssertObject(newData, "newData");
+      Assertion.Require(newData, "newData");
 
       newData.AssertIsValid();
 
@@ -347,17 +347,17 @@ namespace Empiria.Land.Registration {
 
 
     public void SetPartitionNo(string newPartitionNo) {
-      Assertion.Assert(this.IsPartition,
+      Assertion.Require(this.IsPartition,
                        "This real estate is not a partition of another property.");
 
       this.PartitionNo = EmpiriaString.TrimAll(newPartitionNo);
 
-      Assertion.AssertObject(this.PartitionNo, "newPartitionNo");
+      Assertion.Require(this.PartitionNo, "newPartitionNo");
     }
 
 
     internal RealEstate[] Subdivide(RealEstatePartitionDTO partitionInfo) {
-      Assertion.Assert(!this.IsNew, "New properties can't be subdivided.");
+      Assertion.Require(!this.IsNew, "New properties can't be subdivided.");
 
       RealEstate[] partitions = new RealEstate[1];
 

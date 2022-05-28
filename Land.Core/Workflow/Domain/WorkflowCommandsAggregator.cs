@@ -33,7 +33,7 @@ namespace Empiria.Land.Workflow {
     #region Public methods
 
     public WorkflowCommandsAggregator(WorkflowRules rules) {
-      Assertion.AssertObject(rules, "rules");
+      Assertion.Require(rules, "rules");
 
       _rules = rules;
     }

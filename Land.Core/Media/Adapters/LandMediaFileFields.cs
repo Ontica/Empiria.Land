@@ -23,7 +23,7 @@ namespace Empiria.Land.Media.Adapters {
       if (Enum.TryParse(value, out result)) {
         return result;
       } else {
-        throw Assertion.AssertNoReachThisCode($"Unrecognized MediaContent value '{value}'.");
+        throw Assertion.EnsureNoReachThisCode($"Unrecognized MediaContent value '{value}'.");
       }
     }
 

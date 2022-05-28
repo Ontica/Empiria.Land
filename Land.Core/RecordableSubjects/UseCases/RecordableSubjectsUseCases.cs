@@ -37,9 +37,9 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
     public TractIndexDto AmendableRecordingActs(string recordableSubjectUID,
                                                 string instrumentRecordingUID,
                                                 string amendmentRecordingActTypeUID) {
-      Assertion.AssertObject(recordableSubjectUID, "recordableSubjectUID");
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(amendmentRecordingActTypeUID, "amendmentRecordingActTypeUID");
+      Assertion.Require(recordableSubjectUID, "recordableSubjectUID");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(amendmentRecordingActTypeUID, "amendmentRecordingActTypeUID");
 
       var amendmentRecordingActType = RecordingActType.Parse(amendmentRecordingActTypeUID);
 
@@ -91,7 +91,7 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
     }
 
     public FixedList<RecordableSubjectShortDto> SearchRecordableSubjects(SearchRecordableSubjectsCommand searchCommand) {
-      Assertion.AssertObject(searchCommand, "searchCommand");
+      Assertion.Require(searchCommand, "searchCommand");
 
       searchCommand.EnsureIsValid();
 

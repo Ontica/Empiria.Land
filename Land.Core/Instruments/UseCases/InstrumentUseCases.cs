@@ -31,7 +31,7 @@ namespace Empiria.Land.Instruments.UseCases {
     #region Use cases
 
     public InstrumentDto GetInstrument(string instrumentUID) {
-      Assertion.AssertObject(instrumentUID, "instrumentUID");
+      Assertion.Require(instrumentUID, "instrumentUID");
 
       var instrument = Instrument.Parse(instrumentUID);
 

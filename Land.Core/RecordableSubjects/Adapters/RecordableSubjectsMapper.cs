@@ -36,7 +36,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
         return Map(noPropertyResource);
 
       } else {
-        throw Assertion.AssertNoReachThisCode($"Unrecognized recordable subject type " +
+        throw Assertion.EnsureNoReachThisCode($"Unrecognized recordable subject type " +
                                               $"'{resource.GetEmpiriaType().NamedKey}'.");
       }
     }

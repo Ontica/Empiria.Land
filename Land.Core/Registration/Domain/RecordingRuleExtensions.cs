@@ -20,14 +20,14 @@ namespace Empiria.Land.Registration {
     #region Methods
 
     static internal FixedList<RecordingActTypeCategory> ApplicableRecordingActTypes(this Instrument instrument) {
-      Assertion.AssertObject(instrument, "instrument");
+      Assertion.Require(instrument, "instrument");
 
       return RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
     }
 
 
     static internal FixedList<RecordingActTypeCategory> ApplicableRecordingActTypes(this PhysicalRecording physicalRecording) {
-      Assertion.AssertObject(physicalRecording, "physicalRecording");
+      Assertion.Require(physicalRecording, "physicalRecording");
 
       return RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
     }

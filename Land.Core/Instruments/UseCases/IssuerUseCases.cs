@@ -32,7 +32,7 @@ namespace Empiria.Land.Instruments.UseCases {
     #region Use cases
 
     public FixedList<IssuerDto> SearchIssuers(IssuersSearchCommand searchCommand) {
-      Assertion.AssertObject(searchCommand, "searchCommand");
+      Assertion.Require(searchCommand, "searchCommand");
 
       searchCommand.EnsureIsValid();
 

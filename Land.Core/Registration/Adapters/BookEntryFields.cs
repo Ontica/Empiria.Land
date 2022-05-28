@@ -41,10 +41,10 @@ namespace Empiria.Land.Registration.Adapters {
 
 
     internal void EnsureIsValid() {
-      Assertion.AssertObject(RecordingNo, "fields.RecordingNo");
+      Assertion.Require(RecordingNo, "fields.RecordingNo");
       if (PresentationTime != ExecutionServer.DateMinValue &&
           AuthorizationDate != ExecutionServer.DateMinValue) {
-        Assertion.Assert(PresentationTime <= AuthorizationDate,
+        Assertion.Require(PresentationTime <= AuthorizationDate,
                         "La fecha de presentación debe ser anterior o igual a la fecha de registro.");
       }
     }
@@ -100,9 +100,9 @@ namespace Empiria.Land.Registration.Adapters {
 
 
     internal void EnsureIsValid() {
-      Assertion.AssertObject(BookEntry, "BookEntry value is required.");
-      Assertion.AssertObject(Instrument, "Instrument value is required.");
-      Assertion.Assert(Instrument.Type.HasValue, "Instrument.Type value is required.");
+      Assertion.Require(BookEntry, "BookEntry value is required.");
+      Assertion.Require(Instrument, "Instrument value is required.");
+      Assertion.Require(Instrument.Type.HasValue, "Instrument.Type value is required.");
 
       BookEntry.EnsureIsValid();
     }

@@ -80,8 +80,8 @@ namespace Empiria.Land.Media {
 
     static private void AssertFileExists(string sourceFileName) {
       if (!File.Exists(sourceFileName)) {
-        Assertion.AssertFail(new LandMediaException(LandMediaException.Msg.FileNotExists,
-                                                    sourceFileName));
+        throw new LandMediaException(LandMediaException.Msg.FileNotExists,
+                                     sourceFileName);
       }
     }
 
@@ -152,7 +152,7 @@ namespace Empiria.Land.Media {
         return folderPath.Replace(ImageProcessor.SubstitutionsFolderPath, replacedPath);
       }
 
-      throw Assertion.AssertNoReachThisCode(folderPath + " doesn't start with a recognized path pattern.");
+      throw Assertion.EnsureNoReachThisCode(folderPath + " doesn't start with a recognized path pattern.");
     }
 
 

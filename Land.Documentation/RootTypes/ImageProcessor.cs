@@ -134,8 +134,8 @@ namespace Empiria.Land.Documentation {
 
     static private void AssertFileExists(string sourceFileName) {
       if (!File.Exists(sourceFileName)) {
-        Assertion.AssertFail(new LandDocumentationException(LandDocumentationException.Msg.FileNotExists,
-                                                            sourceFileName));
+        throw new LandDocumentationException(LandDocumentationException.Msg.FileNotExists,
+                                             sourceFileName);
       }
     }
 
@@ -196,7 +196,7 @@ namespace Empiria.Land.Documentation {
         return folderPath.Replace(ImageProcessor.SubstitutionsFolderPath, replacedPath);
       }
 
-      throw Assertion.AssertNoReachThisCode(folderPath + " doesn't start with a recognized path pattern.");
+      throw Assertion.EnsureNoReachThisCode(folderPath + " doesn't start with a recognized path pattern.");
     }
 
     static private void SendCandidateImageToErrorsBin(CandidateImage image, Exception exception) {

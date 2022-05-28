@@ -107,12 +107,12 @@ namespace Empiria.Land.Registration {
 
     public void AssertCanBeClosed() {
       if (!this.IsReadyToClose()) {
-        Assertion.AssertFail("El usuario no tiene permisos para cerrar el documento o éste no tiene un estado válido.");
+        Assertion.RequireFail("El usuario no tiene permisos para cerrar el documento o éste no tiene un estado válido.");
       }
 
       //this.AssertGraceDaysForEdition();
 
-      Assertion.Assert(this.Document.RecordingActs.Count > 0, "El documento no tiene actos jurídicos.");
+      Assertion.Require(this.Document.RecordingActs.Count > 0, "El documento no tiene actos jurídicos.");
 
       foreach (var recordingAct in this.Document.RecordingActs) {
         recordingAct.AssertCanBeClosed();
@@ -122,7 +122,7 @@ namespace Empiria.Land.Registration {
 
     public void AssertCanBeOpened() {
       if (!this.IsReadyToOpen()) {
-        Assertion.AssertFail("El usuario no tiene permisos para abrir este documento.");
+        Assertion.RequireFail("El usuario no tiene permisos para abrir este documento.");
       }
 
       //this.AssertGraceDaysForEdition();
@@ -145,7 +145,7 @@ namespace Empiria.Land.Registration {
         lastDate = transaction.LastReentryTime;
       }
       if (lastDate.AddDays(graceDaysForEdition) < DateTime.Today) {
-        Assertion.AssertFail("Por motivos de seguridad y calidad en el registro de la información, " +
+        Assertion.RequireFail("Por motivos de seguridad y calidad en el registro de la información, " +
                              "no es posible modificar documentos de trámites de más de 45 días.\n\n" +
                              "En su lugar se puede optar por registrar un nuevo trámite, " +
                              "o quizás se pueda hacer un reingreso si no han transcurrido los " +

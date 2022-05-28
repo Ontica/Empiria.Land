@@ -31,9 +31,9 @@ namespace Empiria.Land.Registration.UseCases {
     public RecordingActDto AppendParty(string instrumentRecordingUID,
                                        string recordingActUID,
                                        RecordingActPartyFields partyFields) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(recordingActUID, "recordingActUID");
-      Assertion.AssertObject(partyFields, "partyFields");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(recordingActUID, "recordingActUID");
+      Assertion.Require(partyFields, "partyFields");
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -48,9 +48,9 @@ namespace Empiria.Land.Registration.UseCases {
     public RecordingActDto RemoveParty(string instrumentRecordingUID,
                                        string recordingActUID,
                                        string partyUID) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(recordingActUID, "recordingActUID");
-      Assertion.AssertObject(partyUID, "partyUID");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(recordingActUID, "recordingActUID");
+      Assertion.Require(partyUID, "partyUID");
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -67,9 +67,9 @@ namespace Empiria.Land.Registration.UseCases {
     public FixedList<PartyDto> SearchParties(string instrumentRecordingUID,
                                              string recordingActUID,
                                              SearchPartiesCommand command) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(recordingActUID, "recordingActUID");
-      Assertion.AssertObject(command, "command");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(recordingActUID, "recordingActUID");
+      Assertion.Require(command, "command");
 
       var list = Party.GetList(command);
 

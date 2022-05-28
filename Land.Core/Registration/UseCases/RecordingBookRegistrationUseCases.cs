@@ -14,7 +14,6 @@ using Empiria.Services;
 using Empiria.Land.Instruments;
 
 using Empiria.Land.Registration.Adapters;
-using Empiria.Land.Instruments.Adapters;
 
 namespace Empiria.Land.Registration.UseCases {
 
@@ -47,14 +46,13 @@ namespace Empiria.Land.Registration.UseCases {
     public FixedList<NamedEntityDto> GetRecordingBooksList(string recorderOfficeUID,
                                                            string recordingSectionUID,
                                                            string keywords) {
-      Assertion.AssertObject(recorderOfficeUID, "recorderOfficeUID");
-      Assertion.AssertObject(recordingSectionUID, "recordingSectionUID");
+      Assertion.Require(recorderOfficeUID, "recorderOfficeUID");
+      Assertion.Require(recordingSectionUID, "recordingSectionUID");
 
       keywords = keywords ?? string.Empty;
 
       var recorderOffice = RecorderOffice.Parse(recorderOfficeUID);
       var recordingSection = RecordingSection.Parse(recordingSectionUID);
-
 
       FixedList<RecordingBook> books = RecordingBook.GetList(recorderOffice, recordingSection, keywords);
 
@@ -63,7 +61,7 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public RecordingBookDto GetRecordingBook(string recordingBookUID) {
-      Assertion.AssertObject(recordingBookUID, "recordingBookUID");
+      Assertion.Require(recordingBookUID, "recordingBookUID");
 
       var recordingBook = RecordingBook.Parse(recordingBookUID);
 
@@ -72,7 +70,7 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public FixedList<BookEntryShortDto> GetRecordingBookEntries(string recordingBookUID) {
-      Assertion.AssertObject(recordingBookUID, "recordingBookUID");
+      Assertion.Require(recordingBookUID, "recordingBookUID");
 
       var recordingBook = RecordingBook.Parse(recordingBookUID);
 
@@ -91,18 +89,18 @@ namespace Empiria.Land.Registration.UseCases {
 
     public RecordingBookDto CreateBookEntry(string recordingBookUID,
                                             ManualEditBookEntryFields fields) {
-      Assertion.AssertObject(recordingBookUID, "recordingBookUID");
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(recordingBookUID, "recordingBookUID");
+      Assertion.Require(fields, "fields");
 
       fields.EnsureIsValid();
 
       var recordingBook = RecordingBook.Parse(recordingBookUID);
 
-      Assertion.Assert(recordingBook.IsAvailableForManualEditing,
+      Assertion.Ensure(recordingBook.IsAvailableForManualEditing,
           $"The selected book '{recordingBook.AsText}' is not available for manual editing." +
           "It is not possible to add it a new book entry.");
 
-      Assertion.Assert(!recordingBook.ExistsRecording(fields.BookEntry.RecordingNo),
+      Assertion.Ensure(!recordingBook.ExistsRecording(fields.BookEntry.RecordingNo),
                        $"There is a book entry with the same number {fields.BookEntry.RecordingNo}");
 
       var instrumentType = InstrumentType.Parse(fields.Instrument.Type.Value);
@@ -111,7 +109,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       instrument.Save();
 
-      Assertion.Assert(instrument.HasDocument,
+      Assertion.Ensure(instrument.HasDocument,
                        "Instruments must have a recording document to be linked to a transaction.");
 
       var document = instrument.TryGetRecordingDocument();
@@ -130,8 +128,8 @@ namespace Empiria.Land.Registration.UseCases {
 
     public InstrumentRecordingDto CreateNextBookEntry(string instrumentRecordingUID,
                                                       CreateNextBookEntryFields fields) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(fields, "fields");
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -154,9 +152,9 @@ namespace Empiria.Land.Registration.UseCases {
     public InstrumentRecordingDto CreateRecordingAct(string recordingBookUID,
                                                      string bookEntryUID,
                                                      RegistrationCommand command) {
-      Assertion.AssertObject(recordingBookUID, "recordingBookUID");
-      Assertion.AssertObject(bookEntryUID, "bookEntryUID");
-      Assertion.AssertObject(command, "command");
+      Assertion.Require(recordingBookUID, "recordingBookUID");
+      Assertion.Require(bookEntryUID, "bookEntryUID");
+      Assertion.Require(command, "command");
 
       var book = RecordingBook.Parse(recordingBookUID);
       var bookEntry = PhysicalRecording.Parse(bookEntryUID);
@@ -178,14 +176,14 @@ namespace Empiria.Land.Registration.UseCases {
 
     public RecordingBookDto RemoveBookEntry(string recordingBookUID,
                                             string bookEntryUID) {
-      Assertion.AssertObject(recordingBookUID, "recordingBookUID");
-      Assertion.AssertObject(bookEntryUID, "bookEntryUID");
+      Assertion.Require(recordingBookUID, "recordingBookUID");
+      Assertion.Require(bookEntryUID, "bookEntryUID");
 
       var book = RecordingBook.Parse(recordingBookUID);
 
       var bookEntry = PhysicalRecording.Parse(bookEntryUID);
 
-      Assertion.Assert(book.Recordings.Contains(bookEntry),
+      Assertion.Ensure(book.Recordings.Contains(bookEntry),
                        $"Book entry '{bookEntryUID}', does not belong to book '{book.AsText}'.");
 
       bookEntry.Delete();
@@ -199,9 +197,9 @@ namespace Empiria.Land.Registration.UseCases {
     public InstrumentRecordingDto RemoveRecordingAct(string recordingBookUID,
                                                      string bookEntryUID,
                                                      string recordingActUID) {
-      Assertion.AssertObject(recordingBookUID, "recordingBookUID");
-      Assertion.AssertObject(bookEntryUID, "bookEntryUID");
-      Assertion.AssertObject(recordingActUID, "recordingActUID");
+      Assertion.Require(recordingBookUID, "recordingBookUID");
+      Assertion.Require(bookEntryUID, "bookEntryUID");
+      Assertion.Require(recordingActUID, "recordingActUID");
 
       var book = RecordingBook.Parse(recordingBookUID);
 
@@ -211,10 +209,10 @@ namespace Empiria.Land.Registration.UseCases {
 
       var instrumentRecording = recordingAct.Document;
 
-      Assertion.Assert(book.Recordings.Contains(bookEntry),
+      Assertion.Ensure(book.Recordings.Contains(bookEntry),
                        $"Book entry '{bookEntryUID}', does not belong to book '{book.AsText}'.");
 
-      Assertion.Assert(bookEntry.RecordingActs.Contains(recordingAct),
+      Assertion.Ensure(bookEntry.RecordingActs.Contains(recordingAct),
                       $"Book entry '{bookEntryUID}', does not contains recording act '{recordingAct.UID}'.");
 
 
@@ -229,8 +227,8 @@ namespace Empiria.Land.Registration.UseCases {
 
     public InstrumentRecordingDto RemoveBookEntryFromInstrument(string instrumentRecordingUID,
                                                                 string bookEntryUID) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(bookEntryUID, "bookEntryUID");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(bookEntryUID, "bookEntryUID");
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -238,7 +236,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var bookEntry = instrumentRecordings.Find(x => x.UID == bookEntryUID);
 
-      Assertion.AssertObject(bookEntry,
+      Assertion.Ensure(bookEntry,
             $"Book recording entry '{bookEntryUID}', does not belong to instrument recording '{instrumentRecordingUID}'.");
 
       bookEntry.Delete();
@@ -250,9 +248,9 @@ namespace Empiria.Land.Registration.UseCases {
     public InstrumentRecordingDto UpdateBookEntryInstrument(string instrumentRecordingUID,
                                                             string bookEntryUID,
                                                             ManualEditBookEntryFields fields) {
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(bookEntryUID, "bookEntryUID");
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(bookEntryUID, "bookEntryUID");
+      Assertion.Require(fields, "fields");
 
       fields.EnsureIsValid();
 

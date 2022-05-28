@@ -54,7 +54,7 @@ namespace Empiria.Land.Workflow.WebApi {
     public SingleObjectModel AssertWorkflowCommandExecutionForMultipleTransactions([FromBody] WorkflowCommand command) {
       base.RequireBody(command);
 
-      Assertion.AssertObject(command.Payload.SearchUID, "payload.searchUID field must be provided.");
+      Assertion.Require(command.Payload.SearchUID, "payload.searchUID field must be provided.");
 
       using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
         TransactionShortModel transaction = usecases.SearchTransaction(command.Payload.SearchUID);

@@ -27,7 +27,7 @@ namespace Empiria.Land.Registration.Forms {
 
 
     static internal RealPropertyDescription Parse(JsonObject json) {
-      Assertion.AssertObject(json, "json");
+      Assertion.Require(json, "json");
 
       return new RealPropertyDescription(json);
     }

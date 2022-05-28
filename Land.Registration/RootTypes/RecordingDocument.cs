@@ -55,7 +55,7 @@ namespace Empiria.Land.Registration {
     static public RecordingDocument ParseGuid(string guid) {
       var recordingDocument = BaseObject.TryParse<RecordingDocument>($"DocumentGUID = '{guid}'");
 
-      Assertion.AssertObject(recordingDocument,
+      Assertion.Require(recordingDocument,
                              $"There is not registered a recording document with guid '{guid}'.");
 
       return recordingDocument;
@@ -338,8 +338,9 @@ namespace Empiria.Land.Registration {
     /// <param name="recordingAct">The item to be added at the end of the RecordingActs collection.</param>
     /// <returns> The recording act's index inside the RecordingActs collection.</returns>
     internal int AddRecordingAct(RecordingAct recordingAct) {
-      Assertion.AssertObject(recordingAct, "recordingAct");
-      Assertion.Assert(this.IsHistoricDocument || !this.IsClosed,
+      Assertion.Require(recordingAct, "recordingAct");
+
+      Assertion.Ensure(this.IsHistoricDocument || !this.IsClosed,
                        "Recording acts can't be added to closed documents.");
 
       recordingActList.Value.Add(recordingAct);
@@ -351,17 +352,22 @@ namespace Empiria.Land.Registration {
     public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Resource resource,
                                            RecordingAct amendmentOf = null,
                                            PhysicalRecording physicalRecording = null) {
+      Assertion.Require(resource, "resource");
+
+      Assertion.Ensure(!resource.IsEmptyInstance, "Resource can't be an empty instance.");
+
       amendmentOf = amendmentOf ?? RecordingAct.Empty;
       physicalRecording = physicalRecording ?? PhysicalRecording.Empty;
 
-      Assertion.Assert(!this.IsEmptyInstance, "Document can't be the empty instance.");
-      Assertion.Assert(this.IsHistoricDocument || !this.IsClosed,
+      Assertion.Ensure(!this.IsEmptyInstance, "Document can't be the empty instance.");
+
+      Assertion.Ensure(this.IsHistoricDocument || !this.IsClosed,
                        "Recording acts can't be added to closed documents");
 
-      Assertion.AssertObject(recordingActType, "recordingActType");
-      Assertion.AssertObject(resource, "resource");
-      Assertion.AssertObject(amendmentOf, "amendmentOf");
-      Assertion.AssertObject(!resource.IsEmptyInstance, "Resource can't be an empty instance.");
+      Assertion.Ensure(recordingActType, "recordingActType");
+      Assertion.Ensure(amendmentOf, "amendmentOf");
+
+
 
       if (this.IsNew) {
         this.Save();
@@ -375,15 +381,15 @@ namespace Empiria.Land.Registration {
     }
 
     internal void SetAuthorizationTime(DateTime authorizationTime) {
-      Assertion.Assert(this.IsNew || this.IsHistoricDocument,
+      Assertion.Ensure(this.IsNew || this.IsHistoricDocument,
                       "AutorizationTime can be set only over new or historic documents.");
       this.AuthorizationTime = authorizationTime;
     }
 
     public void SetDates(DateTime presentationTime, DateTime authorizationTime) {
-      Assertion.Assert(this.IsHistoricDocument,
+      Assertion.Ensure(this.IsHistoricDocument,
                 "Autorization and Presentation dates can be set only over new or historic documents.");
-      Assertion.Assert(!this.IsClosed,
+      Assertion.Ensure(!this.IsClosed,
           "Autorization and Presentation dates can be set only over opened documents.");
 
       if (!this.HasTransaction) {
@@ -424,7 +430,7 @@ namespace Empiria.Land.Registration {
     public RecordingAct GetRecordingAct(string recordingActUID) {
       RecordingAct recordingAct = this.RecordingActs.Find(x => x.UID == recordingActUID);
 
-      Assertion.AssertObject(recordingAct, "recordingAct");
+      Assertion.Require(recordingAct, "recordingAct");
 
       return recordingAct;
     }
@@ -530,12 +536,12 @@ namespace Empiria.Land.Registration {
     }
 
     public void RemoveRecordingAct(RecordingAct recordingAct) {
-      Assertion.AssertObject(recordingAct, "recordingAct");
+      Assertion.Require(recordingAct, "recordingAct");
 
-      Assertion.Assert(this.IsHistoricDocument || !this.IsClosed,
+      Assertion.Ensure(this.IsHistoricDocument || !this.IsClosed,
                        "Recording acts can't be removed from closed documents.");
 
-      Assertion.Assert(recordingAct.Document.Equals(this),
+      Assertion.Ensure(recordingAct.Document.Equals(this),
                        "The recording act doesn't belong to this document.");
 
       recordingAct.Delete();
@@ -552,7 +558,7 @@ namespace Empiria.Land.Registration {
       }
       PhysicalRecording historicRecording = this.RecordingActs[0].PhysicalRecording;
 
-      Assertion.Assert(!historicRecording.IsEmptyInstance,
+      Assertion.Ensure(!historicRecording.IsEmptyInstance,
                       "historicRecording can't be the empty instance.");
 
       return historicRecording;

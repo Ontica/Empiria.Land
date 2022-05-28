@@ -89,7 +89,7 @@ namespace Empiria.Land.Registration {
           return "Crear fracción de predio registrado en antecedente";
 
         default:
-          throw Assertion.AssertNoReachThisCode($"Unhandled registration command type '{commandType}'.");
+          throw Assertion.EnsureNoReachThisCode($"Unhandled registration command type '{commandType}'.");
       }
     }
 
@@ -189,7 +189,7 @@ namespace Empiria.Land.Registration {
           };
 
         default:
-          throw Assertion.AssertNoReachThisCode($"Unhandled registration command type '{commandType}'.");
+          throw Assertion.EnsureNoReachThisCode($"Unhandled registration command type '{commandType}'.");
       }
     }
 

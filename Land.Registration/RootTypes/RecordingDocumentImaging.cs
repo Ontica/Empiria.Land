@@ -96,12 +96,14 @@ namespace Empiria.Land.Registration {
 
 
     public void GenerateImagingControlID() {
-      Assertion.Assert(!this.Document.IsEmptyInstance, "Document can't be the empty instance.");
-      Assertion.Assert(this.Document.IsClosed, "Document is not closed.");
-      Assertion.Assert(this.ImagingControlID.Length == 0,
+      Assertion.Ensure(!this.Document.IsEmptyInstance, "Document can't be the empty instance.");
+      Assertion.Ensure(this.Document.IsClosed, "Document is not closed.");
+
+      Assertion.Ensure(this.ImagingControlID.Length == 0,
                        "Document has already assigned an imaging control number.");
-      Assertion.Assert(this.Document.RecordingActs.Count > 0, "Document should have recording acts.");
-      Assertion.Assert(this.Document.RecordingActs.CountAll((x) => !x.PhysicalRecording.IsEmptyInstance) == 0,
+
+      Assertion.Ensure(this.Document.RecordingActs.Count > 0, "Document should have recording acts.");
+      Assertion.Ensure(this.Document.RecordingActs.CountAll((x) => !x.PhysicalRecording.IsEmptyInstance) == 0,
                        "Document can't have any recording acts that are related to physical recordings.");
 
 
@@ -112,7 +114,7 @@ namespace Empiria.Land.Registration {
 
 
     public void SetAuxiliarImageSet(ImagingItem image) {
-      Assertion.AssertObject(image, "image");
+      Assertion.Require(image, "image");
 
       this.Document.ExtensionData.AuxiliarImageSetId = image.Id;
 
@@ -121,7 +123,7 @@ namespace Empiria.Land.Registration {
 
 
     public void SetImageSet(ImagingItem image) {
-      Assertion.AssertObject(image, "image");
+      Assertion.Require(image, "image");
 
       this.Document.ExtensionData.DocumentImageSetId = image.Id;
 

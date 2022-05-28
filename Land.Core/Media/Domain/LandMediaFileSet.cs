@@ -39,7 +39,7 @@ namespace Empiria.Land.Media {
 
 
     static internal LandMediaFileSet GetFor(BaseObject entity) {
-      Assertion.AssertObject(entity, "entity");
+      Assertion.Require(entity, "entity");
 
       return new LandMediaFileSet(entity);
     }
@@ -61,8 +61,8 @@ namespace Empiria.Land.Media {
     #region Methods
 
     internal async Task Add(LandMediaFileFields fields, Stream fileStream) {
-      Assertion.AssertObject(fields, "fields");
-      Assertion.AssertObject(fileStream, "fileStream");
+      Assertion.Require(fields, "fields");
+      Assertion.Require(fileStream, "fileStream");
 
       await Task.CompletedTask;
 
@@ -79,7 +79,7 @@ namespace Empiria.Land.Media {
 
 
     internal void AssertCanBeAdded(LandMediaFileFields fields) {
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(fields, "fields");
 
       //if (_mediaFileslist.Exists(x => x.MediaContent == fields.MediaContent)) {
       //  Assertion.AssertFail($"A file with MediaContent '{fields.MediaContent}' already exists for this entity.");
@@ -108,7 +108,7 @@ namespace Empiria.Land.Media {
 
 
     public void Remove(string mediaFileUID) {
-      Assertion.AssertObject(mediaFileUID, "mediaFileUID");
+      Assertion.Require(mediaFileUID, "mediaFileUID");
 
       //using (var service = MediaFileServices.ServiceInteractor()) {
       //  var mediaFileToRemove = _mediaFileslist.Find(x => x.UID == mediaFileUID);
@@ -121,9 +121,9 @@ namespace Empiria.Land.Media {
 
 
     public async Task Replace(string mediaFileUID, LandMediaFileFields fields, Stream fileStream) {
-      Assertion.AssertObject(mediaFileUID, "mediaFileUID");
-      Assertion.AssertObject(fields, "fields");
-      Assertion.AssertObject(fileStream, "fileStream");
+      Assertion.Require(mediaFileUID, "mediaFileUID");
+      Assertion.Require(fields, "fields");
+      Assertion.Require(fileStream, "fileStream");
 
       //using (var service = MediaFileServices.ServiceInteractor()) {
       //  var mediaFileToReplace = _mediaFileslist.Find(x => x.UID == mediaFileUID);

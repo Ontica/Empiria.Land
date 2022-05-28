@@ -77,7 +77,7 @@ namespace Empiria.Land.UI {
         } else if (item is Certificate) {
           html += this.GetCertificateRow((Certificate) item, i);
         } else {
-          Assertion.AssertNoReachThisCode("Invalid resource history tract item type.");
+          Assertion.EnsureNoReachThisCode("Invalid resource history tract item type.");
         }
       }
       return HtmlFormatters.TableWrapper(html);

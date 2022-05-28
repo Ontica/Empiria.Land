@@ -36,9 +36,10 @@ namespace Empiria.Land.Registration {
 
     protected RecordingAct(RecordingActType recordingActType,
                            RecordingDocument document) : base(recordingActType) {
-      Assertion.AssertObject(recordingActType, "recordingActType");
-      Assertion.AssertObject(document, "document");
-      Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance.");
+      Assertion.Require(recordingActType, "recordingActType");
+      Assertion.Require(document, "document");
+
+      Assertion.Ensure(!document.IsEmptyInstance, "document can't be the empty instance.");
 
       this.Document = document;
     }
@@ -46,11 +47,11 @@ namespace Empiria.Land.Registration {
 
     protected RecordingAct(RecordingActType recordingActType, RecordingDocument document,
                            PhysicalRecording physicalRecording) : base(recordingActType) {
-      Assertion.AssertObject(recordingActType, "recordingActType");
-      Assertion.AssertObject(document, "document");
-      Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance.");
+      Assertion.Require(recordingActType, "recordingActType");
+      Assertion.Require(document, "document");
+      Assertion.Require(physicalRecording, "physicalRecording");
 
-      Assertion.AssertObject(physicalRecording, "physicalRecording");
+      Assertion.Ensure(!document.IsEmptyInstance, "document can't be the empty instance.");
 
       this.Document = document;
       this.PhysicalRecording = physicalRecording;
@@ -62,15 +63,15 @@ namespace Empiria.Land.Registration {
                                         RecordingDocument document, Resource resource,
                                         RecordingAct amendmentOf, int index,
                                         PhysicalRecording physicalRecording) {
-      Assertion.AssertObject(recordingActType, "recordingActType");
-      Assertion.AssertObject(document, "document");
-      Assertion.AssertObject(resource, "resource");
-      Assertion.AssertObject(amendmentOf, "amendmentOf");
-      Assertion.AssertObject(physicalRecording, "physicalRecording");
+      Assertion.Require(recordingActType, "recordingActType");
+      Assertion.Require(document, "document");
+      Assertion.Require(resource, "resource");
+      Assertion.Require(amendmentOf, "amendmentOf");
+      Assertion.Require(physicalRecording, "physicalRecording");
 
-      Assertion.Assert(!document.IsEmptyInstance, "document can't be the empty instance.");
-      Assertion.Assert(!document.IsNew, "document can't be a new instance.");
-      Assertion.Assert(!amendmentOf.IsNew, "amendmentOf can't be a new instance.");
+      Assertion.Ensure(!document.IsEmptyInstance, "document can't be the empty instance.");
+      Assertion.Ensure(!document.IsNew, "document can't be a new instance.");
+      Assertion.Ensure(!amendmentOf.IsNew, "amendmentOf can't be a new instance.");
 
       RecordingAct recordingAct = recordingActType.CreateInstance();
       recordingAct.PhysicalRecording = physicalRecording;
@@ -322,7 +323,7 @@ namespace Empiria.Land.Registration {
           return this.RecordingActType.RecordingRule.DynamicActNamePattern + " de " +
                  this.AmendmentOf.RecordingActType.DisplayName.ToLowerInvariant();
         } else {
-          throw Assertion.AssertNoReachThisCode();
+          throw Assertion.EnsureNoReachThisCode();
         }
       }
     }
@@ -455,8 +456,8 @@ namespace Empiria.Land.Registration {
     }
 
     public RecordingActParty AppendParty(RecordingActPartyFields recordingActPartyFields) {
-      Assertion.AssertObject(recordingActPartyFields, "recordingActPartyFields");
-      Assertion.Assert(this.IsEditable,
+      Assertion.Require(recordingActPartyFields, "recordingActPartyFields");
+      Assertion.Require(this.IsEditable,
                        "This recording act is not editable, so I can not append a party to it.");
 
       recordingActPartyFields.EnsureValid();
@@ -480,7 +481,7 @@ namespace Empiria.Land.Registration {
         return AppendNewSecondaryParty(recordingActPartyFields);
 
       } else {
-        throw Assertion.AssertNoReachThisCode();
+        throw Assertion.EnsureNoReachThisCode();
       }
     }
 
@@ -549,9 +550,9 @@ namespace Empiria.Land.Registration {
 
 
     public void RemoveParty(RecordingActParty party) {
-      Assertion.AssertObject(party, "party");
+      Assertion.Require(party, "party");
 
-      Assertion.Assert(this.GetParties().Exists(x => x.UID == party.UID),
+      Assertion.Ensure(this.GetParties().Exists(x => x.UID == party.UID),
                        $"Party {party.UID} do not belong to this recording act.");
 
       party.Delete();
@@ -587,7 +588,7 @@ namespace Empiria.Land.Registration {
       if (!this.Resource.IsEmptyInstance) {
         this.RecordingActType.AssertIsApplicableResource(this.Resource);
       } else {
-        Assertion.Assert(rule.AppliesTo == RecordingRuleApplication.NoProperty,
+        Assertion.Require(rule.AppliesTo == RecordingRuleApplication.NoProperty,
                          "El acto jurídico " + this.IndexedName +
                          " sólo puede aplicarse al folio real de un predio o asociación.");
       }
@@ -641,7 +642,7 @@ namespace Empiria.Land.Registration {
                                                          !x.Transaction.Equals(this.Document.GetTransaction()));
 
       if (wrongPrelation) {
-        Assertion.AssertFail("El acto jurídico " + this.IndexedName +
+        Assertion.RequireFail("El acto jurídico " + this.IndexedName +
                              " hace referencia a un folio real al cual se le " +
                              "emitió un certificado con fecha posterior " +
                              "a la fecha de autorización de este documento.\n\n" +
@@ -678,8 +679,8 @@ namespace Empiria.Land.Registration {
     }
 
     public void ChangeRecordingActType(RecordingActType recordingActType) {
-      Assertion.AssertObject(recordingActType, "recordingActType");
-      Assertion.Assert(this.RecordingActType.RecordingRule.ReplaceableBy.Contains(recordingActType),
+      Assertion.Require(recordingActType, "recordingActType");
+      Assertion.Require(this.RecordingActType.RecordingRule.ReplaceableBy.Contains(recordingActType),
           $"El acto jurídico {this.DisplayName} no puede ser reemplazado por {recordingActType.DisplayName}.");
 
       this.ReclassifyAs(recordingActType);
@@ -813,7 +814,7 @@ namespace Empiria.Land.Registration {
 
 
     public void OnResourceUpdated(Resource updatedResource) {
-      Assertion.Assert(updatedResource.Equals(this.Resource),
+      Assertion.Require(updatedResource.Equals(this.Resource),
                        "Recording act resource and the updated resource are not the same.");
 
       this.ResourceShapshotData = updatedResource.GetSnapshotData();
@@ -847,13 +848,13 @@ namespace Empiria.Land.Registration {
     }
 
     public void SetAsMarginalNote(DateTime date, string marginalNote) {
-      Assertion.Assert(!this.PhysicalRecording.IsEmptyInstance,
+      Assertion.Require(!this.PhysicalRecording.IsEmptyInstance,
                       "Marginal notes can be only set over acts belonging to physical recordings.");
 
     }
 
     public void SetExtensionData(RecordingActExtData updatedData) {
-      Assertion.Assert(updatedData != null && !updatedData.IsEmptyInstance,
+      Assertion.Require(updatedData != null && !updatedData.IsEmptyInstance,
                        "updatedData can't be null or the empty instance");
 
       this.ExtensionData = updatedData;
@@ -861,9 +862,9 @@ namespace Empiria.Land.Registration {
 
     protected void SetResource(Resource resource, ResourceRole role = ResourceRole.Informative,
                                Resource relatedResource = null, decimal percentage = 1m) {
-      Assertion.Assert(resource != null && !resource.IsEmptyInstance,
+      Assertion.Require(resource != null && !resource.IsEmptyInstance,
                        "Resource can't be null  or the empty instance.");
-      Assertion.Assert(decimal.Zero < percentage && percentage <= decimal.One,
+      Assertion.Require(decimal.Zero < percentage && percentage <= decimal.One,
                        "Percentage should be set between zero and one inclusive.");
 
       resource.AssertIsStillAlive(this.Document);
@@ -877,7 +878,7 @@ namespace Empiria.Land.Registration {
     }
 
     public void Update(RecordingActFields fields) {
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(fields, "fields");
 
       this.Summary = fields.Description;
 
@@ -970,7 +971,7 @@ namespace Empiria.Land.Registration {
         }
       }
 
-      Assertion.AssertFail("El acto jurídico " + this.IndexedName +
+      Assertion.RequireFail("El acto jurídico " + this.IndexedName +
                             " no pude ser inscrito debido a que el folio real no tiene registrado " +
                             "un acto de: '" + chainedRecordingActType.DisplayName + "'.\n\n" +
                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
@@ -987,7 +988,7 @@ namespace Empiria.Land.Registration {
       if (roles.Count == 0 || rule.AllowNoParties || roles.Count == 0) {
         return;
       }
-      Assertion.Assert(parties.Count != 0, "El acto jurídico " + this.IndexedName +
+      Assertion.Require(parties.Count != 0, "El acto jurídico " + this.IndexedName +
                                            " requiere cuando menos una persona o propietario.");
       foreach (var role in roles) {
         var found = parties.Contains((x) => x.PartyRole == role);
@@ -995,7 +996,7 @@ namespace Empiria.Land.Registration {
           return;
         }
       }
-      Assertion.AssertFail("En el acto jurídico " + this.IndexedName +
+      Assertion.RequireFail("En el acto jurídico " + this.IndexedName +
                            " no hay registradas personas o propietarios jugando alguno de" +
                            " los roles obligatorios para dicho tipo de acto.");
     }

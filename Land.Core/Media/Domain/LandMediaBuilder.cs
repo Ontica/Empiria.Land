@@ -52,7 +52,7 @@ namespace Empiria.Land.Media {
                               $"uid={parameters[0]}");
 
         default:
-          throw Assertion.AssertNoReachThisCode($"GetMediaDto() method can't process files of " +
+          throw Assertion.EnsureNoReachThisCode($"GetMediaDto() method can't process files of " +
                                                 $"media content {mediaContent}.");
       }
     }
@@ -65,7 +65,7 @@ namespace Empiria.Land.Media {
           return repository.GetFiles(mediaContent, instance);
 
         default:
-          throw Assertion.AssertNoReachThisCode();
+          throw Assertion.EnsureNoReachThisCode();
       }
     }
 

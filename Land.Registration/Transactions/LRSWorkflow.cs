@@ -148,7 +148,8 @@ namespace Empiria.Land.Registration.Transactions {
     #region Public methods
 
     internal void Delete() {
-      Assertion.Assert(this.CanBeDeleted, "This transaction can not be deleted.");
+
+      Assertion.Ensure(this.CanBeDeleted, "This transaction can not be deleted.");
 
       this.Close(LRSTransactionStatus.Deleted,
             $"Deleted by user {ExecutionServer.CurrentIdentity.User.FullName} on {DateTime.Now}.");
@@ -157,7 +158,8 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     public void DeliveredElectronicallyToAgency() {
-      Assertion.Assert(this.IsReadyForDeliveryOrReturn,
+
+      Assertion.Ensure(this.IsReadyForDeliveryOrReturn,
         $"Transaction {_transaction.UID} is not ready to be electronically delivered to the agency.");
 
       if (this.CurrentStatus == LRSTransactionStatus.ToDeliver) {
@@ -171,7 +173,7 @@ namespace Empiria.Land.Registration.Transactions {
                    LRSWorkflowRules.InterestedContact, DateTime.Now);
 
       } else {
-        throw Assertion.AssertNoReachThisCode();
+        throw Assertion.EnsureNoReachThisCode();
 
       }
     }
@@ -354,7 +356,7 @@ namespace Empiria.Land.Registration.Transactions {
       string s = LRSWorkflowRules.ValidateStatusChange(_transaction, currentTask.NextStatus);
 
       if (!String.IsNullOrWhiteSpace(s)) {
-        Assertion.AssertFail(s);
+        Assertion.RequireFail(s);
         return;
       }
 
@@ -436,11 +438,10 @@ namespace Empiria.Land.Registration.Transactions {
       DateTime lastDate = _transaction.Document.AuthorizationTime;
 
       if (lastDate.AddDays(graceDaysForImaging) <= DateTime.Now) {
-        Assertion.AssertFail("No es posible reingresar este trámite debido a que el documento " +
-                             "que se registró aún no ha sido digitalizado y ya " +
-                             "transcurrieron más de {0} días desde que éste se cerró.\n\n" +
-                             "Favor de preguntar en la mesa de armado acerca de este documento.",
-                             graceDaysForImaging);
+        Assertion.RequireFail("No es posible reingresar este trámite debido a que el documento " +
+                              "que se registró aún no ha sido digitalizado y ya " +
+                              $"transcurrieron más de {graceDaysForImaging} días desde que éste se cerró.\n\n" +
+                              "Favor de preguntar en la mesa de armado acerca de este documento.");
       }
     }
 
@@ -464,12 +465,11 @@ namespace Empiria.Land.Registration.Transactions {
       }
 
       if (lastDate.AddDays(graceDaysForReentry) <= DateTime.Now) {
-        Assertion.AssertFail("Por motivos de seguridad y calidad en el registro de la información, " +
-                             "no es posible reingresar trámites después de {0} días contados " +
-                             "a partir de su fecha de presentación original, de su fecha de registro, o bien, " +
-                             "de la fecha del último reingreso.\n\n" +
-                             "En su lugar se debe optar por registrar un nuevo trámite.",
-                             graceDaysForReentry);
+        Assertion.RequireFail("Por motivos de seguridad y calidad en el registro de la información, " +
+                             $"no es posible reingresar trámites después de {graceDaysForReentry} días contados " +
+                              "a partir de su fecha de presentación original, de su fecha de registro, o bien, " +
+                              "de la fecha del último reingreso.\n\n" +
+                              "En su lugar se debe optar por registrar un nuevo trámite.");
       }
     }
 

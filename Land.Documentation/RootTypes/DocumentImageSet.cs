@@ -30,12 +30,12 @@ namespace Empiria.Land.Documentation {
 
 
     internal DocumentImageSet(CandidateImage candidateImage, string[] imagesHashCodes) {
-      Assertion.AssertObject(candidateImage, "candidateImage");
-      Assertion.AssertObject(imagesHashCodes, "imagesHashCodes");
+      Assertion.Require(candidateImage, "candidateImage");
+      Assertion.Require(imagesHashCodes, "imagesHashCodes");
 
-      Assertion.Assert(candidateImage.ReadyToCreate,
+      Assertion.Require(candidateImage.ReadyToCreate,
                        "CandidateImage is not ready to be created.");
-      Assertion.Assert(imagesHashCodes.Length > 0,
+      Assertion.Require(imagesHashCodes.Length > 0,
                        "CandidateImage has no inner images.");
       this.Document = candidateImage.Document;
       this.DocumentImageType = candidateImage.DocumentImageType;

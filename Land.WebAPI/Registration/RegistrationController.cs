@@ -161,7 +161,7 @@ namespace Empiria.Land.Registration.WebApi {
           return JsonConverter.ToObject<RealEstateFields>(json.ToString());
 
         default:
-          throw Assertion.AssertNoReachThisCode($"Unrecognized recordable subject type {subjectType}.");
+          throw Assertion.EnsureNoReachThisCode($"Unrecognized recordable subject type {subjectType}.");
       }
     }
 

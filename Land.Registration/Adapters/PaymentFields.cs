@@ -30,8 +30,8 @@ namespace Empiria.Land.Transactions.Adapters {
 
 
     public void AssertValid() {
-      Assertion.AssertObject(this.ReceiptNo, "ReceiptNo");
-      Assertion.Assert(this.Total >= 0, "Total must be a non-negative amount.");
+      Assertion.Require(this.ReceiptNo, "ReceiptNo");
+      Assertion.Require(this.Total >= 0, "Total must be a non-negative amount.");
 
       this.Status = this.Status ?? "Pendiente";
     }

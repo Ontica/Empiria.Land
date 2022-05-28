@@ -53,12 +53,12 @@ namespace Empiria.Land.Documentation {
 
 
     static private void AssertIsValid(LRSTransaction transaction, HttpPostedFile uploadedFile) {
-      Assertion.AssertObject(transaction, "transaction");
-      Assertion.Assert(!transaction.IsEmptyInstance, "transaction can't be the empty instance.");
-      Assertion.AssertObject(uploadedFile, "uploadedFile");
-      Assertion.Assert(uploadedFile.ContentLength > 0, "uploadedFile is an empty file.");
+      Assertion.Require(transaction, "transaction");
+      Assertion.Require(!transaction.IsEmptyInstance, "transaction can't be the empty instance.");
+      Assertion.Require(uploadedFile, "uploadedFile");
+      Assertion.Require(uploadedFile.ContentLength > 0, "uploadedFile is an empty file.");
 
-      Assertion.Assert(EmpiriaPrincipal.Current.IsInRole("Land.Digitizer"),
+      Assertion.Ensure(EmpiriaPrincipal.Current.IsInRole("Land.Digitizer"),
                        "Current user must be in 'Digitalizer' role to perform this operation.");
     }
 
@@ -69,7 +69,7 @@ namespace Empiria.Land.Documentation {
           return FileContentType.PDF;
 
         default:
-          throw Assertion.AssertNoReachThisCode($"The system can't handle uploaded files " +
+          throw Assertion.EnsureNoReachThisCode($"The system can't handle uploaded files " +
                                                 $"with content type {uploadedFile.ContentType}.");
       }
     }

@@ -55,7 +55,7 @@ namespace Empiria.Land.Media {
     public static void LogException(string exceptionText) {
       var auditTrail = MediaFilesProcessorAuditTrail.GetInstance();
 
-      Assertion.Assert(auditTrail.isRunning, "FileAuditTrail is not running. Please start it first.");
+      Assertion.Ensure(auditTrail.isRunning, "FileAuditTrail is not running. Please start it first.");
 
       auditTrail.AddLog(exceptionText.Replace("\n", Environment.NewLine));
     }
@@ -64,7 +64,7 @@ namespace Empiria.Land.Media {
     public static void LogText(string text) {
       var auditTrail = MediaFilesProcessorAuditTrail.GetInstance();
 
-      Assertion.Assert(auditTrail.isRunning, "FileAuditTrail is not running. Please start it first.");
+      Assertion.Ensure(auditTrail.isRunning, "FileAuditTrail is not running. Please start it first.");
 
       auditTrail.AddLog(text.Replace("\n", Environment.NewLine));
     }

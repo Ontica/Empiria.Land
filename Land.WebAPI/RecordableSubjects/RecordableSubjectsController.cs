@@ -27,8 +27,8 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
                                                        [FromUri] string instrumentRecordingUID,
                                                        [FromUri] string amendmentRecordingActTypeUID) {
 
-      Assertion.AssertObject(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.AssertObject(amendmentRecordingActTypeUID, "amendmentRecordingActTypeUID");
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(amendmentRecordingActTypeUID, "amendmentRecordingActTypeUID");
 
       using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
         TractIndexDto tractIndex = usecases.AmendableRecordingActs(recordableSubjectUID,
@@ -115,7 +115,7 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
     [Route("v5/land/registration/recordable-subjects")]
     public CollectionModel SearchRecordableSubjects([FromUri] SearchRecordableSubjectsCommand searchCommand) {
 
-      Assertion.AssertObject(searchCommand, "searchCommand");
+      Assertion.Require(searchCommand, "searchCommand");
 
       using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
         FixedList<RecordableSubjectShortDto> list = usecases.SearchRecordableSubjects(searchCommand);

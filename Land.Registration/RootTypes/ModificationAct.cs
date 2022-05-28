@@ -23,7 +23,7 @@ namespace Empiria.Land.Registration {
 
     internal ModificationAct(RecordingActType recordingActType, RecordingDocument document,
                          Resource resource) : base(recordingActType, document) {
-      Assertion.AssertObject(resource, "resource");
+      Assertion.Require(resource, "resource");
 
       this.SetResource(resource);
 
@@ -33,8 +33,8 @@ namespace Empiria.Land.Registration {
     internal ModificationAct(RecordingActType recordingActType,
                              RecordingDocument document, Resource resource,
                              RecordingAct recordingActToModify) : base(recordingActType, document) {
-      Assertion.AssertObject(resource, "resource");
-      Assertion.AssertObject(recordingActToModify, "recordingActToModify");
+      Assertion.Require(resource, "resource");
+      Assertion.Require(recordingActToModify, "recordingActToModify");
 
       base.SetResource(resource);
 

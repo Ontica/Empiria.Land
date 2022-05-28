@@ -88,7 +88,7 @@ namespace Empiria.Land.Transactions.WebApi {
     [Route("v5/land/transactions")]
     public CollectionModel SearchTransactions([FromUri] SearchTransactionCommand searchCommand) {
 
-      Assertion.AssertObject(searchCommand, "searchCommand");
+      Assertion.Require(searchCommand, "searchCommand");
 
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
         FixedList<TransactionShortModel> list = usecases.SearchTransactions(searchCommand);

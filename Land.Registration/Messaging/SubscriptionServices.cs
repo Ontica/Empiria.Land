@@ -129,7 +129,7 @@ namespace Empiria.Land.Messaging {
 
       }  // else if
 
-      throw Assertion.AssertNoReachThisCode();
+      throw Assertion.EnsureNoReachThisCode();
     }
 
     #endregion Private methods
