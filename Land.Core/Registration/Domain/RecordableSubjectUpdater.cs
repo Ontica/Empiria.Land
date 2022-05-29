@@ -48,7 +48,7 @@ namespace Empiria.Land.Registration {
 
 
     private void EnsureIsEditable(RecordingAct recordingAct) {
-      Assertion.Ensure(recordingAct.IsEditable,
+      Assertion.Require(recordingAct.IsEditable,
           "The associated recording act is not editable, so is not possible to modify its linked resource.");
     }
 
@@ -56,16 +56,16 @@ namespace Empiria.Land.Registration {
     private void EnsureValidFields(RecordingAct recordingAct, RecordableSubjectFields fields) {
       Resource resource = recordingAct.Resource;
 
-      Assertion.Ensure(resource.GUID == fields.UID,
+      Assertion.Require(resource.GUID == fields.UID,
           $"The UID of the resource that should be modified '{fields.UID}' is not equal to " +
           $"the resource linked to the recording act '{resource.GUID}'.");
 
-      Assertion.Ensure(resource.UID == fields.ElectronicID,
+      Assertion.Require(resource.UID == fields.ElectronicID,
           $"The ElectronicID of the resource that should be modified '{fields.ElectronicID}' " +
           $"is not equal to the ID of the resource linked to the recording act {resource.UID}.");
 
 
-      Assertion.Ensure(resource.GetEmpiriaType().NamedKey == fields.Type.ToString(),
+      Assertion.Require(resource.GetEmpiriaType().NamedKey == fields.Type.ToString(),
           $"The resource linked to the recording act is of type '{resource.GetEmpiriaType().NamedKey}', " +
           $"but the type of the resource that should be modified is marked as '{fields.Type}'.");
 

@@ -110,7 +110,7 @@ namespace Empiria.Land.Certification {
     public void Update(CertificateDTO data) {
       Assertion.Require(data, "data");
 
-      Assertion.Ensure(this.Status == CertificateStatus.Pending,
+      Assertion.Require(this.Status == CertificateStatus.Pending,
                        "This certificate can't be updated. It's not in pending status.");
 
       var assembler = new CertificateAssembler(data);

@@ -474,7 +474,7 @@ namespace Empiria.Land.Registration {
 
 
     private void AttachResourceToPhysicalRecording(Resource resource) {
-      Assertion.Ensure(this.CreateResourceOnPhysicalRecording,
+      Assertion.Require(this.CreateResourceOnPhysicalRecording,
                        "Wrong RecordingTask values to execute this method.");
 
       var document = Task.PrecedentRecording.MainDocument;

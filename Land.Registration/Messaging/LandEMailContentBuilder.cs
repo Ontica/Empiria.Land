@@ -120,7 +120,7 @@ namespace Empiria.Land.Messaging {
     static private LRSTransaction GetTransaction(FormerMessage message) {
       var transaction = LRSTransaction.TryParse(message.UnitOfWorkUID);
 
-      Assertion.Ensure(transaction,
+      Assertion.Require(transaction,
                        $"Unrecognized transaction with UID {message.UnitOfWorkUID}.");
 
       return transaction;

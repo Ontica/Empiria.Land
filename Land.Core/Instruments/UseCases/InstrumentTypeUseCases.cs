@@ -33,7 +33,7 @@ namespace Empiria.Land.Instruments.UseCases {
     #region Use cases
 
     public FixedList<string> GetInstrumentKinds(InstrumentTypeEnum instrumentTypeValue) {
-      Assertion.Ensure(instrumentTypeValue != InstrumentTypeEnum.All,
+      Assertion.Require(instrumentTypeValue != InstrumentTypeEnum.All,
                        "instrumentTypeValue can't have the value 'All'.");
 
       if (instrumentTypeValue == InstrumentTypeEnum.Empty) {

@@ -96,11 +96,11 @@ namespace Empiria.Land.Registration.UseCases {
 
       var recordingBook = RecordingBook.Parse(recordingBookUID);
 
-      Assertion.Ensure(recordingBook.IsAvailableForManualEditing,
+      Assertion.Require(recordingBook.IsAvailableForManualEditing,
           $"The selected book '{recordingBook.AsText}' is not available for manual editing." +
           "It is not possible to add it a new book entry.");
 
-      Assertion.Ensure(!recordingBook.ExistsRecording(fields.BookEntry.RecordingNo),
+      Assertion.Require(!recordingBook.ExistsRecording(fields.BookEntry.RecordingNo),
                        $"There is a book entry with the same number {fields.BookEntry.RecordingNo}");
 
       var instrumentType = InstrumentType.Parse(fields.Instrument.Type.Value);
@@ -183,7 +183,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var bookEntry = PhysicalRecording.Parse(bookEntryUID);
 
-      Assertion.Ensure(book.Recordings.Contains(bookEntry),
+      Assertion.Require(book.Recordings.Contains(bookEntry),
                        $"Book entry '{bookEntryUID}', does not belong to book '{book.AsText}'.");
 
       bookEntry.Delete();
@@ -209,10 +209,10 @@ namespace Empiria.Land.Registration.UseCases {
 
       var instrumentRecording = recordingAct.Document;
 
-      Assertion.Ensure(book.Recordings.Contains(bookEntry),
+      Assertion.Require(book.Recordings.Contains(bookEntry),
                        $"Book entry '{bookEntryUID}', does not belong to book '{book.AsText}'.");
 
-      Assertion.Ensure(bookEntry.RecordingActs.Contains(recordingAct),
+      Assertion.Require(bookEntry.RecordingActs.Contains(recordingAct),
                       $"Book entry '{bookEntryUID}', does not contains recording act '{recordingAct.UID}'.");
 
 
@@ -236,7 +236,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var bookEntry = instrumentRecordings.Find(x => x.UID == bookEntryUID);
 
-      Assertion.Ensure(bookEntry,
+      Assertion.Require(bookEntry,
             $"Book recording entry '{bookEntryUID}', does not belong to instrument recording '{instrumentRecordingUID}'.");
 
       bookEntry.Delete();

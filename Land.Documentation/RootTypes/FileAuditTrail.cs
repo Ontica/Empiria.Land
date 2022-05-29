@@ -54,7 +54,7 @@ namespace Empiria.Land.Documentation {
     public static void LogException(string exceptionText) {
       var auditTrail = FileAuditTrail.GetInstance();
 
-      Assertion.Ensure(auditTrail.isRunning, "FileAuditTrail is not running. Please start it first.");
+      Assertion.Require(auditTrail.isRunning, "FileAuditTrail is not running. Please start it first.");
 
       auditTrail.AddLog(exceptionText.Replace("\n", Environment.NewLine));
     }
@@ -64,7 +64,7 @@ namespace Empiria.Land.Documentation {
                                     string message, string fullTextToLog) {
       var auditTrail = FileAuditTrail.GetInstance();
 
-      Assertion.Ensure(auditTrail.isRunning, "FileAuditTrail is not running. Please start it first.");
+      Assertion.Require(auditTrail.isRunning, "FileAuditTrail is not running. Please start it first.");
 
       DataServices.WriteImageProcessingLogException(image, message, exception);
 
@@ -75,7 +75,7 @@ namespace Empiria.Land.Documentation {
     public static void LogOperation(DocumentImageSet imageSet, string message, string fullTextToLog) {
       var auditTrail = FileAuditTrail.GetInstance();
 
-      Assertion.Ensure(auditTrail.isRunning, "FileAuditTrail is not running. Please start it first.");
+      Assertion.Require(auditTrail.isRunning, "FileAuditTrail is not running. Please start it first.");
 
       DataServices.WriteImageProcessingLog(imageSet, message);
 
@@ -87,7 +87,7 @@ namespace Empiria.Land.Documentation {
     public static void LogText(string text) {
       var auditTrail = FileAuditTrail.GetInstance();
 
-      Assertion.Ensure(auditTrail.isRunning, "FileAuditTrail is not running. Please start it first.");
+      Assertion.Require(auditTrail.isRunning, "FileAuditTrail is not running. Please start it first.");
 
       auditTrail.AddLog(text.Replace("\n", Environment.NewLine));
     }

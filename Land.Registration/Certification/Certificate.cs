@@ -294,8 +294,8 @@ namespace Empiria.Land.Certification {
 
 
     public void Cancel() {
-      Assertion.Ensure(this.Status == CertificateStatus.Closed,
-                      "The certificate is not closed so it can't be canceled. Use delete instead.");
+      Assertion.Require(this.Status == CertificateStatus.Closed,
+          "The certificate is not closed so it can't be canceled. Use delete instead.");
 
       this.UserNotes += "Cancelado por " + EmpiriaUser.Current.AsContact().Alias +
                         " el " + DateTime.Now.ToShortDateString() + " a las " +
@@ -307,7 +307,7 @@ namespace Empiria.Land.Certification {
 
 
     public void Close() {
-      Assertion.Ensure(this.Status == CertificateStatus.Pending,
+      Assertion.Require(this.Status == CertificateStatus.Pending,
                       "This certificate can't be closed. It's not in pending status.");
 
       this.IssueTime = DateTime.Now;
@@ -319,7 +319,7 @@ namespace Empiria.Land.Certification {
 
 
     public void Delete() {
-      Assertion.Ensure(this.Status == CertificateStatus.Pending,
+      Assertion.Require(this.Status == CertificateStatus.Pending,
                       "This certificate can't be deleted. It's not in pending status.");
 
       this.UserNotes += "Eliminado por " + EmpiriaUser.Current.AsContact().Alias +
@@ -411,11 +411,11 @@ namespace Empiria.Land.Certification {
 
 
     public void Open() {
-      Assertion.Ensure(this.Status == CertificateStatus.Closed ||
-                       this.Status == CertificateStatus.Canceled ||
-                       this.Status == CertificateStatus.Deleted,
-                      "This certificate can't be opened. It's not in closed, " +
-                      "deleted or canceled status.");
+      Assertion.Require(this.Status == CertificateStatus.Closed ||
+                        this.Status == CertificateStatus.Canceled ||
+                        this.Status == CertificateStatus.Deleted,
+                        "This certificate can't be opened. It's not in closed, " +
+                        "deleted or canceled status.");
 
       this.UserNotes += "Abierto por " + EmpiriaUser.Current.AsContact().Alias +
                         " el " + DateTime.Now.ToShortDateString() + " a las " +

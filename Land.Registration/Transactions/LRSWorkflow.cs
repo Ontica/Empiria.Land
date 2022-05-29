@@ -149,7 +149,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     internal void Delete() {
 
-      Assertion.Ensure(this.CanBeDeleted, "This transaction can not be deleted.");
+      Assertion.Require(this.CanBeDeleted, "This transaction can not be deleted.");
 
       this.Close(LRSTransactionStatus.Deleted,
             $"Deleted by user {ExecutionServer.CurrentIdentity.User.FullName} on {DateTime.Now}.");
@@ -159,7 +159,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public void DeliveredElectronicallyToAgency() {
 
-      Assertion.Ensure(this.IsReadyForDeliveryOrReturn,
+      Assertion.Require(this.IsReadyForDeliveryOrReturn,
         $"Transaction {_transaction.UID} is not ready to be electronically delivered to the agency.");
 
       if (this.CurrentStatus == LRSTransactionStatus.ToDeliver) {

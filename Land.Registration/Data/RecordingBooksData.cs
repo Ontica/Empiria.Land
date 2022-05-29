@@ -194,7 +194,7 @@ namespace Empiria.Land.Data {
 
 
     static internal void WriteRecording(PhysicalRecording o) {
-      Assertion.Ensure(o.MainDocument.Id > 0,
+      Assertion.Require(o.MainDocument.Id > 0,
                        "Wrong data for physical recording. MainDocument was missed.");
 
       var op = DataOperation.Parse("writeLRSPhysicalRecording", o.Id, o.UID, o.RecordingBook.Id,

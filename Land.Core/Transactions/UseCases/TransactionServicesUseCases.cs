@@ -37,12 +37,12 @@ namespace Empiria.Land.Transactions.UseCases {
 
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
-      Assertion.Ensure(transaction.ControlData.CanEditServices,
+      Assertion.Require(transaction.ControlData.CanEditServices,
                        $"Can not delete services for transaction '{transactionUID}'.");
 
       LRSTransactionItem item = transaction.Items.Find((x) => x.UID == requestedServiceUID);
 
-      Assertion.Ensure(item,
+      Assertion.Require(item,
           $"Transaction {transactionUID} do not have a service with uid '{requestedServiceUID}'.");
 
       transaction.RemoveItem(item);
@@ -56,10 +56,10 @@ namespace Empiria.Land.Transactions.UseCases {
     public async Task<TransactionDto> CancelPaymentOrder(string transactionUID) {
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
-      Assertion.Ensure(transaction.HasPaymentOrder,
+      Assertion.Require(transaction.HasPaymentOrder,
                 $"Transaction '{transactionUID}' has not a payment order.");
 
-      Assertion.Ensure(transaction.ControlData.CanCancelPaymentOrder,
+      Assertion.Require(transaction.ControlData.CanCancelPaymentOrder,
             "The payment order can not be canceled because business rules restrict it, " +
             "or the user account does not has enough privileges.");
 
@@ -72,10 +72,10 @@ namespace Empiria.Land.Transactions.UseCases {
     public async Task<TransactionDto> GeneratePaymentOrder(string transactionUID) {
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
-      Assertion.Ensure(!transaction.HasPaymentOrder,
+      Assertion.Require(!transaction.HasPaymentOrder,
           $"A payment order has already been generated for transaction '{transactionUID}'.");
 
-      Assertion.Ensure(transaction.ControlData.CanGeneratePaymentOrder,
+      Assertion.Require(transaction.ControlData.CanGeneratePaymentOrder,
           "The payment order can not be generated because business rules restrict it, " +
           "or the user account does not has enough privileges.");
 
@@ -97,7 +97,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
-      Assertion.Ensure(transaction.ControlData.CanEditServices,
+      Assertion.Require(transaction.ControlData.CanEditServices,
                  $"Can not request services on transaction '{transactionUID}'.");
 
       var connector = new PaymentServicesConnector();
@@ -120,7 +120,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
-      Assertion.Ensure(transaction.ControlData.CanEditPayment,
+      Assertion.Require(transaction.ControlData.CanEditPayment,
                        $"Can not set payment for transaction '{transactionUID}'.");
 
       //Assertion.Assert(transaction.PaymentOrder.Total == 0 ||

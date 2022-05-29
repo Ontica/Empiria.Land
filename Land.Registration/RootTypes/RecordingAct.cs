@@ -39,7 +39,7 @@ namespace Empiria.Land.Registration {
       Assertion.Require(recordingActType, "recordingActType");
       Assertion.Require(document, "document");
 
-      Assertion.Ensure(!document.IsEmptyInstance, "document can't be the empty instance.");
+      Assertion.Require(!document.IsEmptyInstance, "document can't be the empty instance.");
 
       this.Document = document;
     }
@@ -51,7 +51,7 @@ namespace Empiria.Land.Registration {
       Assertion.Require(document, "document");
       Assertion.Require(physicalRecording, "physicalRecording");
 
-      Assertion.Ensure(!document.IsEmptyInstance, "document can't be the empty instance.");
+      Assertion.Require(!document.IsEmptyInstance, "document can't be the empty instance.");
 
       this.Document = document;
       this.PhysicalRecording = physicalRecording;
@@ -69,9 +69,9 @@ namespace Empiria.Land.Registration {
       Assertion.Require(amendmentOf, "amendmentOf");
       Assertion.Require(physicalRecording, "physicalRecording");
 
-      Assertion.Ensure(!document.IsEmptyInstance, "document can't be the empty instance.");
-      Assertion.Ensure(!document.IsNew, "document can't be a new instance.");
-      Assertion.Ensure(!amendmentOf.IsNew, "amendmentOf can't be a new instance.");
+      Assertion.Require(!document.IsEmptyInstance, "document can't be the empty instance.");
+      Assertion.Require(!document.IsNew, "document can't be a new instance.");
+      Assertion.Require(!amendmentOf.IsNew, "amendmentOf can't be a new instance.");
 
       RecordingAct recordingAct = recordingActType.CreateInstance();
       recordingAct.PhysicalRecording = physicalRecording;
@@ -552,8 +552,8 @@ namespace Empiria.Land.Registration {
     public void RemoveParty(RecordingActParty party) {
       Assertion.Require(party, "party");
 
-      Assertion.Ensure(this.GetParties().Exists(x => x.UID == party.UID),
-                       $"Party {party.UID} do not belong to this recording act.");
+      Assertion.Require(this.GetParties().Exists(x => x.UID == party.UID),
+                        $"Party {party.UID} do not belong to this recording act.");
 
       party.Delete();
     }

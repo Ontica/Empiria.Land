@@ -591,10 +591,10 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     public void CancelPayment() {
-      Assertion.Ensure(this.HasPayment,
+      Assertion.Require(this.HasPayment,
                        $"There are not any registered payments for transaction '{this.UID}'.");
 
-      Assertion.Ensure(this.ControlData.CanCancelPayment,
+      Assertion.Require(this.ControlData.CanCancelPayment,
                        $"Can not cancel the payment for transaction '{this.UID}'.");
 
       var payment = this.Payments[0];
@@ -651,12 +651,12 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public void AttachDocument(RecordingDocument documentToAttach) {
-      Assertion.Ensure(!this.IsEmptyInstance && !this.IsNew,
+      Assertion.Require(!this.IsEmptyInstance && !this.IsNew,
                        "Document can't be attached to a new or empty transaction.");
-      Assertion.Ensure(!documentToAttach.IsEmptyInstance, "Attached documents can't be the empty instance.");
-      Assertion.Ensure(this.Document.IsEmptyInstance ||
-                       documentToAttach.Equals(this.Document),
-                       "Transaction's document should be empty in order to be changed.");
+      Assertion.Require(!documentToAttach.IsEmptyInstance, "Attached documents can't be the empty instance.");
+      Assertion.Require(this.Document.IsEmptyInstance ||
+                        documentToAttach.Equals(this.Document),
+                        "Transaction's document should be empty in order to be changed.");
 
       /// ToDo: Should be a DB transactional op
       documentToAttach.PresentationTime = this.PresentationTime;
@@ -671,11 +671,11 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public void RemoveDocument() {
-      Assertion.Ensure(!this.IsEmptyInstance && !this.IsNew,
+      Assertion.Require(!this.IsEmptyInstance && !this.IsNew,
                        "Document can't be detached from a new or empty transaction.");
-      Assertion.Ensure(!this.Document.IsEmptyInstance,
+      Assertion.Require(!this.Document.IsEmptyInstance,
                        "Document can't be removed because it's the empty instance.");
-      Assertion.Ensure(this.Document.RecordingActs.Count == 0,
+      Assertion.Require(this.Document.RecordingActs.Count == 0,
                        "Document has recording acts. It's not possible to delete it.");
 
       var tempDocument = this.Document;
@@ -811,7 +811,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.TransactionType = LRSTransactionType.Parse(fields.TypeUID);
       this.DocumentType = LRSDocumentType.Parse(fields.SubtypeUID);
 
-      Assertion.Ensure(this.TransactionType.GetDocumentTypes().Contains(this.DocumentType),
+      Assertion.Require(this.TransactionType.GetDocumentTypes().Contains(this.DocumentType),
             $"The transaction subtype '{this.TransactionType.Name}' is not related with the " +
             $"given transaction type '{this.DocumentType.Name}'.");
 
@@ -819,6 +819,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.RecorderOffice = RecorderOffice.Parse(fields.FilingOfficeUID);
 
       this.RequestedBy = EmpiriaString.TrimAll(fields.RequestedBy);
+
       Assertion.Require(RequestedBy, "fields.RequestedBy");
 
       this.DocumentDescriptor = EmpiriaString.TrimAll(fields.InstrumentDescriptor);
@@ -914,7 +915,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     private void EnsureCanEditServices() {
-      Assertion.Ensure(this.ControlData.CanEditServices,
+      Assertion.Require(this.ControlData.CanEditServices,
           "The transaction is in a status that doesn't permit aggregate new services or products," +
           "or the user doesn't have enough privileges.");
 

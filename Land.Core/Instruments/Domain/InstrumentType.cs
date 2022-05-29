@@ -30,7 +30,7 @@ namespace Empiria.Land.Instruments {
     static internal new InstrumentType Parse(string typeName) => InstrumentType.Parse<InstrumentType>(typeName);
 
     static internal InstrumentType Parse(InstrumentTypeEnum instrumentTypeName) {
-      Assertion.Ensure(instrumentTypeName != InstrumentTypeEnum.All,
+      Assertion.Require(instrumentTypeName != InstrumentTypeEnum.All,
                       "instrumentTypeName can not be equal to 'All'.");
 
       var fullTypeName = $"ObjectTypeInfo.LegalInstrument.{instrumentTypeName}";

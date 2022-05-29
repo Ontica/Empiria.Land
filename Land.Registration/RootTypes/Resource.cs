@@ -373,7 +373,8 @@ namespace Empiria.Land.Registration {
         this.PostingTime = DateTime.Now;
       }
 
-      Assertion.Ensure(this.UID.Length != 0, "Property UniqueIdentifier can't be an empty string.");
+      Assertion.Ensure(this.UID.Length != 0,
+                       "Property UniqueIdentifier can't be an empty string.");
     }
 
 
@@ -409,7 +410,8 @@ namespace Empiria.Land.Registration {
     #region Private methods
 
     private void AssignUID() {
-      Assertion.Ensure(this._propertyUID.Length == 0, "Property has already assigned a UniqueIdentifier.");
+      Assertion.Require(this._propertyUID.Length == 0,
+                        "Property has already assigned a UniqueIdentifier.");
 
       while (true) {
         string temp = this.GenerateResourceUID();
@@ -419,7 +421,8 @@ namespace Empiria.Land.Registration {
         }
       } // while
 
-      Assertion.Ensure(this._propertyUID.Length != 0, "Property UniqueIdentifier has not been generated.");
+      Assertion.Ensure(this._propertyUID.Length != 0,
+                      "Property UniqueIdentifier has not been generated.");
     }
 
     private bool HasCompleteInformation() {

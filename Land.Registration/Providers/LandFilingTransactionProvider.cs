@@ -77,7 +77,7 @@ namespace Empiria.Land.Providers {
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      Assertion.Ensure(transaction, nameof(transaction));
+      Assertion.Require(transaction, nameof(transaction));
 
       if (transaction.Workflow.IsReadyForDeliveryOrReturn) {
         transaction.Workflow.DeliveredElectronicallyToAgency();
@@ -90,7 +90,7 @@ namespace Empiria.Land.Providers {
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      Assertion.Ensure(transaction, nameof(transaction));
+      Assertion.Require(transaction, nameof(transaction));
 
       if (!transaction.Workflow.IsFinished) {
         return new FixedList<EFilingDocument>();
@@ -130,7 +130,7 @@ namespace Empiria.Land.Providers {
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      Assertion.Ensure(transaction, nameof(transaction));
+      Assertion.Require(transaction, nameof(transaction));
 
       return transaction;
     }
@@ -141,7 +141,7 @@ namespace Empiria.Land.Providers {
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      Assertion.Ensure(transaction, nameof(transaction));
+      Assertion.Require(transaction, nameof(transaction));
 
       transaction.SetPayment(receiptNo, transaction.Items.TotalFee.Total);
 
@@ -165,7 +165,7 @@ namespace Empiria.Land.Providers {
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      Assertion.Ensure(transaction, nameof(transaction));
+      Assertion.Require(transaction, nameof(transaction));
 
       transaction.Workflow.Receive("Ingresado automáticamente desde el sistema de notarías y grandes usuarios.");
 
@@ -178,7 +178,7 @@ namespace Empiria.Land.Providers {
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      Assertion.Ensure(transaction, nameof(transaction));
+      Assertion.Require(transaction, nameof(transaction));
 
       var paymentOrder = ((IPayable) transaction).TryGetFormerPaymentOrderData();
 
@@ -193,11 +193,11 @@ namespace Empiria.Land.Providers {
     public IFilingTransaction UpdateTransaction(EFilingRequest filingRequest) {
       Assertion.Require(filingRequest, "filingRequest");
 
-      Assertion.Ensure(filingRequest.HasTransaction, "filingRequest.HasTransaction must be true.");
+      Assertion.Require(filingRequest.HasTransaction, "filingRequest.HasTransaction must be true.");
 
       var transaction = LRSTransaction.TryParse(filingRequest.Transaction.UID, true);
 
-      Assertion.Ensure(transaction, nameof(transaction));
+      Assertion.Require(transaction, nameof(transaction));
 
       transaction.RequestedBy = filingRequest.RequestedBy.Name;
 

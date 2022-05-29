@@ -31,7 +31,7 @@ namespace Empiria.Land.Instruments {
     static public new IssuerType Parse(string typeName) => ObjectTypeInfo.Parse<IssuerType>(typeName);
 
     static internal IssuerType Parse(IssuerTypeEnum issuerTypeName) {
-      Assertion.Ensure(issuerTypeName != IssuerTypeEnum.All,
+      Assertion.Require(issuerTypeName != IssuerTypeEnum.All,
                        "issuerTypeName can not be equal to 'All'.");
 
       var fullTypeName = $"ObjectTypeInfo.LegalInstrumentIssuer.{issuerTypeName}";

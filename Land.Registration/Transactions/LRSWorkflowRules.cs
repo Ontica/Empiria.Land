@@ -232,8 +232,8 @@ namespace Empiria.Land.Registration.Transactions {
       }
       var transaction = document.GetTransaction();
 
-      Assertion.Ensure(!transaction.IsEmptyInstance,
-                       "Transaction can't be the empty instance, because the document is not historic.");
+      Assertion.Require(!transaction.IsEmptyInstance,
+                        "Transaction can't be the empty instance, because the document is not historic.");
 
       if (!(transaction.Workflow.CurrentStatus == LRSTransactionStatus.Recording ||
             transaction.Workflow.CurrentStatus == LRSTransactionStatus.Elaboration ||

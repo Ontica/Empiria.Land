@@ -243,8 +243,8 @@ namespace Empiria.Land.Registration {
       Assertion.Require(document, "document");
       Assertion.Require(recordingNumber, "recordingNumber");
 
-      Assertion.Ensure(!document.IsEmptyInstance, "document can't be the empty instance.");
-      Assertion.Ensure(!document.IsEmptyDocumentType, "document can't be the special empty document.");
+      Assertion.Require(!document.IsEmptyInstance, "document can't be the empty instance.");
+      Assertion.Require(!document.IsEmptyDocumentType, "document can't be the special empty document.");
 
       return new PhysicalRecording(this, document, RecordingBook.FormatRecordingNumber(recordingNumber));
     }

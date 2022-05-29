@@ -73,8 +73,8 @@ namespace Empiria.Land.UI {
       }
 
       if (this.IsHistoricEdition) {
-        Assertion.Ensure(this.Transaction.IsEmptyInstance,
-                        "For historic documents, transaction should be the empty instance.");
+        Assertion.Require(this.Transaction.IsEmptyInstance,
+                          "For historic documents, transaction should be the empty instance.");
       }
     }
 

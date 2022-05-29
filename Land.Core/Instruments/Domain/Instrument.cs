@@ -227,7 +227,7 @@ namespace Empiria.Land.Instruments {
 
 
     private void CreateRecordingDocument() {
-      Assertion.Ensure(_recordingDocument == null, "RecordingDocument already exists.");
+      Assertion.Require(_recordingDocument == null, "RecordingDocument already exists.");
 
       _recordingDocument = RecordingDocument.CreateFromInstrument(this.Id, InstrumentType.Id, this.Kind);
 

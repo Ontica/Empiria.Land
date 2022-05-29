@@ -40,11 +40,11 @@ namespace Empiria.Land.Pages {
 		private void Initialize() {
 			transaction = GetTransaction();
 
-			Assertion.Ensure(!transaction.Document.IsEmptyInstance, "Transaction does not have a registration document.");
+			Assertion.Require(!transaction.Document.IsEmptyInstance, "Transaction does not have a registration document.");
 
 			recordings = PhysicalRecording.GetDocumentRecordings(transaction.Document.Id);
 
-			Assertion.Ensure(recordings.Count > 0, "Document does not have recordings.");
+			Assertion.Require(recordings.Count > 0, "Document does not have recordings.");
 
 			int recordingId = int.Parse(Request.QueryString["id"]);
 			if (recordingId != -1) {

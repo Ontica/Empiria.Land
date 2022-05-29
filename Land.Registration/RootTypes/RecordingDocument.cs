@@ -340,7 +340,7 @@ namespace Empiria.Land.Registration {
     internal int AddRecordingAct(RecordingAct recordingAct) {
       Assertion.Require(recordingAct, "recordingAct");
 
-      Assertion.Ensure(this.IsHistoricDocument || !this.IsClosed,
+      Assertion.Require(this.IsHistoricDocument || !this.IsClosed,
                        "Recording acts can't be added to closed documents.");
 
       recordingActList.Value.Add(recordingAct);
@@ -354,19 +354,18 @@ namespace Empiria.Land.Registration {
                                            PhysicalRecording physicalRecording = null) {
       Assertion.Require(resource, "resource");
 
-      Assertion.Ensure(!resource.IsEmptyInstance, "Resource can't be an empty instance.");
+      Assertion.Require(!resource.IsEmptyInstance, "Resource can't be an empty instance.");
 
       amendmentOf = amendmentOf ?? RecordingAct.Empty;
       physicalRecording = physicalRecording ?? PhysicalRecording.Empty;
 
-      Assertion.Ensure(!this.IsEmptyInstance, "Document can't be the empty instance.");
+      Assertion.Require(!this.IsEmptyInstance, "Document can't be the empty instance.");
 
-      Assertion.Ensure(this.IsHistoricDocument || !this.IsClosed,
+      Assertion.Require(this.IsHistoricDocument || !this.IsClosed,
                        "Recording acts can't be added to closed documents");
 
-      Assertion.Ensure(recordingActType, "recordingActType");
-      Assertion.Ensure(amendmentOf, "amendmentOf");
-
+      Assertion.Require(recordingActType, "recordingActType");
+      Assertion.Require(amendmentOf, "amendmentOf");
 
 
       if (this.IsNew) {
@@ -381,20 +380,23 @@ namespace Empiria.Land.Registration {
     }
 
     internal void SetAuthorizationTime(DateTime authorizationTime) {
-      Assertion.Ensure(this.IsNew || this.IsHistoricDocument,
-                      "AutorizationTime can be set only over new or historic documents.");
+      Assertion.Require(this.IsNew || this.IsHistoricDocument,
+         "AutorizationTime can be set only over new or historic documents.");
+
       this.AuthorizationTime = authorizationTime;
     }
 
+
     public void SetDates(DateTime presentationTime, DateTime authorizationTime) {
-      Assertion.Ensure(this.IsHistoricDocument,
-                "Autorization and Presentation dates can be set only over new or historic documents.");
-      Assertion.Ensure(!this.IsClosed,
-          "Autorization and Presentation dates can be set only over opened documents.");
+      Assertion.Require(this.IsHistoricDocument,
+        "Autorization and Presentation dates can be set only over new or historic documents.");
+      Assertion.Require(!this.IsClosed,
+        "Autorization and Presentation dates can be set only over opened documents.");
 
       if (!this.HasTransaction) {
         this.PresentationTime = presentationTime;
       }
+
       this.AuthorizationTime = authorizationTime;
     }
 
@@ -538,11 +540,11 @@ namespace Empiria.Land.Registration {
     public void RemoveRecordingAct(RecordingAct recordingAct) {
       Assertion.Require(recordingAct, "recordingAct");
 
-      Assertion.Ensure(this.IsHistoricDocument || !this.IsClosed,
+      Assertion.Require(this.IsHistoricDocument || !this.IsClosed,
                        "Recording acts can't be removed from closed documents.");
 
-      Assertion.Ensure(recordingAct.Document.Equals(this),
-                       "The recording act doesn't belong to this document.");
+      Assertion.Require(recordingAct.Document.Equals(this),
+                        "The recording act doesn't belong to this document.");
 
       recordingAct.Delete();
       recordingActList.Value.Remove(recordingAct);
@@ -558,8 +560,8 @@ namespace Empiria.Land.Registration {
       }
       PhysicalRecording historicRecording = this.RecordingActs[0].PhysicalRecording;
 
-      Assertion.Ensure(!historicRecording.IsEmptyInstance,
-                      "historicRecording can't be the empty instance.");
+      Assertion.Require(!historicRecording.IsEmptyInstance,
+                        "historicRecording can't be the empty instance.");
 
       return historicRecording;
     }
