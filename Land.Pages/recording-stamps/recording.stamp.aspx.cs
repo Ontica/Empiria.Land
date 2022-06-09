@@ -475,11 +475,14 @@ namespace Empiria.Land.WebApp {
 
     private string GetNoPropertyActText(RecordingAct recordingAct, int index) {
       const string template =
-            "{INDEX}.- <b style='text-transform:uppercase'>{RECORDING.ACT}</b><br/>";
+          "{INDEX}.- <b style='text-transform:uppercase'>{RECORDING.ACT}</b> " +
+          "(folio electrónico <b>{RESOURCE.UID}</b>)<br/>";
 
       string x = template.Replace("{INDEX}", index.ToString());
 
-      return x.Replace("{RECORDING.ACT}", recordingAct.DisplayName);
+      x = x.Replace("{RECORDING.ACT}", recordingAct.DisplayName);
+
+      return x.Replace("{RESOURCE.UID}", recordingAct.Resource.UID);
     }
 
 

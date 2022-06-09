@@ -177,7 +177,7 @@
             <img style="margin-right:-12pt;margin-left:-12pt;margin-top:-12pt" alt="" title=""
                  src="../user.controls/qrcode.aspx?size=120&#38;data=<%=SEARCH_SERVICES_SERVER_BASE_ADDRESS%>/?type=resource%26uid=<%=base.UniqueInvolvedResource.UID%>%26hash=<%=base.UniqueInvolvedResource.QRCodeSecurityHash()%>" />
             <div style="margin-top:-12pt;font-size:7pt;white-space:nowrap">
-              Consultar folio real/predio<br />
+              Consultar folio electrónico<br />
               <b><%=base.UniqueInvolvedResource.UID%></b>
             </div>
             <% } %>
