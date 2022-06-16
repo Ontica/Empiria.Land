@@ -176,7 +176,7 @@ namespace Empiria.Land.Registration {
 
     public override void AssertCanBeClosed() {
       Assertion.Require(this.Kind,
-          $"Se requiere proporcionar la información del predio con folio real {this.UID}.");
+          $"Se requiere proporcionar la información del predio con folio electrónico {this.UID}.");
       Assertion.Require(!this.RecorderOffice.IsEmptyInstance,
                       "Predio " + this.UID +
                       ":\nSe requiere proporcionar el Distrito judicial al que pertenece el predio.");

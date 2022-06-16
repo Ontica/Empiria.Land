@@ -31,7 +31,7 @@ namespace Empiria.Land.WebApi {
     private static readonly string PRINT_SERVICES_SERVER_BASE_ADDRESS =
                                             ConfigurationData.Get<string>("PrintServicesServerBaseAddress");
 
-    private readonly DateTime hashCodeValidationStartDate = DateTime.Parse("2016-11-24");
+    private readonly DateTime hashCodeValidationStartDate = DateTime.Parse("2020-01-01");
     private readonly DateTime certificateHashCodeValidationStartDate = DateTime.Parse("2020-01-01");
 
     #region Public APIs
@@ -151,14 +151,14 @@ namespace Empiria.Land.WebApi {
 
         if (resource == null && hash.Length == 0) {
           throw new ResourceNotFoundException("Land.Resource.NotFound",
-                                              "No tenemos registrado ningún predio o asociación con folio real '{0}'.\n" +
+                                              "No tenemos registrado ningún predio o asociación con folio electrónico '{0}'.\n" +
                                               "Favor de revisar la información proporcionada.",
                                               resourceUID);
 
         } else if (resource == null && hash.Length != 0) {
           throw new ResourceNotFoundException("Land.Resource.InvalidQRCode",
                                               "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                              "referencia a un predio o asociación con folio real '{0}' que NO está " +
+                                              "referencia a un predio o asociación con folio electrónico '{0}' que NO está " +
                                               "registrado en nuestros archivos.\n\n" +
                                               "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
                                               "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
@@ -167,7 +167,7 @@ namespace Empiria.Land.WebApi {
         } else if (resource != null && hash.Length != 0 && hash != resource.QRCodeSecurityHash()) {
           throw new ResourceNotFoundException("Land.Resource.InvalidQRCode",
                                               "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                              "referencia al predio o asociación con folio real '{0}' que sí tenemos registrado " +
+                                              "referencia al predio o asociación con folio electrónico '{0}' que sí tenemos registrado " +
                                               "en nuestros archivos pero el código de validación del QR no es correcto.\n\n" +
                                               "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
                                               "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
@@ -330,8 +330,8 @@ namespace Empiria.Land.WebApi {
         propertyBag.Add(new PropertyBagItem("Partida origen del predio en libros físicos", String.Empty, "section"));
         propertyBag.Add(new PropertyBagItem("Partida", physicalRecording.AsText));
         propertyBag.Add(new PropertyBagItem("Nota importante","Los datos de la partida sólo se muestran con fines informativos.<br/>" +
-                                            "A partir del año 2015 todos los predios se deben identificar mediante su folio real, " +
-                                            "no con la partida que tenían en libros físicos."));
+                                            "A partir de junio del año 2022, todos los predios se deben identificar mediante su folio electrónico, " +
+                                            "no con el número de inscripción que tenían en libros físicos."));
       }
 
       return propertyBag;
@@ -359,7 +359,7 @@ namespace Empiria.Land.WebApi {
 
       var uniqueResource = document.GetUniqueInvolvedResource();
       if (!uniqueResource.Equals(Resource.Empty) && uniqueResource is RealEstate) {
-        propertyBag.Add(new PropertyBagItem("Documento registral expedido sobre el folio real", String.Empty, "section"));
+        propertyBag.Add(new PropertyBagItem("Documento registral expedido sobre el folio electrónico", String.Empty, "section"));
         propertyBag.Add(new PropertyBagItem("Folio real", uniqueResource.UID + "<br/>" +
                                             GetResourceLink(uniqueResource.UID), "enhanced-text"));
 
@@ -620,7 +620,7 @@ namespace Empiria.Land.WebApi {
 
     private string GetResourceLink(string resourceUID) {
       return $"<a href='{SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?type=resource&uid={resourceUID}'>" +
-             $"Consultar este folio real</a>";
+             $"Consultar este folio electrónico</a>";
     }
 
 

@@ -88,7 +88,7 @@ namespace Empiria.Land.UI {
                 "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
                    "{{RESOURCE.UID}}</a></td>" +
              "<td><a href='javascript:copyToClipboard(\"{{RESOURCE.UID}}\");'>" +
-                 "<img src='../themes/default/bullets/copy.gif' title='Copiar el folio real'></a></td>" +
+                 "<img src='../themes/default/bullets/copy.gif' title='Copiar el folio electrónico'></a></td>" +
              "<td>{{REGISTERED.BY}}</td>" +
            "</tr>";
 

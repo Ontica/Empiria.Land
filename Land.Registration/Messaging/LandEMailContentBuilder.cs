@@ -34,7 +34,7 @@ namespace Empiria.Land.Messaging {
     internal EMailContent BuildForRegisteredForResourceChanges(Resource resource) {
       var body = GetTemplate(NotificationType.SubscribedForResourceChanges);
 
-      return new EMailContent($"El predio con folio real {resource.UID} " +
+      return new EMailContent($"El predio con folio electrónico {resource.UID} " +
                               $"ha sido registrado para su monitoreo", body);
     }
 
@@ -43,7 +43,7 @@ namespace Empiria.Land.Messaging {
       var body = GetTemplate(NotificationType.ResourceWasChanged);
 
       return new EMailContent($"Se han registrado nuevos movimientos " +
-                              $"en el predio con folio real {resource.UID}", body);
+                              $"en el predio con folio electrónico {resource.UID}", body);
     }
 
 

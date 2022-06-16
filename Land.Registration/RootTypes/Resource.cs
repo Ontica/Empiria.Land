@@ -318,10 +318,10 @@ namespace Empiria.Land.Registration {
       }
 
       Assertion.RequireFail(
-        $"El acto jurídico {newRecordingActType.DisplayName} no puede ser inscrito debido a que el folio real '{this.UID}' " +
+        $"El acto jurídico {newRecordingActType.DisplayName} no puede ser inscrito debido a que el folio electrónico '{this.UID}' " +
         $"no tiene registrado previamente un acto de: '{chainedRecordingActType.DisplayName}'.\n\n" +
         "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
-        "Favor de revisar la historia del folio real involucrado. Es posible que el trámite donde " +
+        "Favor de revisar la historia del folio electrónico involucrado. Es posible que el trámite donde " +
         "viene el acto faltante aún no haya sido procesado o que el documento esté abierto.");
     }
 
@@ -340,7 +340,7 @@ namespace Empiria.Land.Registration {
                                                      x.Document.IsClosed);
 
       //if (wrongPrelation) {
-      //  Assertion.AssertFail("El folio real '{0}' tiene registrado cuando menos otro acto jurídico " +
+      //  Assertion.AssertFail("El folio electrónico '{0}' tiene registrado cuando menos otro acto jurídico " +
       //                       "con una prelación posterior a la fecha de presentación de este documento.\n\n" +
       //                       "Por lo anterior, no es posible agregarlo en este documento.\n\n" +
       //                       "Favor de revisar la historia del predio.", this.UID);
@@ -350,12 +350,12 @@ namespace Empiria.Land.Registration {
 
     internal void AssertIsStillAlive(RecordingDocument document) {
       Assertion.Require(this.Status != RecordableObjectStatus.Deleted,
-                       $"El folio real '{this.UID}' está marcado como eliminado.");
+                       $"El folio electrónico '{this.UID}' está marcado como eliminado.");
 
       var tract = this.Tract.GetRecordingActs();
       if (0 != tract.CountAll((x) => x.RecordingActType.RecordingRule.IsEndingAct &&
                                      x.Document.PresentationTime < document.PresentationTime)) {
-        Assertion.RequireFail($"El folio real '{this.UID}' ya fue cancelado, fusionado o dividido en su totalidad. " +
+        Assertion.RequireFail($"El folio electrónico '{this.UID}' ya fue cancelado, fusionado o dividido en su totalidad. " +
                              "Ya no es posible agregarlo en este documento.");
       }
     }

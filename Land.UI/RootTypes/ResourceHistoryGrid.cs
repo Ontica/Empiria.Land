@@ -207,7 +207,7 @@ namespace Empiria.Land.UI {
 
           return temp;
         } else {
-          var temp = "Sobre <b>" + realEstate.PartitionNo + "</b> con folio real " +
+          var temp = "Sobre <b>" + realEstate.PartitionNo + "</b> con folio electrónico " +
                       "<a href='javascript:doOperation(\"displayResourcePopupWindow\", {{RESOURCE.ID}}, {{RECORDING.ACT.ID}});'>" +
                       "{{RESOURCE.UID}}</a>";
           temp = temp.Replace("{{RESOURCE.ID}}", realEstate.Id.ToString());

@@ -590,7 +590,7 @@ namespace Empiria.Land.Registration {
       } else {
         Assertion.Require(rule.AppliesTo == RecordingRuleApplication.NoProperty,
                          "El acto jurídico " + this.IndexedName +
-                         " sólo puede aplicarse al folio real de un predio o asociación.");
+                         " sólo puede aplicarse al folio electrónico de un predio o asociación.");
       }
 
       if (!this.PhysicalRecording.IsEmptyInstance) {
@@ -620,7 +620,7 @@ namespace Empiria.Land.Registration {
 
       //if (trappedAct != null) {
       //  Assertion.AssertFail("Este documento no puede ser cerrado, ya que el acto jurídico\n" +
-      //                       "{0} hace referencia al folio real '{1}' que tiene registrado " +
+      //                       "{0} hace referencia al folio electrónico '{1}' que tiene registrado " +
       //                       "movimientos en otro documento que está abierto y que tiene una prelación " +
       //                       "anterior al de este.\n\n" +
       //                       "Primero debe cerrarse dicho documento para evitar que sus actos " +
@@ -643,7 +643,7 @@ namespace Empiria.Land.Registration {
 
       if (wrongPrelation) {
         Assertion.RequireFail("El acto jurídico " + this.IndexedName +
-                             " hace referencia a un folio real al cual se le " +
+                             " hace referencia a un folio electrónico al cual se le " +
                              "emitió un certificado con fecha posterior " +
                              "a la fecha de autorización de este documento.\n\n" +
                              "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
@@ -669,7 +669,7 @@ namespace Empiria.Land.Registration {
 
       //if (wrongPrelation) {
       //  Assertion.AssertFail("El acto jurídico " + this.IndexedName +
-      //                       " hace referencia a un folio real que tiene registrado " +
+      //                       " hace referencia a un folio electrónico que tiene registrado " +
       //                       "cuando menos otro acto jurídico con una prelación posterior " +
       //                       "a la de este documento.\n\n" +
       //                       "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
@@ -972,7 +972,7 @@ namespace Empiria.Land.Registration {
       }
 
       Assertion.RequireFail("El acto jurídico " + this.IndexedName +
-                            " no pude ser inscrito debido a que el folio real no tiene registrado " +
+                            " no pude ser inscrito debido a que el folio electrónico no tiene registrado " +
                             "un acto de: '" + chainedRecordingActType.DisplayName + "'.\n\n" +
                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
                             "Favor de revisar la historia del predio involucrado. Es posible que el trámite donde " +
