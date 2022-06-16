@@ -43,7 +43,7 @@ namespace Empiria.Land.Registration.UseCases {
       return InstrumentRecordingMapper.Map(instrumentRecording);
     }
 
-  
+
     public RecordingActDto GetRecordingAct(string instrumentRecordingUID, string recordingActUID) {
       Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
       Assertion.Require(recordingActUID, "recordingActUID");

@@ -52,7 +52,6 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     }
 
-
     public bool NewPartition {
       get; internal set;
     }

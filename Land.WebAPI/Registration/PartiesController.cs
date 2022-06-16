@@ -30,7 +30,7 @@ namespace Empiria.Land.Registration.WebApi {
 
       using (var usecases = PartiesRegistrationUseCases.UseCaseInteractor()) {
         FixedList<PartyDto> parties = usecases.SearchParties(instrumentRecordingUID,
-                                                            recordingActUID, command);
+                                                             recordingActUID, command);
 
         return new CollectionModel(this.Request, parties);
       }

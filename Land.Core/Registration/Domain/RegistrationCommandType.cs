@@ -43,8 +43,6 @@ namespace Empiria.Land.Registration {
 
     static internal string Name(this RegistrationCommandType commandType) {
       switch (commandType) {
-        case RegistrationCommandType.Undefined:
-          return "La regla de registro no ha sido definida";
 
         case RegistrationCommandType.CreateAssociation:
           return "Sociedad civil a inscibirse por primera vez";
@@ -79,14 +77,17 @@ namespace Empiria.Land.Registration {
         case RegistrationCommandType.CreateRealEstatePartition:
           return "Fracción de predio inscrito con folio real";
 
+        case RegistrationCommandType.CreateRealEstatePartitionForAntecedent:
+          return "Fracción de predio registrado en antecedente";
+
         case RegistrationCommandType.SelectRealEstateAct:
           return "Sobre un acto jurídico de predio con folio real";
 
         case RegistrationCommandType.SelectRealEstateAntecedent:
           return "Predio registrado en antecedente, sin folio real";
 
-        case RegistrationCommandType.CreateRealEstatePartitionForAntecedent:
-          return "Crear fracción de predio registrado en antecedente";
+        case RegistrationCommandType.Undefined:
+          return "La regla de registro no ha sido definida";
 
         default:
           throw Assertion.EnsureNoReachThisCode($"Unhandled registration command type '{commandType}'.");

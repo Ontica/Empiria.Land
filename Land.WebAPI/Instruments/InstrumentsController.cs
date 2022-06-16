@@ -12,6 +12,7 @@ using System.Web.Http;
 using Empiria.WebApi;
 
 using Empiria.Land.Instruments.UseCases;
+using Empiria.Land.Instruments.Adapters;
 
 namespace Empiria.Land.Instruments.WebApi {
 
@@ -25,9 +26,9 @@ namespace Empiria.Land.Instruments.WebApi {
     public SingleObjectModel GetInstrument([FromUri] string instrumentUID) {
 
       using (var usecases = InstrumentUseCases.UseCaseInteractor()) {
-        var instrumentDto = usecases.GetInstrument(instrumentUID);
+        InstrumentDto instrument = usecases.GetInstrument(instrumentUID);
 
-        return new SingleObjectModel(this.Request, instrumentDto);
+        return new SingleObjectModel(this.Request, instrument);
       }
     }
 
