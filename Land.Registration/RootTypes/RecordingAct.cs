@@ -99,8 +99,14 @@ namespace Empiria.Land.Registration {
       return recordingAct;
     }
 
+
     static public RecordingAct Parse(int id) {
       return BaseObject.ParseId<RecordingAct>(id);
+    }
+
+
+    static public RecordingAct Parse(int id, bool reload) {
+      return BaseObject.ParseId<RecordingAct>(id, reload);
     }
 
 

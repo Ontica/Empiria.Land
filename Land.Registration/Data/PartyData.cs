@@ -30,7 +30,7 @@ namespace Empiria.Land.Data {
                    "AND RecActPartyStatus <> 'X'";
 
       return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
-                                                   (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
+                                                   (x) => BaseObject.ParseList<RecordingActParty>(x, true)).ToFixedList();
     }
 
     static public FixedList<RecordingActParty> GetRecordingPartyList(RecordingDocument document, Party party) {
@@ -44,14 +44,14 @@ namespace Empiria.Land.Data {
 
       var operation = DataOperation.Parse(sql);
       return DataReader.GetList<RecordingActParty>(operation, (x) =>
-                                                   BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
+                                                   BaseObject.ParseList<RecordingActParty>(x, true)).ToFixedList();
     }
 
     static public FixedList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
       var op = DataOperation.Parse("qryLRSResourceActiveOwnershipRecordingActParties",
                                    recordingAct.Resource.Id);
 
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<RecordingActParty>(x, true)).ToFixedList();
     }
 
 
@@ -72,7 +72,7 @@ namespace Empiria.Land.Data {
                    "AND PartyOfId <> -1 AND RecActPartyStatus <> 'X'";
 
       return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
-                                                  (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
+                                                  (x) => BaseObject.ParseList<RecordingActParty>(x, true)).ToFixedList();
     }
 
     static public RecordingActParty GetSecondaryParty(RecordingAct recordingAct, Party party) {

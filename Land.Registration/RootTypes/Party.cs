@@ -52,6 +52,10 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<Party>(id);
     }
 
+    static public Party Parse(int id, bool reload) {
+      return BaseObject.ParseId<Party>(id, reload);
+    }
+
 
     static public Party Parse(string uid) {
       return BaseObject.ParseKey<Party>(uid);

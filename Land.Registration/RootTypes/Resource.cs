@@ -33,6 +33,11 @@ namespace Empiria.Land.Registration {
     }
 
 
+    static public Resource Parse(int id, bool reload) {
+      return BaseObject.ParseId<Resource>(id, reload);
+    }
+
+
     static public Resource ParseGuid(string guid) {
       var resource = BaseObject.TryParse<Resource>($"PropertyGUID = '{guid}'");
 

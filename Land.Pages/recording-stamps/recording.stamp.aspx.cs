@@ -48,11 +48,12 @@ namespace Empiria.Land.WebApp {
       isMainDocument = bool.Parse(Request.QueryString["main"] ?? "false");
 
       document = RecordingDocument.TryParse(documentUID, true);
+
       transaction = document.GetTransaction();
 
-      selectedRecordingAct = RecordingAct.Parse(selectedRecordingActId);
-
       document.RefreshRecordingActs();
+
+      selectedRecordingAct = RecordingAct.Parse(selectedRecordingActId);
 
       recordingActs = document.RecordingActs;
 
@@ -236,13 +237,15 @@ namespace Empiria.Land.WebApp {
 
         // If not amendment act, then process it by resource type application
 
-        if (recordingAct.Resource is RealEstate) {
+        var resource = Reload(recordingAct.Resource);
+
+        if (resource is RealEstate) {
           temp = this.GetRealEstateActText(recordingAct, index);
 
-        } else if (recordingAct.Resource is Association) {
-          temp = this.GetAssociationActText(recordingAct, (Association) recordingAct.Resource, index);
+        } else if (resource is Association) {
+          temp = this.GetAssociationActText(recordingAct, (Association) resource, index);
 
-        } else if (recordingAct.Resource is NoPropertyResource) {
+        } else if (resource is NoPropertyResource) {
           temp = this.GetNoPropertyActText(recordingAct, index);
 
         } else {
@@ -258,17 +261,20 @@ namespace Empiria.Land.WebApp {
 
     private string GetPartiesText(RecordingAct recordingAct) {
       const string t = "{PARTY-ROLE}: {PARTY-NAME}<br/>";
-      var parties = recordingAct.GetParties();
+      FixedList<RecordingActParty> parties = recordingAct.GetParties();
 
       var html = string.Empty;
 
       foreach (var party in parties) {
-        var temp = t.Replace("{PARTY-ROLE}", party.PartyRole.Name);
-        temp = temp.Replace("{PARTY-NAME}", party.Party.FullName);
+        var p = Reload(party);
+
+        var temp = t.Replace("{PARTY-ROLE}", p.PartyRole.Name);
+        temp = temp.Replace("{PARTY-NAME}", Reload(p.Party).FullName);
         html += temp;
       }
       return html;
     }
+
 
     private string Decorate(RecordingAct recordingAct, string text) {
       if (this.selectedRecordingAct.IsEmptyInstance) {
@@ -419,6 +425,9 @@ namespace Empiria.Land.WebApp {
       x = x.Replace("{AMENDMENT.ACT}", this.GetAmendmentActTypeDisplayName(recordingAct));
 
       RecordingAct amendedAct = recordingAct.AmendmentOf;
+
+      amendedAct = Reload(amendedAct);
+
       if (amendedAct.IsEmptyInstance) {
         x = x.Replace(" {AMENDMENT.ACT.RECORDING},", " ");
       } else {
@@ -432,7 +441,8 @@ namespace Empiria.Land.WebApp {
         }
       }
 
-      Resource resource = recordingAct.Resource;
+      Resource resource = Reload(recordingAct.Resource);
+
       if (resource is RealEstate) {
         x = x.Replace("{RESOURCE.DATA}", "sobre el bien inmueble con folio electrónico " +
                       this.GetRealEstateTextWithAntecedentAndCadastralKey(recordingAct));
@@ -491,7 +501,7 @@ namespace Empiria.Land.WebApp {
       Assertion.Require(recordingAct.Resource is RealEstate,
                        $"Type mismatch parsing real estate with id {recordingAct.Resource.Id}");
 
-      RealEstate property = (RealEstate) recordingAct.Resource;
+      RealEstate property = (RealEstate) Reload(recordingAct.Resource);
 
       if (!property.IsPartitionOf.IsEmptyInstance &&
            property.IsInTheRankOfTheFirstDomainAct(recordingAct)) {
@@ -661,7 +671,10 @@ namespace Empiria.Land.WebApp {
 
     private string GetRealEstateTextWithAntecedentAndCadastralKey(RecordingAct recordingAct) {
       var domainAntecedent = recordingAct.Resource.Tract.GetRecordingAntecedent(recordingAct);
-      var property = (RealEstate) recordingAct.Resource;
+
+      domainAntecedent = Reload(domainAntecedent);
+
+      var property = (RealEstate) Reload(recordingAct.Resource);
 
       string x = GetRealEstateTextWithCadastralKey(property);
       if (property.IsPartitionOf.IsEmptyInstance && domainAntecedent.Equals(RecordingAct.Empty)) {
@@ -694,18 +707,18 @@ namespace Empiria.Land.WebApp {
       const string incorporationActText =
             "{INDEX}.- <b style='text-transform:uppercase'>CONSTITUCIÓN</b> de " +
             "la {ASSOCIATION.KIND} denominada <b>{ASSOCIATION.NAME}</b>, " +
-            "misma a la que se le asignó el folio electrónico <b class='bigger'>{ASSOCIATION.UID}</b>.<br/>";
+            "misma a la que se le asignó el folio único <b class='bigger'>{ASSOCIATION.UID}</b>.<br/>";
 
       const string overAssociationWithIncorporationActInDigitalRecording =
           "{INDEX}.- <b style='text-transform:uppercase'>{RECORDING.ACT}</b> de " +
           "la {ASSOCIATION.KIND} denominada <b>{ASSOCIATION.NAME}</b>, " +
-          "con folio electrónico <b class='bigger'>{ASSOCIATION.UID}</b>.<br/>";
+          "con folio único <b class='bigger'>{ASSOCIATION.UID}</b>.<br/>";
 
       const string overAssociationWithIncorporationActInPhysicalRecording =
           "{INDEX}.- <b style='text-transform:uppercase'>{RECORDING.ACT}</b> de " +
           "la {ASSOCIATION.KIND} denominada <b>{ASSOCIATION.NAME}</b>, " +
-          "con folio electrónico <b class='bigger'>{ASSOCIATION.UID}</b> y " +
-          "antecedente de inscripción en {ANTECEDENT}.<br/>";
+          "con folio único <b class='bigger'>{ASSOCIATION.UID}</b> y " +
+          "antecedente registral en {ANTECEDENT}.<br/>";
 
       RecordingAct incorporationAct = association.GetIncorporationAct();
 
@@ -743,6 +756,27 @@ namespace Empiria.Land.WebApp {
 
     #endregion Private methods
 
+
+    #region Helpers
+
+    private RecordingAct Reload(RecordingAct act) {
+      return RecordingAct.Parse(act.Id, true);
+    }
+
+    private Resource Reload(Resource resource) {
+      return Resource.Parse(resource.Id, true);
+    }
+
+    private RecordingActParty Reload(RecordingActParty party) {
+      return RecordingActParty.Parse(party.Id, true);
+    }
+
+    private Party Reload(Party party) {
+      return Party.Parse(party.Id, true);
+    }
+
+
+    #endregion Helpers
   } // class RegistrationStamp
 
 } // namespace Empiria.Land.WebApp
