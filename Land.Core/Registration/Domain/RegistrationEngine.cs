@@ -21,11 +21,13 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public RegistrationEngine(RecordingDocument recordingDocument) {
+      Assertion.Require(recordingDocument, nameof(recordingDocument));
+
       _recordingDocument = recordingDocument;
     }
 
     internal void Execute(RegistrationCommand command) {
-      Assertion.Require(command, "command");
+      Assertion.Require(command, nameof(command));
 
       command.EnsureIsValid();
 
@@ -39,8 +41,8 @@ namespace Empiria.Land.Registration {
 
     internal void Execute(PhysicalRecording bookEntry,
                           RegistrationCommand command) {
-      Assertion.Require(bookEntry, "bookEntry");
-      Assertion.Require(command, "command");
+      Assertion.Require(bookEntry, nameof(bookEntry));
+      Assertion.Require(command, nameof(command));
 
       command.EnsureIsValid();
 
@@ -156,15 +158,21 @@ namespace Empiria.Land.Registration {
 
 
     static private bool MustCreatePrecedentBookEntry(RegistrationCommand command) {
+      if (!String.IsNullOrWhiteSpace(command.Payload.BookEntryUID)) {
+        return false;
+      }
+
       if (String.IsNullOrWhiteSpace(command.Payload.BookEntryNo)) {
         return false;
       }
 
       if (command.Type == RegistrationCommandType.SelectAssociationAntecedent ||
           command.Type == RegistrationCommandType.SelectNoPropertyAntecedent ||
-          command.Type == RegistrationCommandType.SelectRealEstateAntecedent) {
+          command.Type == RegistrationCommandType.SelectRealEstateAntecedent ||
+          command.Type == RegistrationCommandType.CreateRealEstatePartitionForAntecedent) {
         return true;
       }
+
       return false;
     }
 

@@ -102,7 +102,8 @@ namespace Empiria.Land.Registration {
         this.PrecedentRecording = PhysicalRecording.Parse(fields.PrecedentBookEntryUID);
       }
 
-      if (this.RecordingTaskType == RecordingTaskType.createPartition) {
+      if (this.RecordingTaskType == RecordingTaskType.createPartition ||
+          this.RecordingTaskType == RecordingTaskType.createPartitionAndPropertyOnAntecedent) {
         this.PartitionInfo = new RealEstatePartitionDTO(fields.PartitionType, fields.PartitionNo, String.Empty);
       }
 
@@ -112,6 +113,7 @@ namespace Empiria.Land.Registration {
     }
 
 
+    /// <summary>Used only by TLX v4.0</summary>
     public RecordingTask(int documentId = -1,
                          int recordingActTypeId = -1,
                          RecordingTaskType recordingTaskType = RecordingTaskType.actNotApplyToProperty,

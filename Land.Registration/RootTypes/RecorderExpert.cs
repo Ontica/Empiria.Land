@@ -24,7 +24,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public RecordingAct[] Execute(RecordingTask task) {
-      Assertion.Require(task, "task");
+      Assertion.Require(task, nameof(task));
 
       var expert = new RecorderExpert(task);
 
@@ -47,8 +47,8 @@ namespace Empiria.Land.Registration {
 
     private bool CreateNewResource {
       get {
-        return ((Task.RecordingTaskType == RecordingTaskType.createProperty) &&
-                 Task.PrecedentProperty.IsEmptyInstance);
+        return (Task.RecordingTaskType == RecordingTaskType.createProperty &&
+                Task.PrecedentProperty.IsEmptyInstance);
       }
     }
 
@@ -64,8 +64,8 @@ namespace Empiria.Land.Registration {
 
     private bool SelectResource {
       get {
-        return ((Task.RecordingTaskType == RecordingTaskType.selectProperty) &&
-                 !Task.PrecedentProperty.IsEmptyInstance);
+        return (Task.RecordingTaskType == RecordingTaskType.selectProperty &&
+                !Task.PrecedentProperty.IsEmptyInstance);
       }
     }
 
@@ -134,12 +134,12 @@ namespace Empiria.Land.Registration {
       switch (Task.RecordingActType.RecordingRule.AppliesTo) {
         case RecordingRuleApplication.Association:
           Assertion.Require(resourceToApply is Association,
-            "Este acto sólo es aplicable a asociaciones. El folio real corresponde a un predio.");
+            "Este acto sólo es aplicable a asociaciones. El folio electrónico corresponde a un predio.");
           return;
 
         case RecordingRuleApplication.RealEstate:
           Assertion.Require(resourceToApply is RealEstate,
-            "Este acto sólo es aplicable a predios. El folio real corresponde a una asociación.");
+            "Este acto sólo es aplicable a predios. El folio electrónico corresponde a una asociación.");
           return;
       }
     }
