@@ -273,7 +273,7 @@ namespace Empiria.Land.WebApp {
 
 
     private string GetPartiesText(RecordingAct recordingAct) {
-      const string t = "{PARTY-ROLE}: {PARTY-NAME}<br/>";
+      const string t = "{PARTY-ROLE}: {PARTY-NAME} {OWNERSHIP}<br/>";
       FixedList<RecordingActParty> parties = recordingAct.GetParties();
 
       var html = string.Empty;
@@ -283,6 +283,16 @@ namespace Empiria.Land.WebApp {
 
         var temp = t.Replace("{PARTY-ROLE}", p.PartyRole.Name);
         temp = temp.Replace("{PARTY-NAME}", Reload(p.Party).FullName);
+
+        if (p.OwnershipPart.Unit.IsEmptyInstance) {
+          temp = temp.Replace("{OWNERSHIP}", string.Empty);
+        } else if (p.OwnershipPart.Unit == DataTypes.Unit.FullUnit ||
+                   p.OwnershipPart.Unit == DataTypes.Unit.UndividedUnit) {
+          temp = temp.Replace("{OWNERSHIP}", $"({p.OwnershipPart.Unit.Name})");
+        } else {
+          temp = temp.Replace("{OWNERSHIP}", $"({p.OwnershipPart})");
+        }
+
         html += temp;
       }
       return html;
