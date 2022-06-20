@@ -254,10 +254,23 @@ namespace Empiria.Land.WebApp {
         }
         html += this.Decorate(recordingAct, temp);
         html += this.GetPartiesText(recordingAct);
+        html += this.GetNotesText(recordingAct);
         html += "<br/>";
       }
       return html;
     }
+
+
+    private string GetNotesText(RecordingAct recordingAct) {
+      if (recordingAct.Summary.Length == 0) {
+        return string.Empty;
+      }
+
+      const string t = "Notas: {NOTES}<br/>";
+
+      return t.Replace("{NOTES}", recordingAct.Summary);
+    }
+
 
     private string GetPartiesText(RecordingAct recordingAct) {
       const string t = "{PARTY-ROLE}: {PARTY-NAME}<br/>";
