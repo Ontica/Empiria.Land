@@ -222,6 +222,7 @@ namespace Empiria.Land.WebApp {
       string html = String.Empty;
 
       int index = 0;
+
       foreach (RecordingAct recordingAct in recordingActs) {
         string temp = String.Empty;
 
@@ -232,6 +233,9 @@ namespace Empiria.Land.WebApp {
           temp = this.GetAmendmentActText(recordingAct, index);
           html += this.Decorate(recordingAct, temp);
           html += this.GetPartiesText(recordingAct);
+          html += this.GetNotesText(recordingAct);
+          html += "<br/>";
+
           continue;
         }
 
@@ -252,11 +256,13 @@ namespace Empiria.Land.WebApp {
           throw Assertion.EnsureNoReachThisCode();
 
         }
+
         html += this.Decorate(recordingAct, temp);
         html += this.GetPartiesText(recordingAct);
         html += this.GetNotesText(recordingAct);
         html += "<br/>";
       }
+
       return html;
     }
 
@@ -273,28 +279,45 @@ namespace Empiria.Land.WebApp {
 
 
     private string GetPartiesText(RecordingAct recordingAct) {
-      const string t = "{PARTY-ROLE}: {PARTY-NAME} {OWNERSHIP}<br/>";
-      FixedList<RecordingActParty> parties = recordingAct.GetParties();
+      var graph = new PartiesGraph(recordingAct);
 
       var html = string.Empty;
 
-      foreach (var party in parties) {
-        var p = Reload(party);
-
-        var temp = t.Replace("{PARTY-ROLE}", p.PartyRole.Name);
-        temp = temp.Replace("{PARTY-NAME}", Reload(p.Party).FullName);
-
-        if (p.OwnershipPart.Unit.IsEmptyInstance) {
-          temp = temp.Replace("{OWNERSHIP}", string.Empty);
-        } else if (p.OwnershipPart.Unit == DataTypes.Unit.FullUnit ||
-                   p.OwnershipPart.Unit == DataTypes.Unit.UndividedUnit) {
-          temp = temp.Replace("{OWNERSHIP}", $"({p.OwnershipPart.Unit.Name})");
-        } else {
-          temp = temp.Replace("{OWNERSHIP}", $"({p.OwnershipPart})");
-        }
-
-        html += temp;
+      foreach (PartiesGraphNode node in graph.Roots) {
+        html += GetPartyText(graph, node);
       }
+
+      return html;
+    }
+
+
+    private string GetPartyText(PartiesGraph graph, PartiesGraphNode node) {
+      const string t = "{TAB}{PARTY-ROLE}: {PARTY-NAME} {OWNERSHIP}<br/>";
+
+      var p = Reload(node.RecordingActParty);
+
+      var html = t.Replace("{PARTY-ROLE}", p.PartyRole.Name);
+
+      html = html.Replace("{TAB}", EmpiriaString.Duplicate(" &#160; &#160; &#160; ", node.Level - 1));
+
+      html = html.Replace("{PARTY-NAME}", Reload(p.Party).FullName);
+
+      if (p.OwnershipPart.Unit.IsEmptyInstance) {
+        html = html.Replace("{OWNERSHIP}", string.Empty);
+
+      } else if (p.OwnershipPart.Unit == DataTypes.Unit.FullUnit ||
+                 p.OwnershipPart.Unit == DataTypes.Unit.UndividedUnit) {
+        html = html.Replace("{OWNERSHIP}", $"({p.OwnershipPart.Unit.Name})");
+
+      } else {
+        html = html.Replace("{OWNERSHIP}", $"({p.OwnershipPart})");
+
+      }
+
+      foreach (PartiesGraphNode child in graph.GetChildren(node)) {
+        html += GetPartyText(graph, child);
+      }
+
       return html;
     }
 

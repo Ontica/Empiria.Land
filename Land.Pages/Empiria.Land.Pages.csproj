@@ -173,6 +173,7 @@
     <Compile Include="receipts\transaction.receipt.aspx.designer.cs">
       <DependentUpon>transaction.receipt.aspx</DependentUpon>
     </Compile>
+    <Compile Include="recording-stamps\PartiesGraph.cs" />
     <Compile Include="recording-stamps\physical-recording.stamp.aspx.cs">
       <DependentUpon>physical-recording.stamp.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
