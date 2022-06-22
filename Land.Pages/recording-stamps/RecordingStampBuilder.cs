@@ -11,7 +11,7 @@ using System;
 
 using Empiria.Land.Registration;
 
-namespace Empiria.Land.WebApp {
+namespace Empiria.Land.Pages {
 
   /// <summary>Recording stamp builder methods.</summary>
   internal class RecordingStampBuilder {
@@ -73,15 +73,6 @@ namespace Empiria.Land.WebApp {
       }
 
       return html;
-    }
-
-
-    internal string GetDateAsText(DateTime date) {
-      if (date == ExecutionServer.DateMinValue || date == ExecutionServer.DateMaxValue) {
-        return "No consta";
-      } else {
-        return date.ToString(@"dd \de MMMM \de yyyy");
-      }
     }
 
   }  // class RecordingStampBuilder

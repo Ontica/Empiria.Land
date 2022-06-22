@@ -16,7 +16,7 @@ using Empiria.Land.Instruments;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.WebApp {
+namespace Empiria.Land.Pages {
 
   /// <summary>Recording stamp for instruments with recording acts.</summary>
   public partial class RecordingStamp : System.Web.UI.Page {
@@ -304,7 +304,7 @@ namespace Empiria.Land.WebApp {
 
 
     private string GetDateAsText(DateTime date) {
-      return builder.GetDateAsText(date);
+      return CommonMethods.GetDateAsText(date);
     }
 
 
@@ -352,4 +352,4 @@ namespace Empiria.Land.WebApp {
 
   } // class RegistrationStamp
 
-} // namespace Empiria.Land.WebApp
+} // namespace Empiria.Land.Pages

@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Adapters;
 
-namespace Empiria.Land.WebApp {
+namespace Empiria.Land.Pages {
 
   internal class PartiesGraph {
 
@@ -82,4 +82,4 @@ namespace Empiria.Land.WebApp {
 
   }  // class PartiesGraphNode
 
-}  // namespace Empiria.Land.WebApp
+}  // namespace Empiria.Land.Pages

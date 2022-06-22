@@ -26,6 +26,15 @@ namespace Empiria.Land.Pages {
     static public string GovernmentWebPage => "https://registropublico.zacatecas.gob.mx";
 
 
+    static internal string GetDateAsText(DateTime date) {
+      if (date == ExecutionServer.DateMinValue || date == ExecutionServer.DateMaxValue) {
+        return "No consta";
+      } else {
+        return date.ToString(@"dd \de MMMM \de yyyy");
+      }
+    }
+
   } // class CommonMethods
 
 } // namespace Empiria.Land.Pages
+

@@ -11,7 +11,7 @@ using System;
 
 using Empiria.Land.Registration;
 
-namespace Empiria.Land.WebApp {
+namespace Empiria.Land.Pages {
 
   /// <summary>Temporal instances reload methods.</summary>
   static internal class Reloaders {
@@ -36,4 +36,5 @@ namespace Empiria.Land.WebApp {
 
   }  // class Reloaders
 
-}  // namespace Empiria.Land.WebApp
+}  // namespace Empiria.Land.Pages
+

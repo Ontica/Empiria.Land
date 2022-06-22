@@ -109,7 +109,6 @@
     <Content Include="receipts\transaction.receipt.aspx" />
     <Content Include="recording-stamps\physical-recording.stamp.aspx" />
     <Content Include="recording-stamps\recording.stamp.aspx" />
-    <Content Include="scripts\empiria.general.js" />
     <Content Include="themes\default\css\certificates.css" />
     <Content Include="themes\default\css\official.document.css" />
     <Content Include="themes\default\css\report.css" />
@@ -123,13 +122,7 @@
     <Content Include="themes\default\customer\seal.logo.right.png" />
     <Content Include="themes\default\customer\section_division_bar.jpg" />
     <Content Include="themes\default\customer\separator.jpg" />
-    <Content Include="themes\default\textures\alert.background.png" />
-    <Content Include="themes\default\textures\gauge.jpg" />
-    <Content Include="themes\default\textures\header.background.png" />
-    <Content Include="themes\default\textures\main_background.gif" />
-    <Content Include="themes\default\textures\main_background.old.gif" />
     <Content Include="themes\default\textures\pixel.gif" />
-    <Content Include="themes\default\textures\textbox.gif" />
     <Content Include="user.controls\barcode.aspx" />
     <Content Include="user.controls\printer.aspx" />
     <Content Include="user.controls\qrcode.aspx" />
@@ -174,7 +167,7 @@
       <DependentUpon>transaction.receipt.aspx</DependentUpon>
     </Compile>
     <Compile Include="recording-stamps\RecordingActTextBuilder.cs" />
-    <Compile Include="recording-stamps\Reloaders.cs" />
+    <Compile Include="RootTypes\Reloaders.cs" />
     <Compile Include="recording-stamps\RecordingStampBuilder.cs" />
     <Compile Include="recording-stamps\PartiesGraph.cs" />
     <Compile Include="recording-stamps\physical-recording.stamp.aspx.cs">
@@ -215,8 +208,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="imaging\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>

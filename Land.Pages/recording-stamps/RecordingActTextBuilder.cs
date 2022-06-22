@@ -11,7 +11,7 @@ using System;
 
 using Empiria.Land.Registration;
 
-namespace Empiria.Land.WebApp {
+namespace Empiria.Land.Pages {
 
   /// <summary>Text builder for recording acts.</summary>
   internal class RecordingActTextBuilder {
@@ -321,14 +321,6 @@ namespace Empiria.Land.WebApp {
       return x;
     }
 
-    internal string GetDateAsText(DateTime date) {
-      if (date == ExecutionServer.DateMinValue || date == ExecutionServer.DateMaxValue) {
-        return "No consta";
-      } else {
-        return date.ToString(@"dd \de MMMM \de yyyy");
-      }
-    }
-
     private string GetRealEstateTextWithAntecedentAndCadastralKey() {
       var domainAntecedent = _recordingAct.Resource.Tract.GetRecordingAntecedent(_recordingAct);
 
@@ -354,11 +346,11 @@ namespace Empiria.Land.WebApp {
 
       } else if (!(domainAntecedent is DomainAct)) {   // TODO: this is very strange, is a special case
         x += String.Format(" el {0} bajo el número de documento electrónico {1}",
-                           this.GetDateAsText(domainAntecedent.Document.AuthorizationTime),
+                           CommonMethods.GetDateAsText(domainAntecedent.Document.AuthorizationTime),
                            domainAntecedent.Document.UID);
       } else {
         x += String.Format(", con antecedente inscrito el {0} bajo el número de documento electrónico {1}",
-                           this.GetDateAsText(domainAntecedent.Document.AuthorizationTime),
+                           CommonMethods.GetDateAsText(domainAntecedent.Document.AuthorizationTime),
                            domainAntecedent.Document.UID);
       }
       return x;
@@ -444,4 +436,4 @@ namespace Empiria.Land.WebApp {
 
   }  // class RecordingActTextBuilder
 
-}  // namespace Empiria.Land.WebApp
+}  // namespace Empiria.Land.Pages

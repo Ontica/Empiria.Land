@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Empiria.Land.WebApp {
+namespace Empiria.Land.Pages {
 
 
   public partial class RecordingStamp {

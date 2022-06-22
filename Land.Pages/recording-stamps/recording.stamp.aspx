@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="Empiria.Land.WebApp.RecordingStamp" Codebehind="recording.stamp.aspx.cs" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="Empiria.Land.Pages.RecordingStamp" Codebehind="recording.stamp.aspx.cs" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
