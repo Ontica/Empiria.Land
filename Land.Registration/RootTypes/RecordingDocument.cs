@@ -470,10 +470,7 @@ namespace Empiria.Land.Registration {
 
     public bool HasTransaction {
       get {
-        if (_transaction != null) {
-          return GetTransaction() != LRSTransaction.Empty;
-        }
-        return _transaction != LRSTransaction.Empty;
+        return !GetTransaction().Equals(LRSTransaction.Empty);
       }
     }
 
@@ -486,6 +483,14 @@ namespace Empiria.Land.Registration {
         }
       }
     }
+
+
+    public string TransactionID {
+      get {
+        return this.HasTransaction ? GetTransaction().UID : string.Empty;
+      }
+    }
+
 
     private LRSTransaction _transaction = null;
     public LRSTransaction GetTransaction() {
