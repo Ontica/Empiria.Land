@@ -37,9 +37,10 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
     public TractIndexDto AmendableRecordingActs(string recordableSubjectUID,
                                                 string instrumentRecordingUID,
                                                 string amendmentRecordingActTypeUID) {
-      Assertion.Require(recordableSubjectUID, "recordableSubjectUID");
-      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.Require(amendmentRecordingActTypeUID, "amendmentRecordingActTypeUID");
+
+      Assertion.Require(recordableSubjectUID, nameof(recordableSubjectUID));
+      Assertion.Require(instrumentRecordingUID, nameof(instrumentRecordingUID));
+      Assertion.Require(amendmentRecordingActTypeUID, nameof(amendmentRecordingActTypeUID));
 
       var amendmentRecordingActType = RecordingActType.Parse(amendmentRecordingActTypeUID);
 
@@ -47,13 +48,24 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
       FixedList<RecordingActType> appliesTo = amendmentRecordingActType.GetAppliesToRecordingActTypesList();
 
-      EmpiriaLog.Debug(appliesTo.Count.ToString());
+      FixedList<RecordingAct> acts = recordableSubject.Tract.GetRecordingActs();
 
-      FixedList<RecordingAct> list = recordableSubject.Tract.GetRecordingActs();
-
-      var amendableActs = list.FindAll((x) => appliesTo.Contains(x.RecordingActType));
+      var amendableActs = acts.FindAll((x) => appliesTo.Contains(x.RecordingActType));
 
       return TractIndexMapper.Map(recordableSubject, amendableActs);
+    }
+
+
+    public TractIndexDto TractIndex(string recordableSubjectUID) {
+      Assertion.Require(recordableSubjectUID, nameof(recordableSubjectUID));
+
+      var recordableSubject = Resource.ParseGuid(recordableSubjectUID);
+
+      FixedList<RecordingAct> acts = recordableSubject.Tract.GetRecordingActs();
+
+      acts.Reverse();
+
+      return TractIndexMapper.Map(recordableSubject, acts);
     }
 
     #endregion Use cases

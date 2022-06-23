@@ -39,6 +39,18 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
     }
 
 
+    [HttpGet]
+    [Route("v5/land/registration/recordable-subjects/{recordableSubjectUID:guid}/tract-index")]
+    public SingleObjectModel GetFullTractIndex([FromUri] string recordableSubjectUID) {
+
+      using (var usecases = TractIndexUseCases.UseCaseInteractor()) {
+        TractIndexDto tractIndex = usecases.TractIndex(recordableSubjectUID);
+
+        return new SingleObjectModel(this.Request, tractIndex);
+      }
+    }
+
+
     #endregion Web Apis
 
   }  // class TractIndexController
