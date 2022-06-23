@@ -36,17 +36,27 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    public string RecordingActUID {
+    public string UID {
       get; internal set;
     }
 
 
-    public string RecordingActName {
+    public string Type {
       get; internal set;
     }
 
 
-    public string Antecedent {
+    public string Name {
+      get; internal set;
+    }
+
+
+    public string DocumentID {
+      get; internal set;
+    }
+
+
+    public string TransactionID {
       get; internal set;
     }
 
@@ -56,7 +66,12 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    public DateTime RecordingDate {
+    public DateTime RecordingTime {
+      get; internal set;
+    }
+
+
+    public string Status {
       get; internal set;
     }
 

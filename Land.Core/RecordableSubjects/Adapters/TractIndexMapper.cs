@@ -33,11 +33,14 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
     static private TractIndexEntryDto MapTractIndexEntry(RecordingAct recordingAct) {
       return new TractIndexEntryDto {
-        RecordingActUID = recordingAct.UID,
-        RecordingActName = recordingAct.DisplayName,
-        Antecedent = "Antecedente",
-        RecordingDate = recordingAct.Document.AuthorizationTime,
+        UID = recordingAct.UID,
+        Type = "RecordingAct",
+        Name = recordingAct.DisplayName,
+        DocumentID = recordingAct.Document.UID,
+        TransactionID = recordingAct.Document.TransactionID,
+        RecordingTime = recordingAct.Document.AuthorizationTime,
         PresentationTime = recordingAct.Document.PresentationTime,
+        Status = recordingAct.StatusName
       };
     }
 
