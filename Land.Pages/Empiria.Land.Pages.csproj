@@ -166,6 +166,7 @@
     <Compile Include="receipts\transaction.receipt.aspx.designer.cs">
       <DependentUpon>transaction.receipt.aspx</DependentUpon>
     </Compile>
+    <Compile Include="recording-stamps\RegistrationTextBuilder.cs" />
     <Compile Include="recording-stamps\RecordingActTextBuilder.cs" />
     <Compile Include="RootTypes\Reloaders.cs" />
     <Compile Include="recording-stamps\RecordingStampBuilder.cs" />

@@ -34,6 +34,10 @@ namespace Empiria.Land.Pages {
       }
     }
 
+    static internal string AsWarning(string text) {
+      return "<span style='color:red;'><strong>*****" + text + "*****</strong></span>";
+    }
+
   } // class CommonMethods
 
 } // namespace Empiria.Land.Pages

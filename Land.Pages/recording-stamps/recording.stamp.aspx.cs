@@ -34,7 +34,6 @@ namespace Empiria.Land.Pages {
     protected RecordingDocument document = null;
     protected LRSTransaction transaction = null;
 
-    private FixedList<RecordingAct> recordingActs = null;
     private RecordingAct _selectedRecordingAct;
     private bool _isMainDocument;
 
@@ -48,6 +47,7 @@ namespace Empiria.Land.Pages {
       string documentUID = Request.QueryString["uid"];
 
       int selectedRecordingActId = int.Parse(Request.QueryString["selectedRecordingActId"] ?? "-1");
+
       _isMainDocument = bool.Parse(Request.QueryString["main"] ?? "false");
 
       document = RecordingDocument.TryParse(documentUID, true);
@@ -57,8 +57,6 @@ namespace Empiria.Land.Pages {
       document.RefreshRecordingActs();
 
       _selectedRecordingAct = RecordingAct.Parse(selectedRecordingActId);
-
-      recordingActs = document.RecordingActs;
 
       this.instrument = Instrument.Parse(document.InstrumentId, true);
 
@@ -72,27 +70,30 @@ namespace Empiria.Land.Pages {
 
     protected string GetDigitalSeal() {
       if (document.IsHistoricDocument) {
-        return AsWarning("Los documentos históricos no tienen sello digital.");
+        return CommonMethods.AsWarning("Los documentos históricos no tienen sello digital.");
+
       } else if (document.Status != RecordableObjectStatus.Closed) {
-        return AsWarning("El documento está ABIERTO por lo que no tiene sello digital.");
+        return CommonMethods.AsWarning("El documento está ABIERTO por lo que no tiene sello digital.");
+
       } else {
         return document.Security.GetDigitalSeal().Substring(0, 64);
+
       }
     }
 
 
     protected string GetDigitalSignature() {
       if (document.IsHistoricDocument) {
-        return AsWarning("Los documentos históricos no tienen firma digital.");
+        return CommonMethods.AsWarning("Los documentos históricos no tienen firma digital.");
       }
       if (document.Status != RecordableObjectStatus.Closed) {
-        return AsWarning("El documento está incompleto. No tiene validez.");
+        return CommonMethods.AsWarning("El documento está incompleto. No tiene validez.");
       }
       if (!document.Security.UseESign) {
         return "Documento firmado de forma autógrafa. Requiere también sello oficial.";
 
       } else if (document.Security.UseESign && document.Security.Unsigned()) {
-        return AsWarning("Este documento NO HA SIDO FIRMADO digitalmente. No tiene valor oficial.");
+        return CommonMethods.AsWarning("Este documento NO HA SIDO FIRMADO digitalmente. No tiene valor oficial.");
 
       } else if (document.Security.UseESign && document.Security.Signed()) {
         return document.Security.GetDigitalSignature();
@@ -131,7 +132,6 @@ namespace Empiria.Land.Pages {
 
       } else {
         return string.Empty;
-
       }
     }
 
@@ -145,33 +145,7 @@ namespace Empiria.Land.Pages {
 
 
     protected string GetPaymentText() {
-      if (document.IsHistoricDocument) {
-        return String.Empty;
-      }
-
-      string template;
-
-      var payment = LRSPayment.Empty;
-
-      if (transaction.Payments.Count > 0) {
-        payment = transaction.Payments[0];
-      }
-
-      if (!this.transaction.FormerPaymentOrderData.IsEmptyInstance) {
-        template = "Derechos por <b>{AMOUNT}</b> según la línea de captura <b>{RECEIPT}</b> expedida por " +
-                   "la Secretaría de Finanzas del Estado, y cuyo comprobante se archiva.";
-        template = template.Replace("{RECEIPT}", transaction.FormerPaymentOrderData.RouteNumber);
-
-      } else {
-        template = "Derechos por <b>{AMOUNT}</b> según recibo <b>{RECEIPT}</b> expedido por " +
-                   "la Secretaría de Finanzas del Estado, que se archiva.";
-        template = template.Replace("{RECEIPT}", transaction.Payments.ReceiptNumbers);
-      }
-
-      template = template.Replace("{AMOUNT}", payment.ReceiptTotal.ToString("C2"));
-      template = template.Replace("{RECEIPT}", payment.ReceiptNo);
-
-      return template;
+      return builder.PaymentText();  
     }
 
 
@@ -181,44 +155,7 @@ namespace Empiria.Land.Pages {
 
 
     protected string GetPrelationText() {
-      if (document.IsHistoricDocument) {
-        return PrelationTextForHistoricDocuments();
-      } else {
-        return PrelationTextForDocumentsWithTransaction();
-      }
-    }
-
-
-    private string PrelationTextForDocumentsWithTransaction() {
-      const string template =
-           "Documento presentado para su examen y registro {REENTRY_TEXT} el <b>{DATE} a las {TIME} horas</b>, " +
-           "bajo el número de trámite <b>{NUMBER}</b>, y para el cual {COUNT}";
-
-      DateTime presentationTime = transaction.IsReentry ? transaction.LastReentryTime : transaction.PresentationTime;
-
-      string x = template.Replace("{DATE}", GetDateAsText(presentationTime));
-
-      x = x.Replace("{TIME}", presentationTime.ToString("HH:mm:ss"));
-      x = x.Replace("{NUMBER}", transaction.UID);
-      x = x.Replace("{REENTRY_TEXT}", transaction.IsReentry ? "(como reingreso)" : String.Empty);
-
-      if (this.recordingActs.Count > 1) {
-        x = x.Replace("{COUNT}", "se registraron los siguientes " + this.recordingActs.Count.ToString() +
-                      " (" + EmpiriaString.SpeechInteger(this.recordingActs.Count).ToLower() + ") " +
-                      "actos jurídicos:");
-
-      } else if (this.recordingActs.Count == 1) {
-        x = x.Replace("{COUNT}", "se registró el siguiente acto jurídico:");
-
-      } else {
-        x = x.Replace("{COUNT}", AsWarning("<u>NO SE HAN REGISTRADO</u> actos jurídicos."));
-      }
-      return x;
-    }
-
-
-    private string PrelationTextForHistoricDocuments() {
-      return "<h3>" + this.recordingActs[0].PhysicalRecording.AsText + "</h3>";
+      return builder.PrelationText();
     }
 
 
@@ -269,42 +206,7 @@ namespace Empiria.Land.Pages {
 
 
     protected string GetRecordingPlaceAndDate() {
-      if (document.IsHistoricDocument) {
-        return PlaceAndDateTextForHistoricDocuments();
-      } else {
-        return PlaceAndDateTextForDocumentsWithTransaction();
-      }
-    }
-
-
-    private string PlaceAndDateTextForDocumentsWithTransaction() {
-      const string t = "Registrado en {CITY}, a las {TIME} horas del {DATE}. Doy Fe.";
-
-      string x = t.Replace("{DATE}", GetDateAsText(document.AuthorizationTime));
-      x = x.Replace("{TIME}", document.AuthorizationTime.ToString(@"HH:mm"));
-      x = x.Replace("{CITY}", document.RecorderOffice.GetPlace());
-
-      return x;
-    }
-
-
-    private string PlaceAndDateTextForHistoricDocuments() {
-      const string template =
-            "De acuerdo a lo que consta en libros físicos y en documentos históricos:<br/>" +
-            "Fecha de presentación: <b>{PRESENTATION.DATE}</b>. " +
-            "Fecha de registro: <b>{AUTHORIZATION.DATE}</b>.<br/><br/>" +
-            "Fecha de la captura histórica: <b>{RECORDING.DATE}<b>.<br/>";
-
-      string x = template.Replace("{PRESENTATION.DATE}", GetDateAsText(document.PresentationTime));
-      x = x.Replace("{AUTHORIZATION.DATE}", GetDateAsText(document.AuthorizationTime));
-      x = x.Replace("{RECORDING.DATE}", GetDateAsText(document.PostingTime));
-
-      return x;
-    }
-
-
-    private string GetDateAsText(DateTime date) {
-      return CommonMethods.GetDateAsText(date);
+      return builder.RecordingPlaceAndDate();
     }
 
 
@@ -313,7 +215,7 @@ namespace Empiria.Land.Pages {
         return String.Empty;
       }
       if (!CanBePrinted()) {
-        return AsWarning("ESTE DOCUMENTO NO ES VÁLIDO EN EL ESTADO ACTUAL.");
+        return CommonMethods.AsWarning("ESTE DOCUMENTO NO ES VÁLIDO EN EL ESTADO ACTUAL.");
       } else {
         return document.Security.GetSignedBy().FullName;
       }
@@ -339,16 +241,6 @@ namespace Empiria.Land.Pages {
     }
 
     #endregion Protected methods
-
-
-    #region Private methods
-
-
-    private string AsWarning(string text) {
-      return "<span style='color:red;'><strong>*****" + text + "*****</strong></span>";
-    }
-
-    #endregion Private methods
 
   } // class RegistrationStamp
 
