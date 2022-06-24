@@ -80,21 +80,6 @@ namespace Empiria.Land.Pages {
     }
 
 
-    internal string Decorate(RecordingAct selectedRecordingAct, bool isMainDocument, string text) {
-      if (selectedRecordingAct.IsEmptyInstance) {
-        return text;
-      }
-      if (!_recordingAct.Equals(selectedRecordingAct)) {
-        return text;
-      }
-      if (isMainDocument) {
-        return "<span class='selectedItem'> " + text + "</span>";
-      } else {
-        return "<span class='markedItem'> " + text + "</span>";
-      }
-    }
-
-
     internal string GetAmendmentActText(int index) {
       const string template = "{INDEX}.- <b style='text-transform:uppercase'>{AMENDMENT.ACT}</b> " +
                               "{AMENDMENT.ACT.RECORDING}, {RESOURCE.DATA}.<br/>";

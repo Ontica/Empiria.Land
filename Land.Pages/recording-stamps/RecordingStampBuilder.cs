@@ -40,7 +40,7 @@ namespace Empiria.Land.Pages {
         // If amendment act, process it and continue
         if (recordingAct.RecordingActType.IsAmendmentActType) {
           temp =  builder.GetAmendmentActText(index);
-          html += builder.Decorate(selectedRecordingAct, isMainDocument, temp);
+          html += Decorate(recordingAct, selectedRecordingAct, isMainDocument, temp);
           html += builder.GetPartiesText();
           html += builder.GetNotesText();
           html += "<br/>";
@@ -66,13 +66,49 @@ namespace Empiria.Land.Pages {
 
         }
 
-        html += builder.Decorate(selectedRecordingAct, isMainDocument, temp);
+        html += Decorate(recordingAct, selectedRecordingAct, isMainDocument, temp);
         html += builder.GetPartiesText();
         html += builder.GetNotesText();
         html += "<br/>";
       }
 
       return html;
+    }
+
+
+    private string Decorate(RecordingAct currentRecordingAct,
+                            RecordingAct selectedRecordingAct,
+                            bool isMainDocument, string text) {
+      if (selectedRecordingAct.IsEmptyInstance) {
+        return text;
+      }
+      if (!currentRecordingAct.Equals(selectedRecordingAct)) {
+        return text;
+      }
+      if (isMainDocument) {
+        return "<span class='selectedItem'> " + text + "</span>";
+      } else {
+        return "<span class='markedItem'> " + text + "</span>";
+      }
+    }
+
+
+    internal string PrelationText() {
+      var builder = new RegistrationTextBuilder(_document);
+
+      return builder.PrelationText();
+    }
+
+    internal string RecordingPlaceAndDate() {
+      var builder = new RegistrationTextBuilder(_document);
+
+      return builder.RecordingPlaceAndDate();
+    }
+
+    internal string PaymentText() {
+       var builder = new RegistrationTextBuilder(_document);
+
+      return builder.PaymentText();
     }
 
   }  // class RecordingStampBuilder
