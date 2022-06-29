@@ -17,6 +17,7 @@ using Empiria.Land.Instruments.Adapters;
 
 using Empiria.Land.Registration.Transactions;
 using Empiria.Land.RecordableSubjects.Adapters;
+using Empiria.DataTypes;
 
 namespace Empiria.Land.Registration.Adapters {
 
@@ -34,7 +35,7 @@ namespace Empiria.Land.Registration.Adapters {
 
       Instrument instrument = Instrument.Parse(instrumentRecording.InstrumentId);
 
-      var mediaBuilder = new LandMediaBuilder();
+
 
       var actions = new InstrumentRecordingControlData(instrumentRecording, instrument, transaction);
 
@@ -48,19 +49,32 @@ namespace Empiria.Land.Registration.Adapters {
         dto.BookEntries = RecordingBookMapper.MapBookEntriesListDto(bookEntries);
         dto.BookRecordingMode = true;
 
-        dto.StampMedia = mediaBuilder.GetMediaDto(LandMediaContent.BookEntryRegistrationStamp,
-                                                  "-1", transaction.Id.ToString());
       } else {
         dto.RecordingActs = MapRecordingActsListDto(instrumentRecording.RecordingActs);
-
-        dto.StampMedia = mediaBuilder.GetMediaDto(LandMediaContent.RegistrationStamp,
-                                                  instrumentRecording.UID);
       }
+
+      dto.StampMedia = MapStampMedia(instrumentRecording, transaction);
 
       dto.TransactionUID = transaction.UID;
       dto.Actions = GetControlDataDto(actions);
 
       return dto;
+    }
+
+
+    static internal MediaData MapStampMedia(RecordingDocument instrumentRecording,
+                                            LRSTransaction transaction) {
+      var mediaBuilder = new LandMediaBuilder();
+
+      Instrument instrument = Instrument.Parse(instrumentRecording.InstrumentId);
+
+      if (instrument.RecordingBookEntries.Count > 0) {
+        return mediaBuilder.GetMediaDto(LandMediaContent.BookEntryRegistrationStamp,
+                                        "-1", transaction.Id.ToString());
+      } else {
+        return mediaBuilder.GetMediaDto(LandMediaContent.RegistrationStamp,
+                                        instrumentRecording.UID);
+      }
     }
 
 
