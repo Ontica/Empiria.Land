@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using Empiria.DataTypes;
 
 namespace Empiria.Land.RecordableSubjects.Adapters {
 
@@ -67,6 +68,21 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
 
     public DateTime RecordingTime {
+      get; internal set;
+    }
+
+
+    public RecordableSubjectDto RecordableSubject {
+      get; internal set;
+    }
+
+
+    public MediaData StampMedia {
+      get; internal set;
+    }
+
+
+    public string InstrumentRecordingUID {
       get; internal set;
     }
 

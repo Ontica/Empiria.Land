@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Land.Registration;
+using Empiria.Land.Registration.Adapters;
 
 namespace Empiria.Land.RecordableSubjects.Adapters {
 
@@ -40,6 +41,11 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
         TransactionID = recordingAct.Document.TransactionID,
         RecordingTime = recordingAct.Document.AuthorizationTime,
         PresentationTime = recordingAct.Document.PresentationTime,
+        RecordableSubject = RecordableSubjectsMapper.Map(recordingAct.Resource),
+        StampMedia = InstrumentRecordingMapper.MapStampMedia(recordingAct.Document,
+                                                             recordingAct.Document.GetTransaction()),
+        InstrumentRecordingUID = recordingAct.Document.GUID,
+
         Status = recordingAct.StatusName
       };
     }
