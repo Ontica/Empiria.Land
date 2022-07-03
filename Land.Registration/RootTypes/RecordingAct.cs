@@ -511,6 +511,8 @@ namespace Empiria.Land.Registration {
       var party = Party.Parse(recordingActPartyFields.Party.UID);
       var partyOf = Party.Parse(recordingActPartyFields.AssociatedWithUID);
 
+      Assertion.Require(!party.Equals(partyOf), "Primary and secondary parties must be distinct persons.");
+
       var role = SecondaryPartyRole.Parse(recordingActPartyFields.RoleUID);
 
       var recordingActParty = this.AppendParty(party, role, partyOf);
