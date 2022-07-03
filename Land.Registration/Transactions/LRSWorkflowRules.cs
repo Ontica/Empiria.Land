@@ -115,15 +115,16 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public bool IsNotSignable(LRSTransactionType type, LRSDocumentType docType) {
-      if (type.Id == 704 || type.Id == 705 || (type.Id == 706 && docType.Id == 734)) {
+      if (type.Id == 704 || (type.Id == 706 && docType.Id == 734)) {
         return true;
       }
+
       return false;
     }
 
 
     static public bool IsArchivable(LRSTransactionType type, LRSDocumentType docType) {
-      if (docType.Id == 722 || docType.Id == 761) {
+      if (docType.Id == 761) {
         return true;
       }
       return false;
@@ -136,10 +137,8 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static public bool IsEmptyItemsTransaction(LRSTransaction transaction) {
-      if (transaction.TransactionType.Id == 704) {
-        return true;
-      }
-      if (transaction.DocumentType.Id == 722) {
+      if (transaction.TransactionType.Id == 704 ||
+          transaction.TransactionType.Id == 705) {
         return true;
       }
 
@@ -198,8 +197,8 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static private bool NotRecordableDocumentType(LRSDocumentType docType) {
-      return EmpiriaMath.IsMemberOf(docType.Id, new int[] { 722, 723, 724, 730, 731, 732, 733, 734, 735, 736,
-                                                            751, 752, 753, 754, 755, 756, 757, 758, });
+      return EmpiriaMath.IsMemberOf(docType.Id, new int[] { 723, 724, 730, 731, 732, 733, 734, 735, 736,
+                                                            751, 752, 753, 754, 755, 756, 757, 758 });
     }
 
 
@@ -210,7 +209,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (IsCertificateIssueCase(type, docType)) {
         return false;
       }
-      if (type.Id == 699 || type.Id == 702 || type.Id == 706) {
+      if (type.Id == 699 || type.Id == 702 || type.Id == 705 || type.Id == 706) {
         return false;
       } else if (NotRecordableDocumentType(docType)) {
         return false;

@@ -18,8 +18,13 @@ namespace Empiria.Land.Registration.Transactions {
     #region Methods
 
     internal static bool IsFeeWaiverApplicable(LRSTransaction transaction) {
-      return (transaction.TransactionType.Id == 704 || transaction.TransactionType.Id == 707 ||
-             (transaction.TransactionType.Id == 700 && transaction.DocumentType.Id == 722));
+      if (transaction.TransactionType.Id == 705 ||
+          transaction.TransactionType.Id == 704 ||
+          transaction.TransactionType.Id == 707) {
+        return true;
+      }
+
+      return (transaction.TransactionType.Id == 700 && transaction.DocumentType.Id == 722);
     }
 
     #endregion Methods
