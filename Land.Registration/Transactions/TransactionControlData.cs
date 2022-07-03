@@ -259,7 +259,6 @@ namespace Empiria.Land.Transactions {
 
     #endregion User's action flags
 
-
     #region Flags used to control the user interface
 
     public bool ShowCertificatesEmissionTab {
@@ -321,10 +320,12 @@ namespace Empiria.Land.Transactions {
 
         // ToDo: Check if has uploaded documents
 
-        return false;
+        if (!IsUserInRole("Land.Digitizer")) {
+          return false;
+        }
 
-        //return LRSWorkflowRules.IsDigitalizable(_transaction.TransactionType,
-        //                                        _transaction.DocumentType);
+        return LRSWorkflowRules.IsDigitalizable(_transaction.TransactionType,
+                                                _transaction.DocumentType);
       }
     }
 
