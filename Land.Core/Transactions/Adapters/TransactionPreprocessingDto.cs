@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Land.Instruments.Adapters;
+using Empiria.Land.Media.Adapters;
 
 namespace Empiria.Land.Transactions.Adapters {
 
@@ -26,6 +27,11 @@ namespace Empiria.Land.Transactions.Adapters {
     public object AntecedentRecordingActs {
       get; internal set;
     }
+
+    public FixedList<LandMediaFileDto> Media {
+      get; internal set;
+    }
+
 
     public TransactionPreprocessingActionsDto Actions {
       get; internal set;

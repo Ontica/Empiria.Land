@@ -7,10 +7,12 @@
 *  Summary  : Use cases to upload and manage media files related to Empiria Land entities.                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
 using Empiria.Services;
+using Empiria.Storage;
 
 using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
@@ -35,9 +37,27 @@ namespace Empiria.Land.Media.UseCases {
 
     #region Use cases
 
-    public async Task<InstrumentDto> AddInstrumentMediaFile(string instrumentUID,
-                                                            LandMediaFileFields fields,
-                                                            Stream fileStream) {
+    public Task AppendTransactionMediaFile(string transactionUID,
+                                           LandMediaContent contentType,
+                                           InputFile pdfFile) {
+      Assertion.Require(transactionUID, nameof(transactionUID));
+      Assertion.Require(contentType, nameof(contentType));
+      Assertion.Require(pdfFile, nameof(pdfFile));
+
+      return Task.CompletedTask;
+    }
+
+
+    public Task RemoveTransactionMediaFile(string transactionUID, string mediaFileUID) {
+      Assertion.Require(transactionUID, nameof(transactionUID));
+      Assertion.Require(mediaFileUID, nameof(mediaFileUID));
+
+      return Task.CompletedTask;
+    }
+
+    public async Task<InstrumentDto> AppendInstrumentMediaFile(string instrumentUID,
+                                                               LandMediaFileFields fields,
+                                                               Stream fileStream) {
       ValidateArguments(instrumentUID, fields, fileStream);
 
       var instrument = Instrument.Parse(instrumentUID);
@@ -100,7 +120,7 @@ namespace Empiria.Land.Media.UseCases {
       Assertion.Require(fields, "fields");
 
       Assertion.Require(fields.MediaContent == LandMediaContent.InstrumentMainFile ||
-                       fields.MediaContent == LandMediaContent.InstrumentAuxiliaryFile,
+                        fields.MediaContent == LandMediaContent.InstrumentAuxiliaryFile,
                        $"Unrecognized mediaContent value for a legal instrument file.");
     }
 
