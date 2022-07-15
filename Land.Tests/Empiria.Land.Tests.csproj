@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\extensions\Tests\Empiria.Tests.csproj" />
+    <ProjectReference Include="..\Land.Analytics\Empiria.Land.Analytics.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="empiria.config.json">
