@@ -13,7 +13,6 @@ using Empiria.WebApi;
 
 using Empiria.Land.Registration.Adapters;
 using Empiria.Land.Registration.UseCases;
-using Empiria.Land.Instruments.Adapters;
 
 namespace Empiria.Land.Registration.WebApi {
 

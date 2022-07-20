@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Land Registration                            Component : Web Api                               *
 *  Assembly : Empiria.Land.WebApi.dll                      Pattern   : Controller                            *
-*  Type     : PartiesController                            License   : Please read LICENSE.txt file          *
+*  Type     : PartiesRegistrationController                License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Web API for recording act parties edition.                                                     *
 *                                                                                                            *
@@ -17,7 +17,7 @@ using Empiria.Land.Registration.UseCases;
 namespace Empiria.Land.Registration.WebApi {
 
   /// <summary>Web API for recording act parties edition.</summary>
-  public class PartiesController : WebApiController {
+  public class PartiesRegistrationController : WebApiController {
 
     #region Web Apis
 
@@ -72,6 +72,6 @@ namespace Empiria.Land.Registration.WebApi {
 
     #endregion Web Apis
 
-  }  // class PartiesController
+  }  // class PartiesRegistrationController
 
 }  //namespace Empiria.Land.Registration.WebApi
