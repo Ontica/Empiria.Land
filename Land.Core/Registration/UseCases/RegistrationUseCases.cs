@@ -44,6 +44,23 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
+    public TractIndexDto GetTractIndex(string instrumentRecordingUID, string recordingActUID) {
+      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(recordingActUID, "recordingActUID");
+
+
+      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+
+      RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
+
+      var tract = recordingAct.Resource.Tract.GetRecordingActs();
+
+      tract.Reverse();
+
+      return TractIndexMapper.Map(recordingAct.Resource, tract);
+    }
+
+
     public RecordingActDto GetRecordingAct(string instrumentRecordingUID, string recordingActUID) {
       Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
       Assertion.Require(recordingActUID, "recordingActUID");

@@ -24,9 +24,26 @@ namespace Empiria.Land.Registration.WebApi {
     #region Web Apis
 
 
-    [HttpPatch, HttpPut]
+    [HttpGet]
     [Route("v5/land/registration/{instrumentRecordingUID:guid}/" +
-       "recording-acts/{recordingActUID:guid}/update-recordable-subject")]
+           "recording-acts/{recordingActUID:guid}/tract-index")]
+    public SingleObjectModel GetTractIndex([FromUri] string instrumentRecordingUID,
+                                           [FromUri] string recordingActUID) {
+
+      using (var usecases = RegistrationUseCases.UseCaseInteractor()) {
+        TractIndexDto tractIndex = usecases.GetTractIndex(instrumentRecordingUID,
+                                                          recordingActUID);
+
+        return new SingleObjectModel(this.Request, tractIndex);
+      }
+    }
+
+
+    [HttpPost, HttpPatch, HttpPut]
+    [Route("v5/land/registration/{instrumentRecordingUID:guid}/" +
+           "recording-acts/{recordingActUID:guid}/recordable-subject")]
+    [Route("v5/land/registration/{instrumentRecordingUID:guid}/" +
+           "recording-acts/{recordingActUID:guid}/update-recordable-subject")]
     public SingleObjectModel UpdateRecordableSubject([FromUri] string instrumentRecordingUID,
                                                      [FromUri] string recordingActUID,
                                                      [FromBody] object body) {
