@@ -492,6 +492,19 @@ namespace Empiria.Land.Registration {
     }
 
 
+    public Person AuthorizedBy {
+      get {
+        if (AuthorizationTime == ExecutionServer.DateMinValue) {
+          return Person.Parse(-1);
+        } else if (this.AuthorizationTime >= new DateTime(2022, 4, 1)) {
+          return Person.Parse(401);  // Roberto López Arellano
+        } else {
+          return Person.Parse(4);   // Tere Alvarado
+        }
+      }
+    }
+
+
     private LRSTransaction _transaction = null;
     public LRSTransaction GetTransaction() {
       if (this.IsEmptyInstance || this.IsEmptyDocumentType) {
