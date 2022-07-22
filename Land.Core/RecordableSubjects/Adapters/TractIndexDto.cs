@@ -21,12 +21,18 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    public FixedList<TractIndexEntryDto> TractIndex {
+    public FixedList<TractIndexEntryDto> Entries {
+      get; internal set;
+    } = new FixedList<TractIndexEntryDto>();
+
+
+    public FixedList<TractIndexEntryDto> Structure {
       get; internal set;
     } = new FixedList<TractIndexEntryDto>();
 
 
   }  // class TractIndexDto
+
 
 
   /// <summary>Holds an entry of the recordable subject tract.</summary>
@@ -42,17 +48,57 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    public string Type {
+    public string EntryType {
       get; internal set;
     }
 
 
-    public string Name {
+    public string Description {
       get; internal set;
     }
 
 
-    public string DocumentID {
+    public DateTime RequestedTime {
+      get; internal set;
+    }
+
+
+    public DateTime IssueTime {
+      get; internal set;
+    }
+
+
+    public string Status {
+      get; internal set;
+    }
+
+
+    public TransactionInfoDto Transaction {
+      get; internal set;
+    }
+
+
+    public OfficialDocumentDto OfficialDocument {
+      get; internal set;
+    }
+
+
+    public RecordableSubjectChangesDto SubjectChanges {
+      get; internal set;
+    }
+
+  }  // class TractIndexEntryDto
+
+
+
+  public class TransactionInfoDto {
+
+    internal TransactionInfoDto() {
+      // no-op
+    }
+
+
+    public string UID {
       get; internal set;
     }
 
@@ -62,27 +108,27 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
+    public string RequestedBy {
+      get; internal set;
+    }
+
+
+    public NamedEntityDto Agency {
+      get; internal set;
+    }
+
+
+    public NamedEntityDto FilingOffice {
+      get; internal set;
+    }
+
+
     public DateTime PresentationTime {
       get; internal set;
     }
 
 
-    public DateTime RecordingTime {
-      get; internal set;
-    }
-
-
-    public RecordableSubjectDto RecordableSubject {
-      get; internal set;
-    }
-
-
-    public MediaData StampMedia {
-      get; internal set;
-    }
-
-
-    public string InstrumentRecordingUID {
+    public DateTime CompletedTime {
       get; internal set;
     }
 
@@ -91,6 +137,113 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       get; internal set;
     }
 
-  }  // class TractIndexEntryDto
+  }
+
+
+  public class OfficialDocumentDto {
+
+    internal OfficialDocumentDto() {
+      // no-op
+    }
+
+    public string UID {
+      get; internal set;
+    }
+
+
+    public string Type {
+      get; internal set;
+    }
+
+
+    public string DocumentID {
+      get; internal set;
+    }
+
+
+    public string Description {
+      get; internal set;
+    }
+
+
+    public NamedEntityDto Office {
+      get; internal set;
+    }
+
+
+    public DateTime IssueTime {
+      get; internal set;
+    }
+
+
+    public string ElaboratedBy {
+      get; internal set;
+    }
+
+
+    public string AuthorizedBy {
+      get; internal set;
+    }
+
+
+    public string Status {
+      get; internal set;
+    }
+
+
+    public MediaData Media {
+      get; internal set;
+    }
+
+  }
+
+
+  public class RecordableSubjectChangesDto {
+
+    internal RecordableSubjectChangesDto() {
+      // no-op
+    }
+
+    public string Summary {
+      get; internal set;
+    }
+
+
+    public RecordableSubjectDto Snapshot {
+      get; internal set;
+    }
+
+
+    public FixedList<StructureChangeDto> StructureChanges {
+      get; internal set;
+    } = new FixedList<StructureChangeDto>();
+
+
+  }
+
+
+
+  public class StructureChangeDto {
+
+    internal StructureChangeDto() {
+      // no-op
+    }
+
+    public string Operation {
+      get; internal set;
+    }
+
+
+    public string OperationType {
+      get; internal set;
+    }
+
+
+    public RecordableSubjectDto RelatedSubject {
+      get; internal set;
+    }
+
+  }
+
 
 }  // namespace Empiria.Land.RecordableSubjects.Adapters

@@ -167,6 +167,13 @@ namespace Empiria.Land.Registration {
     }
 
 
+    public bool HasPhysicalRecording {
+      get {
+        return !this.PhysicalRecording.IsEmptyInstance;
+      }
+    }
+
+
     [DataField("RecordingActIndex")]
     public int Index {
       get;
