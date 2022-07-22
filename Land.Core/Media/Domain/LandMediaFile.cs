@@ -19,7 +19,8 @@ using Empiria.Security;
 
 namespace Empiria.Land.Media {
 
-  /// <summary>A media file related to an Empiria Land entity like instrument, transaction or book.</summary>
+  /// <summary>A media file related to an Empiria Land entity like instrument,
+  /// transaction or recording book.</summary>
   internal class LandMediaFile : BaseObject, IProtected {
 
     #region Constructors and parsers
@@ -215,6 +216,8 @@ namespace Empiria.Land.Media {
         this.PostedBy = EmpiriaUser.Current.AsContact();
         this.PostingTime = DateTime.Now;
       }
+
+      throw new NotImplementedException("OnSave()");
       // MediaRepository.WriteMediaFile(this);
     }
 

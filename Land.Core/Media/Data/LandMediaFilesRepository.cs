@@ -34,8 +34,8 @@ namespace Empiria.Land.Media {
 
 
     private FixedList<LandMediaFile> GetMediaFiles(string filter) {
-      string sql = "SELECT * FROM LRSMediaFiles " +
-                   $"WHERE ({filter}) AND MediaFileStatus <> 'X'";
+      string sql = "SELECT * FROM LRSMediaPostings " +
+                   $"WHERE ({filter}) AND MediaPostingStatus <> 'X'";
 
       var op = DataOperation.Parse(sql);
 

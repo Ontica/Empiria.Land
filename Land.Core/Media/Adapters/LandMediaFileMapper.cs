@@ -14,6 +14,10 @@ namespace Empiria.Land.Media.Adapters {
   /// <summary>Methods used to map Land media files to LandMediaFileDto objects.</summary>
   static internal class LandMediaFileMapper {
 
+    static internal FixedList<LandMediaFileDto> MapTests() {
+      return new FixedList<LandMediaFileDto>();
+    }
+
     static internal LandMediaFileDto[] Map(LandMediaFileSet mediaFileSet) {
       FixedList<LandMediaFile> mediaFiles = mediaFileSet.GetFiles();
 

@@ -62,11 +62,13 @@ namespace Empiria.Land.Transactions {
       }
     }
 
+
     public bool ShowInstrumentFiles {
       get {
         return true;
       }
     }
+
 
     public bool ShowAntecedent {
       get {
@@ -84,11 +86,12 @@ namespace Empiria.Land.Transactions {
     public Instrument Instrument {
       get {
         if (_transaction.HasInstrument) {
-          return Instrument.Parse(_transaction.GetInstrumentUID());
+          return Instrument.Parse(_transaction.InstrumentId);
         }
         return Instrument.Empty;
       }
     }
+
 
     public object Antecedent {
       get;

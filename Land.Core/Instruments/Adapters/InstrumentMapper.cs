@@ -19,7 +19,9 @@ namespace Empiria.Land.Instruments.Adapters {
     static internal InstrumentDto Map(Instrument instrument) {
       var issuerDto = IssuerMapper.Map(instrument.Issuer);
 
-      var mediaFiles = LandMediaFileMapper.Map(instrument.GetMediaFileSet());
+      // var mediaFiles = LandMediaFileMapper.Map(instrument.GetMediaFileSet());
+
+      var mediaFiles = LandMediaFileMapper.MapTests();
 
       var dto = new InstrumentDto {
         UID = instrument.UID,

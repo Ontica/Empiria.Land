@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Land Media Files Management                Component : Use cases Layer                         *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Use case interactor class               *
-*  Type     : LandMediaFilesUseCases                     License   : Please read LICENSE.txt file            *
+*  Type     : StoreLandMediaFilesUseCases                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases to upload and manage media files related to Empiria Land entities.                   *
+*  Summary  : Use cases to store media files related to Empiria Land entities.                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -17,34 +17,42 @@ using Empiria.Storage;
 using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Media.Adapters;
+using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Media.UseCases {
 
-  /// <summary>Use cases to upload media files related to Empiria Land entities.</summary>
-  public class LandMediaFilesUseCases : UseCase {
+  /// <summary>Use cases to store media files related to Empiria Land entities.</summary>
+  public class StoreLandMediaFilesUseCases : UseCase {
 
     #region Constructors and parsers
 
-    protected LandMediaFilesUseCases() {
+    protected StoreLandMediaFilesUseCases() {
       // no-op
     }
 
-    static public LandMediaFilesUseCases UseCaseInteractor() {
-      return UseCase.CreateInstance<LandMediaFilesUseCases>();
+    static public StoreLandMediaFilesUseCases UseCaseInteractor() {
+      return UseCase.CreateInstance<StoreLandMediaFilesUseCases>();
     }
 
     #endregion Constructors and parsers
 
     #region Use cases
 
-    public Task AppendTransactionMediaFile(string transactionUID,
-                                           LandMediaContent contentType,
-                                           InputFile pdfFile) {
+    public Task<LandMediaFileDto> AppendTransactionMediaFile(string transactionUID,
+                                                             InputFile pdfFile) {
       Assertion.Require(transactionUID, nameof(transactionUID));
-      Assertion.Require(contentType, nameof(contentType));
       Assertion.Require(pdfFile, nameof(pdfFile));
 
-      return Task.CompletedTask;
+      var task = new Task<LandMediaFileDto>(() => {
+
+        var transaction = LRSTransaction.Parse(transactionUID);
+
+        LandMediaFile landFile = LandMediaWriteServices.StoreTransactionFile(transaction, pdfFile);
+
+        return LandMediaFileMapper.Map(landFile);
+      });
+
+      return task;
     }
 
 
@@ -52,8 +60,19 @@ namespace Empiria.Land.Media.UseCases {
       Assertion.Require(transactionUID, nameof(transactionUID));
       Assertion.Require(mediaFileUID, nameof(mediaFileUID));
 
-      return Task.CompletedTask;
+      var task = new Task(() => {
+
+        var transaction = LRSTransaction.Parse(transactionUID);
+
+        var landFile = LandMediaFile.Parse(mediaFileUID);
+
+        LandMediaWriteServices.RemoveTransactionFile(transaction, landFile);
+
+      });
+
+      return task;
     }
+
 
     public async Task<InstrumentDto> AppendInstrumentMediaFile(string instrumentUID,
                                                                LandMediaFileFields fields,

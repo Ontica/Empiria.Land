@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Land.Media.Adapters;
+
 namespace Empiria.Land.Instruments.Adapters {
 
   /// <summary>Output DTO with data representing a legal instrument.</summary>
@@ -70,7 +72,7 @@ namespace Empiria.Land.Instruments.Adapters {
       get; internal set;
     }
 
-    public object[] Media {
+    public FixedList<LandMediaFileDto> Media {
       get; internal set;
     }
 

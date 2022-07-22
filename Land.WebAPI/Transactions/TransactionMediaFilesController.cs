@@ -33,12 +33,10 @@ namespace Empiria.Land.Media.WebApi {
 
       string mediaContent = base.GetFormDataFromHttpRequest("mediaContent");
 
-      InputFile pdfFile = base.GetInputFileFromHttpRequest();
+      InputFile pdfFile = base.GetInputFileFromHttpRequest(mediaContent);
 
-      using (var usecases = LandMediaFilesUseCases.UseCaseInteractor()) {
-        await usecases.AppendTransactionMediaFile(transactionUID,
-                                                  LandMediaFileFields.ConvertMediaContent(mediaContent),
-                                                  pdfFile);
+      using (var usecases = StoreLandMediaFilesUseCases.UseCaseInteractor()) {
+        _ = await usecases.AppendTransactionMediaFile(transactionUID, pdfFile);
 
         TransactionPreprocessingDto dto = GetTransactionPreprocessingDto(transactionUID);
 
@@ -52,7 +50,7 @@ namespace Empiria.Land.Media.WebApi {
     public async Task<SingleObjectModel> RemoveTransactionMediaFile([FromUri] string transactionUID,
                                                                     [FromUri] string mediaFileUID) {
 
-      using (var usecases = LandMediaFilesUseCases.UseCaseInteractor()) {
+      using (var usecases = StoreLandMediaFilesUseCases.UseCaseInteractor()) {
         await usecases.RemoveTransactionMediaFile(transactionUID, mediaFileUID);
 
         TransactionPreprocessingDto dto = GetTransactionPreprocessingDto(transactionUID);

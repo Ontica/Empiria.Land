@@ -11,8 +11,6 @@ using System;
 
 using Empiria.DataTypes;
 using Empiria.Land.Media.Adapters;
-using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Media {
 
@@ -56,6 +54,7 @@ namespace Empiria.Land.Media {
                                                 $"media content {mediaContent}.");
       }
     }
+
 
     internal FixedList<LandMediaFile> GetLandMediaFiles(LandMediaContent mediaContent, BaseObject instance) {
       var repository = new LandMediaFilesRepository();

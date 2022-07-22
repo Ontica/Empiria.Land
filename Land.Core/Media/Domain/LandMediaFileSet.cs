@@ -12,8 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-using Empiria.Storage;
-
 using Empiria.Land.Media.Adapters;
 
 namespace Empiria.Land.Media {
@@ -44,6 +42,7 @@ namespace Empiria.Land.Media {
       return new LandMediaFileSet(entity);
     }
 
+
     #endregion Constructors and parsers
 
     #region Properties
@@ -66,6 +65,8 @@ namespace Empiria.Land.Media {
 
       await Task.CompletedTask;
 
+      throw new NotImplementedException("Add");
+
       //using (var service = MediaFileServices.ServiceInteractor()) {
       //  var storage = service.GetStorageFor(this.Entity);
 
@@ -80,6 +81,8 @@ namespace Empiria.Land.Media {
 
     internal void AssertCanBeAdded(LandMediaFileFields fields) {
       Assertion.Require(fields, "fields");
+
+      throw new NotImplementedException("AssertCanBeAdded");
 
       //if (_mediaFileslist.Exists(x => x.MediaContent == fields.MediaContent)) {
       //  Assertion.AssertFail($"A file with MediaContent '{fields.MediaContent}' already exists for this entity.");
@@ -98,17 +101,20 @@ namespace Empiria.Land.Media {
 
 
     static private List<LandMediaFile> GetEntityMediaFilesList(BaseObject entity) {
+      return new List<LandMediaFile>();
+
       //using (var service = MediaFileServices.ServiceInteractor()) {
       //  var files = service.GetRelatedMediaFiles<LandMediaFile>(entity);
 
       //  return new List<LandMediaFile>(files);
       //}
-      return new List<LandMediaFile>();
     }
 
 
     public void Remove(string mediaFileUID) {
       Assertion.Require(mediaFileUID, "mediaFileUID");
+
+      throw new NotImplementedException("Remove");
 
       //using (var service = MediaFileServices.ServiceInteractor()) {
       //  var mediaFileToRemove = _mediaFileslist.Find(x => x.UID == mediaFileUID);
@@ -125,6 +131,10 @@ namespace Empiria.Land.Media {
       Assertion.Require(fields, "fields");
       Assertion.Require(fileStream, "fileStream");
 
+      await Task.CompletedTask;
+
+      throw new NotImplementedException("Replace");
+
       //using (var service = MediaFileServices.ServiceInteractor()) {
       //  var mediaFileToReplace = _mediaFileslist.Find(x => x.UID == mediaFileUID);
 
@@ -133,9 +143,9 @@ namespace Empiria.Land.Media {
 
       //  _mediaFileslist.Remove(mediaFileToReplace);
       //  _mediaFileslist.Add(newMediaFile);
+      //      await Task.CompletedTask;
       //}
 
-      await Task.CompletedTask;
     }
 
 
