@@ -31,22 +31,23 @@ namespace Empiria.Land.Instruments.UseCases {
 
     #region Use cases
 
-    public FixedList<IssuerDto> SearchIssuers(IssuersSearchCommand searchCommand) {
-      Assertion.Require(searchCommand, "searchCommand");
+    public FixedList<IssuerDto> SearchIssuers(IssuersQuery query) {
+      Assertion.Require(query, nameof(query));
 
-      searchCommand.EnsureIsValid();
+      query.EnsureIsValid();
 
-      var list = Issuer.GetList(searchCommand);
+      var list = Issuer.GetList(query);
 
       return IssuerMapper.Map(list);
     }
 
 
     public void UpdateAll() {
-      var command = new IssuersSearchCommand();
-      command.PageSize = 100000;
+      var query = new IssuersQuery();
 
-      var list = Issuer.GetList(command);
+      query.PageSize = 100000;
+
+      var list = Issuer.GetList(query);
 
       foreach (var item in list) {
         item.Save();

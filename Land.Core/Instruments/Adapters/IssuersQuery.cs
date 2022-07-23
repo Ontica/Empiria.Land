@@ -1,42 +1,90 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Legal Instruments                          Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Type Extension methods                  *
-*  Type     : IssuersSearchCommandExtensions             License   : Please read LICENSE.txt file            *
+*  Module   : Legal Instruments                          Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Query payload                           *
+*  Type     : IssuersQuery                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Extension methods for type IssuersSearchCommand.                                               *
+*  Summary  : Query payload used to search instrument issuers.                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
 using System.Linq;
 
 namespace Empiria.Land.Instruments.Adapters {
 
-  /// <summary>Extension methods for type IssuersSearchCommand.</summary>
-  static internal class IssuersSearchCommandExtensions {
+  /// <summary>Query payload used to search instrument issuers.</summary>
+  public class IssuersQuery {
+
+    #region Properties
+
+    public InstrumentTypeEnum InstrumentType {
+      get; set;
+    } = InstrumentTypeEnum.All;
+
+
+    public string InstrumentKind {
+      get; set;
+    } = String.Empty;
+
+
+    public IssuerTypeEnum IssuerType {
+      get; set;
+    } = IssuerTypeEnum.All;
+
+
+    public string OnDate {
+      get; set;
+    } = String.Empty;
+
+
+    public string Keywords {
+      get; set;
+    } = string.Empty;
+
+
+    public string OrderBy {
+      get; set;
+    } = String.Empty;
+
+
+    public int PageSize {
+      get; set;
+    } = 50;
+
+
+    public int Page {
+      get; set;
+    } = 1;
+
+    #endregion Properties
+
+  }  // class IssuersQuery
+
+
+  /// <summary>Extension methods for type IssuersQuery.</summary>
+  static internal class IssuersQueryExtensions {
 
     #region Extension methods
 
-    static internal void EnsureIsValid(this IssuersSearchCommand command) {
-      if (EmpiriaString.NotIsEmpty(command.OnDate)) {
-        Assertion.Require(EmpiriaString.IsDate(command.OnDate),
-                         $"Unrecognized onDate search value: '{command.OnDate}'");
+    static internal void EnsureIsValid(this IssuersQuery query) {
+      if (EmpiriaString.NotIsEmpty(query.OnDate)) {
+        Assertion.Require(EmpiriaString.IsDate(query.OnDate),
+                         $"Unrecognized onDate search value: '{query.OnDate}'");
       }
 
-      command.Keywords = command.Keywords ?? String.Empty;
-      command.OrderBy = command.OrderBy ?? String.Empty;
-      command.PageSize = command.PageSize > 0 ? command.PageSize : 50;
-      command.Page = command.Page > 0 ? command.Page : 1;
+      query.Keywords = query.Keywords ?? String.Empty;
+      query.OrderBy = query.OrderBy ?? String.Empty;
+      query.PageSize = query.PageSize > 0 ? query.PageSize : 50;
+      query.Page = query.Page > 0 ? query.Page : 1;
     }
 
 
-    static internal string MapToFilterString(this IssuersSearchCommand command) {
-      string issuerTypeStatusFilter = BuildIssuerTypeAndStatusFilter(command.IssuerType);
-      string instrumentTypeFilter = BuildInstrumentTypeFilter(command.InstrumentType);
-      string instrumentKindFilter = BuildInstrumentKindFilter(command.InstrumentKind);
-      string onDateFilter = BuildOnDateFilter(command.OnDate);
-      string keywordsFilter = SearchExpression.ParseAndLikeKeywords("IssuerKeywords", command.Keywords);
+    static internal string MapToFilterString(this IssuersQuery query) {
+      string issuerTypeStatusFilter = BuildIssuerTypeAndStatusFilter(query.IssuerType);
+      string instrumentTypeFilter = BuildInstrumentTypeFilter(query.InstrumentType);
+      string instrumentKindFilter = BuildInstrumentKindFilter(query.InstrumentKind);
+      string onDateFilter = BuildOnDateFilter(query.OnDate);
+      string keywordsFilter = SearchExpression.ParseAndLikeKeywords("IssuerKeywords", query.Keywords);
 
 
       Filter filter = new Filter(issuerTypeStatusFilter);
@@ -50,9 +98,9 @@ namespace Empiria.Land.Instruments.Adapters {
     }
 
 
-    static internal string MapToSortString(this IssuersSearchCommand command) {
-      if (EmpiriaString.NotIsEmpty(command.OrderBy)) {
-        return command.OrderBy;
+    static internal string MapToSortString(this IssuersQuery query) {
+      if (EmpiriaString.NotIsEmpty(query.OrderBy)) {
+        return query.OrderBy;
       } else {
         return "IssuerName";
       }
@@ -61,7 +109,7 @@ namespace Empiria.Land.Instruments.Adapters {
 
     #endregion Extension methods
 
-    #region Helper methods
+    #region Helpers
 
     static private string BuildInstrumentKindFilter(string instrumentKind) {
       if (EmpiriaString.IsEmpty(instrumentKind)) {
@@ -109,8 +157,8 @@ namespace Empiria.Land.Instruments.Adapters {
       return $"{activeIssuersFilter} AND IssuerTypeId = {issuerType.Id}";
     }
 
-    #endregion Helper methods
+    #endregion Helpers
 
-  }  // class IssuersSearchCommandExtensions
+  }  // class IssuersQueryExtensions
 
 }  // namespace Empiria.Land.Instruments.Adapters

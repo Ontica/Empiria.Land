@@ -18,13 +18,13 @@ namespace Empiria.Land.Instruments.Data {
   /// <summary>Data read and write services for legal instrument issuers.</summary>
   static internal class IssuersData {
 
-    static internal FixedList<Issuer> GetList(IssuersSearchCommand searchCommand) {
-      searchCommand.EnsureIsValid();
+    static internal FixedList<Issuer> GetList(IssuersQuery query) {
+      query.EnsureIsValid();
 
-      string filter  = searchCommand.MapToFilterString();
-      string orderBy = searchCommand.MapToSortString();
+      string filter  = query.MapToFilterString();
+      string orderBy = query.MapToSortString();
 
-      string sql = $"SELECT TOP {searchCommand.PageSize} * " +
+      string sql = $"SELECT TOP {query.PageSize} * " +
                     "FROM LRSIssuers " +
                    $"WHERE {filter} ORDER BY {orderBy}";
 

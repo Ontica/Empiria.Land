@@ -37,17 +37,17 @@ namespace Empiria.Land.Tests.Instruments {
 
     [Fact]
     public void Should_Search_Issuers_For_EscrituraPublica() {
-      var searchCommand = new IssuersSearchCommand();
+      var query = new IssuersQuery();
 
-      FixedList<IssuerDto> list = _usecases.SearchIssuers(searchCommand);
+      FixedList<IssuerDto> list = _usecases.SearchIssuers(query);
 
       Assert.NotEmpty(list);
 
       int moreGeneralListItemsCount = list.Count;
 
-      searchCommand.InstrumentType = InstrumentTypeEnum.EscrituraPublica;
+      query.InstrumentType = InstrumentTypeEnum.EscrituraPublica;
 
-      list = _usecases.SearchIssuers(searchCommand);
+      list = _usecases.SearchIssuers(query);
 
       Assert.True(list.Count <= moreGeneralListItemsCount,
                  "Search issuers by instrument type must return the same or fewer items.");
@@ -55,9 +55,9 @@ namespace Empiria.Land.Tests.Instruments {
 
       moreGeneralListItemsCount = list.Count;
 
-      searchCommand.Keywords = "gOnzález";
+      query.Keywords = "gOnzález";
 
-      list = _usecases.SearchIssuers(searchCommand);
+      list = _usecases.SearchIssuers(query);
 
       Assert.True(list.Count <= moreGeneralListItemsCount,
                  "Search issuers by keyword must return the same or fewer items.");

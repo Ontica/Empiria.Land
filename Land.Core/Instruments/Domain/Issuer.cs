@@ -42,8 +42,8 @@ namespace Empiria.Land.Instruments {
 
     static public Issuer Empty => BaseObject.ParseEmpty<Issuer>();
 
-    static public FixedList<Issuer> GetList(IssuersSearchCommand searchCommand) {
-      return IssuersData.GetList(searchCommand);
+    static public FixedList<Issuer> GetList(IssuersQuery query) {
+      return IssuersData.GetList(query);
     }
 
     #endregion Constructors and parsers

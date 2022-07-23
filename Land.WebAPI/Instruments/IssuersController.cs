@@ -24,13 +24,13 @@ namespace Empiria.Land.Instruments.WebApi {
 
     [HttpGet]
     [Route("v5/land/instrument-issuers")]
-    public CollectionModel SearchIssuers([FromUri] IssuersSearchCommand searchCommand) {
-      if (searchCommand == null) {
-        searchCommand = new IssuersSearchCommand();
+    public CollectionModel SearchIssuers([FromUri] IssuersQuery query) {
+      if (query == null) {
+        query = new IssuersQuery();
       }
 
       using (var usecases = IssuerUseCases.UseCaseInteractor()) {
-        FixedList<IssuerDto> list = usecases.SearchIssuers(searchCommand);
+        FixedList<IssuerDto> list = usecases.SearchIssuers(query);
 
         return new CollectionModel(this.Request, list);
       }
