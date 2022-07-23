@@ -1,33 +1,76 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Transaction Management                     Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Type Extension methods                  *
-*  Type     : SearchTransactionCommandExtensions         License   : Please read LICENSE.txt file            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Query payload                           *
+*  Type     : TransactionsQuery                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Extension methods for SearchTransactionCommand interface adapter.                              *
+*  Summary  : Query payload used for transactions searching.                                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Transactions.Adapters {
 
-  /// <summary>Extension methods for SearchTransactionCommand interface adapter.</summary>
-  static internal class SearchTransactionCommandExtensions {
+  /// <summary>Query payload used for transactions searching.</summary>
+  public class TransactionsQuery {
+
+    public TransactionStage Stage {
+      get;
+      set;
+    } = TransactionStage.All;
+
+
+    public TransactionStatus Status {
+      get;
+      set;
+    } = TransactionStatus.All;
+
+
+    public string Keywords {
+      get;
+      set;
+    } = string.Empty;
+
+
+    public string OrderBy {
+      get;
+      set;
+    } = String.Empty;
+
+
+    public int PageSize {
+      get;
+      set;
+    } = 50;
+
+
+    public int Page {
+      get;
+      set;
+    } = 1;
+
+  }  // class TransactionQuery
+
+
+
+  /// <summary>Extension methods for TransactionsQuery class.</summary>
+  static internal class TransactionsQueryExtensions {
 
     #region Extension methods
 
-    static internal void EnsureIsValid(this SearchTransactionCommand command) {
-      command.Keywords = command.Keywords ?? String.Empty;
-      command.OrderBy = command.OrderBy ?? "TransactionId DESC";
-      command.PageSize = command.PageSize <= 0 ? 50 : command.PageSize;
-      command.Page = command.Page <= 0 ? 1 : command.Page;
+    static internal void EnsureIsValid(this TransactionsQuery query) {
+      query.Keywords = query.Keywords ?? String.Empty;
+      query.OrderBy = query.OrderBy ?? "TransactionId DESC";
+      query.PageSize = query.PageSize <= 0 ? 50 : query.PageSize;
+      query.Page = query.Page <= 0 ? 1 : query.Page;
     }
 
 
-    static internal string MapToFilterString(this SearchTransactionCommand command) {
-      string stageStatusFilter = BuildStageStatusFilter(command.Stage, command.Status);
-      string keywordsFilter = BuildKeywordsFilter(command.Keywords);
+    static internal string MapToFilterString(this TransactionsQuery query) {
+      string stageStatusFilter = BuildStageStatusFilter(query.Stage, query.Status);
+      string keywordsFilter = BuildKeywordsFilter(query.Keywords);
 
       var filter = new Filter(stageStatusFilter);
 
@@ -37,9 +80,9 @@ namespace Empiria.Land.Transactions.Adapters {
     }
 
 
-    static internal string MapToSortString(this SearchTransactionCommand command) {
-      if (!String.IsNullOrWhiteSpace(command.OrderBy)) {
-        return command.OrderBy;
+    static internal string MapToSortString(this TransactionsQuery query) {
+      if (!String.IsNullOrWhiteSpace(query.OrderBy)) {
+        return query.OrderBy;
       } else {
         return "TransactionId DESC";
       }
@@ -47,7 +90,7 @@ namespace Empiria.Land.Transactions.Adapters {
 
     #endregion Extension methods
 
-    #region Private methods
+    #region Helpers
 
     static private string BuildKeywordsFilter(string keywords) {
       if (EmpiriaString.IsInteger(keywords)) {
@@ -112,8 +155,8 @@ namespace Empiria.Land.Transactions.Adapters {
       }
     }
 
-    #endregion Private methods
+    #endregion Helpers
 
-  }  // class SearchTransactionCommandExtensions
+  }  // class TransactionsQueryExtensions
 
 }  // namespace Empiria.Land.Transactions.Adapters

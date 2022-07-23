@@ -99,15 +99,15 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
-    public FixedList<TransactionShortModel> SearchTransactions(SearchTransactionCommand searchCommand) {
-      Assertion.Require(searchCommand, "searchCommand");
+    public FixedList<TransactionShortModel> SearchTransactions(TransactionsQuery query) {
+      Assertion.Require(query, nameof(query));
 
-      searchCommand.EnsureIsValid();
+      query.EnsureIsValid();
 
-      string filter = searchCommand.MapToFilterString();
-      string sort = searchCommand.MapToSortString();
+      string filter = query.MapToFilterString();
+      string sort = query.MapToSortString();
 
-      var list = LRSTransaction.GetList(filter, sort, searchCommand.PageSize);
+      var list = LRSTransaction.GetList(filter, sort, query.PageSize);
 
       return TransactionShortModelMapper.Map(list);
     }

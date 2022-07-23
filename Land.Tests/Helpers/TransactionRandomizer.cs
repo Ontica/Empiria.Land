@@ -78,7 +78,7 @@ namespace Empiria.Land.Tests {
     static internal TransactionDto GetRandomOnPendingStageTransaction() {
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
 
-        var command = new SearchTransactionCommand {
+        var command = new TransactionsQuery {
           Stage = TransactionStage.Pending,
           Status = TransactionStatus.Payment
         };
@@ -136,11 +136,11 @@ namespace Empiria.Land.Tests {
     static internal TransactionDto GetRandomTransaction() {
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
 
-        var command = new SearchTransactionCommand {
+        var query = new TransactionsQuery {
           Keywords = "ez"
         };
 
-        var transactions = usecases.SearchTransactions(command);
+        var transactions = usecases.SearchTransactions(query);
 
         var index = EmpiriaMath.GetRandom(0, transactions.Count - 1);
 
@@ -169,10 +169,10 @@ namespace Empiria.Land.Tests {
 
     static internal TransactionDto GetRandomUpdatableTransaction() {
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
-        var command = new SearchTransactionCommand {
+        var query = new TransactionsQuery {
           Stage = TransactionStage.Pending
         };
-        var transactions = usecases.SearchTransactions(command);
+        var transactions = usecases.SearchTransactions(query);
 
         var index = EmpiriaMath.GetRandom(0, transactions.Count - 1);
 

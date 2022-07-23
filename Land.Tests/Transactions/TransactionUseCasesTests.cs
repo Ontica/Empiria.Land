@@ -93,14 +93,12 @@ namespace Empiria.Land.Tests.Transactions {
 
       transaction = _usecases.GetTransaction(transaction.UID);
 
-      // Assert.Equal(TransactionStatus.Deleted, transaction.Status);
-
-      var searchCommand = new SearchTransactionCommand {
+      var query = new TransactionsQuery {
         Stage = TransactionStage.Pending,
         Keywords = transaction.UID
       };
 
-      FixedList<TransactionShortModel> list = _usecases.SearchTransactions(searchCommand);
+      FixedList<TransactionShortModel> list = _usecases.SearchTransactions(query);
 
       Assert.Empty(list);
     }
@@ -116,12 +114,12 @@ namespace Empiria.Land.Tests.Transactions {
 
     [Fact]
     public void Should_Get_MyInbox_TransactionList() {
-      var myInboxCommand = new SearchTransactionCommand {
+      var myInboxQuery = new TransactionsQuery {
         Stage = TransactionStage.MyInbox,
         PageSize = 100,
       };
 
-      FixedList<TransactionShortModel> list = _usecases.SearchTransactions(myInboxCommand);
+      FixedList<TransactionShortModel> list = _usecases.SearchTransactions(myInboxQuery);
 
       Assert.NotEmpty(list);
 
@@ -135,20 +133,20 @@ namespace Empiria.Land.Tests.Transactions {
 
     [Fact]
     public void Should_Search_And_Get_A_TransactionList() {
-      var searchCommand = new SearchTransactionCommand {
+      var query = new TransactionsQuery {
         Stage = TransactionStage.Completed,
         PageSize = 100,
       };
 
-      FixedList<TransactionShortModel> list = _usecases.SearchTransactions(searchCommand);
+      FixedList<TransactionShortModel> list = _usecases.SearchTransactions(query);
 
       Assert.NotEmpty(list);
 
       int moreGeneralListItemsCount = list.Count;
 
-      searchCommand.Keywords = "josé";
+      query.Keywords = "josé";
 
-      list = _usecases.SearchTransactions(searchCommand);
+      list = _usecases.SearchTransactions(query);
 
       Assert.True(list.Count <= moreGeneralListItemsCount,
                  "Search transactions by keyword must return the same or fewer items.");
@@ -173,8 +171,6 @@ namespace Empiria.Land.Tests.Transactions {
 
       Assert.True(DateTime.Now.AddSeconds(-2) <= submitted.PresentationTime &&
                   submitted.PresentationTime <= DateTime.Now);
-
-      // Assert.NotEqual(TransactionStatus.Payment, submitted.Status);
 
       Assert.False(submitted.Actions.Can.Submit);
       Assert.False(submitted.Actions.Can.CancelPayment);
