@@ -98,7 +98,7 @@ namespace Empiria.Land.Tests.Transactions {
         Keywords = transaction.UID
       };
 
-      FixedList<TransactionShortModel> list = _usecases.SearchTransactions(query);
+      FixedList<TransactionDescriptor> list = _usecases.SearchTransactions(query);
 
       Assert.Empty(list);
     }
@@ -119,7 +119,7 @@ namespace Empiria.Land.Tests.Transactions {
         PageSize = 100,
       };
 
-      FixedList<TransactionShortModel> list = _usecases.SearchTransactions(myInboxQuery);
+      FixedList<TransactionDescriptor> list = _usecases.SearchTransactions(myInboxQuery);
 
       Assert.NotEmpty(list);
 
@@ -138,7 +138,7 @@ namespace Empiria.Land.Tests.Transactions {
         PageSize = 100,
       };
 
-      FixedList<TransactionShortModel> list = _usecases.SearchTransactions(query);
+      FixedList<TransactionDescriptor> list = _usecases.SearchTransactions(query);
 
       Assert.NotEmpty(list);
 

@@ -62,7 +62,7 @@ namespace Empiria.Land.Workflow {
           break;
 
         case WorkflowCommandType.SetNextStatus:
-          var status = TransactionDtoMapper.MapStatus(command.Payload.NextStatus);
+          var status = TransactionMapper.MapStatus(command.Payload.NextStatus);
 
           workflow.SetNextStatus(status, assignTo, command.Payload.Note);
           break;

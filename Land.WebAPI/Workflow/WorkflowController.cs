@@ -57,7 +57,7 @@ namespace Empiria.Land.Workflow.WebApi {
       Assertion.Require(command.Payload.SearchUID, "payload.searchUID field must be provided.");
 
       using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
-        TransactionShortModel transaction = usecases.SearchTransaction(command.Payload.SearchUID);
+        TransactionDescriptor transaction = usecases.SearchTransaction(command.Payload.SearchUID);
 
         command.Payload.TransactionUID = new string[] { transaction.UID };
 

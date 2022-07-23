@@ -105,7 +105,7 @@ namespace Empiria.Land.Workflow.UseCases {
     }
 
 
-    public TransactionShortModel SearchTransaction(string searchUID) {
+    public TransactionDescriptor SearchTransaction(string searchUID) {
       Assertion.Require(searchUID, "searchUID");
 
       var transaction = LRSTransaction.TryParseWitAnyKey(searchUID);
@@ -114,7 +114,7 @@ namespace Empiria.Land.Workflow.UseCases {
         throw new ResourceNotFoundException("Transaction.NotFound", $"No encontré un trámite con clave '{searchUID}'.");
       }
 
-      return TransactionShortModelMapper.Map(transaction);
+      return TransactionMapper.MapToDescriptor(transaction);
     }
 
 

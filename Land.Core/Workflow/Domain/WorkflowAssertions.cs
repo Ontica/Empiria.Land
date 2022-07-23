@@ -86,7 +86,7 @@ namespace Empiria.Land.Workflow {
 
       var allNextStatusList = _rules.NextStatusList(transaction);
 
-      LRSTransactionStatus mappedStatus = TransactionDtoMapper.MapStatus(nextStatus);
+      LRSTransactionStatus mappedStatus = TransactionMapper.MapStatus(nextStatus);
 
       Assertion.Require(allNextStatusList.Contains(mappedStatus),
                        $"No es posible mover el trámite '{transaction.UID}' a " +

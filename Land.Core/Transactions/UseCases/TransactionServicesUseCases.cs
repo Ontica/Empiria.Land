@@ -28,7 +28,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       transaction.CancelPayment();
 
-      return await Task.FromResult(TransactionDtoMapper.Map(transaction));
+      return await Task.FromResult(TransactionMapper.Map(transaction));
     }
 
 
@@ -49,7 +49,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       transaction.Save();
 
-      return TransactionDtoMapper.Map(transaction);
+      return TransactionMapper.Map(transaction);
     }
 
 
@@ -65,7 +65,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       transaction.CancelPaymentOrder();
 
-      return await Task.FromResult(TransactionDtoMapper.Map(transaction));
+      return await Task.FromResult(TransactionMapper.Map(transaction));
     }
 
 
@@ -85,7 +85,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       transaction.SetPaymentOrder(paymentOrder);
 
-      return TransactionDtoMapper.Map(transaction);
+      return TransactionMapper.Map(transaction);
     }
 
 
@@ -108,7 +108,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       transaction.AddItem(requestedServiceFields);
 
-      return TransactionDtoMapper.Map(transaction);
+      return TransactionMapper.Map(transaction);
     }
 
 
@@ -135,7 +135,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       transaction.SetPayment(paymentFields);
 
-      return await Task.FromResult(TransactionDtoMapper.Map(transaction));
+      return await Task.FromResult(TransactionMapper.Map(transaction));
     }
 
     #endregion Use cases

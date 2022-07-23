@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Transaction Management                     Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
-*  Type     : TransactionDtoMapper                       License   : Please read LICENSE.txt file            *
+*  Type     : TransactionoMapper                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Contains methods to map from LRSTransaction objects to TransactionDTOs.                        *
 *                                                                                                            *
@@ -21,7 +21,7 @@ using Empiria.Land.Registration.Transactions;
 namespace Empiria.Land.Transactions.Adapters {
 
   /// <summary>Contains methods to map from LRSTransaction objects to TransactionDTOs.</summary>
-  static internal class TransactionDtoMapper {
+  static internal class TransactionMapper {
 
     static internal FixedList<TransactionDto> Map(FixedList<LRSTransaction> list) {
       return new FixedList<TransactionDto>(list.Select((x) => Map(x)));
@@ -75,6 +75,38 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.Instrument = InstrumentMapper.Map(data.Instrument);
       dto.Antecedent = data.Antecedent;
       dto.AntecedentRecordingActs = data.AntecedentRecordingActs;
+
+      return dto;
+    }
+
+
+    static internal FixedList<TransactionDescriptor> MapToDescriptor(FixedList<LRSTransaction> list) {
+      var mappedItems = list.Select((x) => MapToDescriptor(x));
+
+      return new FixedList<TransactionDescriptor>(mappedItems);
+    }
+
+
+    static internal TransactionDescriptor MapToDescriptor(LRSTransaction transaction) {
+      var dto = new TransactionDescriptor();
+
+      var currentTask = transaction.Workflow.GetCurrentTask();
+
+      dto.UID = transaction.UID;
+      dto.TransactionID = transaction.UID;
+      dto.Type = transaction.TransactionType.Name;
+      dto.Subtype = transaction.DocumentType.Name;
+      dto.RequestedBy = transaction.RequestedBy;
+      dto.PresentationTime = transaction.PresentationTime;
+      dto.InternalControlNo = transaction.InternalControlNoFormatted;
+      dto.Status = currentTask.CurrentStatus.ToString();
+      dto.StatusName = currentTask.CurrentStatusName;
+      dto.AssignedToUID = currentTask.Responsible.UID;
+      dto.AssignedToName = currentTask.Responsible.Alias;
+
+      dto.NextStatus = currentTask.NextStatus.ToString();
+      dto.NextStatusName = currentTask.NextStatusName;
+      dto.NextAssignedToName = currentTask.NextContact.Alias;
 
       return dto;
     }

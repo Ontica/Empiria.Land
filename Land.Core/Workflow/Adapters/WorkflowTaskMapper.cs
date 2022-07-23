@@ -30,7 +30,7 @@ namespace Empiria.Land.Workflow.Adapters {
         EndProcessTime = task.EndProcessTime,
         CheckOutTime = task.CheckOutTime,
         ElapsedTime = task.ElapsedTime.ToString(@"dd\:hh\:mm") + ":00",
-        NextTask = TransactionDtoMapper.MapStatus(task.NextStatus),
+        NextTask = TransactionMapper.MapStatus(task.NextStatus),
         NextTaskName = task.NextStatusName,
         NextAssigneeUID = task.NextContact.UID,
         NextAssigneeName = task.NextContact.Alias,

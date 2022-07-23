@@ -55,7 +55,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       var transactionType = LRSTransactionType.Parse(transactionTypeUID);
 
-      return TransactionTypeDtoMapper.Map(transactionType);
+      return TransactionTypeMapper.Map(transactionType);
     }
 
 
@@ -63,14 +63,14 @@ namespace Empiria.Land.Transactions.UseCases {
       FixedList<RecordingActTypeCategory> list =
                   RecordingActTypeCategory.GetList("TransactionActTypesCategories.List");
 
-      return ProvidedServiceDtoMapper.Map(list);
+      return ProvidedServiceMapper.Map(list);
     }
 
 
     public FixedList<TransactionTypeDto> TransactionTypes() {
       FixedList<LRSTransactionType> list = LRSTransactionType.GetList();
 
-      return TransactionTypeDtoMapper.Map(list);
+      return TransactionTypeMapper.Map(list);
     }
 
 

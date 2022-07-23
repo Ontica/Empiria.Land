@@ -45,7 +45,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       clone.Save();
 
-      return TransactionDtoMapper.Map(clone);
+      return TransactionMapper.Map(clone);
     }
 
 
@@ -63,7 +63,7 @@ namespace Empiria.Land.Transactions.UseCases {
         LandMessenger.Start();
       }
 
-      return TransactionDtoMapper.Map(transaction);
+      return TransactionMapper.Map(transaction);
     }
 
 
@@ -86,7 +86,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       var preprocessingControlData = new TransactionPreprocessingData(transaction);
 
-      return TransactionDtoMapper.Map(preprocessingControlData);
+      return TransactionMapper.Map(preprocessingControlData);
     }
 
 
@@ -95,11 +95,11 @@ namespace Empiria.Land.Transactions.UseCases {
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
-      return TransactionDtoMapper.Map(transaction);
+      return TransactionMapper.Map(transaction);
     }
 
 
-    public FixedList<TransactionShortModel> SearchTransactions(TransactionsQuery query) {
+    public FixedList<TransactionDescriptor> SearchTransactions(TransactionsQuery query) {
       Assertion.Require(query, nameof(query));
 
       query.EnsureIsValid();
@@ -109,7 +109,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       var list = LRSTransaction.GetList(filter, sort, query.PageSize);
 
-      return TransactionShortModelMapper.Map(list);
+      return TransactionMapper.MapToDescriptor(list);
     }
 
 
@@ -120,7 +120,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       transaction.Workflow.Receive(string.Empty);
 
-      return await Task.FromResult(TransactionDtoMapper.Map(transaction));
+      return await Task.FromResult(TransactionMapper.Map(transaction));
     }
 
 
@@ -134,7 +134,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       transaction.Save();
 
-      return TransactionDtoMapper.Map(transaction);
+      return TransactionMapper.Map(transaction);
     }
 
     #endregion Use cases

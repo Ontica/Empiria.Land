@@ -14,7 +14,7 @@ using Empiria.Land.Registration.Transactions;
 namespace Empiria.Land.Transactions.Adapters {
 
   /// <summary>Contains methods used to map to ProvidedServiceDto objects.</summary>
-  static internal class ProvidedServiceDtoMapper {
+  static internal class ProvidedServiceMapper {
 
     static internal FixedList<ProvidedServiceGroupDto> Map(FixedList<RecordingActTypeCategory> groups) {
       return new FixedList<ProvidedServiceGroupDto>(groups.Select((x) => Map(x)));
@@ -87,6 +87,6 @@ namespace Empiria.Land.Transactions.Adapters {
 
     #endregion Private methods
 
-  }  // class TransactionDtoMapper
+  }  // class ProvidedServiceMapper
 
 }  // namespace Empiria.Land.Transactions.Adapters

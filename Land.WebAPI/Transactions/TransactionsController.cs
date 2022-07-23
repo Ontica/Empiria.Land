@@ -91,7 +91,7 @@ namespace Empiria.Land.Transactions.WebApi {
       Assertion.Require(query, nameof(query));
 
       using (var usecases = TransactionUseCases.UseCaseInteractor()) {
-        FixedList<TransactionShortModel> list = usecases.SearchTransactions(query);
+        FixedList<TransactionDescriptor> list = usecases.SearchTransactions(query);
 
         return new CollectionModel(this.Request, list);
       }

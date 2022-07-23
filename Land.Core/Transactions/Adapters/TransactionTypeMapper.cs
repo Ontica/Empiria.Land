@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Transaction Management                     Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
-*  Type     : TransactionTypeDtoMapper                   License   : Please read LICENSE.txt file            *
+*  Type     : TransactionTypeMapper                      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Mapping methods from TransactionType instances to TransactionTypeDto models.                   *
 *                                                                                                            *
@@ -13,7 +13,7 @@ using Empiria.Land.Registration.Transactions;
 namespace Empiria.Land.Transactions.Adapters {
 
   /// <summary>Mapping methods from TransactionType instances to TransactionTypeDto models.</summary>
-  static internal class TransactionTypeDtoMapper {
+  static internal class TransactionTypeMapper {
 
     static internal FixedList<TransactionTypeDto> Map(FixedList<LRSTransactionType> list) {
       return new FixedList<TransactionTypeDto>(list.Select((x) => Map(x)));
@@ -32,6 +32,6 @@ namespace Empiria.Land.Transactions.Adapters {
       return dto;
     }
 
-  }  // class TransactionTypeDtoMapper
+  }  // class TransactionTypeMapper
 
 }  // namespace Empiria.Land.Transactions.Adapters
