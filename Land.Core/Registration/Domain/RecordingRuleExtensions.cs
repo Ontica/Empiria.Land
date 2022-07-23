@@ -20,15 +20,16 @@ namespace Empiria.Land.Registration {
     #region Methods
 
     static internal FixedList<RecordingActTypeCategory> ApplicableRecordingActTypes(this Instrument instrument) {
-      Assertion.Require(instrument, "instrument");
-
       return RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
     }
 
 
     static internal FixedList<RecordingActTypeCategory> ApplicableRecordingActTypes(this PhysicalRecording physicalRecording) {
-      Assertion.Require(physicalRecording, "physicalRecording");
+      return RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
+    }
 
+
+    static internal FixedList<RecordingActTypeCategory> ApplicableRecordingActTypes(this Resource recordableSubject) {
       return RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
     }
 
@@ -36,7 +37,7 @@ namespace Empiria.Land.Registration {
     static internal FixedList<RegistrationCommandType> RegistrationCommandTypes(this RecordingActType recordingActType) {
       var rule = recordingActType.RecordingRule;
 
-      List<RegistrationCommandType> list = new List<RegistrationCommandType>();
+      var list = new List<RegistrationCommandType>();
 
       if (!rule.IsActive) {
         list.Add(RegistrationCommandType.Undefined);
@@ -99,6 +100,57 @@ namespace Empiria.Land.Registration {
 
       return list.ToFixedList();
     }
+
+
+    static internal FixedList<RegistrationCommandType> TractIndexRegistrationCommandTypes(this RecordingActType recordingActType) {
+      var rule = recordingActType.RecordingRule;
+
+      var list = new List<RegistrationCommandType>();
+
+      if (!rule.IsActive) {
+        list.Add(RegistrationCommandType.Undefined);
+        return list.ToFixedList();
+      }
+
+      switch (rule.AppliesTo) {
+        case RecordingRuleApplication.Association:
+          list.Add(RegistrationCommandType.AssociationTractIndex);
+          break;
+
+        case RecordingRuleApplication.AssociationAct:
+          list.Add(RegistrationCommandType.AmendAssociationTractIndexAct);
+          break;
+
+
+        case RecordingRuleApplication.NoProperty:
+          list.Add(RegistrationCommandType.NoPropertyTractIndex);
+          break;
+
+        case RecordingRuleApplication.NoPropertyAct:
+          list.Add(RegistrationCommandType.AmendNoPropertyTractIndexAct);
+          break;
+
+        case RecordingRuleApplication.RealEstate:
+        case RecordingRuleApplication.Structure:
+          list.Add(RegistrationCommandType.RealEstateTractIndex);
+          if (rule.AllowsPartitions) {
+            list.Add(RegistrationCommandType.RealEstateTractIndexPartition);
+          }
+          break;
+
+        case RecordingRuleApplication.RealEstateAct:
+          list.Add(RegistrationCommandType.AmendRealEstateTractIndexAct);
+          break;
+
+      }
+
+      if (list.Count == 0) {
+        list.Add(RegistrationCommandType.Undefined);
+      }
+
+      return list.ToFixedList();
+    }
+
 
     #endregion Methods
 

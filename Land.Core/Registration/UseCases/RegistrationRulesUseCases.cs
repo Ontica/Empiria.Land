@@ -35,8 +35,8 @@ namespace Empiria.Land.Registration.UseCases {
 
     public FixedList<RecordingActTypeGroupDto> RecordingActTypesForBookEntry(string recordingBookUID,
                                                                              string bookEntryUID) {
-      Assertion.Require(recordingBookUID, "recordingBookUID");
-      Assertion.Require(bookEntryUID, "bookEntryUID");
+      Assertion.Require(recordingBookUID, nameof(recordingBookUID));
+      Assertion.Require(bookEntryUID, nameof(bookEntryUID));
 
       var book = RecordingBook.Parse(recordingBookUID);
 
@@ -47,22 +47,35 @@ namespace Empiria.Land.Registration.UseCases {
 
       FixedList<RecordingActTypeCategory> recordingActTypesList = bookEntry.ApplicableRecordingActTypes();
 
-      return RecordingActTypeMapper.Map(recordingActTypesList);
+      return RecordingActTypeMapper.Map(recordingActTypesList, false);
     }
 
 
     public FixedList<RecordingActTypeGroupDto> RecordingActTypesForInstrument(string instrumentUID) {
-      Assertion.Require(instrumentUID, "instrumentUID");
+      Assertion.Require(instrumentUID, nameof(instrumentUID));
 
       var instrument = Instrument.Parse(instrumentUID);
 
       FixedList<RecordingActTypeCategory> recordingActTypesList = instrument.ApplicableRecordingActTypes();
 
-      return RecordingActTypeMapper.Map(recordingActTypesList);
+      return RecordingActTypeMapper.Map(recordingActTypesList, false);
+    }
+
+
+    public FixedList<RecordingActTypeGroupDto> RecordingActTypesForRecordableSubject(string recordableSubjectUID) {
+      Assertion.Require(recordableSubjectUID, nameof(recordableSubjectUID));
+
+      var recordableSubject = Resource.ParseGuid(recordableSubjectUID);
+
+      FixedList<RecordingActTypeCategory> recordingActTypesList = recordableSubject.ApplicableRecordingActTypes();
+
+      return RecordingActTypeMapper.Map(recordingActTypesList, true);
     }
 
 
     public FixedList<NamedEntityDto> RecordingActTypesList(string listUID) {
+      Assertion.Require(listUID, nameof(listUID));
+
       var category = RecordingActTypeCategory.Parse(listUID);
 
       var list = category.RecordingActTypes;

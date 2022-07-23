@@ -27,7 +27,6 @@ namespace Empiria.Land.Registration {
     SelectNoPropertyAntecedent,
     SelectNoPropertyAct,
 
-
     CreateRealEstate,
     SelectRealEstate,
     SelectRealEstateAntecedent,
@@ -35,6 +34,19 @@ namespace Empiria.Land.Registration {
 
     CreateRealEstatePartition,
     CreateRealEstatePartitionForAntecedent,
+
+
+    ///  Tract index edition commands
+
+    AssociationTractIndex,
+    AmendAssociationTractIndexAct,
+
+    NoPropertyTractIndex,
+    AmendNoPropertyTractIndexAct,
+
+    RealEstateTractIndex,
+    AmendRealEstateTractIndexAct,
+    RealEstateTractIndexPartition,
 
   }  // enum RegistrationCommandType
 
@@ -54,7 +66,7 @@ namespace Empiria.Land.Registration {
           return "Sociedad registrada en antecedente, sin folio electrónico";
 
         case RegistrationCommandType.SelectAssociationAct:
-          return "Sobre un acto jurídico de una asociación";
+          return "Sobre un acto jurídico de una sociedad";
 
         case RegistrationCommandType.CreateNoProperty:
           return "Documento a inscribirse por primera vez";
@@ -85,6 +97,27 @@ namespace Empiria.Land.Registration {
 
         case RegistrationCommandType.SelectRealEstateAntecedent:
           return "Predio registrado en antecedente, sin folio real";
+
+        case RegistrationCommandType.AssociationTractIndex:
+          return "Sobre esta sociedad";
+
+        case RegistrationCommandType.AmendAssociationTractIndexAct:
+          return "Sobre un acto jurídico de esta sociedad";
+
+        case RegistrationCommandType.NoPropertyTractIndex:
+          return "Sobre este documento";
+
+        case RegistrationCommandType.AmendNoPropertyTractIndexAct:
+          return "Sobre un acto jurídico de este documento";
+
+        case RegistrationCommandType.RealEstateTractIndex:
+          return "Sobre la totalidad de este predio";
+
+        case RegistrationCommandType.RealEstateTractIndexPartition:
+          return "Sobre una fracción de este predio";
+
+        case RegistrationCommandType.AmendRealEstateTractIndexAct:
+          return "Sobre un acto jurídico de este predio";
 
         case RegistrationCommandType.Undefined:
           return "La regla de registro no ha sido definida";
@@ -186,6 +219,51 @@ namespace Empiria.Land.Registration {
           return new RegistrationCommandRuleDto {
             SubjectType = RecordableSubjectType.RealEstate,
             SelectSubject = true,
+            SelectTargetAct = true
+          };
+
+        case RegistrationCommandType.AssociationTractIndex:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.Association,
+            SelectBookEntry = true
+          };
+
+        case RegistrationCommandType.AmendAssociationTractIndexAct:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.Association,
+            SelectTargetAct = true
+          };
+
+        case RegistrationCommandType.NoPropertyTractIndex:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.NoProperty,
+            SelectBookEntry = true
+          };
+
+
+        case RegistrationCommandType.AmendNoPropertyTractIndexAct:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.NoProperty,
+            SelectTargetAct = true
+          };
+
+        case RegistrationCommandType.RealEstateTractIndex:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.RealEstate,
+            SelectBookEntry = true
+          };
+
+        case RegistrationCommandType.RealEstateTractIndexPartition:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.RealEstate,
+            SelectBookEntry = true,
+            NewPartition = true
+          };
+
+
+        case RegistrationCommandType.AmendRealEstateTractIndexAct:
+          return new RegistrationCommandRuleDto {
+            SubjectType = RecordableSubjectType.RealEstate,
             SelectTargetAct = true
           };
 

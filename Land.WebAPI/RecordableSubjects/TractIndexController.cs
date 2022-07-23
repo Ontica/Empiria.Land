@@ -13,6 +13,8 @@ using Empiria.WebApi;
 
 using Empiria.Land.RecordableSubjects.Adapters;
 using Empiria.Land.RecordableSubjects.UseCases;
+using Empiria.Land.Registration.Adapters;
+using Empiria.Land.Registration.UseCases;
 
 namespace Empiria.Land.RecordableSubjects.WebApi {
 
@@ -50,6 +52,17 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
       }
     }
 
+
+    [HttpGet]
+    [Route("v5/land/registration/recordable-subjects/{recordableSubjectUID:guid}/tract-index/recording-act-types")]
+    public CollectionModel GetTractIndexRecordingActTypes([FromUri] string recordableSubjectUID) {
+
+      using (var usecases = RegistrationRulesUseCases.UseCaseInteractor()) {
+        FixedList<RecordingActTypeGroupDto> groups = usecases.RecordingActTypesForRecordableSubject(recordableSubjectUID);
+
+        return new CollectionModel(this.Request, groups);
+      }
+    }
 
     #endregion Web Apis
 

@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Linq;
 
 namespace Empiria.Land.Registration.Adapters {
 
@@ -17,43 +16,56 @@ namespace Empiria.Land.Registration.Adapters {
     #region Public methods
 
 
-    static internal FixedList<RecordingActTypeGroupDto> Map(FixedList<RecordingActTypeCategory> list) {
-      return new FixedList<RecordingActTypeGroupDto>(list.Select((x) => Map(x)));
+    static internal FixedList<RecordingActTypeGroupDto> Map(FixedList<RecordingActTypeCategory> list,
+                                                            bool forUseInTractIndexEdition) {
+      return new FixedList<RecordingActTypeGroupDto>(list.Select((x) => Map(x, forUseInTractIndexEdition)));
     }
 
-
-    static internal RecordingActTypeGroupDto Map(RecordingActTypeCategory group) {
-      return new RecordingActTypeGroupDto {
-        UID = group.UID,
-        Name = group.Name,
-        RecordingActTypes = Map(group.RecordingActTypes)
-      };
-    }
-
-
-    static internal FixedList<RecordingActTypeDto> Map(FixedList<RecordingActType> list) {
-      return new FixedList<RecordingActTypeDto>(list.Select((x) => Map(x)));
-    }
-
-
-    static internal RecordingActTypeDto Map(RecordingActType recordingActType) {
-      return new RecordingActTypeDto {
-        UID = recordingActType.UID,
-        Name = recordingActType.DisplayName,
-        RegistrationCommands = MapRegistrationCommandTypesList(recordingActType.RegistrationCommandTypes())
-      };
-    }
 
     static internal FixedList<NamedEntityDto> MapToNamedEntityList(FixedList<RecordingActType> list) {
       return new FixedList<NamedEntityDto>(list.Select((x) => new NamedEntityDto(x.UID, x.DisplayName)));
+
     }
 
     #endregion Public methods
 
-    #region Helper methods
+    #region Helpers
 
-    static private FixedList<RegistrationCommandDto> MapRegistrationCommandTypesList(FixedList<RegistrationCommandType> list) {
-      return new FixedList<RegistrationCommandDto>(list.Select((x) => MapRegistrationCommandType(x)));
+    static private RecordingActTypeGroupDto Map(RecordingActTypeCategory group,
+                                                bool forUseInTractIndexEdition) {
+
+      return new RecordingActTypeGroupDto {
+        UID = group.UID,
+        Name = group.Name,
+        RecordingActTypes = group.RecordingActTypes.Select(x => Map(x, forUseInTractIndexEdition))
+                                                   .ToFixedList()
+      };
+    }
+
+
+    static private RecordingActTypeDto Map(RecordingActType recordingActType,
+                                           bool forUseInTractIndexEdition) {
+      return new RecordingActTypeDto {
+        UID = recordingActType.UID,
+        Name = recordingActType.DisplayName,
+        RegistrationCommands = MapRegistrationCommandTypes(recordingActType, forUseInTractIndexEdition)
+      };
+    }
+
+
+    static private FixedList<RegistrationCommandDto> MapRegistrationCommandTypes(RecordingActType recordingActType,
+                                                                                 bool forUseInTractIndexEdition) {
+
+      FixedList<RegistrationCommandType> commandTypes;
+
+      if (forUseInTractIndexEdition) {
+        commandTypes = recordingActType.TractIndexRegistrationCommandTypes();
+      } else {
+        commandTypes = recordingActType.RegistrationCommandTypes();
+      }
+
+      return commandTypes.Select((x) => MapRegistrationCommandType(x))
+                         .ToFixedList();
     }
 
 
@@ -65,7 +77,7 @@ namespace Empiria.Land.Registration.Adapters {
       };
     }
 
-    #endregion Helper methods
+    #endregion Helpers
 
   }  // class RecordingActTypeMapper
 
