@@ -23,10 +23,32 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
                                       FixedList<RecordingAct> amendableActs) {
       return new TractIndexDto {
         RecordableSubject = RecordableSubjectsMapper.Map(recordableSubject),
-        Entries = MapTractIndex(amendableActs)
+        Entries = MapTractIndex(amendableActs),
+        Structure = new FixedList<TractIndexEntryDto>(),
+        Actions = MapActions(recordableSubject, amendableActs)
       };
     }
 
+    static private TractIndexActions MapActions(Resource recordableSubject,
+                                                FixedList<RecordingAct> amendableActs) {
+      return new TractIndexActions {
+        CanBeClosed = true,
+        CanBeOpened = false,
+        CanBeUpdated = true
+      };
+    }
+
+    static private TrantIndexEntryActions MapActions(RecordingAct recordingAct) {
+      bool isHistoric = recordingAct.Document.IsHistoricDocument;
+      bool isClosed = recordingAct.Document.IsClosed;
+
+      return new TrantIndexEntryActions {
+        CanBeDeleted = isHistoric && !isClosed,
+        CanBeClosed = isHistoric && !isClosed,
+        CanBeOpened = isHistoric && isClosed,
+        CanBeUpdated = isHistoric && !isClosed &&  recordingAct.IsEditable,
+      };
+    }
 
     static private FixedList<TractIndexEntryDto> MapTractIndex(FixedList<RecordingAct> list) {
       return new FixedList<TractIndexEntryDto>(list.Select((x) => MapTractIndexEntry(x)));
@@ -44,32 +66,11 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
         Transaction = MapTransaction(recordingAct.Document.GetTransaction()),
         OfficialDocument = MapToOfficialDocument(recordingAct),
-        SubjectChanges = MapSubjectChanges(recordingAct)
-
-        //OfficialDocument
-        //Transaction
-        //RecordingAct =
-        //Certificate =
-
-
-        //TransactionID = recordingAct.Document.TransactionID,
-        //TransactionUID = recordingAct.Document.TransactionID,
-
-        //RegisteredBy = recordingAct.RegisteredBy.Alias,
-
-
-        //DocumentUID = recordingAct.Document.GUID,
-        //DocumentNumber = recordingAct.Document.UID,
-        //DocumentMedia = InstrumentRecordingMapper.MapStampMedia(recordingAct.Document,
-        //                                                        recordingAct.Document.GetTransaction()),
-
-
-        //RecordableSubject = RecordableSubjectsMapper.Map(recordingAct.Resource),
-        //InstrumentRecordingUID = recordingAct.Document.GUID,
-
-
+        SubjectChanges = MapSubjectChanges(recordingAct),
+        Actions = MapActions(recordingAct)
       };
     }
+
 
 
     static private OfficialDocumentDto MapToOfficialDocument(RecordingAct recordingAct) {

@@ -31,8 +31,34 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     } = new FixedList<TractIndexEntryDto>();
 
 
-  }  // class TractIndexDto
+    public TractIndexActions Actions {
+      get; internal set;
+    } = new TractIndexActions();
 
+  }
+
+
+  public class TractIndexActions {
+
+    internal TractIndexActions() {
+      // no-op
+    }
+
+    public bool CanBeClosed {
+      get; internal set;
+    }
+
+
+    public bool CanBeOpened {
+      get; internal set;
+    }
+
+
+    public bool CanBeUpdated {
+      get; internal set;
+    }
+
+  }
 
 
   /// <summary>Holds an entry of the recordable subject tract.</summary>
@@ -87,8 +113,38 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       get; internal set;
     }
 
+
+    public TrantIndexEntryActions Actions {
+      get; internal set;
+    } = new TrantIndexEntryActions();
+
+
   }  // class TractIndexEntryDto
 
+
+  public class TrantIndexEntryActions {
+
+    internal TrantIndexEntryActions() {
+      // no-op
+    }
+
+    public bool CanBeClosed {
+      get; internal set;
+    }
+
+    public bool CanBeDeleted {
+      get; internal set;
+    }
+
+    public bool CanBeOpened {
+      get; internal set;
+    }
+
+    public bool CanBeUpdated {
+      get; internal set;
+    }
+
+  }
 
 
   public class TransactionInfoDto {
