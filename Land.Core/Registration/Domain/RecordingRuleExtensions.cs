@@ -19,18 +19,30 @@ namespace Empiria.Land.Registration {
 
     #region Methods
 
-    static internal FixedList<RecordingActTypeCategory> ApplicableRecordingActTypes(this Instrument instrument) {
-      return RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
+    static internal ApplicableRecordingActTypeList ApplicableRecordingActTypes(this Instrument instrument) {
+      var list = RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
+
+      var builder = new ApplicableRecordingActTypesBuilder(list);
+
+      return builder.BuildFor(instrument);
     }
 
 
-    static internal FixedList<RecordingActTypeCategory> ApplicableRecordingActTypes(this PhysicalRecording physicalRecording) {
-      return RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
+    static internal ApplicableRecordingActTypeList ApplicableRecordingActTypes(this PhysicalRecording bookEntry) {
+      var list = RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
+
+      var builder = new ApplicableRecordingActTypesBuilder(list);
+
+      return builder.BuildFor(bookEntry);
     }
 
 
-    static internal FixedList<RecordingActTypeCategory> ApplicableRecordingActTypes(this Resource recordableSubject) {
-      return RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
+    static internal ApplicableRecordingActTypeList ApplicableRecordingActTypes(this Resource recordableSubject) {
+      var list = RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
+
+      var builder = new ApplicableRecordingActTypesBuilder(list);
+
+      return builder.BuildFor(recordableSubject);
     }
 
 
