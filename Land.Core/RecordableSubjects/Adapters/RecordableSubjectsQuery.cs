@@ -1,10 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Recordable Subjects                        Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Type Extension methods                  *
-*  Type     : SearchRecordableSubjectsCommandExtensions  License   : Please read LICENSE.txt file            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Query payload                           *
+*  Type     : RecordableSubjectsQuery                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Extension methods for SearchRecordableSubjectsCommand interface adapter.                       *
+*  Summary  : Query payload used for recordable subjects searching.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,23 +13,57 @@ using Empiria.Land.Registration;
 
 namespace Empiria.Land.RecordableSubjects.Adapters {
 
-  /// <summary>Extension methods for SearchRecordableSubjectsCommand interface adapter.</summary>
-  static internal class SearchRecordableSubjectsCommandExtensions {
+  public class RecordableSubjectsQuery {
+
+    public RecordableSubjectType Type {
+      get; set;
+    } = RecordableSubjectType.None;
+
+
+    public string Keywords {
+      get;
+      set;
+    } = string.Empty;
+
+
+    public string OrderBy {
+      get;
+      set;
+    } = String.Empty;
+
+
+    public int PageSize {
+      get;
+      set;
+    } = 50;
+
+
+    public int Page {
+      get;
+      set;
+    } = 1;
+
+
+  }  // class // RecordableSubjectsQuery
+
+
+  /// <summary>Extension methods for RecordableSubjectsQuery type.</summary>
+  static internal class RecordableSubjectsQueryExtensions {
 
     #region Extension methods
 
-    static internal void EnsureIsValid(this SearchRecordableSubjectsCommand command) {
-      command.Keywords = command.Keywords ?? String.Empty;
-      command.OrderBy = command.OrderBy ?? "PropertyUID";
-      command.PageSize = command.PageSize <= 0 ? 50 : command.PageSize;
-      command.Page = command.Page <= 0 ? 1 : command.Page;
+    static internal void EnsureIsValid(this RecordableSubjectsQuery query) {
+      query.Keywords = query.Keywords ?? String.Empty;
+      query.OrderBy = query.OrderBy ?? "PropertyUID";
+      query.PageSize = query.PageSize <= 0 ? 50 : query.PageSize;
+      query.Page = query.Page <= 0 ? 1 : query.Page;
     }
 
 
-    static internal string MapToFilterString(this SearchRecordableSubjectsCommand command) {
-      string typeFilter = BuildRecordableSubjectTypeFilter(command.Type);
+    static internal string MapToFilterString(this RecordableSubjectsQuery query) {
+      string typeFilter = BuildRecordableSubjectTypeFilter(query.Type);
 
-      string keywordsFilter = BuildKeywordsFilter(command.Keywords);
+      string keywordsFilter = BuildKeywordsFilter(query.Keywords);
 
       var filter = new Filter(typeFilter);
 
@@ -52,9 +86,9 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    static internal string MapToSortString(this SearchRecordableSubjectsCommand command) {
-      if (!String.IsNullOrWhiteSpace(command.OrderBy)) {
-        return command.OrderBy;
+    static internal string MapToSortString(this RecordableSubjectsQuery query) {
+      if (!String.IsNullOrWhiteSpace(query.OrderBy)) {
+        return query.OrderBy;
       } else {
         return "PropertyUID";
       }
@@ -62,7 +96,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
     #endregion Extension methods
 
-    #region Private methods
+    #region Helpers
 
     static private string BuildKeywordsFilter(string keywords) {
       if (Resource.MatchesWithUID(keywords)) {
@@ -75,8 +109,8 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    #endregion Private methods
+    #endregion Helpers
 
-  }  // class SearchRecordableSubjectsCommandExtensions
+  }  // class RecordableSubjectsQueryExtensions
 
 }  // namespace Empiria.Land.RecordableSubjects.Adapters

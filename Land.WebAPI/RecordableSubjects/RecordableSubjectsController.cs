@@ -95,12 +95,12 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
 
     [HttpGet]
     [Route("v5/land/registration/recordable-subjects")]
-    public CollectionModel SearchRecordableSubjects([FromUri] SearchRecordableSubjectsCommand searchCommand) {
+    public CollectionModel SearchRecordableSubjects([FromUri] RecordableSubjectsQuery query) {
 
-      Assertion.Require(searchCommand, "searchCommand");
+      Assertion.Require(query, nameof(query));
 
       using (var usecases = RecordableSubjectsUseCases.UseCaseInteractor()) {
-        FixedList<RecordableSubjectShortDto> list = usecases.SearchRecordableSubjects(searchCommand);
+        FixedList<RecordableSubjectShortDto> list = usecases.SearchRecordableSubjects(query);
 
         return new CollectionModel(this.Request, list);
       }
