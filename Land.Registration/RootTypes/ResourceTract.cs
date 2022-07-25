@@ -103,6 +103,19 @@ namespace Empiria.Land.Registration {
     }
 
 
+    public RecordingAct GetRecordingAct(string recordingActUID) {
+      FixedList<RecordingAct> recordingActs = this.GetRecordingActs();
+
+      RecordingAct recordingAct = recordingActs.Find(x => x.UID == recordingActUID);
+
+      Assertion.Require(recordingAct,
+                        $"The recording act with UID '{recordingActUID}' does not " +
+                        $"belong to resource '{this.Resource.UID}' tract index");
+
+      return recordingAct;
+    }
+
+
     public FixedList<RecordingAct> GetRecordingActs() {
       return ResourceTractData.GetResourceRecordingActList(this.Resource);
     }
