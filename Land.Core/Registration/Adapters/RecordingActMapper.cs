@@ -106,18 +106,15 @@ static internal class RecordingActMapper {
 
       dto.PartUnits = recordingAct.RecordingActType.GetPartyPartUnits()
                                                    .Select(x => x.MapToNamedEntity())
-                                                   .ToList()
                                                    .ToFixedList();
 
 
       dto.PrimaryPartyRoles = recordingAct.RecordingActType.GetPrimaryRoles()
                                                            .Select(x => x.MapToNamedEntity())
-                                                           .ToList()
                                                            .ToFixedList();
 
       dto.SecondaryPartyRoles = SecondaryPartyRole.GetList()
                                                   .Select(x => x.MapToNamedEntity())
-                                                  .ToList()
                                                   .ToFixedList();
 
       return dto;

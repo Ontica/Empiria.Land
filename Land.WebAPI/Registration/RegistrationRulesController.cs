@@ -23,7 +23,7 @@ namespace Empiria.Land.Registration.WebApi {
 
     [HttpGet]
     [Route("v5/land/registration/{instrumentUID:guid}/recording-act-types")]
-    public CollectionModel GetInstrumentRecordingActTypeGroups([FromUri] string instrumentUID) {
+    public CollectionModel GetInstrumentRecordingActTypes([FromUri] string instrumentUID) {
 
       using (var usecases = RegistrationRulesUseCases.UseCaseInteractor()) {
         FixedList<RecordingActTypeGroupDto> groups = usecases.RecordingActTypesForInstrument(instrumentUID);
@@ -36,8 +36,8 @@ namespace Empiria.Land.Registration.WebApi {
     [HttpGet]
     [Route("v5/land/registration/recording-books/{recordingBookUID:guid}/" +
            "book-entries/{bookEntryUID:guid}/recording-act-types")]
-    public CollectionModel GetBookEntryRecordingActTypeGroups([FromUri] string recordingBookUID,
-                                                              [FromUri] string bookEntryUID) {
+    public CollectionModel GetBookEntryRecordingActTypes([FromUri] string recordingBookUID,
+                                                         [FromUri] string bookEntryUID) {
 
       using (var usecases = RegistrationRulesUseCases.UseCaseInteractor()) {
         FixedList<RecordingActTypeGroupDto> groups = usecases.RecordingActTypesForBookEntry(recordingBookUID, bookEntryUID);
@@ -45,6 +45,7 @@ namespace Empiria.Land.Registration.WebApi {
         return new CollectionModel(this.Request, groups);
       }
     }
+
 
 
     [HttpGet]

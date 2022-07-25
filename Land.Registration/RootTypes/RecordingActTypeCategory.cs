@@ -17,7 +17,7 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private RecordingActTypeCategory() {
+    protected RecordingActTypeCategory() {
       // Required by Empiria Framework.
     }
 
@@ -53,8 +53,6 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    //[DataField(ExtensionDataFieldName + ".RecordingActTypes")]
-    // OOJJOO: Improve
 
     FixedList<RecordingActType> _recordingActTypesList = null;
     public FixedList<RecordingActType> RecordingActTypes {

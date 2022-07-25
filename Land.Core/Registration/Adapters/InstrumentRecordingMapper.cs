@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.DataTypes;
+
 using Empiria.Land.Media;
 using Empiria.Land.Media.Adapters;
 
@@ -17,7 +19,7 @@ using Empiria.Land.Instruments.Adapters;
 
 using Empiria.Land.Registration.Transactions;
 using Empiria.Land.RecordableSubjects.Adapters;
-using Empiria.DataTypes;
+
 
 namespace Empiria.Land.Registration.Adapters {
 
@@ -90,9 +92,8 @@ namespace Empiria.Land.Registration.Adapters {
 
 
     static internal FixedList<RecordingActEntryDto> MapRecordingActsListDto(FixedList<RecordingAct> list) {
-      var mappedItems = list.Select((x) => GetRecordingActEntryDto(x));
-
-      return new FixedList<RecordingActEntryDto>(mappedItems);
+      return list.Select((x) => GetRecordingActEntryDto(x))
+                 .ToFixedList();
     }
 
 

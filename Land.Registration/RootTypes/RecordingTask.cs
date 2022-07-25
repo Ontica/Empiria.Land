@@ -39,6 +39,7 @@ namespace Empiria.Land.Registration {
       get; set;
     } = string.Empty;
 
+
     public string RecordingBookEntryUID {
       get; set;
     } = string.Empty;
