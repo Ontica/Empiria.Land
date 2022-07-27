@@ -64,6 +64,40 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
       }
     }
 
+
+    [HttpPost]
+    [Route("v5/land/registration/recordable-subjects/{recordableSubjectUID:guid}/tract-index")]
+    public SingleObjectModel CreateRecordingActInTractIndex([FromUri] string recordableSubjectUID,
+                                                            [FromBody] RegistrationCommand command) {
+      base.RequireBody(command);
+
+      using (var usecases = TractIndexUseCases.UseCaseInteractor()) {
+
+        usecases.CreateRecordingAct(recordableSubjectUID, command);
+
+        TractIndexDto tractIndex = usecases.TractIndex(recordableSubjectUID);
+
+        return new SingleObjectModel(this.Request, tractIndex);
+      }
+    }
+
+
+    [HttpDelete]
+    [Route("v5/land/registration/recordable-subjects/{recordableSubjectUID:guid}/tract-index/{recordingActUID:guid}")]
+    public SingleObjectModel RemoveRecordingActFromTractIndex([FromUri] string recordableSubjectUID,
+                                                              [FromUri] string recordingActUID) {
+
+      using (var usecases = TractIndexUseCases.UseCaseInteractor()) {
+
+        usecases.RemoveRecordingAct(recordableSubjectUID, recordingActUID);
+
+        TractIndexDto tractIndex = usecases.TractIndex(recordableSubjectUID);
+
+        return new SingleObjectModel(this.Request, tractIndex);
+      }
+    }
+
+
     #endregion Web Apis
 
   }  // class TractIndexController

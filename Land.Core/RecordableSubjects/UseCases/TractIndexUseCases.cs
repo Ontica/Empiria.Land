@@ -14,6 +14,7 @@ using Empiria.Services;
 using Empiria.Land.Registration;
 
 using Empiria.Land.RecordableSubjects.Adapters;
+using Empiria.Land.Registration.Adapters;
 
 namespace Empiria.Land.RecordableSubjects.UseCases {
 
@@ -56,6 +57,14 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
     }
 
 
+    public void CreateRecordingAct(string recordableSubjectUID, RegistrationCommand command) {
+      Assertion.Require(recordableSubjectUID, nameof(recordableSubjectUID));
+      Assertion.Require(command, nameof(command));
+
+
+    }
+
+
     public TractIndexDto TractIndex(string recordableSubjectUID) {
       Assertion.Require(recordableSubjectUID, nameof(recordableSubjectUID));
 
@@ -67,6 +76,21 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
       return TractIndexMapper.Map(recordableSubject, acts);
     }
+
+
+    public void RemoveRecordingAct(string recordableSubjectUID, string recordingActUID) {
+      Assertion.Require(recordableSubjectUID, nameof(recordableSubjectUID));
+      Assertion.Require(recordingActUID, nameof(recordingActUID));
+
+      var recordableSubject = Resource.ParseGuid(recordableSubjectUID);
+
+      RecordingAct recordingAct = recordableSubject.Tract.GetRecordingAct(recordingActUID);
+
+      RecordingDocument instrumentRecording = recordingAct.Document;
+
+      instrumentRecording.RemoveRecordingAct(recordingAct);
+    }
+
 
     #endregion Use cases
 
