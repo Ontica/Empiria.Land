@@ -267,7 +267,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public PhysicalRecording FindRecording(string recordingNumber) {
+    public PhysicalRecording TryGetRecording(string recordingNumber) {
       string recordingNo = RecordingBook.FormatRecordingNumber(recordingNumber);
 
       return Recordings.Find((x) => x.Number == recordingNo);

@@ -72,7 +72,9 @@ namespace Empiria.Land.Registration {
       fields.PartitionNo = command.Payload.PartitionNo;
 
       if (MustCreatePrecedentBookEntry(command)) {
-        var newBookEntry = CreatePrecedentBookEntry(command);
+        var book = RecordingBook.Parse(command.Payload.RecordingBookUID);
+        var bookEntryNo = EmpiriaString.TrimAll(command.Payload.BookEntryNo);
+        var newBookEntry = CreatePrecedentBookEntry(book, bookEntryNo);
         fields.PrecedentBookEntryUID = newBookEntry.UID;
       } else {
         fields.PrecedentBookEntryUID = command.Payload.BookEntryUID;
@@ -84,13 +86,9 @@ namespace Empiria.Land.Registration {
     }
 
 
-    private PhysicalRecording CreatePrecedentBookEntry(RegistrationCommand command) {
-      var book = RecordingBook.Parse(command.Payload.RecordingBookUID);
-
+    static internal PhysicalRecording CreatePrecedentBookEntry(RecordingBook book, string bookEntryNo) {
       Assertion.Require(book.IsAvailableForManualEditing,
           $"El {book.AsText} está cerrado, por lo que no es posible agregarle nuevas inscripciones.");
-
-      var bookEntryNo = EmpiriaString.TrimAll(command.Payload.BookEntryNo);
 
       if (book.ExistsRecording(bookEntryNo)) {
         Assertion.RequireFail(
@@ -133,6 +131,9 @@ namespace Empiria.Land.Registration {
         case RegistrationCommandType.SelectAssociation:
         case RegistrationCommandType.SelectNoProperty:
         case RegistrationCommandType.SelectRealEstate:
+        case RegistrationCommandType.AssociationTractIndex:
+        case RegistrationCommandType.NoPropertyTractIndex:
+        case RegistrationCommandType.RealEstateTractIndex:
           return RecordingTaskType.selectProperty;
 
         case RegistrationCommandType.SelectAssociationAntecedent:
@@ -141,6 +142,7 @@ namespace Empiria.Land.Registration {
           return RecordingTaskType.createPropertyOnAntecedent;
 
         case RegistrationCommandType.CreateRealEstatePartition:
+        case RegistrationCommandType.RealEstateTractIndexPartition:
           return RecordingTaskType.createPartition;
 
         case RegistrationCommandType.CreateRealEstatePartitionForAntecedent:
@@ -149,6 +151,10 @@ namespace Empiria.Land.Registration {
         case RegistrationCommandType.SelectAssociationAct:
         case RegistrationCommandType.SelectNoPropertyAct:
         case RegistrationCommandType.SelectRealEstateAct:
+        case RegistrationCommandType.AmendAssociationTractIndexAct:
+        case RegistrationCommandType.AmendNoPropertyTractIndexAct:
+        case RegistrationCommandType.AmendRealEstateTractIndexAct:
+
           return RecordingTaskType.actAppliesToOtherRecordingAct;
 
         default:

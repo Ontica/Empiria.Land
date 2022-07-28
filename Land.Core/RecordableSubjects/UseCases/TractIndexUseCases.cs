@@ -15,6 +15,7 @@ using Empiria.Land.Registration;
 
 using Empiria.Land.RecordableSubjects.Adapters;
 using Empiria.Land.Registration.Adapters;
+using Empiria.Land.Registration.UseCases;
 
 namespace Empiria.Land.RecordableSubjects.UseCases {
 
@@ -61,7 +62,20 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
       Assertion.Require(recordableSubjectUID, nameof(recordableSubjectUID));
       Assertion.Require(command, nameof(command));
 
+      command.EnsureIsValid();
 
+      Assertion.Require(command.Payload.RecordableSubjectUID.Length == 0 ||
+                        command.Payload.RecordableSubjectUID == recordableSubjectUID,
+                        "RecordableSubjectUID value is inconsistent.");
+
+      command.Payload.RecordableSubjectUID = recordableSubjectUID;
+
+      EnsureHasBookEntry(command);
+
+      using (var usecase = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
+        usecase.CreateRecordingAct(command.Payload.RecordingBookUID,
+                                   command.Payload.BookEntryUID, command);
+      }
     }
 
 
@@ -93,6 +107,29 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
 
     #endregion Use cases
+
+    #region Helpers
+
+    private void EnsureHasBookEntry(RegistrationCommand command) {
+      if (!String.IsNullOrWhiteSpace(command.Payload.BookEntryUID)) {
+        return;
+      }
+
+      string bookEntryNo = command.Payload.BookEntryNo;
+
+      var book = RecordingBook.Parse(command.Payload.RecordingBookUID);
+
+      PhysicalRecording bookEntry = book.TryGetRecording(bookEntryNo);
+
+      if (bookEntry == null) {
+        bookEntry = RegistrationEngine.CreatePrecedentBookEntry(book, bookEntryNo);
+      }
+
+      command.Payload.BookEntryUID = bookEntry.UID;
+      command.Payload.BookEntryNo = string.Empty;
+    }
+
+    #endregion Helpers
 
   }  // class TractIndexUseCases
 
