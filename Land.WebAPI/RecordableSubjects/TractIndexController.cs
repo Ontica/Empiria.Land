@@ -66,6 +66,21 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
 
 
     [HttpPost]
+    [Route("v5/land/registration/recordable-subjects/{recordableSubjectUID:guid}/tract-index/close")]
+    public SingleObjectModel CloseTractIndex([FromUri] string recordableSubjectUID) {
+
+      using (var usecases = TractIndexUseCases.UseCaseInteractor()) {
+
+        usecases.CloseTractIndex(recordableSubjectUID);
+
+        TractIndexDto tractIndex = usecases.TractIndex(recordableSubjectUID);
+
+        return new SingleObjectModel(this.Request, tractIndex);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v5/land/registration/recordable-subjects/{recordableSubjectUID:guid}/tract-index")]
     public SingleObjectModel CreateRecordingActInTractIndex([FromUri] string recordableSubjectUID,
                                                             [FromBody] RegistrationCommand command) {
@@ -74,6 +89,20 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
       using (var usecases = TractIndexUseCases.UseCaseInteractor()) {
 
         usecases.CreateRecordingAct(recordableSubjectUID, command);
+
+        TractIndexDto tractIndex = usecases.TractIndex(recordableSubjectUID);
+
+        return new SingleObjectModel(this.Request, tractIndex);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v5/land/registration/recordable-subjects/{recordableSubjectUID:guid}/tract-index/open")]
+    public SingleObjectModel OpenTractIndex([FromUri] string recordableSubjectUID) {
+
+      using (var usecases = TractIndexUseCases.UseCaseInteractor()) {
+        usecases.OpenTractIndex(recordableSubjectUID);
 
         TractIndexDto tractIndex = usecases.TractIndex(recordableSubjectUID);
 

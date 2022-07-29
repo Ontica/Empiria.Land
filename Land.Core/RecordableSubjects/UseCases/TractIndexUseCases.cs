@@ -58,6 +58,14 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
     }
 
 
+    public void CloseTractIndex(string recordableSubjectUID) {
+      Assertion.Require(recordableSubjectUID, nameof(recordableSubjectUID));
+
+      _ = Resource.ParseGuid(recordableSubjectUID);
+
+    }
+
+
     public void CreateRecordingAct(string recordableSubjectUID, RegistrationCommand command) {
       Assertion.Require(recordableSubjectUID, nameof(recordableSubjectUID));
       Assertion.Require(command, nameof(command));
@@ -92,6 +100,13 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
     }
 
 
+    public void OpenTractIndex(string recordableSubjectUID) {
+      Assertion.Require(recordableSubjectUID, nameof(recordableSubjectUID));
+
+      _ = Resource.ParseGuid(recordableSubjectUID);
+    }
+
+
     public void RemoveRecordingAct(string recordableSubjectUID, string recordingActUID) {
       Assertion.Require(recordableSubjectUID, nameof(recordableSubjectUID));
       Assertion.Require(recordingActUID, nameof(recordingActUID));
@@ -104,7 +119,6 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
       instrumentRecording.RemoveRecordingAct(recordingAct);
     }
-
 
     #endregion Use cases
 
@@ -128,6 +142,7 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
       command.Payload.BookEntryUID = bookEntry.UID;
       command.Payload.BookEntryNo = string.Empty;
     }
+
 
     #endregion Helpers
 
