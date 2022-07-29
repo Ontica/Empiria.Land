@@ -132,7 +132,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static public bool IsCertificateIssueCase(LRSTransactionType type, LRSDocumentType docType) {
-      return false;
+      return type.Id == 701;
     }
 
 

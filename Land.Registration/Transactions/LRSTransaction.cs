@@ -368,11 +368,13 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
     public bool HasInstrument {
       get {
-        return this.InstrumentId != 1;
+        return this.InstrumentId != -1;
       }
     }
+
 
     public bool HasCertificates {
       get {
