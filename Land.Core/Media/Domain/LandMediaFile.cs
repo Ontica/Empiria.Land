@@ -25,7 +25,7 @@ namespace Empiria.Land.Media {
 
     #region Constructors and parsers
 
-    protected LandMediaFile() {
+    internal protected LandMediaFile() {
       //  no-op
     }
 
@@ -73,8 +73,8 @@ namespace Empiria.Land.Media {
     }
 
 
-    [DataField("StorageId", Default = "Empiria.Storage.MediaStorage.Default")]
-    public MediaStorage Storage {
+    [DataField("StorageId")]
+    public StorageContainer Container {
       get;
       private set;
     }
@@ -103,8 +103,7 @@ namespace Empiria.Land.Media {
 
     public string FullPath {
       get {
-        return StorageUtilityMethods.GetFileFullName(this.Storage,
-                                                     StorageUtilityMethods.CombinePaths(this.FilePath, this.FileName));
+        return string.Empty;
       }
     }
 
@@ -146,7 +145,7 @@ namespace Empiria.Land.Media {
 
     public string Url {
       get {
-        return $"{this.Storage.Url}/{this.FilePath}/{this.FileName}";
+        return $"{this.Container.BaseUrl}/{this.FilePath}/{this.FileName}";
       }
     }
 
@@ -166,7 +165,7 @@ namespace Empiria.Land.Media {
         return new object[] {
           1, "MediaId", this.Id, "MediaUID", this.UID, "MediaType", this.MediaType,
           "MediaLength", this.Length, "OriginalFileName", this.OriginalFileName,
-          "StorageId", this.Storage.Id, "FilePath", this.FilePath, "FileName", this.FileName,
+          "StorageId", this.Container.Id, "FilePath", this.FilePath, "FileName", this.FileName,
           "MediaHashCode", this.HashCode, "ExtData", this.ExtensionData.ToString(),
           "PostingTime", this.PostingTime, "PostedById", this.PostedBy.Id,
           "MediaStatus", (char) this.Status

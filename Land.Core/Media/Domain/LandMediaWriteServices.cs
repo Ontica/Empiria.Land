@@ -47,31 +47,43 @@ namespace Empiria.Land.Media {
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(inputFile, nameof(inputFile));
 
-      StorageContainer container = DetermineContainerFor(mediaContent, transaction);
+      StorageContainer container = DetermineContainerFor(transaction);
 
-      StorageFile storageFile = container.Add(inputFile);
+      string relativePath = DetermineRelativePath(transaction);
+
+      var fileName = $"{DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss")}-{transaction.UID}.pdf";
+
+      StorageFile storageFile = container.Store(relativePath, fileName, inputFile);
 
       return LinkFile(mediaContent, transaction, storageFile);
     }
 
 
-    static private StorageContainer DetermineContainerFor(LandMediaContent mediaContent,
-                                                          LRSTransaction transaction) {
+    private static string DetermineRelativePath(LRSTransaction transaction) {
       string year = transaction.PresentationTime.ToString("yyyy");
       string month = transaction.PresentationTime.ToString("MM");
-      string officeName = transaction.RecorderOffice.Alias;
+      string officeName = transaction.RecorderOffice.Alias.Replace(" ", string.Empty);
 
-      string path = $"{year}\\{year}-{month}\\{year}-{month}-{officeName}";
+      return $"{year}-{month}-{officeName}";
+    }
 
-      // return StorageContainer.Parse(mediaContent.ToString(), path);
-      return StorageContainer.Parse(1001);
+    static private StorageContainer DetermineContainerFor(LRSTransaction transaction) {
+      string year = transaction.PresentationTime.ToString("yyyy");
+      string month = transaction.PresentationTime.ToString("MM");
+
+      // ToDo: look up containers by tags: "year == 2022" AND "month == 3"
+      return StorageContainer.Parse(1000 + transaction.PresentationTime.Month);
     }
 
 
     static private LandMediaFile LinkFile(LandMediaContent contentType,
                                           LRSTransaction transaction,
                                           StorageFile storageFile) {
-      throw new NotImplementedException();
+      var mediaFile = new LandMediaFile();
+
+      mediaFile.Save();
+
+      return mediaFile;
     }
 
 
