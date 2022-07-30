@@ -52,6 +52,8 @@ namespace Empiria.Land.Media.UseCases {
         return LandMediaFileMapper.Map(landFile);
       });
 
+      task.Start();
+
       return task;
     }
 

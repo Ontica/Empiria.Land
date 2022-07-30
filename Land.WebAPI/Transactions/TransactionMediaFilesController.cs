@@ -36,7 +36,7 @@ namespace Empiria.Land.Media.WebApi {
       InputFile pdfFile = base.GetInputFileFromHttpRequest(mediaContent);
 
       using (var usecases = StoreLandMediaFilesUseCases.UseCaseInteractor()) {
-        _ = await usecases.AppendTransactionMediaFile(transactionUID, pdfFile);
+        _ = await usecases.AppendTransactionMediaFile(transactionUID, pdfFile).ConfigureAwait(false);
 
         TransactionPreprocessingDto dto = GetTransactionPreprocessingDto(transactionUID);
 
