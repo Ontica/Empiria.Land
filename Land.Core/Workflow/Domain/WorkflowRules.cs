@@ -164,10 +164,10 @@ namespace Empiria.Land.Workflow {
         case LRSTransactionStatus.Process:
         case LRSTransactionStatus.Control:
           // Certificado || Cancelación || Copia simple
-          if (type.Id == 701 || type.Id == 704 || type.Id == 705 ||
-              docType.Id == 723 || docType.Id == 734) {
+          if (type.Id == 701 || type.Id == 704 || docType.Id == 734) {
             list.Add(LRSTransactionStatus.Elaboration);
-          } else if (type.Id == 700 || type.Id == 702 || type.Id == 703) {
+          } else if (type.Id == 700 || type.Id == 702 ||
+                     type.Id == 703 || type.Id == 705) {
             list.Add(LRSTransactionStatus.Qualification);
             list.Add(LRSTransactionStatus.Recording);
             list.Add(LRSTransactionStatus.Elaboration);
@@ -232,11 +232,11 @@ namespace Empiria.Land.Workflow {
         case LRSTransactionStatus.Revision:
 
           list.Add(LRSTransactionStatus.OnSign);
-          if (type.Id == 701 || docType.Id == 723) {
+          if (type.Id == 701) {
             list.Add(LRSTransactionStatus.Elaboration);
-          } else if (type.Id == 700 || type.Id == 702 || type.Id == 703) {
+          } else if (type.Id == 700 || type.Id == 702 || type.Id == 703 || type.Id == 705) {
             list.Add(LRSTransactionStatus.Recording);
-          } else if (type.Id == 704 || type.Id == 705) {
+          } else if (type.Id == 704) {
             list.Add(LRSTransactionStatus.Elaboration);
           }
           if (LRSWorkflowRules.IsArchivable(type, docType)) {
@@ -251,11 +251,11 @@ namespace Empiria.Land.Workflow {
         case LRSTransactionStatus.OnSign:
           list.Add(LRSTransactionStatus.ToDeliver);
           list.Add(LRSTransactionStatus.Revision);
-          if (type.Id == 701 || docType.Id == 723) {
+          if (type.Id == 701) {
             list.Add(LRSTransactionStatus.Elaboration);
-          } else if (type.Id == 700 || type.Id == 702 || type.Id == 703) {
+          } else if (type.Id == 700 || type.Id == 702 || type.Id == 703 || type.Id == 705) {
             list.Add(LRSTransactionStatus.Recording);
-          } else if (type.Id == 704 || type.Id == 705) {
+          } else if (type.Id == 704) {
             list.Add(LRSTransactionStatus.Elaboration);
           }
           list.Add(LRSTransactionStatus.Control);
