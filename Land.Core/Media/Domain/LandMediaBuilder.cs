@@ -56,7 +56,8 @@ namespace Empiria.Land.Media {
     }
 
 
-    internal FixedList<LandMediaFile> GetLandMediaFiles(LandMediaContent mediaContent, BaseObject instance) {
+    internal FixedList<LandMediaPosting> GetLandMediaPostings(LandMediaContent mediaContent,
+                                                              BaseObject instance) {
       var repository = new LandMediaFilesRepository();
 
       switch (mediaContent) {

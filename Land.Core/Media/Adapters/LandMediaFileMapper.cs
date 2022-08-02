@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Storage;
+
 namespace Empiria.Land.Media.Adapters {
 
   /// <summary>Methods used to map Land media files to LandMediaFileDto objects.</summary>
@@ -19,7 +21,7 @@ namespace Empiria.Land.Media.Adapters {
     }
 
     static internal LandMediaFileDto[] Map(LandMediaFileSet mediaFileSet) {
-      FixedList<LandMediaFile> mediaFiles = mediaFileSet.GetFiles();
+      FixedList<LandMediaPosting> mediaFiles = mediaFileSet.GetFiles();
 
       LandMediaFileDto[] array = new LandMediaFileDto[mediaFiles.Count];
 
@@ -31,14 +33,16 @@ namespace Empiria.Land.Media.Adapters {
     }
 
 
-    static public LandMediaFileDto Map(LandMediaFile mediaFile) {
+    static public LandMediaFileDto Map(LandMediaPosting mediaPosting) {
+      StorageFile file = (StorageFile) mediaPosting.StorageItem;
+
       return new LandMediaFileDto {
-        UID = mediaFile.UID,
-        Type = mediaFile.MediaType,
-        Content = mediaFile.MediaContent,
-        Name = mediaFile.OriginalFileName,
-        Url = mediaFile.Url,
-        Size = mediaFile.Length
+        UID = mediaPosting.UID,
+        Type = FileType.Pdf.ToString(),
+        Content = file.AppContentType,
+        Name = file.OriginalFileName,
+        Url = file.Url,
+        Size = file.Size
       };
     }
 

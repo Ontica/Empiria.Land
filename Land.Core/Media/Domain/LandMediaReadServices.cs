@@ -15,7 +15,7 @@ namespace Empiria.Land.Media {
 
   internal class LandMediaReadServices {
 
-    internal static FixedList<LandMediaFile> GetTransactionFiles(LRSTransaction transaction) {
+    static internal FixedList<LandMediaPosting> GetTransactionFiles(LRSTransaction transaction) {
       throw new NotImplementedException();
     }
 

@@ -22,7 +22,7 @@ namespace Empiria.Land.Media {
 
     #region Fields
 
-    private readonly List<LandMediaFile> _mediaFileslist;
+    private readonly List<LandMediaPosting> _mediaFileslist;
 
     #endregion Fields
 
@@ -51,7 +51,7 @@ namespace Empiria.Land.Media {
       get;
     }
 
-    internal FixedList<LandMediaFile> GetFiles() {
+    internal FixedList<LandMediaPosting> GetFiles() {
       return _mediaFileslist.ToFixedList();
     }
 
@@ -100,8 +100,8 @@ namespace Empiria.Land.Media {
     }
 
 
-    static private List<LandMediaFile> GetEntityMediaFilesList(BaseObject entity) {
-      return new List<LandMediaFile>();
+    static private List<LandMediaPosting> GetEntityMediaFilesList(BaseObject entity) {
+      return new List<LandMediaPosting>();
 
       //using (var service = MediaFileServices.ServiceInteractor()) {
       //  var files = service.GetRelatedMediaFiles<LandMediaFile>(entity);

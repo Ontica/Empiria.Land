@@ -78,7 +78,7 @@ namespace Empiria.Land.Registration.Adapters {
     static private FixedList<LandMediaFileDto> MapBookEntryMediaFiles(PhysicalRecording bookEntry) {
       var mediaBuilder = new LandMediaBuilder();
 
-      var files = mediaBuilder.GetLandMediaFiles(LandMediaContent.BookEntryMediaFiles, bookEntry);
+      var files = mediaBuilder.GetLandMediaPostings(LandMediaContent.BookEntryMediaFiles, bookEntry);
 
       return new FixedList<LandMediaFileDto>(files.Select(x => LandMediaFileMapper.Map(x)));
     }

@@ -1,10 +1,11 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Land Media Files Management                Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Information Holder                      *
-*  Type     : LandMediaFile                              License   : Please read LICENSE.txt file            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Object Posting                          *
+*  Type     : LandMediaPosting                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : A media file related to an Empiria Land entity like instrument, transaction or recording book. *
+*  Summary  : Stores a link between an Empiria Land entity (instrument, transaction, recording book)         *
+*             and a media file.                                                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -15,32 +16,38 @@ using Empiria.Storage;
 
 using Empiria.StateEnums;
 using Empiria.Security;
+using Empiria.Land.Registration.Transactions;
 
+using Empiria.Land.Media.Adapters;
+using Empiria.Land.Instruments;
+using Empiria.Land.Registration;
 
 namespace Empiria.Land.Media {
 
   /// <summary>A media file related to an Empiria Land entity like instrument,
   /// transaction or recording book.</summary>
-  internal class LandMediaFile : BaseObject, IProtected {
+  internal class LandMediaPosting : BaseObject, IProtected {
 
     #region Constructors and parsers
 
-    internal protected LandMediaFile() {
-      //  no-op
-    }
+    internal protected LandMediaPosting(LandMediaContent contentType, StorageFile storageFile) {
+      Assertion.Require(storageFile, nameof(storageFile));
 
-    static public LandMediaFile Parse(int id) {
-      return BaseObject.ParseId<LandMediaFile>(id);
     }
 
 
-    static public LandMediaFile Parse(string uid) {
-      return BaseObject.ParseKey<LandMediaFile>(uid);
+    static public LandMediaPosting Parse(int id) {
+      return BaseObject.ParseId<LandMediaPosting>(id);
     }
 
-    static public LandMediaFile Empty {
+
+    static public LandMediaPosting Parse(string uid) {
+      return BaseObject.ParseKey<LandMediaPosting>(uid);
+    }
+
+    static public LandMediaPosting Empty {
       get {
-        return BaseObject.ParseEmpty<LandMediaFile>();
+        return BaseObject.ParseEmpty<LandMediaPosting>();
       }
     }
 
@@ -48,85 +55,89 @@ namespace Empiria.Land.Media {
 
     #region Properties
 
-    [DataField("MediaContent")]
-    public string MediaContent {
-      get;
-      private set;
-    }
 
-    [DataField("MediaType")]
-    public string MediaType {
-      get;
-      private set;
-    }
-
-    [DataField("MediaLength")]
-    public int Length {
-      get;
-      private set;
-    }
-
-    [DataField("OriginalFileName")]
-    public string OriginalFileName {
+    [DataField("StorageItemId")]
+    internal StorageItem StorageItem {
       get;
       private set;
     }
 
 
-    [DataField("StorageId")]
-    public StorageContainer Container {
+    [DataField("ImagingControlID")]
+    public string ImagingControlID {
       get;
       private set;
     }
 
 
-    [DataField("BaseFolderId")]
-    internal int BaseFolderId {
-      get;
-      private set;
-    }
-
-
-    [DataField("FilePath")]
-    internal string FilePath {
-      get;
-      private set;
-    }
-
-
-    [DataField("FileName")]
-    internal string FileName {
-      get;
-      private set;
-    }
-
-
-    public string FullPath {
+    public string Keywords {
       get {
-        return string.Empty;
+        return String.Empty;
       }
     }
 
 
-    [DataField("FileHashCode")]
-    public string HashCode {
-      get;
-      private set;
-    }
-
-
-    [DataField("MediaFileExtData")]
+    [DataField("MediaPostingExtData")]
     protected internal JsonObject ExtensionData {
       get;
       private set;
     }
 
 
-    [DataField("PostingTime")]
-    public DateTime PostingTime {
+    [DataField("TransactionId")]
+    internal LRSTransaction Transaction {
       get;
       private set;
-    } = ExecutionServer.DateMaxValue;
+    }
+
+
+    [DataField("InstrumentId")]
+    internal Instrument Instrument {
+      get;
+      private set;
+    }
+
+
+    [DataField("DocumentId")]
+    internal RecordingDocument InstrumentRecording {
+      get;
+      private set;
+    }
+
+
+    [DataField("RecordingBookId")]
+    internal RecordingBook RecordingBook {
+      get;
+      private set;
+    }
+
+
+    [DataField("BookEntryId")]
+    internal PhysicalRecording BookEntry {
+      get;
+      private set;
+    }
+
+
+    [DataField("BookEntryNo")]
+    internal string BookEntryNo {
+      get;
+      private set;
+    }
+
+
+    [DataField("ExternalTransactionId")]
+    internal int ExternalTransactionId {
+      get;
+      private set;
+    }
+
+
+    [DataField("PostingTime")]
+    internal DateTime PostingTime {
+      get;
+      private set;
+    }
 
 
     [DataField("PostedById")]
@@ -136,18 +147,12 @@ namespace Empiria.Land.Media {
     }
 
 
-    [DataField("MediaFileStatus", Default = EntityStatus.Active)]
+    [DataField("MediaPostingStatus", Default = EntityStatus.Active)]
     public EntityStatus Status {
       get;
       private set;
     }
 
-
-    public string Url {
-      get {
-        return $"{this.Container.BaseUrl}/{this.FilePath}/{this.FileName}";
-      }
-    }
 
     #endregion Properties
 
@@ -163,15 +168,22 @@ namespace Empiria.Land.Media {
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
       if (version == 1) {
         return new object[] {
-          1, "MediaId", this.Id, "MediaUID", this.UID, "MediaType", this.MediaType,
-          "MediaLength", this.Length, "OriginalFileName", this.OriginalFileName,
-          "StorageId", this.Container.Id, "FilePath", this.FilePath, "FileName", this.FileName,
-          "MediaHashCode", this.HashCode, "ExtData", this.ExtensionData.ToString(),
-          "PostingTime", this.PostingTime, "PostedById", this.PostedBy.Id,
-          "MediaStatus", (char) this.Status
+          1, "Id", Id, "StorageItemId", StorageItem.Id, "ImagingControlID", ImagingControlID,
+          "ExtensionData", ExtensionData.ToString(),
+          "Transaction", Transaction.Id, "Instrument", Instrument.Id,
+          "InstrumentRecording", InstrumentRecording.Id,
+          "RecordingBook", RecordingBook.Id, "BookEntry", BookEntry.Id, "BookEntryNo", BookEntryNo,
+          "ExternalTransaction", ExternalTransactionId,
+          "PostingTime", PostingTime, "PostedBy", PostedBy.Id,
+          "MediaStatus", (char) Status
         };
       }
       throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
+    }
+
+
+    internal void LinkToTransaction(LRSTransaction transaction) {
+      this.Transaction = transaction;
     }
 
 
@@ -195,19 +207,7 @@ namespace Empiria.Land.Media {
                        "MediaObject must be in 'Active' status.");
 
       this.Status = EntityStatus.Deleted;
-
-      this.Save();
     }
-
-
-    //private void LoadFields(MediaFileFields fields) {
-    //  this.MediaContent = fields.MediaContent;
-    //  this.MediaType = fields.MediaType;
-    //  this.Length = fields.MediaLength;
-    //  this.OriginalFileName = fields.OriginalFileName;
-    //  this.FolderPath = fields.FolderPath;
-    //  this.HashCode = fields.FileHashCode;
-    //}
 
 
     protected override void OnSave() {
@@ -216,12 +216,11 @@ namespace Empiria.Land.Media {
         this.PostingTime = DateTime.Now;
       }
 
-      throw new NotImplementedException("OnSave()");
-      // MediaRepository.WriteMediaFile(this);
+      LandMediaFilesRepository.WriteMediaPosting(this);
     }
 
     #endregion Methods
 
-  }  // class LandMediaFile
+  }  // class LandMediaPosting
 
 }  // namespace Empiria.Land.Media

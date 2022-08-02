@@ -47,7 +47,7 @@ namespace Empiria.Land.Media.UseCases {
 
         var transaction = LRSTransaction.Parse(transactionUID);
 
-        LandMediaFile landFile = LandMediaWriteServices.StoreTransactionFile(transaction, pdfFile);
+        LandMediaPosting landFile = LandMediaWriteServices.StoreTransactionFile(transaction, pdfFile);
 
         return LandMediaFileMapper.Map(landFile);
       });
@@ -66,7 +66,7 @@ namespace Empiria.Land.Media.UseCases {
 
         var transaction = LRSTransaction.Parse(transactionUID);
 
-        var landFile = LandMediaFile.Parse(mediaFileUID);
+        var landFile = LandMediaPosting.Parse(mediaFileUID);
 
         LandMediaWriteServices.RemoveTransactionFile(transaction, landFile);
 
