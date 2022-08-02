@@ -22,7 +22,7 @@ namespace Empiria.Land.Media {
       // no-op
     }
 
-    internal FixedList<LandMediaFile> GetFiles(LandMediaContent mediaContent, BaseObject instance) {
+    internal FixedList<LandMediaPosting> GetFiles(LandMediaContent mediaContent, BaseObject instance) {
       string filter = BuildFilter(mediaContent, instance);
 
       return GetMediaFiles(filter);
@@ -33,13 +33,25 @@ namespace Empiria.Land.Media {
     }
 
 
-    private FixedList<LandMediaFile> GetMediaFiles(string filter) {
+    private FixedList<LandMediaPosting> GetMediaFiles(string filter) {
       string sql = "SELECT * FROM LRSMediaPostings " +
                    $"WHERE ({filter}) AND MediaPostingStatus <> 'X'";
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<LandMediaFile>(op);
+      return DataReader.GetFixedList<LandMediaPosting>(op);
+    }
+
+
+    static internal void WriteMediaPosting(LandMediaPosting o) {
+      var op = DataOperation.Parse("writeLRSMediaPosting",
+               o.Id, o.UID, o.StorageItem.Id, o.ImagingControlID, o.Keywords,
+               o.ExtensionData.ToString(), o.Transaction.Id, o.Instrument.Id,
+               o.InstrumentRecording.Id, o.RecordingBook.Id, o.BookEntry.Id,
+               o.BookEntryNo, o.ExternalTransactionId, o.PostingTime, o.PostedBy.Id,
+               (char) o.Status, o.Integrity.GetUpdatedHashCode());
+
+      DataWriter.Execute(op);
     }
 
   }  // class LandMediaFilesRepository

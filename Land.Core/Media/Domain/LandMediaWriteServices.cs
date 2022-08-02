@@ -22,7 +22,7 @@ namespace Empiria.Land.Media {
 
 
     static internal void RemoveTransactionFile(LRSTransaction transaction,
-                                               LandMediaFile landFile) {
+                                               LandMediaPosting landFile) {
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(landFile, nameof(landFile));
 
@@ -36,7 +36,7 @@ namespace Empiria.Land.Media {
     }
 
 
-    static internal LandMediaFile StoreTransactionFile(LRSTransaction transaction,
+    static internal LandMediaPosting StoreTransactionFile(LRSTransaction transaction,
                                                        InputFile inputFile) {
       LandMediaContent mediaContent = LandMediaFileFields.ConvertMediaContent(inputFile.AppContentType);
 
@@ -55,7 +55,7 @@ namespace Empiria.Land.Media {
 
       StorageFile storageFile = container.Store(relativePath, fileName, inputFile);
 
-      return LinkFile(mediaContent, transaction, storageFile);
+      return LinkFile(mediaContent, storageFile, transaction);
     }
 
 
@@ -76,19 +76,21 @@ namespace Empiria.Land.Media {
     }
 
 
-    static private LandMediaFile LinkFile(LandMediaContent contentType,
-                                          LRSTransaction transaction,
-                                          StorageFile storageFile) {
-      var mediaFile = new LandMediaFile();
+    static private LandMediaPosting LinkFile(LandMediaContent contentType,
+                                             StorageFile storageFile,
+                                             LRSTransaction transaction) {
+      var posting = new LandMediaPosting(contentType, storageFile);
 
-      mediaFile.Save();
+      posting.LinkToTransaction(transaction);
 
-      return mediaFile;
+      posting.Save();
+
+      return posting;
     }
 
 
     static private void UnlinkFile(LRSTransaction transaction,
-                                   LandMediaFile landFile) {
+                                   LandMediaPosting landFile) {
       throw new NotImplementedException();
     }
 
