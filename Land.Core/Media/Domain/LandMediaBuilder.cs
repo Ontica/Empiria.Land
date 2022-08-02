@@ -58,11 +58,9 @@ namespace Empiria.Land.Media {
 
     internal FixedList<LandMediaPosting> GetLandMediaPostings(LandMediaContent mediaContent,
                                                               BaseObject instance) {
-      var repository = new LandMediaFilesRepository();
-
       switch (mediaContent) {
         case LandMediaContent.BookEntryMediaFiles:
-          return repository.GetFiles(mediaContent, instance);
+          return LandMediaPostingsData.GetMediaPostings(mediaContent, instance);
 
         default:
           throw Assertion.EnsureNoReachThisCode();

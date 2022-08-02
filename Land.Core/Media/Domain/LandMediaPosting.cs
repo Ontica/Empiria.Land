@@ -216,7 +216,7 @@ namespace Empiria.Land.Media {
         this.PostingTime = DateTime.Now;
       }
 
-      LandMediaFilesRepository.WriteMediaPosting(this);
+      LandMediaPostingsData.WriteMediaPosting(this);
     }
 
     #endregion Methods
