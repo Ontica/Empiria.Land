@@ -8,13 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.IO;
-using System.Threading.Tasks;
 
 using Empiria.Services;
 
-using Empiria.Land.Instruments;
-using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Media.Adapters;
 
 using Empiria.Land.Registration;
@@ -46,77 +42,7 @@ namespace Empiria.Land.Media.UseCases {
       throw new NotImplementedException();
     }
 
-
-    public async Task<InstrumentDto> AddInstrumentMediaFile(string instrumentUID,
-                                                            LandMediaFileFields fields,
-                                                            Stream fileStream) {
-      ValidateArguments(instrumentUID, fields, fileStream);
-
-      var instrument = Instrument.Parse(instrumentUID);
-
-      var mediaFileSet = instrument.GetMediaFileSet();
-
-      mediaFileSet.AssertCanBeAdded(fields);
-
-      await mediaFileSet.Add(fields, fileStream);
-
-      return InstrumentMapper.Map(instrument);
-    }
-
-
-    public InstrumentDto RemoveInstrumentMediaFile(string instrumentUID, string mediaFileUID) {
-      Assertion.Require(instrumentUID, "instrumentUID");
-      Assertion.Require(mediaFileUID, "mediaFileUID");
-
-      var instrument = Instrument.Parse(instrumentUID);
-
-      var mediaFileSet = instrument.GetMediaFileSet();
-
-      mediaFileSet.AssertCanBeRemoved(mediaFileUID);
-
-      mediaFileSet.Remove(mediaFileUID);
-
-      return InstrumentMapper.Map(instrument);
-    }
-
-
-    public async Task<InstrumentDto> ReplaceInstrumentMediaFile(string instrumentUID,
-                                                                string toReplaceMediaFileUID,
-                                                                LandMediaFileFields fields,
-                                                                Stream fileStream) {
-      Assertion.Require(toReplaceMediaFileUID, "toReplaceMediaFileUID");
-      ValidateArguments(instrumentUID, fields, fileStream);
-
-
-      var instrument = Instrument.Parse(instrumentUID);
-
-      var mediaFileSet = instrument.GetMediaFileSet();
-
-      mediaFileSet.AssertCanBeReplaced(toReplaceMediaFileUID);
-
-      await mediaFileSet.Replace(toReplaceMediaFileUID, fields, fileStream);
-
-      return InstrumentMapper.Map(instrument);
-    }
-
-
     #endregion Use cases
-
-    #region Helper methods
-
-    private void ValidateArguments(string instrumentUID,
-                                   LandMediaFileFields fields,
-                                   Stream fileStream) {
-      Assertion.Require(instrumentUID, "instrumentUID");
-      Assertion.Require(fileStream, "fileStream");
-      Assertion.Require(fields, "fields");
-
-      Assertion.Require(fields.MediaContent == LandMediaContent.InstrumentMainFile ||
-                       fields.MediaContent == LandMediaContent.InstrumentAuxiliaryFile,
-                       $"Unrecognized mediaContent value for a legal instrument file.");
-    }
-
-    #endregion Helper methods
 
   }  // class RecordingBookMediaUseCases
 
