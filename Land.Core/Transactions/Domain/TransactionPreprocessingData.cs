@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Land.Instruments;
+using Empiria.Land.Media;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Transactions {
@@ -17,11 +18,17 @@ namespace Empiria.Land.Transactions {
   /// <summary>Provides control data for transaction preprocessing tasks.</summary>
   internal class TransactionPreprocessingData {
 
-    private readonly LRSTransaction _transaction;
-
     public TransactionPreprocessingData(LRSTransaction transaction) {
-      _transaction = transaction;
+      Assertion.Require(transaction, nameof(transaction));
+
+      this.Transaction = transaction;
     }
+
+
+    public LRSTransaction Transaction {
+      get;
+    }
+
 
     public bool CanEditInstrument {
       get {
@@ -43,11 +50,13 @@ namespace Empiria.Land.Transactions {
       }
     }
 
+
     public bool CanCreateAntecedent {
       get {
         return false;
       }
     }
+
 
     public bool CanEditAntecedentRecordingActs {
       get {
@@ -85,10 +94,17 @@ namespace Empiria.Land.Transactions {
 
     public Instrument Instrument {
       get {
-        if (_transaction.HasInstrument) {
-          return Instrument.Parse(_transaction.InstrumentId);
+        if (Transaction.HasInstrument) {
+          return Instrument.Parse(Transaction.InstrumentId);
         }
         return Instrument.Empty;
+      }
+    }
+
+
+    public FixedList<LandMediaPosting> TransactionMediaPostings {
+      get {
+        return LandMediaReadServices.TransactionFiles(Transaction);
       }
     }
 

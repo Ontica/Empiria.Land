@@ -9,14 +9,20 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Land.Instruments;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Media {
 
-  internal class LandMediaReadServices {
+  static internal class LandMediaReadServices {
 
-    static internal FixedList<LandMediaPosting> GetTransactionFiles(LRSTransaction transaction) {
-      throw new NotImplementedException();
+    static internal FixedList<LandMediaPosting> InstrumentFiles(Instrument instrument) {
+      return new FixedList<LandMediaPosting>();
+    }
+
+
+    static internal FixedList<LandMediaPosting> TransactionFiles(LRSTransaction transaction) {
+      return new FixedList<LandMediaPosting>();
     }
 
   }  // class LandMediaReadServices

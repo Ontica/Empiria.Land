@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Transaction Management                     Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
-*  Type     : TransactionoMapper                         License   : Please read LICENSE.txt file            *
+*  Type     : TransactionMapper                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Contains methods to map from LRSTransaction objects to TransactionDTOs.                        *
 *                                                                                                            *
@@ -58,6 +58,8 @@ namespace Empiria.Land.Transactions.Adapters {
 
 
     static internal TransactionPreprocessingDto Map(TransactionPreprocessingData data) {
+      var mediaDto = LandMediaFileMapper.Map(data.TransactionMediaPostings);
+
       var dto = new TransactionPreprocessingDto();
 
       dto.Actions.Can.EditInstrument = data.CanEditInstrument;
@@ -71,7 +73,7 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.Actions.Show.Antecedent = data.ShowAntecedent;
       dto.Actions.Show.AntecedentRecordingActs = data.ShowAntecedentRecordingActs;
 
-      dto.Media = LandMediaFileMapper.MapTests();
+      dto.Media = mediaDto;
       dto.Instrument = InstrumentMapper.Map(data.Instrument);
       dto.Antecedent = data.Antecedent;
       dto.AntecedentRecordingActs = data.AntecedentRecordingActs;
@@ -240,6 +242,6 @@ namespace Empiria.Land.Transactions.Adapters {
 
     #endregion Private methods
 
-  }  // class TransactionDtoMapper
+  }  // class TransactionMapper
 
 }  // namespace Empiria.Land.Transactions.Adapters

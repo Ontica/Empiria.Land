@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Land.Media;
 using Empiria.Land.Media.Adapters;
 
 namespace Empiria.Land.Instruments.Adapters {
@@ -19,9 +20,9 @@ namespace Empiria.Land.Instruments.Adapters {
     static internal InstrumentDto Map(Instrument instrument) {
       var issuerDto = IssuerMapper.Map(instrument.Issuer);
 
-      // var mediaFiles = LandMediaFileMapper.Map(instrument.GetMediaFileSet());
+      FixedList<LandMediaPosting> mediaPostings = LandMediaReadServices.InstrumentFiles(instrument);
 
-      var mediaFiles = LandMediaFileMapper.MapTests();
+      FixedList<LandMediaFileDto> mediaFilesDtos = LandMediaFileMapper.Map(mediaPostings);
 
       var dto = new InstrumentDto {
         UID = instrument.UID,
@@ -38,7 +39,7 @@ namespace Empiria.Land.Instruments.Adapters {
         Folio = instrument.Folio,
         EndFolio = instrument.EndFolio,
         SheetsCount = instrument.SheetsCount,
-        Media = mediaFiles
+        Media = mediaFilesDtos
       };
 
       return dto;
