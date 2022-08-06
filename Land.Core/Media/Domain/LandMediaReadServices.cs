@@ -17,12 +17,12 @@ namespace Empiria.Land.Media {
   static internal class LandMediaReadServices {
 
     static internal FixedList<LandMediaPosting> InstrumentFiles(Instrument instrument) {
-      return new FixedList<LandMediaPosting>();
+      return LandMediaPostingsData.GetMediaPostings(instrument);
     }
 
 
     static internal FixedList<LandMediaPosting> TransactionFiles(LRSTransaction transaction) {
-      return new FixedList<LandMediaPosting>();
+      return LandMediaPostingsData.GetMediaPostings(transaction);
     }
 
   }  // class LandMediaReadServices

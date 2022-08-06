@@ -30,6 +30,11 @@ namespace Empiria.Land.Media {
 
     #region Constructors and parsers
 
+    private LandMediaPosting() {
+      // Required by Empiria Framework
+    }
+
+
     internal protected LandMediaPosting(LandMediaContent mediaContent, StorageFile storageFile) {
       Assertion.Require(storageFile, nameof(storageFile));
 

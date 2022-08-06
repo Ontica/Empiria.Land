@@ -12,6 +12,7 @@ using System;
 using Empiria.Land.Instruments;
 using Empiria.Land.Transactions;
 using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Media;
 
 namespace Empiria.Land.Registration {
 
@@ -121,7 +122,7 @@ namespace Empiria.Land.Registration {
 
     public bool ShowFiles {
       get {
-        return false;
+        return LandMediaReadServices.InstrumentFiles(_instrument).Count != 0;
       }
     }
 

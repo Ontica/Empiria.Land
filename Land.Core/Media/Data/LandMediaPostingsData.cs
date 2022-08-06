@@ -10,13 +10,21 @@
 using System;
 
 using Empiria.Data;
-
+using Empiria.Land.Instruments;
 using Empiria.Land.Media.Adapters;
+using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Media {
 
   /// <summary>Data read and write services for Land media postings.</summary>
   static internal class LandMediaPostingsData {
+
+
+    static internal FixedList<LandMediaPosting> GetMediaPostings(BaseObject instance) {
+      string filter = BuildFilter(instance);
+
+      return GetMediaPostings(filter);
+    }
 
 
     static internal FixedList<LandMediaPosting> GetMediaPostings(LandMediaContent mediaContent,
@@ -41,14 +49,32 @@ namespace Empiria.Land.Media {
 
     #region Helpers
 
+    static private string BuildFilter(BaseObject instance) {
+      if (instance is LRSTransaction) {
+        return $"[TransactionId] = {instance.Id}";
+
+      } else if (instance is Instrument instrument) {
+        LRSTransaction transaction = instrument.GetTransaction();
+
+        if (transaction != null && !transaction.IsEmptyInstance) {
+          return $"([InstrumentId] = {instrument.Id} OR [TransactionId] = {transaction.Id})";
+        } else {
+          return $"[InstrumentId] = {instrument.Id}";
+        }
+      }
+
+      throw Assertion.EnsureNoReachThisCode($"Unhandled instance type {instance.GetType()}.");
+    }
+
+
     static private string BuildFilter(LandMediaContent mediaContent, BaseObject instance) {
-      return $"[PhysicalRecordingId] = {instance.Id}";
+      return $"([MediaContentType] = '{mediaContent}' AND {BuildFilter(instance)})";
     }
 
 
     static private FixedList<LandMediaPosting> GetMediaPostings(string filter) {
       string sql = "SELECT * FROM LRSMediaPostings " +
-                   $"WHERE ({filter}) AND MediaPostingStatus <> 'X'";
+                   $"WHERE {filter} AND MediaPostingStatus <> 'X'";
 
       var op = DataOperation.Parse(sql);
 
