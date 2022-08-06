@@ -37,7 +37,7 @@ namespace Empiria.Land.Media {
 
 
     static internal LandMediaPosting StoreTransactionFile(LRSTransaction transaction,
-                                                       InputFile inputFile) {
+                                                          InputFile inputFile) {
       LandMediaContent mediaContent = LandMediaFileFields.ConvertMediaContent(inputFile.AppContentType);
 
       Assertion.Require(mediaContent == LandMediaContent.InstrumentMainFile ||
@@ -59,20 +59,21 @@ namespace Empiria.Land.Media {
     }
 
 
-    private static string DetermineRelativePath(LRSTransaction transaction) {
-      string year = transaction.PresentationTime.ToString("yyyy");
-      string month = transaction.PresentationTime.ToString("MM");
-      string officeName = transaction.RecorderOffice.Alias.Replace(" ", string.Empty);
-
-      return $"{year}-{month}-{officeName}";
-    }
-
     static private StorageContainer DetermineContainerFor(LRSTransaction transaction) {
       string year = transaction.PresentationTime.ToString("yyyy");
       string month = transaction.PresentationTime.ToString("MM");
 
       // ToDo: look up containers by tags: "year == 2022" AND "month == 3"
       return StorageContainer.Parse(1000 + transaction.PresentationTime.Month);
+    }
+
+
+    static private string DetermineRelativePath(LRSTransaction transaction) {
+      string year = transaction.PresentationTime.ToString("yyyy");
+      string month = transaction.PresentationTime.ToString("MM");
+      string officeName = transaction.RecorderOffice.Alias.Replace(" ", string.Empty);
+
+      return $"{year}-{month}-{officeName}";
     }
 
 
