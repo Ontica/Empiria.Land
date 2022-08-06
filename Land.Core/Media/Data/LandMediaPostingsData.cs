@@ -29,8 +29,8 @@ namespace Empiria.Land.Media {
 
     static internal void WriteMediaPosting(LandMediaPosting o) {
       var op = DataOperation.Parse("writeLRSMediaPosting",
-               o.Id, o.UID, o.StorageItem.Id, o.ImagingControlID, o.Keywords,
-               o.ExtensionData.ToString(), o.Transaction.Id, o.Instrument.Id,
+               o.Id, o.UID, o.StorageItem.Id, o.MediaContent.ToString(), o.ImagingControlID,
+               o.Keywords, o.ExtensionData.ToString(), o.Transaction.Id, o.Instrument.Id,
                o.InstrumentRecording.Id, o.RecordingBook.Id, o.BookEntry.Id,
                o.BookEntryNo, o.ExternalTransactionId, o.PostingTime, o.PostedBy.Id,
                (char) o.Status, o.Integrity.GetUpdatedHashCode());

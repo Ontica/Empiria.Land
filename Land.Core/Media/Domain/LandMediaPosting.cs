@@ -30,9 +30,11 @@ namespace Empiria.Land.Media {
 
     #region Constructors and parsers
 
-    internal protected LandMediaPosting(LandMediaContent contentType, StorageFile storageFile) {
+    internal protected LandMediaPosting(LandMediaContent mediaContent, StorageFile storageFile) {
       Assertion.Require(storageFile, nameof(storageFile));
 
+      this.MediaContent = mediaContent;
+      this.StorageItem = storageFile;
     }
 
 
@@ -63,14 +65,21 @@ namespace Empiria.Land.Media {
     }
 
 
-    [DataField("ImagingControlID")]
-    public string ImagingControlID {
+    [DataField("MediaContentType", Default = LandMediaContent.Unknown)]
+    internal LandMediaContent MediaContent {
       get;
       private set;
     }
 
 
-    public string Keywords {
+    [DataField("ImagingControlID")]
+    internal string ImagingControlID {
+      get;
+      private set;
+    }
+
+
+    internal string Keywords {
       get {
         return String.Empty;
       }
@@ -126,11 +135,11 @@ namespace Empiria.Land.Media {
     }
 
 
-    [DataField("ExternalTransactionId")]
+    [DataField("ExternalTransactionId", Default = -1)]
     internal int ExternalTransactionId {
       get;
       private set;
-    }
+    } = -1;
 
 
     [DataField("PostingTime")]
@@ -141,14 +150,14 @@ namespace Empiria.Land.Media {
 
 
     [DataField("PostedById")]
-    public Contact PostedBy {
+    internal Contact PostedBy {
       get;
       private set;
     }
 
 
     [DataField("MediaPostingStatus", Default = EntityStatus.Active)]
-    public EntityStatus Status {
+    internal EntityStatus Status {
       get;
       private set;
     }
