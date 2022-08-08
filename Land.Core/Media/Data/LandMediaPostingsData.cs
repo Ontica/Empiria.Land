@@ -10,10 +10,12 @@
 using System;
 
 using Empiria.Data;
+using Empiria.Storage;
+
 using Empiria.Land.Instruments;
 using Empiria.Land.Media.Adapters;
+using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
-using Empiria.Storage;
 
 namespace Empiria.Land.Media {
 
@@ -59,16 +61,20 @@ namespace Empiria.Land.Media {
 
     static private string BuildFilter(BaseObject instance) {
       if (instance is LRSTransaction) {
-        return $"[TransactionId] = {instance.Id}";
+        return $"TransactionId = {instance.Id}";
 
       } else if (instance is Instrument instrument) {
         LRSTransaction transaction = instrument.GetTransaction();
 
-        if (transaction != null && !transaction.IsEmptyInstance) {
-          return $"([InstrumentId] = {instrument.Id} OR [TransactionId] = {transaction.Id})";
+        if (!instrument.IsEmptyInstance && transaction != null && !transaction.IsEmptyInstance) {
+          return $"(InstrumentId = {instrument.Id} OR TransactionId = {transaction.Id})";
         } else {
-          return $"[InstrumentId] = {instrument.Id}";
+          return $"InstrumentId = {instrument.Id}";
         }
+
+      } else if (instance is PhysicalRecording bookEntry) {
+        return $"BookEntryId = {bookEntry.Id}";
+
       }
 
       throw Assertion.EnsureNoReachThisCode($"Unhandled instance type {instance.GetType()}.");
