@@ -44,12 +44,11 @@ static internal class RecordingActMapper {
 
       dto.IsEditable = recordingAct.IsEditable;
 
-      dto.EditableFields = MapEditableFields(recordingAct.RecordingActType);
+      dto.EditableFields = MapEditableFields(recordingAct);
 
       if (!recordingAct.IsEditable) {
         return dto;
       }
-
 
       dto.EditionValues = MapEditionValues(recordingAct, dto.EditableFields);
 
@@ -57,8 +56,8 @@ static internal class RecordingActMapper {
     }
 
 
-    static private FixedList<string> MapEditableFields(RecordingActType recordingActType) {
-      var recordingRule = recordingActType.RecordingRule;
+    static private FixedList<string> MapEditableFields(RecordingAct recordingAct) {
+      var recordingRule = recordingAct.RecordingActType.RecordingRule;
 
       var list = new List<string>();
 
@@ -72,7 +71,7 @@ static internal class RecordingActMapper {
         list.Add("Kinds");
       }
 
-      if (recordingRule.ReplaceableBy.Count != 0) {
+      if (recordingAct.IsHistoric && recordingRule.ReplaceableBy.Count != 0) {
         list.Add("RecordingActType");
       }
 
@@ -95,7 +94,7 @@ static internal class RecordingActMapper {
         dto.Kinds.Sort((x, y)  => x.CompareTo(y));
       }
 
-      if (recordingRule.ReplaceableBy.Count != 0) {
+      if (editableFields.Contains("RecordingActType")) {
         dto.RecordingActTypes = RecordingActTypeMapper.MapToNamedEntityList(recordingRule.ReplaceableBy);
       }
 
