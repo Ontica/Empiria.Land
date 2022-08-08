@@ -699,7 +699,8 @@ namespace Empiria.Land.Registration {
           $"El acto jurídico {this.DisplayName} no puede ser reemplazado por {recordingActType.DisplayName}.");
 
       this.ReclassifyAs(recordingActType);
-      this.Save();
+
+      RecordingActsData.UpdateRecordingActType(this);
     }
 
     public void ChangeStatusTo(RecordableObjectStatus newStatus) {

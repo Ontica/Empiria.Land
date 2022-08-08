@@ -87,6 +87,17 @@ namespace Empiria.Land.Data {
       DataWriter.Execute(op);
     }
 
+    internal static void UpdateRecordingActType(RecordingAct recordingAct) {
+      Assertion.Require(recordingAct.IsEditable,
+                        $"Recording act '{recordingAct.UID}' can not be edited.");
+
+      var sql = "UPDATE LRSRecordingActs " +
+               $"SET RecordingActTypeId = {recordingAct.RecordingActType.Id} " +
+               $"WHERE RecordingActId = {recordingAct.Id}";
+
+      DataWriter.Execute(DataOperation.Parse(sql));
+    }
+
     #endregion Public methods
 
   } // class RecordingActsData
