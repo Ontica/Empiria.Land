@@ -18,7 +18,8 @@ namespace Empiria.Land.Media.Adapters {
 
 
     static internal FixedList<LandMediaFileDto> Map(FixedList<LandMediaPosting> list) {
-      return list.Select(x => Map(x)).ToFixedList();
+      return list.Select(x => Map(x))
+                 .ToFixedList();
     }
 
 

@@ -94,7 +94,7 @@ namespace Empiria.Land.Instruments {
         if (this.Summary.Length != 0) {
           return this.Summary;
         }
-        return "Escritura pública número 34";
+        return "Instrument.AsText not implemented";
       }
     }
 

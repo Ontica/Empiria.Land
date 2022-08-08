@@ -80,7 +80,8 @@ namespace Empiria.Land.Registration.Adapters {
 
       var files = mediaBuilder.GetLandMediaPostings(LandMediaContent.BookEntryMediaFiles, bookEntry);
 
-      return new FixedList<LandMediaFileDto>(files.Select(x => LandMediaFileMapper.Map(x)));
+      return files.Select(x => LandMediaFileMapper.Map(x))
+                  .ToFixedList();
     }
 
 
