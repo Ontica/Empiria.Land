@@ -25,6 +25,7 @@ namespace Empiria.Land.Registration {
     private readonly Instrument _instrument;
     private readonly TransactionControlData _transactionControlData;
     private readonly bool _isHistoricRegistration;
+    private readonly bool _isNewRegistration;
 
     internal InstrumentRecordingControlData(RecordingDocument instrumentRecording,
                                             Instrument instrument,
@@ -39,6 +40,8 @@ namespace Empiria.Land.Registration {
       _transactionControlData = transaction.ControlData;
 
       _isHistoricRegistration = transaction.IsEmptyInstance;
+
+      _isNewRegistration = _instrumentRecording.IsEmptyInstance || _instrumentRecording.IsNew;
     }
 
 
@@ -62,7 +65,7 @@ namespace Empiria.Land.Registration {
     public bool CanOpen {
       get {
         return this.CanEdit && _instrumentRecording.IsClosed &&
-               !UseRecordingBookRegistation;
+               !_isNewRegistration && !UseRecordingBookRegistation;
       }
     }
 
@@ -70,7 +73,7 @@ namespace Empiria.Land.Registration {
     public bool CanClose {
       get {
         return this.CanEdit && !_instrumentRecording.IsClosed &&
-               !UseRecordingBookRegistation &&
+               !_isNewRegistration && !UseRecordingBookRegistation &&
                _instrumentRecording.HasRecordingActs;
       }
     }
