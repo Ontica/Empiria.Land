@@ -11,10 +11,17 @@ using System;
 
 using Empiria.Land.Instruments;
 using Empiria.Land.Registration.Transactions;
+using Empiria.Storage;
 
 namespace Empiria.Land.Media {
 
   static internal class LandMediaReadServices {
+
+    internal static bool HasFileReferences(StorageFile file) {
+      FixedList<LandMediaPosting> postings = LandMediaPostingsData.GetFilePostings(file);
+
+      return postings.Count != 0;
+    }
 
     static internal FixedList<LandMediaPosting> InstrumentFiles(Instrument instrument) {
       return LandMediaPostingsData.GetMediaPostings(instrument);

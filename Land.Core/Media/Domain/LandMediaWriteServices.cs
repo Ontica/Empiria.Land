@@ -22,17 +22,20 @@ namespace Empiria.Land.Media {
 
 
     static internal void RemoveTransactionFile(LRSTransaction transaction,
-                                               LandMediaPosting landFile) {
+                                               LandMediaPosting posting) {
       Assertion.Require(transaction, nameof(transaction));
-      Assertion.Require(landFile, nameof(landFile));
+      Assertion.Require(posting, nameof(posting));
 
-      UnlinkFile(transaction, landFile);
+      RemovePosting(transaction, posting);
 
-      //if (!landFile.HasReferences) {
-      //  StorageContainer container = landFile.GetContainer();
+      var file = (StorageFile) posting.StorageItem;
 
-      //  container.Remove(landFile);
-      //}
+      if (!LandMediaReadServices.HasFileReferences(file)) {
+
+        StorageContainer container = file.Container;
+
+        container.Remove(file);
+      }
     }
 
 
@@ -51,11 +54,13 @@ namespace Empiria.Land.Media {
 
       string relativePath = DetermineRelativePath(transaction);
 
-      var fileName = $"{DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss")}-{transaction.UID}.pdf";
+      string fileExtension = "pdf";
+
+      var fileName = $"{DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss.fff")}-{transaction.UID}.{fileExtension}";
 
       StorageFile storageFile = container.Store(relativePath, fileName, inputFile);
 
-      return LinkFile(mediaContent, storageFile, transaction);
+      return CreatePosting(mediaContent, storageFile, transaction);
     }
 
 
@@ -77,9 +82,9 @@ namespace Empiria.Land.Media {
     }
 
 
-    static private LandMediaPosting LinkFile(LandMediaContent contentType,
-                                             StorageFile storageFile,
-                                             LRSTransaction transaction) {
+    static private LandMediaPosting CreatePosting(LandMediaContent contentType,
+                                                  StorageFile storageFile,
+                                                  LRSTransaction transaction) {
       var posting = new LandMediaPosting(contentType, storageFile);
 
       posting.LinkToTransaction(transaction);
@@ -90,9 +95,11 @@ namespace Empiria.Land.Media {
     }
 
 
-    static private void UnlinkFile(LRSTransaction transaction,
-                                   LandMediaPosting landFile) {
-      throw new NotImplementedException();
+    static private void RemovePosting(LRSTransaction transaction,
+                                      LandMediaPosting posting) {
+      posting.Delete();
+
+      posting.Save();
     }
 
   }  // class LandMediaWriteServices

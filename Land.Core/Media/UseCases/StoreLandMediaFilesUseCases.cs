@@ -69,6 +69,8 @@ namespace Empiria.Land.Media.UseCases {
 
       });
 
+      task.Start();
+
       return task;
     }
 

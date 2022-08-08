@@ -13,11 +13,19 @@ using Empiria.Data;
 using Empiria.Land.Instruments;
 using Empiria.Land.Media.Adapters;
 using Empiria.Land.Registration.Transactions;
+using Empiria.Storage;
 
 namespace Empiria.Land.Media {
 
   /// <summary>Data read and write services for Land media postings.</summary>
   static internal class LandMediaPostingsData {
+
+
+    internal static FixedList<LandMediaPosting> GetFilePostings(StorageFile file) {
+      var filter = $"StorageItemId = {file.Id}";
+
+      return GetMediaPostings(filter);
+    }
 
 
     static internal FixedList<LandMediaPosting> GetMediaPostings(BaseObject instance) {
