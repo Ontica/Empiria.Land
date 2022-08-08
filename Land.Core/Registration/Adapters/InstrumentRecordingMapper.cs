@@ -37,15 +37,13 @@ namespace Empiria.Land.Registration.Adapters {
 
       Instrument instrument = Instrument.Parse(instrumentRecording.InstrumentId);
 
-
-
       var actions = new InstrumentRecordingControlData(instrumentRecording, instrument, transaction);
 
       var bookEntries = instrument.RecordingBookEntries;
 
       dto.UID = instrumentRecording.GUID;
       dto.InstrumentRecordingID = instrumentRecording.UID;
-      dto.Instrument = InstrumentMapper.Map(instrument);
+      dto.Instrument = InstrumentMapper.Map(instrument, transaction);
 
       if (bookEntries.Count > 0) {
         dto.BookEntries = RecordingBookMapper.MapBookEntriesListDto(bookEntries);

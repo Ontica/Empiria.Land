@@ -74,7 +74,7 @@ namespace Empiria.Land.Transactions.Adapters {
       dto.Actions.Show.AntecedentRecordingActs = data.ShowAntecedentRecordingActs;
 
       dto.Media = mediaDto;
-      dto.Instrument = InstrumentMapper.Map(data.Instrument);
+      dto.Instrument = InstrumentMapper.Map(data.Instrument, data.Transaction);
       dto.Antecedent = data.Antecedent;
       dto.AntecedentRecordingActs = data.AntecedentRecordingActs;
 

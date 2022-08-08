@@ -11,6 +11,7 @@ using System;
 
 using Empiria.Land.Media;
 using Empiria.Land.Media.Adapters;
+using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Instruments.Adapters {
 
@@ -41,6 +42,23 @@ namespace Empiria.Land.Instruments.Adapters {
         SheetsCount = instrument.SheetsCount,
         Media = mediaFilesDtos
       };
+
+      return dto;
+    }
+
+
+    static internal InstrumentDto Map(Instrument instrument, LRSTransaction transaction) {
+      if (!instrument.IsNew && !instrument.IsEmptyInstance) {
+        return Map(instrument);
+      }
+
+      InstrumentDto dto = Map(instrument);
+
+      FixedList<LandMediaPosting> mediaPostings = LandMediaReadServices.TransactionFiles(transaction);
+
+      FixedList<LandMediaFileDto> mediaFilesDtos = LandMediaFileMapper.Map(mediaPostings);
+
+      dto.Media = mediaFilesDtos;
 
       return dto;
     }
