@@ -186,9 +186,12 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static public bool IsRecordingDocumentCase(LRSTransactionType type, LRSDocumentType docType) {
-      if (NotRecordableDocumentType(docType)) {
-        return false;
-      }
+      //if (NotRecordableDocumentType(docType)) {
+      //  return false;
+      //}
+      //if ((docType.Id == 723 || docType.Id == 724 || type.Id == 705) && ) {
+      //  return false;
+      //}
       if (type.Id == 700 || type.Id == 705) {
         return true;
       }
@@ -196,27 +199,27 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    static private bool NotRecordableDocumentType(LRSDocumentType docType) {
-      return EmpiriaMath.IsMemberOf(docType.Id, new int[] { 724, 730, 731, 732, 733, 734, 735, 736,
-                                                            751, 752, 753, 754, 755, 756, 757, 758 });
-    }
+    //static private bool NotRecordableDocumentType(LRSDocumentType docType) {
+    //  return EmpiriaMath.IsMemberOf(docType.Id, new int[] {  723, 724, 730, 731, 732, 733, 734, 735, 736,
+    //                                                        751, 752, 753, 754, 755, 756, 757, 758 });
+    //}
 
 
     public static bool IsDigitalizable(LRSTransactionType type, LRSDocumentType docType) {
-      if (!IsRecordingDocumentCase(type, docType)) {
-        return false;
+      if (IsRecordingDocumentCase(type, docType)) {
+        return true;
       }
-      if (IsCertificateIssueCase(type, docType)) {
-        return false;
-      }
-      if (type.Id == 699 || type.Id == 702 || type.Id == 705 || type.Id == 706) {
-        return false;
-      } else if (NotRecordableDocumentType(docType)) {
-        return false;
-      } else if (EmpiriaMath.IsMemberOf(docType.Id, new int[] { 715, 724, 728, 739, 744, 757 } )) {
-        return false;
-      }
-      return true;
+      //if (IsCertificateIssueCase(type, docType)) {
+      //  return false;
+      //}
+      //if (type.Id == 699 || type.Id == 702 || type.Id == 705 || type.Id == 706) {
+      //  return false;
+      //} else if (NotRecordableDocumentType(docType)) {
+      //  return false;
+      //} else if (EmpiriaMath.IsMemberOf(docType.Id, new int[] { 715, 724, 728, 739, 744, 757 })) {
+      //  return false;
+      //}
+      return false;
     }
 
 
