@@ -7,14 +7,14 @@
 [Empiria Land](http://www.ontica.org/land/) is a suite of powerful solutions that provide information services
 for land recording offices, cadastral departments and other land management governmental organizations.
 
-This repository corresponds to the system's backend just for the Land Recording System.
+This repository corresponds to the system's backend for the Land Recording System.
 
-The project is based on C# 8.0 and .NET Framework 4.8, and the web API is tailored on ASP .NET Web Api.
+The project is based on C# 7.0 and .NET Framework 4.8, and the web API is tailored on ASP .NET Web Api.
 
 As other Empiria products, this backend runs over [Empiria Framework](https://github.com/Ontica/Empiria.Core)
 components and, as usual, needs some of the [Empiria Extensions](https://github.com/Ontica/Empiria.Extensions).
 
-The project can be compiled using Visual Studio 2019 Community Edition.
+The project can be compiled using Visual Studio 2022 Community Edition.
 
 
 ## Contents
@@ -27,8 +27,8 @@ Empiria Land includes the following software components:
 2.  **Registration Services**  
     Classes and other types used for document and recording acts registration.
 
-3.  **Certification Services**  
-    Contains types to manage and emit official certificates related to land ownership.
+3.  **Certificate Issuing Services**  
+    Services used to manage and emit official certificates related to land ownership.
 
 4.  **Transaction Services**  
     Services to manage customer's front-desk and external system transactions.
@@ -51,7 +51,7 @@ Empiria Land includes the following software components:
 10.  **Web API (HTTP/REST-based)**  
     Http/Json RESTful type web services used to communicate with third party systems, to emit certificates and perform data searching operations.
 
-11. **Tests**  
+11. **Tests**
     Unit and integration test cases for Empiria Land.
 
 ## Documentation
@@ -69,4 +69,4 @@ important in the case of public utility or government systems.
 
 ## Copyright
 
-Copyright © 2009-2021. La Vía Óntica SC, Ontica LLC and colaborators.
+Copyright © 2009-2022. La Vía Óntica SC, Ontica LLC and colaborators.
