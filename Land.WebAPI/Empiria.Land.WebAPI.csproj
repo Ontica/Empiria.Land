@@ -53,6 +53,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Land.Analytics\Empiria.Land.Analytics.csproj" />
+    <ProjectReference Include="..\Land.Certificates\Empiria.Land.Certificates.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Net.Http" />
