@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Transaction Management                       Component : Web Api                               *
 *  Assembly : Empiria.Land.WebApi.dll                      Pattern   : Controller                            *
-*  Type     : InstrumentRecordingController                License   : Please read LICENSE.txt file          *
+*  Type     : TransactionInstrumentRecordingController     License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Web API used to get, update and link transaction instruments.                                  *
 *                                                                                                            *
@@ -19,7 +19,7 @@ using Empiria.Land.Registration.UseCases;
 namespace Empiria.Land.Registration.WebApi {
 
   /// <summary>Web API used to get, update and link transaction instruments.</summary>
-  public class InstrumentRecordingController : WebApiController {
+  public class TransactionInstrumentRecordingController : WebApiController {
 
     #region Web Apis
 
@@ -28,8 +28,9 @@ namespace Empiria.Land.Registration.WebApi {
     [Route("v5/land/transactions/{transactionUID:length(19)}/instrument-recording")]
     public SingleObjectModel GetTransactionInstrumentRecording([FromUri] string transactionUID) {
 
-      using (var usecases = InstrumentRecordingUseCases.UseCaseInteractor()) {
-        InstrumentRecordingDto instrumentRecordingDto = usecases.GetTransactionInstrumentRecording(transactionUID);
+      using (var usecases = TransactionInstrumentRecordingUseCases.UseCaseInteractor()) {
+        InstrumentRecordingDto instrumentRecordingDto =
+                            usecases.GetTransactionInstrumentRecording(transactionUID);
 
         return new SingleObjectModel(this.Request, instrumentRecordingDto);
       }
@@ -43,10 +44,11 @@ namespace Empiria.Land.Registration.WebApi {
 
       base.RequireBody(fields);
 
-      using (var usecases = InstrumentRecordingUseCases.UseCaseInteractor()) {
-        var instrumentDto = usecases.CreateTransactionInstrumentRecording(transactionUID, fields);
+      using (var usecases = TransactionInstrumentRecordingUseCases.UseCaseInteractor()) {
+        InstrumentRecordingDto instrumentRecordingDto =
+                            usecases.CreateTransactionInstrumentRecording(transactionUID, fields);
 
-        return new SingleObjectModel(this.Request, instrumentDto);
+        return new SingleObjectModel(this.Request, instrumentRecordingDto);
       }
     }
 
@@ -58,15 +60,16 @@ namespace Empiria.Land.Registration.WebApi {
 
       base.RequireBody(fields);
 
-      using (var usecases = InstrumentRecordingUseCases.UseCaseInteractor()) {
-        var instrumentDto = usecases.UpdateTransactionInstrumentRecording(transactionUID, fields);
+      using (var usecases = TransactionInstrumentRecordingUseCases.UseCaseInteractor()) {
+        InstrumentRecordingDto instrumentRecordingDto =
+                            usecases.UpdateTransactionInstrumentRecording(transactionUID, fields);
 
-        return new SingleObjectModel(this.Request, instrumentDto);
+        return new SingleObjectModel(this.Request, instrumentRecordingDto);
       }
     }
 
     #endregion Web Apis
 
-  }  // class TransactionInstrumentController
+  }  // class TransactionInstrumentRecordingController
 
 }  //namespace Empiria.Land.Transactions.WebApi

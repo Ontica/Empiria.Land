@@ -1,10 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Registration Services                      Component : Test cases                              *
-*  Assembly : Empiria.Land.Tests.dll                     Pattern   : Use cases tests class                   *
-*  Type     : InstrumentRecordingUseCasesTests           License   : Please read LICENSE.txt file            *
+*  Module   : Registration Services                        Component : Test cases                            *
+*  Assembly : Empiria.Land.Tests.dll                       Pattern   : Use cases tests class                 *
+*  Type     : TransactionInstrumentRecordingUseCasesTests  License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Test cases for instrument registration use cases.                                              *
+*  Summary  : Test cases for transaction instrument registration use cases.                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -18,22 +18,22 @@ using Empiria.Land.Registration.Adapters;
 
 namespace Empiria.Land.Tests.Registration {
 
-  /// <summary>Test cases for instrument registration use cases.</summary>
-  public class InstrumentRecordingUseCasesTests {
+  /// <summary>Test cases for transaction instrument registration use cases.</summary>
+  public class TransactionInstrumentRecordingUseCasesTests {
 
     #region Fields
 
     private readonly string TRANSACTION_UID = TestingConstants.TRANSACTION_UID;
 
-    private readonly InstrumentRecordingUseCases _usecases;
+    private readonly TransactionInstrumentRecordingUseCases _usecases;
 
     #endregion Fields
 
     #region Initialization
 
-    public InstrumentRecordingUseCasesTests() => _usecases = InstrumentRecordingUseCases.UseCaseInteractor();
+    public TransactionInstrumentRecordingUseCasesTests() => _usecases = TransactionInstrumentRecordingUseCases.UseCaseInteractor();
 
-    ~InstrumentRecordingUseCasesTests() => _usecases.Dispose();
+    ~TransactionInstrumentRecordingUseCasesTests() => _usecases.Dispose();
 
     #endregion Initialization
 
@@ -113,6 +113,6 @@ namespace Empiria.Land.Tests.Registration {
 
     #endregion Facts
 
-  }  // class InstrumentRecordingUseCasesTests
+  }  // class TransactionInstrumentRecordingUseCasesTests
 
 }  // namespace Empiria.Land.Tests.Registration
