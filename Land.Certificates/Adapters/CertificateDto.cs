@@ -9,9 +9,38 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.DataTypes;
+
+using Empiria.Land.RecordableSubjects.Adapters;
+
 namespace Empiria.Land.Certificates {
 
   public class CertificateDto {
+
+    public string UID {
+      get; internal set;
+    }
+
+    public string Type {
+      get; internal set;
+    }
+
+    public string CertificateID {
+      get; internal set;
+    }
+
+    public RecordableSubjectDto RecordableSubject {
+      get; internal set;
+    }
+
+    public MediaData MediaLink {
+      get; internal set;
+    } = MediaData.Empty;
+
+
+    public string Status {
+      get; internal set;
+    }
 
   }  // class CertificateDto
 

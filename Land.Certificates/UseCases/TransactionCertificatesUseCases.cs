@@ -11,6 +11,7 @@ using System;
 
 using Empiria.Services;
 
+using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Certificates.UseCases {
@@ -45,13 +46,34 @@ namespace Empiria.Land.Certificates.UseCases {
       Assertion.Require(transactionUID, nameof(transactionUID));
       Assertion.Require(command, nameof(command));
 
+      command.EnsureIsValid();
+
       var transaction = LRSTransaction.Parse(transactionUID);
 
-      return new CertificateDto();
+      var certificateType = CertificateType.Parse(command.Payload.CertificateTypeUID);
+
+      Resource recordableSubject;
+
+      if (command.Type == CreateCertificateCommandType.OverRealEstateAntecedent) {
+        recordableSubject = CreateRecordableSubjectInAntecedent(command.Payload);
+      } else {
+        recordableSubject = (RealEstate) Resource.ParseGuid(command.Payload.RecordableSubjectUID);
+      }
+
+      var certificate = Certificate.Create(certificateType, transaction, recordableSubject);
+
+      return CertificateMapper.Map(certificate);
     }
 
-
     #endregion Use cases
+
+    #region Helpers
+
+    private Resource CreateRecordableSubjectInAntecedent(CreateCertificateCommandPayload payload) {
+      return RealEstate.Parse(1885);
+    }
+
+    #endregion Helpers
 
   }  // class TransactionCertificatesUseCases
 

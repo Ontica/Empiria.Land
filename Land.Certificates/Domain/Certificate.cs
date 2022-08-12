@@ -12,6 +12,9 @@ using System;
 using Empiria.Ontology;
 using Empiria.Security;
 
+using Empiria.Land.Registration;
+using Empiria.Land.Registration.Transactions;
+
 namespace Empiria.Land.Certificates {
 
   /// <summary>Partitioned type that represents a Land certificate.</summary>
@@ -28,6 +31,21 @@ namespace Empiria.Land.Certificates {
       return BaseObject.ParseId<Certificate>(id);
     }
 
+    static internal Certificate Create(CertificateType certificateType,
+                                       LRSTransaction transaction,
+                                       Resource recordableSubject) {
+      Assertion.Require(certificateType, nameof(certificateType));
+      Assertion.Require(transaction, nameof(transaction));
+      Assertion.Require(recordableSubject, nameof(recordableSubject));
+
+      var certificate = new Certificate(certificateType);
+      certificate.Transaction = transaction;
+      certificate.RecordableSubject = recordableSubject;
+
+      return certificate;
+    }
+
+
     #endregion Constructors and parsers
 
     #region Properties
@@ -38,7 +56,31 @@ namespace Empiria.Land.Certificates {
       }
     }
 
-   #endregion Properties
+    public string CertificateID {
+      get;
+      private set;
+    }
+
+
+    public string Status {
+      get;
+      internal set;
+    } = "Incomplete";
+
+
+    public LRSTransaction Transaction {
+      get;
+      private set;
+    }
+
+
+    public Resource RecordableSubject {
+      get;
+      private set;
+    }
+
+
+    #endregion Properties
 
     #region IProtected implementation
 
