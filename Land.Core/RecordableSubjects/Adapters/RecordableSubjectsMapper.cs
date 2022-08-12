@@ -17,7 +17,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
   /// <summary>Methods to map recordable subjects like real estate, associations
   /// and no property subjects.</summary>
-  static internal class RecordableSubjectsMapper {
+  static public class RecordableSubjectsMapper {
 
 
     static internal FixedList<RecordableSubjectShortDto> Map<T>(FixedList<T> list) where T: Resource {
@@ -25,7 +25,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    static internal RecordableSubjectDto Map(Resource resource) {
+    static public RecordableSubjectDto Map(Resource resource) {
       if (resource is RealEstate realEstate) {
         return Map(realEstate);
 
@@ -94,7 +94,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    private static RecordableSubjectShortDto MapToShortDto<T>(T resource) where T : Resource {
+    static private RecordableSubjectShortDto MapToShortDto<T>(T resource) where T : Resource {
       var dto = new RecordableSubjectShortDto();
 
       dto.UID = resource.GUID;
