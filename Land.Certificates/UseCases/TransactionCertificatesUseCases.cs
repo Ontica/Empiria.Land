@@ -11,6 +11,8 @@ using System;
 
 using Empiria.Services;
 
+using Empiria.Land.Registration.Transactions;
+
 namespace Empiria.Land.Certificates.UseCases {
 
   /// <summary>Use cases that links transactions with certificates.</summary>
@@ -27,7 +29,15 @@ namespace Empiria.Land.Certificates.UseCases {
     #region Use cases
 
     public FixedList<CertificateTypeDto> CertificateTypes(string transactionUID) {
-      throw new NotImplementedException();
+      Assertion.Require(transactionUID, nameof(transactionUID));
+
+      var transaction = LRSTransaction.Parse(transactionUID);
+
+      var defaultList = CertificateType.GetList();
+
+      var builder = new ApplicableCertificateTypesBuilder(defaultList);
+
+      return builder.BuildFor(transaction);
     }
 
     #endregion Use cases
