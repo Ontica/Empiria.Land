@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
-using Empiria.Land.RecordableSubjects.Adapters;
+
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Certificates {
@@ -60,20 +60,15 @@ namespace Empiria.Land.Certificates {
       var commands = new List<CertificateIssuingCommandDto>();
 
       commands.Add(new CertificateIssuingCommandDto {
-        UID = "OverRegisteredRealEstate",
-        Name = "Predio con folio real",
-        Rules = new CertificateIssuingCommandRuleDto {
-          SubjectType = RecordableSubjectType.RealEstate,
-          SelectSubject = true
-        }
+        UID = CreateCertificateCommandType.OverRegisteredRealEstate.ToString(),
+        Name = CreateCertificateCommandType.OverRegisteredRealEstate.Name(),
+        Rules = CreateCertificateCommandType.OverRegisteredRealEstate.Rules(),
       });
+
       commands.Add(new CertificateIssuingCommandDto {
-        UID = "OverRealEstateAntecedent",
-        Name = "Predio registrado en antecedente, sin folio real",
-        Rules = new CertificateIssuingCommandRuleDto {
-          SubjectType = RecordableSubjectType.RealEstate,
-          SelectBookEntry = true
-        }
+        UID = CreateCertificateCommandType.OverRealEstateAntecedent.ToString(),
+        Name = CreateCertificateCommandType.OverRealEstateAntecedent.Name(),
+        Rules = CreateCertificateCommandType.OverRealEstateAntecedent.Rules()
       });
 
       return commands.ToFixedList();
