@@ -23,24 +23,27 @@ namespace Empiria.Land.Certificates.WebApi {
 
     [HttpGet]
     [Route("v5/land/transactions/{transactionUID:length(19)}/certificates/certificate-types")]
-    public FixedList<CertificateTypeDto> GetTransactionCertificateTypes([FromUri] string transactionUID) {
+    public CollectionModel GetTransactionCertificateTypes([FromUri] string transactionUID) {
 
       using (var usecases = TransactionCertificatesUseCases.UseCaseInteractor()) {
-        return usecases.CertificateTypes(transactionUID);
-      }
+        FixedList<CertificateTypeDto> types = usecases.CertificateTypes(transactionUID);
 
+        return new CollectionModel(this.Request, types);
+      }
     }
 
 
     [HttpPost]
     [Route("v5/land/transactions/{transactionUID:length(19)}/certificates")]
-    public CertificateDto CreateCertificate([FromUri] string transactionUID,
-                                            [FromBody] CreateCertificateCommand command) {
+    public SingleObjectModel CreateCertificate([FromUri] string transactionUID,
+                                               [FromBody] CreateCertificateCommand command) {
       base.RequireBody(command);
 
       using (var usecases = TransactionCertificatesUseCases.UseCaseInteractor()) {
 
-        return usecases.CreateCertificate(transactionUID, command);
+        CertificateDto certificate = usecases.CreateCertificate(transactionUID, command);
+
+        return new SingleObjectModel(this.Request, certificate);
       }
     }
 
