@@ -31,6 +31,20 @@ namespace Empiria.Land.Certificates.WebApi {
 
     }
 
+
+    [HttpPost]
+    [Route("v5/land/transactions/{transactionUID:length(19)}/certificates")]
+    public CertificateDto CreateCertificate([FromUri] string transactionUID,
+                                            [FromBody] CreateCertificateCommand command) {
+      base.RequireBody(command);
+
+      using (var usecases = TransactionCertificatesUseCases.UseCaseInteractor()) {
+
+        return usecases.CreateCertificate(transactionUID, command);
+      }
+    }
+
+
     #endregion Web Apis
 
   }  // class TransactionCertificatesController

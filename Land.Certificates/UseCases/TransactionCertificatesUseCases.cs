@@ -40,6 +40,17 @@ namespace Empiria.Land.Certificates.UseCases {
       return builder.BuildFor(transaction);
     }
 
+
+    public CertificateDto CreateCertificate(string transactionUID, CreateCertificateCommand command) {
+      Assertion.Require(transactionUID, nameof(transactionUID));
+      Assertion.Require(command, nameof(command));
+
+      var transaction = LRSTransaction.Parse(transactionUID);
+
+      return new CertificateDto();
+    }
+
+
     #endregion Use cases
 
   }  // class TransactionCertificatesUseCases
