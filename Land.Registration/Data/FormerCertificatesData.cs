@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Land.Registration.dll                Pattern : Data Services                           *
 *  Type     : CertificatesData                             License : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Provides database read and write methods for land certificates.                                *
+*  Summary  : FormerCertificatesData Provides database read and write methods for land certificates.         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -18,22 +18,22 @@ using Empiria.Land.Registration.Transactions;
 namespace Empiria.Land.Data {
 
   /// <summary>Provides database read and write methods for land certificates.</summary>
-  static internal class CertificatesData {
+  static internal class FormerCertificatesData {
 
     #region Public methods
 
-    static internal FixedList<Certificate> GetTransactionIssuedCertificates(LRSTransaction transaction) {
+    static internal FixedList<FormerCertificate> GetTransactionIssuedCertificates(LRSTransaction transaction) {
       if (transaction.IsEmptyInstance) {
-        return new FixedList<Certificate>();
+        return new FixedList<FormerCertificate>();
       }
 
       var op = DataOperation.Parse("qryLRSCertificatesByTransaction", transaction.Id);
 
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<Certificate>(x, true)).ToFixedList();
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<FormerCertificate>(x, true)).ToFixedList();
     }
 
 
-    static internal bool IsSigned(Certificate certificate) {
+    static internal bool IsSigned(FormerCertificate certificate) {
       var sql = $"SELECT * FROM vwLRSDocumentSign WHERE DocumentNo = '{certificate.UID}' " +
                 $"AND SignStatus = 'S' AND DigitalSign <> ''";
 
@@ -43,7 +43,7 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal string GetDigitalSignature(Certificate certificate) {
+    static internal string GetDigitalSignature(FormerCertificate certificate) {
       var sql = $"SELECT DigitalSign FROM vwLRSDocumentSign WHERE DocumentNo = '{certificate.UID}' " +
                 $"AND SignStatus = 'S' AND DigitalSign <> ''";
 
@@ -53,7 +53,7 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal Person GetDigitalSignatureSignedBy(Certificate certificate) {
+    static internal Person GetDigitalSignatureSignedBy(FormerCertificate certificate) {
       var sql = $"SELECT RequestedToId FROM vwLRSDocumentSign WHERE DocumentNo = '{certificate.UID}' " +
                 $"AND SignStatus = 'S' AND DigitalSign <> ''";
 
@@ -63,18 +63,18 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal FixedList<Certificate> ResourceEmittedCertificates(Resource resource) {
+    static internal FixedList<FormerCertificate> ResourceEmittedCertificates(Resource resource) {
       if (resource.IsEmptyInstance) {
-        return new FixedList<Certificate>();
+        return new FixedList<FormerCertificate>();
       }
 
       var op = DataOperation.Parse("qryLRSResourceEmittedCertificates", resource.Id);
 
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<Certificate>(x, true)).ToFixedList();
+      return DataReader.GetList(op, (x) => BaseObject.ParseList<FormerCertificate>(x, true)).ToFixedList();
     }
 
 
-    static internal void WriteCertificate(Certificate o) {
+    static internal void WriteCertificate(FormerCertificate o) {
       var op = DataOperation.Parse("writeLRSCertificate",
                           o.Id, o.CertificateType.Id, o.GUID, o.UID,
                           o.Transaction.Id, o.RecorderOffice.Id, o.Property.Id, o.OwnerName,
@@ -89,6 +89,6 @@ namespace Empiria.Land.Data {
 
     #endregion Public methods
 
-  } // class CertificatesData
+  } // class FormerCertificatesData
 
 } // namespace Empiria.Land.Data

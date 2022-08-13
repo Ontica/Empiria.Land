@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Certification Services              *
 *  Namespace : Empiria.Land.Certification                     Assembly : Empiria.Land.Certification.dll      *
-*  Type      : CertificateExtData                             Pattern  : IExtensibleData class               *
+*  Type      : FormerCertificateExtData                       Pattern  : IExtensibleData class               *
 *  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Holds extensible data for certificates.                                                       *
+*  Summary   : FormerCertificateExtData Holds extensible data for certificates.                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -14,37 +14,37 @@ using Empiria.Json;
 
 namespace Empiria.Land.Certification {
 
-  /// <summary>Holds extensible data for certificates.</summary>
-  public class CertificateExtData : IExtensibleData {
+  /// <summary>FomerCertificateExtData Holds extensible data for certificates.</summary>
+  public class FormerCertificateExtData : IExtensibleData {
 
     #region Constructors and parsers
 
-    internal CertificateExtData() {
+    internal FormerCertificateExtData() {
 
     }
 
-    internal CertificateExtData(CertificateDTO data) {
+    internal FormerCertificateExtData(FormerCertificateDTO data) {
       Assertion.Require(data, "data");
 
       this.LoadDTOData(data);
     }
 
-    static internal CertificateExtData Parse(string jsonString) {
+    static internal FormerCertificateExtData Parse(string jsonString) {
       if (String.IsNullOrWhiteSpace(jsonString)) {
-        return CertificateExtData.Empty;
+        return FormerCertificateExtData.Empty;
       }
 
       var json = JsonConverter.ToJsonObject(jsonString);
 
-      var data = new CertificateExtData();
+      var data = new FormerCertificateExtData();
       data.LoadJson(json);
 
       return data;
     }
 
-    static private readonly CertificateExtData _empty = new CertificateExtData() { IsEmptyInstance = true };
+    static private readonly FormerCertificateExtData _empty = new FormerCertificateExtData() { IsEmptyInstance = true };
 
-    static public CertificateExtData Empty {
+    static public FormerCertificateExtData Empty {
       get {
         return _empty;
       }
@@ -156,7 +156,7 @@ namespace Empiria.Land.Certification {
       this.UseMarginalNotesAsFullBody = json.Get<Boolean>("UseMarginalNotesAsFullBody", false);
     }
 
-    private void LoadDTOData(CertificateDTO data) {
+    private void LoadDTOData(FormerCertificateDTO data) {
       this.PropertyCommonName = data.PropertyCommonName;
       this.PropertyLocation = data.PropertyLocation;
       this.PropertyMetesAndBounds = data.PropertyMetesAndBounds;
@@ -171,6 +171,6 @@ namespace Empiria.Land.Certification {
 
     #endregion Methods
 
-  }  // class CertificateExtData
+  }  // class FormerCertificateExtData
 
 } // namespace Empiria.Land.Certification

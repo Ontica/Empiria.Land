@@ -230,7 +230,7 @@ namespace Empiria.Land.Providers {
     }
 
 
-    static private EFilingDocument MapToEFilingDocumentDTO(Certificate certificate) {
+    static private EFilingDocument MapToEFilingDocumentDTO(FormerCertificate certificate) {
       return new EFilingDocument() {
         UID = certificate.UID,
         Type = certificate.CertificateType.Name,

@@ -24,11 +24,11 @@ namespace Empiria.Land.WebApi {
 
     [HttpPost]
     [Route("v1/certificates")]
-    public SingleObjectModel CreateCertificate([FromBody] CertificateDTO certificateData) {
+    public SingleObjectModel CreateCertificate([FromBody] FormerCertificateDTO certificateData) {
       try {
         base.RequireBody(certificateData);
 
-        var certificate = Certificate.Create(certificateData);
+        var certificate = FormerCertificate.Create(certificateData);
 
         return this.BuildCertificateResponse(certificate);
       } catch (Exception e) {
@@ -40,7 +40,7 @@ namespace Empiria.Land.WebApi {
     [Route("v1/certificates/{certificateUID}/close")]
     public SingleObjectModel CloseCertificate([FromUri] string certificateUID) {
       try {
-        Certificate certificate = this.ReadCertificate(certificateUID);
+        FormerCertificate certificate = this.ReadCertificate(certificateUID);
         certificate.Close();
 
         return this.BuildCertificateResponse(certificate);
@@ -53,7 +53,7 @@ namespace Empiria.Land.WebApi {
     [Route("v1/certificates/{certificateUID}/open")]
     public SingleObjectModel OpenCertificate([FromUri] string certificateUID) {
       try {
-        Certificate certificate = this.ReadCertificate(certificateUID);
+        FormerCertificate certificate = this.ReadCertificate(certificateUID);
         certificate.Open();
 
         return this.BuildCertificateResponse(certificate);
@@ -66,7 +66,7 @@ namespace Empiria.Land.WebApi {
     [Route("v1/certificates/{certificateUID}")]
     public SingleObjectModel DeleteOrCancelCertificate([FromUri] string certificateUID) {
       try {
-        Certificate certificate = this.ReadCertificate(certificateUID);
+        FormerCertificate certificate = this.ReadCertificate(certificateUID);
 
         if (certificate.CanDelete()) {
           certificate.Delete();
@@ -83,7 +83,7 @@ namespace Empiria.Land.WebApi {
     [Route("v1/certificates/{certificateUID}")]
     public SingleObjectModel GetCertificate([FromUri] string certificateUID) {
       try {
-        Certificate certificate = this.ReadCertificate(certificateUID);
+        FormerCertificate certificate = this.ReadCertificate(certificateUID);
 
         return this.BuildCertificateResponse(certificate);
       } catch (Exception e) {
@@ -95,7 +95,7 @@ namespace Empiria.Land.WebApi {
     [Route("v1/certificates/{certificateUID}/as-text")]
     public SingleObjectModel GetCertificateAsText([FromUri] string certificateUID) {
       try {
-        Certificate certificate = this.ReadCertificate(certificateUID);
+        FormerCertificate certificate = this.ReadCertificate(certificateUID);
 
         return this.BuildCertificateAsTextResponse(certificate);
       } catch (Exception e) {
@@ -106,11 +106,11 @@ namespace Empiria.Land.WebApi {
     [HttpPut, HttpPatch]
     [Route("v1/certificates/{certificateUID}")]
     public SingleObjectModel UpdateCertificate([FromUri] string certificateUID,
-                                               [FromBody] CertificateDTO certificateData) {
+                                               [FromBody] FormerCertificateDTO certificateData) {
       try {
         base.RequireBody(certificateData);
 
-        Certificate certificate = this.ReadCertificate(certificateUID);
+        FormerCertificate certificate = this.ReadCertificate(certificateUID);
         certificate.Update(certificateData);
 
         return this.BuildCertificateResponse(certificate);
@@ -123,17 +123,17 @@ namespace Empiria.Land.WebApi {
 
     #region Private methods
 
-    private SingleObjectModel BuildCertificateResponse(Certificate certificate) {
+    private SingleObjectModel BuildCertificateResponse(FormerCertificate certificate) {
       return new SingleObjectModel(this.Request, this.GetCertificateModel(certificate),
                                    "Empiria.Land.Certificate");
     }
 
-    private SingleObjectModel BuildCertificateAsTextResponse(Certificate certificate) {
+    private SingleObjectModel BuildCertificateAsTextResponse(FormerCertificate certificate) {
       return new SingleObjectModel(this.Request, this.GetCertificateAsTextModel(certificate),
                                    "Empiria.Land.CertificateAsText");
     }
 
-    private object GetCertificateModel(Certificate o) {
+    private object GetCertificateModel(FormerCertificate o) {
       return new {
         uid = o.UID,
         type = new {
@@ -174,7 +174,7 @@ namespace Empiria.Land.WebApi {
       };
     }
 
-    private object GetCertificateAsTextModel(Certificate o) {
+    private object GetCertificateAsTextModel(FormerCertificate o) {
       return new {
         uid = o.UID,
         type = new {
@@ -189,10 +189,10 @@ namespace Empiria.Land.WebApi {
       };
     }
 
-    private Certificate ReadCertificate(string certificateUID) {
+    private FormerCertificate ReadCertificate(string certificateUID) {
       base.RequireResource(certificateUID, "certificateUID");
 
-      var certificate = Certificate.TryParse(certificateUID);
+      var certificate = FormerCertificate.TryParse(certificateUID);
 
       if (certificate == null) {
         throw new ResourceNotFoundException("Empiria.Land.Certificate.NotFound",

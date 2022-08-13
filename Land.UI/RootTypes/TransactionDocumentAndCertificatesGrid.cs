@@ -70,7 +70,7 @@ namespace Empiria.Land.UI {
       return row;
     }
 
-    private string GetCertificateRow(Certificate certificate, int index) {
+    private string GetCertificateRow(FormerCertificate certificate, int index) {
       const string template =
          "<tr class='{{CLASS}}'>" +
            "<td style='white-space:nowrap;'>" +
@@ -102,7 +102,7 @@ namespace Empiria.Land.UI {
       row = row.Replace("{{RECORDING.DATE}}", HtmlFormatters.GetDateAsText(certificate.IssueTime));
 
       row = row.Replace("{{ISSUED.BY}}", certificate.IssuedBy.Nickname +
-                                         (certificate.Status == CertificateStatus.Pending ?
+                                         (certificate.Status == FormerCertificateStatus.Pending ?
                                           " Pendiente" : String.Empty));
 
       return row;
@@ -129,9 +129,9 @@ namespace Empiria.Land.UI {
       if (!_transaction.Document.IsEmptyDocumentType) {
         html += this.GetDocumentRow(_transaction.Document, 0);
       }
-      FixedList<Certificate> certificates = _transaction.GetIssuedCertificates();
+      FixedList<FormerCertificate> certificates = _transaction.GetIssuedCertificates();
       for (int i = 0; i < certificates.Count; i++) {
-        Certificate certificate = certificates[i];
+        FormerCertificate certificate = certificates[i];
 
         html += this.GetCertificateRow(certificate, i + 1);
       }

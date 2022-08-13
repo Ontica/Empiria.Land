@@ -67,8 +67,8 @@ namespace Empiria.Land.Registration {
 
     #region Methods
 
-    public FixedList<Certificate> GetEmittedCerificates() {
-      return CertificatesData.ResourceEmittedCertificates(this.Resource);
+    public FixedList<FormerCertificate> GetEmittedCerificates() {
+      return FormerCertificatesData.ResourceEmittedCertificates(this.Resource);
     }
 
 

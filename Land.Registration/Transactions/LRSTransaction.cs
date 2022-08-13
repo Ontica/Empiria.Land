@@ -93,7 +93,9 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public LRSTransaction Empty {
-      get { return BaseObject.ParseEmpty<LRSTransaction>(); }
+      get {
+        return BaseObject.ParseEmpty<LRSTransaction>();
+      }
     }
 
 
@@ -721,8 +723,8 @@ namespace Empiria.Land.Registration.Transactions {
       return temp;
     }
 
-    public FixedList<Certificate> GetIssuedCertificates() {
-      return Empiria.Land.Data.CertificatesData.GetTransactionIssuedCertificates(this);
+    public FixedList<FormerCertificate> GetIssuedCertificates() {
+      return Empiria.Land.Data.FormerCertificatesData.GetTransactionIssuedCertificates(this);
     }
 
     protected override void OnInitialize() {

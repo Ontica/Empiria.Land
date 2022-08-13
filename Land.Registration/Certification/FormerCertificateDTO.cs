@@ -2,18 +2,19 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Certification Services              *
 *  Namespace : Empiria.Land.Certification                     Assembly : Empiria.Land.Certification.dll      *
-*  Type      : CertificateDTO                                 Pattern  : Data Transfer Object                *
+*  Type      : FormerCertificateDTO                           Pattern  : Data Transfer Object                *
 *  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Data transfer object that holds data used to build certificates from external sources.        *
+*  Summary   : Former Data transfer object that holds data used to build certificates from external sources. *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Land.Certification {
 
-  /// <summary>Data transfer object that holds data used to build certificates from external sources.</summary>
-  public class CertificateDTO {
+  /// <summary>Former Data transfer object that holds data used to build
+  /// certificates from external sources.</summary>
+  public class FormerCertificateDTO {
 
     #region Public properties
 

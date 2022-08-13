@@ -44,7 +44,7 @@ namespace Empiria.Land.WebApi {
         certificateUID = FormatParameter(certificateUID);
         hash = FormatParameter(hash);
 
-        var certificate = Certificate.TryParse(certificateUID, true);
+        var certificate = FormerCertificate.TryParse(certificateUID, true);
 
         if (certificate == null && hash.Length == 0) {
           throw new ResourceNotFoundException("Land.Certificate.NotFound",
@@ -60,7 +60,7 @@ namespace Empiria.Land.WebApi {
                                               "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
                                               certificateUID);
 
-        } else if (certificate != null && certificate.Status == CertificateStatus.Deleted) {
+        } else if (certificate != null && certificate.Status == FormerCertificateStatus.Deleted) {
           throw new ResourceNotFoundException("Land.Certificate.Deleted",
                                               $"El certificado {certificate.UID} que está consultando fue ELIMINADO posteriormente a " +
                                               "su impresión, por lo que no tiene ninguna validez oficial.\n\n" +
@@ -239,7 +239,7 @@ namespace Empiria.Land.WebApi {
 
     #region Private methods
 
-    private List<PropertyBagItem> BuildCertificateResponse(Certificate certificate, string hash) {
+    private List<PropertyBagItem> BuildCertificateResponse(FormerCertificate certificate, string hash) {
       var propertyBag = new List<PropertyBagItem>(16);
 
       propertyBag.Add(new PropertyBagItem("Información del certificado", String.Empty, "section"));
@@ -665,7 +665,7 @@ namespace Empiria.Land.WebApi {
     }
 
 
-    private string GetCertificateText(Certificate certificate) {
+    private string GetCertificateText(FormerCertificate certificate) {
       if (certificate.UseESign) {
         return certificate.AsText;
       } else {
@@ -764,8 +764,8 @@ namespace Empiria.Land.WebApi {
                                         recordingAct.DisplayName + "<br/>" +
                                         $"{GetDocumentUIDAsLink(recordingAct.Document.UID)}"));
 
-        } else if (tractItem is Certificate) {
-          Certificate certificate = (Certificate) tractItem;
+        } else if (tractItem is FormerCertificate) {
+          FormerCertificate certificate = (FormerCertificate) tractItem;
 
           if (!certificate.IsClosed) {
             continue;

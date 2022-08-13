@@ -22,14 +22,14 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    static public FixedList<Certificate> Certificates(string keywords, string sort = "") {
+    static public FixedList<FormerCertificate> Certificates(string keywords, string sort = "") {
       string filter = FilterExpression("CertificateKeywords", keywords);
       sort = SortExpression(sort, "CertificateUID");
 
       string sql = EntitySqlString("LRSCertificates", "CertificateStatus", filter, sort, 50);
 
       return DataReader.GetList(DataOperation.Parse(sql),
-                                (x) => BaseObject.ParseList<Certificate>(x)).ToFixedList();
+                                (x) => BaseObject.ParseList<FormerCertificate>(x)).ToFixedList();
     }
 
 

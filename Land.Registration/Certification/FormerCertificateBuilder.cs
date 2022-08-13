@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Certification Services                       Component : Certificate builder                   *
 *  Assembly : Empiria.Land.Registration.dll                Pattern   : Builder Class                         *
-*  Type     : CertificateBuilder                           License   : Please read LICENSE.txt file          *
+*  Type     : FormerCertificateBuilder                     License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Builds a certificate Html output using a text-based template.                                  *
+*  Summary  : FormerCertificateBuilder Builds a certificate Html output using a text-based template.         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -16,18 +16,18 @@ using Empiria.Land.Registration;
 namespace Empiria.Land.Certification {
 
   /// <summary>Builds a certificate Html output using a text-based template.</summary>
-  internal class CertificateBuilder {
+  internal class FormerCertificateBuilder {
 
     #region Constructors and parsers
 
-    private CertificateBuilder(Certificate certificate) {
+    private FormerCertificateBuilder(FormerCertificate certificate) {
       this.Certificate = certificate;
     }
 
-    internal static string Build(Certificate certificate) {
+    internal static string Build(FormerCertificate certificate) {
       Assertion.Require(certificate, "certificate");
 
-      var builder = new CertificateBuilder(certificate);
+      var builder = new FormerCertificateBuilder(certificate);
 
       return builder.Build();
     }
@@ -36,7 +36,7 @@ namespace Empiria.Land.Certification {
 
     #region Properties
 
-    private Certificate Certificate {
+    private FormerCertificate Certificate {
       get;
       set;
     }
@@ -161,6 +161,6 @@ namespace Empiria.Land.Certification {
 
     #endregion Helpers
 
-  } // class CertificateBuilder
+  } // class FormerCertificateBuilder
 
 } // namespace Empiria.Land.Certification

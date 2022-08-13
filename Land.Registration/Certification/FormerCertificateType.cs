@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Certification Services              *
 *  Namespace : Empiria.Land.Certification                     Assembly : Empiria.Land.Certification.dll      *
-*  Type      : LandCertificateType                            Pattern  : Power type                          *
+*  Type      : FormerCertificateType                          Pattern  : Power type                          *
 *  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Power type that describes certificates types.                                                 *
+*  Summary   : Former Power type that describes certificates types.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -14,27 +14,27 @@ using Empiria.Ontology;
 
 namespace Empiria.Land.Certification {
 
-  ///<summary>Power type that describes certificates types.</summary>
-  [Powertype(typeof(Certificate))]
-  public sealed class CertificateType : Powertype {
+  ///<summary>Former Power type that describes certificates types.</summary>
+  [Powertype(typeof(FormerCertificate))]
+  public sealed class FormerCertificateType : Powertype {
 
     #region Constructors and parsers
 
-    private CertificateType() {
+    private FormerCertificateType() {
       // Empiria powertype types always have this constructor.
     }
 
-    static public new CertificateType Parse(int typeId) {
-      return ObjectTypeInfo.Parse<CertificateType>(typeId);
+    static public new FormerCertificateType Parse(int typeId) {
+      return ObjectTypeInfo.Parse<FormerCertificateType>(typeId);
     }
 
-    static internal new CertificateType Parse(string typeName) {
-      return ObjectTypeInfo.Parse<CertificateType>(typeName);
+    static internal new FormerCertificateType Parse(string typeName) {
+      return ObjectTypeInfo.Parse<FormerCertificateType>(typeName);
     }
 
-    static public CertificateType Empty {
+    static public FormerCertificateType Empty {
       get {
-        return CertificateType.Parse("ObjectType.LandCertificate");
+        return FormerCertificateType.Parse("ObjectType.LandCertificate");
       }
     }
 
@@ -50,6 +50,6 @@ namespace Empiria.Land.Certification {
 
     #endregion Methods
 
-  } // class CertificateType
+  } // class FormerCertificateType
 
 } // namespace Empiria.Land.Certification

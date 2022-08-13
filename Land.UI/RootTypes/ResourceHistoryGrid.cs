@@ -74,8 +74,8 @@ namespace Empiria.Land.UI {
 
         if (item is RecordingAct) {
           html += this.GetRecordingActRow((RecordingAct) item, i);
-        } else if (item is Certificate) {
-          html += this.GetCertificateRow((Certificate) item, i);
+        } else if (item is FormerCertificate) {
+          html += this.GetCertificateRow((FormerCertificate) item, i);
         } else {
           Assertion.EnsureNoReachThisCode("Invalid resource history tract item type.");
         }
@@ -105,7 +105,7 @@ namespace Empiria.Land.UI {
       return template;
     }
 
-    private string GetCertificateRow(Certificate certificate, int index) {
+    private string GetCertificateRow(FormerCertificate certificate, int index) {
       const string template =
          "<tr class='{{CLASS}}'>" +
            "<td>{{PRESENTATION.DATE}}<br/>{{ISSUE.DATE}}</td>" +

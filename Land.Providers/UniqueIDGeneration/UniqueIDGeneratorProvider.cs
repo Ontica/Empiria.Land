@@ -43,7 +43,7 @@ namespace Empiria.Land.Providers {
       while (true) {
         string newCertificateUID = UniqueIDGeneratorProvider.CreateCertificateUID();
 
-        var checkIfExistCertificate = Certificate.TryParse(newCertificateUID);
+        var checkIfExistCertificate = FormerCertificate.TryParse(newCertificateUID);
 
         if (checkIfExistCertificate == null) {
           return newCertificateUID;

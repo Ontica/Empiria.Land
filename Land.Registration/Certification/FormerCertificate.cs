@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Certification Services              *
 *  Namespace : Empiria.Land.Certification                     Assembly : Empiria.Land.Certification.dll      *
-*  Type      : Certificate                                    Pattern  : Empiria Object Type                 *
+*  Type      : FormerCertificate                              Pattern  : Empiria Object Type                 *
 *  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
-*  Summary   : Holds information about a land certificate.                                                   *
+*  Summary   : FormerCertificate Holds information about a land certificate.                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -23,23 +23,23 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Certification {
 
-  /// <summary>Holds information about a land certificate.</summary>
-  [PartitionedType(typeof(CertificateType))]
-  public partial class Certificate : BaseObject, IResourceTractItem, IProtected {
+  /// <summary>FormerCertificate Holds information about a land certificate.</summary>
+  [PartitionedType(typeof(FormerCertificateType))]
+  public partial class FormerCertificate : BaseObject, IResourceTractItem, IProtected {
 
     #region Constructors and parsers
 
-    private Certificate(CertificateType powerType) : base(powerType) {
+    private FormerCertificate(FormerCertificateType powerType) : base(powerType) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    static public Certificate Parse(int id) {
-      return BaseObject.ParseId<Certificate>(id, true);
+    static public FormerCertificate Parse(int id) {
+      return BaseObject.ParseId<FormerCertificate>(id, true);
     }
 
 
-    static public Certificate ParseGuid(string guid) {
-      var certificate = BaseObject.TryParse<Certificate>($"CertificateGUID = '{guid}'");
+    static public FormerCertificate ParseGuid(string guid) {
+      var certificate = BaseObject.TryParse<FormerCertificate>($"CertificateGUID = '{guid}'");
 
       Assertion.Require(certificate,
                              $"There is not registered a certificate with guid {guid}.");
@@ -48,8 +48,8 @@ namespace Empiria.Land.Certification {
     }
 
 
-    static public Certificate TryParse(string certificateUID, bool reload = false) {
-      return BaseObject.TryParse<Certificate>($"CertificateUID = '{certificateUID}'", reload);
+    static public FormerCertificate TryParse(string certificateUID, bool reload = false) {
+      return BaseObject.TryParse<FormerCertificate>($"CertificateUID = '{certificateUID}'", reload);
     }
 
 
@@ -57,9 +57,9 @@ namespace Empiria.Land.Certification {
 
     #region Properties
 
-    public CertificateType CertificateType {
+    public FormerCertificateType CertificateType {
       get {
-        return (CertificateType) base.GetEmpiriaType();
+        return (FormerCertificateType) base.GetEmpiriaType();
       }
     }
 
@@ -110,7 +110,7 @@ namespace Empiria.Land.Certification {
       private set;
     }
 
-    public CertificateExtData ExtensionData {
+    public FormerCertificateExtData ExtensionData {
       get;
       private set;
     }
@@ -149,7 +149,7 @@ namespace Empiria.Land.Certification {
     public Person SignedBy {
       get {
         if (this.UseESign) {
-          return CertificatesData.GetDigitalSignatureSignedBy(this);
+          return FormerCertificatesData.GetDigitalSignatureSignedBy(this);
         } else {
           return RecorderOffice.GetSigner();
         }
@@ -164,8 +164,8 @@ namespace Empiria.Land.Certification {
     }
 
 
-    [DataField("IssueMode", Default = CertificateIssueMode.Manual)]
-    internal CertificateIssueMode IssueMode {
+    [DataField("IssueMode", Default = FormerCertificateIssueMode.Manual)]
+    internal FormerCertificateIssueMode IssueMode {
       get;
       private set;
     }
@@ -185,8 +185,8 @@ namespace Empiria.Land.Certification {
     }
 
 
-    [DataField("CertificateStatus", Default = CertificateStatus.Pending)]
-    public CertificateStatus Status {
+    [DataField("CertificateStatus", Default = FormerCertificateStatus.Pending)]
+    public FormerCertificateStatus Status {
       get;
       private set;
     }
@@ -195,13 +195,13 @@ namespace Empiria.Land.Certification {
     public string StatusName {
       get {
         switch (this.Status) {
-          case CertificateStatus.Canceled:
+          case FormerCertificateStatus.Canceled:
             return "Cancelado";
-          case CertificateStatus.Closed:
+          case FormerCertificateStatus.Closed:
             return "Cerrado";
-          case CertificateStatus.Deleted:
+          case FormerCertificateStatus.Deleted:
             return "Eliminado";
-          case CertificateStatus.Pending:
+          case FormerCertificateStatus.Pending:
             return "En elaboración";
           default:
             throw Assertion.EnsureNoReachThisCode("Unrecognized certificate status.");
@@ -222,7 +222,7 @@ namespace Empiria.Land.Certification {
 
     public bool IsClosed {
       get {
-        return this.Status == CertificateStatus.Closed;
+        return this.Status == FormerCertificateStatus.Closed;
       }
     }
 
@@ -279,59 +279,59 @@ namespace Empiria.Land.Certification {
     #region Public methods
 
     public bool CanCancel() {
-      return this.Status == CertificateStatus.Closed;
+      return this.Status == FormerCertificateStatus.Closed;
     }
 
 
     public bool CanDelete() {
-      return this.Status == CertificateStatus.Pending;
+      return this.Status == FormerCertificateStatus.Pending;
     }
 
 
     public bool CanOpen() {
-      return this.Status == CertificateStatus.Closed;
+      return this.Status == FormerCertificateStatus.Closed;
     }
 
 
     public void Cancel() {
-      Assertion.Require(this.Status == CertificateStatus.Closed,
+      Assertion.Require(this.Status == FormerCertificateStatus.Closed,
           "The certificate is not closed so it can't be canceled. Use delete instead.");
 
       this.UserNotes += "Cancelado por " + EmpiriaUser.Current.AsContact().Alias +
                         " el " + DateTime.Now.ToShortDateString() + " a las " +
                         DateTime.Now.ToShortTimeString() + @"\n\n";
-      this.Status = CertificateStatus.Canceled;
+      this.Status = FormerCertificateStatus.Canceled;
 
       this.Save();
     }
 
 
     public void Close() {
-      Assertion.Require(this.Status == CertificateStatus.Pending,
+      Assertion.Require(this.Status == FormerCertificateStatus.Pending,
                       "This certificate can't be closed. It's not in pending status.");
 
       this.IssueTime = DateTime.Now;
       this.IssuedBy = EmpiriaUser.Current.AsContact();
-      this.Status = CertificateStatus.Closed;
+      this.Status = FormerCertificateStatus.Closed;
 
       this.Save();
     }
 
 
     public void Delete() {
-      Assertion.Require(this.Status == CertificateStatus.Pending,
+      Assertion.Require(this.Status == FormerCertificateStatus.Pending,
                       "This certificate can't be deleted. It's not in pending status.");
 
       this.UserNotes += "Eliminado por " + EmpiriaUser.Current.AsContact().Alias +
                         " el " + DateTime.Now.ToShortDateString() + " a las " +
                         DateTime.Now.ToShortTimeString() + @"\n\n";
-      this.Status = CertificateStatus.Deleted;
+      this.Status = FormerCertificateStatus.Deleted;
       this.Save();
     }
 
 
     public string GetDigitalString() {
-      if (this.Status == CertificateStatus.Pending) {
+      if (this.Status == FormerCertificateStatus.Pending) {
         return "* * * * CERTIFICADO EN PROCESO DE ELABORACIÓN * * * *";
       }
 
@@ -364,7 +364,7 @@ namespace Empiria.Land.Certification {
 
 
     public string GetDigitalSeal() {
-      if (this.Status == CertificateStatus.Pending) {
+      if (this.Status == FormerCertificateStatus.Pending) {
         return "SIN VALOR LEGAL * * * * * SIN VALOR LEGAL";
       }
 
@@ -388,7 +388,7 @@ namespace Empiria.Land.Certification {
 
 
     public bool Signed() {
-      return Data.CertificatesData.IsSigned(this);
+      return Data.FormerCertificatesData.IsSigned(this);
     }
 
 
@@ -404,16 +404,16 @@ namespace Empiria.Land.Certification {
       if (this.Unsigned()) {
         return "NO SE HA FIRMADO ELECTRÓNICAMENTE";
       } else {
-        return Data.CertificatesData.GetDigitalSignature(this)
+        return Data.FormerCertificatesData.GetDigitalSignature(this)
                                     .Substring(0, 64);
       }
     }
 
 
     public void Open() {
-      Assertion.Require(this.Status == CertificateStatus.Closed ||
-                        this.Status == CertificateStatus.Canceled ||
-                        this.Status == CertificateStatus.Deleted,
+      Assertion.Require(this.Status == FormerCertificateStatus.Closed ||
+                        this.Status == FormerCertificateStatus.Canceled ||
+                        this.Status == FormerCertificateStatus.Deleted,
                         "This certificate can't be opened. It's not in closed, " +
                         "deleted or canceled status.");
 
@@ -423,7 +423,7 @@ namespace Empiria.Land.Certification {
 
       this.IssueTime = ExecutionServer.DateMaxValue;
       this.IssuedBy = Contact.Empty;
-      this.Status = CertificateStatus.Pending;
+      this.Status = FormerCertificateStatus.Pending;
 
       this.Save();
     }
@@ -445,11 +445,11 @@ namespace Empiria.Land.Certification {
     #region Protected methods
 
     protected override void OnInitialize() {
-      this.ExtensionData = new CertificateExtData();
+      this.ExtensionData = new FormerCertificateExtData();
     }
 
     protected override void OnLoadObjectData(System.Data.DataRow row) {
-      this.ExtensionData = CertificateExtData.Parse((string) row["CertificateExtData"]);
+      this.ExtensionData = FormerCertificateExtData.Parse((string) row["CertificateExtData"]);
     }
 
     protected override void OnBeforeSave() {
@@ -464,11 +464,11 @@ namespace Empiria.Land.Certification {
         this.PostingTime = DateTime.Now;
         this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       }
-      if (this.Status != CertificateStatus.Deleted &&
-          this.Status != CertificateStatus.Canceled) {
-        this.AsText = CertificateBuilder.Build(this);
+      if (this.Status != FormerCertificateStatus.Deleted &&
+          this.Status != FormerCertificateStatus.Canceled) {
+        this.AsText = FormerCertificateBuilder.Build(this);
       }
-      CertificatesData.WriteCertificate(this);
+      FormerCertificatesData.WriteCertificate(this);
     }
 
     #endregion Protected methods

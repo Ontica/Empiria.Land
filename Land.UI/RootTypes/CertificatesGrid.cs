@@ -19,17 +19,17 @@ namespace Empiria.Land.UI {
 
     #region Fields
 
-    private FixedList<Certificate> _list = null;
+    private FixedList<FormerCertificate> _list = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    private CertificatesGrid(FixedList<Certificate> list) {
+    private CertificatesGrid(FixedList<FormerCertificate> list) {
       _list = list;
     }
 
-    static public string Parse(FixedList<Certificate> list) {
+    static public string Parse(FixedList<FormerCertificate> list) {
       var grid = new CertificatesGrid(list);
 
       return grid.GetHtml();
@@ -39,7 +39,7 @@ namespace Empiria.Land.UI {
 
     #region Private methods
 
-    private string GetCertificateRow(Certificate certificate, int index) {
+    private string GetCertificateRow(FormerCertificate certificate, int index) {
       const string template =
          "<tr class='{{CLASS}}'>" +
            "<td>{{PRESENTATION.DATE}}<br/>{{ISSUE.DATE}}</td>" +
@@ -76,7 +76,7 @@ namespace Empiria.Land.UI {
 
       row = row.Replace("{{TRANSACTION}}", "Trámite:" + certificate.Transaction.UID);
       row = row.Replace("{{ISSUED.BY}}", certificate.IssuedBy.Nickname +
-                                         (certificate.Status == CertificateStatus.Pending ?
+                                         (certificate.Status == FormerCertificateStatus.Pending ?
                                           " Pendiente" : String.Empty));
 
       return row;
@@ -99,7 +99,7 @@ namespace Empiria.Land.UI {
     private string GetHtml() {
       string html = this.GetTitle() + this.GetHeader();
       for (int i = 0; i < _list.Count; i++) {
-        Certificate certificate = _list[i];
+        FormerCertificate certificate = _list[i];
 
         html += this.GetCertificateRow(certificate, i);
       }
