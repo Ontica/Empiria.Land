@@ -50,6 +50,8 @@ namespace Empiria.Land.Certificates.UseCases {
 
       var certificate = Certificate.Create(certificateType, transaction, recordableSubject);
 
+      certificate.Save();
+
       return CertificateMapper.Map(certificate);
     }
 
