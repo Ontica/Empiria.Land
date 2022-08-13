@@ -9,11 +9,15 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Contacts;
+using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Security;
 
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
+
+using Empiria.Land.Certificates.Data;
 
 namespace Empiria.Land.Certificates {
 
@@ -33,14 +37,14 @@ namespace Empiria.Land.Certificates {
 
     static internal Certificate Create(CertificateType certificateType,
                                        LRSTransaction transaction,
-                                       Resource recordableSubject) {
+                                       Resource onRecordableSubject) {
       Assertion.Require(certificateType, nameof(certificateType));
       Assertion.Require(transaction, nameof(transaction));
-      Assertion.Require(recordableSubject, nameof(recordableSubject));
+      Assertion.Require(onRecordableSubject, nameof(onRecordableSubject));
 
       var certificate = new Certificate(certificateType);
       certificate.Transaction = transaction;
-      certificate.RecordableSubject = recordableSubject;
+      certificate.OnRecordableSubject = onRecordableSubject;
 
       return certificate;
     }
@@ -56,29 +60,118 @@ namespace Empiria.Land.Certificates {
       }
     }
 
+    [DataField("CertificateNumber", IsOptional = false)]
     public string CertificateID {
       get;
       private set;
     }
 
 
-    public string Status {
+    [DataField("RecorderOfficeId")]
+    public RecorderOffice RecorderOffice {
       get;
-      internal set;
-    } = "Incomplete";
+      private set;
+    }
 
 
+    [DataField("TransactionId", IsOptional = false)]
     public LRSTransaction Transaction {
       get;
       private set;
     }
 
 
-    public Resource RecordableSubject {
+    [DataField("OnPropertyId")]
+    public Resource OnRecordableSubject {
       get;
       private set;
     }
 
+
+    [DataField("OnRecordingId")]
+    public RecordingDocument OnRecording {
+      get;
+      private set;
+    }
+
+
+    [DataField("OnOwnerName")]
+    public string OnOwnerName {
+      get;
+      private set;
+    }
+
+
+    [DataField("CertificateNotes")]
+    public string Notes {
+      get;
+      private set;
+    }
+
+
+    [DataField("CertificateExtData")]
+    internal protected JsonObject ExtensionData {
+      get;
+      private set;
+    }
+
+
+    [DataField("CertificateAsText")]
+    public string AsText {
+      get;
+      private set;
+    }
+
+
+    public string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(this.UID, this.OnRecordableSubject.UID,
+                                           this.OnRecording.Keywords, this.Transaction.UID,
+                                           this.Transaction.RequestedBy);
+      }
+    }
+
+
+    [DataField("IssueTime", Default = "ExecutionServer.DateMaxValue")]
+    public DateTime IssueTime {
+      get;
+      private set;
+    }
+
+
+    [DataField("IssuedById")]
+    public Contact IssuedBy {
+      get;
+      private set;
+    }
+
+
+    [DataField("IssueMode", Default = CertificateIssueMode.Manual)]
+    internal CertificateIssueMode IssueMode {
+      get;
+      private set;
+    }
+
+
+    [DataField("PostedById")]
+    public Contact PostedBy {
+      get;
+      private set;
+    }
+
+
+    [DataField("PostingTime", Default = "DateTime.Now")]
+    public DateTime PostingTime {
+      get;
+      private set;
+    }
+
+
+    [DataField("CertificateStatus", Default = CertificateStatus.Pending)]
+    public CertificateStatus Status {
+      get;
+      private set;
+    }
 
     #endregion Properties
 
@@ -103,13 +196,21 @@ namespace Empiria.Land.Certificates {
 
 
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
-      if (version == 1) {
-        return new object[] {
-          version, "Id", this.Id, "CertificateTypeId", this.CertificateType.Id,
-          "UID", this.UID
-        };
+      if (version != 1) {
+        throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
       }
-      throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
+
+      return new object[] {
+          version, "Id", this.Id, "CertificateTypeId", this.CertificateType.Id,
+          "CertificateID", this.CertificateID, "TransactionId", this.Transaction.Id,
+          "RecorderOffice", this.RecorderOffice.Id,
+          "OnRecordableSubject", this.OnRecordableSubject.Id,
+          "OnRecording", this.OnRecording.Id, "OnOwnerName", this.OnOwnerName,
+          "ExtensionData", this.ExtensionData.ToString(), "AsText", this.AsText,
+          "IssueTime", this.IssueTime, "IssuedById", this.IssuedBy.Id,
+          "IssueMode", (char) this.IssueMode, "PostedBy", this.PostedBy.Id,
+          "PostingTime", this.PostingTime, "Status", (char) this.Status
+        };
     }
 
 
@@ -123,6 +224,14 @@ namespace Empiria.Land.Certificates {
     }
 
     #endregion IProtected implementation
+
+    #region Methods
+
+    protected override void OnSave() {
+      CertificatesData.WriteCertificate(this);
+    }
+
+    #endregion Methods
 
   } // class Certificate
 

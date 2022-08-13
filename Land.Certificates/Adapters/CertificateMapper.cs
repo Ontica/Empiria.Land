@@ -22,9 +22,9 @@ namespace Empiria.Land.Certificates {
         UID = certificate.UID,
         CertificateID = certificate.CertificateID,
         Type = certificate.CertificateType.DisplayName,
-        RecordableSubject = RecordableSubjectsMapper.Map(certificate.RecordableSubject),
+        RecordableSubject = RecordableSubjectsMapper.Map(certificate.OnRecordableSubject),
         MediaLink = GetCertificateMediaLink(certificate),
-        Status = certificate.Status,
+        Status = certificate.Status.Name()
       };
     }
 
