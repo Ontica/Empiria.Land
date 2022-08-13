@@ -29,20 +29,8 @@ namespace Empiria.Land.Certificates.UseCases {
 
     #region Use cases
 
-    public FixedList<CertificateTypeDto> CertificateTypes(string transactionUID) {
-      Assertion.Require(transactionUID, nameof(transactionUID));
-
-      var transaction = LRSTransaction.Parse(transactionUID);
-
-      var defaultList = CertificateType.GetList();
-
-      var builder = new ApplicableCertificateTypesBuilder(defaultList);
-
-      return builder.BuildFor(transaction);
-    }
-
-
-    public CertificateDto CreateCertificate(string transactionUID, CreateCertificateCommand command) {
+    public CertificateDto CreateCertificate(string transactionUID,
+                                            CreateCertificateCommand command) {
       Assertion.Require(transactionUID, nameof(transactionUID));
       Assertion.Require(command, nameof(command));
 
@@ -63,6 +51,43 @@ namespace Empiria.Land.Certificates.UseCases {
       var certificate = Certificate.Create(certificateType, transaction, recordableSubject);
 
       return CertificateMapper.Map(certificate);
+    }
+
+
+    public CertificateDto CloseCertificate(string transactionUID,
+                                           string certificateUID) {
+      throw new NotImplementedException();
+    }
+
+
+    public FixedList<CertificateDto> GetCertificates(string transactionUID) {
+      throw new NotImplementedException();
+    }
+
+
+    public FixedList<CertificateTypeDto> GetCertificateTypes(string transactionUID) {
+      Assertion.Require(transactionUID, nameof(transactionUID));
+
+      var transaction = LRSTransaction.Parse(transactionUID);
+
+      var defaultList = CertificateType.GetList();
+
+      var builder = new ApplicableCertificateTypesBuilder(defaultList);
+
+      return builder.BuildFor(transaction);
+    }
+
+
+    public CertificateDto EditCertificate(string transactionUID,
+                                          string certificateUID,
+                                          object fields) {
+      throw new NotImplementedException();
+    }
+
+
+    public CertificateDto OpenCertificate(string transactionUID,
+                                          string certificateUID) {
+      throw new NotImplementedException();
     }
 
     #endregion Use cases
