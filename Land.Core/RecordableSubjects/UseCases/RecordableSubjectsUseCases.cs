@@ -39,6 +39,15 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
     }
 
 
+    public bool ExistsRecordableSubjectID(string recordableSubjectID) {
+      Assertion.Require(recordableSubjectID, nameof(recordableSubjectID));
+
+      var recordableSubject = Resource.TryParseWithUID(recordableSubjectID);
+
+      return (recordableSubject != null);
+    }
+
+
     public FixedList<string> NoPropertyKinds() {
       return NoPropertyResource.NoPropertyKinds();
     }

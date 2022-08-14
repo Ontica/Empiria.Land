@@ -79,6 +79,15 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
+    public bool ExistsTransactionID(string transactionID) {
+      Assertion.Require(transactionID, "transactionID");
+
+      var transaction = LRSTransaction.TryParse(transactionID);
+
+      return (transaction != null);
+    }
+
+
     public TransactionPreprocessingDto GetPreprocessingData(string transactionUID) {
       Assertion.Require(transactionUID, "transactionUID");
 

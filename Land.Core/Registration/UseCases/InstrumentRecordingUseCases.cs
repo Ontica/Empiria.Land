@@ -32,6 +32,15 @@ namespace Empiria.Land.Registration.UseCases {
 
     #region Use cases
 
+    public bool ExistsInstrumentRecordingID(string instrumentRecordingID) {
+      Assertion.Require(instrumentRecordingID, nameof(instrumentRecordingID));
+
+      var instrumentRecording = RecordingDocument.TryParse(instrumentRecordingID);
+
+      return (instrumentRecording != null);
+    }
+
+
     public InstrumentRecordingDto GetInstrumentRecording(string instrumentRecordingUID) {
       Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
 
