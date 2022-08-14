@@ -11,9 +11,19 @@ using System;
 
 using Empiria.Data;
 
+using Empiria.Land.Registration.Transactions;
+
 namespace Empiria.Land.Certificates.Data {
 
   static internal class CertificatesData {
+
+    static internal FixedList<Certificate> GetTransactionCertificates(LRSTransaction transaction) {
+      var sql = "SELECT * FROM LRSCertificates " +
+               $"WHERE TransactionId = {transaction.Id}";
+
+      return DataReader.GetFixedList<Certificate>(DataOperation.Parse(sql));
+    }
+
 
     /// <summary>Data read and write services for land certificates.</summary>
     static internal void WriteCertificate(Certificate o) {

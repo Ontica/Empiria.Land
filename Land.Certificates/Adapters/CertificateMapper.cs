@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
 using Empiria.DataTypes;
 
 using Empiria.Land.RecordableSubjects.Adapters;
@@ -16,6 +15,12 @@ using Empiria.Land.RecordableSubjects.Adapters;
 namespace Empiria.Land.Certificates {
 
   static internal class CertificateMapper {
+
+    static internal FixedList<CertificateDto> Map(FixedList<Certificate> list) {
+      return list.Select(x => Map(x))
+                 .ToFixedList();
+    }
+
 
     static internal CertificateDto Map(Certificate certificate) {
       return new CertificateDto {

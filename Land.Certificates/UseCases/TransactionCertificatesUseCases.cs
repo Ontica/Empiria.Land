@@ -14,6 +14,8 @@ using Empiria.Services;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
+using Empiria.Land.Certificates.Data;
+
 namespace Empiria.Land.Certificates.UseCases {
 
   /// <summary>Use cases that links transactions with certificates.</summary>
@@ -63,7 +65,13 @@ namespace Empiria.Land.Certificates.UseCases {
 
 
     public FixedList<CertificateDto> GetCertificates(string transactionUID) {
-      throw new NotImplementedException();
+      Assertion.Require(transactionUID, nameof(transactionUID));
+
+      var transaction = LRSTransaction.Parse(transactionUID);
+
+      FixedList<Certificate> certificates = CertificatesData.GetTransactionCertificates(transaction);
+
+      return CertificateMapper.Map(certificates);
     }
 
 
