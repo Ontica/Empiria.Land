@@ -61,4 +61,7 @@
     <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />
     <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Land.Certificates\Empiria.Land.Certificates.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Land Core                                  Component : Integration Layer                       *
+*  Module   : Land Providers                             Component : UniqueID Generator Provider             *
 *  Assembly : Empiria.Land.Providers.dll                 Pattern   : Provider implementation                 *
 *  Type     : UniqueIDGeneratorProvider                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Certification;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
@@ -20,7 +19,7 @@ namespace Empiria.Land.Providers {
 
     #region Fields
 
-    private static readonly string PREFIX = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
+    static private readonly string CUSTOMER_ID = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
 
     #endregion Fields
 
@@ -40,15 +39,9 @@ namespace Empiria.Land.Providers {
 
 
     public string GenerateCertificateUID() {
-      while (true) {
-        string newCertificateUID = UniqueIDGeneratorProvider.CreateCertificateUID();
+      var generator = new CertificateIDGenerator(CUSTOMER_ID);
 
-        var checkIfExistCertificate = FormerCertificate.TryParse(newCertificateUID);
-
-        if (checkIfExistCertificate == null) {
-          return newCertificateUID;
-        }
-      }
+      return generator.GenerateID();
     }
 
 
@@ -105,7 +98,7 @@ namespace Empiria.Land.Providers {
 
 
     static private string CreateAssociationUID() {
-      string temp = "PM-" + PREFIX + "-";
+      string temp = "PM-" + CUSTOMER_ID + "-";
 
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomCharacter(temp);
@@ -121,33 +114,6 @@ namespace Empiria.Land.Providers {
         hashCode += (Convert.ToInt32(temp[i]) + Convert.ToInt32(i == 0 ? 0 : temp[i - 1])) * (i + 1);
       }
       temp += GetChecksumCharacterCode(hashCode);
-
-      return temp;
-    }
-
-
-    static private string CreateCertificateUID() {
-      string temp = String.Empty;
-      int hashCode = 0;
-      bool useLetters = false;
-
-      for (int i = 0; i < 7; i++) {
-        if (useLetters) {
-          temp += EmpiriaMath.GetRandomCharacter(temp);
-          temp += EmpiriaMath.GetRandomCharacter(temp);
-        } else {
-          temp += EmpiriaMath.GetRandomDigit(temp);
-          temp += EmpiriaMath.GetRandomDigit(temp);
-        }
-        hashCode += ((Convert.ToInt32(temp[temp.Length - 2]) +
-                      Convert.ToInt32(temp[temp.Length - 1])) % ((int) Math.Pow(i + 1, 2)));
-        useLetters = !useLetters;
-      }
-      string prefix = PREFIX;
-      temp = "CE-" + PREFIX + "-" + temp.Substring(0, 4) + "-" + temp.Substring(4, 6) + "-" + temp.Substring(10, 4);
-
-      temp += "ABCDEFHJKMNPRTWXYZ".Substring((hashCode * Convert.ToInt32(prefix[0])) % 17, 1);
-      temp += "9A8B7CD5E4F2".Substring((hashCode * Convert.ToInt32(prefix[1])) % 11, 1);
 
       return temp;
     }
@@ -170,8 +136,8 @@ namespace Empiria.Land.Providers {
                       Convert.ToInt32(temp[temp.Length - 1])) % ((int) Math.Pow(i + 1, 2)));
         useLetters = !useLetters;
       }
-      string prefix = PREFIX;
-      temp = "RP-" + PREFIX + "-" + temp.Substring(0, 4) + "-" + temp.Substring(4, 6) + "-" + temp.Substring(10, 4);
+      string prefix = CUSTOMER_ID;
+      temp = "RP-" + CUSTOMER_ID + "-" + temp.Substring(0, 4) + "-" + temp.Substring(4, 6) + "-" + temp.Substring(10, 4);
 
       hashCode = (hashCode * Convert.ToInt32(prefix[0])) % 49;
       hashCode = (hashCode * Convert.ToInt32(prefix[1])) % 53;
@@ -184,7 +150,7 @@ namespace Empiria.Land.Providers {
 
 
     static private string CreateNoPropertyResourceUID() {
-      string temp = "RD-" + PREFIX + "-";
+      string temp = "RD-" + CUSTOMER_ID + "-";
 
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomCharacter(temp);
@@ -206,7 +172,7 @@ namespace Empiria.Land.Providers {
 
 
     static private string CreatePropertyUID() {
-      string temp = "FR-" + PREFIX + "-";
+      string temp = "FR-" + CUSTOMER_ID + "-";
 
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);
@@ -247,8 +213,8 @@ namespace Empiria.Land.Providers {
                       Convert.ToInt32(temp[temp.Length - 1])) % ((int) Math.Pow(i + 1, 2)));
         useLetters = !useLetters;
       }
-      string prefix = PREFIX;
-      temp = "TR-" + PREFIX + "-" + temp.Substring(0, 5) + "-" + temp.Substring(5, 5);
+      string prefix = CUSTOMER_ID;
+      temp = "TR-" + CUSTOMER_ID + "-" + temp.Substring(0, 5) + "-" + temp.Substring(5, 5);
       hashCode = (hashCode * Convert.ToInt32(prefix[0])) % 49;
       hashCode = (hashCode * Convert.ToInt32(prefix[1])) % 53;
 
