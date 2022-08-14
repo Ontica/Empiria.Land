@@ -9,32 +9,40 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
-
 namespace Empiria.Land.Providers {
 
   /// <summary>Provides unique ID generation services for land-related documents and objects.</summary>
   public class UniqueIDGeneratorProvider : IUniqueIDGeneratorProvider {
 
-    #region Fields
+    #region Constructor and fields
 
-    static private readonly string CUSTOMER_ID = ExecutionServer.LicenseName == "Zacatecas" ? "ZS" : "TL";
+    private readonly string CUSTOMER_ID;
 
-    #endregion Fields
+    public UniqueIDGeneratorProvider() {
+      switch (ExecutionServer.LicenseName) {
+        case "Tlaxcala":
+          CUSTOMER_ID = "TL";
+          break;
 
-    #region Public methods
+        case "Zacatecas":
+          CUSTOMER_ID = "ZS";
+          break;
+
+        default:
+          throw Assertion.EnsureNoReachThisCode(
+            $"Unhandled license name {ExecutionServer.LicenseName}.");
+      }
+    }
+
+
+    #endregion Constructor and fields
+
+    #region Methods
 
     public string GenerateAssociationUID() {
-      while (true) {
-        string newAssociationUID = UniqueIDGeneratorProvider.CreateAssociationUID();
+      var generator = new RecordableSubjectIDGenerator(CUSTOMER_ID);
 
-        var checkIfExistAssociation = Resource.TryParseWithUID(newAssociationUID);
-
-        if (checkIfExistAssociation == null) {
-          return newAssociationUID;
-        }
-      }
+      return generator.GenerateAssociationID();
     }
 
 
@@ -46,192 +54,33 @@ namespace Empiria.Land.Providers {
 
 
     public string GenerateDocumentUID() {
-      while (true) {
-        string newDocumentUID = UniqueIDGeneratorProvider.CreateDocumentUID();
+      var generator = new RecordingDocumentIDGenerator(CUSTOMER_ID);
 
-        var checkIfExistDocument = RecordingDocument.TryParse(newDocumentUID);
-
-        if (checkIfExistDocument == null) {
-          return newDocumentUID;
-        }
-      }
+      return generator.GenerateID();
     }
 
 
     public string GenerateNoPropertyResourceUID() {
-      while (true) {
-        string newNoPropertyUID = UniqueIDGeneratorProvider.CreateNoPropertyResourceUID();
+      var generator = new RecordableSubjectIDGenerator(CUSTOMER_ID);
 
-        var checkIfExistNoPropertyResource = Resource.TryParseWithUID(newNoPropertyUID);
-
-        if (checkIfExistNoPropertyResource == null) {
-          return newNoPropertyUID;
-        }
-      }
+      return generator.GenerateNoPropertyID();
     }
 
 
     public string GeneratePropertyUID() {
-      while (true) {
-        string newPropertyUID = UniqueIDGeneratorProvider.CreatePropertyUID();
+      var generator = new RecordableSubjectIDGenerator(CUSTOMER_ID);
 
-        var checkIfExistProperty = Resource.TryParseWithUID(newPropertyUID);
-
-        if (checkIfExistProperty == null) {
-          return newPropertyUID;
-        }
-      }
+      return generator.GenerateRealEstateID();
     }
 
 
     public string GenerateTransactionUID() {
-      while (true) {
-        string newTransactionUID = UniqueIDGeneratorProvider.CreateTransactionUID();
+      var generator = new TransactionIDGenerator(CUSTOMER_ID);
 
-        var checkIfExistTransaction = LRSTransaction.TryParse(newTransactionUID);
-
-        if (checkIfExistTransaction == null) {
-          return newTransactionUID;
-        }
-      }
+      return generator.GenerateID();
     }
 
-
-    static private string CreateAssociationUID() {
-      string temp = "PM-" + CUSTOMER_ID + "-";
-
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
-      temp += "-";
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-
-      int hashCode = 0;
-      for (int i = 0; i < temp.Length; i++) {
-        hashCode += (Convert.ToInt32(temp[i]) + Convert.ToInt32(i == 0 ? 0 : temp[i - 1])) * (i + 1);
-      }
-      temp += GetChecksumCharacterCode(hashCode);
-
-      return temp;
-    }
-
-
-    static private string CreateDocumentUID() {
-      string temp = String.Empty;
-      int hashCode = 0;
-      bool useLetters = false;
-
-      for (int i = 0; i < 7; i++) {
-        if (useLetters) {
-          temp += EmpiriaMath.GetRandomCharacter(temp);
-          temp += EmpiriaMath.GetRandomCharacter(temp);
-        } else {
-          temp += EmpiriaMath.GetRandomDigit(temp);
-          temp += EmpiriaMath.GetRandomDigit(temp);
-        }
-        hashCode += ((Convert.ToInt32(temp[temp.Length - 2]) +
-                      Convert.ToInt32(temp[temp.Length - 1])) % ((int) Math.Pow(i + 1, 2)));
-        useLetters = !useLetters;
-      }
-      string prefix = CUSTOMER_ID;
-      temp = "RP-" + CUSTOMER_ID + "-" + temp.Substring(0, 4) + "-" + temp.Substring(4, 6) + "-" + temp.Substring(10, 4);
-
-      hashCode = (hashCode * Convert.ToInt32(prefix[0])) % 49;
-      hashCode = (hashCode * Convert.ToInt32(prefix[1])) % 53;
-
-      temp += "ABCDEFGHJKMLNPQRSTUVWXYZ".Substring(hashCode % 24, 1);
-      temp += "9A8B7C6D5E4F3G2H1JKR".Substring(hashCode % 20, 1);
-
-      return temp;
-    }
-
-
-    static private string CreateNoPropertyResourceUID() {
-      string temp = "RD-" + CUSTOMER_ID + "-";
-
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
-      temp += "-";
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-
-      int hashCode = 0;
-      for (int i = 0; i < temp.Length; i++) {
-        hashCode += (Convert.ToInt32(temp[i]) + Convert.ToInt32(i == 0 ? 0 : temp[i - 1])) * (i + 1);
-      }
-      temp += GetChecksumCharacterCode(hashCode);
-
-      return temp;
-    }
-
-
-    static private string CreatePropertyUID() {
-      string temp = "FR-" + CUSTOMER_ID + "-";
-
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
-      temp += "-";
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-      temp += EmpiriaMath.GetRandomDigitOrCharacter(temp);
-      temp += EmpiriaMath.GetRandomDigit(temp);
-
-      int hashCode = 0;
-      for (int i = 0; i < temp.Length; i++) {
-        hashCode += (Convert.ToInt32(temp[i]) + Convert.ToInt32(i == 0 ? 0 : temp[i - 1])) * (i + 1);
-      }
-      temp += GetChecksumCharacterCode(hashCode);
-
-      return temp;
-    }
-
-
-    static private string CreateTransactionUID() {
-      string temp = String.Empty;
-      int hashCode = 0;
-      bool useLetters = false;
-      for (int i = 0; i < 5; i++) {
-        if (useLetters) {
-          temp += EmpiriaMath.GetRandomCharacter(temp);
-          temp += EmpiriaMath.GetRandomCharacter(temp);
-        } else {
-          temp += EmpiriaMath.GetRandomDigit(temp);
-          temp += EmpiriaMath.GetRandomDigit(temp);
-        }
-        hashCode += ((Convert.ToInt32(temp[temp.Length - 2]) +
-                      Convert.ToInt32(temp[temp.Length - 1])) % ((int) Math.Pow(i + 1, 2)));
-        useLetters = !useLetters;
-      }
-      string prefix = CUSTOMER_ID;
-      temp = "TR-" + CUSTOMER_ID + "-" + temp.Substring(0, 5) + "-" + temp.Substring(5, 5);
-      hashCode = (hashCode * Convert.ToInt32(prefix[0])) % 49;
-      hashCode = (hashCode * Convert.ToInt32(prefix[1])) % 53;
-
-      return temp + "-" + (hashCode % 10).ToString();
-    }
-
-    #endregion Public methods
-
-    #region Private methods
-
-    static private string GetChecksumCharacterCode(int hashCode) {
-      string hashCodeConvertionRule = "FSKB8VANXM1TUCR9PG5WLZEH24QYD73J";
-
-      return hashCodeConvertionRule.Substring(hashCode % hashCodeConvertionRule.Length, 1);
-    }
-
-    #endregion Private methods
+    #endregion Methods
 
   }  // class UniqueIDGeneratorProvider
 
