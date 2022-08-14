@@ -11,6 +11,8 @@ using System;
 
 using Empiria.Ontology;
 
+using Empiria.Land.Providers;
+
 namespace Empiria.Land.Certificates {
 
   ///<summary>Power type that describes certificates types.</summary>
@@ -55,6 +57,15 @@ namespace Empiria.Land.Certificates {
     }
 
     #endregion Properties
+
+
+    #region Methods
+
+    internal string CreateCertificateID() {
+      return ExternalProviders.UniqueIDGeneratorProvider.GenerateCertificateUID();
+    }
+
+    #endregion Methods
 
   } // class CertificateType
 

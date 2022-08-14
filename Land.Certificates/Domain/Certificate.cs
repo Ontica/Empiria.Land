@@ -42,9 +42,11 @@ namespace Empiria.Land.Certificates {
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(onRecordableSubject, nameof(onRecordableSubject));
 
-      var certificate = new Certificate(certificateType);
-      certificate.Transaction = transaction;
-      certificate.OnRecordableSubject = onRecordableSubject;
+      var certificate = new Certificate(certificateType) {
+        CertificateID = certificateType.CreateCertificateID(),
+        Transaction = transaction,
+        OnRecordableSubject = onRecordableSubject
+      };
 
       return certificate;
     }
