@@ -21,7 +21,19 @@ namespace Empiria.Land.Certificates.Data {
       var sql = "SELECT * FROM LRSCertificates " +
                $"WHERE TransactionId = {transaction.Id}";
 
-      return DataReader.GetFixedList<Certificate>(DataOperation.Parse(sql));
+      var operation = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<Certificate>(operation);
+    }
+
+
+    static internal Certificate TryGetCertificateWithID(string certificateID) {
+      var sql = "SELECT * FROM LRSCertificates " +
+               $"WHERE CertificateNumber = '{certificateID}'";
+
+      var operation = DataOperation.Parse(sql);
+
+      return DataReader.GetObject<Certificate>(operation);
     }
 
 
@@ -38,6 +50,7 @@ namespace Empiria.Land.Certificates.Data {
 
       DataWriter.Execute(op);
     }
+
 
   }  // class CertificatesData
 
