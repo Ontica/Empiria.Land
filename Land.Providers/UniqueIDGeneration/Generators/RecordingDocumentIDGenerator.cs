@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Registration;
+using Empiria.Land.Registration.UseCases;
 
 namespace Empiria.Land.Providers {
 
@@ -78,9 +78,10 @@ namespace Empiria.Land.Providers {
 
 
     static private bool ExistsRecordingDocumentID(string generatedID) {
-      var document = RecordingDocument.TryParse(generatedID);
+      using (var usecase = InstrumentRecordingUseCases.UseCaseInteractor()) {
 
-      return (document != null);
+        return usecase.ExistsInstrumentRecordingID(generatedID);
+      }
     }
 
     #endregion Helpers

@@ -16,6 +16,8 @@ namespace Empiria.Land.Providers {
   /// <summary>Provides a service to generate a unique Certificate ID.</summary>
   internal class CertificateIDGenerator {
 
+    #region Constructor and fields
+
     private readonly string _customerID;
 
     internal CertificateIDGenerator(string customerID) {
@@ -25,6 +27,9 @@ namespace Empiria.Land.Providers {
       _customerID = customerID;
     }
 
+    #endregion Constructor and fields
+
+    #region Service
 
     internal string GenerateID() {
       while (true) {
@@ -36,6 +41,9 @@ namespace Empiria.Land.Providers {
       }
     }
 
+    #endregion Service
+
+    #region Helpers
 
     private string BuildCertificateID() {
       string temp = String.Empty;
@@ -55,7 +63,9 @@ namespace Empiria.Land.Providers {
         useLetters = !useLetters;
       }
 
-      temp = "CE-" + _customerID + "-" + temp.Substring(0, 4) + "-" + temp.Substring(4, 6) + "-" + temp.Substring(10, 4);
+      temp = "CE-" + _customerID + "-" + temp.Substring(0, 4) + "-" +
+                                         temp.Substring(4, 6) + "-" +
+                                         temp.Substring(10, 4);
 
       temp += "ABCDEFHJKMNPRTWXYZ".Substring((hashCode * Convert.ToInt32(_customerID[0])) % 17, 1);
       temp += "9A8B7CD5E4F2".Substring((hashCode * Convert.ToInt32(_customerID[1])) % 11, 1);
@@ -65,12 +75,13 @@ namespace Empiria.Land.Providers {
 
 
     static private bool ExistsCertificateID(string generatedID) {
-
       using (var usecase = CertificatesUseCases.UseCaseInteractor()) {
 
         return usecase.ExistsCertificateID(generatedID);
       }
     }
+
+    #endregion Helpers
 
   }  // class CertificateIDGenerator
 

@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Registration;
+using Empiria.Land.RecordableSubjects.UseCases;
 
 namespace Empiria.Land.Providers {
 
@@ -132,9 +132,10 @@ namespace Empiria.Land.Providers {
 
 
     static private bool ExistsRecordableSubjectID(string generatedID) {
-      var entity = Resource.TryParseWithUID(generatedID);
+      using (var usecase = RecordableSubjectsUseCases.UseCaseInteractor()) {
 
-      return (entity != null);
+        return usecase.ExistsRecordableSubjectID(generatedID);
+      }
     }
 
 
