@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Land Providers                             Component : UniqueID Generator Provider             *
 *  Assembly : Empiria.Land.Providers.dll                 Pattern   : Service                                 *
-*  Type     : RecordingDocumentIDGenerator               License   : Please read LICENSE.txt file            *
+*  Type     : RecordIDGenerator                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Provides a service to generate a unique RecordingDocument ID.                                  *
+*  Summary  : Provides a service to generate a unique Record ID.                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,29 +13,26 @@ using Empiria.Land.Registration.UseCases;
 
 namespace Empiria.Land.Providers {
 
-  /// <summary>Provides a service to generate a unique RecordingDocument ID.</summary>
-  internal class RecordingDocumentIDGenerator {
+  /// <summary>Provides a service to generate a unique Record ID</summary>
+  internal class RecordIDGenerator {
 
     #region Constructor and fields
 
-    private readonly string _customerID;
+    private readonly string _recordingOfficeTag;
 
-    public RecordingDocumentIDGenerator(string customerID) {
-      Assertion.Require(customerID, nameof(customerID));
-      Assertion.Require(customerID.Length == 2, "customerID must be two chars long.");
-
-      _customerID = customerID;
+    internal RecordIDGenerator(string recordingOfficeTag) {
+      _recordingOfficeTag = recordingOfficeTag;
     }
 
     #endregion Constructor and fields
 
     #region Service
 
-    internal string GenerateID() {
+    internal string GenerateID(string recordIDPrefix) {
       while (true) {
-        string generatedID = BuildRecordingDocumentID();
+        string generatedID = BuildRecordID(recordIDPrefix);
 
-        if (!ExistsRecordingDocumentID(generatedID)) {
+        if (!ExistsRecordID(generatedID)) {
           return generatedID;
         }
       }
@@ -45,7 +42,7 @@ namespace Empiria.Land.Providers {
 
     #region Helpers
 
-    private string BuildRecordingDocumentID() {
+    private string BuildRecordID(string recordIDPrefix) {
       string temp = String.Empty;
       int hashCode = 0;
       bool useLetters = false;
@@ -63,12 +60,13 @@ namespace Empiria.Land.Providers {
         useLetters = !useLetters;
       }
 
-      temp = "RP-" + _customerID + "-" + temp.Substring(0, 4) + "-" +
-                                         temp.Substring(4, 6) + "-" +
-                                         temp.Substring(10, 4);
+      temp = $"{recordIDPrefix}-{_recordingOfficeTag}-" +
+             temp.Substring(0, 4) + "-" +
+             temp.Substring(4, 6) + "-" +
+             temp.Substring(10, 4);
 
-      hashCode = (hashCode * Convert.ToInt32(_customerID[0])) % 49;
-      hashCode = (hashCode * Convert.ToInt32(_customerID[1])) % 53;
+      hashCode = (hashCode * Convert.ToInt32(_recordingOfficeTag[0])) % 49;
+      hashCode = (hashCode * Convert.ToInt32(_recordingOfficeTag[1])) % 53;
 
       temp += "ABCDEFGHJKMLNPQRSTUVWXYZ".Substring(hashCode % 24, 1);
       temp += "9A8B7C6D5E4F3G2H1JKR".Substring(hashCode % 20, 1);
@@ -77,7 +75,7 @@ namespace Empiria.Land.Providers {
     }
 
 
-    static private bool ExistsRecordingDocumentID(string generatedID) {
+    static private bool ExistsRecordID(string generatedID) {
       using (var usecase = InstrumentRecordingUseCases.UseCaseInteractor()) {
 
         return usecase.ExistsInstrumentRecordingID(generatedID);
@@ -86,6 +84,6 @@ namespace Empiria.Land.Providers {
 
     #endregion Helpers
 
-  }  // class RecordingDocumentIDGenerator
+  }  // class RecordIDGenerator
 
 }  // namespace Empiria.Land.Providers

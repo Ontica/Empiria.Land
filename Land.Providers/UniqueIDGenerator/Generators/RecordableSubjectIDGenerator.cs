@@ -18,22 +18,19 @@ namespace Empiria.Land.Providers {
 
     #region Constructor and fields
 
-    private readonly string _customerID;
+    private readonly string _recordingOfficeTag;
 
-    public RecordableSubjectIDGenerator(string customerID) {
-      Assertion.Require(customerID, nameof(customerID));
-      Assertion.Require(customerID.Length == 2, "customerID must be two chars long.");
-
-      _customerID = customerID;
+    internal RecordableSubjectIDGenerator(string recordingOfficeTag) {
+      _recordingOfficeTag = recordingOfficeTag;
     }
 
     #endregion Constructor and fields
 
     #region Services
 
-    internal string GenerateAssociationID() {
+    internal string GenerateAssociationID(string associationsIDPrefix) {
       while (true) {
-        string generatedID = BuildAssociationID();
+        string generatedID = BuildAssociationID(associationsIDPrefix);
 
         if (!ExistsRecordableSubjectID(generatedID)) {
           return generatedID;
@@ -42,9 +39,9 @@ namespace Empiria.Land.Providers {
     }
 
 
-    internal string GenerateNoPropertyID() {
+    internal string GenerateNoPropertyID(string noPropertiesIDPrefix) {
       while (true) {
-        string generatedID = BuildNoPropertyID();
+        string generatedID = BuildNoPropertyID(noPropertiesIDPrefix);
 
         if (!ExistsRecordableSubjectID(generatedID)) {
           return generatedID;
@@ -53,9 +50,9 @@ namespace Empiria.Land.Providers {
     }
 
 
-    internal string GenerateRealEstateID() {
+    internal string GenerateRealEstateID(string realEstatesIDPrefix) {
       while (true) {
-        string generatedID = BuildRealEstateID();
+        string generatedID = BuildRealEstateID(realEstatesIDPrefix);
 
         if (!ExistsRecordableSubjectID(generatedID)) {
           return generatedID;
@@ -67,8 +64,8 @@ namespace Empiria.Land.Providers {
 
     #region Helpers
 
-    private string BuildAssociationID() {
-      string temp = "PM-" + _customerID + "-";
+    private string BuildAssociationID(string associationsIDPrefix) {
+      string temp = $"{associationsIDPrefix}-{_recordingOfficeTag}-";
 
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomCharacter(temp);
@@ -87,8 +84,8 @@ namespace Empiria.Land.Providers {
     }
 
 
-    private string BuildNoPropertyID() {
-      string temp = "RD-" + _customerID + "-";
+    private string BuildNoPropertyID(string noPropertiesIDPrefix) {
+      string temp = $"{noPropertiesIDPrefix}-{_recordingOfficeTag}-";
 
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomCharacter(temp);
@@ -107,8 +104,8 @@ namespace Empiria.Land.Providers {
     }
 
 
-    private string BuildRealEstateID() {
-      string temp = "FR-" + _customerID + "-";
+    private string BuildRealEstateID(string realEstatesIDPrefix) {
+      string temp = $"{realEstatesIDPrefix}-{_recordingOfficeTag}-";
 
       temp += EmpiriaMath.GetRandomDigit(temp);
       temp += EmpiriaMath.GetRandomDigit(temp);
@@ -150,7 +147,7 @@ namespace Empiria.Land.Providers {
 
 
     static private string GetChecksumCharacterCode(int hashCode) {
-      string hashCodeConvertionRule = "FSKB8VANXM1TUCR9PG5WLZEH24QYD73J";
+      const string hashCodeConvertionRule = "FSKB8VANXM1TUCR9PG5WLZEH24QYD73J";
 
       return hashCodeConvertionRule.Substring(hashCode % hashCodeConvertionRule.Length, 1);
     }

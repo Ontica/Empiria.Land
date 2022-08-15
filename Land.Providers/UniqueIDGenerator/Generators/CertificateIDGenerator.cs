@@ -18,22 +18,19 @@ namespace Empiria.Land.Providers {
 
     #region Constructor and fields
 
-    private readonly string _customerID;
+    private readonly string _recordingOfficeTag;
 
-    internal CertificateIDGenerator(string customerID) {
-      Assertion.Require(customerID, nameof(customerID));
-      Assertion.Require(customerID.Length == 2, "customerID must be two chars long.");
-
-      _customerID = customerID;
+    internal CertificateIDGenerator(string recordingOfficeTag) {
+      _recordingOfficeTag = recordingOfficeTag;
     }
 
     #endregion Constructor and fields
 
     #region Service
 
-    internal string GenerateID() {
+    internal string GenerateID(string certificatesIDPrefix) {
       while (true) {
-        string generatedID = BuildCertificateID();
+        string generatedID = BuildCertificateID(certificatesIDPrefix);
 
         if (!ExistsCertificateID(generatedID)) {
           return generatedID;
@@ -45,7 +42,7 @@ namespace Empiria.Land.Providers {
 
     #region Helpers
 
-    private string BuildCertificateID() {
+    private string BuildCertificateID(string certificatesIDPrefix) {
       string temp = String.Empty;
       int hashCode = 0;
       bool useLetters = false;
@@ -63,12 +60,13 @@ namespace Empiria.Land.Providers {
         useLetters = !useLetters;
       }
 
-      temp = "CE-" + _customerID + "-" + temp.Substring(0, 4) + "-" +
-                                         temp.Substring(4, 6) + "-" +
-                                         temp.Substring(10, 4);
+      temp = $"{certificatesIDPrefix}-{_recordingOfficeTag}-" +
+             temp.Substring(0, 4) + "-" +
+             temp.Substring(4, 6) + "-" +
+             temp.Substring(10, 4);
 
-      temp += "ABCDEFHJKMNPRTWXYZ".Substring((hashCode * Convert.ToInt32(_customerID[0])) % 17, 1);
-      temp += "9A8B7CD5E4F2".Substring((hashCode * Convert.ToInt32(_customerID[1])) % 11, 1);
+      temp += "ABCDEFHJKMNPRTWXYZ".Substring((hashCode * Convert.ToInt32(_recordingOfficeTag[0])) % 17, 1);
+      temp += "9A8B7CD5E4F2".Substring((hashCode * Convert.ToInt32(_recordingOfficeTag[1])) % 11, 1);
 
       return temp;
     }

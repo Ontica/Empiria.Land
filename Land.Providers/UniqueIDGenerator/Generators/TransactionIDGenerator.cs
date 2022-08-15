@@ -17,22 +17,19 @@ namespace Empiria.Land.Providers {
 
     #region Constructor and fields
 
-    private readonly string _customerID;
+    private readonly string _recordingOfficeTag;
 
-    public TransactionIDGenerator(string customerID) {
-      Assertion.Require(customerID, nameof(customerID));
-      Assertion.Require(customerID.Length == 2, "customerID must be two chars long.");
-
-      _customerID = customerID;
+    internal TransactionIDGenerator(string recordingOfficeTag) {
+      _recordingOfficeTag = recordingOfficeTag;
     }
 
     #endregion Constructor and fields
 
     #region Service
 
-    internal string GenerateID() {
+    internal string GenerateID(string transactionsIDPrefix) {
       while (true) {
-        string generatedID = BuildTransactionID();
+        string generatedID = BuildTransactionID(transactionsIDPrefix);
 
         if (!ExistsTransactionID(generatedID)) {
           return generatedID;
@@ -44,7 +41,7 @@ namespace Empiria.Land.Providers {
 
     #region Helpers
 
-    private string BuildTransactionID() {
+    private string BuildTransactionID(string transactionsIDPrefix) {
       string temp = String.Empty;
       int hashCode = 0;
       bool useLetters = false;
@@ -62,10 +59,12 @@ namespace Empiria.Land.Providers {
         useLetters = !useLetters;
       }
 
-      temp = "TR-" + _customerID + "-" + temp.Substring(0, 5) + "-" + temp.Substring(5, 5);
+      temp = $"{transactionsIDPrefix}-{_recordingOfficeTag}-" +
+             temp.Substring(0, 5) + "-" +
+             temp.Substring(5, 5);
 
-      hashCode = (hashCode * Convert.ToInt32(_customerID[0])) % 49;
-      hashCode = (hashCode * Convert.ToInt32(_customerID[1])) % 53;
+      hashCode = (hashCode * Convert.ToInt32(_recordingOfficeTag[0])) % 49;
+      hashCode = (hashCode * Convert.ToInt32(_recordingOfficeTag[1])) % 53;
 
       return temp + "-" + (hashCode % 10).ToString();
     }

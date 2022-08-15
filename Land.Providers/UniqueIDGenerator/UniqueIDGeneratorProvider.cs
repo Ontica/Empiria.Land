@@ -16,22 +16,13 @@ namespace Empiria.Land.Providers {
 
     #region Constructor and fields
 
-    private readonly string CUSTOMER_ID;
+    private readonly string _recordingOfficeTag;
 
-    public UniqueIDGeneratorProvider() {
-      switch (ExecutionServer.LicenseName) {
-        case "Tlaxcala":
-          CUSTOMER_ID = "TL";
-          break;
+    public UniqueIDGeneratorProvider(string recordingOfficeTag) {
+      Assertion.Require(recordingOfficeTag, nameof(recordingOfficeTag));
+      Assertion.Require(recordingOfficeTag.Length == 2, "recordingOfficeTag must be two chars long.");
 
-        case "Zacatecas":
-          CUSTOMER_ID = "ZS";
-          break;
-
-        default:
-          throw Assertion.EnsureNoReachThisCode(
-            $"Unhandled license name {ExecutionServer.LicenseName}.");
-      }
+      _recordingOfficeTag = recordingOfficeTag;
     }
 
 
@@ -40,44 +31,44 @@ namespace Empiria.Land.Providers {
     #region Methods
 
     public string GenerateAssociationID() {
-      var generator = new RecordableSubjectIDGenerator(CUSTOMER_ID);
+      var generator = new RecordableSubjectIDGenerator(_recordingOfficeTag);
 
-      return generator.GenerateAssociationID();
+      return generator.GenerateAssociationID("PM");
     }
 
 
     public string GenerateCertificateID() {
-      var generator = new CertificateIDGenerator(CUSTOMER_ID);
+      var generator = new CertificateIDGenerator(_recordingOfficeTag);
 
-      return generator.GenerateID();
+      return generator.GenerateID("CE");
     }
 
 
     public string GenerateRecordID() {
-      var generator = new RecordingDocumentIDGenerator(CUSTOMER_ID);
+      var generator = new RecordIDGenerator(_recordingOfficeTag);
 
-      return generator.GenerateID();
+      return generator.GenerateID("RP");
     }
 
 
     public string GenerateNoPropertyID() {
-      var generator = new RecordableSubjectIDGenerator(CUSTOMER_ID);
+      var generator = new RecordableSubjectIDGenerator(_recordingOfficeTag);
 
-      return generator.GenerateNoPropertyID();
+      return generator.GenerateNoPropertyID("RD");
     }
 
 
     public string GenerateRealEstateID() {
-      var generator = new RecordableSubjectIDGenerator(CUSTOMER_ID);
+      var generator = new RecordableSubjectIDGenerator(_recordingOfficeTag);
 
-      return generator.GenerateRealEstateID();
+      return generator.GenerateRealEstateID("FR");
     }
 
 
     public string GenerateTransactionID() {
-      var generator = new TransactionIDGenerator(CUSTOMER_ID);
+      var generator = new TransactionIDGenerator(_recordingOfficeTag);
 
-      return generator.GenerateID();
+      return generator.GenerateID("TR");
     }
 
     #endregion Methods
