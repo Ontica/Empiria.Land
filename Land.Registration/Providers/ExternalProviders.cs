@@ -27,13 +27,12 @@ namespace Empiria.Land.Providers {
       }
     }
 
-    static public IUniqueIDGeneratorProvider UniqueIDGeneratorProvider {
-      get {
+
+    static public IUniqueIDGeneratorProvider GetUniqueIDGeneratorProvider() {
         Type type = ObjectFactory.GetType("Empiria.Land.Providers",
                                           "Empiria.Land.Providers.UniqueIDGeneratorProvider");
 
         return (IUniqueIDGeneratorProvider) ObjectFactory.CreateObject(type);
-      }
     }
 
   }  // class ExternalProviders

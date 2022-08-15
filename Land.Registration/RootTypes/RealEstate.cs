@@ -244,7 +244,9 @@ namespace Empiria.Land.Registration {
 
 
     protected override string GenerateResourceUID() {
-      return ExternalProviders.UniqueIDGeneratorProvider.GeneratePropertyUID();
+      IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
+
+      return provider.GenerateRealEstateID();
     }
 
     public override ResourceShapshotData GetSnapshotData() {

@@ -14,18 +14,18 @@ namespace Empiria.Land.Providers {
   /// parties, and certificates.</summary>
   public interface IUniqueIDGeneratorProvider {
 
-    string GenerateAssociationUID();
+    string GenerateAssociationID();
 
-    string GenerateCertificateUID();
+    string GenerateCertificateID();
 
-    string GenerateDocumentUID();
+    string GenerateRecordID();
 
-    string GenerateNoPropertyResourceUID();
+    string GenerateNoPropertyID();
 
-    string GeneratePropertyUID();
+    string GenerateRealEstateID();
 
-    string GenerateTransactionUID();
+    string GenerateTransactionID();
 
-  }
+  }  // interface IUniqueIDGeneratorProvider
 
 }

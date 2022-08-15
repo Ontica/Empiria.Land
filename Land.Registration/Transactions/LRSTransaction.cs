@@ -750,7 +750,9 @@ namespace Empiria.Land.Registration.Transactions {
 
     protected override void OnBeforeSave() {
       if (base.IsNew) {
-        this._transactionUID = ExternalProviders.UniqueIDGeneratorProvider.GenerateTransactionUID();
+        IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
+
+        _transactionUID = provider.GenerateTransactionID();
       }
     }
 

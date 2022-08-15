@@ -56,7 +56,9 @@ namespace Empiria.Land.Registration {
     }
 
     protected override string GenerateResourceUID() {
-      return ExternalProviders.UniqueIDGeneratorProvider.GenerateAssociationUID();
+      IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
+
+      return provider.GenerateAssociationID();
     }
 
 

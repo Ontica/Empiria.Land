@@ -39,42 +39,42 @@ namespace Empiria.Land.Providers {
 
     #region Methods
 
-    public string GenerateAssociationUID() {
+    public string GenerateAssociationID() {
       var generator = new RecordableSubjectIDGenerator(CUSTOMER_ID);
 
       return generator.GenerateAssociationID();
     }
 
 
-    public string GenerateCertificateUID() {
+    public string GenerateCertificateID() {
       var generator = new CertificateIDGenerator(CUSTOMER_ID);
 
       return generator.GenerateID();
     }
 
 
-    public string GenerateDocumentUID() {
+    public string GenerateRecordID() {
       var generator = new RecordingDocumentIDGenerator(CUSTOMER_ID);
 
       return generator.GenerateID();
     }
 
 
-    public string GenerateNoPropertyResourceUID() {
+    public string GenerateNoPropertyID() {
       var generator = new RecordableSubjectIDGenerator(CUSTOMER_ID);
 
       return generator.GenerateNoPropertyID();
     }
 
 
-    public string GeneratePropertyUID() {
+    public string GenerateRealEstateID() {
       var generator = new RecordableSubjectIDGenerator(CUSTOMER_ID);
 
       return generator.GenerateRealEstateID();
     }
 
 
-    public string GenerateTransactionUID() {
+    public string GenerateTransactionID() {
       var generator = new TransactionIDGenerator(CUSTOMER_ID);
 
       return generator.GenerateID();

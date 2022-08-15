@@ -454,7 +454,9 @@ namespace Empiria.Land.Certification {
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
-        this._certificateUID = ExternalProviders.UniqueIDGeneratorProvider.GenerateCertificateUID();
+        IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
+
+        _certificateUID = provider.GenerateCertificateID();
       }
     }
 

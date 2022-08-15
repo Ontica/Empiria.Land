@@ -543,7 +543,9 @@ namespace Empiria.Land.Registration {
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
-        this._documentUID = ExternalProviders.UniqueIDGeneratorProvider.GenerateDocumentUID();
+        IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
+
+        _documentUID  = provider.GenerateRecordID();
       }
     }
 

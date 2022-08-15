@@ -62,7 +62,9 @@ namespace Empiria.Land.Certificates {
     #region Methods
 
     internal string CreateCertificateID() {
-      return ExternalProviders.UniqueIDGeneratorProvider.GenerateCertificateUID();
+      IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
+
+      return provider.GenerateCertificateID();
     }
 
     #endregion Methods

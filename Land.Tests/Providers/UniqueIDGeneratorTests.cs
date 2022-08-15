@@ -32,12 +32,13 @@ namespace Empiria.Land.Tests.Providers {
       const int ASSOCIATION_ID_SIZE = 15;
       const string ASSOCIATION_ID_STARTS_WITH = "PM";
 
-      var provider = new UniqueIDGeneratorProvider();
+      IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
 
-      var sut = provider.GenerateAssociationUID();
+      string sut = provider.GenerateAssociationID();
 
       AssertIDIsValid(sut, ASSOCIATION_ID_SIZE, ASSOCIATION_ID_STARTS_WITH);
     }
+
 
 
     [Fact]
@@ -45,9 +46,9 @@ namespace Empiria.Land.Tests.Providers {
       const int CERTIFICATE_ID_SIZE = 24;
       const string CERTIFICATE_ID_STARTS_WITH = "CE";
 
-      var provider = new UniqueIDGeneratorProvider();
+      IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
 
-      var sut = provider.GenerateCertificateUID();
+      string sut = provider.GenerateCertificateID();
 
       AssertIDIsValid(sut, CERTIFICATE_ID_SIZE, CERTIFICATE_ID_STARTS_WITH);
     }
@@ -58,22 +59,22 @@ namespace Empiria.Land.Tests.Providers {
       const int NO_PROPERTY_ID_SIZE = 15;
       const string NO_PROPERTY_ID_STARTS_WITH = "RD";
 
-      var provider = new UniqueIDGeneratorProvider();
+      IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
 
-      var sut = provider.GenerateNoPropertyResourceUID();
+      string sut = provider.GenerateNoPropertyID();
 
       AssertIDIsValid(sut, NO_PROPERTY_ID_SIZE, NO_PROPERTY_ID_STARTS_WITH);
     }
 
 
     [Fact]
-    public void Should_Generate_A_RecordingID() {
+    public void Should_Generate_A_RecordID() {
       const int DOCUMENT_ID_SIZE = 24;
       const string DOCUMENT_ID_STARTS_WITH = "RP";
 
-      var provider = new UniqueIDGeneratorProvider();
+      IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
 
-      var sut = provider.GenerateDocumentUID();
+      string sut = provider.GenerateRecordID();
 
       AssertIDIsValid(sut, DOCUMENT_ID_SIZE, DOCUMENT_ID_STARTS_WITH);
     }
@@ -84,9 +85,9 @@ namespace Empiria.Land.Tests.Providers {
       const int REAL_ESTATE_ID_SIZE = 19;
       const string REAL_ESTATE_ID_STARTS_WITH = "FR";
 
-      var provider = new UniqueIDGeneratorProvider();
+      IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
 
-      var sut = provider.GeneratePropertyUID();
+      string sut = provider.GenerateRealEstateID();
 
       AssertIDIsValid(sut, REAL_ESTATE_ID_SIZE, REAL_ESTATE_ID_STARTS_WITH);
     }
@@ -97,9 +98,9 @@ namespace Empiria.Land.Tests.Providers {
       const int TRANSACTION_ID_SIZE = 19;
       const string TRANSACTION_ID_STARTS_WITH = "TR";
 
-      var provider = new UniqueIDGeneratorProvider();
+      IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
 
-      var sut = provider.GenerateTransactionUID();
+      string sut = provider.GenerateTransactionID();
 
       AssertIDIsValid(sut, TRANSACTION_ID_SIZE, TRANSACTION_ID_STARTS_WITH);
     }
