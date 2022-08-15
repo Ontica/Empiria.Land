@@ -33,7 +33,7 @@ namespace Empiria.Land.Certificates.Data {
 
       var operation = DataOperation.Parse(sql);
 
-      return DataReader.GetObject<Certificate>(operation);
+      return DataReader.GetObject<Certificate>(operation, null);
     }
 
 
