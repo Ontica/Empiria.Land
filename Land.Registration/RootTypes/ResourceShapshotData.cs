@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Newtonsoft.Json;
+
 using Empiria.Json;
 
 namespace Empiria.Land.Registration {
@@ -18,23 +20,51 @@ namespace Empiria.Land.Registration {
     #region Constructors and parsers
 
     internal ResourceShapshotData Parse(Resource resource, string data) {
-      ResourceShapshotData snapshotData;
+      if (String.IsNullOrEmpty(data) ||
+        !JsonObject.Parse(data).HasItems) {
+          return ParseEmptyFor(resource);
+      }
+
+      ResourceShapshotData snapshot;
 
       if (resource is RealEstate) {
-        snapshotData = new RealEstateShapshotData();
+        snapshot = new RealEstateShapshotData();
 
       } else if (resource is Association) {
-        snapshotData = new AssociationShapshotData();
+        snapshot = new AssociationShapshotData();
 
       } else if (resource is NoPropertyResource) {
-        snapshotData = new NoPropertyShapshotData();
+        snapshot = new NoPropertyShapshotData();
 
       } else {
-        snapshotData = new NoPropertyShapshotData();
+        snapshot = new NoPropertyShapshotData();
 
       }
 
-      return JsonConverter.Merge(data, snapshotData);
+      return Empiria.Json.JsonConverter.Merge(data, snapshot);
+    }
+
+
+    static public ResourceShapshotData ParseEmptyFor(Resource resource) {
+      ResourceShapshotData snapshot;
+
+      if (resource is RealEstate) {
+        snapshot = new RealEstateShapshotData();
+
+      } else if (resource is Association) {
+        snapshot = new AssociationShapshotData();
+
+      } else if (resource is NoPropertyResource) {
+        snapshot = new NoPropertyShapshotData();
+
+      } else {
+        snapshot = new NoPropertyShapshotData();
+
+      }
+
+      snapshot.IsEmptyInstance = true;
+
+      return snapshot;
     }
 
 
@@ -55,28 +85,32 @@ namespace Empiria.Land.Registration {
     }
 
 
+    [JsonProperty]
     public string Kind {
       get;
       internal set;
     } = string.Empty;
 
 
+    [JsonProperty]
     public string Name {
       get;
       internal set;
     } = string.Empty;
 
 
+    [JsonProperty]
     public string Description {
       get;
       internal set;
     } = string.Empty;
 
 
+    [JsonProperty]
     public string Status {
       get;
       internal set;
-    }
+    } = string.Empty;
 
     #endregion Properties
 
@@ -99,52 +133,61 @@ namespace Empiria.Land.Registration {
       // no-op
     }
 
+
+    [JsonProperty]
     public string Notes {
       get;
       internal set;
-    }
+    } = string.Empty;
 
 
+    [JsonProperty]
     public int MunicipalityId {
       get;
       internal set;
-    }
+    } = -1;
 
 
+    [JsonProperty]
     public string CadastralKey {
       get;
       internal set;
-    }
+    } = string.Empty;
 
 
+    [JsonProperty]
     public DateTime CadastreLinkingDate {
       get;
       internal set;
-    }
+    } = ExecutionServer.DateMinValue;
 
 
+    [JsonProperty]
     public decimal LotSize {
       get;
       internal set;
     }
 
 
+    [JsonProperty]
     public int LotSizeUnitId {
       get;
       internal set;
     } = -1;
 
 
+    [JsonProperty]
     public string PartitionNo {
       get;
       internal set;
-    }
+    } = string.Empty;
 
 
+    [JsonProperty]
     public string MetesAndBounds {
       get;
       internal set;
-    }
+    } = string.Empty;
 
   }  // class RealEstateShapshotData
 
