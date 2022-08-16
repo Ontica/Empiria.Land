@@ -805,7 +805,7 @@ namespace Empiria.Land.Registration {
 
 
     /// <summary>Gets the resource data as it was when it was applied to this recording act.</summary>
-    public ResourceShapshotData GetResourceExtData() {
+    public ResourceShapshotData GetResourceSnapshotData() {
       if (!this.ResourceShapshotData.IsEmptyInstance) {
         return this.ResourceShapshotData;
       }
@@ -813,14 +813,14 @@ namespace Empiria.Land.Registration {
       var tract = this.Resource.Tract.GetRecordingActs();
 
       /// Look for the first recording act with ResourceExtData added before this act in the tract.
-      /// If it is found then return it, if not then return the current resource data.
-      var lastData = tract.Find((x) => x.Document.PresentationTime > this.Document.PresentationTime &&
-                                       !x.ResourceShapshotData.IsEmptyInstance);
-      if (lastData != null) {
-        return lastData.ResourceShapshotData;
+      /// If it is found then return it, if not then return the an empty resource snapshot.
+      var lastActWithSnapshot = tract.FindLast(x => x.Document.PresentationTime < this.Document.PresentationTime &&
+                                                   !x.ResourceShapshotData.IsEmptyInstance);
+      if (lastActWithSnapshot != null) {
+        return lastActWithSnapshot.ResourceShapshotData;
+      } else {
+        return ResourceShapshotData.ParseEmptyFor(this.Resource);
       }
-
-      return this.Resource.GetSnapshotData();
     }
 
 
