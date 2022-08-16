@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.DataTypes;
+using Empiria.Geography;
 
 using Empiria.Land.Registration;
 
@@ -41,6 +42,23 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       }
     }
 
+    static internal RecordableSubjectDto Map(Resource resource,
+                                             ResourceShapshotData snapshot) {
+      if (resource is RealEstate realEstate) {
+        return MapRealEstateWithSnapshotData(realEstate, (RealEstateShapshotData) snapshot);
+
+      } else if (resource is Association association) {
+        return MapAssociationWithSnapshotData(association, (AssociationShapshotData) snapshot);
+
+      } else if (resource is NoPropertyResource noPropertyResource) {
+        return MapNoPropertyResourceWithSnapshotData(noPropertyResource, (NoPropertyShapshotData) snapshot);
+
+      } else {
+        throw Assertion.EnsureNoReachThisCode($"Unrecognized recordable subject type " +
+                                              $"'{resource.GetEmpiriaType().NamedKey}'.");
+      }
+    }
+
 
     static internal RealEstateDto Map(RealEstate realEstate) {
       var dto = new RealEstateDto();
@@ -50,8 +68,10 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       dto.CadastralID = realEstate.CadastralKey;
       dto.CadastreLinkingDate = realEstate.CadastreLinkingDate;
       dto.CadastralCardMedia = MediaData.Empty;
+
       dto.Municipality = new NamedEntityDto(realEstate.Municipality.UID,
                                             realEstate.Municipality.Name);
+
       dto.LotSize = realEstate.LotSize.Amount;
       dto.LotSizeUnit = realEstate.LotSize.Unit.MapToNamedEntity();
       dto.Description = realEstate.Description;
@@ -105,6 +125,44 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       dto.ElectronicID = resource.UID;
       dto.Kind = resource.Kind;
       dto.Status = resource.Status.ToString();
+
+      return dto;
+    }
+
+
+    static private NoPropertyDto MapNoPropertyResourceWithSnapshotData(NoPropertyResource noPropertyResource,
+                                                                       NoPropertyShapshotData snapshot) {
+      return Map(noPropertyResource);
+    }
+
+
+    static private AssociationDto MapAssociationWithSnapshotData(Association association,
+                                                                 AssociationShapshotData snapshot) {
+      return Map(association);
+    }
+
+
+    static private RealEstateDto MapRealEstateWithSnapshotData(RealEstate realEstate,
+                                                               RealEstateShapshotData snapshot) {
+
+      RealEstateDto dto = Map(realEstate);
+
+      dto.CadastralID = snapshot.CadastralKey;
+      dto.CadastreLinkingDate = snapshot.CadastreLinkingDate;
+      // dto.CadastralCardMedia = MediaData.Empty;
+      dto.Kind = snapshot.Kind;
+
+      var municipality = Municipality.Parse(snapshot.MunicipalityId);
+
+      dto.Municipality = new NamedEntityDto(municipality.UID,
+                                            municipality.Name);
+
+      dto.LotSize = snapshot.LotSize;
+      dto.LotSizeUnit = Unit.Parse(snapshot.LotSizeUnitId)
+                            .MapToNamedEntity();
+
+      dto.Description = snapshot.Description;
+      dto.MetesAndBounds = snapshot.MetesAndBounds;
 
       return dto;
     }

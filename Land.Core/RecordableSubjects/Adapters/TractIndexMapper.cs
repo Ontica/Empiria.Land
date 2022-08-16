@@ -96,7 +96,8 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     static private RecordableSubjectChangesDto MapSubjectChanges(RecordingAct recordingAct) {
       return new RecordableSubjectChangesDto {
         Summary = "Totalidad / Sobre el predio ... / Creado a partir de ... / Fusionado en ... / Subdividido en ...",
-        Snapshot = RecordableSubjectsMapper.Map(recordingAct.Resource),
+        Snapshot = RecordableSubjectsMapper.Map(recordingAct.Resource,
+                                                recordingAct.GetResourceSnapshotData()),
         StructureChanges = new FixedList<StructureChangeDto>()
       };
     }
