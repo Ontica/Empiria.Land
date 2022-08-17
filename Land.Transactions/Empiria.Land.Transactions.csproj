@@ -58,15 +58,16 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Services" Version="1.0.0" />
     <PackageReference Include="Empiria.Land.Core" Version="5.0.0" />
+    <PackageReference Include="Empiria.Land.Certificates" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\extensions\Services\Empiria.Services.csproj" />
     <ProjectReference Include="..\Land.Core\Empiria.Land.Core.csproj" />
+    <ProjectReference Include="..\Land.Certificates\Empiria.Land.Certificates.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Adapters\" />
-    <Folder Include="Data\" />
-    <Folder Include="Domain\" />
-    <Folder Include="UseCases\" />
+    <Folder Include="CertificatesIssuing\Data\" />
+    <Folder Include="CertificatesIssuing\Domain\" />
+    <Folder Include="DocumentsRecording\" />
   </ItemGroup>
 </Project>
