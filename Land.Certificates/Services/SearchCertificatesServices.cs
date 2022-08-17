@@ -1,32 +1,34 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificates Issuing                       Component : Use cases Layer                         *
-*  Assembly : Empiria.Land.Certificates.dll              Pattern   : Use case interactor class               *
-*  Type     : CertificatesUseCases                       License   : Please read LICENSE.txt file            *
+*  Module   : Certificates Issuing                       Component : Domain Services Layer                   *
+*  Assembly : Empiria.Land.Certificates.dll              Pattern   : Domain service interactor               *
+*  Type     : SearchCertificatesServices                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases for Land certificates retrieving.                                                    *
+*  Summary  : Provides services for land certificates searching.                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Services;
 
+using Empiria.Land.Registration.Transactions;
+
 using Empiria.Land.Certificates.Data;
 
-namespace Empiria.Land.Certificates.UseCases {
+namespace Empiria.Land.Certificates.Services {
 
-  /// <summary>Use cases for Land certificates retrieving.</summary>
-  public class CertificatesUseCases : UseCase {
+  /// <summary>Provides services for land certificates searching.</summary>
+  public class SearchCertificatesServices : Service {
 
     #region Constructors and parsers
 
-    static public CertificatesUseCases UseCaseInteractor() {
-      return UseCase.CreateInstance<CertificatesUseCases>();
+    static public SearchCertificatesServices ServiceInteractor() {
+      return Service.CreateInstance<SearchCertificatesServices>();
     }
 
     #endregion Constructors and parsers
 
-    #region Use cases
+    #region Services
 
     public bool ExistsCertificateID(string certificateID) {
       Assertion.Require(certificateID, nameof(certificateID));
@@ -34,6 +36,11 @@ namespace Empiria.Land.Certificates.UseCases {
       var certificate = CertificatesData.TryGetCertificateWithID(certificateID);
 
       return (certificate != null);
+    }
+
+
+    public CertificateDto GetCertificate(Guid certificateGUID) {
+      throw new NotImplementedException();
     }
 
 
@@ -49,8 +56,16 @@ namespace Empiria.Land.Certificates.UseCases {
     }
 
 
-    #endregion Use cases
+    public FixedList<CertificateDto> GetTransactionCertificates(LRSTransaction transaction) {
+      Assertion.Require(transaction, nameof(transaction));
 
-  }  // class CertificatesUseCases
+      FixedList<Certificate> certificates = CertificatesData.GetTransactionCertificates(transaction);
 
-}  // namespace Empiria.Land.Certificates.UseCases
+      return CertificateMapper.Map(certificates);
+    }
+
+    #endregion Services
+
+  }  // class SearchCertificatesService
+
+}  // namespace Empiria.Land.Certificates.Services
