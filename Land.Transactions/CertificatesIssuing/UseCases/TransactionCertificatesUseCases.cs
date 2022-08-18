@@ -14,7 +14,7 @@ using Empiria.Services;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
-using Empiria.Land.Certificates.Data;
+using Empiria.Land.Certificates.Services;
 
 namespace Empiria.Land.Certificates.UseCases {
 
@@ -40,7 +40,7 @@ namespace Empiria.Land.Certificates.UseCases {
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
-      var certificateType = CertificateType.Parse(command.Payload.CertificateTypeUID);
+      var certificateType = (CertificateType) CertificateType.Parse(command.Payload.CertificateTypeUID);
 
       Resource recordableSubject;
 
@@ -50,11 +50,9 @@ namespace Empiria.Land.Certificates.UseCases {
         recordableSubject = (RealEstate) Resource.ParseGuid(command.Payload.RecordableSubjectUID);
       }
 
-      var certificate = Certificate.Create(certificateType, transaction, recordableSubject);
-
-      certificate.Save();
-
-      return CertificateMapper.Map(certificate);
+      using (var certificateCreator = CertificateIssuingServices.ServiceInteractor()) {
+        return certificateCreator.CreateCertificate(certificateType, transaction, recordableSubject);
+      }
     }
 
 
@@ -69,9 +67,9 @@ namespace Empiria.Land.Certificates.UseCases {
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
-      FixedList<Certificate> certificates = CertificatesData.GetTransactionCertificates(transaction);
-
-      return CertificateMapper.Map(certificates);
+      using (var searcher = SearchCertificatesServices.ServiceInteractor()) {
+        return searcher.GetTransactionCertificates(transaction);
+      }
     }
 
 
