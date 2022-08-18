@@ -23,7 +23,7 @@ namespace Empiria.Land.Certificates {
 
   /// <summary>Partitioned type that represents a Land certificate.</summary>
   [PartitionedType(typeof(CertificateType))]
-  internal partial class Certificate : BaseObject, IProtected {
+  internal class Certificate : BaseObject, IProtected {
 
     #region Constructors and parsers
 

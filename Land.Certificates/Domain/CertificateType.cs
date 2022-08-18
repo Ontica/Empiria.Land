@@ -17,7 +17,7 @@ namespace Empiria.Land.Certificates {
 
   ///<summary>Power type that describes certificates types.</summary>
   [Powertype(typeof(Certificate))]
-  internal sealed class CertificateType : Powertype {
+  public sealed class CertificateType : Powertype {
 
     #region Constructors and parsers
 
@@ -36,7 +36,7 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    static internal FixedList<CertificateType> GetList() {
+    static public FixedList<CertificateType> GetList() {
       GeneralList list = GeneralList.Parse("CertificateTypes.Default.List");
 
       return list.GetItems<CertificateType>();
