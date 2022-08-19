@@ -65,9 +65,4 @@
     <ProjectReference Include="..\Land.Core\Empiria.Land.Core.csproj" />
     <ProjectReference Include="..\Land.Certificates\Empiria.Land.Certificates.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CertificatesIssuing\Data\" />
-    <Folder Include="CertificatesIssuing\Domain\" />
-    <Folder Include="DocumentsRecording\" />
-  </ItemGroup>
 </Project>

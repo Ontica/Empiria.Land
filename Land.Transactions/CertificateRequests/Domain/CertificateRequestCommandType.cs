@@ -1,0 +1,74 @@
+﻿/* Empiria Land **********************************************************************************************
+*                                                                                                            *
+*  Module   : Certificate Requests                       Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Extended enumeration                    *
+*  Type     : CertificateRequestCommandType              License   : Please read LICENSE.txt file            *
+*                                                                                                            *
+*  Summary  : Enumerates the commands used for request land certificates within a transction context.        *
+*                                                                                                            *
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
+
+using Empiria.Land.RecordableSubjects.Adapters;
+
+namespace Empiria.Land.Transactions.CertificateRequests {
+
+  /// <summary>Enumerates the commands used for request land certificates
+  /// within a transction context.</summary>
+  public enum CertificateRequestCommandType {
+
+    Undefined = 0,
+
+    OverRegisteredRealEstate,
+
+    OverRealEstateAntecedent
+
+  }  // enum CreateTransactionCertificateCommandType
+
+
+  static internal class CertificateRequestCommandTypeExtensions {
+
+    static internal string Name(this CertificateRequestCommandType commandType) {
+      switch (commandType) {
+
+        case CertificateRequestCommandType.OverRegisteredRealEstate:
+          return "Predio inscrito con folio real";
+
+        case CertificateRequestCommandType.OverRealEstateAntecedent:
+          return "Predio registrado en antecedente, sin folio real";
+
+        case CertificateRequestCommandType.Undefined:
+          return "La regla de registro no ha sido definida";
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unhandled registration command type '{commandType}'.");
+      }
+    }
+
+
+    static internal CertificateRequestCommandTypeRulesDto Rules(this CertificateRequestCommandType commandType) {
+      switch (commandType) {
+        case CertificateRequestCommandType.Undefined:
+          return new CertificateRequestCommandTypeRulesDto();
+
+        case CertificateRequestCommandType.OverRegisteredRealEstate:
+          return new CertificateRequestCommandTypeRulesDto {
+            SubjectType = RecordableSubjectType.RealEstate,
+            SelectSubject = true
+          };
+
+        case CertificateRequestCommandType.OverRealEstateAntecedent:
+          return new CertificateRequestCommandTypeRulesDto {
+            SubjectType = RecordableSubjectType.RealEstate,
+            SelectBookEntry = true
+          };
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unhandled registration command type '{commandType}'.");
+      }
+    }
+
+
+  }  // class CertificateRequestCommandTypeExtensions
+
+} // namespace Empiria.Land.Transactions.CertificateRequests

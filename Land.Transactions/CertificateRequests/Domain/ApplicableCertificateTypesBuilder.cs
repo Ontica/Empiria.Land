@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificates Issuing                       Component : Domain  Layer                           *
-*  Assembly : Empiria.Land.Certificates.dll              Pattern   : Builder                                 *
+*  Module   : Certificate Requests                       Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Builder                                 *
 *  Type     : ApplicableCertificateTypesBuilder          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Builds lists of certificate types for a given context.                                         *
@@ -12,7 +12,9 @@ using System.Collections.Generic;
 
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Certificates {
+using Empiria.Land.Certificates;
+
+namespace Empiria.Land.Transactions.CertificateRequests {
 
   /// <summary>Builds lists of certificate types for a given context.</summary>
   internal class ApplicableCertificateTypesBuilder {
@@ -28,14 +30,14 @@ namespace Empiria.Land.Certificates {
 
     #region Methods
 
-    internal FixedList<CertificateTypeDto> BuildFor(LRSTransaction transaction) {
+    internal FixedList<CertificateRequestTypeDto> BuildFor(LRSTransaction transaction) {
       Assertion.Require(transaction, nameof(transaction));
 
-      var list = new List<CertificateTypeDto>(_baseList.Count);
+      var list = new List<CertificateRequestTypeDto>(_baseList.Count);
 
       foreach (CertificateType certificateType in _baseList) {
         if (IsApplicableTo(certificateType, transaction)) {
-          CertificateTypeDto dto = BuildCertificateTypeDto(certificateType);
+          CertificateRequestTypeDto dto = BuildCertificateTypeDto(certificateType);
           list.Add(dto);
         }
       }
@@ -47,8 +49,8 @@ namespace Empiria.Land.Certificates {
 
     #region Helpers
 
-    private CertificateTypeDto BuildCertificateTypeDto(CertificateType certificateType) {
-      return new CertificateTypeDto {
+    private CertificateRequestTypeDto BuildCertificateTypeDto(CertificateType certificateType) {
+      return new CertificateRequestTypeDto {
         UID = certificateType.UID,
         Name = certificateType.DisplayName,
         IssuingCommands = BuildIssuingCommands(certificateType)
@@ -56,19 +58,19 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    private FixedList<CertificateIssuingCommandDto> BuildIssuingCommands(CertificateType certificateType) {
-      var commands = new List<CertificateIssuingCommandDto>();
+    private FixedList<CertificateRequestCommandTypeDto> BuildIssuingCommands(CertificateType certificateType) {
+      var commands = new List<CertificateRequestCommandTypeDto>();
 
-      commands.Add(new CertificateIssuingCommandDto {
-        UID = CreateCertificateCommandType.OverRegisteredRealEstate.ToString(),
-        Name = CreateCertificateCommandType.OverRegisteredRealEstate.Name(),
-        Rules = CreateCertificateCommandType.OverRegisteredRealEstate.Rules(),
+      commands.Add(new CertificateRequestCommandTypeDto {
+        UID = CertificateRequestCommandType.OverRegisteredRealEstate.ToString(),
+        Name = CertificateRequestCommandType.OverRegisteredRealEstate.Name(),
+        Rules = CertificateRequestCommandType.OverRegisteredRealEstate.Rules(),
       });
 
-      commands.Add(new CertificateIssuingCommandDto {
-        UID = CreateCertificateCommandType.OverRealEstateAntecedent.ToString(),
-        Name = CreateCertificateCommandType.OverRealEstateAntecedent.Name(),
-        Rules = CreateCertificateCommandType.OverRealEstateAntecedent.Rules()
+      commands.Add(new CertificateRequestCommandTypeDto {
+        UID = CertificateRequestCommandType.OverRealEstateAntecedent.ToString(),
+        Name = CertificateRequestCommandType.OverRealEstateAntecedent.Name(),
+        Rules = CertificateRequestCommandType.OverRealEstateAntecedent.Rules()
       });
 
       return commands.ToFixedList();
@@ -84,4 +86,4 @@ namespace Empiria.Land.Certificates {
 
   }  // class ApplicableCertificateTypesBuilder
 
-}  // namespace Empiria.Land.Certificates
+}  // namespace Empiria.Land.Transactions.CertificateRequests
