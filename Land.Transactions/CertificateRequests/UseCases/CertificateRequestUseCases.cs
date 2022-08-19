@@ -83,9 +83,7 @@ namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
 
       var certificateType = command.GetCertificateType();
 
-      var registrationHelper = new RecordableSubjectRegistrationHelper(command);
-
-      Resource recordableSubject = registrationHelper.GetRecordableSubject();
+      var recordableSubject =  command.GetRecordableSubject();
 
       CertificateDto certificate = CreateCertificate(certificateType, transaction, recordableSubject);
 

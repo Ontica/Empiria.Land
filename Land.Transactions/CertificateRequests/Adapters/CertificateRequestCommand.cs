@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Land.Certificates;
+using Empiria.Land.Registration;
 
 namespace Empiria.Land.Transactions.CertificateRequests {
 
@@ -37,14 +38,11 @@ namespace Empiria.Land.Transactions.CertificateRequests {
     }
 
 
-    internal CertificateType GetCertificateType() {
-      return (CertificateType) CertificateType.Parse(this.Payload.CertificateTypeUID);
-    }
-
   }  // class CertificateRequestCommand
 
 
-  /// <summary>Command payload used for request land certificates within a transaction context.</summary>
+
+  /// <summary>Command payload of a CertificateRequestCommand.</summary>
   public class CertificateRequestCommandPayload {
 
     public string CertificateTypeUID {
@@ -73,5 +71,23 @@ namespace Empiria.Land.Transactions.CertificateRequests {
 
 
   }  // class CertificateRequestCommandPayload
+
+
+
+  /// <summary>Extension methods for CertificateRequestCommand.</summary>
+  static internal class CertificateRequestCommandExtensions {
+
+    static internal CertificateType GetCertificateType(this CertificateRequestCommand command) {
+      return (CertificateType) CertificateType.Parse(command.Payload.CertificateTypeUID);
+    }
+
+
+    static internal Resource GetRecordableSubject(this CertificateRequestCommand command) {
+      var registrationHelper = new RecordableSubjectRegistrationHelper(command);
+
+      return registrationHelper.GetRecordableSubject();
+    }
+
+  }
 
 }  // namespace Empiria.Land.Transactions.CertificateRequests
