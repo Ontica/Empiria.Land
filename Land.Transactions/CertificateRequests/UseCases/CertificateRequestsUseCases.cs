@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Certificate Requests                       Component : Use cases Layer                         *
 *  Assembly : Empiria.Land.Transactions.dll              Pattern   : Use case interactor                     *
-*  Type     : RequestCertificatesUseCases                License   : Please read LICENSE.txt file            *
+*  Type     : CertificateRequestsUseCases                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Use cases used to request land certificates within a transaction context.                      *
 *                                                                                                            *
@@ -20,12 +20,12 @@ using Empiria.Land.Transactions.CertificateRequests.Providers;
 namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
 
   /// <summary>Use cases used to request land certificates within a transaction context.</summary>
-  public class RequestCertificatesUseCases : UseCase {
+  public class CertificateRequestsUseCases : UseCase {
 
     #region Constructors and parsers
 
-    static public RequestCertificatesUseCases UseCaseInteractor() {
-      return UseCase.CreateInstance<RequestCertificatesUseCases>();
+    static public CertificateRequestsUseCases UseCaseInteractor() {
+      return UseCase.CreateInstance<CertificateRequestsUseCases>();
     }
 
     #endregion Constructors and parsers
@@ -98,6 +98,6 @@ namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
 
     #endregion Use cases
 
-  }  // class RequestCertificatesUseCases
+  }  // class CertificateRequestsUseCases
 
 }  // namespace Empiria.Land.Transactions.CertificateRequests.UseCases

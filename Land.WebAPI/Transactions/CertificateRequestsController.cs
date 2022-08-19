@@ -26,7 +26,7 @@ namespace Empiria.Land.Transactions.CertificateRequests.WebApi {
     [Route("v5/land/transactions/{transactionID:length(19)}/certificate-request-types")]
     public CollectionModel GetCertificateRequestTypes([FromUri] string transactionID) {
 
-      using (var usecases = RequestCertificatesUseCases.UseCaseInteractor()) {
+      using (var usecases = CertificateRequestsUseCases.UseCaseInteractor()) {
 
         FixedList<CertificateRequestTypeDto> requestTypes = usecases.GetCertificateRequestTypes(transactionID);
 
@@ -40,7 +40,7 @@ namespace Empiria.Land.Transactions.CertificateRequests.WebApi {
     [Route("v5/land/transactions/{transactionID:length(19)}/requested-certificates")]
     public CollectionModel GetRequestedCertificates([FromUri] string transactionID) {
 
-      using (var usecases = RequestCertificatesUseCases.UseCaseInteractor()) {
+      using (var usecases = CertificateRequestsUseCases.UseCaseInteractor()) {
 
         FixedList<CertificateRequestDto> requests = usecases.GetRequestedCertificates(transactionID);
 
@@ -58,7 +58,7 @@ namespace Empiria.Land.Transactions.CertificateRequests.WebApi {
     public SingleObjectModel CloseRequestedCertificate([FromUri] string transactionID,
                                                        [FromUri] Guid certificateGuid) {
 
-      using (var usecases = RequestCertificatesUseCases.UseCaseInteractor()) {
+      using (var usecases = CertificateRequestsUseCases.UseCaseInteractor()) {
 
         CertificateRequestDto certificateRequest = usecases.CloseRequestedCertificate(transactionID, certificateGuid);
 
@@ -74,7 +74,7 @@ namespace Empiria.Land.Transactions.CertificateRequests.WebApi {
                                                       [FromUri] Guid certificateGuid,
                                                       [FromBody] object fields) {
 
-      using (var usecases = RequestCertificatesUseCases.UseCaseInteractor()) {
+      using (var usecases = CertificateRequestsUseCases.UseCaseInteractor()) {
 
         CertificateRequestDto certificateRequest = usecases.EditRequestedCertificate(transactionID, certificateGuid, fields);
 
@@ -89,7 +89,7 @@ namespace Empiria.Land.Transactions.CertificateRequests.WebApi {
     public SingleObjectModel OpenRequestedCertificate([FromUri] string transactionID,
                                                       [FromUri] Guid certificateGuid) {
 
-      using (var usecases = RequestCertificatesUseCases.UseCaseInteractor()) {
+      using (var usecases = CertificateRequestsUseCases.UseCaseInteractor()) {
 
         CertificateRequestDto certificateRequest = usecases.OpenRequestedCertificate(transactionID, certificateGuid);
 
@@ -105,7 +105,7 @@ namespace Empiria.Land.Transactions.CertificateRequests.WebApi {
                                                 [FromBody] CertificateRequestCommand command) {
       base.RequireBody(command);
 
-      using (var usecases = RequestCertificatesUseCases.UseCaseInteractor()) {
+      using (var usecases = CertificateRequestsUseCases.UseCaseInteractor()) {
 
         CertificateRequestDto certificateRequest = usecases.RequestCertificate(transactionID, command);
 
