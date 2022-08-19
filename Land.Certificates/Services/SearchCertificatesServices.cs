@@ -39,8 +39,10 @@ namespace Empiria.Land.Certificates.Services {
     }
 
 
-    public CertificateDto GetCertificate(Guid certificateGUID) {
-      throw new NotImplementedException();
+    public CertificateDto GetCertificate(Guid certificateGuid) {
+      var certificate = Certificate.Parse(certificateGuid.ToString());
+
+      return CertificateMapper.Map(certificate);
     }
 
 

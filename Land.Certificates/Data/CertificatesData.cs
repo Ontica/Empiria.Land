@@ -19,7 +19,8 @@ namespace Empiria.Land.Certificates.Data {
 
     static internal FixedList<Certificate> GetTransactionCertificates(LRSTransaction transaction) {
       var sql = "SELECT * FROM LRSCertificates " +
-               $"WHERE TransactionId = {transaction.Id}";
+               $"WHERE TransactionId = {transaction.Id} AND CertificateStatus <> 'X' " +
+                "ORDER BY CertificateId";
 
       var operation = DataOperation.Parse(sql);
 
