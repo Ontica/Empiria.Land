@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Land.Certificates;
+
 namespace Empiria.Land.Transactions.CertificateRequests {
 
   /// <summary>Command payload used for request land certificates within a transaction context.</summary>
@@ -32,6 +34,11 @@ namespace Empiria.Land.Transactions.CertificateRequests {
 
       Assertion.Require(Payload.CertificateTypeUID,
                         "CreateTransactionCertificateCommandType.Payload.CertificateTypeUID");
+    }
+
+
+    internal CertificateType GetCertificateType() {
+      return (CertificateType) CertificateType.Parse(this.Payload.CertificateTypeUID);
     }
 
   }  // class CertificateRequestCommand

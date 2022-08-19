@@ -81,21 +81,15 @@ namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
 
       var transaction = LRSTransaction.Parse(transactionID);
 
-      var certificateType = (CertificateType) CertificateType.Parse(command.Payload.CertificateTypeUID);
+      var certificateType = command.GetCertificateType();
 
-      Resource recordableSubject;
+      var registrationHelper = new RecordableSubjectRegistrationHelper(command);
 
-      if (command.Type == CertificateRequestCommandType.OverRealEstateAntecedent) {
-        recordableSubject = CreateRecordableSubjectInAntecedent(command.Payload);
-      } else {
-        recordableSubject = (RealEstate) Resource.ParseGuid(command.Payload.RecordableSubjectUID);
-      }
+      Resource recordableSubject = registrationHelper.GetRecordableSubject();
 
-      using (var certificateCreator = CertificateIssuingServices.ServiceInteractor()) {
-        CertificateDto certificate = certificateCreator.CreateCertificate(certificateType, transaction, recordableSubject);
+      CertificateDto certificate = CreateCertificate(certificateType, transaction, recordableSubject);
 
-        return CertificateRequestMapper.Map(transaction, certificate);
-      }
+      return CertificateRequestMapper.Map(transaction, certificate);
     }
 
 
@@ -108,9 +102,16 @@ namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
 
     #region Helpers
 
-    private Resource CreateRecordableSubjectInAntecedent(CertificateRequestCommandPayload payload) {
-      return RealEstate.Parse(1885);
+    private CertificateDto CreateCertificate(CertificateType certificateType,
+                                             LRSTransaction transaction,
+                                             Resource recordableSubject) {
+
+      using (var certificateCreator = CertificateIssuingServices.ServiceInteractor()) {
+
+        return certificateCreator.CreateCertificate(certificateType, transaction, recordableSubject);
+      }
     }
+
 
     #endregion Helpers
 
