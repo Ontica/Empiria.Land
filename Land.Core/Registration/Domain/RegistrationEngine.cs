@@ -8,13 +8,15 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
+
 using Empiria.Land.Registration.Adapters;
 
 namespace Empiria.Land.Registration {
 
-  internal class RegistrationEngine {
+  public class RegistrationEngine {
 
     private readonly RecordingDocument _recordingDocument;
 
@@ -24,6 +26,39 @@ namespace Empiria.Land.Registration {
       Assertion.Require(recordingDocument, nameof(recordingDocument));
 
       _recordingDocument = recordingDocument;
+    }
+
+
+    static public PhysicalRecording CreatePrecedentBookEntry(RecordingBook book, string bookEntryNo) {
+      Assertion.Require(book.IsAvailableForManualEditing,
+          $"El {book.AsText} está cerrado, por lo que no es posible agregarle nuevas inscripciones.");
+
+      if (book.ExistsRecording(bookEntryNo)) {
+        Assertion.RequireFail(
+          "La partida indicada ya existe en el libro seleccionado,\n" +
+          "y no es posible generar más de un folio de predio\n" +
+          "en una misma partida o antecedente.\n\n" +
+          "Si se requiere registrar más de un predio en una partida,\n" +
+          "favor de consultarlo con el área de soporte. Gracias.");
+      }
+
+      var fields = new InstrumentFields();
+
+      fields.Summary = $"Instrumento de la inscripción {bookEntryNo} del {book.AsText}.";
+
+      var instrument = new Instrument(InstrumentType.Parse(InstrumentTypeEnum.Resumen), fields);
+
+      instrument.Save();
+
+      RecordingDocument document = instrument.TryGetRecordingDocument();
+
+      var bookEntry = book.AddRecording(document, bookEntryNo);
+
+      bookEntry.Save();
+
+      book.Refresh();
+
+      return bookEntry;
     }
 
     internal void Execute(RegistrationCommand command) {
@@ -83,39 +118,6 @@ namespace Empiria.Land.Registration {
       fields.TargetRecordingActUID = command.Payload.AmendedRecordingActUID;
 
       return fields;
-    }
-
-
-    static internal PhysicalRecording CreatePrecedentBookEntry(RecordingBook book, string bookEntryNo) {
-      Assertion.Require(book.IsAvailableForManualEditing,
-          $"El {book.AsText} está cerrado, por lo que no es posible agregarle nuevas inscripciones.");
-
-      if (book.ExistsRecording(bookEntryNo)) {
-        Assertion.RequireFail(
-          "La partida indicada ya existe en el libro seleccionado,\n" +
-          "y no es posible generar más de un folio de predio\n" +
-          "en una misma partida o antecedente.\n\n" +
-          "Si se requiere registrar más de un predio en una partida,\n" +
-          "favor de consultarlo con el área de soporte. Gracias.");
-      }
-
-      var fields = new InstrumentFields();
-
-      fields.Summary = $"Instrumento de la inscripción {bookEntryNo} del {book.AsText}.";
-
-      var instrument = new Instrument(InstrumentType.Parse(InstrumentTypeEnum.Resumen), fields);
-
-      instrument.Save();
-
-      RecordingDocument document = instrument.TryGetRecordingDocument();
-
-      var bookEntry = book.AddRecording(document, bookEntryNo);
-
-      bookEntry.Save();
-
-      book.Refresh();
-
-      return bookEntry;
     }
 
 

@@ -21,7 +21,7 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    internal NoPropertyResource() {
+    public NoPropertyResource() {
       // Required by Empiria Framework
     }
 

@@ -20,7 +20,7 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    internal Association() {
+    public Association() {
       // Required by Empiria Framework
     }
 
