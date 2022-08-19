@@ -33,6 +33,10 @@ namespace Empiria.Land.Certificates {
       get; internal set;
     }
 
+    public RecordingContextDto IssuingRecordingContext {
+      get; internal set;
+    }
+
     public MediaData MediaLink {
       get; internal set;
     } = MediaData.Empty;

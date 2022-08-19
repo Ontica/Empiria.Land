@@ -8,7 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.DataTypes;
+
+using Empiria.Land.Registration;
 
 using Empiria.Land.RecordableSubjects.Adapters;
 
@@ -28,6 +31,7 @@ namespace Empiria.Land.Certificates {
         CertificateID = certificate.CertificateID,
         Type = certificate.CertificateType.DisplayName,
         RecordableSubject = RecordableSubjectsMapper.Map(certificate.OnRecordableSubject),
+        IssuingRecordingContext = MapRecordableSubjectRecordingContext(certificate.OnRecordableSubject),
         MediaLink = GetCertificateMediaLink(certificate),
         Status = certificate.Status.Name()
       };
@@ -37,6 +41,12 @@ namespace Empiria.Land.Certificates {
 
     static private MediaData GetCertificateMediaLink(Certificate certificate) {
       return new MediaData("text/html", "http://10.113.5.57/pages/recording-stamps/recording.stamp.aspx?uid=RP-ZS-38UB-92AP54-RH74XA");
+    }
+
+    static private RecordingContextDto MapRecordableSubjectRecordingContext(Resource recordableSubject) {
+      var recordingAct = recordableSubject.Tract.LastRecordingAct;
+
+      return new RecordingContextDto(recordingAct.Document.UID, recordingAct.UID);
     }
 
     #endregion Helpers

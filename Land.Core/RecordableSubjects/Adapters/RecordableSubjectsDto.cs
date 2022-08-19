@@ -28,6 +28,18 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
   public class RecordingContextDto {
 
+    internal RecordingContextDto() {
+      // no-op
+    }
+
+    public RecordingContextDto(string instrumentUID, string recordingActUID) {
+      Assertion.Require(instrumentUID, nameof(instrumentUID));
+      Assertion.Require(recordingActUID, nameof(recordingActUID));
+
+      InstrumentUID = instrumentUID;
+      RecordingActUID = recordingActUID;
+    }
+
     public string InstrumentUID {
       get; internal set;
     }

@@ -25,6 +25,7 @@ namespace Empiria.Land.Transactions.CertificateRequests {
          Type = certificate.Type,
          CertificateID = certificate.CertificateID,
          RecordableSubject = certificate.RecordableSubject,
+         IssuingRecordingContext = certificate.IssuingRecordingContext,
          MediaLink = certificate.MediaLink,
          Status = certificate.Status
       };

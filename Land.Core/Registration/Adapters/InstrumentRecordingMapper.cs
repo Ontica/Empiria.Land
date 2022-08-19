@@ -94,6 +94,13 @@ namespace Empiria.Land.Registration.Adapters {
                  .ToFixedList();
     }
 
+    static internal RecordingContextDto MapRecordingContext(RecordingAct recordingAct) {
+      return new RecordingContextDto {
+        InstrumentUID = recordingAct.Document.UID,
+        RecordingActUID = recordingAct.UID
+      };
+    }
+
 
     #region Private methods
 
@@ -126,20 +133,13 @@ namespace Empiria.Land.Registration.Adapters {
       dto.UID = recordingAct.UID;
       dto.Name = recordingAct.RecordingActType.DisplayName;
       dto.RecordableSubject = RecordableSubjectsMapper.Map(recordingAct.Resource);
-      dto.RecordableSubject.RecordingContext = GetRecordingContext(recordingAct);
+      dto.RecordableSubject.RecordingContext = MapRecordingContext(recordingAct);
 
       dto.Antecedent = recordingAct.GetRecordingAntecedentText();
 
       return dto;
     }
 
-
-    static private RecordingContextDto GetRecordingContext(RecordingAct recordingAct) {
-      return new RecordingContextDto {
-        InstrumentUID = recordingAct.Document.UID,
-        RecordingActUID = recordingAct.UID
-      };
-    }
 
     #endregion Private methods
 
