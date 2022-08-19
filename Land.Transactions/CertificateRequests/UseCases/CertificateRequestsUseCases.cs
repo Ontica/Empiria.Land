@@ -38,6 +38,19 @@ namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
     }
 
 
+    public void DeleteCertificateRequest(string transactionID, Guid certificateGuid) {
+      Assertion.Require(transactionID, nameof(transactionID));
+
+      var transaction = LRSTransaction.Parse(transactionID);
+
+      // ToDo: control transaction
+
+      CertificateDto certificate = CertificatesProvider.GetTransactionCertificate(transaction, certificateGuid);
+
+      CertificatesProvider.DeleteCertificate(transaction, certificate);
+    }
+
+
     public CertificateRequestDto EditRequestedCertificate(string transactionID,
                                                           Guid certificateGuid,
                                                           object fields) {

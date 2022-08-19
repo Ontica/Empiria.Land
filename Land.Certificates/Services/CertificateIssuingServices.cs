@@ -43,6 +43,17 @@ namespace Empiria.Land.Certificates.Services {
       return CertificateMapper.Map(certificate);
     }
 
+
+    public void DeleteCertificate(CertificateDto dto) {
+      Assertion.Require(dto, nameof(dto));
+
+      var certificate = Certificate.Parse(dto.UID);
+
+      certificate.SetStatus(CertificateStatus.Deleted);
+
+      certificate.Save();
+    }
+
     #endregion Services
 
   }  // class CertificateIssuingServices

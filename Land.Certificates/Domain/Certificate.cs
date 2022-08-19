@@ -31,9 +31,16 @@ namespace Empiria.Land.Certificates {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    static public Certificate Parse(int id) {
+
+    static internal Certificate Parse(int id) {
       return BaseObject.ParseId<Certificate>(id);
     }
+
+
+    static internal Certificate Parse(string uid) {
+      return BaseObject.ParseKey<Certificate>(uid);
+    }
+
 
     static internal Certificate Create(CertificateType certificateType,
                                        LRSTransaction transaction,
@@ -50,7 +57,6 @@ namespace Empiria.Land.Certificates {
 
       return certificate;
     }
-
 
     #endregion Constructors and parsers
 
@@ -233,7 +239,39 @@ namespace Empiria.Land.Certificates {
       CertificatesData.WriteCertificate(this);
     }
 
+
+    internal void SetStatus(CertificateStatus newStatus) {
+      EnsureCanChangeStatusTo(newStatus);
+
+      this.Status = newStatus;
+    }
+
     #endregion Methods
+
+    #region Helpers
+
+    static private bool CanChangeStatusTo(CertificateStatus currentStatus, CertificateStatus newStatus) {
+      if (currentStatus == CertificateStatus.Pending &&
+         newStatus == CertificateStatus.Deleted) {
+        return true;
+      }
+      if (currentStatus == CertificateStatus.Closed &&
+          newStatus == CertificateStatus.Pending) {
+        return true;
+      }
+      return false;
+    }
+
+
+    private void EnsureCanChangeStatusTo(CertificateStatus newStatus) {
+      if (!CanChangeStatusTo(this.Status, newStatus)) {
+        Assertion.RequireFail(
+          $"The status of the certificate with ID '{this.CertificateID}' " +
+          $"can not be changed to {newStatus}.");
+      }
+    }
+
+    #endregion Helpers
 
   } // class Certificate
 

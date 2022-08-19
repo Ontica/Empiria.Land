@@ -34,6 +34,18 @@ namespace Empiria.Land.Transactions.CertificateRequests.Providers {
     }
 
 
+    static internal void DeleteCertificate(LRSTransaction transaction,
+                                           CertificateDto certificate) {
+
+      EnsureTransactionHasCertificate(transaction, certificate);
+
+      using (var service = CertificateIssuingServices.ServiceInteractor()) {
+
+        service.DeleteCertificate(certificate);
+      }
+    }
+
+
     static internal CertificateDto GetTransactionCertificate(LRSTransaction transaction,
                                                              Guid certificateGuid) {
 

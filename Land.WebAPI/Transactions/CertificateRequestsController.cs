@@ -67,6 +67,21 @@ namespace Empiria.Land.Transactions.CertificateRequests.WebApi {
     }
 
 
+    [HttpDelete]
+    [Route("v5/land/transactions/{transactionID:length(19)}/certificates/{certificateGuid:guid}")]
+    [Route("v5/land/transactions/{transactionID:length(19)}/requested-certificates/{certificateGuid:guid}")]
+    public NoDataModel DeleteCertificateRequest([FromUri] string transactionID,
+                                                [FromUri] Guid certificateGuid) {
+
+      using (var usecases = CertificateRequestsUseCases.UseCaseInteractor()) {
+
+        usecases.DeleteCertificateRequest(transactionID, certificateGuid);
+
+        return new NoDataModel(this.Request);
+      }
+    }
+
+
     [HttpPut, HttpPatch]
     [Route("v5/land/transactions/{transactionID:length(19)}/certificates/{certificateGuid:guid}")]
     [Route("v5/land/transactions/{transactionID:length(19)}/requested-certificates/{certificateGuid:guid}")]
