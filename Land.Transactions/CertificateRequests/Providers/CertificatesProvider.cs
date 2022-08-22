@@ -22,6 +22,14 @@ namespace Empiria.Land.Transactions.CertificateRequests.Providers {
 
     #region Services
 
+    static internal CertificateDto CloseCertificate(Guid certificateGuid) {
+
+      using (var issuingService = CertificateIssuingServices.ServiceInteractor()) {
+
+        return issuingService.CloseCertificate(certificateGuid);
+      }
+    }
+
 
     static internal CertificateDto CreateCertificate(CertificateType certificateType,
                                                      LRSTransaction transaction,
@@ -34,15 +42,21 @@ namespace Empiria.Land.Transactions.CertificateRequests.Providers {
     }
 
 
-    static internal void DeleteCertificate(LRSTransaction transaction,
-                                           CertificateDto certificate) {
-
-      EnsureTransactionHasCertificate(transaction, certificate);
+    static internal void DeleteCertificate(Guid certificateGuid) {
 
       using (var service = CertificateIssuingServices.ServiceInteractor()) {
 
-        service.DeleteCertificate(certificate);
+        service.DeleteCertificate(certificateGuid);
       }
+    }
+
+
+    static internal void EnsureTransactionHasCertificate(LRSTransaction transaction,
+                                                         Guid certificateGuid) {
+      Assertion.Require(transaction, nameof(transaction));
+
+      // Assertion.Require(certificate.Transaction.Equals(transaction),
+      //                  "The certificate was not requested on the given transaction.");
     }
 
 
@@ -68,6 +82,15 @@ namespace Empiria.Land.Transactions.CertificateRequests.Providers {
     }
 
 
+    static internal CertificateDto OpenCertificate(Guid certificateGuid) {
+
+      using (var issuingService = CertificateIssuingServices.ServiceInteractor()) {
+
+        return issuingService.OpenCertificate(certificateGuid);
+      }
+    }
+
+
     #endregion Services
 
     #region Helpers
@@ -77,7 +100,7 @@ namespace Empiria.Land.Transactions.CertificateRequests.Providers {
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(certificate, nameof(certificate));
 
-      //Assertion.Require(certificate.Transaction.Equals(transaction),
+      // Assertion.Require(certificate.Transaction.Equals(transaction),
       //                  "The certificate was not requested on the given transaction.");
     }
 

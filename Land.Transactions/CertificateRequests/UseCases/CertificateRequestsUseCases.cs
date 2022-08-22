@@ -34,7 +34,17 @@ namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
 
     public CertificateRequestDto CloseRequestedCertificate(string transactionID,
                                                            Guid certificateGuid) {
-      throw new NotImplementedException();
+      Assertion.Require(transactionID, nameof(transactionID));
+
+      var transaction = LRSTransaction.Parse(transactionID);
+
+      CertificatesProvider.EnsureTransactionHasCertificate(transaction, certificateGuid);
+
+      // ToDo: control transaction / certificate edition
+
+      CertificateDto certificate = CertificatesProvider.CloseCertificate(certificateGuid);
+
+      return CertificateRequestMapper.Map(transaction, certificate);
     }
 
 
@@ -43,11 +53,11 @@ namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
 
       var transaction = LRSTransaction.Parse(transactionID);
 
-      // ToDo: control transaction
+      // ToDo: control transaction / certificate edition
 
-      CertificateDto certificate = CertificatesProvider.GetTransactionCertificate(transaction, certificateGuid);
+      CertificatesProvider.EnsureTransactionHasCertificate(transaction, certificateGuid);
 
-      CertificatesProvider.DeleteCertificate(transaction, certificate);
+      CertificatesProvider.DeleteCertificate(certificateGuid);
     }
 
 
@@ -84,7 +94,18 @@ namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
 
     public CertificateRequestDto OpenRequestedCertificate(string transactionID,
                                                           Guid certificateGuid) {
-      throw new NotImplementedException();
+      Assertion.Require(transactionID, nameof(transactionID));
+
+      var transaction = LRSTransaction.Parse(transactionID);
+
+      // ToDo: control transaction / certificate edition
+
+      CertificatesProvider.EnsureTransactionHasCertificate(transaction, certificateGuid);
+
+
+      CertificateDto certificate = CertificatesProvider.OpenCertificate(certificateGuid);
+
+      return CertificateRequestMapper.Map(transaction, certificate);
     }
 
 
