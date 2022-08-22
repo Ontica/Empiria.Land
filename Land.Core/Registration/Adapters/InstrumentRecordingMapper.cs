@@ -96,7 +96,7 @@ namespace Empiria.Land.Registration.Adapters {
 
     static internal RecordingContextDto MapRecordingContext(RecordingAct recordingAct) {
       return new RecordingContextDto {
-        InstrumentUID = recordingAct.Document.UID,
+        InstrumentRecordingUID = recordingAct.Document.GUID,
         RecordingActUID = recordingAct.UID
       };
     }
