@@ -44,14 +44,34 @@ namespace Empiria.Land.Certificates.Services {
     }
 
 
-    public void DeleteCertificate(CertificateDto dto) {
-      Assertion.Require(dto, nameof(dto));
+    public CertificateDto CloseCertificate(Guid certificateGuid) {
+      var certificate = Certificate.Parse(certificateGuid.ToString());
 
-      var certificate = Certificate.Parse(dto.UID);
+      certificate.SetStatus(CertificateStatus.Closed);
+
+      certificate.Save();
+
+      return CertificateMapper.Map(certificate);
+    }
+
+
+    public void DeleteCertificate(Guid certificateGuid) {
+      var certificate = Certificate.Parse(certificateGuid.ToString());
 
       certificate.SetStatus(CertificateStatus.Deleted);
 
       certificate.Save();
+    }
+
+
+    public CertificateDto OpenCertificate(Guid certificateGuid) {
+      var certificate = Certificate.Parse(certificateGuid.ToString());
+
+      certificate.SetStatus(CertificateStatus.Pending);
+
+      certificate.Save();
+
+      return CertificateMapper.Map(certificate);
     }
 
     #endregion Services

@@ -255,6 +255,10 @@ namespace Empiria.Land.Certificates {
          newStatus == CertificateStatus.Deleted) {
         return true;
       }
+      if (currentStatus == CertificateStatus.Pending &&
+          newStatus == CertificateStatus.Closed) {
+        return true;
+      }
       if (currentStatus == CertificateStatus.Closed &&
           newStatus == CertificateStatus.Pending) {
         return true;
@@ -264,11 +268,11 @@ namespace Empiria.Land.Certificates {
 
 
     private void EnsureCanChangeStatusTo(CertificateStatus newStatus) {
-      if (!CanChangeStatusTo(this.Status, newStatus)) {
-        Assertion.RequireFail(
-          $"The status of the certificate with ID '{this.CertificateID}' " +
-          $"can not be changed to {newStatus}.");
+      if (CanChangeStatusTo(this.Status, newStatus)) {
+        return;
       }
+      Assertion.RequireFail($"The status of the certificate with ID '{this.CertificateID}' " +
+                            $"can not be changed to {newStatus}.");
     }
 
     #endregion Helpers
