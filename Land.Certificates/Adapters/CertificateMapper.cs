@@ -46,7 +46,7 @@ namespace Empiria.Land.Certificates {
     static private RecordingContextDto MapRecordableSubjectRecordingContext(Resource recordableSubject) {
       var recordingAct = recordableSubject.Tract.LastRecordingAct;
 
-      return new RecordingContextDto(recordingAct.Document.UID, recordingAct.UID);
+      return new RecordingContextDto(recordingAct.Document.GUID, recordingAct.UID);
     }
 
     #endregion Helpers
