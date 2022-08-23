@@ -57,31 +57,6 @@ namespace Empiria.Land.Transactions.Adapters {
     }
 
 
-    static internal TransactionPreprocessingDto Map(TransactionPreprocessingData data) {
-      var mediaDto = LandMediaFileMapper.Map(data.TransactionMediaPostings);
-
-      var dto = new TransactionPreprocessingDto();
-
-      dto.Actions.Can.EditInstrument = data.CanEditInstrument;
-      dto.Actions.Can.UploadInstrumentFiles = data.CanUploadInstrumentFiles;
-      dto.Actions.Can.SetAntecedent = data.CanSetAntecedent;
-      dto.Actions.Can.CreateAntecedent = data.CanCreateAntecedent;
-      dto.Actions.Can.EditAntecedentRecordingActs = data.CanEditAntecedentRecordingActs;
-
-      dto.Actions.Show.Instrument = data.ShowInstrument;
-      dto.Actions.Show.InstrumentFiles = data.ShowInstrumentFiles;
-      dto.Actions.Show.Antecedent = data.ShowAntecedent;
-      dto.Actions.Show.AntecedentRecordingActs = data.ShowAntecedentRecordingActs;
-
-      dto.Media = mediaDto;
-      dto.Instrument = InstrumentMapper.Map(data.Instrument, data.Transaction);
-      dto.Antecedent = data.Antecedent;
-      dto.AntecedentRecordingActs = data.AntecedentRecordingActs;
-
-      return dto;
-    }
-
-
     static internal FixedList<TransactionDescriptor> MapToDescriptor(FixedList<LRSTransaction> list) {
       var mappedItems = list.Select((x) => MapToDescriptor(x));
 

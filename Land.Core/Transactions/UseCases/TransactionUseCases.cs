@@ -88,17 +88,6 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
-    public TransactionPreprocessingDto GetPreprocessingData(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
-
-      var transaction = LRSTransaction.Parse(transactionUID);
-
-      var preprocessingControlData = new TransactionPreprocessingData(transaction);
-
-      return TransactionMapper.Map(preprocessingControlData);
-    }
-
-
     public TransactionDto GetTransaction(string transactionUID) {
       Assertion.Require(transactionUID, "transactionUID");
 
