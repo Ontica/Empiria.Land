@@ -235,22 +235,9 @@ namespace Empiria.Land.Certificates {
 
     #region Methods
 
-    protected override void OnSave() {
-      CertificatesData.WriteCertificate(this);
-    }
+    internal bool CanChangeStatusTo(CertificateStatus newStatus) {
+      CertificateStatus currentStatus = this.Status;
 
-
-    internal void SetStatus(CertificateStatus newStatus) {
-      EnsureCanChangeStatusTo(newStatus);
-
-      this.Status = newStatus;
-    }
-
-    #endregion Methods
-
-    #region Helpers
-
-    static private bool CanChangeStatusTo(CertificateStatus currentStatus, CertificateStatus newStatus) {
       if (currentStatus == CertificateStatus.Pending &&
          newStatus == CertificateStatus.Deleted) {
         return true;
@@ -267,8 +254,23 @@ namespace Empiria.Land.Certificates {
     }
 
 
+    protected override void OnSave() {
+      CertificatesData.WriteCertificate(this);
+    }
+
+
+    internal void SetStatus(CertificateStatus newStatus) {
+      EnsureCanChangeStatusTo(newStatus);
+
+      this.Status = newStatus;
+    }
+
+    #endregion Methods
+
+    #region Helpers
+
     private void EnsureCanChangeStatusTo(CertificateStatus newStatus) {
-      if (CanChangeStatusTo(this.Status, newStatus)) {
+      if (CanChangeStatusTo(newStatus)) {
         return;
       }
       Assertion.RequireFail($"The status of the certificate with ID '{this.CertificateID}' " +

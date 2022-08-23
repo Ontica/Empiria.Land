@@ -25,9 +25,10 @@ namespace Empiria.Land.Transactions.CertificateRequests {
          Type = certificate.Type,
          CertificateID = certificate.CertificateID,
          RecordableSubject = certificate.RecordableSubject,
-         IssuingRecordingContext = certificate.IssuingRecordingContext,
          MediaLink = certificate.MediaLink,
-         Status = certificate.Status
+         Status = certificate.Status,
+         IssuingRecordingContext = certificate.IssuingRecordingContext,
+         Actions = MapActions(transaction, certificate)
       };
     }
 
@@ -37,6 +38,14 @@ namespace Empiria.Land.Transactions.CertificateRequests {
       return certificates.Select(certificate => Map(transaction, certificate))
                          .ToFixedList();
     }
+
+
+    static private CertificateActions MapActions(LRSTransaction transaction,
+                                                 CertificateDto certificate) {
+      // ToDo: Complete with transaction's certificate request edition rules
+      return certificate.Actions;
+    }
+
 
   }  // class CertificateRequestMapper
 

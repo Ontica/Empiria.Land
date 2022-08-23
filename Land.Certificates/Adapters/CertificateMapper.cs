@@ -31,9 +31,10 @@ namespace Empiria.Land.Certificates {
         CertificateID = certificate.CertificateID,
         Type = certificate.CertificateType.DisplayName,
         RecordableSubject = RecordableSubjectsMapper.Map(certificate.OnRecordableSubject),
-        IssuingRecordingContext = MapRecordableSubjectRecordingContext(certificate.OnRecordableSubject),
         MediaLink = GetCertificateMediaLink(certificate),
-        Status = certificate.Status.Name()
+        Status = certificate.Status.Name(),
+        IssuingRecordingContext = MapRecordableSubjectRecordingContext(certificate.OnRecordableSubject),
+        Actions = MapActions(certificate)
       };
     }
 
@@ -41,6 +42,15 @@ namespace Empiria.Land.Certificates {
 
     static private MediaData GetCertificateMediaLink(Certificate certificate) {
       return new MediaData("text/html", "http://10.113.5.57/pages/recording-stamps/recording.stamp.aspx?uid=RP-ZS-38UB-92AP54-RH74XA");
+    }
+
+
+    static private CertificateActions MapActions(Certificate certificate) {
+      return new CertificateActions {
+        CanClose = certificate.CanChangeStatusTo(CertificateStatus.Closed),
+        CanDelete = certificate.CanChangeStatusTo(CertificateStatus.Deleted),
+        CanOpen = certificate.CanChangeStatusTo(CertificateStatus.Pending)
+      };
     }
 
     static private RecordingContextDto MapRecordableSubjectRecordingContext(Resource recordableSubject) {
