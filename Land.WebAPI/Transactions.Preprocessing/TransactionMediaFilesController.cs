@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Land Media Files Management                  Component : Web Api                               *
+*  Module   : Transactions Preprocessing                   Component : Web Api                               *
 *  Assembly : Empiria.Land.WebApi.dll                      Pattern   : Controller                            *
 *  Type     : TransactionMediaFilesController              License   : Please read LICENSE.txt file          *
 *                                                                                                            *
@@ -14,12 +14,11 @@ using System.Web.Http;
 using Empiria.Storage;
 using Empiria.WebApi;
 
-using Empiria.Land.Media.Adapters;
 using Empiria.Land.Media.UseCases;
-using Empiria.Land.Transactions.UseCases;
-using Empiria.Land.Transactions.Adapters;
 
-namespace Empiria.Land.Media.WebApi {
+using Empiria.Land.Transactions.Preprocessing.Services;
+
+namespace Empiria.Land.Transactions.Preprocessing.WebApi {
 
   /// <summary>Web API used to add, remove and replace transaction's media files.</summary>
   public class TransactionMediaFilesController : WebApiController {
@@ -66,7 +65,7 @@ namespace Empiria.Land.Media.WebApi {
 
 
     private TransactionPreprocessingDto GetTransactionPreprocessingDto(string transactionUID) {
-      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
+      using (var usecases = TransactionPreprocessingServices.ServiceInteractor()) {
         return usecases.GetPreprocessingData(transactionUID);
       }
     }
@@ -75,4 +74,4 @@ namespace Empiria.Land.Media.WebApi {
 
   }  // class TransactionMediaFilesController
 
-}  // namespace Empiria.Land.Media.WebApi
+}  // namespace Empiria.Land.Transactions.Preprocessing.WebApi

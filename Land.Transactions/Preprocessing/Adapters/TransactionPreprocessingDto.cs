@@ -1,17 +1,18 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
+*  Module   : Transactions Preprocessing                 Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data Transfer Object                    *
 *  Type     : TransactionPreprocessingDto                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO with transaction preprocessing status, allowed actions and related entities.        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
 
 using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Media.Adapters;
 
-namespace Empiria.Land.Transactions.Adapters {
+namespace Empiria.Land.Transactions.Preprocessing {
 
   /// <summary>Ouput DTO with transaction preprocessing status, allowed actions and related entities.</summary>
   public class TransactionPreprocessingDto {
@@ -105,4 +106,4 @@ namespace Empiria.Land.Transactions.Adapters {
 
   }  //class TransactionPreprocessingShowFlags
 
-}  // namespace Empiria.Land.Transactions.Adapters
+}  // namespace Empiria.Land.Transactions.Preprocessing

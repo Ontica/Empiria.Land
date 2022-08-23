@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Information Holder                      *
+*  Module   : Transactions Preprocessing                 Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Information Holder                      *
 *  Type     : TransactionPreprocessingData               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides control data for transaction preprocessing tasks.                                     *
@@ -13,7 +13,7 @@ using Empiria.Land.Instruments;
 using Empiria.Land.Media;
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Transactions {
+namespace Empiria.Land.Transactions.Preprocessing {
 
   /// <summary>Provides control data for transaction preprocessing tasks.</summary>
   internal class TransactionPreprocessingData {
@@ -123,4 +123,4 @@ namespace Empiria.Land.Transactions {
 
   }  // class TransactionPreprocessingData
 
-}  // namespace Empiria.Land.Transactions
+}  // namespace Empiria.Land.Transactions.Preprocessing

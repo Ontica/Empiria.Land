@@ -61,18 +61,6 @@ namespace Empiria.Land.Transactions.WebApi {
 
 
     [HttpGet]
-    [Route("v5/land/transactions/{transactionUID:length(19)}/preprocessing-data")]
-    public SingleObjectModel GetPreprocessingData([FromUri] string transactionUID) {
-
-      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
-        TransactionPreprocessingDto preprocessingDto = usecases.GetPreprocessingData(transactionUID);
-
-        return new SingleObjectModel(this.Request, preprocessingDto);
-      }
-    }
-
-
-    [HttpGet]
     [Route("v5/land/transactions/{transactionUID:length(19)}")]
     public SingleObjectModel GetTransaction([FromUri] string transactionUID) {
 
