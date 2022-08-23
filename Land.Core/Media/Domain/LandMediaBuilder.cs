@@ -15,16 +15,16 @@ using Empiria.Land.Media.Adapters;
 namespace Empiria.Land.Media {
 
   /// <summary>Builds internal media files like payment orders or transaction submission receipts.</summary>
-  internal class LandMediaBuilder {
+  public class LandMediaBuilder {
 
     private readonly static string MEDIA_URL = ConfigurationData.GetString("LandMediaBuilder.DefaultUrl");
 
-    internal LandMediaBuilder() {
+    public LandMediaBuilder() {
       // no-op
     }
 
 
-    internal MediaData GetMediaDto(LandMediaContent mediaContent, params string[] parameters) {
+    public MediaData GetMediaDto(LandMediaContent mediaContent, params string[] parameters) {
       switch (mediaContent) {
 
         case LandMediaContent.TransactionControlVoucher:

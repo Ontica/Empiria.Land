@@ -16,7 +16,7 @@ using Empiria.Land.Registration.Transactions;
 namespace Empiria.Land.Instruments.Adapters {
 
   /// <summary>Methods to map legal instruments to InstrumentDto objects.</summary>
-  static internal partial class InstrumentMapper {
+  static public class InstrumentMapper {
 
     static internal InstrumentDto Map(Instrument instrument) {
       var issuerDto = IssuerMapper.Map(instrument.Issuer);
@@ -47,7 +47,7 @@ namespace Empiria.Land.Instruments.Adapters {
     }
 
 
-    static internal InstrumentDto Map(Instrument instrument, LRSTransaction transaction) {
+    static public InstrumentDto Map(Instrument instrument, LRSTransaction transaction) {
       if (!instrument.IsNew && !instrument.IsEmptyInstance) {
         return Map(instrument);
       }

@@ -15,9 +15,9 @@ using Empiria.Storage;
 
 namespace Empiria.Land.Media {
 
-  static internal class LandMediaReadServices {
+  static public class LandMediaReadServices {
 
-    internal static bool HasFileReferences(StorageFile file) {
+    static internal bool HasFileReferences(StorageFile file) {
       FixedList<LandMediaPosting> postings = LandMediaPostingsData.GetFilePostings(file);
 
       return postings.Count != 0;
@@ -28,7 +28,7 @@ namespace Empiria.Land.Media {
     }
 
 
-    static internal FixedList<LandMediaPosting> TransactionFiles(LRSTransaction transaction) {
+    static public FixedList<LandMediaPosting> TransactionFiles(LRSTransaction transaction) {
       return LandMediaPostingsData.GetMediaPostings(transaction);
     }
 

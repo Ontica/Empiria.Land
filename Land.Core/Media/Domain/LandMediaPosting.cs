@@ -26,7 +26,7 @@ namespace Empiria.Land.Media {
 
   /// <summary>A media file related to an Empiria Land entity like instrument,
   /// transaction or recording book.</summary>
-  internal class LandMediaPosting : BaseObject, IProtected {
+  public class LandMediaPosting : BaseObject, IProtected {
 
     #region Constructors and parsers
 

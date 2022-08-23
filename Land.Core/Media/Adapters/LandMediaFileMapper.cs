@@ -14,10 +14,10 @@ using Empiria.Storage;
 namespace Empiria.Land.Media.Adapters {
 
   /// <summary>Methods used to map Land media files to LandMediaFileDto objects.</summary>
-  static internal class LandMediaFileMapper {
+  static public class LandMediaFileMapper {
 
 
-    static internal FixedList<LandMediaFileDto> Map(FixedList<LandMediaPosting> list) {
+    static public FixedList<LandMediaFileDto> Map(FixedList<LandMediaPosting> list) {
       return list.Select(x => Map(x))
                  .ToFixedList();
     }
