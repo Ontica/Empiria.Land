@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Query payload                           *
+*  Module   : Transactions Management                    Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Query payload                           *
 *  Type     : TransactionsQuery                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Query payload used for transactions searching.                                                 *

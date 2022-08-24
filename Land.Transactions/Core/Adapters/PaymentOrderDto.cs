@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
+*  Module   : Transactions Management                    Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data Transfer Object                    *
 *  Type     : PaymentOrderDto                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO for a payment order.                                                                *

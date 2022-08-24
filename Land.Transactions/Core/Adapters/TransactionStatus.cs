@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Enumeration                             *
+*  Module   : Transactions Management                    Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Enumeration                             *
 *  Type     : TransactionStatus                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Enumerates the different workflow stages for a transaction.                                    *

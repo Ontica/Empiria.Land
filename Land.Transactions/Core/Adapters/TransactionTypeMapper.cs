@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
+*  Module   : Transactions Management                    Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Mapper class                            *
 *  Type     : TransactionTypeMapper                      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Mapping methods from TransactionType instances to TransactionTypeDto models.                   *

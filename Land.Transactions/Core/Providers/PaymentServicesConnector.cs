@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Integration Layer                       *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : External Service Connector              *
+*  Module   : Transactions Management                    Component : Integration Layer                       *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : External Service Connector              *
 *  Type     : PaymentServicesConnector                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Connector used to gain access to transaction payment order services.                           *
