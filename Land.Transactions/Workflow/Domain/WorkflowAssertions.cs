@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Workflow Management                        Component : Domain Layer                            *
+*  Module   : Transactions Workflow                      Component : Domain Layer                            *
 *  Assembly : Empiria.Land.Transactions.dll              Pattern   : Assertion methods                       *
 *  Type     : WorkflowAssertions                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -11,12 +11,10 @@ using System;
 
 using Empiria.Contacts;
 
-using Empiria.Land.Workflow.Adapters;
-
 using Empiria.Land.Registration.Transactions;
 using Empiria.Land.Transactions.Adapters;
 
-namespace Empiria.Land.Workflow {
+namespace Empiria.Land.Transactions.Workflow {
 
   /// <summary>Workflow's assertion check methods.</summary>
   internal class WorkflowAssertions {
@@ -96,4 +94,4 @@ namespace Empiria.Land.Workflow {
 
   }  // class WorkflowAssertions
 
-}  // namespace Empiria.Land.Workflow
+}  // namespace Empiria.Land.Transactions.Workflow

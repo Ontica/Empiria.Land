@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Workflow Management                          Component : Web Api                               *
+*  Module   : Transactions Workflow                        Component : Web Api                               *
 *  Assembly : Empiria.Land.WebApi.dll                      Pattern   : Controller                            *
 *  Type     : WorkflowController                           License   : Please read LICENSE.txt file          *
 *                                                                                                            *
@@ -11,11 +11,11 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.Land.Workflow.Adapters;
-using Empiria.Land.Workflow.UseCases;
 using Empiria.Land.Transactions.Adapters;
 
-namespace Empiria.Land.Workflow.WebApi {
+using Empiria.Land.Transactions.Workflow.Services;
+
+namespace Empiria.Land.Transactions.Workflow.WebApi {
 
   /// <summary>Web API used to retrive transaction workflow data and invoke commands on it.</summary>
   public class WorkflowController : WebApiController {
@@ -27,8 +27,9 @@ namespace Empiria.Land.Workflow.WebApi {
     [Route("v5/land/workflow/all-command-types")]
     public CollectionModel AllApplicableUserCommandTypes() {
 
-      using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
-        FixedList<ApplicableCommandDto> commandTypes = usecases.AllApplicableUserCommands();
+      using (var workflow = WorkflowServices.Provider()) {
+
+        FixedList<ApplicableCommandDto> commandTypes = workflow.AllApplicableUserCommands();
 
         return new CollectionModel(this.Request, commandTypes);
       }
@@ -41,8 +42,9 @@ namespace Empiria.Land.Workflow.WebApi {
     public CollectionModel ApplicableCommandTypes([FromBody] string[] transactions) {
       base.RequireBody(transactions);
 
-      using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
-        FixedList<ApplicableCommandDto> commandTypes = usecases.ApplicableCommands(transactions);
+      using (var workflow = WorkflowServices.Provider()) {
+
+        FixedList<ApplicableCommandDto> commandTypes = workflow.ApplicableCommands(transactions);
 
         return new CollectionModel(this.Request, commandTypes);
       }
@@ -56,12 +58,13 @@ namespace Empiria.Land.Workflow.WebApi {
 
       Assertion.Require(command.Payload.SearchUID, "payload.searchUID field must be provided.");
 
-      using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
-        TransactionDescriptor transaction = usecases.SearchTransaction(command.Payload.SearchUID);
+      using (var workflow = WorkflowServices.Provider()) {
+
+        TransactionDescriptor transaction = workflow.SearchTransaction(command.Payload.SearchUID);
 
         command.Payload.TransactionUID = new string[] { transaction.UID };
 
-        usecases.AssertWorkflowCommandExecution(command);
+        workflow.AssertWorkflowCommandExecution(command);
 
         return new SingleObjectModel(this.Request, transaction);
       }
@@ -72,8 +75,9 @@ namespace Empiria.Land.Workflow.WebApi {
     [Route("v5/land/workflow/{transactionUID:length(19)}/current-task")]
     public SingleObjectModel GetTransactionCurrentWorkflowTask([FromUri] string transactionUID) {
 
-      using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
-        WorkflowTaskDto currentWorkflowTask = usecases.CurrentTask(transactionUID);
+      using (var workflow = WorkflowServices.Provider()) {
+
+        WorkflowTaskDto currentWorkflowTask = workflow.CurrentTask(transactionUID);
 
         return new SingleObjectModel(this.Request, currentWorkflowTask);
       }
@@ -84,8 +88,9 @@ namespace Empiria.Land.Workflow.WebApi {
     [Route("v5/land/workflow/{transactionUID:length(19)}/history")]
     public CollectionModel GetTransactionWorkflowHistory([FromUri] string transactionUID) {
 
-      using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
-        FixedList<WorkflowTaskDto> history = usecases.WorkflowHistory(transactionUID);
+      using (var workflow = WorkflowServices.Provider()) {
+
+        FixedList<WorkflowTaskDto> history = workflow.WorkflowHistory(transactionUID);
 
         return new CollectionModel(this.Request, history);
       }
@@ -99,10 +104,11 @@ namespace Empiria.Land.Workflow.WebApi {
 
       base.RequireBody(command);
 
-      using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
+      using (var workflow = WorkflowServices.Provider()) {
+
         command.Payload.TransactionUID = new string[] { transactionUID };
 
-        FixedList<WorkflowTaskDto> currentWorkflowTask = usecases.ExecuteWorkflowCommand(command);
+        FixedList<WorkflowTaskDto> currentWorkflowTask = workflow.ExecuteWorkflowCommand(command);
 
         return new SingleObjectModel(this.Request, currentWorkflowTask[0]);
       }
@@ -114,8 +120,9 @@ namespace Empiria.Land.Workflow.WebApi {
     public CollectionModel ExecuteWorkflowCommandForMultipleTransactions([FromBody] WorkflowCommand command) {
       base.RequireBody(command);
 
-      using (var usecases = WorkflowUseCases.UseCaseInteractor()) {
-        FixedList<WorkflowTaskDto> workflowTasks = usecases.ExecuteWorkflowCommand(command);
+      using (var workflow = WorkflowServices.Provider()) {
+
+        FixedList<WorkflowTaskDto> workflowTasks = workflow.ExecuteWorkflowCommand(command);
 
         return new CollectionModel(this.Request, workflowTasks);
       }
@@ -126,4 +133,4 @@ namespace Empiria.Land.Workflow.WebApi {
 
   }  // class WorkflowController
 
-}  //namespace Empiria.Land.Workflow.WebApi
+}  //namespace Empiria.Land.Transactions.Workflow.WebApi

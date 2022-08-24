@@ -1,10 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Workflow Management                        Component : Use cases Layer                         *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Use case interactor class               *
-*  Type     : WorkflowUseCases                           License   : Please read LICENSE.txt file            *
+*  Module   : Transactions Workflow                      Component : Services Layer                          *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Services provider                       *
+*  Type     : WorkflowServices                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases for get transaction workflow and invoke commands on it.                              *
+*  Summary  : Services for get transaction workflow and invoke commands on it.                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -12,22 +12,21 @@ using System;
 using Empiria.Services;
 
 using Empiria.Land.Transactions.Adapters;
-using Empiria.Land.Workflow.Adapters;
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Workflow.UseCases {
+namespace Empiria.Land.Transactions.Workflow.Services {
 
   /// <summary>Use cases for get transaction workflow and invoke commands on it.</summary>
-  public partial class WorkflowUseCases : UseCase {
+  public partial class WorkflowServices : Service {
 
     #region Constructors and parsers
 
-    protected WorkflowUseCases() {
+    protected WorkflowServices() {
       // no-op
     }
 
-    static public WorkflowUseCases UseCaseInteractor() {
-      return UseCase.CreateInstance<WorkflowUseCases>();
+    static public WorkflowServices Provider() {
+      return Service.CreateInstance<WorkflowServices>();
     }
 
     #endregion Constructors and parsers
@@ -142,6 +141,6 @@ namespace Empiria.Land.Workflow.UseCases {
 
     #endregion Helpers
 
-  }  // class WorkflowUseCases
+  }  // class WorkflowServices
 
-}  // namespace Empiria.Land.Workflow.UseCases
+}  // namespace Empiria.Land.Transactions.Workflow.Services

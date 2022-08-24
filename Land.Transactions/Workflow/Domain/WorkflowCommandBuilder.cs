@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Workflow Management                        Component : Domain Layer                            *
+*  Module   : Transactions Workflow                      Component : Domain Layer                            *
 *  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data structure builder                  *
 *  Type     : WorkflowCommandBuilder                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -12,12 +12,10 @@ using System.Collections.Generic;
 
 using Empiria.Contacts;
 
-using Empiria.Land.Workflow.Adapters;
-
 using Empiria.Land.Registration.Transactions;
 
 
-namespace Empiria.Land.Workflow {
+namespace Empiria.Land.Transactions.Workflow {
 
   /// <summary>Creates workflow commands that can be invoked by the workflow engine.</summary>
   internal class WorkflowCommandBuilder {
@@ -157,4 +155,4 @@ namespace Empiria.Land.Workflow {
 
   }  // class WorkflowCommandBuilder
 
-}  // namespace Empiria.Land.Workflow
+}  // namespace Empiria.Land.Transactions.Workflow

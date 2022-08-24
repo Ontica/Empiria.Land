@@ -73,7 +73,7 @@ namespace Empiria.Land.UI {
 
     static public string GetTransactionNewStatusComboItems(int typeId, int docTypeId,
                                                           LRSTransactionStatus currentStatus) {
-      var rules = new Empiria.Land.Workflow.WorkflowRules();
+      var rules = new Transactions.Workflow.WorkflowRules();
 
       List<LRSTransactionStatus> list = rules.NextStatusList(LRSTransactionType.Parse(typeId),
                                                              LRSDocumentType.Parse(docTypeId),

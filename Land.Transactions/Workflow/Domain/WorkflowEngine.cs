@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Workflow Management                        Component : Domain Layer                            *
+*  Module   : Transactions Workflow                      Component : Domain Layer                            *
 *  Assembly : Empiria.Land.Transactions.dll              Pattern   : Coordinator                             *
 *  Type     : WorkflowEngine                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -13,9 +13,8 @@ using Empiria.Contacts;
 
 using Empiria.Land.Registration.Transactions;
 using Empiria.Land.Transactions.Adapters;
-using Empiria.Land.Workflow.Adapters;
 
-namespace Empiria.Land.Workflow {
+namespace Empiria.Land.Transactions.Workflow {
 
   /// <summary>Performs execution of Empiria Land micro workflow commands.</summary>
   internal class WorkflowEngine {
@@ -105,4 +104,4 @@ namespace Empiria.Land.Workflow {
 
   }  // class WorkflowEngine
 
-}  // namespace Empiria.Land.Workflow
+}  // namespace Empiria.Land.Transactions.Workflow

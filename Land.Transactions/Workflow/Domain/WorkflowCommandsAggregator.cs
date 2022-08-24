@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Workflow Management                        Component : Domain Layer                            *
+*  Module   : Transactions Workflow                      Component : Domain Layer                            *
 *  Assembly : Empiria.Land.Transactions.dll              Pattern   : Aggregator                              *
 *  Type     : WorkflowCommandsAggregator                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -13,11 +13,9 @@ using System.Collections.Generic;
 
 using Empiria.Contacts;
 
-using Empiria.Land.Workflow.Adapters;
-
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Workflow {
+namespace Empiria.Land.Transactions.Workflow {
 
   /// <summary>Aggregates a set of commands for a given transaction and user, that can be
   /// executed by the workflow engine.</summary>
@@ -119,4 +117,4 @@ namespace Empiria.Land.Workflow {
 
   }  // class WorkflowCommandsAggregator
 
-}  // namespace Empiria.Land.Workflow.UseCases
+}  // namespace Empiria.Land.Transactions.Workflow

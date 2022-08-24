@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Workflow Management                        Component : Interface adapters                      *
+*  Module   : Transactions Workflow                      Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Transactions.dll              Pattern   : Command payload                         *
 *  Type     : WorkflowCommand                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -13,7 +13,7 @@ using Empiria.Contacts;
 
 using Empiria.Land.Transactions.Adapters;
 
-namespace Empiria.Land.Workflow.Adapters {
+namespace Empiria.Land.Transactions.Workflow {
 
   /// <summary>Contains information about a transaction workflow command than can be executed.</summary>
   public class WorkflowCommand {
@@ -76,4 +76,4 @@ namespace Empiria.Land.Workflow.Adapters {
 
   }  // class WorkflowCommand
 
-}  // namespace Empiria.Land.Workflow.Adapters
+}  // namespace Empiria.Land.Transactions.Workflow
