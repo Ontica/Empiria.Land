@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Transactions Workflow                      Component : Services Layer                          *
 *  Assembly : Empiria.Land.Transactions.dll              Pattern   : Services provider                       *
-*  Type     : WorkflowServices                           License   : Please read LICENSE.txt file            *
+*  Type     : TransactionWorkflowDataServices            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Services for get transaction workflow and invoke commands on it.                               *
+*  Summary  : Services for get land transactions workflow data.                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -15,24 +15,24 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Transactions.Workflow.Services {
 
-  /// <summary>Use cases for get transaction workflow and invoke commands on it.</summary>
-  public partial class WorkflowServices : Service {
+  /// <summary>Services for get land transactions workflow data.</summary>
+  public class TransactionWorkflowDataServices : Service {
 
     #region Constructors and parsers
 
-    protected WorkflowServices() {
+    protected TransactionWorkflowDataServices() {
       // no-op
     }
 
-    static public WorkflowServices Provider() {
-      return Service.CreateInstance<WorkflowServices>();
+    static public TransactionWorkflowDataServices Provider() {
+      return Service.CreateInstance<TransactionWorkflowDataServices>();
     }
 
     #endregion Constructors and parsers
 
     #region Use cases
 
-    public FixedList<ApplicableCommandDto> AllApplicableUserCommands() {
+    public FixedList<ApplicableCommandDto> GetAllApplicableUserCommands() {
       var user = ExecutionServer.CurrentIdentity.User.AsContact();
 
       var workflowRules = new WorkflowRules();
@@ -43,7 +43,7 @@ namespace Empiria.Land.Transactions.Workflow.Services {
     }
 
 
-    public FixedList<ApplicableCommandDto> ApplicableCommands(string[] transactionUIDs) {
+    public FixedList<ApplicableCommandDto> GetApplicableCommandsForMultipleTransactions(string[] transactionUIDs) {
       if (transactionUIDs == null || transactionUIDs.Length == 0) {
         return new FixedList<ApplicableCommandDto>();
       }
@@ -64,19 +64,6 @@ namespace Empiria.Land.Transactions.Workflow.Services {
     }
 
 
-    public void AssertWorkflowCommandExecution(WorkflowCommand command) {
-      ValidateCommand(command);
-
-      var user = ExecutionServer.CurrentIdentity.User.AsContact();
-
-      var workflowRules = new WorkflowRules();
-
-      var assertions = new WorkflowAssertions(workflowRules);
-
-      assertions.AssertExecution(command, user);
-    }
-
-
     public WorkflowTaskDto CurrentTask(string transactionUID) {
       Assertion.Require(transactionUID, "transactionUID");
 
@@ -86,35 +73,6 @@ namespace Empiria.Land.Transactions.Workflow.Services {
 
       return WorkflowTaskMapper.Map(currentWorkflowTask);
     }
-
-
-    public FixedList<WorkflowTaskDto> ExecuteWorkflowCommand(WorkflowCommand command) {
-      ValidateCommand(command);
-
-      var user = ExecutionServer.CurrentIdentity.User.AsContact();
-
-      var workflowRules = new WorkflowRules();
-
-      var workflowEngine = new WorkflowEngine(workflowRules);
-
-      workflowEngine.Execute(command, user);
-
-      return workflowEngine.GetChangesList();
-    }
-
-
-    public TransactionDescriptor SearchTransaction(string searchUID) {
-      Assertion.Require(searchUID, "searchUID");
-
-      var transaction = LRSTransaction.TryParseWitAnyKey(searchUID);
-
-      if (transaction == null) {
-        throw new ResourceNotFoundException("Transaction.NotFound", $"No encontré un trámite con clave '{searchUID}'.");
-      }
-
-      return TransactionMapper.MapToDescriptor(transaction);
-    }
-
 
     public FixedList<WorkflowTaskDto> WorkflowHistory(string transactionUID) {
       Assertion.Require(transactionUID, "transactionUID");
@@ -128,18 +86,6 @@ namespace Empiria.Land.Transactions.Workflow.Services {
 
     #endregion Use cases
 
-    #region Helpers
-
-    private void ValidateCommand(WorkflowCommand command) {
-      Assertion.Require(command, "command");
-
-      Assertion.Require(command.Payload.NextStatus != TransactionStatus.All,
-        $"Unrecognized value '{command.Payload.NextStatus}' for command.payload.nextStatus.");
-
-    }
-
-    #endregion Helpers
-
-  }  // class WorkflowServices
+  }  // class TransactionWorkflowDataServices
 
 }  // namespace Empiria.Land.Transactions.Workflow.Services

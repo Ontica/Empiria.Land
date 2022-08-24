@@ -96,6 +96,19 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
+    public TransactionDescriptor SearchTransaction(string searchUID) {
+      Assertion.Require(searchUID, "searchUID");
+
+      var transaction = LRSTransaction.TryParseWithAnyKey(searchUID);
+
+      if (transaction == null) {
+        throw new ResourceNotFoundException("Transaction.NotFound", $"No encontré un trámite con clave '{searchUID}'.");
+      }
+
+      return TransactionMapper.MapToDescriptor(transaction);
+    }
+
+
     public FixedList<TransactionDescriptor> SearchTransactions(TransactionsQuery query) {
       Assertion.Require(query, nameof(query));
 

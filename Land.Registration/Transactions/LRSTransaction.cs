@@ -73,7 +73,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public static LRSTransaction TryParseWitAnyKey(string transactionKey, bool reload = false) {
+    public static LRSTransaction TryParseWithAnyKey(string transactionKey, bool reload = false) {
       if (EmpiriaString.IsInteger(transactionKey)) {
         return BaseObject.TryParse<LRSTransaction>("InternalControlNo = '" + transactionKey + "'", reload);
       }
