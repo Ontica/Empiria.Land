@@ -11,12 +11,13 @@
 using System;
 
 using Empiria.Json;
-using Empiria.Land.Transactions.Adapters;
+
 using Empiria.Messaging.EMailDelivery;
 
 using Empiria.OnePoint.EPayments;
 
 using Empiria.Land.Transactions;
+using Empiria.Land.Transactions.Payments;
 
 namespace Empiria.Land.Registration.Transactions {
 

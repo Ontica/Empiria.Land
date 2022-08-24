@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 using Empiria.WebApi;
 
-using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Transactions.UseCases;
 
 namespace Empiria.Land.Transactions.WebApi {
@@ -22,49 +21,13 @@ namespace Empiria.Land.Transactions.WebApi {
 
     #region Web Apis
 
-    [HttpPost]
-    [Route("v5/land/transactions/{transactionUID:length(19)}/cancel-payment")]
-    public async Task<SingleObjectModel> CancelPayment([FromUri] string transactionUID) {
-
-      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
-        TransactionDto transactionDto = await usecases.CancelPayment(transactionUID);
-
-        return new SingleObjectModel(this.Request, transactionDto);
-      }
-    }
-
-
-    [HttpPost]
-    [Route("v5/land/transactions/{transactionUID:length(19)}/cancel-payment-order")]
-    public async Task<SingleObjectModel> CancelPaymentOrder([FromUri] string transactionUID) {
-
-      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
-        TransactionDto transactionDto = await usecases.CancelPaymentOrder(transactionUID);
-
-        return new SingleObjectModel(this.Request, transactionDto);
-      }
-    }
-
-
     [HttpDelete]
     [Route("v5/land/transactions/{transactionUID:length(19)}/requested-services/{requestedServiceUID:guid}")]
     public SingleObjectModel DeleteService([FromUri] string transactionUID,
                                            [FromUri] string requestedServiceUID) {
 
-      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
+      using (var usecases = TransactionServicesUseCases.UseCaseInteractor()) {
         TransactionDto transactionDto = usecases.DeleteService(transactionUID, requestedServiceUID);
-
-        return new SingleObjectModel(this.Request, transactionDto);
-      }
-    }
-
-
-    [HttpPost]
-    [Route("v5/land/transactions/{transactionUID:length(19)}/generate-payment-order")]
-    public async Task<SingleObjectModel> GeneratePaymentOrder([FromUri] string transactionUID) {
-
-      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
-        TransactionDto transactionDto = await usecases.GeneratePaymentOrder(transactionUID);
 
         return new SingleObjectModel(this.Request, transactionDto);
       }
@@ -76,25 +39,13 @@ namespace Empiria.Land.Transactions.WebApi {
     public async Task<SingleObjectModel> RequestService([FromUri] string transactionUID,
                                                         [FromBody] RequestedServiceFields fields) {
 
-      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
+      using (var usecases = TransactionServicesUseCases.UseCaseInteractor()) {
         TransactionDto transactionDto = await usecases.RequestService(transactionUID, fields);
 
         return new SingleObjectModel(this.Request, transactionDto);
       }
     }
 
-
-    [HttpPost]
-    [Route("v5/land/transactions/{transactionUID:length(19)}/set-payment")]
-    public async Task<SingleObjectModel> SetPayment([FromUri] string transactionUID,
-                                                    [FromBody] PaymentFields fields) {
-
-      using (var usecases = TransactionUseCases.UseCaseInteractor()) {
-        TransactionDto transactionDto = await usecases.SetPayment(transactionUID, fields);
-
-        return new SingleObjectModel(this.Request, transactionDto);
-      }
-    }
 
     #endregion Web Apis
 

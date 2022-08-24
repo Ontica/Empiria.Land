@@ -21,8 +21,9 @@ using Empiria.Land.Providers;
 
 using Empiria.Land.Certification;
 using Empiria.Land.Registration.Forms;
-using Empiria.Land.Transactions.Adapters;
+
 using Empiria.Land.Transactions;
+using Empiria.Land.Transactions.Payments;
 
 using Empiria.Land.Integration.PaymentServices;
 

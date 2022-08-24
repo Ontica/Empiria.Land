@@ -11,14 +11,14 @@ using System;
 
 using Empiria.DataTypes;
 
-using Empiria.Land.Instruments.Adapters;
-
 using Empiria.Land.Media;
 using Empiria.Land.Media.Adapters;
 
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Transactions.Adapters {
+using Empiria.Land.Transactions.Payments;
+
+namespace Empiria.Land.Transactions {
 
   /// <summary>Contains methods to map from LRSTransaction objects to TransactionDTOs.</summary>
   static internal class TransactionMapper {
@@ -219,4 +219,4 @@ namespace Empiria.Land.Transactions.Adapters {
 
   }  // class TransactionMapper
 
-}  // namespace Empiria.Land.Transactions.Adapters
+}  // namespace Empiria.Land.Transactions

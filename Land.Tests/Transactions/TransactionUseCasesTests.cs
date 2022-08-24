@@ -14,8 +14,12 @@ using Xunit;
 
 using Empiria.Tests;
 
-using Empiria.Land.Transactions.Adapters;
+using Empiria.Land.Transactions;
 using Empiria.Land.Transactions.UseCases;
+
+using Empiria.Land.Transactions.Payments;
+using Empiria.Land.Transactions.Payments.UseCases;
+
 
 namespace Empiria.Land.Tests.Transactions {
 
@@ -209,25 +213,35 @@ namespace Empiria.Land.Tests.Transactions {
     #region Helper methods
 
     internal async Task<TransactionDto> AddServicesIfApplicable(TransactionDto transaction) {
-      if (transaction.Actions.Can.EditServices) {
+      if (!transaction.Actions.Can.EditServices) {
+        return await Task.FromResult(transaction);
+      }
+
+      using (var servicesUseCases = TransactionServicesUseCases.UseCaseInteractor()) {
         for (int i = 0; i < 3; i++) {
           RequestedServiceFields serviceFields = TransactionRandomizer.CreateRandomRequestedServiceFields();
-          transaction = await _usecases.RequestService(transaction.UID, serviceFields);
+
+          transaction = await servicesUseCases.RequestService(transaction.UID, serviceFields);
         }
       }
+
       return transaction;
     }
 
     internal async Task<TransactionDto> GeneratePaymentOrderAndPaymentIfApplicable(TransactionDto transaction) {
       if (transaction.Actions.Can.GeneratePaymentOrder) {
         Assert.False(transaction.Actions.Can.Submit);
-        transaction = await _usecases.GeneratePaymentOrder(transaction.UID);
-        Assert.True(transaction.Actions.Can.EditPayment);
 
-        PaymentFields paymentFields =
-              TransactionRandomizer.GetRandomPaymentFields(transaction.PaymentOrder.Total);
+        using (var paymentUseCases = TransactionPaymentUseCases.UseCaseInteractor()) {
+          transaction = await paymentUseCases.GeneratePaymentOrder(transaction.UID);
+          Assert.True(transaction.Actions.Can.EditPayment);
 
-        transaction = await _usecases.SetPayment(transaction.UID, paymentFields);
+          PaymentFields paymentFields =
+                TransactionRandomizer.GetRandomPaymentFields(transaction.PaymentOrder.Total);
+
+
+          transaction = await paymentUseCases.SetPayment(transaction.UID, paymentFields);
+        }
 
         Assert.False(transaction.Actions.Can.GeneratePaymentOrder);
       }

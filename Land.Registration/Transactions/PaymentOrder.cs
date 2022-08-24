@@ -14,7 +14,7 @@ using Empiria.Json;
 
 using Empiria.Land.Integration.PaymentServices;
 
-namespace Empiria.Land.Transactions {
+namespace Empiria.Land.Transactions.Payments {
 
   /// <summary>Holds data about a land transaction payment order.</summary>
   public class PaymentOrder : IPaymentOrder {
@@ -184,4 +184,4 @@ namespace Empiria.Land.Transactions {
 
   }  // class PaymentOrder
 
-} // namespace Empiria.Land.Transactions
+} // namespace Empiria.Land.Transactions.Payments

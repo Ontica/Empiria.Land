@@ -11,7 +11,9 @@ using System;
 
 using Empiria.DataTypes;
 
-namespace Empiria.Land.Transactions.Adapters {
+using Empiria.Land.Transactions.Payments;
+
+namespace Empiria.Land.Transactions {
 
   /// <summary>Output DTO that holds full data related to a transaction.</summary>
   public class TransactionDto {
@@ -256,4 +258,4 @@ namespace Empiria.Land.Transactions.Adapters {
 
   }  // class TransationShowControlData
 
-}  // namespace Empiria.Land.Transactions.Adapters
+}  // namespace Empiria.Land.Transactions

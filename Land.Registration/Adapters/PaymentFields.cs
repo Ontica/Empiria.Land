@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land.Transactions.Adapters {
+namespace Empiria.Land.Transactions.Payments {
 
   /// <summary>Data structure that serves to update payment data for a transaction.</summary>
   public class PaymentFields {
@@ -38,4 +38,4 @@ namespace Empiria.Land.Transactions.Adapters {
 
   }  // public class PaymentFields
 
-}  // namespace Empiria.Land.Transactions.Adapters
+}  // namespace Empiria.Land.Transactions.Payments

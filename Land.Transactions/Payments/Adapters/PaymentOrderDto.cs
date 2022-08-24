@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Management                    Component : Interface adapters                      *
+*  Module   : Transaction Payments                       Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data Transfer Object                    *
 *  Type     : PaymentOrderDto                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -11,7 +11,7 @@ using System;
 
 using Empiria.DataTypes;
 
-namespace Empiria.Land.Transactions.Adapters {
+namespace Empiria.Land.Transactions.Payments {
 
   /// <summary>Output DTO for a payment order.</summary>
   public class PaymentOrderDto {
@@ -42,4 +42,4 @@ namespace Empiria.Land.Transactions.Adapters {
 
   }  // class PaymentOrderDto
 
-}  // namespace Empiria.Land.Transactions.Adapters
+}  // namespace Empiria.Land.Transactions.Payments
