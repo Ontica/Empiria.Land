@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Management                    Component : Interface adapters                      *
+*  Module   : Transaction Management                     Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Transactions.dll              Pattern   : Mapper class                            *
 *  Type     : ProvidedServiceDtoMapper                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -11,7 +11,7 @@
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Transactions.Adapters {
+namespace Empiria.Land.Transactions {
 
   /// <summary>Contains methods used to map to ProvidedServiceDto objects.</summary>
   static internal class ProvidedServiceMapper {
@@ -89,4 +89,4 @@ namespace Empiria.Land.Transactions.Adapters {
 
   }  // class ProvidedServiceMapper
 
-}  // namespace Empiria.Land.Transactions.Adapters
+}  // namespace Empiria.Land.Transactions

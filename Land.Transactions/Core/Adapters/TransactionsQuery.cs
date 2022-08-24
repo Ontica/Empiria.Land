@@ -11,7 +11,7 @@ using System;
 
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Transactions.Adapters {
+namespace Empiria.Land.Transactions {
 
   /// <summary>Query payload used for transactions searching.</summary>
   public class TransactionsQuery {
@@ -159,4 +159,4 @@ namespace Empiria.Land.Transactions.Adapters {
 
   }  // class TransactionsQueryExtensions
 
-}  // namespace Empiria.Land.Transactions.Adapters
+}  // namespace Empiria.Land.Transactions

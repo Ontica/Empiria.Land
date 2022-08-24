@@ -11,8 +11,6 @@ using System;
 
 using Empiria.Contacts;
 
-using Empiria.Land.Transactions.Adapters;
-
 namespace Empiria.Land.Transactions.Workflow {
 
   /// <summary>Contains information about a transaction workflow command than can be executed.</summary>

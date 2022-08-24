@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Transactions.Adapters {
+namespace Empiria.Land.Transactions {
 
   /// <summary>Output DTO that represents data about a transaction requested service.</summary>
   public class RequestedServiceDto {
@@ -59,4 +59,4 @@ namespace Empiria.Land.Transactions.Adapters {
 
   }  // class RequestedServiceDto
 
-} // namespace Empiria.Land.Transactions.Adapters
+} // namespace Empiria.Land.Transactions

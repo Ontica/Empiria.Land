@@ -10,7 +10,7 @@
 
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Transactions.Adapters {
+namespace Empiria.Land.Transactions {
 
   /// <summary>Mapping methods from TransactionType instances to TransactionTypeDto models.</summary>
   static internal class TransactionTypeMapper {
@@ -34,4 +34,4 @@ namespace Empiria.Land.Transactions.Adapters {
 
   }  // class TransactionTypeMapper
 
-}  // namespace Empiria.Land.Transactions.Adapters
+}  // namespace Empiria.Land.Transactions

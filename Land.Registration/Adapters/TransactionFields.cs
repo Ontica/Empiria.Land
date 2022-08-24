@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Transactions.Adapters {
+namespace Empiria.Land.Transactions {
 
   /// <summary>Input data structure used to create or update transactions.</summary>
   public class TransactionFields {
@@ -50,4 +50,4 @@ namespace Empiria.Land.Transactions.Adapters {
 
   }  // class TransactionFields
 
-}  // namespace Empiria.Land.Transactions.Adapters
+}  // namespace Empiria.Land.Transactions

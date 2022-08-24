@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Transactions.Adapters {
+namespace Empiria.Land.Transactions {
 
   /// <summary>Enumerates the possible statuses of a transaction with respect of the office workflow.</summary>
   public enum TransactionStatus {
@@ -53,4 +53,4 @@ namespace Empiria.Land.Transactions.Adapters {
 
   }  // enum TransactionStatus
 
-} // namespace Empiria.Land.Transactions.Adapters
+} // namespace Empiria.Land.Transactions

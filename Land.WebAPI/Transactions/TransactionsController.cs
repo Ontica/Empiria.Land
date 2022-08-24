@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 using Empiria.WebApi;
 
-using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Transactions.UseCases;
 
 namespace Empiria.Land.Transactions.WebApi {

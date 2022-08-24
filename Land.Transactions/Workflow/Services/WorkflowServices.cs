@@ -11,7 +11,6 @@ using System;
 
 using Empiria.Services;
 
-using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Transactions.Workflow.Services {

@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using Empiria.Contacts;
 
 using Empiria.Land.Registration.Transactions;
-using Empiria.Land.Transactions.Adapters;
 
 namespace Empiria.Land.Transactions.Workflow {
 

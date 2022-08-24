@@ -11,8 +11,6 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.Land.Transactions.Adapters;
-
 using Empiria.Land.Transactions.Workflow.Services;
 
 namespace Empiria.Land.Transactions.Workflow.WebApi {
@@ -89,7 +87,6 @@ namespace Empiria.Land.Transactions.Workflow.WebApi {
     public CollectionModel GetTransactionWorkflowHistory([FromUri] string transactionUID) {
 
       using (var workflow = WorkflowServices.Provider()) {
-
         FixedList<WorkflowTaskDto> history = workflow.WorkflowHistory(transactionUID);
 
         return new CollectionModel(this.Request, history);

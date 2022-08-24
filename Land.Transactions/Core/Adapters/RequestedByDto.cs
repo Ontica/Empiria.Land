@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Transactions.Adapters {
+namespace Empiria.Land.Transactions {
 
   /// <summary>Output DTO for transaction requester data.</summary>
   public class RequestedByDto {
@@ -23,4 +23,4 @@ namespace Empiria.Land.Transactions.Adapters {
 
   }  // class RequestedByDto
 
-}  // namespace Empiria.Land.Transactions.Adapters
+}  // namespace Empiria.Land.Transactions

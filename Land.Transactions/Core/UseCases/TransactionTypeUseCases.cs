@@ -11,8 +11,6 @@ using Empiria.Services;
 
 using Empiria.Contacts;
 
-using Empiria.Land.Transactions.Adapters;
-
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 

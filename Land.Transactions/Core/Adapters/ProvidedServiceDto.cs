@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Management                    Component : Interface adapters                      *
+*  Module   : Transaction Management                     Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data Transfer Object                    *
 *  Type     : ProvidedServiceDto                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Transactions.Adapters {
+namespace Empiria.Land.Transactions {
 
   /// <summary>Output DTO that groups services provided by government offices.</summary>
   public class ProvidedServiceGroupDto {
@@ -72,4 +72,4 @@ namespace Empiria.Land.Transactions.Adapters {
 
   }  // public class FeeConceptDto
 
-}  // namespace Empiria.Land.Transactions.Adapters
+}  // namespace Empiria.Land.Transactions

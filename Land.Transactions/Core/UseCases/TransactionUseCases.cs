@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 using Empiria.Services;
 
-using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Registration.Transactions;
 
 using Empiria.Land.Messaging;
@@ -20,7 +19,7 @@ using Empiria.Land.Messaging;
 namespace Empiria.Land.Transactions.UseCases {
 
   /// <summary>Use cases for transaction searching and retrieving.</summary>
-  public partial class TransactionUseCases : UseCase {
+  public class TransactionUseCases : UseCase {
 
     #region Constructors and parsers
 
