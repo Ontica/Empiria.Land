@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Workflow Management                        Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Assertion methods                       *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Assertion methods                       *
 *  Type     : WorkflowAssertions                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Workflow's assertion check methods.                                                            *

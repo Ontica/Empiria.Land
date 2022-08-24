@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Workflow Management                        Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Coordinator                             *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Coordinator                             *
 *  Type     : WorkflowEngine                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Performs execution of Empiria Land micro workflow commands.                                    *

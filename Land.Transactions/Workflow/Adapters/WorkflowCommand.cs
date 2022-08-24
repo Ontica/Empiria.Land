@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Workflow Management                        Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Command payload                         *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Command payload                         *
 *  Type     : WorkflowCommand                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Contains information about a transaction workflow command than can be executed.                *

@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Workflow Management                        Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Mapper class                            *
 *  Type     : WorkflowTaskMapper                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Mapping methods from WorkflowTask instances to WorkflowTaskDto models.                         *

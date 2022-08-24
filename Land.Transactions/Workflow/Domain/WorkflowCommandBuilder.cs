@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Workflow Management                        Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data structure builder                  *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data structure builder                  *
 *  Type     : WorkflowCommandBuilder                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Creates workflow commands that can be invoked by the workflow engine.                          *

@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Workflow Management                        Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Aggregator                              *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Aggregator                              *
 *  Type     : WorkflowCommandsAggregator                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Aggregates a set of commands for a given transaction and user, that can be                     *

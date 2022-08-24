@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Workflow Management                        Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Aggregator class                        *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Aggregator class                        *
 *  Type     : WorkflowRules                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides specific rules for Empiria Land micro workflow engine.                                *

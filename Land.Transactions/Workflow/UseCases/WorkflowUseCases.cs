@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Workflow Management                        Component : Use cases Layer                         *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Use case interactor class               *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Use case interactor class               *
 *  Type     : WorkflowUseCases                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Use cases for get transaction workflow and invoke commands on it.                              *

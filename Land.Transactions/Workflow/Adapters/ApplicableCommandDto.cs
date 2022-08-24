@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Workflow Management                        Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data Transfer Object                    *
 *  Type     : ApplicableCommandDto                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO that with applicable commands for a given set of transactions.                      *

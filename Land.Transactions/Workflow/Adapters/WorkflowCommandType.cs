@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Workflow Management                        Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Enumeration                             *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Enumeration                             *
 *  Type     : WorkflowCommandType                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Strings enumeration that defines a transaction workflow command type.                          *
