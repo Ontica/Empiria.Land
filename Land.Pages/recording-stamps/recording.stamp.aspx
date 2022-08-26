@@ -54,18 +54,18 @@
         </td>
         <td>
           <div class="document-text">
-<%--            <p>
-              <%=GetInstrumentText()%>
-            </p>--%>
             <p>
               <%=GetPrelationText()%>
             </p>
             <p>
               <%=base.GetRecordingActsText()%>
             </p>
-<%--            <p style="text-align:justify;font-size:9pt">
-              <%=GetDocumentDescriptionText()%>
-            </p>--%>
+            <% if (this.DocumentHasNotes) { %>
+              <b>Observaciones registrales:</b>
+                <p class="certificate-text">
+                    <%=base.GetDocumentNotes()%>
+                </p>
+            <% } %>
             <p>
               <%=GetPaymentText()%>
             </p>

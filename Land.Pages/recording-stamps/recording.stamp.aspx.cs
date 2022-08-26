@@ -145,7 +145,21 @@ namespace Empiria.Land.Pages {
 
 
     protected string GetPaymentText() {
-      return builder.PaymentText();  
+      return builder.PaymentText();
+    }
+
+
+    protected bool DocumentHasNotes {
+      get {
+        return document.Notes.Length != 0;
+      }
+    }
+
+
+    protected string GetDocumentNotes() {
+      var notes = document.Notes.Replace("<br>", "<br/>");
+
+      return notes;
     }
 
 
