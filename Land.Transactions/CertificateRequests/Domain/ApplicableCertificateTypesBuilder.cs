@@ -61,17 +61,35 @@ namespace Empiria.Land.Transactions.CertificateRequests {
     private FixedList<CertificateRequestCommandTypeDto> BuildIssuingCommands(CertificateType certificateType) {
       var commands = new List<CertificateRequestCommandTypeDto>();
 
-      commands.Add(new CertificateRequestCommandTypeDto {
-        UID = CertificateRequestCommandType.OverRegisteredRealEstate.ToString(),
-        Name = CertificateRequestCommandType.OverRegisteredRealEstate.Name(),
-        Rules = CertificateRequestCommandType.OverRegisteredRealEstate.Rules(),
-      });
+      if (EmpiriaMath.IsMemberOf(certificateType.Id, new[] { 2423, 2425, 2427, 2428, 2432 })) {
+        commands.Add(new CertificateRequestCommandTypeDto {
+          UID = CertificateRequestCommandType.OverRegisteredRealEstate.ToString(),
+          Name = CertificateRequestCommandType.OverRegisteredRealEstate.Name(),
+          Rules = CertificateRequestCommandType.OverRegisteredRealEstate.Rules(),
+        });
 
-      commands.Add(new CertificateRequestCommandTypeDto {
-        UID = CertificateRequestCommandType.OverRealEstateAntecedent.ToString(),
-        Name = CertificateRequestCommandType.OverRealEstateAntecedent.Name(),
-        Rules = CertificateRequestCommandType.OverRealEstateAntecedent.Rules()
-      });
+        commands.Add(new CertificateRequestCommandTypeDto {
+          UID = CertificateRequestCommandType.OverRealEstateAntecedent.ToString(),
+          Name = CertificateRequestCommandType.OverRealEstateAntecedent.Name(),
+          Rules = CertificateRequestCommandType.OverRealEstateAntecedent.Rules()
+        });
+      }
+
+      if (EmpiriaMath.IsMemberOf(certificateType.Id, new[] { 2426, 2431, 2432 })) {
+        commands.Add(new CertificateRequestCommandTypeDto {
+          UID = CertificateRequestCommandType.OverPersonName.ToString(),
+          Name = CertificateRequestCommandType.OverPersonName.Name(),
+          Rules = CertificateRequestCommandType.OverPersonName.Rules()
+        });
+      }
+
+      if (certificateType.Id == 2424) {
+        commands.Add(new CertificateRequestCommandTypeDto {
+          UID = CertificateRequestCommandType.OverUnrecordedRealEstate.ToString(),
+          Name = CertificateRequestCommandType.OverUnrecordedRealEstate.Name(),
+          Rules = CertificateRequestCommandType.OverUnrecordedRealEstate.Rules()
+        });
+      }
 
       return commands.ToFixedList();
     }

@@ -69,6 +69,15 @@ namespace Empiria.Land.Transactions.CertificateRequests {
       get; internal set;
     }
 
+    public bool GivePersonName {
+      get; internal set;
+    }
+
+    public bool GiveRealEstateDescription {
+      get; internal set;
+    }
+
+
   }  // class CertificateRequestCommandTypeRulesDto
 
 } // namespace Empiria.Land.Transactions.CertificateRequests

@@ -21,7 +21,11 @@ namespace Empiria.Land.Transactions.CertificateRequests {
 
     OverRegisteredRealEstate,
 
-    OverRealEstateAntecedent
+    OverRealEstateAntecedent,
+
+    OverUnrecordedRealEstate,
+
+    OverPersonName,
 
   }  // enum CreateTransactionCertificateCommandType
 
@@ -36,6 +40,12 @@ namespace Empiria.Land.Transactions.CertificateRequests {
 
         case CertificateRequestCommandType.OverRealEstateAntecedent:
           return "Predio registrado en antecedente, sin folio real";
+
+        case CertificateRequestCommandType.OverUnrecordedRealEstate:
+          return "Predio no registrado";
+
+        case CertificateRequestCommandType.OverPersonName:
+          return "Persona sin predios registrados";
 
         case CertificateRequestCommandType.Undefined:
           return "La regla de registro no ha sido definida";
@@ -62,6 +72,19 @@ namespace Empiria.Land.Transactions.CertificateRequests {
             SubjectType = RecordableSubjectType.RealEstate,
             SelectBookEntry = true
           };
+
+        case CertificateRequestCommandType.OverUnrecordedRealEstate:
+          return new CertificateRequestCommandTypeRulesDto {
+            SubjectType = RecordableSubjectType.None,
+            GiveRealEstateDescription = true
+          };
+
+        case CertificateRequestCommandType.OverPersonName:
+          return new CertificateRequestCommandTypeRulesDto {
+            SubjectType = RecordableSubjectType.None,
+            GivePersonName = true
+          };
+
 
         default:
           throw Assertion.EnsureNoReachThisCode($"Unhandled registration command type '{commandType}'.");
