@@ -52,6 +52,9 @@
     <WarningsAsErrors />
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Land.SearchServices\Empiria.Land.SearchServices.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web" />
   </ItemGroup>
