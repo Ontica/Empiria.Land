@@ -62,9 +62,4 @@
     <ProjectReference Include="..\..\extensions\Services\Empiria.Services.csproj" />
     <ProjectReference Include="..\Land.Core\Empiria.Land.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Adapters\" />
-    <Folder Include="Data\" />
-    <Folder Include="Domain\" />
-  </ItemGroup>
 </Project>
