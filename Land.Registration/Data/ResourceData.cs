@@ -54,14 +54,14 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal FixedList<T> SearchResources<T>(string filter, string orderBy, int pageSize) where T : Resource {
+    static internal FixedList<Resource> SearchResources(string filter, string orderBy, int pageSize) {
       string sql = $"SELECT TOP {pageSize} LRSProperties.* " +
                    $"FROM LRSProperties " +
                    $"WHERE {filter} ORDER BY {orderBy}";
 
       var operation = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<T>(operation);
+      return DataReader.GetFixedList<Resource>(operation);
     }
 
 

@@ -48,8 +48,8 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public FixedList<T> GetList<T>(string filter, string orderBy, int pageSize) where T: Resource {
-      return ResourceData.SearchResources<T>(filter, orderBy, pageSize);
+    static public FixedList<Resource> GetList(string filter, string orderBy, int pageSize) {
+      return ResourceData.SearchResources(filter, orderBy, pageSize);
     }
 
 
