@@ -76,37 +76,6 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
       return RecorderOfficeMapper.Map(recorderOffices);
     }
 
-    public FixedList<RecordableSubjectShortDto> SearchRecordableSubjects(RecordableSubjectsQuery query) {
-      Assertion.Require(query, nameof(query));
-
-      query.EnsureIsValid();
-
-      string filter = query.MapToFilterString();
-      string sort = query.MapToSortString();
-
-      switch (query.Type) {
-        case RecordableSubjectType.Association:
-          var associations = Resource.GetList<Association>(filter, sort, query.PageSize);
-
-          return RecordableSubjectsMapper.Map(associations);
-
-        case RecordableSubjectType.RealEstate:
-          var realEstates = Resource.GetList<RealEstate>(filter, sort, query.PageSize);
-
-          return RecordableSubjectsMapper.Map(realEstates);
-
-        case RecordableSubjectType.NoProperty:
-          var noProperties = Resource.GetList<NoPropertyResource>(filter, sort, query.PageSize);
-
-          return RecordableSubjectsMapper.Map(noProperties);
-
-        default:
-          var list = Resource.GetList<Resource>(filter, sort, query.PageSize);
-
-          return RecordableSubjectsMapper.Map(list);
-      }
-    }
-
     #endregion Use cases
 
   }  // class RecordableSubjectsUseCases
