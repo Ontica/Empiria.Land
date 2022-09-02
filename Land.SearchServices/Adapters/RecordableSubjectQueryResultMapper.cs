@@ -24,11 +24,7 @@ namespace Empiria.Land.SearchServices {
                  .ToFixedList();
     }
 
-    #endregion Mappers
-
-    #region Helpers
-
-    static private RecordableSubjectQueryResultDto MapForInternalUse(Resource resource) {
+    static internal RecordableSubjectQueryResultDto MapForInternalUse(Resource resource) {
       string resourceName = resource.Name.Length != 0 ?
                                         resource.Name : resource.Description;
 
@@ -42,7 +38,7 @@ namespace Empiria.Land.SearchServices {
       };
     }
 
-    #endregion Helpers
+    #endregion Mappers
 
   }  // class RecordableSubjectQueryResultMapper
 

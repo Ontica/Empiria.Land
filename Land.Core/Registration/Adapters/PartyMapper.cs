@@ -12,36 +12,22 @@ using System;
 namespace Empiria.Land.Registration.Adapters {
 
   /// <summary>Contains methods used to map recording act parties.</summary>
-  static internal class PartyMapper {
+  static public class PartyMapper {
 
 
     static public FixedList<RecordingActPartyDto> Map(FixedList<RecordingActParty> list) {
-      return new FixedList<RecordingActPartyDto>(list.Select((x) => MapRecordingActParty(x)));
+      return list.Select((x) => MapRecordingActParty(x))
+                 .ToFixedList();
     }
 
 
     static public FixedList<PartyDto> Map(FixedList<Party> list) {
-      return new FixedList<PartyDto>(list.Select((x) => MapParty(x)));
+      return list.Select((x) => Map(x))
+                 .ToFixedList();
     }
 
 
-    #region Private methods
-
-    static private RecordingActPartyDto MapRecordingActParty(RecordingActParty recordingActParty) {
-      return new RecordingActPartyDto {
-        UID = recordingActParty.UID,
-        Type = recordingActParty.RoleType,
-        Party = MapParty(recordingActParty.Party),
-        Role = recordingActParty.PartyRole.MapToNamedEntity(),
-        PartAmount = recordingActParty.OwnershipPart.Amount,
-        PartUnit = recordingActParty.OwnershipPart.Unit.MapToNamedEntity(),
-        AssociatedWith = MapParty(recordingActParty.PartyOf),
-        Notes = recordingActParty.Notes,
-      };
-    }
-
-
-    static private PartyDto MapParty(Party party) {
+    static public PartyDto Map(Party party) {
       if (party.IsEmptyInstance) {
         return null;
       }
@@ -53,6 +39,21 @@ namespace Empiria.Land.Registration.Adapters {
         RFC = party.RFC,
         CURP = party is HumanParty ? (party as HumanParty).CURP : string.Empty,
         Notes = party.Notes
+      };
+    }
+
+    #region Private methods
+
+    static private RecordingActPartyDto MapRecordingActParty(RecordingActParty recordingActParty) {
+      return new RecordingActPartyDto {
+        UID = recordingActParty.UID,
+        Type = recordingActParty.RoleType,
+        Party = Map(recordingActParty.Party),
+        Role = recordingActParty.PartyRole.MapToNamedEntity(),
+        PartAmount = recordingActParty.OwnershipPart.Amount,
+        PartUnit = recordingActParty.OwnershipPart.Unit.MapToNamedEntity(),
+        AssociatedWith = Map(recordingActParty.PartyOf),
+        Notes = recordingActParty.Notes,
       };
     }
 
