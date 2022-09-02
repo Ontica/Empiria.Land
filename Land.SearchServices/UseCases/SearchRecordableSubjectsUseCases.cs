@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Search services                            Component : Use cases Layer                         *
 *  Assembly : Empiria.Land.SearchServices.dll            Pattern   : Use case interactor class               *
-*  Type     : RecordableSubjectsSearchUseCases           License   : Please read LICENSE.txt file            *
+*  Type     : SearchRecordableSubjectsUseCases           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Use cases for recordable subjects searching: real estate, associations and no-property.        *
 *                                                                                                            *
@@ -16,12 +16,12 @@ using Empiria.Land.Registration;
 namespace Empiria.Land.SearchServices.UseCases {
 
   /// <summary>Use cases for recordable subjects searching: real estate, associations and no-property.</summary>
-  public class RecordableSubjectsSearchUseCases : UseCase {
+  public class SearchRecordableSubjectsUseCases : UseCase {
 
     #region Constructors and parsers
 
-    static public RecordableSubjectsSearchUseCases UseCaseInteractor() {
-      return UseCase.CreateInstance<RecordableSubjectsSearchUseCases>();
+    static public SearchRecordableSubjectsUseCases UseCaseInteractor() {
+      return UseCase.CreateInstance<SearchRecordableSubjectsUseCases>();
     }
 
     #endregion Constructors and parsers
@@ -46,6 +46,6 @@ namespace Empiria.Land.SearchServices.UseCases {
 
     #endregion Services
 
-  }  // class RecordableSubjectsSearchUseCases
+  }  // class SearchRecordableSubjectsUseCases
 
 }  // namespace Empiria.Land.SearchServices.UseCases

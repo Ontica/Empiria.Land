@@ -22,12 +22,27 @@ namespace Empiria.Land.SearchServices.WebApi {
     #region Web Apis
 
     [HttpPost]
+    [Route("v5/land/internal-search-services/recording-acts-parties")]
+    public CollectionModel SearchParties([FromBody] RecordingActsPartiesQuery query) {
+
+      base.RequireBody(query);
+
+      using (var usecases = SearchRecordingActsPartiesUseCases.UseCaseInteractor()) {
+
+        FixedList<RecordingActPartyQueryResultDto> list = usecases.SearchForInternalUse(query);
+
+        return new CollectionModel(this.Request, list);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v5/land/internal-search-services/recordable-subjects")]
     public CollectionModel SearchRecordableSubjects([FromBody] RecordableSubjectsQuery query) {
 
       base.RequireBody(query);
 
-      using (var usecases = RecordableSubjectsSearchUseCases.UseCaseInteractor()) {
+      using (var usecases = SearchRecordableSubjectsUseCases.UseCaseInteractor()) {
         FixedList<RecordableSubjectQueryResultDto> list = usecases.SearchForInternalUse(query);
 
         return new CollectionModel(this.Request, list);

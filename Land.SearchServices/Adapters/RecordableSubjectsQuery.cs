@@ -23,26 +23,22 @@ namespace Empiria.Land.SearchServices {
 
 
     public string Keywords {
-      get;
-      set;
+      get; set;
     } = string.Empty;
 
 
     public string OrderBy {
-      get;
-      set;
-    } = String.Empty;
+      get; set;
+    } = string.Empty;
 
 
     public int PageSize {
-      get;
-      set;
+      get; set;
     } = 50;
 
 
     public int Page {
-      get;
-      set;
+      get; set;
     } = 1;
 
 
