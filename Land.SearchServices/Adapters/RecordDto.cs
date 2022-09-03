@@ -14,27 +14,21 @@ namespace Empiria.Land.SearchServices {
   /// <summary>Describes a land system electronic record.</summary>
   public class RecordDto {
 
+    internal RecordDto() {
+      // no-op
+    }
+
     public string UID {
       get; internal set;
     }
 
 
-    public string ElectronicID {
+    public string RecordID {
       get; internal set;
     }
 
 
     public string RecorderOffice {
-      get; internal set;
-    }
-
-
-    public string InstrumentType {
-      get; internal set;
-    }
-
-
-    public DateTime PresentationTime {
       get; internal set;
     }
 
@@ -49,7 +43,12 @@ namespace Empiria.Land.SearchServices {
     }
 
 
-    public string SignedBy {
+    public string AuthorizedBy {
+      get; internal set;
+    }
+
+
+    public string Instrument {
       get; internal set;
     }
 
@@ -59,10 +58,40 @@ namespace Empiria.Land.SearchServices {
     }
 
 
-    public string TransactionID {
+    public DateTime PresentationTime {
+      get; internal set;
+    }
+
+
+    public RecordTransactionDto Transaction {
       get; internal set;
     }
 
   }  // class RecordDto
+
+
+
+  /// <summary>Inner DTO with properties that describes a transaction for a RecordDto object.</summary>
+  public class RecordTransactionDto {
+
+    internal RecordTransactionDto() {
+      // no-op
+    }
+
+    public string UID {
+      get; internal set;
+    }
+
+
+    public string TransactionID {
+      get; internal set;
+    }
+
+
+    public string InternalControlNo {
+      get; internal set;
+    }
+
+  }  // class RecordTransactionDto
 
 }  // namespace Empiria.Land.SearchServices

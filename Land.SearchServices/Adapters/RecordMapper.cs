@@ -17,19 +17,36 @@ namespace Empiria.Land.SearchServices {
   static internal class RecordMapper {
 
     static internal RecordDto Map(RecordingDocument document) {
-      PhysicalRecording bookEntry = document.TryGetHistoricRecording();
+      PhysicalRecording physicalRec = document.TryGetHistoricRecording();
+
+      string bookEntry = physicalRec != null ? physicalRec.AsText : String.Empty;
+
+      string instrument = $"{document.DocumentType.DisplayName} Número {document.Id}";
 
       return new RecordDto {
         UID = document.GUID,
-        ElectronicID = document.UID,
+        RecordID = document.UID,
         RecorderOffice = document.RecorderOffice.Alias,
-        InstrumentType = document.DocumentType.DisplayName,
-        PresentationTime = document.PresentationTime,
         RecordingTime = document.AuthorizationTime,
+        PresentationTime = document.PresentationTime,
         RecordedBy = document.PostedBy.Alias,
-        SignedBy = document.AuthorizedBy.Alias,
-        BookEntry = bookEntry != null ? bookEntry.AsText : String.Empty,
-        TransactionID = document.TransactionID,
+        AuthorizedBy = document.AuthorizedBy.Alias,
+        Instrument = instrument,
+        BookEntry = bookEntry,
+        Transaction = MapTransaction(document)
+      };
+    }
+
+
+    static private RecordTransactionDto MapTransaction(RecordingDocument document) {
+      var transaction = document.HasTransaction ?
+                              document.GetTransaction() :
+                              Registration.Transactions.LRSTransaction.Empty;
+
+      return new RecordTransactionDto {
+        UID = transaction.GUID,
+        TransactionID = transaction.UID,
+        InternalControlNo = transaction.InternalControlNo
       };
     }
 
