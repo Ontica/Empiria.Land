@@ -49,6 +49,11 @@ namespace Empiria.Land.SearchServices {
     }
 
 
+    public RecordDto Record {
+      get; internal set;
+    }
+
+
   }  // class RecordableSubjectQueryResultDto
 
 }  // namespace Empiria.Land.SearchServices

@@ -28,13 +28,16 @@ namespace Empiria.Land.SearchServices {
       string resourceName = resource.Name.Length != 0 ?
                                         resource.Name : resource.Description;
 
+      RecordingDocument lastRecordingDocument = resource.Tract.LastRecordingAct.Document;
+
       return new RecordableSubjectQueryResultDto {
         UID = resource.GUID,
         Type = resource.GetEmpiriaType().NamedKey,
         Name = resourceName,
         ElectronicID = resource.UID,
         Kind = resource.Kind,
-        Status = resource.Status.ToString()
+        Status = resource.Status.ToString(),
+        Record = RecordMapper.Map(lastRecordingDocument)
       };
     }
 
