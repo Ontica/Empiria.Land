@@ -29,6 +29,8 @@ namespace Empiria.Land.SearchServices {
     #region Helpers
 
     static private RecordingActPartyQueryResultDto MapForInternalUse(RecordingActParty actParty) {
+      Record record = LandRecordsSearcher.GetRecordingActPartyRecord(actParty);
+
       return new RecordingActPartyQueryResultDto {
         UID = actParty.UID,
         Type = actParty.RoleType.ToString(),
@@ -37,7 +39,7 @@ namespace Empiria.Land.SearchServices {
         RecordingActType = actParty.RecordingAct.DisplayName,
         Status = actParty.Status.ToString(),
         RecordableSubject = RecordableSubjectQueryResultMapper.MapForInternalUse(actParty.RecordingAct.Resource),
-        Record = RecordMapper.Map(actParty.RecordingAct.Document)
+        Record = RecordMapper.Map(record)
       };
     }
 

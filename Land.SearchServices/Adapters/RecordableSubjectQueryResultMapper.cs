@@ -25,19 +25,16 @@ namespace Empiria.Land.SearchServices {
     }
 
     static internal RecordableSubjectQueryResultDto MapForInternalUse(Resource resource) {
-      string resourceName = resource.Name.Length != 0 ?
-                                        resource.Name : resource.Description;
-
-      RecordingDocument lastRecordingDocument = resource.Tract.LastRecordingAct.Document;
+      Record record = LandRecordsSearcher.GetLastDomainActRecord(resource);
 
       return new RecordableSubjectQueryResultDto {
         UID = resource.GUID,
         Type = resource.GetEmpiriaType().NamedKey,
-        Name = resourceName,
+        Name = resource.AsText,
         ElectronicID = resource.UID,
         Kind = resource.Kind,
         Status = resource.Status.ToString(),
-        Record = RecordMapper.Map(lastRecordingDocument)
+        Record = RecordMapper.Map(record)
       };
     }
 

@@ -9,38 +9,30 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Registration;
-
 namespace Empiria.Land.SearchServices {
 
   /// <summary>Methods used to map land electronic records.</summary>
   static internal class RecordMapper {
 
-    static internal RecordDto Map(RecordingDocument document) {
-      PhysicalRecording physicalRec = document.TryGetHistoricRecording();
-
-      string bookEntry = physicalRec != null ? physicalRec.AsText : String.Empty;
-
-      string instrument = $"{document.DocumentType.DisplayName} Número {document.Id}";
-
+    static internal RecordDto Map(Record record) {
       return new RecordDto {
-        UID = document.GUID,
-        RecordID = document.UID,
-        RecorderOffice = document.RecorderOffice.Alias,
-        RecordingTime = document.AuthorizationTime,
-        PresentationTime = document.PresentationTime,
-        RecordedBy = document.PostedBy.Alias,
-        AuthorizedBy = document.AuthorizedBy.Alias,
-        Instrument = instrument,
-        BookEntry = bookEntry,
-        Transaction = MapTransaction(document)
+        UID = record.UID,
+        RecordID = record.RecordID,
+        RecorderOffice = record.RecorderOffice.Alias,
+        RecordingTime = record.AuthorizationTime,
+        PresentationTime = record.PresentationTime,
+        RecordedBy = record.RecordedBy.Alias,
+        AuthorizedBy = record.AuthorizedBy.Alias,
+        Instrument = record.Instrument.AsText,
+        BookEntry = record.HasBookEntry ? record.BookEntry.AsText : string.Empty,
+        Transaction = MapTransaction(record)
       };
     }
 
 
-    static private RecordTransactionDto MapTransaction(RecordingDocument document) {
-      var transaction = document.HasTransaction ?
-                              document.GetTransaction() :
+    static private RecordTransactionDto MapTransaction(Record record) {
+      var transaction = record.HasTransaction ?
+                              record.Transaction :
                               Registration.Transactions.LRSTransaction.Empty;
 
       return new RecordTransactionDto {
