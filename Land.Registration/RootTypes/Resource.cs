@@ -138,6 +138,16 @@ namespace Empiria.Land.Registration {
     }
 
 
+    public virtual string AsText {
+      get {
+        if (this.Name.Length == 0 && this.Description.Length == 0) {
+          return "Información disponible únicamente en documentos físicos.";
+        }
+        return this.Name.Length != 0 ? this.Name : this.Description;
+      }
+    }
+
+
     [DataField("PropertyKind")]
     public string Kind {
       get;
@@ -246,6 +256,7 @@ namespace Empiria.Land.Registration {
                 this.HasCompleteInformation());
       }
     }
+
 
     #endregion Public properties
 

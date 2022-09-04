@@ -189,16 +189,6 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public string AsText() {
-      if (this.Kind.Length == 0) {
-        return "Información disponible únicamente en documentos físicos.";
-      }
-
-      const string template = "predio denominado {0}, de tipo {1}";
-      return String.Format(template, this.Description, this.Kind);
-    }
-
-
     public bool HasHardLimitationActs {
       get {
         var tract = base.Tract.GetRecordingActs();

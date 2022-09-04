@@ -47,6 +47,7 @@ namespace Empiria.Land.Certification {
           data.CertificateTypeUID = "ObjectType.LandCertificate.NoPropiedad";
           break;
       }
+
       data.TransactionUID = transaction.UID;
 
       data.RecorderOfficeId = 101;
@@ -56,9 +57,8 @@ namespace Empiria.Land.Certification {
       data.StartingYear = 1976;
       data.PropertyUID = property.UID;
       data.PropertyMetesAndBounds = property.MetesAndBounds;
-      data.PropertyLocation = property.Description +
-                              " en el municipio de " + property.Municipality.FullName;
-      data.PropertyCommonName = property.AsText();
+      data.PropertyLocation = $"{property.Description} en el municipio de {property.Municipality.FullName}";
+      data.PropertyCommonName = GetPropertyCommonName(property);
 
       data.Operation = property.LastDomainAct.DisplayName.ToUpperInvariant();
       data.OperationDate = property.LastDomainAct.Document.AuthorizationTime;
@@ -72,6 +72,16 @@ namespace Empiria.Land.Certification {
 
       return newCertificate;
     }
+
+
+    private static string GetPropertyCommonName(RealEstate realEstate) {
+      if (realEstate.Kind.Length == 0) {
+        return "Información disponible únicamente en documentos físicos.";
+      }
+
+      return $"predio denominado {realEstate.Description}, de tipo {realEstate.Kind}";
+    }
+
 
     private static string AutoFillMarginalNotes(FixedList<RecordingAct> recordingActs) {
       const string template = "{0} registrado el día {1} bajo el número de documento electrónico {2}";

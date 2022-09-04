@@ -105,6 +105,7 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+
     public string Notes {
       get {
         return ExtendedData.Notes;
@@ -114,9 +115,14 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     public string AsText {
       get {
-        return String.Format("Inscripción {0} del {1}", this.Number, this.RecordingBook.AsText);
+        if (!this.IsEmptyInstance) {
+          return String.Format("Inscripción {0} del {1}", this.Number, this.RecordingBook.AsText);
+        } else {
+          return "Empty";
+        }
       }
     }
 

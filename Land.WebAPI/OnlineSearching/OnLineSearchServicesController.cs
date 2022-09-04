@@ -258,7 +258,7 @@ namespace Empiria.Land.WebApi {
         propertyBag.Add(new PropertyBagItem("Clave catastral",
                                              certificate.Property.CadastralKey.Length != 0 ?
                                              certificate.Property.CadastralKey : "Clave catastral no proporcionada.", "bold-text"));
-        propertyBag.Add(new PropertyBagItem("Descripción", certificate.Property.AsText()));
+        propertyBag.Add(new PropertyBagItem("Descripción", certificate.Property.AsText));
       }
 
       var unsigned = certificate.UseESign && certificate.Unsigned();
@@ -366,7 +366,7 @@ namespace Empiria.Land.WebApi {
         propertyBag.Add(new PropertyBagItem("Clave catastral",
                                              ((RealEstate) uniqueResource).CadastralKey.Length != 0 ?
                                              ((RealEstate) uniqueResource).CadastralKey : "Clave catastral no proporcionada.", "bold-text"));
-        propertyBag.Add(new PropertyBagItem("Descripción", ((RealEstate) uniqueResource).AsText()));
+        propertyBag.Add(new PropertyBagItem("Descripción", uniqueResource.AsText));
       }
 
       var unsigned = document.Security.UseESign && document.Security.Unsigned();
