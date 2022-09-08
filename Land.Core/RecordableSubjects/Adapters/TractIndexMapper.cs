@@ -23,7 +23,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
                                       FixedList<RecordingAct> amendableActs) {
       return new TractIndexDto {
         RecordableSubject = RecordableSubjectsMapper.Map(recordableSubject),
-        Entries = MapTractIndex(amendableActs),
+        Entries = MapTractIndex(recordableSubject, amendableActs),
         Structure = new FixedList<TractIndexEntryDto>(),
         Actions = MapActions(recordableSubject, amendableActs)
       };
@@ -50,12 +50,14 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       };
     }
 
-    static private FixedList<TractIndexEntryDto> MapTractIndex(FixedList<RecordingAct> list) {
-      return new FixedList<TractIndexEntryDto>(list.Select((x) => MapTractIndexEntry(x)));
+    static private FixedList<TractIndexEntryDto> MapTractIndex(Resource recordableSubject,
+                                                               FixedList<RecordingAct> list) {
+      return new FixedList<TractIndexEntryDto>(list.Select((x) => MapTractIndexEntry(recordableSubject, x)));
     }
 
 
-    static private TractIndexEntryDto MapTractIndexEntry(RecordingAct recordingAct) {
+    static private TractIndexEntryDto MapTractIndexEntry(Resource recordableSubject,
+                                                         RecordingAct recordingAct) {
       return new TractIndexEntryDto {
         UID = recordingAct.UID,
         EntryType = "RecordingAct",
@@ -66,7 +68,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
         Transaction = MapTransaction(recordingAct.Document.GetTransaction()),
         OfficialDocument = MapToOfficialDocument(recordingAct),
-        SubjectChanges = MapSubjectChanges(recordingAct),
+        SubjectChanges = MapSubjectChanges(recordableSubject, recordingAct),
         Actions = MapActions(recordingAct)
       };
     }
@@ -76,13 +78,16 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     static private OfficialDocumentDto MapToOfficialDocument(RecordingAct recordingAct) {
       RecordingDocument document = recordingAct.Document;
 
+      PhysicalRecording bookEntry = recordingAct.HasPhysicalRecording ?
+                                          recordingAct.PhysicalRecording : PhysicalRecording.Empty;
+
       return new OfficialDocumentDto {
         UID = document.GUID,
         Type = document.DocumentType.DisplayName,
         DocumentID = document.UID,
-        Description = recordingAct.HasPhysicalRecording ?
-                          recordingAct.PhysicalRecording.AsText : document.UID,
+        Description = bookEntry.IsEmptyInstance ? document.UID  : recordingAct.PhysicalRecording.AsText,
         Office = document.RecorderOffice.MapToNamedEntity(),
+        BookEntry = bookEntry.IsEmptyInstance ? null : MapBookEntry(bookEntry),
         IssueTime = document.AuthorizationTime,
         ElaboratedBy = document.GetRecordingOfficials()[0].Alias,
         AuthorizedBy = document.AuthorizedBy.Alias,
@@ -91,17 +96,23 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       };
     }
 
+    static private BookEntryIdentifiersDto MapBookEntry(PhysicalRecording bookEntry) {
+      return new BookEntryIdentifiersDto {
+         UID = bookEntry.UID,
+         RecordingBookUID = bookEntry.RecordingBook.UID,
+         InstrumentRecordingUID = bookEntry.MainDocument.GUID,
+      };
+    }
 
-
-    static private RecordableSubjectChangesDto MapSubjectChanges(RecordingAct recordingAct) {
+    static private RecordableSubjectChangesDto MapSubjectChanges(Resource recordableSubject,
+                                                                 RecordingAct recordingAct) {
       return new RecordableSubjectChangesDto {
-        Summary = "Totalidad / Sobre el predio ... / Creado a partir de ... / Fusionado en ... / Subdividido en ...",
+        Summary = "Not implemented",
         Snapshot = RecordableSubjectsMapper.Map(recordingAct.Resource,
                                                 recordingAct.GetResourceSnapshotData()),
         StructureChanges = new FixedList<StructureChangeDto>()
       };
     }
-
 
     static private TransactionInfoDto MapTransaction(LRSTransaction transaction) {
       return new TransactionInfoDto {

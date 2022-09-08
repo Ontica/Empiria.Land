@@ -8,6 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
+using Newtonsoft.Json;
+
 using Empiria.DataTypes;
 
 namespace Empiria.Land.RecordableSubjects.Adapters {
@@ -227,6 +230,13 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
+    [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+    public BookEntryIdentifiersDto BookEntry {
+      get;
+      internal set;
+    }
+
+
     public DateTime IssueTime {
       get; internal set;
     }
@@ -252,6 +262,30 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
   }
+
+
+
+  public class BookEntryIdentifiersDto {
+
+    internal BookEntryIdentifiersDto() {
+      // no-op
+    }
+
+    public string UID {
+      get; internal set;
+    }
+
+
+    public string RecordingBookUID {
+      get; internal set;
+    }
+
+
+    public string InstrumentRecordingUID {
+      get; internal set;
+    }
+
+  }  // BookEntryIdentifiersDto
 
 
   public class RecordableSubjectChangesDto {
