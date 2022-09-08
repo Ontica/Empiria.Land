@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Land.Registration.Adapters;
+using Empiria.Land.RecordableSubjects.Adapters;
 
 namespace Empiria.Land.SearchServices {
 
@@ -51,7 +52,7 @@ namespace Empiria.Land.SearchServices {
     }
 
 
-    public RecordableSubjectQueryResultDto RecordableSubject {
+    public RecordableSubjectDto RecordableSubject {
       get; internal set;
     }
 
@@ -61,6 +62,5 @@ namespace Empiria.Land.SearchServices {
     }
 
   }  // class RecordingActPartyQueryResultDto
-
 
 }  // namespace Empiria.Land.SearchServices

@@ -11,6 +11,8 @@ using System;
 
 using Empiria.Land.Registration;
 
+using Empiria.Land.RecordableSubjects.Adapters;
+
 namespace Empiria.Land.SearchServices {
 
   /// <summary>Methods to map recordable subjects like real estate, associations
@@ -34,6 +36,7 @@ namespace Empiria.Land.SearchServices {
         ElectronicID = resource.UID,
         Kind = resource.Kind,
         Status = resource.Status.ToString(),
+        RecordableSubject = RecordableSubjectsMapper.Map(resource),
         Record = RecordMapper.Map(record)
       };
     }

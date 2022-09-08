@@ -12,6 +12,8 @@ using System;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Adapters;
 
+using Empiria.Land.RecordableSubjects.Adapters;
+
 namespace Empiria.Land.SearchServices {
 
   /// <summary>Methods used to map recording act parties to their related query results.</summary>
@@ -38,7 +40,7 @@ namespace Empiria.Land.SearchServices {
         Role = actParty.PartyRole.Name,
         RecordingActType = actParty.RecordingAct.DisplayName,
         Status = actParty.Status.ToString(),
-        RecordableSubject = RecordableSubjectQueryResultMapper.MapForInternalUse(actParty.RecordingAct.Resource),
+        RecordableSubject = RecordableSubjectsMapper.Map(actParty.RecordingAct.Resource),
         Record = RecordMapper.Map(record)
       };
     }

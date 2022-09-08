@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Land.RecordableSubjects.Adapters;
+
 namespace Empiria.Land.SearchServices {
 
   /// <summary>Search result DTO for all recordable subjects: real estate, associations and no-property.</summary>
@@ -49,11 +51,15 @@ namespace Empiria.Land.SearchServices {
     }
 
 
-    public RecordDto Record {
+    public RecordableSubjectDto RecordableSubject {
       get; internal set;
     }
 
 
+    public RecordDto Record {
+      get; internal set;
+    }
+
   }  // class RecordableSubjectQueryResultDto
 
-}  // namespace Empiria.Land.SearchServices
+ }  // namespace Empiria.Land.SearchServices
