@@ -92,9 +92,7 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
       var recordableSubject = Resource.ParseGuid(recordableSubjectUID);
 
-      FixedList<RecordingAct> acts = recordableSubject.Tract.GetRecordingActs();
-
-      acts.Reverse();
+      FixedList<RecordingAct> acts = recordableSubject.Tract.GetFullRecordingActs();
 
       return TractIndexMapper.Map(recordableSubject, acts);
     }

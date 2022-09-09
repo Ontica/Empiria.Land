@@ -750,7 +750,6 @@ namespace Empiria.Land.WebApi {
 
       items.Add(new PropertyBagItem("Últimos actos jurídicos y certificados expedidos sobre el predio", String.Empty, "section"));
 
-      tract.Reverse();
       foreach (var tractItem in tract) {
         if (tractItem is RecordingAct) {
           RecordingAct recordingAct = (RecordingAct) tractItem;

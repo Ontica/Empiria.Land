@@ -53,9 +53,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
 
-      var tract = recordingAct.Resource.Tract.GetRecordingActs();
-
-      tract.Reverse();
+      FixedList<RecordingAct> tract = recordingAct.Resource.Tract.GetRecordingActs();
 
       return TractIndexMapper.Map(recordingAct.Resource, tract);
     }
