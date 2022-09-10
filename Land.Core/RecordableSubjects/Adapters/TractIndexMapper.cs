@@ -106,12 +106,50 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
     static private RecordableSubjectChangesDto MapSubjectChanges(Resource recordableSubject,
                                                                  RecordingAct recordingAct) {
+      if (!(recordableSubject is RealEstate)) {
+        return new RecordableSubjectChangesDto();
+      }
+
+      if (!Resource.IsCreationalRole(recordingAct.ResourceRole)) {
+        return new RecordableSubjectChangesDto();
+      }
+
+      var realEstate = (RealEstate) recordingAct.Resource;
+
+      string summary = String.Empty;
+
+      if (recordingAct.ResourceRole == ResourceRole.Created) {
+        summary = "Predio inscrito por primera vez, ni es fusión ni se subdividió de otro.";
+
+      } else if (realEstate.Equals(recordableSubject)) {
+        summary = $"Creado a partir del predio " +
+                  $"{recordingAct.RelatedResource.UID} como {PartitionText(realEstate)}.";
+      } else {
+        summary = $"Subdividido en {PartitionText(realEstate)} con folio real " +
+                  $"{realEstate.UID}. Superficie: {realEstate.LotSize}.";
+      }
+
       return new RecordableSubjectChangesDto {
-        Summary = "Not implemented",
+        Summary = summary,
         Snapshot = RecordableSubjectsMapper.Map(recordingAct.Resource,
                                                 recordingAct.GetResourceSnapshotData()),
         StructureChanges = new FixedList<StructureChangeDto>()
       };
+    }
+
+    static private string PartitionText(RealEstate newPartition) {
+      if (newPartition.Kind.Length == 0 && newPartition.PartitionNo.Length == 0) {
+        return $"FRACCIÓN O PARTE SIN IDENTIFICAR";
+
+      } else if (newPartition.Kind.Length != 0 && newPartition.PartitionNo.Length == 0) {
+        return $"{newPartition.Kind} SIN IDENTIFICAR";
+
+      } else if (newPartition.Kind.Length == 0 && newPartition.PartitionNo.Length != 0) {
+        return $"FRACCIÓN O PARTE {newPartition.PartitionNo}";
+
+      } else {
+        return $"{newPartition.Kind} {newPartition.PartitionNo}";
+      }
     }
 
     static private TransactionInfoDto MapTransaction(LRSTransaction transaction) {
