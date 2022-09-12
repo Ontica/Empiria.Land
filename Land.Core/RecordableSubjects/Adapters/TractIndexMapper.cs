@@ -107,11 +107,11 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     static private RecordableSubjectChangesDto MapSubjectChanges(Resource recordableSubject,
                                                                  RecordingAct recordingAct) {
       if (!(recordableSubject is RealEstate)) {
-        return new RecordableSubjectChangesDto();
+        return CreateSubjectChangesDto(recordingAct, string.Empty);
       }
 
       if (!Resource.IsCreationalRole(recordingAct.ResourceRole)) {
-        return new RecordableSubjectChangesDto();
+        return CreateSubjectChangesDto(recordingAct, string.Empty);
       }
 
       var realEstate = (RealEstate) recordingAct.Resource;
@@ -119,16 +119,24 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       string summary = String.Empty;
 
       if (recordingAct.ResourceRole == ResourceRole.Created) {
-        summary = "Predio inscrito por primera vez, ni es fusión ni se subdividió de otro.";
+        summary = "Predio inscrito por primera vez (no es fusión ni se subdividió de otro).";
 
       } else if (realEstate.Equals(recordableSubject)) {
         summary = $"Creado a partir del predio " +
                   $"{recordingAct.RelatedResource.UID} como {PartitionText(realEstate)}.";
+
       } else {
         summary = $"Subdividido en {PartitionText(realEstate)} con folio real " +
                   $"{realEstate.UID}. Superficie: {realEstate.LotSize}.";
+
       }
 
+      return CreateSubjectChangesDto(recordingAct, summary);
+    }
+
+
+    static private RecordableSubjectChangesDto CreateSubjectChangesDto(RecordingAct recordingAct,
+                                                                       string summary) {
       return new RecordableSubjectChangesDto {
         Summary = summary,
         Snapshot = RecordableSubjectsMapper.Map(recordingAct.Resource,
@@ -136,6 +144,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
         StructureChanges = new FixedList<StructureChangeDto>()
       };
     }
+
 
     static private string PartitionText(RealEstate newPartition) {
       if (newPartition.Kind.Length == 0 && newPartition.PartitionNo.Length == 0) {
@@ -151,6 +160,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
         return $"{newPartition.Kind} {newPartition.PartitionNo}";
       }
     }
+
 
     static private TransactionInfoDto MapTransaction(LRSTransaction transaction) {
       return new TransactionInfoDto {
