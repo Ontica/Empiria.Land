@@ -70,6 +70,15 @@ namespace Empiria.Land.Transactions.CertificateRequests {
     } = string.Empty;
 
 
+    public DateTime PresentationTime {
+      get; set;
+    } = ExecutionServer.DateMinValue;
+
+
+    public DateTime AuthorizationDate {
+      get; set;
+    } = ExecutionServer.DateMinValue;
+
   }  // class CertificateRequestCommandPayload
 
 

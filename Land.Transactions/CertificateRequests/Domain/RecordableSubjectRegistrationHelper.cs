@@ -68,7 +68,9 @@ namespace Empiria.Land.Transactions.CertificateRequests {
       PhysicalRecording entry = book.TryGetRecording(bookEntryNo);
 
       if (entry == null) {
-        entry = RegistrationEngine.CreatePrecedentBookEntry(book, bookEntryNo);
+        entry = RegistrationEngine.CreatePrecedentBookEntry(book, bookEntryNo,
+                                                            command.Payload.PresentationTime,
+                                                            command.Payload.AuthorizationDate);
       }
 
       command.Payload.BookEntryUID = entry.UID;

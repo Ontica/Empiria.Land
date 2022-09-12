@@ -29,7 +29,10 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public PhysicalRecording CreatePrecedentBookEntry(RecordingBook book, string bookEntryNo) {
+    static public PhysicalRecording CreatePrecedentBookEntry(RecordingBook book,
+                                                             string bookEntryNo,
+                                                             DateTime presentationTime,
+                                                             DateTime authorizationDate) {
       Assertion.Require(book.IsAvailableForManualEditing,
           $"El {book.AsText} está cerrado, por lo que no es posible agregarle nuevas inscripciones.");
 
@@ -52,7 +55,11 @@ namespace Empiria.Land.Registration {
 
       RecordingDocument document = instrument.TryGetRecordingDocument();
 
-      var bookEntry = book.AddRecording(document, bookEntryNo);
+      document.SetDates(presentationTime, authorizationDate);
+
+      document.Save();
+
+      PhysicalRecording bookEntry = book.AddRecording(document, bookEntryNo);
 
       bookEntry.Save();
 
@@ -109,10 +116,14 @@ namespace Empiria.Land.Registration {
       if (MustCreatePrecedentBookEntry(command)) {
         var book = RecordingBook.Parse(command.Payload.RecordingBookUID);
         var bookEntryNo = EmpiriaString.TrimAll(command.Payload.BookEntryNo);
-        var newBookEntry = CreatePrecedentBookEntry(book, bookEntryNo);
+        var newBookEntry = CreatePrecedentBookEntry(book, bookEntryNo,
+                                                    command.Payload.PresentationTime,
+                                                    command.Payload.AuthorizationDate);
         fields.PrecedentBookEntryUID = newBookEntry.UID;
+
       } else {
         fields.PrecedentBookEntryUID = command.Payload.BookEntryUID;
+
       }
 
       fields.TargetRecordingActUID = command.Payload.AmendedRecordingActUID;

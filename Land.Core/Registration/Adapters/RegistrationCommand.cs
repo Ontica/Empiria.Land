@@ -74,6 +74,16 @@ namespace Empiria.Land.Registration.Adapters {
     } = string.Empty;
 
 
+    public DateTime PresentationTime {
+      get; set;
+    } = ExecutionServer.DateMinValue;
+
+
+    public DateTime AuthorizationDate {
+      get; set;
+    } = ExecutionServer.DateMinValue;
+
+
     public string AmendedRecordingActUID {
       get; set;
     } = string.Empty;
