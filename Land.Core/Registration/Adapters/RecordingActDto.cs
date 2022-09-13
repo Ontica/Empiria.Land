@@ -149,6 +149,10 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     }
 
+    public RecordableSubjectDto RelatedSubject {
+      get; internal set;
+    }
+
   }  // class RecordingActEntryDto
 
 }  // namespace Empiria.Land.Registration.Adapters

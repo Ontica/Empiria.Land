@@ -135,6 +135,12 @@ namespace Empiria.Land.Registration.Adapters {
       dto.RecordableSubject = RecordableSubjectsMapper.Map(recordingAct.Resource);
       dto.RecordableSubject.RecordingContext = MapRecordingContext(recordingAct);
 
+      if (recordingAct.Resource is RealEstate &&
+          Resource.IsCreationalRole(recordingAct.ResourceRole)) {
+        dto.RelatedSubject = RecordableSubjectsMapper.Map(recordingAct.RelatedResource);
+        dto.RelatedSubject.RecordingContext = MapRecordingContext(recordingAct);
+      }
+
       dto.Antecedent = recordingAct.GetRecordingAntecedentText();
 
       return dto;
