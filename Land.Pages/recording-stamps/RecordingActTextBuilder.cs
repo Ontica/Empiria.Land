@@ -101,9 +101,13 @@ namespace Empiria.Land.Pages {
         var legend = amendedAct.RecordingActType.FemaleGenre ? "inscrita" : "inscrito";
         if (amendedAct.PhysicalRecording.IsEmptyInstance) {
           x = x.Replace("{AMENDMENT.ACT.RECORDING}",
-                        legend + " bajo el documento " + "<b>" + amendedAct.Document.UID + "</b>");
+                        "sobre " + amendedAct.RecordingActType.DisplayName + " " +
+                        legend + " en el documento " + "<b>" + amendedAct.Document.UID + "</b> el día " +
+                        CommonMethods.GetDateAsText(amendedAct.Document.AuthorizationTime));
+
         } else {
           x = x.Replace("{AMENDMENT.ACT.RECORDING}",
+                        "sobre " + amendedAct.RecordingActType.DisplayName + " " +
                         legend + " en la " + amendedAct.PhysicalRecording.AsText);
         }
       }
