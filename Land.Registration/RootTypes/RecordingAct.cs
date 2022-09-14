@@ -438,9 +438,18 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    #endregion Public properties
+    public bool AppliedOverNewPartition {
+      get {
+          return this.Resource is RealEstate realEstate &&
+                 Resource.IsCreationalRole(this.ResourceRole) &&
+                 !realEstate.IsPartitionOf.IsEmptyInstance &&
+                 realEstate.IsInTheRankOfTheFirstDomainAct(this);
+      }
+    }
 
-    #region Public methods
+   #endregion Public properties
+
+   #region Public methods
 
     internal void Amend(CancelationAct cancelationAct) {
       cancelationAct.AmendmentOf = this;
@@ -448,6 +457,7 @@ namespace Empiria.Land.Registration {
       cancelationAct.Save();
       this.Save();
     }
+
 
     internal void Amend(ModificationAct modificationAct) {
       modificationAct.AmendmentOf = this;
