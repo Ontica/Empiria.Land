@@ -11,7 +11,6 @@ using System;
 
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Adapters;
-using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.RecordableSubjects.Adapters {
 
@@ -19,159 +18,78 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
   /// subjects of other kinds.</summary>
   static internal class TractIndexMapper {
 
-    static internal TractIndexDto Map(Resource recordableSubject,
-                                      FixedList<RecordingAct> amendableActs) {
+    static internal TractIndexDto Map(Resource subject,
+                                      FixedList<RecordingAct> baseEntries) {
+      var builder = new SubjectHistoryBuilder(subject, baseEntries);
+
+      SubjectHistory history = builder.Build();
+
       return new TractIndexDto {
-        RecordableSubject = RecordableSubjectsMapper.Map(recordableSubject),
-        Entries = MapTractIndex(recordableSubject, amendableActs),
-        Structure = new FixedList<TractIndexEntryDto>(),
-        Actions = MapActions(recordableSubject, amendableActs)
+        RecordableSubject = RecordableSubjectsMapper.Map(subject),
+        Entries = MapHistory(history),
+        Actions = history.EditionRules
       };
     }
 
-    static private TractIndexActions MapActions(Resource recordableSubject,
-                                                FixedList<RecordingAct> amendableActs) {
-      return new TractIndexActions {
-        CanBeClosed = true,
-        CanBeOpened = false,
-        CanBeUpdated = true
-      };
-    }
 
-    static private TrantIndexEntryActions MapActions(RecordingAct recordingAct) {
-      bool isHistoric = recordingAct.Document.IsHistoricDocument;
-      bool isClosed = recordingAct.Document.IsClosed;
-
-      return new TrantIndexEntryActions {
-        CanBeDeleted = isHistoric && !isClosed,
-        CanBeClosed = isHistoric && !isClosed,
-        CanBeOpened = isHistoric && isClosed,
-        CanBeUpdated = isHistoric && !isClosed &&  recordingAct.IsEditable,
-      };
-    }
-
-    static private FixedList<TractIndexEntryDto> MapTractIndex(Resource recordableSubject,
-                                                               FixedList<RecordingAct> list) {
-      return new FixedList<TractIndexEntryDto>(list.Select((x) => MapTractIndexEntry(recordableSubject, x)));
+    static private FixedList<TractIndexEntryDto> MapHistory(SubjectHistory history) {
+      return history.Entries.Select(entry => MapHistoryEntry(history.Subject, entry))
+                            .ToFixedList();
     }
 
 
-    static private TractIndexEntryDto MapTractIndexEntry(Resource recordableSubject,
-                                                         RecordingAct recordingAct) {
+    static private TractIndexEntryDto MapHistoryEntry(Resource subject, SubjectHistoryEntry historyEntry) {
+      RecordingAct recordingAct = historyEntry.RecordingAct;
+
       return new TractIndexEntryDto {
         UID = recordingAct.UID,
-        EntryType = "RecordingAct",
-        Description = recordingAct.DisplayName,
-        RequestedTime = recordingAct.Document.PresentationTime,
-        IssueTime = recordingAct.Document.AuthorizationTime,
-        Status = recordingAct.StatusName,
-
-        Transaction = MapTransaction(recordingAct.Document.GetTransaction()),
-        OfficialDocument = MapToOfficialDocument(recordingAct),
-        SubjectChanges = MapSubjectChanges(recordableSubject, recordingAct),
-        Actions = MapActions(recordingAct)
+        EntryType = historyEntry.EntryType,
+        Name = historyEntry.Name,
+        Description = historyEntry.Description,
+        Status = historyEntry.StatusName,
+        RecordingData = MapRecordingData(recordingAct),
+        SubjectSnapshot = RecordableSubjectsMapper.Map(subject,
+                                                       historyEntry.SubjectSnapshot),
+        LotChange = new object(),
+        Actions = historyEntry.EditionRules
       };
     }
 
 
-
-    static private OfficialDocumentDto MapToOfficialDocument(RecordingAct recordingAct) {
+    static private RecordingDataDto MapRecordingData(RecordingAct recordingAct) {
       RecordingDocument document = recordingAct.Document;
 
-      PhysicalRecording bookEntry = recordingAct.HasPhysicalRecording ?
-                                          recordingAct.PhysicalRecording : PhysicalRecording.Empty;
+      PhysicalRecording volumeEntry = recordingAct.HasPhysicalRecording ?
+                                            recordingAct.PhysicalRecording : PhysicalRecording.Empty;
 
-      return new OfficialDocumentDto {
+      var transaction = recordingAct.Document.GetTransaction();
+
+      return new RecordingDataDto {
         UID = document.GUID,
         Type = document.DocumentType.DisplayName,
-        DocumentID = document.UID,
-        Description = bookEntry.IsEmptyInstance ? document.UID  : recordingAct.PhysicalRecording.AsText,
+        RecordingID = document.UID,
+        Description = volumeEntry.IsEmptyInstance ? document.UID  : recordingAct.PhysicalRecording.AsText,
         Office = document.RecorderOffice.MapToNamedEntity(),
-        BookEntry = bookEntry.IsEmptyInstance ? null : MapBookEntry(bookEntry),
-        IssueTime = document.AuthorizationTime,
-        ElaboratedBy = document.GetRecordingOfficials()[0].Alias,
+        VolumeEntryData = MapVolumeEntry(volumeEntry),
+        RecordingTime = document.AuthorizationTime,
+        RecordedBy = document.GetRecordingOfficials()[0].Alias,
         AuthorizedBy = document.AuthorizedBy.Alias,
+        PresentationTime = document.PresentationTime,
+        TransactionUID = transaction.UID,
         Status = document.Status.ToString(),
         Media = InstrumentRecordingMapper.MapStampMedia(document, document.GetTransaction())
       };
     }
 
-    static private BookEntryIdentifiersDto MapBookEntry(PhysicalRecording bookEntry) {
-      return new BookEntryIdentifiersDto {
-         UID = bookEntry.UID,
-         RecordingBookUID = bookEntry.RecordingBook.UID,
-         InstrumentRecordingUID = bookEntry.MainDocument.GUID,
-      };
-    }
 
-    static private RecordableSubjectChangesDto MapSubjectChanges(Resource recordableSubject,
-                                                                 RecordingAct recordingAct) {
-      if (!(recordableSubject is RealEstate)) {
-        return CreateSubjectChangesDto(recordingAct, string.Empty);
+    static private VolumeEntryDataDto MapVolumeEntry(PhysicalRecording volumeEntry) {
+      if (volumeEntry.IsEmptyInstance) {
+        return null;
       }
-
-      if (!Resource.IsCreationalRole(recordingAct.ResourceRole)) {
-        return CreateSubjectChangesDto(recordingAct, string.Empty);
-      }
-
-      var realEstate = (RealEstate) recordingAct.Resource;
-
-      string summary = String.Empty;
-
-      if (recordingAct.ResourceRole == ResourceRole.Created) {
-        summary = "Predio inscrito por primera vez (no es fusión ni se subdividió de otro).";
-
-      } else if (realEstate.Equals(recordableSubject)) {
-        summary = $"Creado a partir del predio " +
-                  $"{recordingAct.RelatedResource.UID} como {PartitionText(realEstate)}.";
-
-      } else {
-        summary = $"Subdividido en {PartitionText(realEstate)} con folio real " +
-                  $"{realEstate.UID}. Superficie: {realEstate.LotSize}.";
-
-      }
-
-      return CreateSubjectChangesDto(recordingAct, summary);
-    }
-
-
-    static private RecordableSubjectChangesDto CreateSubjectChangesDto(RecordingAct recordingAct,
-                                                                       string summary) {
-      return new RecordableSubjectChangesDto {
-        Summary = summary,
-        Snapshot = RecordableSubjectsMapper.Map(recordingAct.Resource,
-                                                recordingAct.GetResourceSnapshotData()),
-        StructureChanges = new FixedList<StructureChangeDto>()
-      };
-    }
-
-
-    static private string PartitionText(RealEstate newPartition) {
-      if (newPartition.Kind.Length == 0 && newPartition.PartitionNo.Length == 0) {
-        return $"FRACCIÓN O PARTE SIN IDENTIFICAR";
-
-      } else if (newPartition.Kind.Length != 0 && newPartition.PartitionNo.Length == 0) {
-        return $"{newPartition.Kind} SIN IDENTIFICAR";
-
-      } else if (newPartition.Kind.Length == 0 && newPartition.PartitionNo.Length != 0) {
-        return $"FRACCIÓN O PARTE {newPartition.PartitionNo}";
-
-      } else {
-        return $"{newPartition.Kind} {newPartition.PartitionNo}";
-      }
-    }
-
-
-    static private TransactionInfoDto MapTransaction(LRSTransaction transaction) {
-      return new TransactionInfoDto {
-         UID = transaction.GUID,
-         TransactionID = transaction.UID,
-         RequestedBy = transaction.RequestedBy,
-         Agency = transaction.Agency.MapToNamedEntity(),
-         FilingOffice = transaction.RecorderOffice.MapToNamedEntity(),
-         PresentationTime = transaction.PresentationTime,
-         CompletedTime  = transaction.ClosingTime,
-         Status = transaction.Workflow.CurrentStatusName
+      return new VolumeEntryDataDto {
+         UID = volumeEntry.UID,
+         RecordingBookUID = volumeEntry.RecordingBook.UID,
+         InstrumentRecordingUID = volumeEntry.MainDocument.GUID,
       };
     }
 

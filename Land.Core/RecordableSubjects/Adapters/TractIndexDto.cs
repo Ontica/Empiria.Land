@@ -34,32 +34,9 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     } = new FixedList<TractIndexEntryDto>();
 
 
-    public TractIndexActions Actions {
+    public EditionRules Actions {
       get; internal set;
-    } = new TractIndexActions();
-
-  }
-
-
-  public class TractIndexActions {
-
-    internal TractIndexActions() {
-      // no-op
-    }
-
-    public bool CanBeClosed {
-      get; internal set;
-    }
-
-
-    public bool CanBeOpened {
-      get; internal set;
-    }
-
-
-    public bool CanBeUpdated {
-      get; internal set;
-    }
+    } = new EditionRules();
 
   }
 
@@ -82,17 +59,12 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
+    public string Name {
+      get; internal set;
+    }
+
+
     public string Description {
-      get; internal set;
-    }
-
-
-    public DateTime RequestedTime {
-      get; internal set;
-    }
-
-
-    public DateTime IssueTime {
       get; internal set;
     }
 
@@ -102,24 +74,28 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    public TransactionInfoDto Transaction {
+    public RecordingDataDto RecordingData {
       get; internal set;
     }
 
 
-    public OfficialDocumentDto OfficialDocument {
+    public RecordableSubjectDto SubjectSnapshot {
       get; internal set;
     }
 
 
-    public RecordableSubjectChangesDto SubjectChanges {
+    public object LotChange {
       get; internal set;
     }
 
+    //public RecordableSubjectChangesDto SubjectChanges {
+    //  get; internal set;
+    //}
 
-    public TrantIndexEntryActions Actions {
+
+    public EditionRules Actions {
       get; internal set;
-    } = new TrantIndexEntryActions();
+    } = new EditionRules();
 
 
   }  // class TractIndexEntryDto
@@ -199,9 +175,9 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
   }
 
 
-  public class OfficialDocumentDto {
+  public class RecordingDataDto {
 
-    internal OfficialDocumentDto() {
+    internal RecordingDataDto() {
       // no-op
     }
 
@@ -215,7 +191,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    public string DocumentID {
+    public string RecordingID {
       get; internal set;
     }
 
@@ -230,24 +206,33 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    [JsonProperty(NullValueHandling = NullValueHandling.Include)]
-    public BookEntryIdentifiersDto BookEntry {
-      get;
-      internal set;
-    }
-
-
-    public DateTime IssueTime {
+    [JsonProperty(PropertyName = "BookEntry",
+                  NullValueHandling = NullValueHandling.Include)]
+    public VolumeEntryDataDto VolumeEntryData {
       get; internal set;
     }
 
 
-    public string ElaboratedBy {
+    public DateTime RecordingTime {
+      get; internal set;
+    }
+
+
+    public string RecordedBy {
       get; internal set;
     }
 
 
     public string AuthorizedBy {
+      get; internal set;
+    }
+
+
+    public DateTime PresentationTime {
+      get; internal set;
+    }
+
+    public string TransactionUID {
       get; internal set;
     }
 
@@ -261,13 +246,13 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       get; internal set;
     }
 
-  }
+  }  // class RecordingDataDto
 
 
 
-  public class BookEntryIdentifiersDto {
+  public class VolumeEntryDataDto {
 
-    internal BookEntryIdentifiersDto() {
+    internal VolumeEntryDataDto() {
       // no-op
     }
 
@@ -285,55 +270,6 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       get; internal set;
     }
 
-  }  // BookEntryIdentifiersDto
-
-
-  public class RecordableSubjectChangesDto {
-
-    internal RecordableSubjectChangesDto() {
-      // no-op
-    }
-
-    public string Summary {
-      get; internal set;
-    }
-
-
-    public RecordableSubjectDto Snapshot {
-      get; internal set;
-    }
-
-
-    public FixedList<StructureChangeDto> StructureChanges {
-      get; internal set;
-    } = new FixedList<StructureChangeDto>();
-
-
-  }
-
-
-
-  public class StructureChangeDto {
-
-    internal StructureChangeDto() {
-      // no-op
-    }
-
-    public string Operation {
-      get; internal set;
-    }
-
-
-    public string OperationType {
-      get; internal set;
-    }
-
-
-    public RecordableSubjectDto RelatedSubject {
-      get; internal set;
-    }
-
-  }
-
+  }  // class VolumeEntryDataDto
 
 }  // namespace Empiria.Land.RecordableSubjects.Adapters
