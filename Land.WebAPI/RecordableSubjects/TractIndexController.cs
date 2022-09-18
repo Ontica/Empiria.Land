@@ -33,7 +33,7 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
       Assertion.Require(amendmentRecordingActTypeUID, "amendmentRecordingActTypeUID");
 
       using (var usecases = TractIndexUseCases.UseCaseInteractor()) {
-        TractIndexDto tractIndex = usecases.AmendableRecordingActs(recordableSubjectUID,
+        SubjectHistoryDto tractIndex = usecases.AmendableRecordingActs(recordableSubjectUID,
                                                                    instrumentRecordingUID,
                                                                    amendmentRecordingActTypeUID);
         return new SingleObjectModel(this.Request, tractIndex);
@@ -46,7 +46,7 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
     public SingleObjectModel GetFullTractIndex([FromUri] string recordableSubjectUID) {
 
       using (var usecases = TractIndexUseCases.UseCaseInteractor()) {
-        TractIndexDto tractIndex = usecases.TractIndex(recordableSubjectUID);
+        SubjectHistoryDto tractIndex = usecases.TractIndex(recordableSubjectUID);
 
         return new SingleObjectModel(this.Request, tractIndex);
       }
@@ -73,7 +73,7 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
 
         usecases.CloseTractIndex(recordableSubjectUID);
 
-        TractIndexDto tractIndex = usecases.TractIndex(recordableSubjectUID);
+        SubjectHistoryDto tractIndex = usecases.TractIndex(recordableSubjectUID);
 
         return new SingleObjectModel(this.Request, tractIndex);
       }
@@ -90,7 +90,7 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
 
         usecases.CreateRecordingAct(recordableSubjectUID, command);
 
-        TractIndexDto tractIndex = usecases.TractIndex(recordableSubjectUID);
+        SubjectHistoryDto tractIndex = usecases.TractIndex(recordableSubjectUID);
 
         return new SingleObjectModel(this.Request, tractIndex);
       }
@@ -104,7 +104,7 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
       using (var usecases = TractIndexUseCases.UseCaseInteractor()) {
         usecases.OpenTractIndex(recordableSubjectUID);
 
-        TractIndexDto tractIndex = usecases.TractIndex(recordableSubjectUID);
+        SubjectHistoryDto tractIndex = usecases.TractIndex(recordableSubjectUID);
 
         return new SingleObjectModel(this.Request, tractIndex);
       }
@@ -120,7 +120,7 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
 
         usecases.RemoveRecordingAct(recordableSubjectUID, recordingActUID);
 
-        TractIndexDto tractIndex = usecases.TractIndex(recordableSubjectUID);
+        SubjectHistoryDto tractIndex = usecases.TractIndex(recordableSubjectUID);
 
         return new SingleObjectModel(this.Request, tractIndex);
       }

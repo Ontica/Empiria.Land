@@ -44,7 +44,7 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
-    public TractIndexDto GetTractIndex(string instrumentRecordingUID, string recordingActUID) {
+    public SubjectHistoryDto GetTractIndex(string instrumentRecordingUID, string recordingActUID) {
       Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
       Assertion.Require(recordingActUID, "recordingActUID");
 
@@ -55,7 +55,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       FixedList<RecordingAct> tract = recordingAct.Resource.Tract.GetRecordingActs();
 
-      return TractIndexMapper.Map(recordingAct.Resource, tract);
+      return SubjectHistoryMapper.Map(recordingAct.Resource, tract);
     }
 
 

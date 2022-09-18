@@ -31,7 +31,7 @@ namespace Empiria.Land.Registration.WebApi {
                                            [FromUri] string recordingActUID) {
 
       using (var usecases = RegistrationUseCases.UseCaseInteractor()) {
-        TractIndexDto tractIndex = usecases.GetTractIndex(instrumentRecordingUID,
+        SubjectHistoryDto tractIndex = usecases.GetTractIndex(instrumentRecordingUID,
                                                           recordingActUID);
 
         return new SingleObjectModel(this.Request, tractIndex);
