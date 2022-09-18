@@ -36,7 +36,7 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
     #region Use cases
 
-    public TractIndexDto AmendableRecordingActs(string recordableSubjectUID,
+    public SubjectHistoryDto AmendableRecordingActs(string recordableSubjectUID,
                                                 string instrumentRecordingUID,
                                                 string amendmentRecordingActTypeUID) {
 
@@ -54,7 +54,7 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
       var amendableActs = acts.FindAll((x) => appliesTo.Contains(x.RecordingActType));
 
-      return TractIndexMapper.Map(recordableSubject, amendableActs);
+      return SubjectHistoryMapper.Map(recordableSubject, amendableActs);
     }
 
 
@@ -87,14 +87,14 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
     }
 
 
-    public TractIndexDto TractIndex(string recordableSubjectUID) {
+    public SubjectHistoryDto TractIndex(string recordableSubjectUID) {
       Assertion.Require(recordableSubjectUID, nameof(recordableSubjectUID));
 
       var recordableSubject = Resource.ParseGuid(recordableSubjectUID);
 
       FixedList<RecordingAct> acts = recordableSubject.Tract.GetFullRecordingActs();
 
-      return TractIndexMapper.Map(recordableSubject, acts);
+      return SubjectHistoryMapper.Map(recordableSubject, acts);
     }
 
 
