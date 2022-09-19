@@ -17,9 +17,9 @@ namespace Empiria.Land.SearchServices {
     static internal RecordDto Map(Record record) {
       return new RecordDto {
         UID = record.UID,
-        RecordID = record.RecordID,
+        RecordID = record.RecordingID,
         RecorderOffice = record.RecorderOffice.Alias,
-        RecordingTime = record.AuthorizationTime,
+        RecordingTime = record.RecordingTime,
         PresentationTime = record.PresentationTime,
         RecordedBy = record.RecordedBy.Alias,
         AuthorizedBy = record.AuthorizedBy.Alias,

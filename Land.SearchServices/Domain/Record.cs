@@ -48,13 +48,13 @@ namespace Empiria.Land.SearchServices {
 
     public string UID => _document.GUID;
 
-    public string RecordID => _document.UID;
+    public string RecordingID => _document.UID;
 
     public Instrument Instrument => _instrument;
 
     public RecorderOffice RecorderOffice => _document.RecorderOffice;
 
-    public DateTime AuthorizationTime => _document.AuthorizationTime;
+    public DateTime RecordingTime => _document.AuthorizationTime;
 
     public DateTime PresentationTime => _document.PresentationTime;
 
