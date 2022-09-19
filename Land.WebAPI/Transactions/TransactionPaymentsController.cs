@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Land.WebApi.dll                      Pattern   : Controller                            *
 *  Type     : TransactionPaymentsController                License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used for transaction payments.                                                         *
+*  Summary  : Web Api used for transaction payments.                                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -17,7 +17,7 @@ using Empiria.Land.Transactions.Payments.UseCases;
 
 namespace Empiria.Land.Transactions.Payments.WebApi {
 
-  /// <summary>Web API used to add and remove requested transaction services.</summary>
+  /// <summary>Web Api used for transaction payments.</summary>
   public class TransactionPaymentsController : WebApiController {
 
     #region Web Apis

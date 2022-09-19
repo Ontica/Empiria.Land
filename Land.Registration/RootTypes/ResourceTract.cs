@@ -127,6 +127,7 @@ namespace Empiria.Land.Registration {
                                                                 breakAct, includeBreakAct);
     }
 
+
     public FixedList<RecordingAct> GetClosedRecordingActsUntil(RecordingDocument breakingDocument,
                                                                bool includeBreakingDocument) {
       var tract = ResourceTractData.GetResourceRecordingActList(this.Resource);

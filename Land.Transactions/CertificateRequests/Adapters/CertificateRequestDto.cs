@@ -15,7 +15,6 @@ using Empiria.Land.RecordableSubjects.Adapters;
 
 using Empiria.Land.Certificates;
 
-
 namespace Empiria.Land.Transactions.CertificateRequests {
 
   /// <summary>DTO with a land certificate requested within a transaction context.</summary>

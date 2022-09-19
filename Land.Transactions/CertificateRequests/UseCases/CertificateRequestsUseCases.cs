@@ -11,6 +11,7 @@ using System;
 
 using Empiria.Services;
 
+using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
 using Empiria.Land.Certificates;
@@ -102,7 +103,6 @@ namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
 
       CertificatesProvider.EnsureTransactionHasCertificate(transaction, certificateGuid);
 
-
       CertificateDto certificate = CertificatesProvider.OpenCertificate(certificateGuid);
 
       return CertificateRequestMapper.Map(transaction, certificate);
@@ -118,9 +118,9 @@ namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
 
       var transaction = LRSTransaction.Parse(transactionID);
 
-      var certificateType = command.GetCertificateType();
+      CertificateType certificateType = command.GetCertificateType();
 
-      var recordableSubject =  command.GetRecordableSubject();
+      Resource recordableSubject = command.GetRecordableSubject();
 
       CertificateDto certificate = CertificatesProvider.CreateCertificate(certificateType,
                                                                           transaction,

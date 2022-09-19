@@ -153,6 +153,6 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     }
 
-  }  // class RecordingActEntryDto
+  }
 
 }  // namespace Empiria.Land.Registration.Adapters

@@ -86,7 +86,6 @@ namespace Empiria.Land.RecordableSubjects {
     }
 
 
-
     static private string PartitionText(RealEstate newPartition) {
       if (newPartition.Kind.Length == 0 && newPartition.PartitionNo.Length == 0) {
         return $"Fracción sin identificar";

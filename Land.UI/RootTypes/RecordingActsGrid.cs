@@ -189,6 +189,7 @@ namespace Empiria.Land.UI {
       return html;
     }
 
+
     static private string GetDeleteLink(RecordingAct recordingAct) {
       const string template =
         "<a href='javascript:doOperation(\"deleteRecordingAct\", {{ID}});' title='Elimina este acto jurídico'>" +

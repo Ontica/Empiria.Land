@@ -91,7 +91,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       get; internal set;
     }
 
-  }  // class BaseRecordableSubjectDto
+  }  // class RecordableSubjectDto
 
 
   /// <summary>Output DTO model for Real Estate.</summary>
