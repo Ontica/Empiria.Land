@@ -13,6 +13,17 @@ using Empiria.Land.Registration;
 
 namespace Empiria.Land.RecordableSubjects {
 
+  /// <summary>Classifies a subject history entry.</summary>
+  public enum SubjectHistoryEntryType {
+
+    RecordingAct,
+
+    Certificate
+
+  }  // enum SubjectHistoryEntryType
+
+
+
   /// <summary>Holds information about a recordable subject history entry.</summary>
   internal class SubjectHistoryEntry {
 
@@ -32,9 +43,9 @@ namespace Empiria.Land.RecordableSubjects {
 
     #region Properties
 
-    public string EntryType {
+    public SubjectHistoryEntryType EntryType {
       get {
-        return "RecordingAct";
+        return SubjectHistoryEntryType.RecordingAct;
       }
     }
 
