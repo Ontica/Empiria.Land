@@ -31,7 +31,7 @@ namespace Empiria.Land.WebApi.Extranet {
 
         if (realEstate == null) {
           throw new ResourceNotFoundException("Property.UID",
-                                              $"No tenemos registrado ningún predio con folio electrónico {propertyUID}.");
+                                              $"No tenemos registrado ningún predio con folio real {propertyUID}.");
         }
 
         return new SingleObjectModel(this.Request, realEstate.ToResponse(),

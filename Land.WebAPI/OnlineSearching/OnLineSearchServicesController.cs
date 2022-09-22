@@ -158,7 +158,7 @@ namespace Empiria.Land.WebApi {
         } else if (resource == null && hash.Length != 0) {
           throw new ResourceNotFoundException("Land.Resource.InvalidQRCode",
                                               "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                              "referencia a un predio o asociación con folio electrónico '{0}' que NO está " +
+                                              "referencia a un predio o asociación con folio real '{0}' que NO está " +
                                               "registrado en nuestros archivos.\n\n" +
                                               "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
                                               "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
@@ -330,7 +330,7 @@ namespace Empiria.Land.WebApi {
         propertyBag.Add(new PropertyBagItem("Partida origen del predio en libros físicos", String.Empty, "section"));
         propertyBag.Add(new PropertyBagItem("Partida", physicalRecording.AsText));
         propertyBag.Add(new PropertyBagItem("Nota importante","Los datos de la partida sólo se muestran con fines informativos.<br/>" +
-                                            "A partir de junio del año 2022, todos los predios se deben identificar mediante su folio electrónico, " +
+                                            "A partir de junio del año 2022, todos los predios se deben identificar mediante su folio real, " +
                                             "no con el número de inscripción que tenían en libros físicos."));
       }
 

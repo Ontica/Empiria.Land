@@ -115,7 +115,7 @@ namespace Empiria.Land.Registration {
 
       //if (CreateResourceOnPhysicalRecording &&
       //    Task.PrecedentRecording.RecordingActs.Count > 0) {
-      //    string msg = "La inscripción ya tiene registrado un predio con folio electrónico, " +
+      //    string msg = "La inscripción ya tiene registrado un predio con folio real, " +
       //                 "y no es posible agregarle otros por este medio.\n\n" +
       //                 "Para agregarle más predios a una inscripción debe utilizarse la " +
       //                 "herramienta de captura histórica.";

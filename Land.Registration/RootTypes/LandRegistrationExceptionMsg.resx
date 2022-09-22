@@ -195,16 +195,16 @@
     <value>La fecha de presentación del antecedente seleccionado ({0}) fue el día {1}.\n\nSin embargo, dicha fecha es posterior al día {3}, fecha de presentación de este trámite ({2}). \n\nEl antecedente seleccionado no puede estar correcto.</value>
   </data>
   <data name="PropertyAlreadyExistsOnRecordingAct" xml:space="preserve">
-    <value>La propiedad con folio electrónico '{0}' ya está referenciada dentro de la lista de propiedades del acto jurídico con identificador {1}.</value>
+    <value>La propiedad con folio real '{0}' ya está referenciada dentro de la lista de propiedades del acto jurídico con identificador {1}.</value>
   </data>
   <data name="PropertyDoesNotHaveAnyRecordingActs" xml:space="preserve">
-    <value>El predio con folio electrónico '{0}' no tiene ningún acto jurídico registrado.\n\nEsto es un error grave, ya que no es posible que un predio esté registrado en el sistema y no exista el acto jurídico que originó su inscripción.</value>
+    <value>El predio con folio real '{0}' no tiene ningún acto jurídico registrado.\n\nEsto es un error grave, ya que no es posible que un predio esté registrado en el sistema y no exista el acto jurídico que originó su inscripción.</value>
   </data>
   <data name="PropertyHasAnnotations" xml:space="preserve">
-    <value>La propiedad con folio {0} tiene registrada cuando menos una anotación o limitación.\n\nPara eliminar la propiedad primero deben cancelarse todas las anotaciones, gravámenes y demás limitaciones que hagan referencia a dicho predio.</value>
+    <value>La propiedad con folio real {0} tiene registrada cuando menos una anotación o limitación.\n\nPara eliminar la propiedad primero deben cancelarse todas las anotaciones, gravámenes y demás limitaciones que hagan referencia a dicho predio.</value>
   </data>
   <data name="PropertyIsReferencedInOtherDomainActs" xml:space="preserve">
-    <value>La propiedad con folio {0} tiene registrados uno o más actos jurídicos distintos al seleccionado.\n\nPara poder eliminar la propiedad, primero deben cancelarse todos los actos jurídicos en los que se haga referencia a la misma, siguiendo el orden inverso de la secuencia jurídica.</value>
+    <value>La propiedad con folio real {0} tiene registrados uno o más actos jurídicos distintos al seleccionado.\n\nPara poder eliminar la propiedad, primero deben cancelarse todos los actos jurídicos en los que se haga referencia a la misma, siguiendo el orden inverso de la secuencia jurídica.</value>
   </data>
   <data name="PropertyNotBelongsToRecordingAct" xml:space="preserve">
     <value>El acto jurídico con identificador {1} no aplica a la propiedad con id = {0}. Puede ser que este problema sea ocasionado por un error de programación.</value>
