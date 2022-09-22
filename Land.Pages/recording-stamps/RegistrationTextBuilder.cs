@@ -59,7 +59,7 @@ namespace Empiria.Land.Pages {
       x = x.Replace("{NUMBER}", _transaction.UID);
       x = x.Replace("{REENTRY_TEXT}", _transaction.IsReentry ? "(como reingreso)" : String.Empty);
 
-      int recordingActsCount = _document.RecordingActs.Count;
+      int recordingActsCount = GetRecordingActsCount();
 
       if (recordingActsCount > 1) {
         x = x.Replace("{COUNT}", "se registraron los siguientes " + recordingActsCount.ToString() +
@@ -75,6 +75,9 @@ namespace Empiria.Land.Pages {
       return x;
     }
 
+    private int GetRecordingActsCount() {
+      return _document.RecordingActs.CountAll(x => !x.IsChild);
+    }
 
     private string PrelationTextForHistoricDocuments() {
       return "<h3>" + _document.RecordingActs[0].PhysicalRecording.AsText + "</h3>";

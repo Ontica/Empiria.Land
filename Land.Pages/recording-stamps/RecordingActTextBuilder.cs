@@ -98,25 +98,35 @@ namespace Empiria.Land.Pages {
       if (amendedAct.IsEmptyInstance) {
         x = x.Replace(" {AMENDMENT.ACT.RECORDING},", " ");
       } else {
-        var legend = amendedAct.RecordingActType.FemaleGenre ? "inscrita" : "inscrito";
+
+        var amendedActName = amendedAct.Kind.Length != 0 ? amendedAct.Kind : amendedAct.RecordingActType.DisplayName;
+
+        if (amendedAct.OperationAmount != 0) {
+          amendedActName += $" por {amendedAct.OperationAmount.ToString("C2")}, ";
+        }
+
+        var legend = amendedAct.RecordingActType.FemaleGenre ? "la cual está inscrito" : "el cual está inscrito";
+
         if (amendedAct.PhysicalRecording.IsEmptyInstance) {
           x = x.Replace("{AMENDMENT.ACT.RECORDING}",
-                        "sobre " + amendedAct.RecordingActType.DisplayName + " " +
-                        legend + " en el documento " + "<b>" + amendedAct.Document.UID + "</b> el día " +
+                        "sobre " + amendedActName + " " +
+                        $"{legend}  en el acto número {amendedAct.Index + 1} del documento <b> {amendedAct.Document.UID}</b> el día " +
                         CommonMethods.GetDateAsText(amendedAct.Document.AuthorizationTime));
 
         } else {
           x = x.Replace("{AMENDMENT.ACT.RECORDING}",
-                        "sobre " + amendedAct.RecordingActType.DisplayName + " " +
-                        legend + " en la " + amendedAct.PhysicalRecording.AsText);
+                        "sobre " + amendedActName + " " +
+                        legend + " en la " + amendedAct.PhysicalRecording.AsText + " el día " +
+                        CommonMethods.GetDateAsText(amendedAct.PhysicalRecording.MainDocument.AuthorizationTime));
         }
+
       }
 
       Resource resource = Reloaders.Reload(_recordingAct.Resource);
 
       if (resource is RealEstate) {
-        x = x.Replace("{RESOURCE.DATA}", "sobre el bien inmueble con folio electrónico " +
-                      this.GetRealEstateTextWithAntecedentAndCadastralKey());
+        x = x.Replace("{RESOURCE.DATA}", "sobre el bien inmueble con folio real " +
+                      GetRealEstateTextWithAntecedentAndCadastralKey(_recordingAct));
 
       } else if (resource is Association) {
         x = x.Replace("{RESOURCE.DATA}", "sobre la sociedad o asociación denominada '" +
@@ -187,19 +197,49 @@ namespace Empiria.Land.Pages {
     }
 
 
+    internal string GetParentActText(int index, FixedList<RecordingAct> children) {
+      const string overTheWhole =
+          "{INDEX}.- {RECORDING.ACT} el cual se aplica sobre los siguientes <b>{CHILDREN.COUNT}</b> predios:<br/>";
+
+      string x = String.Empty;
+
+      x = overTheWhole.Replace("{INDEX}", index.ToString());
+      x = x.Replace("{RECORDING.ACT}", this.GetRecordingActDisplayName());
+      x = x.Replace("{CHILDREN.COUNT}", $"{children.Count} ({EmpiriaString.SpeechInteger(children.Count)})");
+
+      for (int i = 0; i < children.Count; i++) {
+        x += GetChildActText(i + 1, children[i]);
+      }
+      x += "<br/>";
+      return x;
+    }
+
+
+    internal string GetChildActText(int index, RecordingAct child) {
+      const string overTheWhole =
+              "<div style='padding-left:20pt'>{INDEX}.- Bien inmueble con folio real {PROPERTY.UID}.</div>";
+
+      string x = String.Empty;
+
+      x = overTheWhole.Replace("{INDEX}", index.ToString());
+
+      x = x.Replace("{PROPERTY.UID}", GetRealEstateTextWithAntecedentAndCadastralKey(child));
+
+      return x;
+    }
+
+
     private string GetRealEstateActOverTheWhole(int index) {
       const string overTheWhole =
-          "{INDEX}.- {RECORDING.ACT} sobre el " +
-          "bien inmueble con folio electrónico {PROPERTY.UID}.<br/>";
+          "{INDEX}.- {RECORDING.ACT} sobre el bien inmueble con folio real {PROPERTY.UID}.<br/>";
 
       string x = String.Empty;
 
       x = overTheWhole.Replace("{INDEX}", index.ToString());
       x = x.Replace("{RECORDING.ACT}", this.GetRecordingActDisplayName());
 
-      var antecedent = _recordingAct.Resource.Tract.GetRecordingAntecedent(_recordingAct);
       x = x.Replace("{PROPERTY.UID}",
-                    this.GetRealEstateTextWithAntecedentAndCadastralKey());
+                    GetRealEstateTextWithAntecedentAndCadastralKey(_recordingAct));
 
       return x;
     }
@@ -209,27 +249,27 @@ namespace Empiria.Land.Pages {
       const string overPartition =
           "{INDEX}.- {RECORDING.ACT} sobre la " +
           "<b>{PARTITION.TEXT}</b> del bien inmueble con folio {PARTITION.OF}, misma a la que " +
-          "se le asignó el folio electrónico {PROPERTY.UID}.<br/>";
+          "se le asignó el folio real {PROPERTY.UID}.<br/>";
 
       const string overPartitionMale =
           "{INDEX}.- {RECORDING.ACT} sobre el " +
           "<b>{PARTITION.TEXT}</b> del bien inmueble con folio {PARTITION.OF}, mismo al que " +
-          "se le asignó el folio electrónico {PROPERTY.UID}.<br/>";
+          "se le asignó el folio real {PROPERTY.UID}.<br/>";
 
       const string overLot =
           "{INDEX}.- {RECORDING.ACT} sobre el " +
           "<b>{PARTITION.TEXT}</b> de la lotificación con folio {PARTITION.OF}, mismo al que " +
-          "se le asignó el folio electrónico {PROPERTY.UID}.<br/>";
+          "se le asignó el folio real {PROPERTY.UID}.<br/>";
 
       const string overApartment =
           "{INDEX}.- {RECORDING.ACT} sobre el " +
           "<b>{PARTITION.TEXT}</b> del condominio con folio {PARTITION.OF}, mismo a la que " +
-          "se le asignó el folio electrónico {PROPERTY.UID}.<br/>";
+          "se le asignó el folio real {PROPERTY.UID}.<br/>";
 
       const string overHouse =
           "{INDEX}.- {RECORDING.ACT} sobre la " +
-          "<b>{PARTITION.TEXT}</b> del fraccionamiento con folio {PARTITION.OF}, misma a la que " +
-          "se le asignó el folio electrónico {PROPERTY.UID}.<br/>";
+          "<b>{PARTITION.TEXT}</b> del fraccionamiento con folio real {PARTITION.OF}, misma a la que " +
+          "se le asignó el folio real {PROPERTY.UID}.<br/>";
 
       Assertion.Require(!newPartition.IsPartitionOf.IsEmptyInstance, "Property is not a partition.");
 
@@ -310,12 +350,12 @@ namespace Empiria.Land.Pages {
       return x;
     }
 
-    private string GetRealEstateTextWithAntecedentAndCadastralKey() {
-      var domainAntecedent = _recordingAct.Resource.Tract.GetRecordingAntecedent(_recordingAct);
+    static private string GetRealEstateTextWithAntecedentAndCadastralKey(RecordingAct recordingAct) {
+      var domainAntecedent = recordingAct.Resource.Tract.GetRecordingAntecedent(recordingAct);
 
       domainAntecedent = Reloaders.Reload(domainAntecedent);
 
-      var property = (RealEstate) Reloaders.Reload(_recordingAct.Resource);
+      var property = (RealEstate) Reloaders.Reload(recordingAct.Resource);
 
       string x = GetRealEstateTextWithCadastralKey(property);
 
@@ -326,11 +366,11 @@ namespace Empiria.Land.Pages {
         // no-op
 
       } else if (!domainAntecedent.PhysicalRecording.IsEmptyInstance) {
-        if (!_recordingAct.AmendmentOf.PhysicalRecording.Equals(domainAntecedent.PhysicalRecording)) {
+        if (!recordingAct.AmendmentOf.PhysicalRecording.Equals(domainAntecedent.PhysicalRecording)) {
           x += ", con antecedente registral en " + domainAntecedent.PhysicalRecording.AsText;
         }
 
-      } else if (domainAntecedent.Document.Equals(_recordingAct.Document)) {
+      } else if (domainAntecedent.Document.Equals(recordingAct.Document)) {
         x += ", registrado en este documento";
 
       } else if (!(domainAntecedent is DomainAct)) {   // TODO: this is very strange, is a special case

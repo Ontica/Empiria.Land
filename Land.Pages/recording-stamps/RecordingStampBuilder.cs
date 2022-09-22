@@ -37,6 +37,17 @@ namespace Empiria.Land.Pages {
 
         var builder = new RecordingActTextBuilder(recordingAct);
 
+        if (recordingAct.IsParent) {
+          temp = builder.GetParentActText(index, GetChildren(recordingAct));
+          html += Decorate(recordingAct, selectedRecordingAct, isMainDocument, temp);
+          html += builder.GetPartiesText();
+          html += builder.GetNotesText();
+          html += "<br/>";
+          continue;
+        } else if (recordingAct.IsChild) {
+          continue;
+        }
+
         // If amendment act, process it and continue
         if (recordingAct.RecordingActType.IsAmendmentActType) {
           temp =  builder.GetAmendmentActText(index);
@@ -73,6 +84,10 @@ namespace Empiria.Land.Pages {
       }
 
       return html;
+    }
+
+    private FixedList<RecordingAct> GetChildren(RecordingAct parentRecordingAct) {
+      return _document.RecordingActs.FindAll(x => x.ParentId == parentRecordingAct.Id);
     }
 
 
