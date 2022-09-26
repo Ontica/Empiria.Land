@@ -72,7 +72,7 @@ namespace Empiria.Land.Registration {
         this.SpecialCase = json.Get<string>("SpecialCase", String.Empty);
         this.RecordingActTypes = json.GetList<RecordingActType>("RecordingActTypes", false).ToArray();
         this.ReplaceableBy = json.GetList<RecordingActType>("ReplaceableBy", false).ToFixedList();
-        this.AllowsPartitions = json.Get<bool>("AllowsPartitions", false);
+        this.AllowPartitions = json.Get<bool>("AllowPartitions", false);
         this.IsEndingAct = json.Get<bool>("IsEndingAct", false);
         this.IsActive = json.Get<bool>("IsActive", json.HasItems);
         this.AskForResourceName = json.Get<bool>("AskForResourceName", false);
@@ -114,7 +114,7 @@ namespace Empiria.Land.Registration {
       json.Add("IsModification", this.recordingActType.IsModificationActType);
       json.Add("IsCancelation", this.recordingActType.IsCancelationActType);
       json.Add("IsEndingAct", this.IsEndingAct);
-      json.Add("AllowsPartitions", this.AllowsPartitions);
+      json.Add("AllowPartitions", this.AllowPartitions);
       json.Add("AppliesTo", this.AppliesTo.ToString());
       json.Add("AutoCancel", this.AutoCancel);
       json.Add("AskForResourceName", this.AskForResourceName);
@@ -143,7 +143,7 @@ namespace Empiria.Land.Registration {
 
     #region Properties
 
-    public bool AllowsPartitions {
+    public bool AllowPartitions {
       get;
       private set;
     } = false;

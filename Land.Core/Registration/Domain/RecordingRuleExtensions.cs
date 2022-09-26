@@ -76,7 +76,7 @@ namespace Empiria.Land.Registration {
             list.Add(RegistrationCommandType.SelectRealEstate);
             list.Add(RegistrationCommandType.SelectRealEstateAntecedent);
           }
-          if (rule.AllowsPartitions) {
+          if (rule.AllowPartitions) {
             list.Add(RegistrationCommandType.CreateRealEstatePartition);
             list.Add(RegistrationCommandType.CreateRealEstatePartitionForAntecedent);
           }
@@ -145,7 +145,7 @@ namespace Empiria.Land.Registration {
         case RecordingRuleApplication.RealEstate:
         case RecordingRuleApplication.Structure:
           list.Add(RegistrationCommandType.RealEstateTractIndex);
-          if (rule.AllowsPartitions) {
+          if (rule.AllowPartitions) {
             list.Add(RegistrationCommandType.RealEstateTractIndexPartition);
           }
           break;
