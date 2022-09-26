@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.DataTypes;
+
 using Empiria.Land.Registration;
 
 namespace Empiria.Land.Pages {
@@ -68,7 +70,7 @@ namespace Empiria.Land.Pages {
         html = html.Replace("{OWNERSHIP}", $"({p.OwnershipPart.Unit.Name})");
 
       } else {
-        html = html.Replace("{OWNERSHIP}", $"({p.OwnershipPart})");
+        html = html.Replace("{OWNERSHIP}", $"({ToPartAmountText(p.OwnershipPart)})");
 
       }
 
@@ -77,6 +79,16 @@ namespace Empiria.Land.Pages {
       }
 
       return html;
+    }
+
+    static private string ToPartAmountText(Quantity ownershipPart) {
+      if (ownershipPart.Unit.UID == "Unit.Fraction") {
+        var fractionParts = ownershipPart.Amount.ToString().Split('.');
+
+        return $"{fractionParts[0]}/{fractionParts[1].TrimEnd('0')} parte";
+      }
+
+      return ownershipPart.ToString();
     }
 
 
@@ -174,7 +186,11 @@ namespace Empiria.Land.Pages {
 
       string x = template.Replace("{INDEX}", index.ToString());
 
-      x = x.Replace("{RECORDING.ACT}", _recordingAct.DisplayName);
+      if (_recordingAct.Kind.Length != 0) {
+        x = x.Replace("{RECORDING.ACT}", _recordingAct.Kind);
+      } else {
+        x = x.Replace("{RECORDING.ACT}", _recordingAct.DisplayName);
+      }
 
       return x.Replace("{RESOURCE.UID}", _recordingAct.Resource.UID);
     }

@@ -34,9 +34,9 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    public decimal PartAmount {
+    public string PartAmount {
       get; internal set;
-    } = 1m;
+    } = "1";
 
 
     public NamedEntityDto PartUnit {

@@ -61,9 +61,9 @@ namespace Empiria.Land.Registration.Adapters {
     } = string.Empty;
 
 
-    public decimal PartAmount {
+    public string PartAmount {
       get; set;
-    } = 1m;
+    } = "1";
 
 
     public string PartUnitUID {
@@ -83,6 +83,17 @@ namespace Empiria.Land.Registration.Adapters {
 
     internal void EnsureValid() {
 
+    }
+
+    internal decimal ToDecimalPartAmount() {
+      if (this.PartUnitUID == "Unit.Fraction") {
+        var fractionParts = this.PartAmount.Split('/');
+
+        return decimal.Parse(fractionParts[0] + "." + fractionParts[1]);
+
+      }
+
+      return this.PartAmount.Length != 0 ? decimal.Parse(this.PartAmount) : 1m;
     }
 
   }  // class RecordingActPartyFields

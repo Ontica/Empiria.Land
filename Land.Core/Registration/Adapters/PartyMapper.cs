@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.DataTypes;
+
 namespace Empiria.Land.Registration.Adapters {
 
   /// <summary>Contains methods used to map recording act parties.</summary>
@@ -50,11 +52,21 @@ namespace Empiria.Land.Registration.Adapters {
         Type = recordingActParty.RoleType,
         Party = Map(recordingActParty.Party),
         Role = recordingActParty.PartyRole.MapToNamedEntity(),
-        PartAmount = recordingActParty.OwnershipPart.Amount,
+        PartAmount = ToPartAmountText(recordingActParty.OwnershipPart),
         PartUnit = recordingActParty.OwnershipPart.Unit.MapToNamedEntity(),
         AssociatedWith = Map(recordingActParty.PartyOf),
         Notes = recordingActParty.Notes,
       };
+    }
+
+    static private string ToPartAmountText(Quantity ownershipPart) {
+      if (ownershipPart.Unit.UID == "Unit.Fraction") {
+        var fractionParts = ownershipPart.Amount.ToString().Split('.');
+
+        return fractionParts[0] + "/" + fractionParts[1].TrimEnd('0');
+      }
+
+      return ownershipPart.Amount.ToString();
     }
 
     #endregion Private methods
