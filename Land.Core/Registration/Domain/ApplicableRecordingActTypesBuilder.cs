@@ -93,19 +93,23 @@ namespace Empiria.Land.Registration {
     private bool IsApplicableTo(Resource recordableSubject,
                                 ApplicableRecordingActType actType) {
       if (recordableSubject is RealEstate &&
-          actType.RecordingActType.AppliesTo == RecordingRuleApplication.RealEstate) {
+          (actType.RecordingActType.AppliesTo == RecordingRuleApplication.RealEstate ||
+           actType.RecordingActType.AppliesTo == RecordingRuleApplication.RealEstateAct)) {
         return true;
       }
 
       if (recordableSubject is NoPropertyResource &&
-          actType.RecordingActType.AppliesTo == RecordingRuleApplication.NoProperty) {
+          (actType.RecordingActType.AppliesTo == RecordingRuleApplication.NoProperty ||
+           actType.RecordingActType.AppliesTo == RecordingRuleApplication.NoPropertyAct)) {
         return true;
       }
 
       if (recordableSubject is Association &&
-          actType.RecordingActType.AppliesTo == RecordingRuleApplication.Association) {
+          (actType.RecordingActType.AppliesTo == RecordingRuleApplication.Association ||
+           actType.RecordingActType.AppliesTo == RecordingRuleApplication.AssociationAct)) {
         return true;
       }
+
       return false;
     }
 
