@@ -172,7 +172,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (!transaction.Document.IsClosed) {
         return false;
       }
-      if (!LRSWorkflowRules.IsDigitalizable(transaction.TransactionType, transaction.DocumentType)) {
+      if (!IsDigitalizable(transaction.TransactionType, transaction.DocumentType)) {
         return false;
       }
       if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Digitalization ||
@@ -189,12 +189,14 @@ namespace Empiria.Land.Registration.Transactions {
       //if (NotRecordableDocumentType(docType)) {
       //  return false;
       //}
-      //if ((docType.Id == 723 || docType.Id == 724 || type.Id == 705) && ) {
+      //if (docType.Id == 724) {  // docType.Id == 723 ||
       //  return false;
       //}
-      if (type.Id == 700 || type.Id == 705) {
+
+      if (type.Id == 700 || type.Id == 704 || type.Id == 705) {
         return true;
       }
+
       return false;
     }
 
@@ -206,20 +208,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     public static bool IsDigitalizable(LRSTransactionType type, LRSDocumentType docType) {
-      if (IsRecordingDocumentCase(type, docType)) {
-        return true;
-      }
-      //if (IsCertificateIssueCase(type, docType)) {
-      //  return false;
-      //}
-      //if (type.Id == 699 || type.Id == 702 || type.Id == 705 || type.Id == 706) {
-      //  return false;
-      //} else if (NotRecordableDocumentType(docType)) {
-      //  return false;
-      //} else if (EmpiriaMath.IsMemberOf(docType.Id, new int[] { 715, 724, 728, 739, 744, 757 })) {
-      //  return false;
-      //}
-      return false;
+      return IsRecordingDocumentCase(type, docType);
     }
 
 
@@ -261,25 +250,26 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-   static public string ValidateStatusChange(LRSTransaction transaction, LRSTransactionStatus nextStatus) {
-      if (nextStatus == LRSTransactionStatus.Received) {
-        if (transaction.Payments.Count == 0) {
-          return "Este trámite todavía no tiene registrada una boleta de pago.";
+    static public string ValidateStatusChange(LRSTransaction transaction, LRSTransactionStatus nextStatus) {
+      if (nextStatus == LRSTransactionStatus.Received && transaction.Payments.Count == 0) {
+        return "Este trámite todavía no tiene registrada una boleta de pago.";
+      }
+
+      if (!IsRecordingDocumentCase(transaction.TransactionType, transaction.DocumentType)) {
+        return String.Empty;
+      }
+
+      if (transaction.TransactionType.Id == 704 || transaction.DocumentType.Id == 721) {
+        return String.Empty;
+      }
+
+      if (nextStatus == LRSTransactionStatus.Revision || nextStatus == LRSTransactionStatus.OnSign ||
+          nextStatus == LRSTransactionStatus.Archived || nextStatus == LRSTransactionStatus.ToDeliver) {
+        if (transaction.Document.IsEmptyInstance) {
+          return "Necesito primero se ingrese la información del documento a inscribir.";
         }
       }
-      if (IsRecordingDocumentCase(transaction.TransactionType, transaction.DocumentType)) {
-        if (transaction.TransactionType.Id == 704 || transaction.DocumentType.Id == 721) {
-          return String.Empty;
-        }
-      }
-      if (IsRecordingDocumentCase(transaction.TransactionType, transaction.DocumentType)) {
-        if (nextStatus == LRSTransactionStatus.Revision || nextStatus == LRSTransactionStatus.OnSign ||
-            nextStatus == LRSTransactionStatus.Archived || nextStatus == LRSTransactionStatus.ToDeliver) {
-          if (transaction.Document.IsEmptyInstance) {
-            return "Necesito primero se ingrese la información del documento a inscribir.";
-          }
-        }
-      }
+
       return String.Empty;
     }
 

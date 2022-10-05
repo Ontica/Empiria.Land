@@ -105,11 +105,37 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     } = string.Empty;
 
 
+    public string LotSizeUnitUID {
+      get; set;
+    } = string.Empty;
+
+
     public decimal LotSize {
       get; set;
     }
 
-    public string LotSizeUnitUID {
+
+    public decimal BuildingArea {
+      get; set;
+    }
+
+
+    public decimal UndividedPct {
+      get; set;
+    }
+
+
+    public string Section {
+      get; set;
+    } = string.Empty;
+
+
+    public string Block {
+      get; set;
+    } = string.Empty;
+
+
+    public string Lot {
       get; set;
     } = string.Empty;
 

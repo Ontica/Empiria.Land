@@ -125,6 +125,41 @@ namespace Empiria.Land.Registration {
     } = Quantity.Zero;
 
 
+    public decimal BuildingArea {
+      get {
+        return this.RealEstateExtData.BuildingArea;
+      }
+    }
+
+
+    public decimal UndividedPct {
+      get {
+        return this.RealEstateExtData.UndividedPct;
+      }
+    }
+
+
+    public string Section {
+      get {
+        return this.RealEstateExtData.Section;
+      }
+    }
+
+
+    public string Block {
+      get {
+        return this.RealEstateExtData.Block;
+      }
+    }
+
+
+    public string Lot {
+      get {
+        return this.RealEstateExtData.Lot;
+      }
+    }
+
+
     public string Notes {
       get {
         return this.RealEstateExtData.Notes;

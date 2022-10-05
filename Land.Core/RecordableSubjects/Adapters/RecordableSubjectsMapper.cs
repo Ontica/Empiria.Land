@@ -71,6 +71,12 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       dto.Description = realEstate.Description;
       dto.MetesAndBounds = realEstate.MetesAndBounds;
 
+      dto.BuildingArea = realEstate.BuildingArea;
+      dto.UndividedPct = realEstate.UndividedPct;
+      dto.Section = realEstate.Section;
+      dto.Block = realEstate.Block;
+      dto.Lot = realEstate.Lot;
+
       return dto;
     }
 

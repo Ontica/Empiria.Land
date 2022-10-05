@@ -110,6 +110,11 @@ namespace Empiria.Land.Registration {
 
       data.CadastralKey = fields.CadastralID;
       data.MetesAndBounds = fields.MetesAndBounds;
+      data.BuildingArea = fields.BuildingArea;
+      data.UndividedPct = fields.UndividedPct;
+      data.Section = fields.Section;
+      data.Block = fields.Block;
+      data.Lot = fields.Lot;
 
       realEstate.SetExtData(data);
 

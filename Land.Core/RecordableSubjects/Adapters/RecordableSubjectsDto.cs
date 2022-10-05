@@ -131,6 +131,31 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
       get; internal set;
     }
 
+
+    public decimal BuildingArea {
+      get; internal set;
+    }
+
+
+    public decimal UndividedPct {
+      get; internal set;
+    }
+
+
+    public string Section {
+      get; internal set;
+    }
+
+
+    public string Block {
+      get; internal set;
+    }
+
+
+    public string Lot {
+      get; internal set;
+    }
+
   }  // class RealEstateDto
 
 
