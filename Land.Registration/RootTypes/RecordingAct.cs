@@ -630,7 +630,7 @@ namespace Empiria.Land.Registration {
                                              RecordingActPartyFields recordingActPartyFields) {
       if (recordingActParty.RoleType == RecordingActPartyType.Primary) {
         recordingActParty.OwnershipPart = Quantity.Parse(Unit.Parse(recordingActPartyFields.PartUnitUID),
-                                                         recordingActPartyFields.PartAmount);
+                                                         recordingActPartyFields.ToDecimalPartAmount());
       }
       recordingActParty.Notes = recordingActPartyFields.Notes;
     }
@@ -915,6 +915,16 @@ namespace Empiria.Land.Registration {
       this.ExtensionData = updatedData;
     }
 
+
+    internal void SetPhysicalRecording(PhysicalRecording bookEntry) {
+      Assertion.Require(bookEntry, nameof(bookEntry));
+
+      this.PhysicalRecording = bookEntry;
+
+      this.Save();
+    }
+
+
     protected void SetResource(Resource resource, ResourceRole role = ResourceRole.Informative,
                                Resource relatedResource = null, decimal percentage = 1m) {
       Assertion.Require(resource != null && !resource.IsEmptyInstance,
@@ -1043,6 +1053,11 @@ namespace Empiria.Land.Registration {
       if (roles.Count == 0 || rule.AllowNoParties || roles.Count == 0) {
         return;
       }
+
+      if (this.IsChild) {
+        return;
+      }
+
       Assertion.Require(parties.Count != 0, "El acto jurídico " + this.IndexedName +
                                            " requiere cuando menos una persona o propietario.");
       foreach (var role in roles) {

@@ -115,11 +115,11 @@ namespace Empiria.Land.Registration {
 
       //if (CreateResourceOnPhysicalRecording &&
       //    Task.PrecedentRecording.RecordingActs.Count > 0) {
-      //    string msg = "La inscripción ya tiene registrado un predio con folio real, " +
-      //                 "y no es posible agregarle otros por este medio.\n\n" +
-      //                 "Para agregarle más predios a una inscripción debe utilizarse la " +
-      //                 "herramienta de captura histórica.";
-      //  Assertion.AssertFail(msg);
+      //  string msg = "La inscripción ya tiene registrado un predio con folio real, " +
+      //               "y no es posible agregarle otros por este medio.\n\n" +
+      //               "Para agregarle más predios a una inscripción debe utilizarse la " +
+      //               "herramienta de captura histórica.";
+      //  Assertion.RequireFail(msg);
       //}
 
     }
@@ -336,16 +336,28 @@ namespace Empiria.Land.Registration {
 
       RecordingAct targetAct = this.GetTargetRecordingAct(resource);
 
-      return new[] { new ModificationAct(this.Task.RecordingActType,
-                                         this.Task.Document, resource, targetAct) };
+      var act = new[] { new ModificationAct(this.Task.RecordingActType,
+                                            this.Task.Document, resource, targetAct) };
+
+      if (!this.Task.BookEntry.IsEmptyInstance) {
+        act[0].SetPhysicalRecording(this.Task.BookEntry);
+      }
+
+      return act;
     }
 
 
     private ModificationAct[] CreateResourceModificationAct() {
       var resource = this.GetOneResource();
 
-      return new[] { new ModificationAct(this.Task.RecordingActType,
-                                         this.Task.Document, resource) };
+      var act = new[] { new ModificationAct(this.Task.RecordingActType,
+                                            this.Task.Document, resource) };
+
+      if (!this.Task.BookEntry.IsEmptyInstance) {
+        act[0].SetPhysicalRecording(this.Task.BookEntry);
+      }
+
+      return act;
     }
 
 
