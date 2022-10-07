@@ -10,6 +10,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.DataTypes;
 using Empiria.Json;
 
@@ -18,11 +19,18 @@ namespace Empiria.Land.Registration {
   /// <summary>Indicates the legal recording status of a resource in order to apply the recording act.</summary>
   public enum ResourceRecordingStatus {
     Undefined,
+
     NotApply,
-    Both,
+
+    Antecedent,
+
     Registered,
+
     Unregistered,
+
+    Both          // Registered OR Unregistered
   }
+
 
   /// <summary>Indicates the resource type of which is applicable the recording act.</summary>
   public enum RecordingRuleApplication {

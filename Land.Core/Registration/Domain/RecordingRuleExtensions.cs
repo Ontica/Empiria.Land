@@ -58,36 +58,44 @@ namespace Empiria.Land.Registration {
 
       switch (rule.AppliesTo) {
         case RecordingRuleApplication.Association:
-          if (UnregisteredOrBoth(rule)) {
+          if (SelectUnregistered(rule)) {
             list.Add(RegistrationCommandType.CreateAssociation);
           }
-          if (RegisteredOrBoth(rule)) {
+          if (SelectRegistered(rule)) {
             list.Add(RegistrationCommandType.SelectAssociation);
+          }
+          if (SelectAntecedent(rule)) {
             list.Add(RegistrationCommandType.SelectAssociationAntecedent);
           }
           break;
 
         case RecordingRuleApplication.RealEstate:
         case RecordingRuleApplication.Structure:
-          if (UnregisteredOrBoth(rule)) {
+          if (SelectUnregistered(rule)) {
             list.Add(RegistrationCommandType.CreateRealEstate);
           }
-          if (RegisteredOrBoth(rule)) {
+          if (SelectRegistered(rule)) {
             list.Add(RegistrationCommandType.SelectRealEstate);
+          }
+          if (SelectAntecedent(rule)) {
             list.Add(RegistrationCommandType.SelectRealEstateAntecedent);
           }
           if (rule.AllowPartitions) {
             list.Add(RegistrationCommandType.CreateRealEstatePartition);
+          }
+          if (rule.AllowPartitions && SelectAntecedent(rule)) {
             list.Add(RegistrationCommandType.CreateRealEstatePartitionForAntecedent);
           }
           break;
 
         case RecordingRuleApplication.NoProperty:
-          if (UnregisteredOrBoth(rule)) {
+          if (SelectUnregistered(rule)) {
             list.Add(RegistrationCommandType.CreateNoProperty);
           }
-          if (RegisteredOrBoth(rule)) {
+          if (SelectRegistered(rule)) {
             list.Add(RegistrationCommandType.SelectNoProperty);
+          }
+          if (SelectAntecedent(rule)) {
             list.Add(RegistrationCommandType.SelectNoPropertyAntecedent);
           }
           break;
@@ -168,13 +176,19 @@ namespace Empiria.Land.Registration {
 
     #region Helper Methods
 
-    static private bool RegisteredOrBoth(RecordingRule rule) {
+
+    static private bool SelectAntecedent(RecordingRule rule) {
+      return rule.ResourceRecordingStatus == ResourceRecordingStatus.Antecedent;
+    }
+
+
+    static private bool SelectRegistered(RecordingRule rule) {
       return rule.ResourceRecordingStatus == ResourceRecordingStatus.Registered ||
              rule.ResourceRecordingStatus == ResourceRecordingStatus.Both;
     }
 
 
-    static private bool UnregisteredOrBoth(RecordingRule rule) {
+    static private bool SelectUnregistered(RecordingRule rule) {
       return rule.ResourceRecordingStatus == ResourceRecordingStatus.Unregistered ||
              rule.ResourceRecordingStatus == ResourceRecordingStatus.Both;
     }
