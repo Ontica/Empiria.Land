@@ -267,9 +267,9 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        //if (_transaction.HasCertificates) {
-        //  return true;
-        //}
+        if (_transaction.HasCertificates) {
+          return true;
+        }
 
         return LRSWorkflowRules.IsCertificateIssueCase(_transaction.TransactionType,
                                                        _transaction.DocumentType);

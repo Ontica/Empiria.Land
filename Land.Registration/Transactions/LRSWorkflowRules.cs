@@ -63,8 +63,8 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    private static bool IsJuridicCase(LRSTransactionType transactionType, LRSDocumentType documentType) {
-      if (transactionType.Id == 706 && documentType.Id == 734) {
+    private static bool IsJuridicCase(LRSTransactionType type, LRSDocumentType docType) {
+      if (type.Id == 706 && docType.Id == 734) {
         return true;
       }
       return false;
@@ -115,10 +115,6 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static public bool IsNotSignable(LRSTransactionType type, LRSDocumentType docType) {
-      if (type.Id == 704 || (type.Id == 706 && docType.Id == 734)) {
-        return true;
-      }
-
       return false;
     }
 
@@ -132,7 +128,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static public bool IsCertificateIssueCase(LRSTransactionType type, LRSDocumentType docType) {
-      return type.Id == 701;
+      return type.Id == 701 || type.Id == 704;
     }
 
 
@@ -186,25 +182,12 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static public bool IsRecordingDocumentCase(LRSTransactionType type, LRSDocumentType docType) {
-      //if (NotRecordableDocumentType(docType)) {
-      //  return false;
-      //}
-      //if (docType.Id == 724) {  // docType.Id == 723 ||
-      //  return false;
-      //}
-
       if (type.Id == 700 || type.Id == 704 || type.Id == 705) {
         return true;
       }
 
       return false;
     }
-
-
-    //static private bool NotRecordableDocumentType(LRSDocumentType docType) {
-    //  return EmpiriaMath.IsMemberOf(docType.Id, new int[] {  723, 724, 730, 731, 732, 733, 734, 735, 736,
-    //                                                        751, 752, 753, 754, 755, 756, 757, 758 });
-    //}
 
 
     public static bool IsDigitalizable(LRSTransactionType type, LRSDocumentType docType) {
@@ -259,7 +242,7 @@ namespace Empiria.Land.Registration.Transactions {
         return String.Empty;
       }
 
-      if (transaction.TransactionType.Id == 704 || transaction.DocumentType.Id == 721) {
+      if (transaction.TransactionType.Id == 704) {
         return String.Empty;
       }
 

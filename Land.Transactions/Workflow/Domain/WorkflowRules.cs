@@ -164,10 +164,9 @@ namespace Empiria.Land.Transactions.Workflow {
         case LRSTransactionStatus.Process:
         case LRSTransactionStatus.Control:
           // Certificado || Cancelación || Copia simple
-          if (type.Id == 701 || type.Id == 704 || docType.Id == 734) {
+          if (type.Id == 701 || docType.Id == 734) {
             list.Add(LRSTransactionStatus.Elaboration);
-          } else if (type.Id == 700 || type.Id == 702 ||
-                     type.Id == 703 || type.Id == 705) {
+          } else {
             list.Add(LRSTransactionStatus.Qualification);
             list.Add(LRSTransactionStatus.Recording);
             list.Add(LRSTransactionStatus.Elaboration);
@@ -189,6 +188,7 @@ namespace Empiria.Land.Transactions.Workflow {
         case LRSTransactionStatus.Qualification:       // Only used in Zacatecas
 
           list.Add(LRSTransactionStatus.Recording);
+          list.Add(LRSTransactionStatus.Elaboration);
           list.Add(LRSTransactionStatus.Revision);
           list.Add(LRSTransactionStatus.Qualification);
           list.Add(LRSTransactionStatus.ToReturn);
@@ -212,19 +212,10 @@ namespace Empiria.Land.Transactions.Workflow {
           break;
 
         case LRSTransactionStatus.Elaboration:
-          if (docType.Id == 734) {
-            list.Add(LRSTransactionStatus.Revision);
-          } else if (type.Id == 704 || type.Id == 705) {
-            list.Add(LRSTransactionStatus.OnSign);
-          } else {
-            list.Add(LRSTransactionStatus.Revision);
-          }
-
-          list.Add(LRSTransactionStatus.OnSign);
-
           list.Add(LRSTransactionStatus.Elaboration);
+          list.Add(LRSTransactionStatus.Revision);
+          list.Add(LRSTransactionStatus.OnSign);
           list.Add(LRSTransactionStatus.Control);
-
           list.Add(LRSTransactionStatus.ToReturn);
 
           break;
@@ -232,16 +223,19 @@ namespace Empiria.Land.Transactions.Workflow {
         case LRSTransactionStatus.Revision:
 
           list.Add(LRSTransactionStatus.OnSign);
+
           if (type.Id == 701) {
             list.Add(LRSTransactionStatus.Elaboration);
-          } else if (type.Id == 700 || type.Id == 702 || type.Id == 703 || type.Id == 705) {
+          } else {
+            list.Add(LRSTransactionStatus.Qualification);
             list.Add(LRSTransactionStatus.Recording);
-          } else if (type.Id == 704) {
             list.Add(LRSTransactionStatus.Elaboration);
           }
+
           if (LRSWorkflowRules.IsArchivable(type, docType)) {
             list.Add(LRSTransactionStatus.Archived);
           }
+
           list.Add(LRSTransactionStatus.Revision);
           list.Add(LRSTransactionStatus.Control);
           list.Add(LRSTransactionStatus.ToReturn);
@@ -253,11 +247,12 @@ namespace Empiria.Land.Transactions.Workflow {
           list.Add(LRSTransactionStatus.Revision);
           if (type.Id == 701) {
             list.Add(LRSTransactionStatus.Elaboration);
-          } else if (type.Id == 700 || type.Id == 702 || type.Id == 703 || type.Id == 705) {
+          } else {
+            list.Add(LRSTransactionStatus.Qualification);
             list.Add(LRSTransactionStatus.Recording);
-          } else if (type.Id == 704) {
             list.Add(LRSTransactionStatus.Elaboration);
           }
+
           list.Add(LRSTransactionStatus.Control);
           list.Add(LRSTransactionStatus.ToReturn);
 
