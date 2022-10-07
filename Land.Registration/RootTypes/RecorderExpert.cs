@@ -10,6 +10,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Linq;
 
 namespace Empiria.Land.Registration {
 
@@ -113,16 +114,27 @@ namespace Empiria.Land.Registration {
       }
 
 
-      if (CreateResourceOnPhysicalRecording &&
-          Task.PrecedentRecording.RecordingActs.Count > 0) {
-        string msg = "La inscripción ya tiene registrado un predio con folio real, " +
-                     "y no es posible agregarle otros por este medio.\n\n" +
-                     "Para agregarle más predios a una inscripción debe utilizarse la " +
-                     "herramienta de captura histórica.";
-        Assertion.RequireFail(msg);
-      }
+      if (CreateResourceOnPhysicalRecording) {
+        var resources = Task.PrecedentRecording.RecordingActs.Select(x => x.Resource)
+                                                             .Distinct()
+                                                             .ToFixedList();
 
+        if (resources.Count == 1) {
+          Assertion.RequireFail("En esta inscripción ya está registrado un predio, " +
+                                $"al cual se le asignó el folio real {resources[0].UID}.\n\n" +
+                                "Para agregar múltiples predios a una inscripción debe utilizarse la " +
+                                "herramienta de captura histórica.");
+
+        } else if (resources.Count > 1) {
+          Assertion.RequireFail($"La inscripción tiene registrados {resources.Count} predios con folio real, " +
+                                "y no es posible agregarle otros por este medio.\n\n" +
+                                "Para agregar múltiples predios a una inscripción debe utilizarse la " +
+                                "herramienta de captura histórica.");
+        }
+
+      }
     }
+
 
     #endregion Public methods
 
