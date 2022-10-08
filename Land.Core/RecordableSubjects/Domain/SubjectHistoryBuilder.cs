@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Linq;
 
 using Empiria.Land.Registration;
 
@@ -65,24 +66,76 @@ namespace Empiria.Land.RecordableSubjects {
         return string.Empty;
       }
 
+      string temp = BuildRecordingActText(recordingAct);
+
+
       if (!Resource.IsCreationalRole(recordingAct.ResourceRole)) {
-        return string.Empty;
+        return temp;
       }
 
       var realEstate = (RealEstate) recordingAct.Resource;
 
       if (recordingAct.ResourceRole == ResourceRole.Created) {
-        return "Predio inscrito por primera vez (no es fusión ni se subdividió de otro).";
+        return temp + ". Acto inicial en la historia.";
 
       } else if (realEstate.Equals(_subject)) {
-        return $"Fracción identificada como {PartitionText(realEstate)} del predio " +
+        return temp + $". Fracción identificada como {PartitionText(realEstate)} del predio " +
                $"{recordingAct.RelatedResource.UID}, con una superficie de {realEstate.LotSize}.";
 
       } else {
-        return $"Subdividido en {PartitionText(realEstate)} con folio real " +
+        return temp + $". Subdividido en {PartitionText(realEstate)} con folio real " +
                $"{realEstate.UID}. Superficie: {realEstate.LotSize}.";
 
       }
+    }
+
+
+    private string BuildRecordingActText(RecordingAct recordingAct) {
+      string temp = "{PARTIES} {AMOUNT}";
+
+      temp = temp.Replace("{PARTIES}", BuildRecordingActParties(recordingAct));
+
+      if (recordingAct.OperationAmount != 0) {
+        temp = temp.Replace("{AMOUNT}", $"Monto {recordingAct.OperationAmount.ToString("C2")}");
+
+      } else if (recordingAct.RecordingActType.RecordingRule.EditOperationAmount &&
+                 recordingAct.OperationAmount == 0) {
+        temp = temp.Replace("{AMOUNT}", "Sin monto de operación.");
+
+      } else {
+        temp = temp.Replace("{AMOUNT}", string.Empty);
+      }
+
+      return temp;
+    }
+
+
+    private string BuildRecordingActParties(RecordingAct recordingAct) {
+      FixedList<RecordingActParty> parties = recordingAct.GetParties();
+
+      var primaries = parties.FindAll(x => x.RoleType == Registration.Adapters.RecordingActPartyType.Primary);
+      var secondaries = parties.FindAll(x => x.RoleType == Registration.Adapters.RecordingActPartyType.Secondary);
+
+      if (primaries.Count == 0 && recordingAct.RecordingActType.RecordingRule.AllowNoParties) {
+        return string.Empty;
+      }
+
+      if (primaries.Count == 0) {
+        return "Sin personas registradas";
+      }
+
+      if (recordingAct.RecordingActType.IsDomainActType) {
+        return EmpiriaString.ToString(primaries.Select(x => x.Party.FullName + ",")
+                                               .Distinct()
+                                               .ToFixedList());
+
+      } else if (secondaries.Count != 0) {
+        return secondaries[0].Party.FullName + ",";
+
+      } else {
+        return primaries[0].Party.FullName + ",";
+      }
+
     }
 
 
