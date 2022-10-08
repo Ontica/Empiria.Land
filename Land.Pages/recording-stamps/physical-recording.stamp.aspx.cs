@@ -111,9 +111,11 @@ namespace Empiria.Land.Pages {
 			const string t = "Presentado para su examen y registro en	{CITY}, el <b>{DATE} a las {TIME} horas</b>, bajo el número de trámite <b>{NUMBER}</b> - Conste";
 
 
-			DateTime presentationTime = transaction.LastReentryTime == ExecutionServer.DateMaxValue ? transaction.PresentationTime : transaction.LastReentryTime;
+      // DateTime presentationTime = transaction.LastReentryTime == ExecutionServer.DateMaxValue ? transaction.PresentationTime : transaction.LastReentryTime;
 
-			string x = t.Replace("{DATE}", presentationTime.ToString(@"dd \de MMMM \de yyyy"));
+      DateTime presentationTime = transaction.PresentationTime;
+
+      string x = t.Replace("{DATE}", presentationTime.ToString(@"dd \de MMMM \de yyyy"));
 			x = x.Replace("{TIME}", presentationTime.ToString("HH:mm:ss"));
 			x = x.Replace("{NUMBER}", transaction.UID);
 			x = x.Replace("{CITY}", "Zacatecas, Zacatecas");
