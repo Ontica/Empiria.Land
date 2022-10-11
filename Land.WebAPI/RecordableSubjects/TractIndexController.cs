@@ -7,6 +7,7 @@
 *  Summary  : Web API with methods that return tract indexes for recordable subjects.                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
 using System.Web.Http;
 
 using Empiria.WebApi;
@@ -15,6 +16,7 @@ using Empiria.Land.RecordableSubjects.Adapters;
 using Empiria.Land.RecordableSubjects.UseCases;
 using Empiria.Land.Registration.Adapters;
 using Empiria.Land.Registration.UseCases;
+
 
 namespace Empiria.Land.RecordableSubjects.WebApi {
 
@@ -26,16 +28,18 @@ namespace Empiria.Land.RecordableSubjects.WebApi {
     [HttpGet]
     [Route("v5/land/registration/recordable-subjects/{recordableSubjectUID:guid}/amendable-recording-acts")]
     public SingleObjectModel GetAmendableRecordingActs([FromUri] string recordableSubjectUID,
-                                                       [FromUri] string instrumentRecordingUID,
-                                                       [FromUri] string amendmentRecordingActTypeUID) {
+                                                       [FromUri] string amendmentRecordingActTypeUID,
+                                                       [FromUri] string instrumentRecordingUID = "",
+                                                       [FromUri] string date = "") {
 
-      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
       Assertion.Require(amendmentRecordingActTypeUID, "amendmentRecordingActTypeUID");
 
       using (var usecases = TractIndexUseCases.UseCaseInteractor()) {
+
         SubjectHistoryDto tractIndex = usecases.AmendableRecordingActs(recordableSubjectUID,
-                                                                   instrumentRecordingUID,
-                                                                   amendmentRecordingActTypeUID);
+                                                                       amendmentRecordingActTypeUID,
+                                                                       instrumentRecordingUID,
+                                                                       string.IsNullOrWhiteSpace(date) ? DateTime.Now : DateTime.Parse(date));
         return new SingleObjectModel(this.Request, tractIndex);
       }
     }

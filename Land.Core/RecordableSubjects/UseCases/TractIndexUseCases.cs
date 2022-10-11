@@ -37,12 +37,18 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
     #region Use cases
 
     public SubjectHistoryDto AmendableRecordingActs(string recordableSubjectUID,
-                                                string instrumentRecordingUID,
-                                                string amendmentRecordingActTypeUID) {
+                                                    string amendmentRecordingActTypeUID,
+                                                    string instrumentRecordingUID,
+                                                    DateTime date) {
 
       Assertion.Require(recordableSubjectUID, nameof(recordableSubjectUID));
-      Assertion.Require(instrumentRecordingUID, nameof(instrumentRecordingUID));
       Assertion.Require(amendmentRecordingActTypeUID, nameof(amendmentRecordingActTypeUID));
+
+      if (!string.IsNullOrWhiteSpace(instrumentRecordingUID)) {
+        var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+        date = instrumentRecording.AuthorizationTime != ExecutionServer.DateMaxValue ?
+                                      instrumentRecording.AuthorizationTime : instrumentRecording.PresentationTime;
+      }
 
       var amendmentRecordingActType = RecordingActType.Parse(amendmentRecordingActTypeUID);
 
@@ -52,7 +58,8 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
       FixedList<RecordingAct> acts = recordableSubject.Tract.GetRecordingActs();
 
-      var amendableActs = acts.FindAll((x) => appliesTo.Contains(x.RecordingActType));
+      var amendableActs = acts.FindAll(x => appliesTo.Contains(x.RecordingActType) &&
+                                            x.Document.AuthorizationTime <= date);
 
       return SubjectHistoryMapper.Map(recordableSubject, amendableActs);
     }
