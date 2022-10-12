@@ -233,11 +233,13 @@ namespace Empiria.Land.Pages {
 
     internal string GetChildActText(int index, RecordingAct child) {
       const string overTheWhole =
-              "<div style='padding-left:20pt'>{INDEX}.- Bien inmueble con folio real {PROPERTY.UID}.</div>";
+              "<div style='padding-left:20pt'>{INDEX}.- Bien inmueble de tipo <b>{PROPERTY.KIND}</b> con folio real {PROPERTY.UID}.</div>";
 
       string x = String.Empty;
 
       x = overTheWhole.Replace("{INDEX}", index.ToString());
+
+      x = x.Replace("{PROPERTY.KIND}", _recordingAct.Resource.Kind);
 
       x = x.Replace("{PROPERTY.UID}", GetRealEstateTextWithAntecedentAndCadastralKey(child));
 
@@ -247,12 +249,14 @@ namespace Empiria.Land.Pages {
 
     private string GetRealEstateActOverTheWhole(int index) {
       const string overTheWhole =
-          "{INDEX}.- {RECORDING.ACT} sobre el bien inmueble con folio real {PROPERTY.UID}.<br/>";
+          "{INDEX}.- {RECORDING.ACT} sobre el bien inmueble de tipo <b>{PROPERTY.KIND}</b> con folio real {PROPERTY.UID}.<br/>";
 
       string x = String.Empty;
 
       x = overTheWhole.Replace("{INDEX}", index.ToString());
       x = x.Replace("{RECORDING.ACT}", this.GetRecordingActDisplayName());
+
+      x = x.Replace("{PROPERTY.KIND}", _recordingAct.Resource.Kind);
 
       x = x.Replace("{PROPERTY.UID}",
                     GetRealEstateTextWithAntecedentAndCadastralKey(_recordingAct));
@@ -462,20 +466,59 @@ namespace Empiria.Land.Pages {
       }
 
       if (_recordingAct.OperationAmount != 0m) {
-        temp += " por " + _recordingAct.OperationAmount.ToString("C2") + " " + _recordingAct.OperationCurrency.Name + ", ";
+        temp += $" por {_recordingAct.OperationAmount.ToString("C2")} {_recordingAct.OperationCurrency.Name}, ";
       }
 
       return temp;
     }
 
     static private string GetRealEstateTextWithCadastralKey(RealEstate property) {
-      string x = "<b class='bigger'>" + property.UID + "</b>";
+      string location = string.Empty;
 
-      if (property.CadastralKey.Length != 0) {
-        x += " (Clave catastral: <b>" + property.CadastralKey + "</b>)";
+      if (property.Lot.Length != 0) {
+        location = $"Lote: <b>{property.Lot}</b>";
       }
 
-      return x;
+      if (property.Block.Length != 0) {
+        location += location.Length != 0 ? ", " : string.Empty;
+        location += $"Manzana: <b>{property.Block}</b>";
+      }
+
+      if (property.Section.Length != 0) {
+        location += location.Length != 0 ? ", " : string.Empty;
+        location += $"Sección: <b>{property.Section}</b>";
+      }
+
+      if (property.CadastralKey.Length != 0) {
+        location += location.Length != 0 ? ", " : string.Empty;
+        location += $"Clave catastral: <b>{property.CadastralKey}</b>";
+      } else {
+        location += location.Length != 0 ? ", " : string.Empty;
+        location += $"sin clave catastral";
+      }
+
+      string lotSize;
+
+      if (property.LotSize.Unit.IsEmptyInstance || property.LotSize.Amount == 0) {
+        lotSize = "<b>NO CONSTA</b>";
+      } else {
+        lotSize = $"<b>{property.LotSize}</b>";
+      }
+
+
+      if (property.BuildingArea != 0) {
+        lotSize += $" y <b>{property.BuildingArea} M2</b> de construcción";
+      } else {
+        lotSize += $", sin superficie de construcción reportada";
+      }
+
+
+      if (property.UndividedPct != 0) {
+        lotSize += $", y un indiviso de <b>{property.UndividedPct} por ciento</b>";
+      }
+
+
+      return $"<b class='bigger'>{property.UID}</b> ({location}, con una superficie de {lotSize})";
     }
 
 

@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
+using Empiria.Land.Instruments;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
@@ -48,12 +48,21 @@ namespace Empiria.Land.Pages {
 
     private string PrelationTextForDocumentsWithTransaction() {
       const string template =
-           "Documento presentado para su examen y registro {REENTRY_TEXT} el <b>{DATE} a las {TIME} horas</b>, " +
+           "<b style='text-transform:uppercase'>{INSTRUMENT_AS_TEXT}</b>, instrumento presentado " +
+           "para su examen y registro {REENTRY_TEXT} el <b>{DATE} a las {TIME} horas</b>, " +
            "bajo el número de trámite <b>{NUMBER}</b>, y para el cual {COUNT}";
 
       DateTime presentationTime = _transaction.IsReentry ? _transaction.LastReentryTime : _transaction.PresentationTime;
 
       string x = template.Replace("{DATE}", CommonMethods.GetDateAsText(presentationTime));
+
+      if (_transaction.HasInstrument) {
+        var instrument = Instrument.Parse(_document.InstrumentId);
+        x = x.Replace("{INSTRUMENT_AS_TEXT}", instrument.AsText);
+
+      } else {
+        x = x.Replace("{INSTRUMENT_AS_TEXT}", "**INSTRUMENTO NO DETERMINADO**");
+      }
 
       x = x.Replace("{TIME}", presentationTime.ToString("HH:mm:ss"));
       x = x.Replace("{NUMBER}", _transaction.UID);

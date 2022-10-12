@@ -91,10 +91,7 @@ namespace Empiria.Land.Instruments {
 
     public string AsText {
       get {
-        if (this.Summary.Length != 0) {
-          return this.Summary;
-        }
-        return "Instrument.AsText not implemented";
+        return GetInstrumentAsText();
       }
     }
 
@@ -250,6 +247,31 @@ namespace Empiria.Land.Instruments {
       _recordingDocument.IssueOffice = this.Issuer.RelatedEntity;
       _recordingDocument.IssuePlace = this.Issuer.RelatedPlace;
       _recordingDocument.SheetsCount = this.SheetsCount;
+    }
+
+
+    private string GetInstrumentAsText() {
+      string temp = Kind.Length != 0 ? Kind : InstrumentType.DisplayName;
+
+      if (InstrumentNo.Length != 0) {
+        temp += " número " + InstrumentNo + " ";
+      } else {
+        temp += " sin número ";
+      }
+
+      if (IssueDate != ExecutionServer.DateMinValue) {
+        temp += "de fecha " + IssueDate.ToString("dd/MMM/yyyy") + ", ";
+      } else {
+        temp += "sin fecha, ";
+      }
+
+      if (!Issuer.IsEmptyInstance) {
+        temp += Issuer.EntityName;
+      } else {
+        temp += "sin emisor";
+      }
+
+      return temp;
     }
 
 
