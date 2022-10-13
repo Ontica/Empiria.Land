@@ -111,7 +111,7 @@ namespace Empiria.Land.Registration {
           return "Sobre un acto jurídico de este documento";
 
         case RegistrationCommandType.RealEstateTractIndex:
-          return "Sobre la totalidad de este predio";
+          return "Sobre este predio";
 
         case RegistrationCommandType.RealEstateTractIndexPartition:
           return "Sobre una fracción de este predio";
@@ -231,6 +231,7 @@ namespace Empiria.Land.Registration {
         case RegistrationCommandType.AmendAssociationTractIndexAct:
           return new RegistrationCommandRuleDto {
             SubjectType = RecordableSubjectType.Association,
+            SelectBookEntry = true,
             SelectTargetAct = true
           };
 
@@ -244,6 +245,7 @@ namespace Empiria.Land.Registration {
         case RegistrationCommandType.AmendNoPropertyTractIndexAct:
           return new RegistrationCommandRuleDto {
             SubjectType = RecordableSubjectType.NoProperty,
+            SelectBookEntry = true,
             SelectTargetAct = true
           };
 
@@ -264,6 +266,7 @@ namespace Empiria.Land.Registration {
         case RegistrationCommandType.AmendRealEstateTractIndexAct:
           return new RegistrationCommandRuleDto {
             SubjectType = RecordableSubjectType.RealEstate,
+            SelectBookEntry = true,
             SelectTargetAct = true
           };
 
