@@ -89,7 +89,8 @@ namespace Empiria.Land.Registration.Adapters {
       return new BookEntryShortDto {
         UID = bookEntry.UID,
         RecordingNo = bookEntry.Number,
-        InstrumentRecordingUID = bookEntry.MainDocument.GUID
+        InstrumentRecordingUID = bookEntry.MainDocument.GUID,
+        AuthorizationDate = bookEntry.MainDocument.AuthorizationTime
       };
     }
 

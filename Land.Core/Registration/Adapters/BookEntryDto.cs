@@ -112,6 +112,11 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     } = string.Empty;
 
+
+    public DateTime AuthorizationDate {
+      get; internal set;
+    }
+
   }  // BookEntryShortDto
 
 
