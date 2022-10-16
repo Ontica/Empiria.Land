@@ -9,12 +9,14 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land.SearchServices {
+using Empiria.Land.Registration.Transactions;
+
+namespace Empiria.Land.Registration.Adapters {
 
   /// <summary>Methods used to map land electronic records.</summary>
-  static internal class RecordMapper {
+  static public class RecordMapper {
 
-    static internal RecordDto Map(Record record) {
+    static public RecordDto Map(Record record) {
       return new RecordDto {
         UID = record.UID,
         RecordID = record.RecordingID,
@@ -33,7 +35,7 @@ namespace Empiria.Land.SearchServices {
     static private RecordTransactionDto MapTransaction(Record record) {
       var transaction = record.HasTransaction ?
                               record.Transaction :
-                              Registration.Transactions.LRSTransaction.Empty;
+                              LRSTransaction.Empty;
 
       return new RecordTransactionDto {
         UID = transaction.GUID,
@@ -44,4 +46,4 @@ namespace Empiria.Land.SearchServices {
 
   }  // class RecordMapper
 
-}  // namespace Empiria.Land.SearchServices
+}  // namespace Empiria.Land.Registration.Adapters

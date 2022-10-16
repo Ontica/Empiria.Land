@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land.SearchServices {
+namespace Empiria.Land.Registration.Adapters {
 
   /// <summary>Describes a land system electronic record.</summary>
   public class RecordDto {
@@ -94,4 +94,4 @@ namespace Empiria.Land.SearchServices {
 
   }  // class RecordTransactionDto
 
-}  // namespace Empiria.Land.SearchServices
+}  // namespace Empiria.Land.Registration.Adapters

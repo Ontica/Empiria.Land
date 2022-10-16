@@ -31,7 +31,7 @@ namespace Empiria.Land.SearchServices {
     #region Helpers
 
     static private RecordingActPartyQueryResultDto MapForInternalUse(RecordingActParty actParty) {
-      Record record = LandRecordsSearcher.GetRecordingActPartyRecord(actParty);
+      Record record = RecordBuilder.GetRecordingActPartyRecord(actParty);
 
       return new RecordingActPartyQueryResultDto {
         UID = actParty.UID,

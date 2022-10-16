@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Search services                            Component : Domain Layer                            *
 *  Assembly : Empiria.Land.SearchServices.dll            Pattern   : Service provider                        *
-*  Type     : LandRecordsSearcher                        License   : Please read LICENSE.txt file            *
+*  Type     : RecordBuilder                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Provides search services for land records.                                                     *
+*  Summary  : Builds Record objects for Land entities.                                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,10 +13,10 @@ using Empiria.Land.Registration;
 
 namespace Empiria.Land.SearchServices {
 
-  /// <summary>Provides search services for land records.</summary>
-  static internal class LandRecordsSearcher {
+  /// <summary>Builds Record objects for Land entities.</summary>
+  static public class RecordBuilder {
 
-    static internal Record GetLastDomainActRecord(Resource resource) {
+    static public Record GetLastDomainActRecord(Resource resource) {
       Assertion.Require(resource, nameof(resource));
 
       RecordingDocument lastRecordingDocument = resource.Tract.LastRecordingAct.Document;
@@ -25,12 +25,12 @@ namespace Empiria.Land.SearchServices {
     }
 
 
-    static internal Record GetRecordingActPartyRecord(RecordingActParty recordingActParty) {
+    static public Record GetRecordingActPartyRecord(RecordingActParty recordingActParty) {
       Assertion.Require(recordingActParty, nameof(recordingActParty));
 
       return new Record(recordingActParty.RecordingAct.Document);
     }
 
-  }  // class LandRecordsSearcher
+  }  // class RecordBuilder
 
 }  // namespace Empiria.Land.SearchServices

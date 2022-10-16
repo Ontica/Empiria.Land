@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Land.RecordableSubjects.Adapters;
+using Empiria.Land.Registration.Adapters;
 
 namespace Empiria.Land.SearchServices {
 

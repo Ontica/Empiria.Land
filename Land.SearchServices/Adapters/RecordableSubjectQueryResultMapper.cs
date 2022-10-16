@@ -12,6 +12,7 @@ using System;
 using Empiria.Land.Registration;
 
 using Empiria.Land.RecordableSubjects.Adapters;
+using Empiria.Land.Registration.Adapters;
 
 namespace Empiria.Land.SearchServices {
 
@@ -27,7 +28,7 @@ namespace Empiria.Land.SearchServices {
     }
 
     static internal RecordableSubjectQueryResultDto MapForInternalUse(Resource resource) {
-      Record record = LandRecordsSearcher.GetLastDomainActRecord(resource);
+      Record record = RecordBuilder.GetLastDomainActRecord(resource);
 
       return new RecordableSubjectQueryResultDto {
         UID = resource.GUID,

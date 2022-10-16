@@ -12,13 +12,12 @@ using System;
 using Empiria.Contacts;
 
 using Empiria.Land.Instruments;
-using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.SearchServices {
+namespace Empiria.Land.Registration {
 
   /// <summary>Represents a land recording system official record.</summary>
-  internal class Record {
+  public class Record {
 
     #region Fields
 
@@ -97,4 +96,4 @@ namespace Empiria.Land.SearchServices {
 
   }  // class Record
 
-}  // namespace Empiria.Land.SearchServices
+}  // namespace Empiria.Land.Registration
