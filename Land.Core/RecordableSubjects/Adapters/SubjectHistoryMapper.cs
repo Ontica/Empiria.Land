@@ -51,7 +51,6 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
         RecordingData = RecordingDataMapper.MapRecordingData(recordingAct),
         SubjectSnapshot = RecordableSubjectsMapper.Map(subject,
                                                        historyEntry.SubjectSnapshot),
-        LotChange = new LotChangeDto(),
         Actions = historyEntry.EditionRules
       };
     }

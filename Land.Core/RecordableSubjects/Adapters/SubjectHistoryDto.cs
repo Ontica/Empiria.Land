@@ -83,11 +83,6 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    public LotChangeDto LotChange {
-      get; internal set;
-    }
-
-
     public EditionRules Actions {
       get; internal set;
     } = new EditionRules();
@@ -95,12 +90,5 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
   }  // class SubjectHistoryEntryDto
 
-
-
-  /// <summary>Holds information about a real property lot physical change.</summary>
-  public class LotChangeDto {
-
-
-  }  // class LotChangeDto
 
 }  // namespace Empiria.Land.RecordableSubjects.Adapters
