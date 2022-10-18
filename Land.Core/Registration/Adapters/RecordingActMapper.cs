@@ -34,7 +34,7 @@ static internal class RecordingActMapper {
           Actions = MapControlData(recordingAct)
       };
 
-      if (!recordingAct.AmendmentOf.IsEmptyInstance) {
+      if (recordingAct.IsAmendment) {
         dto.AmendedAct = SubjectHistoryMapper.Map(recordingAct.AmendmentOf);
       }
 

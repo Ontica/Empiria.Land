@@ -51,7 +51,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
                                                           SubjectHistoryEntry historyEntry) {
       RecordingAct recordingAct = historyEntry.RecordingAct;
 
-      return new SubjectHistoryEntryDto {
+      var dto = new SubjectHistoryEntryDto {
         UID = recordingAct.UID,
         EntryType = historyEntry.EntryType,
         Name = historyEntry.Name,
@@ -62,6 +62,13 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
                                                        historyEntry.SubjectSnapshot),
         Actions = historyEntry.EditionRules
       };
+
+      if (recordingAct.IsAmendment) {
+        dto.AmendedAct = Map(recordingAct.AmendmentOf);
+      }
+
+      return dto;
+
     }
 
   }  // class SubjectHistoryMapper

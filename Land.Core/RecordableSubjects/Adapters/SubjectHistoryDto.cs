@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Land.Registration.Adapters;
+using Newtonsoft.Json;
 
 namespace Empiria.Land.RecordableSubjects.Adapters {
 
@@ -73,6 +74,13 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
+
+    [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+    public SubjectHistoryEntryDto AmendedAct {
+      get; internal set;
+    }
+
+
     public RecordingDataDto RecordingData {
       get; internal set;
     }
@@ -89,6 +97,5 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
 
 
   }  // class SubjectHistoryEntryDto
-
 
 }  // namespace Empiria.Land.RecordableSubjects.Adapters
