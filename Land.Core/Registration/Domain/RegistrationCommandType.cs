@@ -57,7 +57,7 @@ namespace Empiria.Land.Registration {
       switch (commandType) {
 
         case RegistrationCommandType.CreateAssociation:
-          return "Sociedad civil a inscibirse por primera vez";
+          return "Sociedad civil que NUNCA ha estado inscrita en el RPP (primera vez)";
 
         case RegistrationCommandType.SelectAssociation:
           return "Sociedad inscrita con folio electrónico";
@@ -69,7 +69,7 @@ namespace Empiria.Land.Registration {
           return "Sobre un acto jurídico de una sociedad";
 
         case RegistrationCommandType.CreateNoProperty:
-          return "Documento a inscribirse por primera vez";
+          return "Documento que NUNCA ha esto inscrito en el RPP (primera vez)";
 
         case RegistrationCommandType.SelectNoProperty:
           return "Documento inscrito con folio electrónico";
@@ -81,7 +81,7 @@ namespace Empiria.Land.Registration {
           return "Sobre un acto jurídico de documentos y otros";
 
         case RegistrationCommandType.CreateRealEstate:
-          return "Predio a inscribirse por primera vez";
+          return "Predio que NUNCA ha sido inscrito en el RPP (primera vez)";
 
         case RegistrationCommandType.SelectRealEstate:
           return "Predio inscrito con folio real";
