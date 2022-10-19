@@ -7,6 +7,9 @@
 *  Summary  : Output DTO for a recording act with it associated subject and its participants.                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
+
+using Newtonsoft.Json;
 
 using Empiria.Land.RecordableSubjects.Adapters;
 
@@ -50,6 +53,13 @@ namespace Empiria.Land.Registration.Adapters {
     public NamedEntityDto RecordableSubject {
       get; internal set;
     }
+
+
+    [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+    public SubjectHistoryEntryDto AmendedAct {
+      get; internal set;
+    }
+
 
     public FixedList<RecordingActPartyDto> Parties {
       get; internal set;

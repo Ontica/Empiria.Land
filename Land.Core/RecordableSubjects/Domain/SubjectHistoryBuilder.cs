@@ -20,6 +20,14 @@ namespace Empiria.Land.RecordableSubjects {
     private readonly Resource _subject;
     private readonly FixedList<RecordingAct> _recordingActs;
 
+    public SubjectHistoryBuilder(Resource subject, RecordingAct recordingAct) {
+      Assertion.Require(subject, nameof(subject));
+      Assertion.Require(recordingAct, nameof(recordingAct));
+
+      _subject = subject;
+      _recordingActs = new[] { recordingAct }.ToFixedList();
+    }
+
     public SubjectHistoryBuilder(Resource subject, FixedList<RecordingAct> recordingActs) {
       Assertion.Require(subject, nameof(subject));
       Assertion.Require(recordingActs, nameof(recordingActs));

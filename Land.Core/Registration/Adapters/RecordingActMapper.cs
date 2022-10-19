@@ -10,28 +10,33 @@
 using System;
 using System.Collections.Generic;
 
+using Empiria.Land.RecordableSubjects.Adapters;
+
 namespace Empiria.Land.Registration.Adapters {
 
 
 /// <summary>Contains methods used to map recording acts.</summary>
 static internal class RecordingActMapper {
 
-
     static internal RecordingActDto Map(RecordingAct recordingAct) {
-      var dto = new RecordingActDto();
+        var dto = new RecordingActDto {
+          UID = recordingAct.UID,
+          Type = recordingAct.RecordingActType.Name,
+          Name = recordingAct.DisplayName,
+          Kind = recordingAct.Kind,
+          Description = recordingAct.Summary,
+          OperationAmount = recordingAct.OperationAmount,
+          CurrencyUID = recordingAct.OperationCurrency.UID,
+          RecordableSubject = new NamedEntityDto(recordingAct.Resource.UID,
+                                                 recordingAct.Resource.Description),
+          Parties = PartyMapper.Map(recordingAct.GetParties()),
+          Status = recordingAct.Status,
+          Actions = MapControlData(recordingAct)
+      };
 
-      dto.UID = recordingAct.UID;
-      dto.Type = recordingAct.RecordingActType.Name;
-      dto.Name = recordingAct.DisplayName;
-      dto.Kind = recordingAct.Kind;
-      dto.Description = recordingAct.Summary;
-      dto.OperationAmount = recordingAct.OperationAmount;
-      dto.CurrencyUID = recordingAct.OperationCurrency.UID;
-      dto.RecordableSubject = new NamedEntityDto(recordingAct.Resource.UID,
-                                                 recordingAct.Resource.Description);
-      dto.Parties = PartyMapper.Map(recordingAct.GetParties());
-      dto.Status = recordingAct.Status;
-      dto.Actions = MapControlData(recordingAct);
+      if (!recordingAct.AmendmentOf.IsEmptyInstance) {
+        dto.AmendedAct = SubjectHistoryMapper.Map(recordingAct.AmendmentOf);
+      }
 
       return dto;
     }

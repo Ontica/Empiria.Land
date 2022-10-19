@@ -32,6 +32,15 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
+    static internal SubjectHistoryEntryDto Map(RecordingAct recordingAct) {
+      var builder = new SubjectHistoryBuilder(recordingAct.Resource, recordingAct);
+
+      SubjectHistory history = builder.Build();
+
+      return MapHistoryEntry(recordingAct.Resource, history.Entries[0]);
+    }
+
+
     static private FixedList<SubjectHistoryEntryDto> MapHistory(SubjectHistory history) {
       return history.Entries.Select(entry => MapHistoryEntry(history.Subject, entry))
                             .ToFixedList();
