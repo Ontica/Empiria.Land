@@ -962,6 +962,7 @@ namespace Empiria.Land.Registration {
       if (this.WasCanceledOn(onDate)) {
         return false;
       }
+
       var autoCancelDays = this.RecordingActType.RecordingRule.AutoCancel;
       if (autoCancelDays == 0) {
         return true;

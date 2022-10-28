@@ -256,7 +256,7 @@ namespace Empiria.Land.Registration {
       int recordingActIndex = recordingActs.IndexOf(recordingAct);
 
       Assertion.Require(recordingActIndex != -1,
-                       "Supplied recordingAct doesn't belong to the property tract.");
+                       $"Supplied recordingAct {recordingAct.Id} doesn't belong to the property tract '{this.UID}'.");
 
       for (int i = 0; i < recordingActIndex; i++) {
         if (recordingActs[i].RecordingActType.IsDomainActType ||

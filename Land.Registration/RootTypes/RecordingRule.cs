@@ -117,7 +117,7 @@ namespace Empiria.Land.Registration {
     }
 
     private JsonObject ConvertToJson() {
-      JsonObject json = new JsonObject();
+      var json = new JsonObject();
 
       json.Add("IsModification", this.recordingActType.IsModificationActType);
       json.Add("IsCancelation", this.recordingActType.IsCancelationActType);

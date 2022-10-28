@@ -9,8 +9,9 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Registration.Adapters;
 using Newtonsoft.Json;
+
+using Empiria.Land.Registration.Adapters;
 
 namespace Empiria.Land.RecordableSubjects.Adapters {
 

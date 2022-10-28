@@ -22,7 +22,7 @@ namespace Empiria.Land.Registration {
     }
 
     internal ModificationAct(RecordingActType recordingActType, RecordingDocument document,
-                         Resource resource) : base(recordingActType, document) {
+                             Resource resource) : base(recordingActType, document) {
       Assertion.Require(resource, "resource");
 
       this.SetResource(resource);
@@ -44,6 +44,7 @@ namespace Empiria.Land.Registration {
     static public new ModificationAct Parse(int id) {
       return BaseObject.ParseId<ModificationAct>(id);
     }
+
 
     #endregion Constructors and parsers
 
