@@ -59,9 +59,9 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
       FixedList<RecordingAct> acts = recordableSubject.Tract.GetRecordingActs();
 
       var amendableActs = acts.FindAll(x => appliesTo.Contains(x.RecordingActType) &&
-                                            ((date < x.Document.AuthorizationTime &&
+                                            ((x.Document.AuthorizationTime < date &&
                                               x.Document.AuthorizationTime != ExecutionServer.DateMaxValue) ||
-                                              date < x.Document.PresentationTime &&
+                                              x.Document.PresentationTime < date &&
                                               x.Document.AuthorizationTime == ExecutionServer.DateMaxValue));
 
       return SubjectHistoryMapper.Map(recordableSubject, amendableActs);
