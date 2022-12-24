@@ -58,19 +58,22 @@ namespace Empiria.Land.Data {
       }
 
       var operation = DataOperation.Parse("qryLRSResourceRecordingActs", resource.Id);
-      DataTable table = DataReader.GetDataTable(operation);
+
+      FixedList<RecordingAct> recordingActs = DataReader.GetFixedList<RecordingAct>(operation);
+
       List<RecordingAct> list = new List<RecordingAct>();
-      foreach (DataRow row in table.Rows) {
-        var recordingAct = BaseObject.ParseDataRow<RecordingAct>(row);
-        if (recordingAct.Equals(breakAct)) {
+
+      foreach (var act in recordingActs) {
+        if (act.Equals(breakAct)) {
           if (includeBreakAct) {
-            list.Add(BaseObject.ParseDataRow<RecordingAct>(row));
+            list.Add(act);
           }
           break;
         } else {
-          list.Add(BaseObject.ParseDataRow<RecordingAct>(row));
+          list.Add(act);
         }
       }
+
       return list.ToFixedList();
     }
 

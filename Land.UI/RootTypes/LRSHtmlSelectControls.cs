@@ -161,36 +161,43 @@ namespace Empiria.Land.UI {
     static public string GetBookImageClippersComboItems(RecorderOffice recorderOffice,
                                                         ComboControlUseMode comboControlUseMode,
                                                         Contact defaultBookImageClipper) {
-      FixedList<Contact> contacts = recorderOffice.GetContactsInRole<Contact>("RecorderOffice->ImageClippers");
-      return GetContactsInRoleComboItems(contacts, defaultBookImageClipper, comboControlUseMode,
-                                         "( Seleccionar al cortador del libro )",
-                                         "( Todos los cortadores de libros )",
-                                         "No hay cortadores definidos");
+      throw new NotImplementedException("GetBookImageClippersComboItems()");
+
+      //FixedList<Contact> contacts = recorderOffice.GetContactsInRole<Contact>("RecorderOffice->ImageClippers");
+      //return GetContactsInRoleComboItems(contacts, defaultBookImageClipper, comboControlUseMode,
+      //                                   "( Seleccionar al cortador del libro )",
+      //                                   "( Todos los cortadores de libros )",
+      //                                   "No hay cortadores definidos");
     }
 
 
     static public string GetBookImageDigitalizersComboItems(RecorderOffice recorderOffice,
                                                             ComboControlUseMode comboControlUseMode,
                                                             Contact defaultBookImageDigitalizer) {
-      FixedList<Contact> contacts = recorderOffice.GetContactsInRole<Contact>("RecorderOffice->ImageDigitalizers");
+      throw new NotImplementedException("GetBookImageDigitalizersComboItems()");
 
-      return GetContactsInRoleComboItems(contacts, defaultBookImageDigitalizer, comboControlUseMode,
-                                         "( Seleccionar al digitalizador del libro )",
-                                         "( Todos los digitalizadores )",
-                                         "No hay digitalizadores definidos");
+
+      //FixedList<Contact> contacts = recorderOffice.GetContactsInRole<Contact>("RecorderOffice->ImageDigitalizers");
+
+      //return GetContactsInRoleComboItems(contacts, defaultBookImageDigitalizer, comboControlUseMode,
+      //                                   "( Seleccionar al digitalizador del libro )",
+      //                                   "( Todos los digitalizadores )",
+      //                                   "No hay digitalizadores definidos");
     }
 
 
     static public string GetRecordingsBatchAnalystComboItems(ComboControlUseMode comboControlUseMode,
                                                              Contact defaultBookBatchRecorderUser) {
-      FixedList<Contact> contacts =
-                RecorderOffice.MainRecorderOffice.GetContactsInRole<Contact>("RecorderOffice->RecordingsBatchAnalysts");
-      contacts.Sort((x, y) => x.Alias.CompareTo(y.Alias));
+      throw new NotImplementedException("GetRecordingsBatchAnalystComboItems()");
 
-      return GetContactsInRoleComboItems(contacts, defaultBookBatchRecorderUser, comboControlUseMode,
-                                         "( Seleccionar al analista del libro )",
-                                         "( Todos los analistas de libros )",
-                                         "No hay analistas definidos");
+      //FixedList<Contact> contacts =
+      //          RecorderOffice.MainRecorderOffice.GetContactsInRole<Contact>("RecorderOffice->RecordingsBatchAnalysts");
+      //contacts.Sort((x, y) => x.Alias.CompareTo(y.Alias));
+
+      //return GetContactsInRoleComboItems(contacts, defaultBookBatchRecorderUser, comboControlUseMode,
+      //                                   "( Seleccionar al analista del libro )",
+      //                                   "( Todos los analistas de libros )",
+      //                                   "No hay analistas definidos");
     }
 
 

@@ -70,13 +70,16 @@ namespace Empiria.Land.Registration.Transactions {
       get { return base.NamedKey; }
     }
 
-    private FixedList<Contact> _issuedByEntities = null;
+    // private FixedList<Contact> _issuedByEntities = null;
+
     public FixedList<Contact> IssuedByEntities {
       get {
-        if (_issuedByEntities == null) {
-          _issuedByEntities = base.GetLinks<Contact>("DocumentType->IssuedBy");
-        }
-        return _issuedByEntities;
+        throw new NotImplementedException("IssuedByEntities");
+
+        //if (_issuedByEntities == null) {
+        //  _issuedByEntities = base.GetLinks<Contact>("DocumentType->IssuedBy");
+        //}
+        //return _issuedByEntities;
       }
     }
 

@@ -39,9 +39,10 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<JudicialOffice> GetList(GeographicRegion place) {
-      var association = TypeAssociationInfo.Parse("JudicialOffice->Region");
+      throw new NotImplementedException("GetList(GeographicRegion)");
+      //var association = TypeAssociationInfo.Parse("JudicialOffice->Region");
 
-      return association.GetInverseLinks<JudicialOffice>(place, (x, y) => x.Number.CompareTo(y.Number));
+      //return association.GetInverseLinks<JudicialOffice>(place, (x, y) => x.Number.CompareTo(y.Number));
     }
 
     #endregion Constructors and parsers
@@ -59,19 +60,23 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public FixedList<Person> GetJudges() {
-      FixedList<Person> list = base.GetLinks<Person>("JudicialOffice_Judges");
+      throw new NotImplementedException("GetJudges()");
 
-      list.Sort((x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
+      // FixedList<Person> list = base.GetLinks<Person>("JudicialOffice_Judges");
 
-      return list;
+      //list.Sort((x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
+
+      //return list;
     }
 
     public FixedList<Person> GetJudges(TimeFrame period) {
-      FixedList<Person> list = base.GetLinks<Person>("JudicialOffice_Judges", period);
+      throw new NotImplementedException("GetJudges(TimeFrame)");
 
-      list.Sort((x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
+      //FixedList<Person> list = base.GetLinks<Person>("JudicialOffice_Judges", period);
 
-      return list;
+      //list.Sort((x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
+
+      //return list;
     }
 
     #endregion Public methods

@@ -42,7 +42,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public FixedList<LRSDocumentType> GetDocumentTypes() {
-      FixedList<LRSDocumentType> list = this.GetLinks<LRSDocumentType>("TransactionType_DocumentType");
+      var list = base.ExtendedDataField.GetFixedList<LRSDocumentType>("documentTypes", false);
 
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 

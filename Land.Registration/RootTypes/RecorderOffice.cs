@@ -41,8 +41,8 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<RecorderOffice> GetList() {
-      return MainRecorderOffice.GetLinks<RecorderOffice>("RecorderOffice->SubRecorderOffices",
-                                                         (x, y) => x.Number.CompareTo(y.Number));
+      return BaseObject.GetList<RecorderOffice>()
+                       .ToFixedList();
     }
 
     static public RecorderOffice MainRecorderOffice {
@@ -65,18 +65,23 @@ namespace Empiria.Land.Registration {
 
 
     public FixedList<GeographicRegion> GetNotaryOfficePlaces() {
-      return MainRecorderOffice.GetLinks<GeographicRegion>("RecorderOffice->NotaryOfficePlaces",
-                                                           (x, y) => x.Name.CompareTo(y.Name));
+      throw new NotImplementedException("GetNotaryOfficePlaces()");
+
+      //return MainRecorderOffice.GetLinks<GeographicRegion>("RecorderOffice->NotaryOfficePlaces",
+      //                                                     (x, y) => x.Name.CompareTo(y.Name));
     }
 
     public FixedList<GeographicRegion> GetPrivateDocumentIssuePlaces() {
-      return MainRecorderOffice.GetLinks<GeographicRegion>("RecorderOffice->PrivateDocumentIssuePlace",
-                                                           (x, y) => x.Name.CompareTo(y.Name));
+      throw new NotImplementedException("GetPrivateDocumentIssuePlaces()");
+      //return MainRecorderOffice.GetLinks<GeographicRegion>("RecorderOffice->PrivateDocumentIssuePlace",
+      //                                                     (x, y) => x.Name.CompareTo(y.Name));
     }
 
     public FixedList<GeographicRegion> GetJudicialDocumentIssuePlaces() {
-      return MainRecorderOffice.GetLinks<GeographicRegion>("RecorderOffice->JudicialDocumentIssuePlace",
-                                                               (x, y) => x.Name.CompareTo(y.Name));
+      throw new NotImplementedException("GetJudicialDocumentIssuePlaces()");
+
+      //return MainRecorderOffice.GetLinks<GeographicRegion>("RecorderOffice->JudicialDocumentIssuePlace",
+      //                                                         (x, y) => x.Name.CompareTo(y.Name));
     }
 
 
@@ -92,24 +97,32 @@ namespace Empiria.Land.Registration {
 
 
     public FixedList<Person> GetRecorderOfficials() {
-      return this.GetLinks<Person>("RecorderOffice->RecorderOfficials",
-                                   (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
+      throw new NotImplementedException("GetRecorderOfficials()");
+
+      //return this.GetLinks<Person>("RecorderOffice->RecorderOfficials",
+      //                             (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
     }
 
     public FixedList<Person> GetRecorderOfficials(TimeFrame period) {
-      return this.GetLinks<Person>("RecorderOffice->RecorderOfficials", period,
-                                   (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
+      throw new NotImplementedException("GetRecorderOfficials(TimeFrame)");
+
+      //return this.GetLinks<Person>("RecorderOffice->RecorderOfficials", period,
+      //                             (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
     }
 
     public FixedList<Organization> GetPropertyTitleOffices() {
-      return MainRecorderOffice.GetLinks<Organization>("RecorderOffice->PropertyTitleOffices",
-                                                       (x, y) => x.FullName.CompareTo(y.FullName));
+      throw new NotImplementedException("GetPropertyTitleOffices()");
+
+      //return MainRecorderOffice.GetLinks<Organization>("RecorderOffice->PropertyTitleOffices",
+      //                                                 (x, y) => x.FullName.CompareTo(y.FullName));
 
     }
 
     public FixedList<Person> GetPropertyTitleSigners() {
-      return MainRecorderOffice.GetLinks<Person>("RecorderOffice->PropertyTitleSigners",
-                                                  (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
+      throw new NotImplementedException("GetPropertyTitleSigners()");
+
+      //return MainRecorderOffice.GetLinks<Person>("RecorderOffice->PropertyTitleSigners",
+      //                                            (x, y) => x.FamilyFullName.CompareTo(y.FamilyFullName));
     }
 
 
