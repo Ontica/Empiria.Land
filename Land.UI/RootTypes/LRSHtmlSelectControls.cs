@@ -336,7 +336,7 @@ namespace Empiria.Land.UI {
         contactsList.Add(contact);
       }
 
-      contactsList.Sort((x, y) => x.Alias.CompareTo(y.Alias));
+      contactsList.Sort((x, y) => x.ShortName.CompareTo(y.ShortName));
 
       return contactsList.ToFixedList();
     }

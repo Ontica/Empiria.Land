@@ -136,7 +136,7 @@ namespace Empiria.Land.Pages {
 
 			x = x.Replace("{VOL}", baseRecording.RecordingBook.BookNumber);
 			x = x.Replace("{SECTION}", baseRecording.RecordingBook.RecordingSection.Name);
-			x = x.Replace("{DISTRICT}", baseRecording.RecordingBook.RecorderOffice.Alias);
+			x = x.Replace("{DISTRICT}", baseRecording.RecordingBook.RecorderOffice.ShortName);
 			x = x.Replace("{DOCUMENT}", transaction.Document.UID);
 
 			return x;
@@ -183,7 +183,7 @@ namespace Empiria.Land.Pages {
 				string x = t1.Replace("{NUMBER}", recordings[i].Number);
 				x = x.Replace("{VOL}", recordings[i].RecordingBook.BookNumber);
 				x = x.Replace("{SECTION}", recordings[i].RecordingBook.RecordingSection.Name);
-				x = x.Replace("{DISTRICT}", recordings[i].RecordingBook.RecorderOffice.Alias);
+				x = x.Replace("{DISTRICT}", recordings[i].RecordingBook.RecorderOffice.ShortName);
 				html += x;
 			}
 			return html;

@@ -53,7 +53,7 @@ namespace Empiria.Land.Certification {
       template.Replace("{{DOCUMENT.OR.PHYSICAL.RECORDING}}", this.GetDocumentOrPhysicalRecording());
 
       template.Replace("{{SOLICITANTE}}", o.ExtensionData.SeekForName.ToUpperInvariant());
-      template.Replace("{{DISTRITO}}", o.RecorderOffice.Alias);
+      template.Replace("{{DISTRITO}}", o.RecorderOffice.ShortName);
       template.Replace("{{FOLIO REAL}}", o.Property.UID);
       template.Replace("{{DENOMINACION.PREDIO}}", o.ExtensionData.PropertyCommonName);
       template.Replace("{{UBICACION.PREDIO}}", o.ExtensionData.PropertyLocation);
@@ -127,7 +127,7 @@ namespace Empiria.Land.Certification {
       text.Replace("{{NUMBER}}", physicalRecording.Number);
       text.Replace("{{SECTION}}", physicalRecording.RecordingBook.RecordingSection.Name);
       text.Replace("{{BOOK}}", physicalRecording.RecordingBook.BookNumber);
-      text.Replace("{{DISTRICT}}", physicalRecording.RecordingBook.RecorderOffice.Alias);
+      text.Replace("{{DISTRICT}}", physicalRecording.RecordingBook.RecorderOffice.ShortName);
       text.Replace("{{DATE}}",
                     this.Certificate.ExtensionData.OperationDate.ToString("dd \\de MMMM \\de yyyy"));
 

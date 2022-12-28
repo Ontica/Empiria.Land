@@ -23,7 +23,7 @@ namespace Empiria.Land.Transactions.Workflow {
     static internal WorkflowTaskDto Map(LRSWorkflowTask task) {
       return new WorkflowTaskDto {
         TaskName = task.CurrentStatusName,
-        AssigneeName = task.Responsible.Alias,
+        AssigneeName = task.Responsible.ShortName,
         CheckInTime = task.CheckInTime,
         EndProcessTime = task.EndProcessTime,
         CheckOutTime = task.CheckOutTime,
@@ -31,7 +31,7 @@ namespace Empiria.Land.Transactions.Workflow {
         NextTask = TransactionMapper.MapStatus(task.NextStatus),
         NextTaskName = task.NextStatusName,
         NextAssigneeUID = task.NextContact.UID,
-        NextAssigneeName = task.NextContact.Alias,
+        NextAssigneeName = task.NextContact.ShortName,
         Notes = task.Notes,
         StatusName = task.StatusName
       };

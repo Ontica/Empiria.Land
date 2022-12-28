@@ -20,11 +20,11 @@ namespace Empiria.Land.Registration.Adapters {
       return new RecordDto {
         UID = record.UID,
         RecordID = record.RecordingID,
-        RecorderOffice = record.RecorderOffice.Alias,
+        RecorderOffice = record.RecorderOffice.ShortName,
         RecordingTime = record.RecordingTime,
         PresentationTime = record.PresentationTime,
-        RecordedBy = record.RecordedBy.Alias,
-        AuthorizedBy = record.AuthorizedBy.Alias,
+        RecordedBy = record.RecordedBy.ShortName,
+        AuthorizedBy = record.AuthorizedBy.ShortName,
         Instrument = record.Instrument.AsText,
         BookEntry = record.HasBookEntry ? record.BookEntry.AsText : string.Empty,
         Transaction = MapTransaction(record)

@@ -53,13 +53,13 @@ namespace Empiria.Land.Registration.Adapters {
       dto.UID = bookEntry.UID;
       dto.RecordingBookUID = bookEntry.RecordingBook.UID;
       dto.RecordingTime = bookEntry.RecordingTime;
-      dto.RecorderOfficeName = bookEntry.RecordingBook.RecorderOffice.Alias;
+      dto.RecorderOfficeName = bookEntry.RecordingBook.RecorderOffice.ShortName;
       dto.RecordingSectionName = bookEntry.RecordingBook.RecordingSection.Name;
       dto.VolumeNo = bookEntry.RecordingBook.BookNumber;
       dto.RecordingNo = bookEntry.Number;
       dto.PresentationTime = bookEntry.MainDocument.PresentationTime;
       dto.AuthorizationDate = bookEntry.MainDocument.AuthorizationTime;
-      dto.RecordedBy = bookEntry.RecordedBy.Alias;
+      dto.RecordedBy = bookEntry.RecordedBy.ShortName;
       dto.InstrumentRecording = InstrumentRecordingMapper.MapToShort(bookEntry.MainDocument);
       dto.RecordingActs = InstrumentRecordingMapper.MapRecordingActsListDto(bookEntry.RecordingActs);
       dto.Status = bookEntry.Status;

@@ -204,7 +204,7 @@ namespace Empiria.Land.UI {
           temp = temp.Replace("{RECORDING.NOTES}", recordings[i].Notes);
         }
         temp = temp.Replace("{RECORDING.STATUS}", recordings[i].StatusName);
-        temp = temp.Replace("{CAPTURED.BY}", recordings[i].RecordedBy.Alias);
+        temp = temp.Replace("{CAPTURED.BY}", recordings[i].RecordedBy.ShortName);
 
         temp = temp.Replace("{RECORDING.ID}", recordings[i].Id.ToString());
         html += temp;

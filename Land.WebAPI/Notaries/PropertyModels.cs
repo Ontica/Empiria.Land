@@ -27,7 +27,7 @@ namespace Empiria.Land.WebApi.Extranet {
         metesAndBounds = realEstate.MetesAndBounds,
         district = new {
           uid = realEstate.RecorderOffice.Id.ToString(),
-          name = realEstate.RecorderOffice.Alias
+          name = realEstate.RecorderOffice.ShortName
         },
         municipality = new {
           uid = realEstate.Municipality.Id.ToString(),

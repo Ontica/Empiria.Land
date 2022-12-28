@@ -103,7 +103,7 @@ namespace Empiria.Land.Registration.Transactions {
     static public FixedList<Contact> GetAgenciesList() {
       GeneralList listType = GeneralList.Parse("LRSTransaction.ManagementAgencies.List");
 
-      return listType.GetItems<Contact>((x, y) => x.Alias.CompareTo(y.Alias));
+      return listType.GetItems<Contact>((x, y) => x.ShortName.CompareTo(y.ShortName));
     }
 
 
@@ -767,7 +767,7 @@ namespace Empiria.Land.Registration.Transactions {
                                                   this.DocumentDescriptor, this.RequestedBy,
                                                   this.Agency.FullName,
                                                   this.DocumentType.Name, this.TransactionType.Name,
-                                                  this.RecorderOffice.Alias);
+                                                  this.RecorderOffice.ShortName);
       TransactionData.WriteTransaction(this);
       if (base.IsNew) {
         var newWorkflow = LRSWorkflow.Create(this);

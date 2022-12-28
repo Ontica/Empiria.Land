@@ -76,7 +76,7 @@ namespace Empiria.Land.Media {
     static private string DetermineRelativePath(LRSTransaction transaction) {
       string year = transaction.PresentationTime.ToString("yyyy");
       string month = transaction.PresentationTime.ToString("MM");
-      string officeName = transaction.RecorderOffice.Alias.Replace(" ", string.Empty);
+      string officeName = transaction.RecorderOffice.ShortName.Replace(" ", string.Empty);
 
       return $"{year}-{month}-{officeName}";
     }

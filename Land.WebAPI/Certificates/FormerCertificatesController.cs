@@ -154,7 +154,7 @@ namespace Empiria.Land.WebApi {
         },
         recorderOffice = new {
           id = o.RecorderOffice.Id,
-          name = o.RecorderOffice.Alias,
+          name = o.RecorderOffice.ShortName,
         },
         property = new {
           uid = o.Property.UID,

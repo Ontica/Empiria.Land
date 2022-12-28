@@ -25,7 +25,7 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     static private RecorderOfficeDto Map(RecorderOffice recorderOffice) {
       return new RecorderOfficeDto {
         UID = recorderOffice.UID,
-        Name = recorderOffice.Alias,
+        Name = recorderOffice.ShortName,
         Municipalities = MapMunicipalities(recorderOffice),
         RecordingSections = MapRecordingSections(recorderOffice)
       };

@@ -246,7 +246,7 @@ namespace Empiria.Land.WebApi {
       propertyBag.Add(new PropertyBagItem("Número de certificado", certificate.UID, "enhanced-text"));
       propertyBag.Add(new PropertyBagItem("Tipo de certificado", certificate.CertificateType.DisplayName, "enhanced-text"));
       propertyBag.Add(new PropertyBagItem("Fecha de expedición", GetDateTime(certificate.IssueTime), "date-time"));
-      propertyBag.Add(new PropertyBagItem("Elaborado por", certificate.IssuedBy.Alias));
+      propertyBag.Add(new PropertyBagItem("Elaborado por", certificate.IssuedBy.ShortName));
 
       propertyBag.Add(new PropertyBagItem("Resumen", GetCertificateText(certificate), "small-text"));
 
@@ -344,10 +344,10 @@ namespace Empiria.Land.WebApi {
       propertyBag.Add(new PropertyBagItem("Información del documento", String.Empty, "section"));
       propertyBag.Add(new PropertyBagItem("Sello registral número", document.UID, "bold-text"));
       propertyBag.Add(new PropertyBagItem("Tipo de documento", document.DocumentType.DisplayName, "bold-text"));
-      propertyBag.Add(new PropertyBagItem("Emitido por", document.IssuedBy.Alias));
+      propertyBag.Add(new PropertyBagItem("Emitido por", document.IssuedBy.ShortName));
       propertyBag.Add(new PropertyBagItem("Fecha de presentación", GetDateTime(document.PresentationTime), "date-time"));
       propertyBag.Add(new PropertyBagItem("Fecha de registro", GetDateTime(document.AuthorizationTime), "date"));
-      propertyBag.Add(new PropertyBagItem("Registrado por", document.GetRecordingOfficials()[0].Alias));
+      propertyBag.Add(new PropertyBagItem("Registrado por", document.GetRecordingOfficials()[0].ShortName));
       propertyBag.Add(new PropertyBagItem("Resumen", document.Notes, "small-text"));
 
       if (document.RecordingActs.Count > 0) {

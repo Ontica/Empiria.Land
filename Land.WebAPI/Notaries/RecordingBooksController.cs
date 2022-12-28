@@ -66,7 +66,7 @@ namespace Empiria.Land.WebApi {
       try {
         FixedList<RecorderOffice> list = RecorderOffice.GetList();
 
-        return new CollectionModel(base.Request, list.ToIdentifiableResponse(x => x.Alias),
+        return new CollectionModel(base.Request, list.ToIdentifiableResponse(x => x.ShortName),
                                    typeof(RecorderOffice).FullName);
 
       } catch (Exception e) {
@@ -174,7 +174,7 @@ namespace Empiria.Land.WebApi {
           },
           recorderOffice = new {
             id = book.RecorderOffice.Id,
-            name = book.RecorderOffice.Alias,
+            name = book.RecorderOffice.ShortName,
           },
         };
         array.Add(item);
@@ -192,7 +192,7 @@ namespace Empiria.Land.WebApi {
       foreach (RecorderOffice recorderOffice in recorderOfficesList) {
         var item = new {
           id = recorderOffice.Id,
-          name = recorderOffice.Alias,
+          name = recorderOffice.ShortName,
         };
         recorderOffices.Add(item);
       }

@@ -79,11 +79,11 @@ namespace Empiria.Land.Transactions {
       dto.Status = currentTask.CurrentStatus.ToString();
       dto.StatusName = currentTask.CurrentStatusName;
       dto.AssignedToUID = currentTask.Responsible.UID;
-      dto.AssignedToName = currentTask.Responsible.Alias;
+      dto.AssignedToName = currentTask.Responsible.ShortName;
 
       dto.NextStatus = currentTask.NextStatus.ToString();
       dto.NextStatusName = currentTask.NextStatusName;
-      dto.NextAssignedToName = currentTask.NextContact.Alias;
+      dto.NextAssignedToName = currentTask.NextContact.ShortName;
 
       return dto;
     }

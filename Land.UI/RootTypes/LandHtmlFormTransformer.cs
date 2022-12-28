@@ -104,7 +104,7 @@ namespace Empiria.Land.UI {
     private string TransformRealPropertyOnRecordingBookSection(RealPropertyDescription property) {
       string html = GetTemplate("RealPropertyOnRecordingBookSection");
 
-      html = html.Replace("{{DISTRICT.NAME}}", property.RecorderOffice.Alias);
+      html = html.Replace("{{DISTRICT.NAME}}", property.RecorderOffice.ShortName);
       html = html.Replace("{{MUNICIPALITY.NAME}}", property.Municipality.Name);
       html = html.Replace("{{RECORDING.BOOK.NAME}}", property.RecordingBook.AsText);
       html = html.Replace("{{RECORDING.NO}}", property.RecordingNo);
@@ -125,7 +125,7 @@ namespace Empiria.Land.UI {
 
       html = html.Replace("{{REAL.PROPERTY.UID}}", realProperty.UID);
 
-      html = html.Replace("{{DISTRICT.NAME}}", realProperty.RecorderOffice.Alias);
+      html = html.Replace("{{DISTRICT.NAME}}", realProperty.RecorderOffice.ShortName);
       html = html.Replace("{{MUNICIPALITY.NAME}}", realProperty.Municipality.Name);
       html = html.Replace("{{CADASTRAL.KEY}}", realProperty.CadastralKey);
       html = html.Replace("{{REAL.PROPERTY.TYPE}}", realProperty.Kind);

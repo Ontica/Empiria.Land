@@ -68,10 +68,10 @@ namespace Empiria.Land.Registration {
     } = String.Empty;
 
 
-    public RoleType IssuedByPosition {
+    public string IssuedByPosition {
       get;
       set;
-    } = RoleType.Empty;
+    } = string.Empty;
 
 
     public Contact MainWitness {

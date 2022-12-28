@@ -297,7 +297,7 @@ namespace Empiria.Land.Certification {
       Assertion.Require(this.Status == FormerCertificateStatus.Closed,
           "The certificate is not closed so it can't be canceled. Use delete instead.");
 
-      this.UserNotes += "Cancelado por " + EmpiriaUser.Current.AsContact().Alias +
+      this.UserNotes += "Cancelado por " + EmpiriaUser.Current.AsContact().ShortName +
                         " el " + DateTime.Now.ToShortDateString() + " a las " +
                         DateTime.Now.ToShortTimeString() + @"\n\n";
       this.Status = FormerCertificateStatus.Canceled;
@@ -322,7 +322,7 @@ namespace Empiria.Land.Certification {
       Assertion.Require(this.Status == FormerCertificateStatus.Pending,
                       "This certificate can't be deleted. It's not in pending status.");
 
-      this.UserNotes += "Eliminado por " + EmpiriaUser.Current.AsContact().Alias +
+      this.UserNotes += "Eliminado por " + EmpiriaUser.Current.AsContact().ShortName +
                         " el " + DateTime.Now.ToShortDateString() + " a las " +
                         DateTime.Now.ToShortTimeString() + @"\n\n";
       this.Status = FormerCertificateStatus.Deleted;
@@ -417,7 +417,7 @@ namespace Empiria.Land.Certification {
                         "This certificate can't be opened. It's not in closed, " +
                         "deleted or canceled status.");
 
-      this.UserNotes += "Abierto por " + EmpiriaUser.Current.AsContact().Alias +
+      this.UserNotes += "Abierto por " + EmpiriaUser.Current.AsContact().ShortName +
                         " el " + DateTime.Now.ToShortDateString() + " a las " +
                         DateTime.Now.ToShortTimeString() + @"\n\n";
 
