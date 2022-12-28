@@ -3,7 +3,7 @@
     <Company>Ontica</Company>
     <Product>Empiria Land Documentation Services</Product>
     <Description>Document imaging and management services for Empiria Land.</Description>
-    <Copyright>(c) 2009-2021. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
+    <Copyright>(c) 2009-2023. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
     <Version>5.0.0</Version>
     <AssemblyVersion>5.0.0</AssemblyVersion>
     <FileVersion>5.0.0.0</FileVersion>
@@ -51,13 +51,13 @@
     <NoWarn />
     <WarningsAsErrors />
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System.Web" />
-  </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Land.Registration" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web" />
   </ItemGroup>
 </Project>

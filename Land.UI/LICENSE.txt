@@ -1,7 +1,7 @@
 ﻿Empiria Land User Interface Services License
 ============================================
 
-Copyright (c) 2009-2022. La Vía Óntica SC, Ontica LLC y autores.
+Copyright (c) 2009-2023. La Vía Óntica SC, Ontica LLC y autores.
                          Todos los derechos reservados.
 -----------------------------------------------------------------------
 
