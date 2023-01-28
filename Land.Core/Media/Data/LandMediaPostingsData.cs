@@ -60,6 +60,10 @@ namespace Empiria.Land.Media {
     #region Helpers
 
     static private string BuildFilter(BaseObject instance) {
+      if (instance.Id == -1) {
+        return SearchExpression.NoRecordsFilter;
+      }
+
       if (instance is LRSTransaction) {
         return $"TransactionId = {instance.Id}";
 
