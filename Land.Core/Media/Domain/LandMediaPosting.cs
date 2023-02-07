@@ -226,7 +226,7 @@ namespace Empiria.Land.Media {
 
     protected override void OnSave() {
       if (base.IsNew) {
-        this.PostedBy = EmpiriaUser.Current.AsContact();
+        this.PostedBy = ExecutionServer.CurrentContact;
         this.PostingTime = DateTime.Now;
       }
 

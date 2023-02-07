@@ -195,7 +195,7 @@ namespace Empiria.Land.Pages {
 
     protected string GetCurrentUserInitials() {
       if (ExecutionServer.IsAuthenticated) {
-        var user = Security.EmpiriaUser.Current.AsContact();
+        var user = ExecutionServer.CurrentContact;
 
         return user.Nickname;
       }

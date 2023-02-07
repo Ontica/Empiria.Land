@@ -58,7 +58,7 @@ namespace Empiria.Land.Registration.Transactions {
       task.AssignedBy = LRSWorkflowRules.InterestedContact;
       task.CurrentStatus = transaction.Workflow.CurrentStatus;
       task.EndProcessTime = task.CheckInTime;
-      task.Responsible = Contact.Parse(ExecutionServer.CurrentUserId);
+      task.Responsible = ExecutionServer.CurrentContact;
       task.Save();
 
       return task;
@@ -241,7 +241,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     internal LRSWorkflowTask CreateNext(string notes) {
-      var responsible = Contact.Parse(ExecutionServer.CurrentUserId);
+      var responsible = ExecutionServer.CurrentContact;
 
       return this.CreateNext(notes, responsible, DateTime.Now);
     }

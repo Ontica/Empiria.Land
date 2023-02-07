@@ -232,7 +232,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     protected override void OnSave() {
-      this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      this.PostedBy = ExecutionServer.CurrentContact;
       this.PostingTime = DateTime.Now;
       TransactionData.WriteTransactionItem(this);
 

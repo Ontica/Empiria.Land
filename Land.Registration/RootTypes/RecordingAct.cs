@@ -897,7 +897,7 @@ namespace Empiria.Land.Registration {
       // Writes the recording act
       if (base.IsNew) {
         this.RegistrationTime = DateTime.Now;
-        this.RegisteredBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.RegisteredBy = ExecutionServer.CurrentContact;
       }
       RecordingActsData.WriteRecordingAct(this);
     }

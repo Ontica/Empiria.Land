@@ -385,7 +385,7 @@ namespace Empiria.Land.Registration {
       if (this.IsNew) {
         this.GUID = Guid.NewGuid().ToString().ToLower();
         this.AssignUID();
-        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.PostedBy = ExecutionServer.CurrentContact;
         this.PostingTime = DateTime.Now;
       }
 

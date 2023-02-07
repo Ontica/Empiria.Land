@@ -408,7 +408,7 @@ namespace Empiria.Land.Registration {
       base.ReclassifyAs(newRecordingDocumentType);
       this.IssueDate = ExecutionServer.DateMinValue;
       this.ExtensionData = RecordingDocumentExtData.Empty;
-      this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      this.PostedBy = ExecutionServer.CurrentContact;
     }
 
     private void SetAuthorizationTime() {
@@ -552,7 +552,7 @@ namespace Empiria.Land.Registration {
     protected override void OnSave() {
       if (this.IsNew) {
         this.PostingTime = DateTime.Now;
-        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.PostedBy = ExecutionServer.CurrentContact;
       }
       RecordingBooksData.WriteRecordingDocument(this);
     }

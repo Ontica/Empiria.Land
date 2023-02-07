@@ -380,7 +380,7 @@ namespace Empiria.Land.Registration {
     protected override void OnSave() {
       if (this.IsNew) {
         this.CreationDate = DateTime.Now;
-        this.CreatedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.CreatedBy = ExecutionServer.CurrentContact;
       }
       RecordingBooksData.WriteRecordingBook(this);
     }
@@ -446,7 +446,7 @@ namespace Empiria.Land.Registration {
       }
       this.AssignedTo = RecorderOffice.Empty;
       this.ClosingDate = DateTime.Now;
-      this.ApprovedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+      this.ApprovedBy = ExecutionServer.CurrentContact;
       this.Status = RecordingBookStatus.Closed;
       Save();
       return true;

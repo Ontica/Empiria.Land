@@ -233,7 +233,7 @@ namespace Empiria.Land.Registration {
 
     protected override void OnSave() {
       if (base.IsNew) {
-        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.PostedBy = ExecutionServer.CurrentContact;
       }
       RecordingActsData.WriteRecordingActParty(this);
     }

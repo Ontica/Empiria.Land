@@ -33,7 +33,7 @@ namespace Empiria.Land.Transactions.Workflow.Services {
     public void AssertWorkflowCommandExecution(WorkflowCommand command) {
       ValidateCommand(command);
 
-      var user = ExecutionServer.CurrentIdentity.User.AsContact();
+      var user = ExecutionServer.CurrentContact;
 
       var workflowRules = new WorkflowRules();
 
@@ -46,7 +46,7 @@ namespace Empiria.Land.Transactions.Workflow.Services {
     public FixedList<WorkflowTaskDto> ExecuteWorkflowCommand(WorkflowCommand command) {
       ValidateCommand(command);
 
-      var user = ExecutionServer.CurrentIdentity.User.AsContact();
+      var user = ExecutionServer.CurrentContact;
 
       var workflowRules = new WorkflowRules();
 

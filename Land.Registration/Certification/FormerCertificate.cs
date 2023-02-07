@@ -297,7 +297,7 @@ namespace Empiria.Land.Certification {
       Assertion.Require(this.Status == FormerCertificateStatus.Closed,
           "The certificate is not closed so it can't be canceled. Use delete instead.");
 
-      this.UserNotes += "Cancelado por " + EmpiriaUser.Current.AsContact().ShortName +
+      this.UserNotes += "Cancelado por " + ExecutionServer.CurrentContact.ShortName +
                         " el " + DateTime.Now.ToShortDateString() + " a las " +
                         DateTime.Now.ToShortTimeString() + @"\n\n";
       this.Status = FormerCertificateStatus.Canceled;
@@ -311,7 +311,7 @@ namespace Empiria.Land.Certification {
                       "This certificate can't be closed. It's not in pending status.");
 
       this.IssueTime = DateTime.Now;
-      this.IssuedBy = EmpiriaUser.Current.AsContact();
+      this.IssuedBy = ExecutionServer.CurrentContact;
       this.Status = FormerCertificateStatus.Closed;
 
       this.Save();
@@ -322,7 +322,7 @@ namespace Empiria.Land.Certification {
       Assertion.Require(this.Status == FormerCertificateStatus.Pending,
                       "This certificate can't be deleted. It's not in pending status.");
 
-      this.UserNotes += "Eliminado por " + EmpiriaUser.Current.AsContact().ShortName +
+      this.UserNotes += "Eliminado por " + ExecutionServer.CurrentContact.ShortName +
                         " el " + DateTime.Now.ToShortDateString() + " a las " +
                         DateTime.Now.ToShortTimeString() + @"\n\n";
       this.Status = FormerCertificateStatus.Deleted;
@@ -417,7 +417,7 @@ namespace Empiria.Land.Certification {
                         "This certificate can't be opened. It's not in closed, " +
                         "deleted or canceled status.");
 
-      this.UserNotes += "Abierto por " + EmpiriaUser.Current.AsContact().ShortName +
+      this.UserNotes += "Abierto por " + ExecutionServer.CurrentContact.ShortName +
                         " el " + DateTime.Now.ToShortDateString() + " a las " +
                         DateTime.Now.ToShortTimeString() + @"\n\n";
 
@@ -464,7 +464,7 @@ namespace Empiria.Land.Certification {
       if (this.IsNew) {
         this.GUID = Guid.NewGuid().ToString().ToLower();
         this.PostingTime = DateTime.Now;
-        this.PostedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.PostedBy = ExecutionServer.CurrentContact;
       }
       if (this.Status != FormerCertificateStatus.Deleted &&
           this.Status != FormerCertificateStatus.Canceled) {

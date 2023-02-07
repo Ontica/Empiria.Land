@@ -294,7 +294,7 @@ namespace Empiria.Land.Registration {
     protected override void OnSave() {
       if (this.IsNew) {
         this.RecordingTime = DateTime.Now;
-        this.RecordedBy = Contact.Parse(ExecutionServer.CurrentUserId);
+        this.RecordedBy = ExecutionServer.CurrentContact;
 
         if (this.MainDocument.IsNew) {
           this.MainDocument.Save();

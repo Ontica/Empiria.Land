@@ -152,7 +152,7 @@ namespace Empiria.Land.Registration.Transactions {
       Assertion.Require(this.CanBeDeleted, "This transaction can not be deleted.");
 
       this.Close(LRSTransactionStatus.Deleted,
-            $"Deleted by user {ExecutionServer.CurrentIdentity.User.FullName} on {DateTime.Now}.");
+            $"Deleted by user {ExecutionServer.CurrentContact.FullName} on {DateTime.Now}.");
 
     }
 
@@ -339,7 +339,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public void Take(string notes) {
-      var responsible = Contact.Parse(ExecutionServer.CurrentUserId);
+      var responsible = ExecutionServer.CurrentContact;
 
       this.Take(notes, responsible, DateTime.Now);
     }
@@ -485,7 +485,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     private void Close(LRSTransactionStatus closeStatus, string notes) {
-      var responsible = Contact.Parse(ExecutionServer.CurrentUserId);
+      var responsible = ExecutionServer.CurrentContact;
 
       this.Close(closeStatus, notes, responsible, DateTime.Now);
     }

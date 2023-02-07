@@ -33,7 +33,7 @@ namespace Empiria.Land.Transactions.Workflow.Services {
     #region Use cases
 
     public FixedList<ApplicableCommandDto> GetAllApplicableUserCommands() {
-      var user = ExecutionServer.CurrentIdentity.User.AsContact();
+      var user = ExecutionServer.CurrentContact;
 
       var workflowRules = new WorkflowRules();
 
@@ -48,7 +48,7 @@ namespace Empiria.Land.Transactions.Workflow.Services {
         return new FixedList<ApplicableCommandDto>();
       }
 
-      var user = ExecutionServer.CurrentIdentity.User.AsContact();
+      var user = ExecutionServer.CurrentContact;
 
       var workflowRules = new WorkflowRules();
 
