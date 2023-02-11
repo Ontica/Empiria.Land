@@ -41,7 +41,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<RecorderOffice> GetList() {
-      return BaseObject.GetList<RecorderOffice>()
+      return BaseObject.GetList<RecorderOffice>("ContactStatus = 'A'")
                        .ToFixedList();
     }
 

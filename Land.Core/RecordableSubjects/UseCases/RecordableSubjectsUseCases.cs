@@ -71,9 +71,11 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
 
     public FixedList<RecorderOfficeDto> RecorderOffices() {
-      var recorderOffices = RecorderOffice.GetList();
+      var offices = RecorderOffice.GetList();
 
-      return RecorderOfficeMapper.Map(recorderOffices);
+      offices = base.RestrictUserDataAccessTo(offices);
+
+      return RecorderOfficeMapper.Map(offices);
     }
 
     #endregion Use cases
