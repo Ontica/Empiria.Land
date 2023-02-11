@@ -148,7 +148,7 @@ namespace Empiria.Land.Registration.Transactions {
       return ((transaction.Workflow.CurrentStatus == LRSTransactionStatus.Returned ||
               (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Delivered ||
                transaction.Workflow.CurrentStatus == LRSTransactionStatus.Archived)) &&
-               user.IsInRole("Land.Supervisor"));
+               user.IsInRole("Supervisor"));
     }
 
 
@@ -156,7 +156,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (transaction.IsEmptyInstance || transaction.Document.IsEmptyInstance) {
         return false;
       }
-      if (!ExecutionServer.CurrentPrincipal.IsInRole("Land.Digitizer")) {
+      if (!ExecutionServer.CurrentPrincipal.IsInRole("Digitizer")) {
         return false;
       }
       if (transaction.Document.Imaging.ImagingControlID.Length != 0) {
@@ -196,9 +196,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static internal bool UserCanEditDocument(RecordingDocument document) {
-      if (!(ExecutionServer.CurrentPrincipal.IsInRole("Land.Registrar") ||
-            ExecutionServer.CurrentPrincipal.IsInRole("Land.Certificator") ||
-            ExecutionServer.CurrentPrincipal.IsInRole("Land.LegalAdvisor"))) {
+      if (!(ExecutionServer.CurrentPrincipal.IsInRole("LandRegistrar"))) {
         return false;
       }
       if (document.IsHistoricDocument) {

@@ -439,19 +439,6 @@ namespace Empiria.Land.Registration {
       Save();
     }
 
-    public bool Close(string esign, string notes) {
-      /// OOJJJOO
-      if (!ExecutionServer.CurrentPrincipal.IsInRole("VerifyESign" + esign)) { // .VerifyElectronicSign(esign)) {
-        return false;
-      }
-      this.AssignedTo = RecorderOffice.Empty;
-      this.ClosingDate = DateTime.Now;
-      this.ApprovedBy = ExecutionServer.CurrentContact;
-      this.Status = RecordingBookStatus.Closed;
-      Save();
-      return true;
-    }
-
     public void SendToRevision() {
       this.Status = RecordingBookStatus.Revision;
       Save();

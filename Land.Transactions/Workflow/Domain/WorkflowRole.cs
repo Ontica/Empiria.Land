@@ -13,29 +13,13 @@ namespace Empiria.Land.Transactions.Workflow {
   /// <summary>User roles used for Empiria Land micro workflow execution.</summary>
   internal enum WorkflowRole {
 
-    Certificator,
-
     ControlClerk,
 
     DeliveryClerk,
 
-    Digitizer,
-
-    HistoricDigitizer,
-
-    FilingQualifier,
-
-    LegalAdvisor,
-
-    ReceptionClerk,
-
-    Registrar,
-
     Signer,
 
-    Supervisor,
-
-    User
+    Supervisor
 
   }  // enum WorkflowRole
 

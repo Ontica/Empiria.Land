@@ -27,7 +27,7 @@ namespace Empiria.Land.Transactions.Workflow {
 
 
     internal bool IsInRole(Contact user, WorkflowRole role) {
-      return EmpiriaUser.IsInRole(user, $"Land.{role}");
+      return EmpiriaUser.IsInRole(user, $"{role}");
     }
 
 

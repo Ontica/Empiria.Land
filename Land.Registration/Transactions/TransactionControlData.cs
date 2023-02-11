@@ -75,8 +75,8 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!IsUserInRole("Land.Registrar",
-                          "Land.Certificator")) {
+        if (!IsUserInRole("LandRegistrar",
+                          "LandCertificator")) {
           return false;
         }
 
@@ -98,7 +98,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!IsUserInRole("Land.Registrar")) {
+        if (!IsUserInRole("LandRegistrar")) {
           return false;
         }
 
@@ -189,7 +189,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!IsUserInRole("Land.ReceptionClerk")) {
+        if (!IsUserInRole("ReceptionClerk")) {
           return false;
         }
 
@@ -238,7 +238,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        return IsUserInRole("Land.Digitizer");
+        return IsUserInRole("Digitizer");
       }
     }
 
@@ -253,7 +253,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        return IsUserInRole("Land.Digitizer");
+        return IsUserInRole("Digitizer");
       }
     }
 
@@ -320,7 +320,7 @@ namespace Empiria.Land.Transactions {
 
         // ToDo: Check if has uploaded documents
 
-        if (!IsUserInRole("Land.Digitizer")) {
+        if (!IsUserInRole("Digitizer")) {
           return false;
         }
 
