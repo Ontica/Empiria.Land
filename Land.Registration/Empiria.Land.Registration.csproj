@@ -57,6 +57,7 @@
     <PackageReference Include="Empiria.Messaging" Version="7.0.0" />
     <PackageReference Include="Empiria.OnePoint.EFiling" Version="2.0.0" />
     <PackageReference Include="Empiria.OnePoint.EPayments" Version="2.0.0" />
+    <PackageReference Include="Empiria.Land.Integration" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\extensions\Documents\Empiria.Documents.csproj" />
@@ -64,8 +65,6 @@
     <ProjectReference Include="..\..\extensions\Messaging\Empiria.Messaging.csproj" />
     <ProjectReference Include="..\..\onepoint\EFiling.Core\Empiria.OnePoint.EFiling.csproj" />
     <ProjectReference Include="..\..\onepoint\EPayments.Core\Empiria.OnePoint.EPayments.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Land.Integration\Empiria.Land.Integration.csproj" />
   </ItemGroup>
 </Project>
