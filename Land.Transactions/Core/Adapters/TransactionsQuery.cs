@@ -9,12 +9,19 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Transactions {
 
   /// <summary>Query payload used for transactions searching.</summary>
   public class TransactionsQuery {
+
+    public RecorderOffice RecorderOffice {
+      get;
+      set;
+    } = RecorderOffice.Empty;
+
 
     public TransactionStage Stage {
       get;
@@ -65,15 +72,16 @@ namespace Empiria.Land.Transactions {
       query.OrderBy = query.OrderBy ?? "TransactionId DESC";
       query.PageSize = query.PageSize <= 0 ? 50 : query.PageSize;
       query.Page = query.Page <= 0 ? 1 : query.Page;
+      query.RecorderOffice = GetRecorderOffice(query.RecorderOffice);
     }
 
-
     static internal string MapToFilterString(this TransactionsQuery query) {
+      string recorderOfficeFilter = BuildRecorderOfficeFilter(query.RecorderOffice);
       string stageStatusFilter = BuildStageStatusFilter(query.Stage, query.Status);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
 
-      var filter = new Filter(stageStatusFilter);
-
+      var filter = new Filter(recorderOfficeFilter);
+      filter.AppendAnd(stageStatusFilter);
       filter.AppendAnd(keywordsFilter);
 
       return filter.ToString();
@@ -107,6 +115,15 @@ namespace Empiria.Land.Transactions {
 
         return SearchExpression.ParseAndLikeKeywords("TransactionKeywords", keywords);
       }
+    }
+
+
+    static private string BuildRecorderOfficeFilter(RecorderOffice recorderOffice) {
+      if (recorderOffice.IsEmptyInstance) {
+        return string.Empty;
+      }
+
+      return $"(RecorderOfficeId = {recorderOffice.Id})";
     }
 
 
@@ -153,6 +170,19 @@ namespace Empiria.Land.Transactions {
         default:
           throw Assertion.EnsureNoReachThisCode();
       }
+    }
+
+    static private RecorderOffice GetRecorderOffice(RecorderOffice recorderOffice) {
+      if (!recorderOffice.IsEmptyInstance) {
+        return recorderOffice;
+      }
+      if (ExecutionServer.CurrentPrincipal.Permissions.Contains("oficialia-zacatecas")) {
+        return RecorderOffice.Parse(101);
+      }
+      if (ExecutionServer.CurrentPrincipal.Permissions.Contains("oficialia-fresnillo")) {
+        return RecorderOffice.Parse(102);
+      }
+      return RecorderOffice.Empty;
     }
 
     #endregion Helpers
