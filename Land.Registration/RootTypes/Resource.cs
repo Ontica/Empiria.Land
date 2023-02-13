@@ -387,6 +387,7 @@ namespace Empiria.Land.Registration {
         this.AssignUID();
         this.PostedBy = ExecutionServer.CurrentContact;
         this.PostingTime = DateTime.Now;
+        EnsureRecorderOfficeIsAssigned();
       }
 
       Assertion.Ensure(this.UID.Length != 0,
@@ -443,6 +444,19 @@ namespace Empiria.Land.Registration {
 
     private bool HasCompleteInformation() {
       return false;
+    }
+
+
+    private void EnsureRecorderOfficeIsAssigned() {
+      if (!this.RecorderOffice.IsEmptyInstance) {
+        return;
+      }
+      if (ExecutionServer.CurrentPrincipal.Permissions.Contains("oficialia-zacatecas")) {
+        this.RecorderOffice = RecorderOffice.Parse(101);
+      }
+      if (ExecutionServer.CurrentPrincipal.Permissions.Contains("oficialia-fresnillo")) {
+        this.RecorderOffice = RecorderOffice.Parse(102);
+      }
     }
 
     #endregion Private methods
