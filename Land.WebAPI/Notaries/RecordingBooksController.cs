@@ -28,24 +28,6 @@ namespace Empiria.Land.WebApi {
 
 
     [HttpGet, AllowAnonymous]
-    [Route("v2/catalogues/recorder-offices/{recorderOfficeId}/ownership-recording-sections")]
-    public CollectionModel GetOwnershipRecordingSections([FromUri] int recorderOfficeId) {
-      try {
-
-        var recorderOffice = RecorderOffice.Parse(recorderOfficeId);
-
-        FixedList<RecordingSection> list = RecordingSection.GetListForOwnershipRecordings(recorderOffice);
-
-        return new CollectionModel(base.Request, list.ToIdResponse(x => x.Name),
-                                   typeof(RecordingSection).FullName);
-
-      } catch (Exception e) {
-        throw base.CreateHttpException(e);
-      }
-    }
-
-
-    [HttpGet, AllowAnonymous]
     [Route("v2/catalogues/real-estate-types")]
     public CollectionModel GetRealEstateTypes() {
       try {

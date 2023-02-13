@@ -13,6 +13,7 @@ using Empiria.WebApi;
 
 using Empiria.Land.Registration.Adapters;
 using Empiria.Land.Registration.UseCases;
+using System;
 
 namespace Empiria.Land.Registration.WebApi {
 
@@ -26,7 +27,10 @@ namespace Empiria.Land.Registration.WebApi {
     public CollectionModel GetRecordingSectionsList() {
 
       using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> sections = usecases.GetRecordingSections();
+
+        RecorderOffice recorderOffice = GetRecorderOffice();
+
+        FixedList<NamedEntityDto> sections = usecases.GetRecordingSections(recorderOffice);
 
         return new CollectionModel(this.Request, sections);
       }
@@ -193,6 +197,18 @@ namespace Empiria.Land.Registration.WebApi {
 
 
     #endregion Web Apis
+
+
+    private RecorderOffice GetRecorderOffice() {
+      if (ExecutionServer.CurrentPrincipal.Permissions.Contains("oficialia-zacatecas")) {
+        return RecorderOffice.Parse(101);
+      }
+      if (ExecutionServer.CurrentPrincipal.Permissions.Contains("oficialia-fresnillo")) {
+        return RecorderOffice.Parse(102);
+      }
+      return RecorderOffice.Empty;
+    }
+
 
   }  // class RecordingBookRegistrationController
 

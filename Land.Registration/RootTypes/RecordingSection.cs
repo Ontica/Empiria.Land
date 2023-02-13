@@ -45,30 +45,22 @@ namespace Empiria.Land.Registration {
       return list;
     }
 
-    static public FixedList<RecordingSection> GetListForRecording() {
-      GeneralList listType = GeneralList.Parse("CreateNextPhysicalRecordingSections.List");
+    static public FixedList<RecordingSection> GetList(RecorderOffice recorderOffice) {
+      var list = RecordingSection.GetList();
 
-      return listType.GetItems<RecordingSection>();
-    }
-
-
-
-
-
-    static public FixedList<RecordingSection> GetListForOwnershipRecordings(RecorderOffice recorderOffice) {
-      var list = GeneralObject.GetList<RecordingSection>();
-
-      list = list.FindAll(x => x.ContainsOwnershipActs);
-
-      list.Sort((x, y) => x.NamedKey.CompareTo(y.NamedKey));
-
-      return list;
+      return list.FindAll(x => x.RecorderOffice.Equals(recorderOffice));
     }
 
     #endregion Constructors and parsers
 
-
     #region Properties
+
+
+    public RecorderOffice RecorderOffice {
+      get {
+        return base.ExtendedDataField.Get<RecorderOffice>("RecorderOfficeId");
+      }
+    }
 
 
     public bool ContainsOwnershipActs {
@@ -87,7 +79,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Properties
 
-
     #region Methods
 
     public FixedList<RecorderOffice> GetRecorderOffices() {
@@ -99,7 +90,6 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Methods
-
 
   } // class RecordingSection
 

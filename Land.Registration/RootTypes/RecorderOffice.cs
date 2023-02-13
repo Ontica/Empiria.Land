@@ -92,7 +92,7 @@ namespace Empiria.Land.Registration {
 
 
     public FixedList<RecordingSection> GetRecordingSections() {
-      return RecordingSection.GetListForRecording();
+      return RecordingSection.GetList(this);
     }
 
 

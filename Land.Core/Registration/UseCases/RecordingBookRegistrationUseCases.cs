@@ -36,8 +36,10 @@ namespace Empiria.Land.Registration.UseCases {
     #region Command Use cases
 
 
-    public FixedList<NamedEntityDto> GetRecordingSections() {
-      FixedList<RecordingSection> list = RecordingSection.GetListForRecording();
+    public FixedList<NamedEntityDto> GetRecordingSections(RecorderOffice recorderOffice) {
+      Assertion.Require(recorderOffice, nameof(recorderOffice));
+
+      FixedList<RecordingSection> list = RecordingSection.GetList(recorderOffice);
 
       return list.MapToNamedEntityList();
     }
