@@ -67,11 +67,11 @@
                 <b style='font-size:9pt'><%=Encode(transaction.RequestedBy)%></b>
               </td>
 							<td style="white-space:nowrap">Distrito:</td>
-              <td><b><%=transaction.RecorderOffice.Alias%></b></td>
+              <td><b><%=transaction.RecorderOffice.ShortName%></b></td>
             </tr>
             <tr>
               <td style="white-space:nowrap">Notaría/Gestor:</td>
-              <td style="white-space:nowrap;width:30%"><b><%=transaction.Agency.Alias%></b></td>
+              <td style="white-space:nowrap;width:30%"><b><%=transaction.Agency.ShortName%></b></td>
 							<td style="white-space:nowrap">Tipo de trámite:</td>
               <td style="white-space:nowrap;width:30%"><b><%=transaction.TransactionType.Name%></b></td>
               <td style="white-space:nowrap">Importe:</td>
@@ -85,7 +85,7 @@
 							<td style="white-space:nowrap">Instrumento:</td>
               <td><b><%=Encode(transaction.DocumentDescriptor)%></b></td>
               <td style="white-space:nowrap">Recibió:</td>
-              <td style="white-space:nowrap"><b><%=transaction.ReceivedBy.Alias%></b></td>
+              <td style="white-space:nowrap"><b><%=transaction.ReceivedBy.ShortName%></b></td>
             </tr>
             <tr>
               <td style="white-space:nowrap;vertical-align:top">Observaciones:</td>

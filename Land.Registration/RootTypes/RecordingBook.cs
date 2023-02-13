@@ -52,7 +52,7 @@ namespace Empiria.Land.Registration {
       //this.RecorderOffice = recorderOffice;
       //this.BookNumber = recordingBookTag;
       //this.AsText = recordingBookTag;
-      //this.FullName = recorderOffice.Alias + " " + this.Parent.BuildChildFullName(recordingBookTag);
+      //this.FullName = recorderOffice.ShortName + " " + this.Parent.BuildChildFullName(recordingBookTag);
     }
 
 
