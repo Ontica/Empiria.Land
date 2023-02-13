@@ -113,15 +113,8 @@
     <Content Include="themes\default\css\official.document.css" />
     <Content Include="themes\default\css\report.css" />
     <Content Include="themes\default\css\to.printer.css" />
-    <Content Include="themes\default\customer\background.png" />
-    <Content Include="themes\default\customer\dashboard.background.gif" />
     <Content Include="themes\default\customer\horizontal.logo.png" />
     <Content Include="themes\default\customer\horizontal.logo.veda.png" />
-    <Content Include="themes\default\customer\pleca-roja.png" />
-    <Content Include="themes\default\customer\seal.logo.left.png" />
-    <Content Include="themes\default\customer\seal.logo.right.png" />
-    <Content Include="themes\default\customer\section_division_bar.jpg" />
-    <Content Include="themes\default\customer\separator.jpg" />
     <Content Include="themes\default\textures\pixel.gif" />
     <Content Include="user.controls\barcode.aspx" />
     <Content Include="user.controls\printer.aspx" />
