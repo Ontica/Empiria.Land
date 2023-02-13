@@ -10,8 +10,6 @@ namespace Empiria.Land.Pages {
 
     static public string CustomerOfficeName => "Dirección de Catastro y Registro Público";
 
-    static public string DistrictName => "Registro Público del Distrito de Zacatecas";
-
     static public string DocumentLogo {
       get {
         if (DISPLAY_VEDA_ELECTORAL_UI) {

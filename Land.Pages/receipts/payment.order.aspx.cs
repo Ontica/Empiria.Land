@@ -49,7 +49,7 @@ namespace Empiria.Land.Pages {
     }
 
     protected string GetDistrictName() {
-      return "Registro Público del Distrito de Zacatecas";
+      return $"Registro Público del Distrito de {transaction.RecorderOffice.ShortName}";
     }
 
 

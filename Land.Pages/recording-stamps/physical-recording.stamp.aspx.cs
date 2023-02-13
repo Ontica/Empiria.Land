@@ -203,7 +203,7 @@ namespace Empiria.Land.Pages {
 
 
 		protected string GetRecordingSignerPosition() {
-			return "C. Oficial Registrador del Distrito Judicial de Zacatecas";
+			return $"C. Oficial Registrador del Distrito Judicial de {baseRecording.MainDocument.RecorderOffice.ShortName}";
 		}
 
 
