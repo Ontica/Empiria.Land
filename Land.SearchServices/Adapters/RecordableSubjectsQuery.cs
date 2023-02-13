@@ -22,6 +22,11 @@ namespace Empiria.Land.SearchServices {
     } = RecordableSubjectType.None;
 
 
+    public RecorderOffice RecorderOffice {
+      get; set;
+    } = RecorderOffice.Empty;
+
+
     public string Keywords {
       get; set;
     } = string.Empty;
@@ -56,16 +61,19 @@ namespace Empiria.Land.SearchServices {
       query.OrderBy = query.OrderBy ?? "PropertyUID";
       query.PageSize = query.PageSize <= 0 ? 50 : query.PageSize;
       query.Page = query.Page <= 0 ? 1 : query.Page;
+      query.RecorderOffice = GetRecorderOffice(query.RecorderOffice);
     }
 
 
     static internal string MapToFilterString(this RecordableSubjectsQuery query) {
+      string recorderOfficeFilter = BuildRecorderOfficeFilter(query.RecorderOffice);
       string typeFilter = BuildRecordableSubjectTypeFilter(query.Type);
 
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
 
-      var filter = new Filter(typeFilter);
+      var filter = new Filter(recorderOfficeFilter);
 
+      filter.AppendAnd(typeFilter);
       filter.AppendAnd(keywordsFilter);
 
       return filter.ToString();
@@ -83,6 +91,15 @@ namespace Empiria.Land.SearchServices {
         default:
           return "(PropertyTypeId <> 0)";
       }
+    }
+
+
+    static private string BuildRecorderOfficeFilter(RecorderOffice recorderOffice) {
+      if (recorderOffice.IsEmptyInstance) {
+        return string.Empty;
+      }
+
+      return $"(RecorderOfficeId = {recorderOffice.Id})";
     }
 
 
@@ -108,6 +125,19 @@ namespace Empiria.Land.SearchServices {
       }
     }
 
+
+    static private RecorderOffice GetRecorderOffice(RecorderOffice recorderOffice) {
+      if (!recorderOffice.IsEmptyInstance) {
+        return recorderOffice;
+      }
+      if (ExecutionServer.CurrentPrincipal.Permissions.Contains("oficialia-zacatecas")) {
+        return RecorderOffice.Parse(101);
+      }
+      if (ExecutionServer.CurrentPrincipal.Permissions.Contains("oficialia-fresnillo")) {
+        return RecorderOffice.Parse(102);
+      }
+      return RecorderOffice.Empty;
+    }
 
     #endregion Helpers
 
