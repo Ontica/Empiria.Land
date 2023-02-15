@@ -917,7 +917,7 @@ namespace Empiria.Land.Registration.Transactions {
 
       current++;
 
-      return current.ToString();
+      return $"{current:000000}";
     }
 
 
