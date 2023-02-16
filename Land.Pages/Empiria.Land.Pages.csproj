@@ -179,6 +179,7 @@
       <DependentUpon>recording.stamp.aspx</DependentUpon>
     </Compile>
     <Compile Include="RootTypes\CommonMethods.cs" />
+    <Compile Include="RootTypes\WebApplication.cs" />
     <Compile Include="user.controls\barcode.aspx.cs">
       <DependentUpon>barcode.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -220,14 +221,6 @@
     <ProjectReference Include="..\..\extensions\Geography\Empiria.Geography.csproj">
       <Project>{96267945-dbe1-4b2c-88e2-0ecdc5ca7669}</Project>
       <Name>Empiria.Geography</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\extensions\Presentation.Web\Empiria.Presentation.Web.csproj">
-      <Project>{0aeea12e-b4f7-4e12-a768-99bb82bd3fc9}</Project>
-      <Name>Empiria.Presentation.Web</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\extensions\Presentation\Empiria.Presentation.csproj">
-      <Project>{2790ad3e-0ae4-4c94-83ba-96bc53185b19}</Project>
-      <Name>Empiria.Presentation</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\extensions\Services\Empiria.Services.csproj">
       <Project>{8e1d08a7-d609-43bb-9e16-fb033693df24}</Project>
