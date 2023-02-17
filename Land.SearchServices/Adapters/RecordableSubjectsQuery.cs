@@ -99,7 +99,7 @@ namespace Empiria.Land.SearchServices {
         return string.Empty;
       }
 
-      return $"(RecorderOfficeId = {recorderOffice.Id})";
+      return $"(RecorderOfficeId = {recorderOffice.Id} OR PropertyId = -2)";
     }
 
 
