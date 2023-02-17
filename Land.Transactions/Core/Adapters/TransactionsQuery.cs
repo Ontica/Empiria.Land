@@ -102,7 +102,7 @@ namespace Empiria.Land.Transactions {
 
     static private string BuildKeywordsFilter(string keywords) {
       if (EmpiriaString.IsInteger(keywords)) {
-        return $"(InternalControlNo = '{keywords}')";
+        return $"(InternalControlNo = '{int.Parse(keywords):000000}')";
 
       } else if (LRSTransaction.MatchesWithTransactionUID(keywords)) {
         return $"(TransactionUID = '{keywords}')";
