@@ -52,6 +52,7 @@
     <WarningsAsErrors />
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Land.ESign\Empiria.Land.ESign.csproj" />
     <ProjectReference Include="..\Land.SearchServices\Empiria.Land.SearchServices.csproj" />
   </ItemGroup>
   <ItemGroup>

@@ -1,17 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31025.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Empiria.Land.Documentation", "Land.Documentation\Empiria.Land.Documentation.csproj", "{7D98C757-6ED4-48D0-B351-A99CE5ED8987}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Empiria.Land.Documentation", "Land.Documentation\Empiria.Land.Documentation.csproj", "{7D98C757-6ED4-48D0-B351-A99CE5ED8987}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Empiria.Land.Registration", "Land.Registration\Empiria.Land.Registration.csproj", "{EA85313C-BBBB-4F31-B6B9-05BB79ADDFF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Empiria.Land.Registration", "Land.Registration\Empiria.Land.Registration.csproj", "{EA85313C-BBBB-4F31-B6B9-05BB79ADDFF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Empiria.Land.UI", "Land.UI\Empiria.Land.UI.csproj", "{90D29B34-A9C5-47EE-8279-7473FA37D194}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Empiria.Land.UI", "Land.UI\Empiria.Land.UI.csproj", "{90D29B34-A9C5-47EE-8279-7473FA37D194}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Empiria.Land.WebApi", "Land.WebAPI\Empiria.Land.WebApi.csproj", "{D0A0661C-5DCD-42CE-8F3D-D5D5C5E47455}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Empiria.Land.AppServices", "Land.AppServices\Empiria.Land.AppServices.csproj", "{6123D3D5-409D-40C4-B9BE-04E3A6B2B51E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Empiria.Land.WebApi", "Land.WebAPI\Empiria.Land.WebApi.csproj", "{D0A0661C-5DCD-42CE-8F3D-D5D5C5E47455}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,10 +34,6 @@ Global
 		{D0A0661C-5DCD-42CE-8F3D-D5D5C5E47455}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0A0661C-5DCD-42CE-8F3D-D5D5C5E47455}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0A0661C-5DCD-42CE-8F3D-D5D5C5E47455}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6123D3D5-409D-40C4-B9BE-04E3A6B2B51E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6123D3D5-409D-40C4-B9BE-04E3A6B2B51E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6123D3D5-409D-40C4-B9BE-04E3A6B2B51E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6123D3D5-409D-40C4-B9BE-04E3A6B2B51E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
