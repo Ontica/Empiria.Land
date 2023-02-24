@@ -1,18 +1,27 @@
-﻿/* Empiria Land      *****************************************************************************************
+﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : ESign                                      Component : Data Layer                              *
+*  Module   : ESign Services                             Component : Data Layer                              *
 *  Assembly : Empiria.Land.ESign.dll                     Pattern   : Data Service                            *
-*  Type     : ESignDataService                           License   : Please read LICENSE.txt file            *
+*  Type     : ESignEngineData                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides data read methods for ESign.                                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using Empiria.Land.ESign.Adapters;
+using Empiria.Land.ESign.Domain;
 
 namespace Empiria.Land.ESign.Data {
 
   /// <summary>Provides data read methods for ESign.</summary>
-  internal class ESignEngineData {
+  static internal class ESignEngineData {
+
+
+    static internal FixedList<SignRequestEntry> GetSignRequests(ESignQuery query) {
+      Assertion.Require(query, nameof(query));
+
+      return new FixedList<SignRequestEntry>();
+    }
 
 
   } // class ESignDataService

@@ -46,10 +46,15 @@
     <Compile Include="Adapters\ESignQuery.cs" />
     <Compile Include="Data\ESignEngineData.cs" />
     <Compile Include="Domain\ESignEngine.cs" />
+    <Compile Include="Domain\SignRequestEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UseCases\ESignEngineUseCases.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj">
+      <Project>{adebc2bc-d0bd-4d1e-bb13-4f769eec655b}</Project>
+      <Name>Empiria.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\extensions\Services\Empiria.Services.csproj">
       <Project>{79b5e4d4-8a7c-41b3-834c-1e2bfdd34001}</Project>
       <Name>Empiria.Services</Name>

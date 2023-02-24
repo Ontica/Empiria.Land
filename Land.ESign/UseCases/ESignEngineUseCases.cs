@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using Empiria.Land.ESign.Adapters;
+using Empiria.Land.ESign.Domain;
 using Empiria.Services;
 
 namespace Empiria.Land.ESign.UseCases {
@@ -30,8 +31,14 @@ namespace Empiria.Land.ESign.UseCases {
     #endregion Constructors and parsers
 
 
-    public ESignDTO Build(ESignQuery query) {
-      throw new NotImplementedException();
+    public ESignDTO BuildRequest(ESignQuery query) {
+      Assertion.Require(query, nameof(query));
+
+      var build = new ESignEngine(query);
+
+      FixedList<SignRequestEntry> requestedData = build.BuildRequest();
+
+      return ESignEngineMapper.Map(requestedData);
     }
 
 
