@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 
 using Empiria.Contacts;
+
 using Empiria.Security;
 
 using Empiria.Land.Registration.Transactions;
@@ -27,7 +28,7 @@ namespace Empiria.Land.Transactions.Workflow {
 
 
     internal bool IsInRole(Contact user, WorkflowRole role) {
-      return EmpiriaUser.IsInRole(user, $"{role}");
+      return AuthorizationService.IsSubjectInRole(user, $"{role}");
     }
 
 

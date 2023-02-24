@@ -38,7 +38,7 @@ namespace Empiria.Presentation.Web {
 
         authTicket = FormsAuthentication.RenewTicketIfOld(authTicket);
 
-        EmpiriaPrincipal principal = AuthenticationService.Authenticate(authTicket.UserData);
+        IEmpiriaPrincipal principal = AuthenticationService.Authenticate(authTicket.UserData);
 
         Thread.CurrentPrincipal = principal;
         this.Context.User = principal;
@@ -60,7 +60,7 @@ namespace Empiria.Presentation.Web {
     public void OnSessionEnd(object sender, EventArgs e) {
       try {
         if (ExecutionServer.IsAuthenticated) {
-          ExecutionServer.CurrentPrincipal.CloseSession();
+          ExecutionServer.CurrentPrincipal.Logout();
         }
         if (Request.IsAuthenticated) {
           FormsAuthentication.SignOut();
