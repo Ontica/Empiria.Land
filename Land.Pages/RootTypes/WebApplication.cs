@@ -38,9 +38,11 @@ namespace Empiria.Presentation.Web {
 
         authTicket = FormsAuthentication.RenewTicketIfOld(authTicket);
 
-        IEmpiriaPrincipal principal = AuthenticationService.Authenticate(authTicket.UserData);
+        IEmpiriaPrincipal principal = AuthenticationService.Authenticate(authTicket.UserData,
+                                                                         Request.UserHostAddress);
 
         Thread.CurrentPrincipal = principal;
+
         this.Context.User = principal;
       }
     }
