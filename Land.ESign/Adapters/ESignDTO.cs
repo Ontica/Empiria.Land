@@ -15,6 +15,21 @@ namespace Empiria.Land.ESign.Adapters {
   public class ESignDTO {
 
 
+    public string UID {
+      get; set;
+    }
+
+
+    public string EventType {
+      get; set;
+    }
+
+
+    public DateTime TimeStamp {
+      get; set;
+    } = DateTime.Now;
+
+
     public FixedList<SignRequestDto> SignRequests {
       get; set;
     } = new FixedList<SignRequestDto>();

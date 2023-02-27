@@ -17,6 +17,13 @@ namespace Empiria.Land.ESign.Data {
   static internal class ESignEngineData {
 
 
+    internal static FixedList<SignRequestEntry> GetPendingESigns(string esignStatus) {
+      Assertion.Require(esignStatus, nameof(esignStatus));
+
+      return new FixedList<SignRequestEntry>();
+    }
+
+
     static internal FixedList<SignRequestEntry> GetSignRequests(ESignQuery query) {
       Assertion.Require(query, nameof(query));
 

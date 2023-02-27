@@ -16,20 +16,20 @@ namespace Empiria.Land.ESign.Domain {
   /// <summary>Generates the data for the ESign.</summary>
   internal class ESignEngine {
 
-
-    private readonly ESignQuery _query;
-
-    public ESignEngine(ESignQuery query) {
-      _query = query;
-    }
-
-
     #region Public methods
 
 
-    internal FixedList<SignRequestEntry> BuildRequest() {
+    internal FixedList<SignRequestEntry> GetPendingESigns(string esignStatus) {
 
-      FixedList<SignRequestEntry> requestedData = ESignEngineData.GetSignRequests(_query);
+      FixedList<SignRequestEntry> requestedData = ESignEngineData.GetPendingESigns(esignStatus);
+
+      return requestedData;
+    }
+
+
+    internal FixedList<SignRequestEntry> BuildRequest(ESignQuery query) {
+      
+      FixedList<SignRequestEntry> requestedData = ESignEngineData.GetSignRequests(query);
 
       return requestedData;
     }

@@ -25,6 +25,19 @@ namespace Empiria.Land.ESign.WebAPI {
 
     [HttpPost]
     [Route("v5/land/e-sign/request-pending-esign")]
+    public SingleObjectModel GetPendingESigns([FromBody] string esignStatus) {
+      
+      using (var usecases = ESignEngineUseCases.UseCaseInteractor()) {
+
+        ESignDTO esign = usecases.GetPendingESigns(esignStatus);
+
+        return new SingleObjectModel(this.Request, esign);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v5/land/e-sign/generate-esign")]
 #pragma warning disable CS3001 // El tipo de argumento no es conforme a CLS
     public SingleObjectModel GenerateESign([FromBody] ESignQuery query) {
 #pragma warning restore CS3001 // El tipo de argumento no es conforme a CLS

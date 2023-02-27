@@ -31,12 +31,23 @@ namespace Empiria.Land.ESign.UseCases {
     #endregion Constructors and parsers
 
 
+    public ESignDTO GetPendingESigns(string esignStatus) {
+      Assertion.Require(esignStatus, nameof(esignStatus));
+
+      var build = new ESignEngine();
+
+      FixedList<SignRequestEntry> requestedData = build.GetPendingESigns(esignStatus);
+
+      return ESignEngineMapper.Map(requestedData);
+    }
+
+
     public ESignDTO BuildRequest(ESignQuery query) {
       Assertion.Require(query, nameof(query));
 
-      var build = new ESignEngine(query);
+      var build = new ESignEngine();
 
-      FixedList<SignRequestEntry> requestedData = build.BuildRequest();
+      FixedList<SignRequestEntry> requestedData = build.BuildRequest(query);
 
       return ESignEngineMapper.Map(requestedData);
     }
