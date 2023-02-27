@@ -272,7 +272,7 @@ namespace Empiria.Land.Pages {
       if (ExecutionServer.IsAuthenticated) {
         var user = ExecutionServer.CurrentContact;
 
-        return user.Nickname;
+        return user.Initials;
       } else {
         return "Interesado";
       }

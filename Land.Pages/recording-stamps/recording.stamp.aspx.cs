@@ -187,7 +187,7 @@ namespace Empiria.Land.Pages {
         if (temp.Length != 0) {
           temp += " ";
         }
-        temp += official.Nickname;
+        temp += official.Initials;
       }
       return temp;
     }
@@ -197,7 +197,7 @@ namespace Empiria.Land.Pages {
       if (ExecutionServer.IsAuthenticated) {
         var user = ExecutionServer.CurrentContact;
 
-        return user.Nickname;
+        return user.Initials;
       }
       return String.Empty;
     }

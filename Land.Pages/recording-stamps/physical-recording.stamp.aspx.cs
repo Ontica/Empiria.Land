@@ -147,7 +147,7 @@ namespace Empiria.Land.Pages {
       string temp = String.Empty;
 
       for (int i = 0; i < recordings.Count; i++) {
-        string initials = recordings[i].RecordedBy.Nickname;
+        string initials = recordings[i].RecordedBy.Initials;
         if (initials.Length == 0) {
           continue;
         }
