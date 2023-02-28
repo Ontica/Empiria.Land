@@ -10,6 +10,7 @@
 using System;
 using Empiria.Land.ESign.Adapters;
 using Empiria.Land.ESign.Data;
+using Empiria.OnePoint.ESign;
 
 namespace Empiria.Land.ESign.Domain {
 
@@ -21,6 +22,7 @@ namespace Empiria.Land.ESign.Domain {
 
     internal FixedList<SignRequestEntry> GetPendingESigns(string esignStatus) {
 
+      var eSignUseCases = new ESignDocumentUseCases();
       FixedList<SignRequestEntry> requestedData = ESignEngineData.GetPendingESigns(esignStatus);
 
       return requestedData;

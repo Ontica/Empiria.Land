@@ -10,6 +10,8 @@
 using System;
 using Empiria.Land.ESign.Adapters;
 using Empiria.Land.ESign.Domain;
+using Empiria.OnePoint.ESign;
+using Empiria.OnePoint.ESign.Adapters;
 using Empiria.Services;
 
 namespace Empiria.Land.ESign.UseCases {
@@ -34,11 +36,11 @@ namespace Empiria.Land.ESign.UseCases {
     public ESignDTO GetPendingESigns(string esignStatus) {
       Assertion.Require(esignStatus, nameof(esignStatus));
 
-      var build = new ESignEngine();
+      var eSignUseCases = new ESignDocumentUseCases();
 
-      FixedList<SignRequestEntry> requestedData = build.GetPendingESigns(esignStatus);
+      FixedList<OPSignDocumentEntryDto> signedDocumentsDto = eSignUseCases.SignedDocuments(esignStatus);
 
-      return ESignEngineMapper.Map(requestedData);
+      return ESignEngineMapper.Map(signedDocumentsDto);
     }
 
 
@@ -49,7 +51,8 @@ namespace Empiria.Land.ESign.UseCases {
 
       FixedList<SignRequestEntry> requestedData = build.BuildRequest(query);
 
-      return ESignEngineMapper.Map(requestedData);
+      return new ESignDTO();
+      //return ESignEngineMapper.Map(requestedData);
     }
 
 

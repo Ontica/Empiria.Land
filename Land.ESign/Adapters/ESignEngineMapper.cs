@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using Empiria.Land.ESign.Domain;
+using Empiria.OnePoint.ESign.Adapters;
 
 namespace Empiria.Land.ESign.Adapters {
 
@@ -18,9 +19,9 @@ namespace Empiria.Land.ESign.Adapters {
     #region Public methods
 
 
-    static internal ESignDTO Map(FixedList<SignRequestEntry> signRequests) {
+    static internal ESignDTO Map(FixedList<OPSignDocumentEntryDto> signedDocumentsDto) {
       return new ESignDTO {
-        SignRequests = MapEntries(signRequests)
+        SignRequests = MapEntries(signedDocumentsDto)
       };
     }
 
@@ -30,23 +31,18 @@ namespace Empiria.Land.ESign.Adapters {
     #region Private methods
 
 
-    static private FixedList<SignRequestDto> MapEntries(FixedList<SignRequestEntry> signRequests) {
-      var requests = signRequests.Select((x) => MapEntry((SignRequestEntry) x));
+    static private FixedList<SignRequestDto> MapEntries(
+                    FixedList<OPSignDocumentEntryDto> signedDocumentsDto) {
+
+      var requests = signedDocumentsDto.Select((x) => MapEntry((OPSignDocumentEntryDto) x));
 
       return new FixedList<SignRequestDto>(requests);
     }
 
 
-    static private SignRequestDto MapEntry(SignRequestEntry x) {
+    static private SignRequestDto MapEntry(OPSignDocumentEntryDto x) {
       var dto = new SignRequestDto();
-      dto.UID = x.UID;
-      dto.RequestedBy = x.RequestedBy;
-      dto.RequestedTime = x.RequestedTime;
-      dto.SignStatus = x.SignStatus;
-      dto.SignatureKind = x.SignatureKind;
-      dto.DigitalSignature = x.DigitalSignature;
-      dto.Document = x.Document;
-      dto.Filing = x.Filing;
+      
       return dto;
     }
 
