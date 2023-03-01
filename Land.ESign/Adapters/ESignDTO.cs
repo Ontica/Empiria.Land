@@ -30,115 +30,12 @@ namespace Empiria.Land.ESign.Adapters {
     } = DateTime.Now;
 
 
-    public FixedList<SignRequestDto> SignRequests {
+    public FixedList<SignDocumentRequestDto> SignRequests {
       get; set;
-    } = new FixedList<SignRequestDto>();
+    } = new FixedList<SignDocumentRequestDto>();
 
 
   } // class ESignDTO
-
-
-  public class SignRequestDto {
-
-
-    public string UID {
-      get; set;
-    }
-
-
-    public string RequestedBy {
-      get; set;
-    }
-
-
-    public DateTime RequestedTime {
-      get; set;
-    }
-
-
-    public string SignStatus {
-      get; set;
-    }
-
-
-    public string SignatureKind {
-      get; set;
-    }
-
-
-    public string DigitalSignature {
-      get; set;
-    }
-
-
-    public DocumentType Document {
-      get; set;
-    }
-
-
-    public Filing Filing {
-      get; set;
-    }
-
-
-  } // class SignRequest
-
-
-  public class DocumentType {
-
-
-    public string UID {
-      get; set;
-    }
-
-
-    public string Type {
-      get; set;
-    }
-
-
-    public string DocumentNumber {
-      get; set;
-    }
-
-
-    public string Description {
-      get; set;
-    }
-
-
-    public string Uri {
-      get; set;
-    }
-
-
-  } // class DocumentType
-
-
-  public class Filing {
-
-
-    public string FilingNo {
-      get; set;
-    }
-
-
-    public DateTime FilingTime {
-      get; set;
-    }
-
-
-    public string FiledBy {
-      get; set;
-    }
-
-
-    public string PostedBy {
-      get; set;
-    }
-
-
-  } // class Filing
 
 
 }

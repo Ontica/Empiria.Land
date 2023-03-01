@@ -51,7 +51,7 @@ namespace Empiria.Land.ESign.Domain {
     }
 
 
-    public Filing Filing {
+    public DocumentFiling Filing {
       get; internal set;
     }
 

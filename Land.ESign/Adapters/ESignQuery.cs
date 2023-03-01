@@ -23,9 +23,9 @@ namespace Empiria.Land.ESign.Adapters {
     } = string.Empty;
 
 
-    public FixedList<SignRequestDto> SignRequests {
+    public FixedList<SignDocumentRequestDto> SignRequests {
       get; set;
-    } = new FixedList<SignRequestDto>();
+    } = new FixedList<SignDocumentRequestDto>();
 
 
     public DateTime TimeStamp {

@@ -91,6 +91,9 @@
     <ProjectReference Include="..\..\land.zacatecas\Integration\SIT.Finanzas\SIT.Finanzas.Connector.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Land.ESign\Empiria.Land.ESign.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="empiria.config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

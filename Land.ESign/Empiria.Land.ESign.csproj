@@ -44,6 +44,8 @@
     <Compile Include="Adapters\ESignDTO.cs" />
     <Compile Include="Adapters\ESignEngineMapper.cs" />
     <Compile Include="Adapters\ESignQuery.cs" />
+    <Compile Include="Adapters\SignDocumentDto.cs" />
+    <Compile Include="Adapters\SignDocumentRequestDto.cs" />
     <Compile Include="Data\ESignEngineData.cs" />
     <Compile Include="Domain\ESignEngine.cs" />
     <Compile Include="Domain\SignRequestEntry.cs" />

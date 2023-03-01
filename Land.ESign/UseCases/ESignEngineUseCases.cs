@@ -33,14 +33,15 @@ namespace Empiria.Land.ESign.UseCases {
     #endregion Constructors and parsers
 
 
-    public ESignDTO GetPendingESigns(string esignStatus) {
-      Assertion.Require(esignStatus, nameof(esignStatus));
+    public FixedList<SignDocumentDto> GetSignedDocuments(int recorderOfficeId) {
+      Assertion.Require(recorderOfficeId, nameof(recorderOfficeId));
 
       var eSignUseCases = new ESignDocumentUseCases();
 
-      FixedList<OPSignDocumentEntryDto> signedDocumentsDto = eSignUseCases.SignedDocuments(esignStatus);
+      FixedList<OnePointSignDocumentDto> signedDocumentsDto = 
+                                         eSignUseCases.SignedDocuments(recorderOfficeId);
 
-      return ESignEngineMapper.Map(signedDocumentsDto);
+      return ESignEngineMapper.Mapper(signedDocumentsDto);
     }
 
 

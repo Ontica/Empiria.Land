@@ -25,11 +25,11 @@ namespace Empiria.Land.ESign.WebAPI {
 
     [HttpPost]
     [Route("v5/land/e-sign/request-pending-esign")]
-    public SingleObjectModel GetPendingESigns([FromBody] string esignStatus) {
+    public SingleObjectModel GetPendingESigns([FromBody] int recorderOfficeId) {
       
       using (var usecases = ESignEngineUseCases.UseCaseInteractor()) {
 
-        ESignDTO esign = usecases.GetPendingESigns(esignStatus);
+        FixedList<SignDocumentDto> esign = usecases.GetSignedDocuments(recorderOfficeId);
 
         return new SingleObjectModel(this.Request, esign);
       }
