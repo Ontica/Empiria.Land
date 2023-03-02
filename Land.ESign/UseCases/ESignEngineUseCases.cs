@@ -38,7 +38,7 @@ namespace Empiria.Land.ESign.UseCases {
 
       var eSignUseCases = new ESignDocumentUseCases();
 
-      FixedList<OnePointSignDocumentDto> signedDocumentsDto = 
+      FixedList<OnePointESignDocumentDto> signedDocumentsDto =
                                          eSignUseCases.SignedDocuments(recorderOfficeId);
 
       return ESignEngineMapper.Mapper(signedDocumentsDto);
