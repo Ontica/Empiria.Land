@@ -58,7 +58,8 @@ namespace Empiria.Land.Registration.UseCases {
 
       FixedList<RecordingBook> books = RecordingBook.GetList(recorderOffice, recordingSection, keywords);
 
-      return new FixedList<NamedEntityDto>(books.Select(x => new NamedEntityDto(x.UID, x.BookNumber)));
+      return books.Select(x => new NamedEntityDto(x.UID, x.BookNumber))
+                  .ToFixedList();
     }
 
 

@@ -274,7 +274,7 @@ namespace Empiria.Land.Certificates {
         return;
       }
       Assertion.RequireFail($"The status of the certificate with ID '{this.CertificateID}' " +
-                            $"can not be changed to {newStatus}.");
+                            $"cannot be changed to {newStatus}.");
     }
 
     #endregion Helpers

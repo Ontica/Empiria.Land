@@ -89,7 +89,7 @@ namespace Empiria.Land.Data {
 
     internal static void UpdateRecordingActType(RecordingAct recordingAct) {
       Assertion.Require(recordingAct.IsEditable,
-                        $"Recording act '{recordingAct.UID}' can not be edited.");
+                        $"Recording act '{recordingAct.UID}' cannot be edited.");
 
       var sql = "UPDATE LRSRecordingActs " +
                $"SET RecordingActTypeId = {recordingAct.RecordingActType.Id} " +

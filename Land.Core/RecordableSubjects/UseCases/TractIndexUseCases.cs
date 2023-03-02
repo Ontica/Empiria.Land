@@ -46,7 +46,7 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
       if (!string.IsNullOrWhiteSpace(instrumentRecordingUID)) {
         var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
-        date = instrumentRecording.AuthorizationTime != ExecutionServer.DateMaxValue ?
+        date = instrumentRecording.AuthorizationTime != ExecutionServer.DateMinValue ?
                                       instrumentRecording.AuthorizationTime : instrumentRecording.PresentationTime;
       }
 

@@ -600,7 +600,7 @@ namespace Empiria.Land.Registration.Transactions {
                        $"There are not any registered payments for transaction '{this.UID}'.");
 
       Assertion.Require(this.ControlData.CanCancelPayment,
-                       $"Can not cancel the payment for transaction '{this.UID}'.");
+                       $"It's not possible to cancel the payment for transaction '{this.UID}'.");
 
       var payment = this.Payments[0];
 

@@ -149,7 +149,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     internal void Delete() {
 
-      Assertion.Require(this.CanBeDeleted, "This transaction can not be deleted.");
+      Assertion.Require(this.CanBeDeleted, "This transaction cannot be deleted.");
 
       this.Close(LRSTransactionStatus.Deleted,
             $"Deleted by user {ExecutionServer.CurrentContact.FullName} on {DateTime.Now}.");

@@ -31,6 +31,7 @@ namespace Empiria.Land.Registration {
       var json = JsonConverter.ToJsonObject(jsonString);
 
       var data = new RealEstateExtData();
+
       data.LoadJson(json);
 
       return data;

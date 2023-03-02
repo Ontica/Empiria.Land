@@ -104,7 +104,9 @@ namespace Empiria.Land.Data {
     }
 
     static internal void SetTransactionInstrument(LRSTransaction transaction, IIdentifiable instrument) {
-      var sql = $"UPDATE LRSTransactions SET InstrumentId = {instrument.Id} WHERE TransactionId = {transaction.Id}";
+      var sql = $"UPDATE LRSTransactions " +
+                $"SET InstrumentId = {instrument.Id} " +
+                $"WHERE TransactionId = {transaction.Id}";
 
       var op = DataOperation.Parse(sql);
 

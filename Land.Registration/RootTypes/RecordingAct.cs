@@ -510,7 +510,7 @@ namespace Empiria.Land.Registration {
     public RecordingActParty AppendParty(RecordingActPartyFields recordingActPartyFields) {
       Assertion.Require(recordingActPartyFields, "recordingActPartyFields");
       Assertion.Require(this.IsEditable,
-                       "This recording act is not editable, so I can not append a party to it.");
+                       "This recording act is not editable, so I cannot append a party to it.");
 
       recordingActPartyFields.EnsureValid();
 
