@@ -11,7 +11,6 @@ using System;
 using Empiria.Data;
 using Empiria.Land.ESign.Adapters;
 using Empiria.Land.ESign.Domain;
-using Empiria.OnePoint.ESign;
 
 namespace Empiria.Land.ESign.Data {
 
@@ -19,19 +18,38 @@ namespace Empiria.Land.ESign.Data {
   static internal class ESignEngineData {
 
 
-    internal static FixedList<SignRequestEntry> GetPendingESigns(string esignStatus) {
-      Assertion.Require(esignStatus, nameof(esignStatus));
+    internal static FixedList<SignedDocumentEntry> GetSignedDocuments(int recorderOfficeId) {
+      Assertion.Require(recorderOfficeId, nameof(recorderOfficeId));
 
-      //var eSignUseCases = ESignUseCases();
+      var sql = "SELECT * FROM ( " +
+                " SELECT tra.TransactionId, tra.TransactionUID, docType.ObjectName AS DocumentType, " +
+                " transType.ObjectName AS TransactionType, tra.InternalControlNo, " +
+                " assigned.ContactFullName AS AssignedBy, responsible.ContactFullName as Responsible, " +
+                " tra.RequestedBy, tra.TransactionStatus, " +
+                " MAX(tra.PresentationTime) AS PresentationTime " +
 
-      return new FixedList<SignRequestEntry>();
-    }
+                " FROM LRSTransactions tra " +
+                " INNER JOIN LRSDocuments doc on tra.DocumentId = doc.DocumentId " +
+                " INNER JOIN LRSInstruments ins on doc.InstrumentId = ins.InstrumentId " +
+                " INNER JOIN SimpleObjects docType on tra.DocumentTypeId = docType.ObjectId " +
+                " INNER JOIN SimpleObjects transType on tra.TransactionTypeId = transType.ObjectId " +
+                " INNER JOIN LRSTransactionTrack tt on tra.TransactionId = tt.TransactionId " +
+                " INNER JOIN Contacts assigned on tt.AssignedById = assigned.ContactId " +
+                " INNER JOIN Contacts responsible on tt.ResponsibleId = responsible.ContactId " +
 
+                $" WHERE tra.TransactionStatus = 'S' AND tra.RecorderOfficeId = {recorderOfficeId} " +
+                "  and tt.TrackId = " +
+                " (select max (TrackId) from LRSTransactionTrack where TransactionId = tra.TransactionId) " +
 
-    static internal FixedList<SignRequestEntry> GetSignRequests(ESignQuery query) {
-      Assertion.Require(query, nameof(query));
+                " GROUP BY tra.TransactionId, tra.TransactionUID, docType.ObjectName, " +
+                "   transType.ObjectName, tra.InternalControlNo, assigned.ContactFullName, " +
+                "   responsible.ContactFullName, tra.RequestedBy, tra.TransactionStatus " +
 
-      return new FixedList<SignRequestEntry>();
+                ") AS GETTRANSACTIONS ORDER BY PresentationTime DESC";
+
+      var dataOperation = DataOperation.Parse(sql);
+
+      return DataReader.GetPlainObjectFixedList<SignedDocumentEntry>(dataOperation);
     }
 
 

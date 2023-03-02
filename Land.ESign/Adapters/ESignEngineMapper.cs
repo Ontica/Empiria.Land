@@ -19,45 +19,11 @@ namespace Empiria.Land.ESign.Adapters {
     #region Public methods
 
 
-    static internal FixedList<SignDocumentDto> Mapper(FixedList<OnePointSignDocumentDto> signedDocumentsDto) {
+    static internal FixedList<SignDocumentDto> Mapper(FixedList<SignedDocumentEntry> signedDocumentsDto) {
 
       FixedList<SignDocumentDto> mapEntries = MapToSignDocument(signedDocumentsDto);
 
-      return new FixedList<SignDocumentDto>();
-    }
-
-
-    static private FixedList<SignDocumentDto> MapToSignDocument(FixedList<OnePointSignDocumentDto> signedDocumentsDto) {
-
-      var requests = signedDocumentsDto.Select((x) => MapDocument((OnePointSignDocumentDto) x));
-
-      return new FixedList<SignDocumentDto>(requests);
-    }
-
-
-    static private SignDocumentDto MapDocument(OnePointSignDocumentDto x) {
-      var dto = new SignDocumentDto();
-
-      dto.TransactionId = x.TransactionId;
-      dto.TransactionUID = x.TransactionUID;
-      dto.DocumentType = x.DocumentType;
-      dto.TransactionType = x.TransactionType;
-      dto.InternalControlNo = x.InternalControlNo;
-      dto.AssignedById = x.AssignedById;
-      dto.AssignedBy = x.AssignedBy;
-      dto.RequestedBy = x.RequestedBy;
-      dto.TransactionStatus = x.TransactionStatus;
-      dto.RecorderOfficeId = x.RecorderOfficeId;
-      dto.PresentationTime = x.PresentationTime;
-      
-      return dto;
-    }
-
-
-    static internal ESignDTO Map(FixedList<OnePointSignDocumentDto> signedDocumentsDto) {
-      return new ESignDTO {
-        SignRequests = MapEntries(signedDocumentsDto)
-      };
+      return new FixedList<SignDocumentDto>(mapEntries);
     }
 
 
@@ -65,20 +31,29 @@ namespace Empiria.Land.ESign.Adapters {
 
     #region Private methods
 
+    
+    static private SignDocumentDto MapDocument(SignedDocumentEntry x) {
+      var dto = new SignDocumentDto();
 
-    static private FixedList<SignDocumentRequestDto> MapEntries(
-                    FixedList<OnePointSignDocumentDto> signedDocumentsDto) {
+      dto.TransactionUID = x.TransactionUID;
+      dto.DocumentType = x.DocumentType;
+      dto.TransactionType = x.TransactionType;
+      dto.InternalControlNo = x.InternalControlNo;
+      dto.AssignedBy = x.AssignedBy;
+      dto.RequestedBy = x.RequestedBy;
+      dto.TransactionStatus = x.TransactionStatus;
+      dto.PresentationTime = x.PresentationTime;
 
-      var requests = signedDocumentsDto.Select((x) => MapEntry((OnePointSignDocumentDto) x));
-
-      return new FixedList<SignDocumentRequestDto>(requests);
+      return dto;
     }
 
 
-    static private SignDocumentRequestDto MapEntry(OnePointSignDocumentDto x) {
-      var dto = new SignDocumentRequestDto();
-      
-      return dto;
+    static private FixedList<SignDocumentDto> MapToSignDocument(
+                    FixedList<SignedDocumentEntry> signedDocumentsDto) {
+
+      var requests = signedDocumentsDto.Select((x) => MapDocument(x));
+
+      return new FixedList<SignDocumentDto>(requests);
     }
 
 

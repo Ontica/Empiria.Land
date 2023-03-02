@@ -36,21 +36,6 @@ namespace Empiria.Land.ESign.WebAPI {
     }
 
 
-    [HttpPost]
-    [Route("v5/land/e-sign/generate-esign")]
-#pragma warning disable CS3001 // El tipo de argumento no es conforme a CLS
-    public SingleObjectModel GenerateESign([FromBody] ESignQuery query) {
-#pragma warning restore CS3001 // El tipo de argumento no es conforme a CLS
-
-      using (var usecases = ESignEngineUseCases.UseCaseInteractor()) {
-
-        ESignDTO esign = usecases.BuildRequest(query);
-
-        return new SingleObjectModel(this.Request, esign);
-      }
-    }
-
-
     #endregion Web Apis
 
 

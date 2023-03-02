@@ -20,18 +20,9 @@ namespace Empiria.Land.ESign.Domain {
     #region Public methods
 
 
-    internal FixedList<SignRequestEntry> GetPendingESigns(string esignStatus) {
+    internal FixedList<SignedDocumentEntry> GetSignedDocuments(int recorderOfficeId) {
 
-      var eSignUseCases = new ESignDocumentUseCases();
-      FixedList<SignRequestEntry> requestedData = ESignEngineData.GetPendingESigns(esignStatus);
-
-      return requestedData;
-    }
-
-
-    internal FixedList<SignRequestEntry> BuildRequest(ESignQuery query) {
-      
-      FixedList<SignRequestEntry> requestedData = ESignEngineData.GetSignRequests(query);
+      FixedList<SignedDocumentEntry> requestedData = ESignEngineData.GetSignedDocuments(recorderOfficeId);
 
       return requestedData;
     }
