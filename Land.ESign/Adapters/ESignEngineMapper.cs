@@ -8,8 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using Empiria.Land.ESign.Domain;
-using Empiria.OnePoint.ESign.Adapters;
+
+using Empiria.OnePoint.ESign;
 
 namespace Empiria.Land.ESign.Adapters {
 
