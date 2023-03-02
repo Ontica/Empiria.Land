@@ -49,7 +49,7 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField("NickName")]
+    [DataField("Initials")]
     public string Number {
       get;
       private set;

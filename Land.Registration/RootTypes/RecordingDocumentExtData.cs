@@ -74,6 +74,7 @@ namespace Empiria.Land.Registration {
     } = string.Empty;
 
 
+    [Newtonsoft.Json.JsonIgnore]
     public Contact MainWitness {
       get;
       set;
