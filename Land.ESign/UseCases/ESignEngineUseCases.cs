@@ -11,8 +11,6 @@ using System;
 
 using Empiria.Services;
 
-using Empiria.OnePoint.ESign;
-
 using Empiria.Land.ESign.Adapters;
 using Empiria.Land.ESign.Domain;
 
@@ -35,11 +33,11 @@ namespace Empiria.Land.ESign.UseCases {
     #endregion Constructors and parsers
 
 
-    public FixedList<SignDocumentDto> GetSignedDocuments(int recorderOfficeId) {
+    public FixedList<SignDocumentDto> GetSignedDocuments(int recorderOfficeId, string responsibleUID) {
       Assertion.Require(recorderOfficeId, nameof(recorderOfficeId));
 
       var build = new ESignEngine();
-      FixedList<SignedDocumentEntry> requestedData = build.GetSignedDocuments(recorderOfficeId);
+      FixedList<SignedDocumentEntry> requestedData = build.GetSignedDocuments(recorderOfficeId, responsibleUID);
 
       return ESignEngineMapper.Mapper(requestedData);
     }

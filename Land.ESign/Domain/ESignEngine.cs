@@ -10,7 +10,6 @@
 using System;
 
 using Empiria.Land.ESign.Data;
-using Empiria.OnePoint.ESign;
 
 namespace Empiria.Land.ESign.Domain {
 
@@ -20,9 +19,10 @@ namespace Empiria.Land.ESign.Domain {
     #region Public methods
 
 
-    internal FixedList<SignedDocumentEntry> GetSignedDocuments(int recorderOfficeId) {
+    internal FixedList<SignedDocumentEntry> GetSignedDocuments(int recorderOfficeId, string responsibleUID) {
 
-      FixedList<SignedDocumentEntry> requestedData = ESignEngineData.GetSignedDocuments(recorderOfficeId);
+      FixedList<SignedDocumentEntry> requestedData = ESignEngineData.GetSignedDocuments(
+                                                        recorderOfficeId, responsibleUID);
 
       return requestedData;
     }

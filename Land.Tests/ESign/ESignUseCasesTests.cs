@@ -23,9 +23,9 @@ namespace Empiria.Land.Tests.ESign {
       using (var useCase = ESignEngineUseCases.UseCaseInteractor()) {
 
         int recorderOfficeId = 101;
-        //string responsibleUID = "9a957ace-417a-4575-bedd-fe9ea90051fe";
+        string responsibleUID = "9a957ace-417a-4575-bedd-fe9ea90051fe";
 
-        FixedList<SignDocumentDto> documents = useCase.GetSignedDocuments(recorderOfficeId);
+        FixedList<SignDocumentDto> documents = useCase.GetSignedDocuments(recorderOfficeId, responsibleUID);
         Assert.NotNull(documents);
       }
 

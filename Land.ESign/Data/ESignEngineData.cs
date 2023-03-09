@@ -9,8 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using Empiria.Data;
-
-using Empiria.OnePoint.ESign;
+using Empiria.Land.ESign.Domain;
 
 namespace Empiria.Land.ESign.Data {
 
@@ -18,7 +17,7 @@ namespace Empiria.Land.ESign.Data {
   static internal class ESignEngineData {
 
 
-    internal static FixedList<SignedDocumentEntry> GetSignedDocuments(int recorderOfficeId) {
+    internal static FixedList<SignedDocumentEntry> GetSignedDocuments(int recorderOfficeId, string responsibleUID) {
       Assertion.Require(recorderOfficeId, nameof(recorderOfficeId));
 
       var sql = "SELECT * FROM ( " +
@@ -38,6 +37,7 @@ namespace Empiria.Land.ESign.Data {
                 " INNER JOIN Contacts responsible on tt.ResponsibleId = responsible.ContactId " +
 
                 $" WHERE tra.TransactionStatus = 'S' AND tra.RecorderOfficeId = {recorderOfficeId} " +
+                $" AND responsible.ContactUID = '{responsibleUID}'" +
                 "  and tt.TrackId = " +
                 " (select max (TrackId) from LRSTransactionTrack where TransactionId = tra.TransactionId) " +
 
