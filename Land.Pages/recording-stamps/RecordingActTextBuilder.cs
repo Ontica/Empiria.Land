@@ -114,7 +114,7 @@ namespace Empiria.Land.Pages {
         var amendedActName = amendedAct.Kind.Length != 0 ? amendedAct.Kind : amendedAct.RecordingActType.DisplayName;
 
         if (amendedAct.OperationAmount != 0) {
-          amendedActName += $" por {amendedAct.OperationAmount.ToString("C2")}, ";
+          amendedActName += $" por {amendedAct.OperationAmount.ToString("C2")} {amendedAct.OperationCurrency.Name}, ";
         }
 
         var legend = amendedAct.RecordingActType.FemaleGenre ? "la cual está inscrito" : "el cual está inscrito";
