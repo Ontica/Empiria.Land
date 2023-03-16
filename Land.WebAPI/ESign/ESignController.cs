@@ -11,6 +11,7 @@ using System;
 using System.Web.Http;
 using Empiria.Land.ESign.Adapters;
 using Empiria.Land.ESign.UseCases;
+using Empiria.OnePoint.ESign;
 using Empiria.WebApi;
 
 
@@ -33,6 +34,19 @@ namespace Empiria.Land.ESign.WebAPI {
       using (var usecases = ESignEngineUseCases.UseCaseInteractor()) {
 
         FixedList<SignDocumentDto> esign = usecases.GetSignedDocuments(recorderOfficeId, responsibleUID);
+
+        return new SingleObjectModel(this.Request, esign);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v5/land/e-sign/request-document-list")]
+    public SingleObjectModel UpdateESignDocumentList([FromBody] SignTaskDTO signTaskDTO) {
+
+      using (var usecases = ESignEngineUseCases.UseCaseInteractor()) {
+
+        FixedList<ESignDTO> esign = usecases.TryGetESignForDocuments(signTaskDTO);
 
         return new SingleObjectModel(this.Request, esign);
       }

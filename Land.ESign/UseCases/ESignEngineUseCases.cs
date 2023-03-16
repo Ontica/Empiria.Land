@@ -13,6 +13,8 @@ using Empiria.Services;
 
 using Empiria.Land.ESign.Adapters;
 using Empiria.Land.ESign.Domain;
+using Empiria.OnePoint.ESign;
+using Empiria.OnePoint.ESign.Services;
 
 namespace Empiria.Land.ESign.UseCases {
 
@@ -40,6 +42,15 @@ namespace Empiria.Land.ESign.UseCases {
       FixedList<SignedDocumentEntry> requestedData = build.GetSignedDocuments(recorderOfficeId, responsibleUID);
 
       return ESignEngineMapper.Mapper(requestedData);
+    }
+
+
+    public FixedList<ESignDTO> TryGetESignForDocuments(SignTaskDTO signTaskDTO) {
+      Assertion.Require(signTaskDTO, nameof(signTaskDTO));
+
+      FixedList<SignRequestDTO> signRequest = ESignDocumentsService.GenerateESignDocumentsList(signTaskDTO);
+
+      return new FixedList<ESignDTO>(); //TODO mapper
     }
 
 

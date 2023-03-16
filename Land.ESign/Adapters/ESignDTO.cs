@@ -30,9 +30,9 @@ namespace Empiria.Land.ESign.Adapters {
     } = DateTime.Now;
 
 
-    public FixedList<SignDocumentRequestDto> SignRequests {
+    public SignDocumentRequestDto SignRequests {
       get; set;
-    } = new FixedList<SignDocumentRequestDto>();
+    }
 
 
   } // class ESignDTO
