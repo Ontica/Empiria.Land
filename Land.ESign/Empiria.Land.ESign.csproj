@@ -66,6 +66,10 @@
       <Project>{1a78011d-0f6d-4d0f-9ac7-c2e20365dbaa}</Project>
       <Name>Empiria.OnePoint.ESign</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj">
+      <Project>{8752d185-e9d2-4ef2-8ee7-f98271be552a}</Project>
+      <Name>Empiria.Land.Registration</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

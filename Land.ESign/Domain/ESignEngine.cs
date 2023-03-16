@@ -23,7 +23,7 @@ namespace Empiria.Land.ESign.Domain {
 
       FixedList<SignedDocumentEntry> requestedData = ESignEngineData.GetSignedDocuments(
                                                         recorderOfficeId, responsibleUID);
-
+      
       return requestedData;
     }
 
