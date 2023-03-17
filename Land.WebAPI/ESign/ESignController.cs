@@ -46,7 +46,7 @@ namespace Empiria.Land.ESign.WebAPI {
 
       using (var usecases = ESignEngineUseCases.UseCaseInteractor()) {
 
-        FixedList<ESignDTO> esign = usecases.TryGetESignForDocuments(signTaskDTO);
+        FixedList<SignDocumentRequestDto> esign = usecases.TryGetESignForDocuments(signTaskDTO);
 
         return new SingleObjectModel(this.Request, esign);
       }

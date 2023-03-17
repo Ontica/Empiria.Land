@@ -41,16 +41,16 @@ namespace Empiria.Land.ESign.UseCases {
       var build = new ESignEngine();
       FixedList<SignedDocumentEntry> requestedData = build.GetSignedDocuments(recorderOfficeId, responsibleUID);
 
-      return ESignEngineMapper.Mapper(requestedData);
+      return ESignEngineMapper.Map(requestedData);
     }
 
 
-    public FixedList<ESignDTO> TryGetESignForDocuments(SignTaskDTO signTaskDTO) {
+    public FixedList<SignDocumentRequestDto> TryGetESignForDocuments(SignTaskDTO signTaskDTO) {
       Assertion.Require(signTaskDTO, nameof(signTaskDTO));
 
       FixedList<SignRequestDTO> signRequest = ESignDocumentsService.GenerateESignDocumentsList(signTaskDTO);
 
-      return new FixedList<ESignDTO>(); //TODO mapper
+      return ESignEngineMapper.Map(signRequest);
     }
 
 
