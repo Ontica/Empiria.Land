@@ -159,8 +159,13 @@ namespace Empiria.Land.Pages {
       Assertion.Require(_recordingAct.RecordingActType.IsAmendmentActType,
                        "_recordingAct.IsAmendment should be true.");
 
+
+      if (_recordingAct.Kind.Length != 0) {
+        return _recordingAct.Kind;
+      }
+
       if (!_recordingAct.RecordingActType.RecordingRule.UseDynamicActNaming) {
-        return _recordingAct.DisplayName;
+        return _recordingAct.RecordingActType.DisplayName;
       }
 
       string x = _recordingAct.RecordingActType.RecordingRule.DynamicActNamePattern + " {AMENDED.ACT}";
