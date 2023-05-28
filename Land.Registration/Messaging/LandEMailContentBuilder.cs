@@ -31,30 +31,30 @@ namespace Empiria.Land.Messaging {
 
     #region Public methods
 
-    internal EMailContent BuildForRegisteredForResourceChanges(Resource resource) {
+    internal EmailContent BuildForRegisteredForResourceChanges(Resource resource) {
       var body = GetTemplate(NotificationType.SubscribedForResourceChanges);
 
-      return new EMailContent($"El predio con folio electrónico {resource.UID} " +
+      return new EmailContent($"El predio con folio electrónico {resource.UID} " +
                               $"ha sido registrado para su monitoreo", body);
     }
 
 
-    internal EMailContent BuildForResourceChanged(Resource resource) {
+    internal EmailContent BuildForResourceChanged(Resource resource) {
       var body = GetTemplate(NotificationType.ResourceWasChanged);
 
-      return new EMailContent($"Se han registrado nuevos movimientos " +
+      return new EmailContent($"Se han registrado nuevos movimientos " +
                               $"en el predio con folio electrónico {resource.UID}", body);
     }
 
 
-    internal EMailContent BuildForTransactionDelayed(LRSTransaction transaction) {
+    internal EmailContent BuildForTransactionDelayed(LRSTransaction transaction) {
       var body = GetTemplate(NotificationType.TransactionDelayed);
 
-      return new EMailContent($"Su trámite {transaction.UID} tiene una nueva fecha de entrega", body);
+      return new EmailContent($"Su trámite {transaction.UID} tiene una nueva fecha de entrega", body);
     }
 
 
-    internal EMailContent BuildForTransactionReadyToDelivery(FormerMessage message) {
+    internal EmailContent BuildForTransactionReadyToDelivery(FormerMessage message) {
       var transaction = GetTransaction(message);
 
       var body = GetTemplate(NotificationType.TransactionReadyToDelivery);
@@ -62,11 +62,11 @@ namespace Empiria.Land.Messaging {
       body = SetTransactionFields(body, transaction);
       body = SetMessageFields(body, message);
 
-      return new EMailContent($"Su trámite {transaction.UID} está listo", body);
+      return new EmailContent($"Su trámite {transaction.UID} está listo", body);
     }
 
 
-    internal EMailContent BuildForTransactionReceived(FormerMessage message) {
+    internal EmailContent BuildForTransactionReceived(FormerMessage message) {
       var transaction = GetTransaction(message);
 
       var body = GetTemplate(NotificationType.TransactionReceived);
@@ -74,11 +74,11 @@ namespace Empiria.Land.Messaging {
       body = SetTransactionFields(body, transaction);
       body = SetMessageFields(body, message);
 
-      return new EMailContent($"Su trámite {transaction.UID} fue ingresado", body);
+      return new EmailContent($"Su trámite {transaction.UID} fue ingresado", body);
     }
 
 
-    internal EMailContent BuildForTransactionReentered(FormerMessage message) {
+    internal EmailContent BuildForTransactionReentered(FormerMessage message) {
       var transaction = GetTransaction(message);
 
       var body = GetTemplate(NotificationType.TransactionReentered);
@@ -86,12 +86,12 @@ namespace Empiria.Land.Messaging {
       body = SetTransactionFields(body, transaction);
       body = SetMessageFields(body, message);
 
-      return new EMailContent($"Su trámite {transaction.UID} fue reingresado. " +
+      return new EmailContent($"Su trámite {transaction.UID} fue reingresado. " +
                               $"Sus documentos impresos están sujetos a cambios.", body);
     }
 
 
-    internal EMailContent BuildForTransactionReturned(FormerMessage message) {
+    internal EmailContent BuildForTransactionReturned(FormerMessage message) {
       var transaction = GetTransaction(message);
 
       var body = GetTemplate(NotificationType.TransactionReturned);
@@ -99,7 +99,7 @@ namespace Empiria.Land.Messaging {
       body = SetTransactionFields(body, transaction);
       body = SetMessageFields(body, message);
 
-      return new EMailContent($"Su trámite {transaction.UID} ha sido devuelto", body);
+      return new EmailContent($"Su trámite {transaction.UID} ha sido devuelto", body);
     }
 
 

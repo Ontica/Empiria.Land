@@ -155,7 +155,7 @@ namespace Empiria.Land.Messaging {
 
       var emailContentBuilder = new LandEMailContentBuilder();
 
-      EMailContent content = null;
+      EmailContent content = null;
 
       switch (notificationType) {
 
@@ -198,7 +198,9 @@ namespace Empiria.Land.Messaging {
 
       var sendTo = message.MessageData.Get<SendTo>("SendTo");
 
-      await EMail.SendAsync(sendTo, content);
+      var sender = new EmailSender();
+
+      await sender.SendAsync(sendTo, content);
     }
 
 
