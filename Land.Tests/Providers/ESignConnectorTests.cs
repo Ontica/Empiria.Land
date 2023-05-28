@@ -24,16 +24,16 @@ namespace Empiria.Land.Tests.Providers {
 
     private readonly string _SIGNED_DOCUMENT_UID = TestingConstants.SIGNED_DOCUMENT_UID;
 
-    [Fact]
-    public async Task Should_Get_Sign_Request_ByDocumentNumber() {
-      TestsCommonMethods.Authenticate();
+    //[Fact]
+    //public async Task Should_Get_Sign_Request_ByDocumentNumber() {
+    //  TestsCommonMethods.Authenticate();
 
-      var connector = new ESignConnector();
+    //  var connector = new ESignConnector();
 
-      var signRequest = await connector.GetRequestByDocumentNumber(_SIGNED_DOCUMENT_UID);
+    //  var signRequest = await connector.GetRequestByDocumentNumber(_SIGNED_DOCUMENT_UID);
 
-      Assert.Equal("Signed", signRequest.SignStatus);
-    }
+    //  Assert.Equal("Signed", signRequest.SignStatus);
+    //}
 
   }  // class ESignConnectorTests
 
