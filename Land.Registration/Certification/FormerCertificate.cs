@@ -431,10 +431,10 @@ namespace Empiria.Land.Certification {
 
     public string QRCodeSecurityHash() {
       if (!this.IsNew) {
-        return FormerCryptographer.CreateHashCode(this.Id.ToString("00000000") +
-                                                  this.IssueTime.ToString("yyyyMMddTHH:mm"), this.UID)
-                                  .Substring(0, 8)
-                                  .ToUpperInvariant();
+        return Cryptographer.CreateHashCode(this.Id.ToString("00000000") +
+                                            this.IssueTime.ToString("yyyyMMddTHH:mm"), this.UID)
+                            .Substring(0, 8)
+                            .ToUpperInvariant();
       } else {
         return String.Empty;
       }

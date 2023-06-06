@@ -780,7 +780,8 @@ namespace Empiria.Land.Registration.Transactions {
 
     public string QRCodeSecurityHash() {
       if (!this.IsNew) {
-        return FormerCryptographer.CreateHashCode(this.Id.ToString("00000000"), this.UID).Substring(0, 8);
+        return Cryptographer.CreateHashCode(this.Id.ToString("00000000"), this.UID)
+                             .Substring(0, 8);
       } else {
         return String.Empty;
       }

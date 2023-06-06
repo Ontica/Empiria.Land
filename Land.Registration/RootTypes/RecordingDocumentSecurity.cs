@@ -194,11 +194,11 @@ namespace Empiria.Land.Registration {
         return String.Empty;
       }
 
-      return FormerCryptographer.CreateHashCode(this.Document.Id.ToString("00000000") +
-                                                this.Document.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
-                                                this.Document.UID)
-                                .Substring(0, 8)
-                                .ToUpperInvariant();
+      return Cryptographer.CreateHashCode(this.Document.Id.ToString("00000000") +
+                                          this.Document.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
+                                          this.Document.UID)
+                           .Substring(0, 8)
+                           .ToUpperInvariant();
     }
 
 
