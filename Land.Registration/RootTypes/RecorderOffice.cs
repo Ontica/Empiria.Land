@@ -45,10 +45,6 @@ namespace Empiria.Land.Registration {
                        .ToFixedList();
     }
 
-    static public RecorderOffice MainRecorderOffice {
-      get { return RecorderOffice.Parse(ExecutionServer.OrganizationId); }
-    }
-
     #endregion Constructors and parsers
 
     #region Public properties
