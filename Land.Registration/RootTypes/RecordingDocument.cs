@@ -25,7 +25,7 @@ namespace Empiria.Land.Registration {
 
   /// <summary>Partitioned type that represents a document that is attached to recordings.</summary>
   [PartitionedType(typeof(RecordingDocumentType))]
-  public class RecordingDocument : BaseObject, IExtensible<RecordingDocumentExtData> {
+  public class RecordingDocument : BaseObject {
 
     #region Fields
 

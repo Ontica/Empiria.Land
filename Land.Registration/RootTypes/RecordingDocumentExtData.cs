@@ -16,7 +16,7 @@ using Empiria.Json;
 namespace Empiria.Land.Registration {
 
   /// <summary>Contains extensible data for a recording act.</summary>
-  public class RecordingDocumentExtData : IExtensibleData {
+  public class RecordingDocumentExtData {
 
     #region Constructors and parsers
 

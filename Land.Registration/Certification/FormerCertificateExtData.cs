@@ -15,7 +15,7 @@ using Empiria.Json;
 namespace Empiria.Land.Certification {
 
   /// <summary>FomerCertificateExtData Holds extensible data for certificates.</summary>
-  public class FormerCertificateExtData : IExtensibleData {
+  public class FormerCertificateExtData {
 
     #region Constructors and parsers
 
