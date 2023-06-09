@@ -73,12 +73,7 @@ namespace Empiria.Land.Registration {
 
 
     static internal RecordingDocument TryParse(PhysicalRecording recording) {
-      DataRow dataRow = DocumentsData.GetRecordingMainDocument(recording);
-      if (dataRow != null) {
-        return BaseObject.ParseDataRow<RecordingDocument>(dataRow);
-      } else {
-        return null;
-      }
+      return DocumentsData.TryGetRecordingMainDocument(recording);
     }
 
 

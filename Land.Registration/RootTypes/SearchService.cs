@@ -28,8 +28,9 @@ namespace Empiria.Land.Registration {
 
       string sql = EntitySqlString("LRSCertificates", "CertificateStatus", filter, sort, 50);
 
-      return DataReader.GetList(DataOperation.Parse(sql),
-                                (x) => BaseObject.ParseList<FormerCertificate>(x)).ToFixedList();
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<FormerCertificate>(op);
     }
 
 
@@ -39,8 +40,9 @@ namespace Empiria.Land.Registration {
 
       string sql = EntitySqlString("LRSDocuments", "DocumentStatus", filter, sort, 50);
 
-      return DataReader.GetList(DataOperation.Parse(sql),
-                                (x) => BaseObject.ParseList<RecordingDocument>(x)).ToFixedList();
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<RecordingDocument>(op);
     }
 
 
@@ -50,8 +52,9 @@ namespace Empiria.Land.Registration {
 
       string sql = EntitySqlString("LRSDocuments", "DocumentStatus", filter, sort, 250);
 
-      return DataReader.GetList(DataOperation.Parse(sql),
-                                (x) => BaseObject.ParseList<RecordingDocument>(x)).ToFixedList();
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<RecordingDocument>(op);
     }
 
 
@@ -75,8 +78,7 @@ namespace Empiria.Land.Registration {
       string sql = EntitySqlString("vwLRSRecordingActParties", "RecActPartyStatus",
                                     filter, sort, 250);
 
-      return DataReader.GetList(DataOperation.Parse(sql),
-                                (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
+      return DataReader.GetFixedList<RecordingActParty>(DataOperation.Parse(sql));
     }
 
 
@@ -90,8 +92,7 @@ namespace Empiria.Land.Registration {
 
       string sql = EntitySqlString("vwLRSRecordingActParties", "", filter, sort, 250);
 
-      return DataReader.GetList(DataOperation.Parse(sql),
-                                (x) => BaseObject.ParseList<RecordingActParty>(x)).ToFixedList();
+      return DataReader.GetFixedList<RecordingActParty>(DataOperation.Parse(sql)).ToFixedList();
     }
 
 
@@ -100,8 +101,7 @@ namespace Empiria.Land.Registration {
       sort = SortExpression(sort, "RecordingAsText");
       string sql = EntitySqlString("LRSPhysicalRecordings", "RecordingStatus", filter, sort, 50);
 
-      return DataReader.GetList(DataOperation.Parse(sql),
-                                (x) => BaseObject.ParseList<PhysicalRecording>(x)).ToFixedList();
+      return DataReader.GetFixedList<PhysicalRecording>(DataOperation.Parse(sql));
     }
 
 
@@ -110,8 +110,7 @@ namespace Empiria.Land.Registration {
       sort = SortExpression(sort, "BookAsText");
       string sql = EntitySqlString("LRSPhysicalBooks", "BookStatus", filter, sort, 50);
 
-      return DataReader.GetList(DataOperation.Parse(sql),
-                                (x) => BaseObject.ParseList<RecordingBook>(x)).ToFixedList();
+      return DataReader.GetFixedList<RecordingBook>(DataOperation.Parse(sql));
     }
 
 
@@ -121,8 +120,7 @@ namespace Empiria.Land.Registration {
 
       string sql = EntitySqlString("LRSProperties", "PropertyStatus", filter, sort, 50);
 
-      return DataReader.GetList(DataOperation.Parse(sql),
-                                (x) => BaseObject.ParseList<Resource>(x)).ToFixedList();
+      return DataReader.GetFixedList<Resource>(DataOperation.Parse(sql));
     }
 
 
@@ -132,8 +130,7 @@ namespace Empiria.Land.Registration {
 
       string sql = EntitySqlString("LRSTransactions", "TransactionStatus", filter, sort, 50);
 
-      return DataReader.GetList(DataOperation.Parse(sql),
-                                (x) => BaseObject.ParseList<LRSTransaction>(x)).ToFixedList();
+      return DataReader.GetFixedList<LRSTransaction>(DataOperation.Parse(sql));
     }
 
     #endregion Public methods

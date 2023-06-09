@@ -30,12 +30,9 @@ namespace Empiria.Land.Data {
 
       var sql = $"SELECT * FROM LRSTransactions WHERE DocumentId = {document.Id}";
 
-      var dataRow = DataReader.GetDataRow(DataOperation.Parse(sql));
-      if (dataRow != null) {
-        return BaseObject.ParseDataRow<LRSTransaction>(dataRow);
-      } else {
-        return LRSTransaction.Empty;
-      }
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetObject(op, LRSTransaction.Empty);
     }
 
     static internal bool IsSigned(RecordingDocument document) {
@@ -93,8 +90,10 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal DataRow GetRecordingMainDocument(PhysicalRecording recording) {
-      return DataReader.GetDataRow(DataOperation.Parse("getLRSRecordingMainDocument", recording.Id));
+    static internal RecordingDocument TryGetRecordingMainDocument(PhysicalRecording recording) {
+      var op = DataOperation.Parse("getLRSRecordingMainDocument", recording.Id);
+
+      return DataReader.GetObject<RecordingDocument>(op, null);
     }
 
 

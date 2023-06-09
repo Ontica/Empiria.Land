@@ -27,7 +27,7 @@ namespace Empiria.Land.Data {
     static public FixedList<Contact> GetContactsWithWorkflowOutboxTasks() {
       var operation = DataOperation.Parse("qryLRSContactsWithWorkflowOutboxTasks");
 
-      return DataReader.GetList(operation, (x) => BaseObject.ParseList<Contact>(x)).ToFixedList();
+      return DataReader.GetFixedList<Contact>(operation);
     }
 
     static public DataView GetResponsibleWorkflowInbox(Contact contact, WorkflowTaskStatus status,
@@ -51,25 +51,28 @@ namespace Empiria.Land.Data {
     }
 
     static public LRSWorkflowTask GetWorkflowLastTask(LRSTransaction transaction) {
-      DataRow row = DataReader.GetDataRow(DataOperation.Parse("getLRSWorkflowLastTask", transaction.Id));
 
-      return BaseObject.ParseDataRow<LRSWorkflowTask>(row);
+      var op = DataOperation.Parse("getLRSWorkflowLastTask", transaction.Id);
+
+      return DataReader.GetObject<LRSWorkflowTask>(op);
     }
+
 
     static public List<LRSWorkflowTask> GetWorkflowTrack(LRSTransaction transaction) {
       var op = DataOperation.Parse("qryLRSWorkflowTrack", transaction.Id);
 
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<LRSWorkflowTask>(x));
+      return DataReader.GetList<LRSWorkflowTask>(op);
     }
 
-    static internal void WriteLRSWorkflowTask(LRSWorkflowTask o) {
-      var operation = DataOperation.Parse("writeLRSWorkflowTask", o.Id, o.Transaction.Id,
-                                          o.EventId, (char) o.Mode, o.AssignedBy.Id, o.Responsible.Id,
-                                          o.NextContact.Id, (char) o.CurrentStatus, (char) o.NextStatus,
-                                          o.CheckInTime, o.EndProcessTime, o.CheckOutTime, o.Notes,
-                                          o.PreviousTask.Id, o.NextTask.Id, (char) o.Status, String.Empty);
 
-      DataWriter.Execute(operation);
+    static internal void WriteLRSWorkflowTask(LRSWorkflowTask o) {
+      var op = DataOperation.Parse("writeLRSWorkflowTask", o.Id, o.Transaction.Id,
+                               o.EventId, (char) o.Mode, o.AssignedBy.Id, o.Responsible.Id,
+                               o.NextContact.Id, (char) o.CurrentStatus, (char) o.NextStatus,
+                               o.CheckInTime, o.EndProcessTime, o.CheckOutTime, o.Notes,
+                               o.PreviousTask.Id, o.NextTask.Id, (char) o.Status, String.Empty);
+
+      DataWriter.Execute(op);
     }
 
     #endregion Public methods

@@ -31,8 +31,7 @@ namespace Empiria.Land.Data {
     static internal FixedList<Resource> GetPhysicalRecordingResources(PhysicalRecording recording) {
       var operation = DataOperation.Parse("qryLRSPhysicalRecordingResources", recording.Id);
 
-      return DataReader.GetList<Resource>(operation,
-                                          (x) => BaseObject.ParseList<Resource>(x)).ToFixedList();
+      return DataReader.GetFixedList<Resource>(operation);
     }
 
 
@@ -42,15 +41,14 @@ namespace Empiria.Land.Data {
       }
       DataOperation operation = DataOperation.Parse("qryLRSRealEstatePartitions", property.Id);
 
-      return DataReader.GetList<RealEstate>(operation,
-                                          (x) => BaseObject.ParseList<RealEstate>(x)).ToArray();
+      return DataReader.GetFixedList<RealEstate>(operation).ToArray();
     }
 
 
-    static internal DataRow GetResourceWithUID(string uniqueID) {
+    static internal Resource TryGetResourceWithUID(string uniqueID) {
       DataOperation operation = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
 
-      return DataReader.GetDataRow(operation);
+      return DataReader.GetObject<Resource>(operation, null);
     }
 
 
@@ -75,6 +73,7 @@ namespace Empiria.Land.Data {
       DataWriter.Execute(operation);
     }
 
+
     static internal void WriteNoPropertyResource(NoPropertyResource o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.GUID, o.UID,
                                            o.Name, o.Kind, o.Description, o.RecorderOffice.Id, -1, String.Empty,
@@ -83,6 +82,7 @@ namespace Empiria.Land.Data {
                                            o.PostingTime, o.PostedBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
       DataWriter.Execute(operation);
     }
+
 
     static internal void WriteRealEstate(RealEstate o) {
       var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.GUID, o.UID,

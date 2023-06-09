@@ -45,7 +45,7 @@ namespace Empiria.Land.Data {
 
       var operation = DataOperation.Parse(sql);
 
-      return DataReader.GetList<RecordingAct>(operation, (x) => BaseObject.ParseList<RecordingAct>(x, true));
+      return DataReader.GetList<RecordingAct>(operation, true);
     }
 
 

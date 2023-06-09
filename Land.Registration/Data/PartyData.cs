@@ -29,9 +29,9 @@ namespace Empiria.Land.Data {
                    "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
                    "AND RecActPartyStatus <> 'X'";
 
-      return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
-                                                   (x) => BaseObject.ParseList<RecordingActParty>(x, true)).ToFixedList();
+      return DataReader.GetFixedList<RecordingActParty>(DataOperation.Parse(sql), true);
     }
+
 
     static public FixedList<RecordingActParty> GetRecordingPartyList(RecordingDocument document, Party party) {
       string sql = "SELECT LRSRecordingActParties.* " +
@@ -43,15 +43,16 @@ namespace Empiria.Land.Data {
               " OR LRSRecordingActParties.PartyOfId = " + party.Id.ToString() + ")";
 
       var operation = DataOperation.Parse(sql);
-      return DataReader.GetList<RecordingActParty>(operation, (x) =>
-                                                   BaseObject.ParseList<RecordingActParty>(x, true)).ToFixedList();
+
+      return DataReader.GetFixedList<RecordingActParty>(operation, true);
     }
+
 
     static public FixedList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
       var op = DataOperation.Parse("qryLRSResourceActiveOwnershipRecordingActParties",
                                    recordingAct.Resource.Id);
 
-      return DataReader.GetList(op, (x) => BaseObject.ParseList<RecordingActParty>(x, true)).ToFixedList();
+      return DataReader.GetFixedList<RecordingActParty>(op, true);
     }
 
 
@@ -71,15 +72,16 @@ namespace Empiria.Land.Data {
                    "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
                    "AND PartyOfId <> -1 AND RecActPartyStatus <> 'X'";
 
-      return DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql),
-                                                  (x) => BaseObject.ParseList<RecordingActParty>(x, true)).ToFixedList();
+      return DataReader.GetFixedList<RecordingActParty>(DataOperation.Parse(sql), true);
     }
+
 
     static public RecordingActParty GetSecondaryParty(RecordingAct recordingAct, Party party) {
       FixedList<RecordingActParty> secondaries = GetSecondaryPartiesList(recordingAct);
 
       return secondaries.Find((x) => x.Party.Equals(party));
     }
+
 
     static private string GetPartyTypeInfoFilter(ObjectTypeInfo partyType) {
       if (partyType == null) {
@@ -91,6 +93,7 @@ namespace Empiria.Land.Data {
         return "(PartyTypeId = " + partyType.Id.ToString() + ")";
       }
     }
+
 
     static public DataTable GetParties(ObjectTypeInfo partyType, string keywords) {
       string filter = SearchExpression.ParseAndLikeWithNoiseWords("PartyKeywords", keywords);
@@ -105,6 +108,7 @@ namespace Empiria.Land.Data {
 
       return GeneralDataOperations.GetEntities("LRSParties", filter, "PartyFullName");
     }
+
 
     static public DataTable GetPartiesOnRecording(ObjectTypeInfo partyType,
                                                   PhysicalRecording recording, string keywords) {
@@ -129,7 +133,7 @@ namespace Empiria.Land.Data {
 
       sql = String.Format(sql, party.Id);
 
-      var list = DataReader.GetList(DataOperation.Parse(sql), (x) => BaseObject.ParseList<RecordingActParty>(x));
+      var list = DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql));
 
       list.Sort((x, y) => (((IResourceTractItem) x.RecordingAct).TractPrelationStamp).CompareTo(
                                                       ((IResourceTractItem) y.RecordingAct).TractPrelationStamp));

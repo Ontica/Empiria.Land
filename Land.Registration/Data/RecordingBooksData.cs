@@ -165,16 +165,15 @@ namespace Empiria.Land.Data {
 
     static internal PhysicalRecording FindRecording(RecordingBook recordingBook, string filter) {
       string sql = "SELECT * FROM LRSPhysicalRecordings WHERE " +
-                   "(PhysicalBookId = " + recordingBook.Id.ToString() + " AND RecordingStatus <> 'X')";
+                   $"(PhysicalBookId = {recordingBook.Id} AND RecordingStatus <> 'X')";
+
       if (!String.IsNullOrWhiteSpace(filter)) {
-        sql += " AND " + filter;
+        sql += $" AND {filter}";
       }
-      DataRow row = DataReader.GetDataRow(DataOperation.Parse(sql));
-      if (row != null) {
-        return BaseObject.ParseDataRow<PhysicalRecording>(row);
-      } else {
-        return PhysicalRecording.Empty;
-      }
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetObject<PhysicalRecording>(op, PhysicalRecording.Empty);
     }
 
 

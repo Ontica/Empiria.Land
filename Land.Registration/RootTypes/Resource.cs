@@ -54,12 +54,16 @@ namespace Empiria.Land.Registration {
 
 
     static public Resource TryParseWithUID(string propertyUID, bool reload = false) {
-      DataRow row = ResourceData.GetResourceWithUID(propertyUID);
+      Resource resource = ResourceData.TryGetResourceWithUID(propertyUID);
 
-      if (row != null) {
-        return BaseObject.ParseDataRow<Resource>(row, reload);
-      } else {
+      if (resource == null) {
         return null;
+      }
+
+      if (!reload) {
+        return resource;
+      } else {
+        return BaseObject.ParseId<Resource>(resource.Id);
       }
     }
 
