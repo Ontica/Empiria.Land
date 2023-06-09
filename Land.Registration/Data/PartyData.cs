@@ -56,14 +56,16 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal DataTable GetParties(SearchPartiesCommand command) {
+    static internal FixedList<Party> GetParties(SearchPartiesCommand command) {
       string filter = SearchExpression.ParseAndLikeWithNoiseWords("PartyKeywords", command.Keywords);
+
       if (filter.Length != 0) {
         filter += " AND ";
       }
       filter += "(PartyStatus <> 'X')";
 
-      return GeneralDataOperations.GetEntities("LRSParties", filter, "PartyFullName");
+      return GeneralDataOperations.GetFixedList<Party>("LRSParties", filter, "PartyFullName");
+
     }
 
 
@@ -95,37 +97,6 @@ namespace Empiria.Land.Data {
     }
 
 
-    static public DataTable GetParties(ObjectTypeInfo partyType, string keywords) {
-      string filter = SearchExpression.ParseAndLikeWithNoiseWords("PartyKeywords", keywords);
-      if (filter.Length != 0) {
-        filter += " AND ";
-      }
-      filter += GetPartyTypeInfoFilter(partyType);
-      if (filter.Length != 0) {
-        filter += " AND ";
-      }
-      filter += "(PartyStatus <> 'X')";
-
-      return GeneralDataOperations.GetEntities("LRSParties", filter, "PartyFullName");
-    }
-
-
-    static public DataTable GetPartiesOnRecording(ObjectTypeInfo partyType,
-                                                  PhysicalRecording recording, string keywords) {
-      var operation = DataOperation.Parse("qryLRSPartiesOnRecording", recording.Id);
-
-      string filter = SearchExpression.ParseAndLikeWithNoiseWords("PartyKeywords", keywords);
-      if (filter.Length != 0) {
-        filter += " AND ";
-      }
-      filter += GetPartyTypeInfoFilter(partyType);
-
-      DataView view = DataReader.GetDataView(operation, filter, "PartyFullName");
-
-      return view.ToTable();
-    }
-
-
     internal static FixedList<RecordingActParty> GetRecordingActs(Party party) {
       string sql = "SELECT * FROM LRSRecordingActParties " +
                    "WHERE (PartyId = {0} OR PartyOfId = {0}) AND " +
@@ -140,31 +111,10 @@ namespace Empiria.Land.Data {
       return list.ToFixedList();
     }
 
-    static public DataTable GetInvolvedParties(ObjectTypeInfo partyType, RecordingAct recordingAct,
-                                               string keywords) {
-      return new DataTable();
-    }
-
-
-    static public DataTable GetParties(PartyFilterType partyFilterType, ObjectTypeInfo partyType,
-                                       RecordingAct recordingAct, string keywords) {
-      switch (partyFilterType) {
-        case PartyFilterType.ByKeywords:
-          return GetParties(partyType, keywords);
-        case PartyFilterType.OnInscription:
-          return GetPartiesOnRecording(partyType, recordingAct.PhysicalRecording, keywords);
-        case PartyFilterType.Involved:
-          return GetInvolvedParties(partyType, recordingAct, keywords);
-        default:
-          throw new Empiria.Reflection.ReflectionException(Empiria.Reflection.ReflectionException.Msg.ConditionalOptionNotDefined,
-                                                           partyFilterType.ToString());
-      }
-    }
-
 
     static internal void WriteParty(Party o) {
       var dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.UID, o.GetEmpiriaType().Id,
-                                              o.FullName,o.RFC,
+                                              o.FullName, o.RFC,
                                               (o is HumanParty) ? ((HumanParty)o).CURP : String.Empty,
                                               o.Notes, string.Empty, o.Keywords, (char) o.Status, String.Empty);
       DataWriter.Execute(dataOperation);

@@ -69,24 +69,8 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public FixedList<Party> GetList(ObjectTypeInfo partyType, string keywords) {
-      DataTable table = PartyData.GetParties(partyType, keywords);
-
-      return BaseObject.ParseList<Party>(table).ToFixedList();
-    }
-
-
-    static public FixedList<Party> GetList(PartyFilterType partyFilterType, ObjectTypeInfo partyType,
-                                           RecordingAct recordingAct, string keywords) {
-      DataTable table = PartyData.GetParties(partyFilterType, partyType, recordingAct, keywords);
-
-      return BaseObject.ParseList<Party>(table).ToFixedList();
-    }
-
     static public FixedList<Party> GetList(SearchPartiesCommand command) {
-      DataTable table = PartyData.GetParties(command);
-
-      return BaseObject.ParseList<Party>(table).ToFixedList();
+      return PartyData.GetParties(command);
     }
 
 
