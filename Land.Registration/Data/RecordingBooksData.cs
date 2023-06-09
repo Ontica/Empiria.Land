@@ -116,23 +116,6 @@ namespace Empiria.Land.Data {
     }
 
 
-    static public FixedList<RecordingBook> GetRecordingBooks(string filter, string sort = "BookAsText") {
-      string sql = "SELECT * FROM LRSPhysicalBooks" +  GeneralDataOperations.GetFilterSortSqlString(filter, sort);
-
-      return DataReader.GetFixedList<RecordingBook>(DataOperation.Parse(sql));
-    }
-
-
-    static public FixedList<RecordingBook> GetRecordingBooks(RecorderOffice recorderOffice) {
-      string filter = "RecorderOfficeId = " + recorderOffice.Id.ToString();
-
-      string sql = "SELECT * FROM LRSPhysicalBooks" +
-                   GeneralDataOperations.GetFilterSortSqlString(filter, "BookAsText");
-
-      return DataReader.GetFixedList<RecordingBook>(DataOperation.Parse(sql));
-    }
-
-
     static public FixedList<RecordingBook> GetRecordingBooksInSection(RecorderOffice recorderOffice,
                                                                       RecordingSection sectionType,
                                                                       string keywords = "") {
@@ -143,8 +126,9 @@ namespace Empiria.Land.Data {
         filter += " AND " + SearchExpression.ParseAndLike("BookKeywords", keywords);
       }
 
-      string sql = "SELECT * FROM LRSPhysicalBooks" +
-                    GeneralDataOperations.GetFilterSortSqlString(filter, "BookNo, BookAsText");
+      string sql = "SELECT * FROM LRSPhysicalBooks " +
+                   $"WHERE {filter} " +
+                   $"ORDER BY BookNo, BookAsText";
 
       return DataReader.GetFixedList<RecordingBook>(DataOperation.Parse(sql));
     }

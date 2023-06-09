@@ -85,11 +85,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    static public FixedList<RecordingBook> GetList(string filter, string sort = "BookNo, BookAsText") {
-      return RecordingBooksData.GetRecordingBooks(filter, sort);
-    }
-
-
     public static FixedList<RecordingBook> GetList(RecorderOffice recorderOffice,
                                                    RecordingSection recordingSection,
                                                    string keywords) {

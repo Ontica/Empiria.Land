@@ -64,8 +64,11 @@ namespace Empiria.Land.Data {
       }
       filter += "(PartyStatus <> 'X')";
 
-      return GeneralDataOperations.GetFixedList<Party>("LRSParties", filter, "PartyFullName");
+      string sql = "SELECT * FROM LRSParties " +
+                  $"WHERE {filter} " +
+                  "ORDER BY PartyFullName";
 
+      return DataReader.GetFixedList<Party>(DataOperation.Parse(sql));
     }
 
 
