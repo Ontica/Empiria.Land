@@ -728,7 +728,7 @@ namespace Empiria.Land.Registration.Transactions {
       return Empiria.Land.Data.FormerCertificatesData.GetTransactionIssuedCertificates(this);
     }
 
-    protected override void OnInitialize() {
+    protected override void OnLoad() {
       recordingActs = new Lazy<LRSTransactionItemList>(() => new LRSTransactionItemList());
       payments = new Lazy<LRSPaymentList>(() => new LRSPaymentList());
       workflow = new Lazy<LRSWorkflow>(() => new LRSWorkflow(this));

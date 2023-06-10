@@ -51,7 +51,7 @@ namespace Empiria.Land.Registration {
       LoadData(dto);
     }
 
-    protected override void OnInitialize() {
+    protected override void OnLoad() {
       recordingActList = GetNewRecordingActListLazyInstance();
       this.ExtendedData = new RecordingExtData();
     }

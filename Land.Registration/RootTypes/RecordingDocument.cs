@@ -515,7 +515,7 @@ namespace Empiria.Land.Registration {
       return _transaction;
     }
 
-    protected override void OnInitialize() {
+    protected override void OnLoad() {
       this.ExtensionData = new RecordingDocumentExtData();
       this.Number = String.Empty;
       this.ExpedientNo = String.Empty;

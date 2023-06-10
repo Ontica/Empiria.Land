@@ -444,7 +444,7 @@ namespace Empiria.Land.Certification {
 
     #region Protected methods
 
-    protected override void OnInitialize() {
+    protected override void OnLoad() {
       this.ExtensionData = new FormerCertificateExtData();
     }
 
