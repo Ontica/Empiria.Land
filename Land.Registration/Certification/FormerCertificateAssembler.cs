@@ -90,7 +90,7 @@ namespace Empiria.Land.Certification {
 
       foreach (var act in recordingActs) {
         string temp = String.Format(template, act.DisplayName,
-                                    EmpiriaString.SpeechDate(act.Document.AuthorizationTime),
+                                    EmpiriaSpeech.SpeechDate(act.Document.AuthorizationTime),
                                     act.Document.UID);
         if (act.RecordingActType.RecordingRule.IsHardLimitation) {
           var p = act.GetParties().Find((x) => !x.PartyOf.IsEmptyInstance);
@@ -172,9 +172,12 @@ namespace Empiria.Land.Certification {
         if (data.PropertyUID.Length == 0) {
           return RealEstate.Empty;
         }
+
         var property = RealEstate.TryParseWithUID(data.PropertyUID);
+
         Validate.NotNull(property,
                         $"Property with unique ID '{data.PropertyUID}' was not found.");
+
         return property;
       }
 

@@ -72,7 +72,7 @@ namespace Empiria.Land.Pages {
 
       if (recordingActsCount > 1) {
         x = x.Replace("{COUNT}", "se registraron los siguientes " + recordingActsCount.ToString() +
-                      " (" + EmpiriaString.SpeechInteger(recordingActsCount).ToLower() + ") " +
+                      " (" + EmpiriaSpeech.SpeechInteger(recordingActsCount).ToLower() + ") " +
                       "actos jurídicos:");
 
       } else if (recordingActsCount == 1) {

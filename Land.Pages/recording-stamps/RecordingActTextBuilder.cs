@@ -226,7 +226,7 @@ namespace Empiria.Land.Pages {
 
       x = overTheWhole.Replace("{INDEX}", index.ToString());
       x = x.Replace("{RECORDING.ACT}", this.GetRecordingActDisplayName());
-      x = x.Replace("{CHILDREN.COUNT}", $"{children.Count} ({EmpiriaString.SpeechInteger(children.Count)})");
+      x = x.Replace("{CHILDREN.COUNT}", $"{children.Count} ({EmpiriaSpeech.SpeechInteger(children.Count)})");
 
       for (int i = 0; i < children.Count; i++) {
         x += GetChildActText(i + 1, children[i]);

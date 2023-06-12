@@ -263,7 +263,7 @@ namespace Empiria.Land.Pages {
       temp1 = temp1.Replace("{4}", totalFee.Discount.Amount.ToString("C2"));
       temp1 = temp1.Replace("{5}", totalFee.Total.ToString("C2"));
 
-      temp1 = temp1.Replace("{TOTAL_SPEECH}", EmpiriaString.SpeechMoney(totalFee.Total));
+      temp1 = temp1.Replace("{TOTAL_SPEECH}", EmpiriaSpeech.SpeechMoney(totalFee.Total));
 
       return html + temp1;
     }

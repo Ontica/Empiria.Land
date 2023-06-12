@@ -60,7 +60,7 @@ namespace Empiria.Land.Certification {
       template.Replace("{{MEDIDAS.Y.COLINDANCIAS}}", o.ExtensionData.PropertyMetesAndBounds);
 
       template.Replace("{{AÑO.BÚSQUEDA}}", o.ExtensionData.StartingYear >= 1900 ?
-                          EmpiriaString.SpeechInteger(o.ExtensionData.StartingYear).ToLowerInvariant() :
+                          EmpiriaSpeech.SpeechInteger(o.ExtensionData.StartingYear).ToLowerInvariant() :
                           AsWarning("AÑO DE BÚSQUEDA NO PROPORCIONADO"));
 
       template.Replace("{{OPERACION}}", o.ExtensionData.Operation.ToLowerInvariant());

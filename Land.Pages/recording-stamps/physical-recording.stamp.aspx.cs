@@ -172,7 +172,7 @@ namespace Empiria.Land.Pages {
 
 			if (this.recordings.Count > 1) {
 				html = docMulti.Replace("{DOCUMENT}", transaction.Document.UID);
-				html = html.Replace("{COUNT}", this.recordings.Count.ToString() + " (" + EmpiriaString.SpeechInteger(this.recordings.Count).ToLower() + ")");
+				html = html.Replace("{COUNT}", this.recordings.Count.ToString() + " (" + EmpiriaSpeech.SpeechInteger(this.recordings.Count).ToLower() + ")");
 			} else if (this.recordings.Count == 1) {
 				html = docOne.Replace("{DOCUMENT}", transaction.Document.UID);
 			} else if (this.recordings.Count == 0) {
