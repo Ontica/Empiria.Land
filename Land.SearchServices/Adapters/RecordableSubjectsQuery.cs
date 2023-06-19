@@ -130,13 +130,8 @@ namespace Empiria.Land.SearchServices {
       if (!recorderOffice.IsEmptyInstance) {
         return recorderOffice;
       }
-      if (ExecutionServer.CurrentPrincipal.Permissions.Contains("oficialia-zacatecas")) {
-        return RecorderOffice.Parse(101);
-      }
-      if (ExecutionServer.CurrentPrincipal.Permissions.Contains("oficialia-fresnillo")) {
-        return RecorderOffice.Parse(102);
-      }
-      return RecorderOffice.Empty;
+
+      return Permissions.GetUserRecorderOffice();
     }
 
     #endregion Helpers

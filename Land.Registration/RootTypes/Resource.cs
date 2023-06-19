@@ -455,12 +455,7 @@ namespace Empiria.Land.Registration {
       if (!this.RecorderOffice.IsEmptyInstance) {
         return;
       }
-      if (ExecutionServer.CurrentPrincipal.Permissions.Contains("oficialia-zacatecas")) {
-        this.RecorderOffice = RecorderOffice.Parse(101);
-      }
-      if (ExecutionServer.CurrentPrincipal.Permissions.Contains("oficialia-fresnillo")) {
-        this.RecorderOffice = RecorderOffice.Parse(102);
-      }
+      this.RecorderOffice = Permissions.GetUserRecorderOffice();
     }
 
     #endregion Private methods
