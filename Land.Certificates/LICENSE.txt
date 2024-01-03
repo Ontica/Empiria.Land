@@ -1,7 +1,7 @@
 ﻿Empiria Land Certificates
 =========================
 
-Copyright (c) 2009-2023. La Vía Óntica SC, Ontica LLC y autores.
+Copyright (c) 2009-2024. La Vía Óntica SC, Ontica LLC y autores.
                          Todos los derechos reservados.
 -----------------------------------------------------------------------
 
