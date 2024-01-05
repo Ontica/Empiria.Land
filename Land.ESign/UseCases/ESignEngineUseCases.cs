@@ -34,7 +34,6 @@ namespace Empiria.Land.ESign.UseCases {
 
     #endregion Constructors and parsers
 
-
     public FixedList<SignDocumentDto> GetSignedDocuments(int recorderOfficeId, string responsibleUID) {
       Assertion.Require(recorderOfficeId, nameof(recorderOfficeId));
 

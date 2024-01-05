@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.Land.ESign.Domain;
 using Empiria.OnePoint.ESign;
 
@@ -67,7 +68,7 @@ namespace Empiria.Land.ESign.Adapters {
 
 
     private static FixedList<SignDocumentRequestDto> MapToESignDto(FixedList<SignRequestDTO> signRequest) {
-      
+
       var requests = signRequest.Select((x) => MapToSignDocumentDto(x));
 
       return new FixedList<SignDocumentRequestDto>(requests);

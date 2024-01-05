@@ -28,7 +28,6 @@ namespace Empiria.Land.Messaging {
 
     #endregion Constructors and parsers
 
-
     #region Public methods
 
     internal EmailContent BuildForRegisteredForResourceChanges(Resource resource) {

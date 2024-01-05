@@ -18,24 +18,15 @@ namespace Empiria.Land.ESign.Domain {
 
     #region Public methods
 
-
     internal FixedList<SignedDocumentEntry> GetSignedDocuments(int recorderOfficeId, string responsibleUID) {
 
       FixedList<SignedDocumentEntry> requestedData = ESignEngineData.GetSignedDocuments(
                                                         recorderOfficeId, responsibleUID);
-      
+
       return requestedData;
     }
 
-
     #endregion Public methods
-
-
-    #region Private methods
-
-
-
-    #endregion Private methods
 
   } // class ESignEngine
 

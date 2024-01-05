@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-
 namespace Empiria.Land.ESign.Domain {
 
   /// <summary>Contains data for an electronic-sign operation.</summary>
@@ -24,7 +23,6 @@ namespace Empiria.Land.ESign.Domain {
     #endregion Constructors and parsers
 
     #region Properties
-
 
     [DataField("TransactionId")]
     public int TransactionId {
