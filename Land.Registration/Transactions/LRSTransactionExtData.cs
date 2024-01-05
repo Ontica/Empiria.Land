@@ -163,12 +163,19 @@ namespace Empiria.Land.Registration.Transactions {
       if (!String.IsNullOrWhiteSpace(fields.RequestedByEmail)) {
         this.SendTo = new SendTo(fields.RequestedByEmail);
       }
+
+      if (!String.IsNullOrWhiteSpace(fields.RFC)) {
+        this.RFC = fields.RFC;
+      }
     }
 
 
     internal void Update(TransactionFields fields) {
       if (!String.IsNullOrWhiteSpace(fields.RequestedByEmail)) {
         this.SendTo = new SendTo(fields.RequestedByEmail);
+      }
+      if (!String.IsNullOrWhiteSpace(fields.RFC)) {
+        this.RFC = fields.RFC;
       }
     }
 
