@@ -46,17 +46,31 @@ namespace Empiria.Land.Registration.Transactions {
 
     private LRSTransaction() {
       // Required by Empiria Framework.
+      this.Initialize();
     }
 
     public LRSTransaction(LRSTransactionType transactionType) {
+      this.Initialize();
+
       this.TransactionType = transactionType;
     }
 
+
     public LRSTransaction(TransactionFields fields) {
+      this.Initialize();
+
       this.EnsureFieldsAreValid(fields);
 
       this.LoadFields(fields);
     }
+
+
+    private void Initialize() {
+      recordingActs = new Lazy<LRSTransactionItemList>(() => new LRSTransactionItemList());
+      payments = new Lazy<LRSPaymentList>(() => new LRSPaymentList());
+      workflow = new Lazy<LRSWorkflow>(() => new LRSWorkflow(this));
+    }
+
 
     static public LRSTransaction Parse(int id) {
       return BaseObject.ParseId<LRSTransaction>(id);
@@ -271,7 +285,7 @@ namespace Empiria.Land.Registration.Transactions {
     public LRSTransactionExtData ExtensionData {
       get;
       private set;
-    }
+    } = new LRSTransactionExtData();
 
 
     public LRSExternalTransaction ExternalTransaction {
@@ -728,16 +742,11 @@ namespace Empiria.Land.Registration.Transactions {
       return Empiria.Land.Data.FormerCertificatesData.GetTransactionIssuedCertificates(this);
     }
 
-    protected override void OnLoad() {
-      recordingActs = new Lazy<LRSTransactionItemList>(() => new LRSTransactionItemList());
-      payments = new Lazy<LRSPaymentList>(() => new LRSPaymentList());
-      workflow = new Lazy<LRSWorkflow>(() => new LRSWorkflow(this));
-      this.ExtensionData = new LRSTransactionExtData();
-    }
 
     protected override void OnLoadObjectData(System.Data.DataRow row) {
       recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
       payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
+
       workflow = new Lazy<LRSWorkflow>(
                             () => LRSWorkflow.Parse(this, (LRSTransactionStatus) Convert.ToChar(row["TransactionStatus"])));
 

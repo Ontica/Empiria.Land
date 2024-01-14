@@ -29,7 +29,7 @@ namespace Empiria.Land.Registration {
 
     #region Fields
 
-    private Lazy<List<RecordingAct>> recordingActList = null;
+    private Lazy<List<RecordingAct>> recordingActList = new Lazy<List<RecordingAct>>();
 
     #endregion Fields
 
@@ -39,6 +39,8 @@ namespace Empiria.Land.Registration {
       if (powerType.Equals(RecordingDocumentType.Empty)) {
         this.Status = RecordableObjectStatus.Closed;
       }
+      this.Imaging = new RecordingDocumentImaging(this);
+      this.Security = new RecordingDocumentSecurity(this);
     }
 
 
@@ -248,7 +250,7 @@ namespace Empiria.Land.Registration {
     public RecordingDocumentExtData ExtensionData {
       get;
       set;
-    }
+    } = new RecordingDocumentExtData();
 
     public string Keywords {
       get {
@@ -515,25 +517,13 @@ namespace Empiria.Land.Registration {
       return _transaction;
     }
 
-    protected override void OnLoad() {
-      this.ExtensionData = new RecordingDocumentExtData();
-      this.Number = String.Empty;
-      this.ExpedientNo = String.Empty;
-
+    protected override void OnLoadObjectData(DataRow row) {
       recordingActList = new Lazy<List<RecordingAct>>(() => RecordingActsData.GetDocumentRecordingActs(this));
-
-      this.Imaging = new RecordingDocumentImaging(this);
-      this.Security = new RecordingDocumentSecurity(this);
+      this.ExtensionData = RecordingDocumentExtData.Parse((string) row["DocumentExtData"]);
     }
-
 
     public void RefreshRecordingActs() {
       recordingActList = new Lazy<List<RecordingAct>>(() => RecordingActsData.GetDocumentRecordingActs(this));
-    }
-
-
-    protected override void OnLoadObjectData(DataRow row) {
-      this.ExtensionData = RecordingDocumentExtData.Parse((string) row["DocumentExtData"]);
     }
 
     protected override void OnBeforeSave() {

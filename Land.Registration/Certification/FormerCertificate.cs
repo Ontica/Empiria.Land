@@ -113,7 +113,7 @@ namespace Empiria.Land.Certification {
     public FormerCertificateExtData ExtensionData {
       get;
       private set;
-    }
+    } = new FormerCertificateExtData();
 
     internal string Keywords {
       get {
@@ -443,10 +443,6 @@ namespace Empiria.Land.Certification {
     #endregion Public methods
 
     #region Protected methods
-
-    protected override void OnLoad() {
-      this.ExtensionData = new FormerCertificateExtData();
-    }
 
     protected override void OnLoadObjectData(System.Data.DataRow row) {
       this.ExtensionData = FormerCertificateExtData.Parse((string) row["CertificateExtData"]);

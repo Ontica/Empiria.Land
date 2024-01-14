@@ -23,7 +23,7 @@ namespace Empiria.Land.Registration {
 
     #region Fields
 
-    private Lazy<FixedList<RecordingAct>> recordingActList = null;
+    private Lazy<FixedList<RecordingAct>> recordingActList = new Lazy<FixedList<RecordingAct>>();
 
     #endregion Fields
 
@@ -51,12 +51,8 @@ namespace Empiria.Land.Registration {
       LoadData(dto);
     }
 
-    protected override void OnLoad() {
-      recordingActList = GetNewRecordingActListLazyInstance();
-      this.ExtendedData = new RecordingExtData();
-    }
-
     protected override void OnLoadObjectData(DataRow row) {
+      recordingActList = GetNewRecordingActListLazyInstance();
       this.ExtendedData = RecordingExtData.Parse((string) row["RecordingExtData"]);
     }
 
@@ -129,7 +125,7 @@ namespace Empiria.Land.Registration {
     internal RecordingExtData ExtendedData {
       get;
       private set;
-    }
+    } = new RecordingExtData();
 
     public int StartImageIndex {
       get {
