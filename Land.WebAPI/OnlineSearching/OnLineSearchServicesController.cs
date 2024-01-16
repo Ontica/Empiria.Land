@@ -325,8 +325,28 @@ namespace Empiria.Land.WebApi {
     }
 
 
-    private List<PropertyBagItem> BuildNoPropertyStatusResponse(NoPropertyResource resource) {
-      throw new NotImplementedException();
+    private List<PropertyBagItem> BuildNoPropertyStatusResponse(NoPropertyResource noproperty) {
+      var propertyBag = new List<PropertyBagItem>(16);
+
+      propertyBag.Add(new PropertyBagItem("Información del documento", String.Empty, "section"));
+      propertyBag.Add(new PropertyBagItem("Folio electrónico", noproperty.UID, "enhanced-text"));
+      propertyBag.Add(new PropertyBagItem("Nombre", noproperty.Name, "bold-text"));
+      propertyBag.Add(new PropertyBagItem("Tipo", noproperty.Kind));
+      propertyBag.Add(new PropertyBagItem("Descripción", noproperty.Description));
+
+      propertyBag.AddRange(ResourceTractSection(noproperty));
+
+      var physicalRecording = noproperty.Tract.GetLastPhysicalRecording();
+
+      if (!physicalRecording.IsEmptyInstance) {
+        propertyBag.Add(new PropertyBagItem("Partida origen del documento en libros físicos", String.Empty, "section"));
+        propertyBag.Add(new PropertyBagItem("Partida", physicalRecording.AsText));
+        propertyBag.Add(new PropertyBagItem("Nota importante", "Los datos de la partida sólo se muestran con fines informativos.<br/>" +
+                                            "A partir de junio del año 2022, todos los documentos se deben identificar mediante su folio electrónico, " +
+                                            "no con el número de inscripción que tenían en libros físicos."));
+      }
+
+      return propertyBag;
     }
 
 
@@ -779,7 +799,7 @@ namespace Empiria.Land.WebApi {
           }
 
           items.Add(new PropertyBagItem(recordingAct.Document.AuthorizationTime.ToString("dd/MMM/yyyy"),
-                                        recordingAct.DisplayName + "<br/>" +
+                                        (recordingAct.Kind.Length != 0 ? recordingAct.Kind : recordingAct.DisplayName) + "<br/>" +
                                         $"{GetDocumentUIDAsLink(recordingAct.Document.UID)}"));
 
         } else if (tractItem is FormerCertificate) {
