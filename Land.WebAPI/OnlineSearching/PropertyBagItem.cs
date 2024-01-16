@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Land                                   System   : Land Services                       *
-*  Namespace : Empiria.Land.WebApi.Models                     Assembly : Empiria.Land.WebApi.dll             *
+*  Namespace : Empiria.Land.WebApi                            Assembly : Empiria.Land.WebApi.dll             *
 *  Type      : PropertyBagItem                                Pattern  : Information Holder                  *
 *  Version   : 3.0                                            License  : Please read license.txt file        *
 *                                                                                                            *
@@ -10,7 +10,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land.WebApi.Models {
+namespace Empiria.Land.WebApi {
 
   /// <summary>Holds information about a property item included in a property bag.</summary>
   public class PropertyBagItem {
@@ -68,4 +68,4 @@ namespace Empiria.Land.WebApi.Models {
 
   }  // class PropertyBagItem
 
-}  // namespace Empiria.Land.WebApi.Models
+}  // namespace Empiria.Land.WebApi

@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.Land.Certification;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
@@ -18,10 +19,9 @@ namespace Empiria.Land.WebApi {
   internal class ResourceNotFoundValidator {
 
     private readonly DateTime certificateHashCodeValidationStartDate = DateTime.Parse("2020-01-01");
-
     private readonly DateTime hashCodeValidationStartDate = DateTime.Parse("2020-01-01");
 
-    internal LRSTransaction EnsureValidTransactionRequest(string transactionUID, string hash) {
+    internal void ValidateTransaction(string transactionUID, string hash) {
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
@@ -49,8 +49,6 @@ namespace Empiria.Land.WebApi {
                                             transaction.UID);
 
       }
-
-      return transaction;
     }
 
 
@@ -98,6 +96,7 @@ namespace Empiria.Land.WebApi {
 
 
     internal void ValidateDocument(string documentUID, string hash) {
+
       var document = RecordingDocument.TryParse(documentUID, true);
 
       if (document == null && hash.Length == 0) {
@@ -159,6 +158,19 @@ namespace Empiria.Land.WebApi {
       }
     }
 
+    internal void ValidateTransactionForElectronicDelivery(string transactionUID, string messageUID) {
+
+      var transaction = LRSTransaction.TryParse(transactionUID, true);
+
+      if (!transaction.Workflow.IsReadyForElectronicDelivery(messageUID)) {
+        throw new ResourceNotFoundException("Land.Transaction.NotReadyForElectronicalDelivery",
+                                            "El trámite {0} NO está disponible para entrega electrónica.\n\n" +
+                                            "Posiblemente su estado cambió después de que usted recibió el mensaje.\n" +
+                                            "Si este es el caso, en breve recibirá un nuevo mensaje sobre la situación del mismo.",
+                                            transaction.UID);
+
+      }
+    }
   }  // class ResourceNotFoundValidator
 
 }  // namespace Empiria.Land.WebApi
