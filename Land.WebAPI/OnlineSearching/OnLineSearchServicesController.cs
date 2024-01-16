@@ -31,9 +31,6 @@ namespace Empiria.Land.WebApi {
     private static readonly string PRINT_SERVICES_SERVER_BASE_ADDRESS =
                                             ConfigurationData.Get<string>("PrintServicesServerBaseAddress");
 
-    private readonly DateTime hashCodeValidationStartDate = DateTime.Parse("2020-01-01");
-    private readonly DateTime certificateHashCodeValidationStartDate = DateTime.Parse("2020-01-01");
-
     #region Public APIs
 
     [HttpGet, AllowAnonymous]
@@ -44,47 +41,15 @@ namespace Empiria.Land.WebApi {
         certificateUID = FormatParameter(certificateUID);
         hash = FormatParameter(hash);
 
-        var certificate = FormerCertificate.TryParse(certificateUID, true);
+        var validator = new ResourceNotFoundValidator();
 
-        if (certificate == null && hash.Length == 0) {
-          throw new ResourceNotFoundException("Land.Certificate.NotFound",
-                                              "No tenemos registrado ningún certificado con número '{0}'.\n" +
-                                              "Favor de revisar la información proporcionada.",
-                                              certificateUID);
+        validator.ValidateCertificate(certificateUID, hash);
 
-        } else if (certificate == null && hash.Length != 0) {
-          throw new ResourceNotFoundException("Land.Certificate.InvalidQRCode",
-                                              "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                              "referencia a un certificado con número '{0}' que NO está registrado en nuestros archivos.\n\n" +
-                                              "MUY IMPORTANTE: Es muy probable que su documento sea falso.\n\n" +
-                                              "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                              certificateUID);
+        var propertiesBagBuilder = new OnLineSearchPropertiesBagBuilder();
 
-        } else if (certificate != null && certificate.Status == FormerCertificateStatus.Deleted) {
-          throw new ResourceNotFoundException("Land.Certificate.Deleted",
-                                              $"El certificado {certificate.UID} que está consultando fue ELIMINADO posteriormente a " +
-                                              "su impresión, por lo que no tiene ninguna validez oficial.\n\n" +
-                                              "Es posible que se lo hayan entregado por equivocación o que haya sido víctima de un fraude.\n\n" +
-                                              "MUY IMPORTANTE: Para obtener más información comuníquese de inmediato a la " +
-                                              "oficina del Registro Público.",
-                                              certificateUID);
+        List<PropertyBagItem> propertiesBag = propertiesBagBuilder.BuildCertificate(certificateUID, hash);
 
-        } else if (certificate != null && hash.Length != 0 &&
-                   certificate.IssueTime >= certificateHashCodeValidationStartDate && hash != certificate.QRCodeSecurityHash()) {
-          throw new ResourceNotFoundException("Land.Certificate.InvalidQRCode",
-                                              "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                              "referencia al certificado con número '{0}' que está registrado en nuestros archivos " +
-                                              "pero el código de validación del QR no es correcto.\n\n" +
-                                              "MUY IMPORTANTE: Es posible que su certificado sea falso o que haya sido modificado " +
-                                              "posteriormente a la impresión que tiene en la mano.\n\nEsto último significa que su " +
-                                              "certificado impreso no es válido y que debe solicitar una reposición del mismo.\n\n" +
-                                              "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                              certificateUID);
-
-        }
-
-        return new CollectionModel(this.Request, BuildCertificateResponse(certificate, hash),
-                                  "Empiria.PropertyBag");
+        return new CollectionModel(this.Request, propertiesBag, "Empiria.PropertyBag");
 
       } catch (Exception e) {
         throw base.CreateHttpException(e);
@@ -100,35 +65,9 @@ namespace Empiria.Land.WebApi {
         documentUID = FormatParameter(documentUID);
         hash = FormatParameter(hash);
 
-        var document = RecordingDocument.TryParse(documentUID, true);
+        var validator = new ResourceNotFoundValidator();
 
-        if (document == null && hash.Length == 0) {
-          throw new ResourceNotFoundException("Land.RecordingDocument.NotFound",
-                                              "No tenemos registrado ningún documento o sello registral con número '{0}'.\n" +
-                                              "Favor de revisar la información proporcionada.",
-                                              documentUID);
-
-        } else if (document == null && hash.Length != 0) {
-          throw new ResourceNotFoundException("Land.RecordingDocument.InvalidQRCode",
-                                              "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                              "referencia al sello registral con número '{0}' que NO está registrado en nuestros archivos.\n\n" +
-                                              "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
-                                              "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                              documentUID);
-
-        } else if (document != null && hash.Length != 0  &&
-                   document.AuthorizationTime >= hashCodeValidationStartDate && hash != document.Security.QRCodeSecurityHash()) {
-          throw new ResourceNotFoundException("Land.RecordingDocument.InvalidQRCode",
-                                              "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                              "referencia al sello registral con número '{0}' que sí tenemos registrado " +
-                                              "pero el código de validación del QR no es correcto.\n\n" +
-                                              "MUY IMPORTANTE: Es posible que su documento sea falso o que haya sido modificado " +
-                                              "posteriormente a la impresión que tiene en la mano.\n\nEsto último significa que su " +
-                                              "documento impreso no es válido y que debe solicitar una reposición del mismo.\n\n" +
-                                              "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                              documentUID);
-
-        }
+        validator.ValidateDocument(documentUID, hash);
 
         return new CollectionModel(this.Request, BuildRecordingDocumentResponse(document, hash),
                                    "Empiria.PropertyBag");
@@ -147,32 +86,9 @@ namespace Empiria.Land.WebApi {
         resourceUID = FormatParameter(resourceUID);
         hash = FormatParameter(hash);
 
-        var resource = Resource.TryParseWithUID(resourceUID, true);
+        var validator = new ResourceNotFoundValidator();
 
-        if (resource == null && hash.Length == 0) {
-          throw new ResourceNotFoundException("Land.Resource.NotFound",
-                                              "No tenemos registrado ningún predio o asociación con folio electrónico '{0}'.\n" +
-                                              "Favor de revisar la información proporcionada.",
-                                              resourceUID);
-
-        } else if (resource == null && hash.Length != 0) {
-          throw new ResourceNotFoundException("Land.Resource.InvalidQRCode",
-                                              "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                              "referencia a un predio o asociación con folio real '{0}' que NO está " +
-                                              "registrado en nuestros archivos.\n\n" +
-                                              "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
-                                              "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                              resourceUID);
-
-        } else if (resource != null && hash.Length != 0 && hash != resource.QRCodeSecurityHash()) {
-          throw new ResourceNotFoundException("Land.Resource.InvalidQRCode",
-                                              "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                              "referencia al predio o asociación con folio electrónico '{0}' que sí tenemos registrado " +
-                                              "en nuestros archivos pero el código de validación del QR no es correcto.\n\n" +
-                                              "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
-                                              "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                              resourceUID);
-        }
+        validator.ValidateResource(resourceUID, hash);
 
         return new CollectionModel(this.Request, BuildResourceStatusResponse(resource),
                                    "Empiria.PropertyBag");
@@ -189,7 +105,14 @@ namespace Empiria.Land.WebApi {
                                           [FromUri] string hash = "",
                                           [FromUri] string messageUID = "") {
       try {
-        LRSTransaction transaction = EnsureValidTransactionRequest(transactionUID, hash, messageUID);
+
+        transactionUID = FormatParameter(transactionUID);
+        hash = FormatParameter(hash);
+        messageUID = FormatParameter(messageUID);
+
+        var validator = new ResourceNotFoundValidator();
+
+        LRSTransaction transaction = validator.EnsureValidTransactionRequest(transactionUID, hash);
 
         return new CollectionModel(this.Request, BuildTransactionResponse(transaction, messageUID),
                                   "Empiria.PropertyBag");
@@ -214,7 +137,13 @@ namespace Empiria.Land.WebApi {
           return new CollectionModel(this.Request, data, "Empiria.PropertyBag");
         }
 
-        LRSTransaction transaction = EnsureValidTransactionRequest(transactionUID, hash, messageUID);
+        var validator = new ResourceNotFoundValidator();
+
+        transactionUID = FormatParameter(transactionUID);
+        hash = FormatParameter(hash);
+        messageUID = FormatParameter(messageUID);
+
+        LRSTransaction transaction = validator.EnsureValidTransactionRequest(transactionUID, hash);
 
         if (!transaction.Workflow.IsReadyForElectronicDelivery(messageUID)) {
           throw new ResourceNotFoundException("Land.Transaction.NotReadyForElectronicalDelivery",
@@ -239,8 +168,10 @@ namespace Empiria.Land.WebApi {
 
     #region Private methods
 
-    private List<PropertyBagItem> BuildCertificateResponse(FormerCertificate certificate, string hash) {
+    internal List<PropertyBagItem> BuildCertificate(string certificateUID, string hash) {
       var propertyBag = new List<PropertyBagItem>(16);
+
+      var certificate = FormerCertificate.TryParse(certificateUID, true);
 
       propertyBag.Add(new PropertyBagItem("Información del certificado", String.Empty, "section"));
       propertyBag.Add(new PropertyBagItem("Número de certificado", certificate.UID, "enhanced-text"));
@@ -286,7 +217,6 @@ namespace Empiria.Land.WebApi {
 
       return propertyBag;
     }
-
 
     private List<PropertyBagItem> BuildResourceStatusResponse(Resource resource) {
       if (resource is RealEstate) {
@@ -570,42 +500,6 @@ namespace Empiria.Land.WebApi {
       }
 
       return propertyBag;
-    }
-
-
-    private LRSTransaction EnsureValidTransactionRequest(string transactionUID, string hash, string messageUID) {
-      transactionUID = FormatParameter(transactionUID);
-      hash = FormatParameter(hash);
-      messageUID = FormatParameter(messageUID);
-
-      var transaction = LRSTransaction.TryParse(transactionUID, true);
-
-      if (transaction == null && hash.Length == 0) {
-        throw new ResourceNotFoundException("Land.Transaction.NotFound",
-                                            "No tenemos registrado ningún trámite con número '{0}'.\n" +
-                                            "Favor de revisar la información proporcionada.",
-                                            transactionUID);
-
-      } else if (transaction == null && hash.Length != 0) {
-        throw new ResourceNotFoundException("Land.Transaction.InvalidQRCode",
-                                            "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                            "referencia a un trámite con número '{0}' que NO está registrado en nuestros archivos.\n\n" +
-                                            "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
-                                            "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                            transactionUID);
-
-      } else if (transaction != null && hash.Length != 0 && hash != transaction.QRCodeSecurityHash()) {
-        throw new ResourceNotFoundException("Land.Transaction.InvalidQRCode",
-                                            "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                            "referencia al trámite con número '{0}' que tenemos registrado en nuestros archivos " +
-                                            $"pero el código de validación del QR no es correcto [{hash}].\n\n" +
-                                            "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
-                                            "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                            transaction.UID);
-
-      }
-
-      return transaction;
     }
 
 
