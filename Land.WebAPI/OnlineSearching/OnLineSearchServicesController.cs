@@ -301,8 +301,27 @@ namespace Empiria.Land.WebApi {
     }
 
 
-    private List<PropertyBagItem> BuildAssociationStatusResponse(Association resource) {
-      throw new NotImplementedException();
+    private List<PropertyBagItem> BuildAssociationStatusResponse(Association association) {
+      var propertyBag = new List<PropertyBagItem>(16);
+
+      propertyBag.Add(new PropertyBagItem("Información de la sociedad", String.Empty, "section"));
+      propertyBag.Add(new PropertyBagItem("Folio único", association.UID, "enhanced-text"));
+      propertyBag.Add(new PropertyBagItem("Nombre", association.Name, "bold-text"));
+      propertyBag.Add(new PropertyBagItem("Tipo", association.Kind));
+
+      propertyBag.AddRange(ResourceTractSection(association));
+
+      var physicalRecording = association.Tract.GetLastPhysicalRecording();
+
+      if (!physicalRecording.IsEmptyInstance) {
+        propertyBag.Add(new PropertyBagItem("Partida origen de la sociedad en libros físicos", String.Empty, "section"));
+        propertyBag.Add(new PropertyBagItem("Partida", physicalRecording.AsText));
+        propertyBag.Add(new PropertyBagItem("Nota importante", "Los datos de la partida sólo se muestran con fines informativos.<br/>" +
+                                            "A partir de junio del año 2022, todas las sociedades se deben identificar mediante su folio único, " +
+                                            "no con el número de inscripción que tenían en libros físicos."));
+      }
+
+      return propertyBag;
     }
 
 
@@ -321,7 +340,7 @@ namespace Empiria.Land.WebApi {
                                            property.CadastralKey : "Clave catastral no proporcionada.", "bold-text"));
       propertyBag.Add(new PropertyBagItem("Descripción", property.Description));
 
-      propertyBag.AddRange(PropertyTractSection(property));
+      propertyBag.AddRange(ResourceTractSection(property));
 
 
       var physicalRecording = property.Tract.GetLastPhysicalRecording();
@@ -739,7 +758,7 @@ namespace Empiria.Land.WebApi {
     }
 
 
-    private IEnumerable<PropertyBagItem> PropertyTractSection(RealEstate property) {
+    private IEnumerable<PropertyBagItem> ResourceTractSection(Resource property) {
       var tract = property.Tract.GetFullRecordingActsWithCertificates();
 
       if (tract.Count == 0) {
@@ -748,7 +767,7 @@ namespace Empiria.Land.WebApi {
 
       var items = new List<PropertyBagItem>(tract.Count);
 
-      items.Add(new PropertyBagItem("Últimos actos jurídicos y certificados expedidos sobre el predio", String.Empty, "section"));
+      items.Add(new PropertyBagItem("Últimos actos jurídicos y certificados expedidos", String.Empty, "section"));
 
       foreach (var tractItem in tract) {
         if (tractItem is RecordingAct) {
