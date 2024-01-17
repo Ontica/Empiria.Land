@@ -74,6 +74,10 @@ namespace Empiria.Land.Transactions {
       get; internal set;
     }
 
+    public BillingDto Billing {
+      get; internal set;
+    }
+
     public MediaData SubmissionReceipt {
       get; internal set;
     }

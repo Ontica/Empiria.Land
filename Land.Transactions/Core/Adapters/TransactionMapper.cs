@@ -46,6 +46,7 @@ namespace Empiria.Land.Transactions {
       dto.ControlVoucher = GetControlVoucherDto(transaction);
       dto.PaymentOrder = GetPaymentOrderDto(transaction);
       dto.Payment = GetPaymentDto(transaction);
+      dto.Billing = GetBillingDto(transaction);
       dto.SubmissionReceipt = GetSubmissionReceiptDto(transaction);
       dto.StatusName = currentTask.CurrentStatusName;
       dto.AssignedTo = currentTask.Responsible.MapToNamedEntity();
@@ -58,9 +59,8 @@ namespace Empiria.Land.Transactions {
 
 
     static internal FixedList<TransactionDescriptor> MapToDescriptor(FixedList<LRSTransaction> list) {
-      var mappedItems = list.Select((x) => MapToDescriptor(x));
-
-      return new FixedList<TransactionDescriptor>(mappedItems);
+      return list.Select((x) => MapToDescriptor(x))
+                 .ToFixedList();
     }
 
 
@@ -96,7 +96,14 @@ namespace Empiria.Land.Transactions {
       return ((TransactionStatus) (char) currentStatus);
     }
 
-    #region Private methods
+    #region Helpers
+
+    static private BillingDto GetBillingDto(LRSTransaction transaction) {
+      return new BillingDto {
+        BillTo = transaction.ExtensionData.BillTo,
+        RFC = transaction.ExtensionData.RFC,
+      };
+    }
 
     static private TransactionControlDataDto GetControlDataDto(LRSTransaction transaction) {
       TransactionControlData controlData = transaction.ControlData;
@@ -215,7 +222,7 @@ namespace Empiria.Land.Transactions {
       };
     }
 
-    #endregion Private methods
+    #endregion Helpers
 
   }  // class TransactionMapper
 

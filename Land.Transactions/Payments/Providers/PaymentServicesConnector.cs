@@ -134,16 +134,14 @@ namespace Empiria.Land.Transactions.Payments.Providers {
 
     private PaymentOrderRequestDto MapToPaymentOrderRequest(LRSTransaction transaction,
                                                             FixedList<LRSTransactionItem> items) {
-      var po = new PaymentOrderRequestDto();
+      return new PaymentOrderRequestDto {
 
-      po.BaseTransactionUID = transaction.UID;
-      po.RequestedBy = transaction.RequestedBy;
-      po.Address = String.Empty;
-      po.RFC = transaction.ExtensionData.RFC;
-
-      po.Concepts = MapToPaymentOrderRequestConceptsArray(items);
-
-      return po;
+        BaseTransactionUID = transaction.UID,
+        RequestedBy = transaction.ExtensionData.BillTo.Length != 0 ? transaction.ExtensionData.BillTo : transaction.RequestedBy,
+        Address = String.Empty,
+        RFC = transaction.ExtensionData.RFC,
+        Concepts = MapToPaymentOrderRequestConceptsArray(items)
+      };
     }
 
 

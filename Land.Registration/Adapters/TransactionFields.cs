@@ -43,6 +43,11 @@ namespace Empiria.Land.Transactions {
     } = string.Empty;
 
 
+    public string BillTo {
+      get; set;
+    } = string.Empty;
+
+
     public string RFC {
       get; set;
     } = string.Empty;

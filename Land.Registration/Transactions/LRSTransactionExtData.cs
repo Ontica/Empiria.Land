@@ -49,6 +49,8 @@ namespace Empiria.Land.Registration.Transactions {
 
       extData.RequesterNotes = json.Get<string>("RequesterNotes", String.Empty);
 
+      extData.BillTo = json.Get<string>("BillTo", String.Empty);
+
       extData.RFC = json.Get<string>("RFC", String.Empty);
 
       if (json.Contains("paymentOrder")) {
@@ -83,6 +85,12 @@ namespace Empiria.Land.Registration.Transactions {
     public string RequesterNotes {
       get;
       internal set;
+    } = String.Empty;
+
+
+    public string BillTo {
+      get;
+      set;
     } = String.Empty;
 
 
@@ -128,6 +136,8 @@ namespace Empiria.Land.Registration.Transactions {
 
       json.AddIfValue("RequesterNotes", this.RequesterNotes);
 
+      json.AddIfValue("BillTo", this.BillTo);
+
       json.AddIfValue("RFC", this.RFC);
 
       if (this.FormerPaymentOrderData.RouteNumber != String.Empty) {
@@ -160,25 +170,28 @@ namespace Empiria.Land.Registration.Transactions {
     internal void Load(TransactionFields fields) {
       Assertion.Require(fields, "fields");
 
-      if (!String.IsNullOrWhiteSpace(fields.RequestedByEmail)) {
-        this.SendTo = new SendTo(fields.RequestedByEmail);
-      }
-
-      if (!String.IsNullOrWhiteSpace(fields.RFC)) {
-        this.RFC = fields.RFC;
-      }
+      LoadFields(fields);
     }
-
 
     internal void Update(TransactionFields fields) {
+      Assertion.Require(fields, "fields");
+
+      LoadFields(fields);
+    }
+
+    private void LoadFields(TransactionFields fields) {
       if (!String.IsNullOrWhiteSpace(fields.RequestedByEmail)) {
         this.SendTo = new SendTo(fields.RequestedByEmail);
       }
+
+      if (!String.IsNullOrWhiteSpace(fields.BillTo)) {
+        this.BillTo = fields.BillTo;
+      }
+
       if (!String.IsNullOrWhiteSpace(fields.RFC)) {
         this.RFC = fields.RFC;
       }
     }
-
 
     #endregion TransactionFields related methods
 
