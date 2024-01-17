@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Documents;
+
 using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration {
@@ -19,6 +20,10 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
+
+    private RecordingDocumentImaging() {
+
+    }
 
     public RecordingDocumentImaging(RecordingDocument document) {
       this.Document = document;
@@ -67,7 +72,7 @@ namespace Empiria.Land.Registration {
     public string ImagingControlID {
       get;
       private set;
-    }
+    } = string.Empty;
 
 
     #endregion Public properties
