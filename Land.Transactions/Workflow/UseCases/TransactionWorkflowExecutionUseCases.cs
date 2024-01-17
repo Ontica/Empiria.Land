@@ -11,7 +11,7 @@ using System;
 
 using Empiria.Services;
 
-namespace Empiria.Land.Transactions.Workflow.Services {
+namespace Empiria.Land.Transactions.Workflow.UseCases {
 
   /// <summary>Use cases that execute workflow commands for land transactions.</summary>
   public class TransactionWorkflowExecutionUseCases : UseCase {
@@ -74,4 +74,4 @@ namespace Empiria.Land.Transactions.Workflow.Services {
 
   }  // class WorkflowServices
 
-}  // namespace Empiria.Land.Transactions.Workflow.Services
+}  // namespace Empiria.Land.Transactions.Workflow.UseCases

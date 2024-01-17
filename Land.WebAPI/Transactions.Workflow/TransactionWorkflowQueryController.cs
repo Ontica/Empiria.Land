@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Transactions Workflow                        Component : Web Api                               *
 *  Assembly : Empiria.Land.WebApi.dll                      Pattern   : Query controller                      *
-*  Type     : TransactionWorkflowDataController            License   : Please read LICENSE.txt file          *
+*  Type     : TransactionWorkflowQueryController           License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Query web api used to retrive transaction workflow data.                                       *
 *                                                                                                            *
@@ -11,12 +11,12 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.Land.Transactions.Workflow.Services;
+using Empiria.Land.Transactions.Workflow.UseCases;
 
 namespace Empiria.Land.Transactions.Workflow.WebApi {
 
   /// <summary>Query web api used to retrive transaction workflow data.</summary>
-  public class TransactionWorkflowDataController : WebApiController {
+  public class TransactionWorkflowQueryController : WebApiController {
 
     #region Web Apis
 
@@ -25,7 +25,7 @@ namespace Empiria.Land.Transactions.Workflow.WebApi {
     [Route("v5/land/workflow/all-command-types")]
     public CollectionModel AllApplicableUserCommandTypes() {
 
-      using (var workflow = TransactionWorkflowDataServices.Provider()) {
+      using (var workflow = TransactionWorkflowQueryUseCases.UseCaseInteractor()) {
 
         FixedList<ApplicableCommandDto> commandTypes = workflow.GetAllApplicableUserCommands();
 
@@ -40,7 +40,7 @@ namespace Empiria.Land.Transactions.Workflow.WebApi {
     public CollectionModel GetApplicableCommandTypesForMultipleTransactuions([FromBody] string[] transactions) {
       base.RequireBody(transactions);
 
-      using (var workflow = TransactionWorkflowDataServices.Provider()) {
+      using (var workflow = TransactionWorkflowQueryUseCases.UseCaseInteractor()) {
 
         FixedList<ApplicableCommandDto> commandTypes = workflow.GetApplicableCommandsForMultipleTransactions(transactions);
 
@@ -53,7 +53,7 @@ namespace Empiria.Land.Transactions.Workflow.WebApi {
     [Route("v5/land/workflow/{transactionUID:length(19)}/current-task")]
     public SingleObjectModel GetTransactionCurrentWorkflowTask([FromUri] string transactionUID) {
 
-      using (var workflow = TransactionWorkflowDataServices.Provider()) {
+      using (var workflow = TransactionWorkflowQueryUseCases.UseCaseInteractor()) {
 
         WorkflowTaskDto currentWorkflowTask = workflow.CurrentTask(transactionUID);
 
@@ -66,7 +66,7 @@ namespace Empiria.Land.Transactions.Workflow.WebApi {
     [Route("v5/land/workflow/{transactionUID:length(19)}/history")]
     public CollectionModel GetTransactionWorkflowHistory([FromUri] string transactionUID) {
 
-      using (var workflow = TransactionWorkflowDataServices.Provider()) {
+      using (var workflow = TransactionWorkflowQueryUseCases.UseCaseInteractor()) {
         FixedList<WorkflowTaskDto> history = workflow.WorkflowHistory(transactionUID);
 
         return new CollectionModel(this.Request, history);
@@ -75,6 +75,6 @@ namespace Empiria.Land.Transactions.Workflow.WebApi {
 
     #endregion Web Apis
 
-  }  // class TransactionWorkflowDataController
+  }  // class TransactionWorkflowQueryController
 
 }  //namespace Empiria.Land.Transactions.Workflow.WebApi

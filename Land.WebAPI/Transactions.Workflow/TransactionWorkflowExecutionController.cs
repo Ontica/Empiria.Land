@@ -12,7 +12,7 @@ using System.Web.Http;
 using Empiria.WebApi;
 
 using Empiria.Land.Transactions.UseCases;
-using Empiria.Land.Transactions.Workflow.Services;
+using Empiria.Land.Transactions.Workflow.UseCases;
 
 namespace Empiria.Land.Transactions.Workflow.WebApi {
 
@@ -50,7 +50,6 @@ namespace Empiria.Land.Transactions.Workflow.WebApi {
     [Route("v5/land/workflow/{transactionUID:length(19)}/execute-command")]
     public SingleObjectModel ExecuteWorkflowCommandForOneTransaction([FromUri] string transactionUID,
                                                                      [FromBody] WorkflowCommand command) {
-
       base.RequireBody(command);
 
       using (var engine = TransactionWorkflowExecutionUseCases.UseCaseInteractor()) {

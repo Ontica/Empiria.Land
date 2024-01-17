@@ -1,10 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Workflow                      Component : Services Layer                          *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Services provider                       *
-*  Type     : TransactionWorkflowDataServices            License   : Please read LICENSE.txt file            *
+*  Module   : Transactions Workflow                      Component : Use cases Layer                         *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Use case interactor class               *
+*  Type     : TransactionWorkflowQueryUseCases           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Services for get land transactions workflow data.                                              *
+*  Summary  : Use cases for get land transactions workflow data.                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,19 +13,19 @@ using Empiria.Services;
 
 using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Transactions.Workflow.Services {
+namespace Empiria.Land.Transactions.Workflow.UseCases {
 
-  /// <summary>Services for get land transactions workflow data.</summary>
-  public class TransactionWorkflowDataServices : Service {
+  /// <summary>Use cases for get land transactions workflow data.</summary>
+  public class TransactionWorkflowQueryUseCases : UseCase {
 
     #region Constructors and parsers
 
-    protected TransactionWorkflowDataServices() {
+    protected TransactionWorkflowQueryUseCases() {
       // no-op
     }
 
-    static public TransactionWorkflowDataServices Provider() {
-      return Service.CreateInstance<TransactionWorkflowDataServices>();
+    static public TransactionWorkflowQueryUseCases UseCaseInteractor() {
+      return UseCase.CreateInstance<TransactionWorkflowQueryUseCases>();
     }
 
     #endregion Constructors and parsers
@@ -65,7 +65,7 @@ namespace Empiria.Land.Transactions.Workflow.Services {
 
 
     public WorkflowTaskDto CurrentTask(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
@@ -74,8 +74,9 @@ namespace Empiria.Land.Transactions.Workflow.Services {
       return WorkflowTaskMapper.Map(currentWorkflowTask);
     }
 
+
     public FixedList<WorkflowTaskDto> WorkflowHistory(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
@@ -86,6 +87,6 @@ namespace Empiria.Land.Transactions.Workflow.Services {
 
     #endregion Use cases
 
-  }  // class TransactionWorkflowDataServices
+  }  // class TransactionWorkflowQueryUseCases
 
-}  // namespace Empiria.Land.Transactions.Workflow.Services
+}  // namespace Empiria.Land.Transactions.Workflow.UseCases
