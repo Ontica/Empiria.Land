@@ -119,8 +119,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     public SendTo SendTo {
-      get;
-      set;
+      get; set;
     } = SendTo.Empty;
 
     #endregion Properties
@@ -182,15 +181,12 @@ namespace Empiria.Land.Registration.Transactions {
     private void LoadFields(TransactionFields fields) {
       if (!String.IsNullOrWhiteSpace(fields.RequestedByEmail)) {
         this.SendTo = new SendTo(fields.RequestedByEmail);
+      } else {
+        this.SendTo = SendTo.Empty;
       }
 
-      if (!String.IsNullOrWhiteSpace(fields.BillTo)) {
-        this.BillTo = fields.BillTo;
-      }
-
-      if (!String.IsNullOrWhiteSpace(fields.RFC)) {
-        this.RFC = fields.RFC;
-      }
+      this.BillTo = fields.BillTo;
+      this.RFC = fields.RFC;
     }
 
     #endregion TransactionFields related methods
