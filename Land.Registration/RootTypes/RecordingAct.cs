@@ -603,24 +603,24 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public void RemoveParty(RecordingActParty party) {
-      Assertion.Require(party, "party");
+    public void RemoveParty(RecordingActParty recordingActParty) {
+      Assertion.Require(recordingActParty, nameof(recordingActParty));
 
-      Assertion.Require(this.GetParties().Exists(x => x.UID == party.UID),
-                        $"Party {party.UID} do not belong to this recording act.");
+      Assertion.Require(this.GetParties().Exists(x => x.UID == recordingActParty.UID),
+                        $"Party {recordingActParty.UID} do not belong to this recording act.");
 
-      if (party.RoleType == RecordingActPartyType.Primary) {
-        var secondaryParties = GetSecondaryPartiesOf(party);
-        foreach (var secondaryParty in secondaryParties) {
-          secondaryParty.Delete();
+      if (recordingActParty.RoleType == RecordingActPartyType.Primary) {
+        var secondaryParties = GetSecondaryPartiesOf(recordingActParty.Party);
+        foreach (var secondaryRecordingActParty in secondaryParties) {
+          secondaryRecordingActParty.Delete();
         }
       }
-      party.Delete();
+      recordingActParty.Delete();
     }
 
-    private FixedList<RecordingActParty> GetSecondaryPartiesOf(RecordingActParty primaryParty) {
+    private FixedList<RecordingActParty> GetSecondaryPartiesOf(Party primaryParty) {
       return this.GetParties().FindAll(x => x.RoleType == RecordingActPartyType.Secondary &&
-                                       x.PartyOf.Equals(primaryParty.Party)).ToFixedList();
+                                       x.PartyOf.Equals(primaryParty)).ToFixedList();
     }
 
     private Party CreateParty(RecordingActPartyFields recordingActPartyFields) {
