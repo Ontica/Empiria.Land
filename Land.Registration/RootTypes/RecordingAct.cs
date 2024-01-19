@@ -609,7 +609,18 @@ namespace Empiria.Land.Registration {
       Assertion.Require(this.GetParties().Exists(x => x.UID == party.UID),
                         $"Party {party.UID} do not belong to this recording act.");
 
+      if (party.RoleType == RecordingActPartyType.Primary) {
+        var secondaryParties = GetSecondaryPartiesOf(party);
+        foreach (var secondaryParty in secondaryParties) {
+          secondaryParty.Delete();
+        }
+      }
       party.Delete();
+    }
+
+    private FixedList<RecordingActParty> GetSecondaryPartiesOf(RecordingActParty primaryParty) {
+      return this.GetParties().FindAll(x => x.RoleType == RecordingActPartyType.Secondary &&
+                                       x.PartyOf.Equals(primaryParty.Party)).ToFixedList();
     }
 
     private Party CreateParty(RecordingActPartyFields recordingActPartyFields) {
