@@ -495,16 +495,26 @@ namespace Empiria.Land.Registration {
       this.Save();
     }
 
-    public RecordingActParty AppendParty(Party party, SecondaryPartyRole role, Party partyOf) {
-      var recordingActParty = RecordingActParty.Create(this, party, role, partyOf);
+    private RecordingActParty AppendSecondaryParty(Party party, SecondaryPartyRole role, Party partyOf) {
+      var primaryParties = GetPrimaryParties();
 
-      return recordingActParty;
+      if (primaryParties.Contains(x => x.Party.Equals(party))) {
+        Assertion.RequireFail($"No es posible agregar a {party.FullName} en un rol secundario " +
+                              $"ya que juega un rol primario en el mismo acto jurídico.");
+      }
+
+      return RecordingActParty.Create(this, party, role, partyOf);
     }
 
-    public RecordingActParty AppendParty(Party party, DomainActPartyRole role) {
-      var recordingActParty = RecordingActParty.Create(this, party, role);
+    private RecordingActParty AppendPrimaryParty(Party party, DomainActPartyRole role) {
+      var secondaryParties = GetSecondaryParties();
 
-      return recordingActParty;
+      if (secondaryParties.Contains(x => x.Party.Equals(party))) {
+        Assertion.RequireFail($"No es posible agregar a {party.FullName} en un rol primario " +
+                              $"ya que juega un rol secundario en el mismo acto jurídico.");
+      }
+
+      return RecordingActParty.Create(this, party, role);
     }
 
     public RecordingActParty AppendParty(RecordingActPartyFields recordingActPartyFields) {
@@ -543,7 +553,7 @@ namespace Empiria.Land.Registration {
 
       var role = DomainActPartyRole.Parse(recordingActPartyFields.RoleUID);
 
-      var recordingActParty = this.AppendParty(party, role);
+      var recordingActParty = this.AppendPrimaryParty(party, role);
 
       LoadRecordingActPartyFields(recordingActParty, recordingActPartyFields);
 
@@ -561,7 +571,7 @@ namespace Empiria.Land.Registration {
 
       var role = SecondaryPartyRole.Parse(recordingActPartyFields.RoleUID);
 
-      var recordingActParty = this.AppendParty(party, role, partyOf);
+      var recordingActParty = this.AppendSecondaryParty(party, role, partyOf);
 
       LoadRecordingActPartyFields(recordingActParty, recordingActPartyFields);
 
@@ -576,7 +586,7 @@ namespace Empiria.Land.Registration {
 
       var role = DomainActPartyRole.Parse(recordingActPartyFields.RoleUID);
 
-      var recordingActParty = this.AppendParty(party, role);
+      var recordingActParty = this.AppendPrimaryParty(party, role);
 
       LoadRecordingActPartyFields(recordingActParty, recordingActPartyFields);
 
@@ -593,7 +603,7 @@ namespace Empiria.Land.Registration {
 
       var partyOf = Party.Parse(recordingActPartyFields.AssociatedWithUID);
 
-      var recordingActParty = this.AppendParty(party, role, partyOf);
+      var recordingActParty = this.AppendSecondaryParty(party, role, partyOf);
 
       LoadRecordingActPartyFields(recordingActParty, recordingActPartyFields);
 
@@ -618,10 +628,22 @@ namespace Empiria.Land.Registration {
       recordingActParty.Delete();
     }
 
+
+    private FixedList<RecordingActParty> GetPrimaryParties() {
+      return GetParties().FindAll(x => x.RoleType == RecordingActPartyType.Primary);
+    }
+
+
+    private FixedList<RecordingActParty> GetSecondaryParties() {
+      return GetParties().FindAll(x => x.RoleType == RecordingActPartyType.Secondary);
+    }
+
+
     private FixedList<RecordingActParty> GetSecondaryPartiesOf(Party primaryParty) {
       return this.GetParties().FindAll(x => x.RoleType == RecordingActPartyType.Secondary &&
                                        x.PartyOf.Equals(primaryParty)).ToFixedList();
     }
+
 
     private Party CreateParty(RecordingActPartyFields recordingActPartyFields) {
       Party party;
