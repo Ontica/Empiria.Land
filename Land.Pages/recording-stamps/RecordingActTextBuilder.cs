@@ -39,43 +39,46 @@ namespace Empiria.Land.Pages {
 
 
     internal string GetPartiesText() {
-      var graph = new PartiesGraph(_recordingAct);
+      var parties = _recordingAct.GetParties();
+      var primaryParties = parties.FindAll(x => x.RoleType == Registration.Adapters.RecordingActPartyType.Primary);
 
       var html = string.Empty;
 
-      foreach (PartiesGraphNode node in graph.Roots) {
-        html += GetPartyText(graph, node);
+      foreach (var primaryParty in primaryParties) {
+        html += GetPartyText(primaryParty, 1);
+
+        var secondaryParties = parties.FindAll(x => x.PartyOf.Equals(primaryParty.Party));
+
+        foreach (var secondaryParty in secondaryParties) {
+          html += GetPartyText(secondaryParty, 2);
+        }
       }
 
       return html;
     }
 
 
-    static private string GetPartyText(PartiesGraph graph, PartiesGraphNode node) {
+    static private string GetPartyText(RecordingActParty party, int level) {
       const string t = "{TAB}{PARTY-ROLE}: {PARTY-NAME} {OWNERSHIP}<br/>";
 
-      var p = Reloaders.Reload(node.RecordingActParty);
+      var p = Reloaders.Reload(party);
 
       var html = t.Replace("{PARTY-ROLE}", p.PartyRole.Name);
 
-      html = html.Replace("{TAB}", EmpiriaString.Duplicate(" &#160; &#160; &#160; ", node.Level - 1));
+      html = html.Replace("{TAB}", EmpiriaString.Duplicate(" &#160; &#160; &#160; ", level));
 
       html = html.Replace("{PARTY-NAME}", Reloaders.Reload(p.Party).FullName);
 
       if (p.OwnershipPart.Unit.IsEmptyInstance) {
         html = html.Replace("{OWNERSHIP}", string.Empty);
 
-      } else if (p.OwnershipPart.Unit == DataTypes.Unit.FullUnit ||
-                 p.OwnershipPart.Unit == DataTypes.Unit.UndividedUnit) {
+      } else if (p.OwnershipPart.Unit == Unit.FullUnit ||
+                 p.OwnershipPart.Unit == Unit.UndividedUnit) {
         html = html.Replace("{OWNERSHIP}", $"({p.OwnershipPart.Unit.Name})");
 
       } else {
         html = html.Replace("{OWNERSHIP}", $"({ToPartAmountText(p.OwnershipPart)})");
 
-      }
-
-      foreach (PartiesGraphNode child in graph.GetChildren(node)) {
-        html += GetPartyText(graph, child);
       }
 
       return html;

@@ -163,7 +163,6 @@
     <Compile Include="recording-stamps\RecordingActTextBuilder.cs" />
     <Compile Include="RootTypes\Reloaders.cs" />
     <Compile Include="recording-stamps\RecordingStampBuilder.cs" />
-    <Compile Include="recording-stamps\PartiesGraph.cs" />
     <Compile Include="recording-stamps\physical-recording.stamp.aspx.cs">
       <DependentUpon>physical-recording.stamp.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
