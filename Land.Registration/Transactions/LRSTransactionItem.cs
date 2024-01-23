@@ -37,7 +37,6 @@ namespace Empiria.Land.Registration.Transactions {
       this.TreasuryCode = treasuryCode;
       this.Quantity = quantity;
       this.OperationValue = operationValue;
-      this.CalculationRule = CalculationRule.Empty;
       this.Fee = fee;
     }
 
@@ -51,7 +50,6 @@ namespace Empiria.Land.Registration.Transactions {
       this.OperationValue = operationValue;
 
       // Derives the calculation rule from parameters and automatically calculates the right fee
-      this.CalculationRule = CalculationRule.Empty;
       this.Fee = new LRSFee();
     }
 
@@ -76,12 +74,6 @@ namespace Empiria.Land.Registration.Transactions {
 
     [DataField("TreasuryCodeId")]
     public LRSLawArticle TreasuryCode {
-      get;
-      private set;
-    }
-
-    //[DataField("CalculationRuleId")]
-    public CalculationRule CalculationRule {
       get;
       private set;
     }
@@ -119,18 +111,6 @@ namespace Empiria.Land.Registration.Transactions {
 
     [DataField("TransactionItemExtData")]
     internal JsonObject ExtensionData {
-      get;
-      private set;
-    }
-
-    //[DataField("PostingTime", Default = "DateTime.Now")]
-    public DateTime PostingTime {
-      get;
-      private set;
-    }
-
-    //[DataField("PostedById")]
-    public Contact PostedBy {
       get;
       private set;
     }
@@ -232,8 +212,6 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     protected override void OnSave() {
-      this.PostedBy = ExecutionServer.CurrentContact;
-      this.PostingTime = DateTime.Now;
       TransactionData.WriteTransactionItem(this);
 
       this.Transaction.OnRecordingActsUpdated();
