@@ -211,10 +211,8 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public PhysicalRecording AddRecording(RecordingDTO dto) {
-      Assertion.Require(dto, "dto");
-
-      this.AssertValidDTOForAppend(dto);
+    public PhysicalRecording AddBookEntry(BookEntryDto dto) {
+      Assertion.Require(dto, nameof(dto));
 
       var recording = new PhysicalRecording(dto);
 
@@ -225,61 +223,61 @@ namespace Empiria.Land.Registration {
 
 
     /// <summary>Adds a new recording to the book, creating a main empty document.</summary>
-    public PhysicalRecording AddRecording(string recordingNumber) {
+    public PhysicalRecording AddBookEntry(string recordingNumber) {
       Assertion.Require(recordingNumber, "recordingNumber");
 
       var newDocument = new RecordingDocument(RecordingDocumentType.Empty);
 
-      return new PhysicalRecording(this, newDocument, RecordingBook.FormatRecordingNumber(recordingNumber));
+      return new PhysicalRecording(this, newDocument, RecordingBook.FormatBookEntryNumber(recordingNumber));
     }
 
 
-    public PhysicalRecording AddRecording(RecordingDocument document, string recordingNumber) {
+    public PhysicalRecording AddBookEntry(RecordingDocument document, string recordingNumber) {
       Assertion.Require(document, "document");
       Assertion.Require(recordingNumber, "recordingNumber");
 
       Assertion.Require(!document.IsEmptyInstance, "document can't be the empty instance.");
       Assertion.Require(!document.IsEmptyDocumentType, "document can't be the special empty document.");
 
-      return new PhysicalRecording(this, document, RecordingBook.FormatRecordingNumber(recordingNumber));
+      return new PhysicalRecording(this, document, RecordingBook.FormatBookEntryNumber(recordingNumber));
     }
 
 
-    public PhysicalRecording CreateNextRecording(RecordingDocument document) {
+    public PhysicalRecording CreateNextBookEntry(RecordingDocument document) {
       Assertion.Require(document, "document");
       Assertion.Require(document.SheetsCount > 0, "Document field SheetsCount must be greater than zero.");
 
       int recordingNumber = RecordingBooksData.GetNextRecordingNumberWithNoReuse(this);
 
-      return new PhysicalRecording(this, document, RecordingBook.FormatRecordingNumber(recordingNumber));
+      return new PhysicalRecording(this, document, RecordingBook.FormatBookEntryNumber(recordingNumber));
     }
 
 
-    public bool ExistsRecording(string recordingNumber) {
-      string recordingNo = RecordingBook.FormatRecordingNumber(recordingNumber);
+    public bool ExistsBookEntry(string bookEntryNumber) {
+      string recordingNo = RecordingBook.FormatBookEntryNumber(bookEntryNumber);
 
       return Recordings.Contains((x) => x.Number == recordingNo);
     }
 
 
-    public PhysicalRecording TryGetRecording(string recordingNumber) {
-      string recordingNo = RecordingBook.FormatRecordingNumber(recordingNumber);
+    public PhysicalRecording TryGetBookEntry(string bookEntryNumber) {
+      string recordingNo = RecordingBook.FormatBookEntryNumber(bookEntryNumber);
 
       return Recordings.Find((x) => x.Number == recordingNo);
     }
 
 
-    static public string FormatRecordingNumber(int recordingNumber) {
-      return recordingNumber.ToString("0000");
+    static public string FormatBookEntryNumber(int bookEntryNumber) {
+      return bookEntryNumber.ToString("0000");
     }
 
 
-    static public string FormatRecordingNumber(string recordingNumber) {
+    static public string FormatBookEntryNumber(string bookEntryNumber) {
       try {
-        recordingNumber = recordingNumber.Replace(" ", String.Empty);
-        recordingNumber = recordingNumber.Replace("-", "/");
+        bookEntryNumber = bookEntryNumber.Replace(" ", String.Empty);
+        bookEntryNumber = bookEntryNumber.Replace("-", "/");
 
-        string[] parts = recordingNumber.Split('/');
+        string[] parts = bookEntryNumber.Split('/');
 
         string temp = int.Parse(parts[0]).ToString("0000");
         for (int i = 1; i <= parts.Length - 2; i++) {
@@ -294,8 +292,8 @@ namespace Empiria.Land.Registration {
         }
         return temp;
       } catch {
-        throw new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingNumber,
-                                            recordingNumber);
+        throw new LandRegistrationException(LandRegistrationException.Msg.InvalidBookEntryNumber,
+                                            bookEntryNumber);
       }
     }
 
@@ -448,10 +446,6 @@ namespace Empiria.Land.Registration {
     #endregion Workflow data and methods
 
     #region Private methods
-
-    private void AssertValidDTOForAppend(RecordingDTO dto) {
-      //throw new NotImplementedException();
-    }
 
     private int CalculateTotalSheets() {
       return RecordingBooksData.GetBookTotalSheets(this);

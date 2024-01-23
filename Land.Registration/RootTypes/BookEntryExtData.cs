@@ -1,11 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : RecordingExtData                               Pattern  : IExtensibleData class               *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Land Registration                            Component : Domain Layer                          *
+*  Assembly : Empiria.Land.Registration.dll                Pattern   : Extended object data holder           *
+*  Type     : BookEntryExtData                             License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Holds extended data for physical recordings.                                                  *
+*  Summary  : Holds extended data for physical book entries.                                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -15,29 +14,29 @@ using Empiria.Json;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Holds extended data for physical recordings.</summary>
-  public class RecordingExtData {
+  /// <summary>Holds extended data for physical book entries.</summary>
+  public class BookEntryExtData {
 
     #region Constructors and parsers
 
-    static internal RecordingExtData Parse(string jsonString) {
+    static internal BookEntryExtData Parse(string jsonString) {
       if (String.IsNullOrWhiteSpace(jsonString)) {
-        return RecordingExtData.Empty;
+        return BookEntryExtData.Empty;
       }
 
       var json = JsonConverter.ToJsonObject(jsonString);
 
-      var data = new RecordingExtData();
+      var data = new BookEntryExtData();
 
       data.LoadJson(json);
 
       return data;
     }
 
-    static private readonly RecordingExtData _empty =
-                          new RecordingExtData() { IsEmptyInstance = true };
+    static private readonly BookEntryExtData _empty =
+                          new BookEntryExtData() { IsEmptyInstance = true };
 
-    static public RecordingExtData Empty {
+    static public BookEntryExtData Empty {
       get {
         return _empty;
       }
@@ -117,6 +116,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Methods
 
-  }  // class RecordingExtData
+  }  // class BookEntryExtData
 
 }  // namespace Empiria.Land.Registration

@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration.Adapters {
       internal set;
     }
 
-    public FixedList<BookEntryDto> BookEntries {
+    public FixedList<BookEntryOutputDto> BookEntries {
       get;
       internal set;
     }

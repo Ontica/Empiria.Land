@@ -30,10 +30,10 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    static internal FixedList<BookEntryDto> MapBookEntriesListDto(FixedList<PhysicalRecording> list) {
+    static internal FixedList<BookEntryOutputDto> MapBookEntriesListDto(FixedList<PhysicalRecording> list) {
       var mappedItems = list.Select((x) => MapBookEntry(x));
 
-      return new FixedList<BookEntryDto>(mappedItems);
+      return new FixedList<BookEntryOutputDto>(mappedItems);
     }
 
 
@@ -47,8 +47,8 @@ namespace Empiria.Land.Registration.Adapters {
 
     #region Helper methods
 
-    static private BookEntryDto MapBookEntry(PhysicalRecording bookEntry) {
-      var dto = new BookEntryDto();
+    static private BookEntryOutputDto MapBookEntry(PhysicalRecording bookEntry) {
+      var dto = new BookEntryOutputDto();
 
       dto.UID = bookEntry.UID;
       dto.RecordingBookUID = bookEntry.RecordingBook.UID;

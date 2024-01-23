@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration {
       Assertion.Require(book.IsAvailableForManualEditing,
           $"El {book.AsText} está cerrado, por lo que no es posible agregarle nuevas inscripciones.");
 
-      if (book.ExistsRecording(bookEntryNo)) {
+      if (book.ExistsBookEntry(bookEntryNo)) {
         Assertion.RequireFail(
           "La partida indicada ya existe en el libro seleccionado,\n" +
           "y no es posible generar más de un folio de predio\n" +
@@ -59,7 +59,7 @@ namespace Empiria.Land.Registration {
 
       document.Save();
 
-      PhysicalRecording bookEntry = book.AddRecording(document, bookEntryNo);
+      PhysicalRecording bookEntry = book.AddBookEntry(document, bookEntryNo);
 
       bookEntry.Save();
 

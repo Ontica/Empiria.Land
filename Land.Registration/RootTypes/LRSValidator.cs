@@ -67,7 +67,7 @@ namespace Empiria.Land.Registration {
 
     static public LandRegistrationException ValidateRecordingNumber(RecordingBook recordingBook, PhysicalRecording recording,
                                                                     string recordingNumberToValidate) {
-      string recordingNo = RecordingBook.FormatRecordingNumber(recordingNumberToValidate);
+      string recordingNo = RecordingBook.FormatBookEntryNumber(recordingNumberToValidate);
       string filter = "PhysicalRecordingId <> " + recording.Id + " AND RecordingNo = '" + recordingNo + "'";
       PhysicalRecording findResult = RecordingBooksData.FindRecording(recordingBook, filter);
 
@@ -81,12 +81,12 @@ namespace Empiria.Land.Registration {
     static public LandRegistrationException ValidateRecordingDates(RecordingBook recordingBook, PhysicalRecording recording,
                                                                    DateTime presentationTime, DateTime authorizationDate) {
       if (!recordingBook.RecordingsControlTimePeriod.Includes(presentationTime)) {
-        return new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingPresentationTime,
+        return new LandRegistrationException(LandRegistrationException.Msg.InvalidBookEntryPresentationTime,
                                              recordingBook.RecordingsControlTimePeriod.StartTime.ToString("dd/MMM/yyyy"),
                                              recordingBook.RecordingsControlTimePeriod.EndTime.ToString("dd/MMM/yyyy"), recordingBook.AsText);
       }
       if (!recordingBook.RecordingsControlTimePeriod.Includes(authorizationDate)) {
-        return new LandRegistrationException(LandRegistrationException.Msg.InvalidRecordingAuthorizationDate,
+        return new LandRegistrationException(LandRegistrationException.Msg.InvalidBookEntryAuthorizationDate,
                                              recordingBook.RecordingsControlTimePeriod.StartTime.ToString("dd/MMM/yyyy"),
                                              recordingBook.RecordingsControlTimePeriod.EndTime.ToString("dd/MMM/yyyy"), recordingBook.AsText);
       }

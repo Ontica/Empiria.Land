@@ -50,9 +50,9 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    internal RecordingDTO MapToRecordingDTO(RecordingBook book,
+    internal BookEntryDto MapToBookEntryDto(RecordingBook book,
                                             RecordingDocument mainDocument) {
-      var dto = new RecordingDTO(book, this.RecordingNo);
+      var dto = new BookEntryDto(book, this.RecordingNo);
 
       dto.MainDocument = mainDocument;
       dto.PresentationTime = this.PresentationTime;
@@ -108,9 +108,9 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    internal RecordingDTO MapToRecordingDTO(RecordingBook book,
+    internal BookEntryDto MapToBookEntryDto(RecordingBook book,
                                             RecordingDocument mainDocument) {
-      var dto = new RecordingDTO(book, this.BookEntry.RecordingNo);
+      var dto = new BookEntryDto(book, this.BookEntry.RecordingNo);
 
       dto.MainDocument = mainDocument;
       dto.PresentationTime = this.BookEntry.PresentationTime;

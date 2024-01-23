@@ -1,11 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : Recording                                      Pattern  : Data Transfer Object                *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Land Registration                            Component : Interface adapters                    *
+*  Assembly : Empiria.Land.Registration.dll                Pattern   : Data Transfer Object                  *
+*  Type     : BookEntryDto                                 License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : DTO that holds data used to edit recording books with physical recording entries.             *
+*  Summary  : DTO that holds data about a physical book recording entry.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,14 +12,14 @@ using Empiria.Contacts;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>DTO that holds data used to edit recording books with physical recording entries.</summary>
-  public class RecordingDTO {
+  /// <summary>DTO that holds data about a physical book recording entry.</summary>
+  public class BookEntryDto {
 
     #region Constructors and parsers
 
-    public RecordingDTO(RecordingBook book, string number) {
+    public BookEntryDto(RecordingBook book, string number) {
       this.RecordingBook = book;
-      this.Number = RecordingBook.FormatRecordingNumber(number);
+      this.Number = RecordingBook.FormatBookEntryNumber(number);
     }
 
     #endregion Constructors and parsers
@@ -79,6 +78,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Public properties
 
-  } // class RecordingDTO
+  } // class BookEntryDto
 
 } // namespace Empiria.Land.Registration

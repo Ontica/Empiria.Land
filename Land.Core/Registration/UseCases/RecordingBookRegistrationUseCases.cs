@@ -103,7 +103,7 @@ namespace Empiria.Land.Registration.UseCases {
           $"The selected book '{recordingBook.AsText}' is not available for manual editing." +
           "It is not possible to add it a new book entry.");
 
-      Assertion.Require(!recordingBook.ExistsRecording(fields.BookEntry.RecordingNo),
+      Assertion.Require(!recordingBook.ExistsBookEntry(fields.BookEntry.RecordingNo),
                        $"There is a book entry with the same number {fields.BookEntry.RecordingNo}");
 
       var instrumentType = InstrumentType.Parse(fields.Instrument.Type.Value);
@@ -117,9 +117,9 @@ namespace Empiria.Land.Registration.UseCases {
 
       var document = instrument.TryGetRecordingDocument();
 
-      RecordingDTO recordingDTO = fields.MapToRecordingDTO(recordingBook, document);
+      BookEntryDto bookEntryDto = fields.MapToBookEntryDto(recordingBook, document);
 
-      recordingBook.AddRecording(recordingDTO);
+      recordingBook.AddBookEntry(bookEntryDto);
 
       document.Save();
 
@@ -144,7 +144,7 @@ namespace Empiria.Land.Registration.UseCases {
       var book = RecordingBook.GetAssignedBookForRecording(office, section,
                                                            instrument.SheetsCount);
 
-      var nextBookEntry = book.CreateNextRecording(instrumentRecording);
+      var nextBookEntry = book.CreateNextBookEntry(instrumentRecording);
 
       nextBookEntry.Save();
 
@@ -259,7 +259,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var bookEntry = PhysicalRecording.Parse(bookEntryUID);
 
-      bookEntry.Update(fields.BookEntry.MapToRecordingDTO(bookEntry.RecordingBook,
+      bookEntry.Update(fields.BookEntry.MapToBookEntryDto(bookEntry.RecordingBook,
                        bookEntry.MainDocument));
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);

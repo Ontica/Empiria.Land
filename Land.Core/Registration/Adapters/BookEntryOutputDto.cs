@@ -1,8 +1,8 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Registration Services                      Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
-*  Type     : BookEntryDto                               License   : Please read LICENSE.txt file            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Output Data Transfer Object             *
+*  Type     : BookEntryOutputDto                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTOs with book entry data (physical books entries).                                     *
 *                                                                                                            *
@@ -16,7 +16,7 @@ using Empiria.Land.Media.Adapters;
 namespace Empiria.Land.Registration.Adapters {
 
   /// <summary>Output DTO for a book entry (physical book recording).</summary>
-  public class BookEntryDto {
+  public class BookEntryOutputDto {
 
     public string UID {
       get; internal set;
@@ -93,7 +93,7 @@ namespace Empiria.Land.Registration.Adapters {
     } = MediaData.Empty;
 
 
-  }  // class BookEntryDto
+  }  // class BookEntryOutputDto
 
 
 

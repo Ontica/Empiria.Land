@@ -141,7 +141,7 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
       var book = RecordingBook.Parse(command.Payload.RecordingBookUID);
 
-      PhysicalRecording bookEntry = book.TryGetRecording(bookEntryNo);
+      PhysicalRecording bookEntry = book.TryGetBookEntry(bookEntryNo);
 
       if (bookEntry == null) {
         bookEntry = RegistrationEngine.CreatePrecedentBookEntry(book, bookEntryNo,

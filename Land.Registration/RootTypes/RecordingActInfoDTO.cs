@@ -42,7 +42,7 @@ namespace Empiria.Land.Registration {
       if (physicalRecordingId != -1) {
         this.PhysicalRecording = PhysicalRecording.Parse(physicalRecordingId);
       } else if (recordingNumber != String.Empty) {
-        this.PhysicalRecording = this.PhysicalBook.AddRecording(recordingNumber);
+        this.PhysicalRecording = this.PhysicalBook.AddBookEntry(recordingNumber);
         this.PhysicalRecordingWasCreated = true;
       } else {
         this.PhysicalRecording = PhysicalRecording.Empty;

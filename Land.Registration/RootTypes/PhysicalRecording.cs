@@ -31,6 +31,7 @@ namespace Empiria.Land.Registration {
 
     private PhysicalRecording() {
       // Required by Empiria Framework.
+      recordingActList = GetNewRecordingActListLazyInstance();
     }
 
     internal PhysicalRecording(RecordingBook recordingBook,
@@ -45,15 +46,17 @@ namespace Empiria.Land.Registration {
       this.RecordingBook = recordingBook;
       this.MainDocument = mainDocument;
       this.Number = recordingNumber;
+      recordingActList = GetNewRecordingActListLazyInstance();
     }
 
-    internal PhysicalRecording(RecordingDTO dto) : this(dto?.RecordingBook, dto?.MainDocument, dto?.Number) {
+    internal PhysicalRecording(BookEntryDto dto) : this(dto?.RecordingBook, dto?.MainDocument, dto?.Number) {
       LoadData(dto);
+      recordingActList = GetNewRecordingActListLazyInstance();
     }
 
     protected override void OnLoadObjectData(DataRow row) {
       recordingActList = GetNewRecordingActListLazyInstance();
-      this.ExtendedData = RecordingExtData.Parse((string) row["RecordingExtData"]);
+      this.ExtendedData = BookEntryExtData.Parse((string) row["RecordingExtData"]);
     }
 
 
@@ -122,10 +125,10 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    internal RecordingExtData ExtendedData {
+    internal BookEntryExtData ExtendedData {
       get;
       private set;
-    } = new RecordingExtData();
+    } = new BookEntryExtData();
 
     public int StartImageIndex {
       get {
@@ -312,7 +315,7 @@ namespace Empiria.Land.Registration {
       this.recordingActList = GetNewRecordingActListLazyInstance();
     }
 
-    public void Update(RecordingDTO data) {
+    public void Update(BookEntryDto data) {
       this.LoadData(data);
       data.MainDocument.Save();
       this.Save();
@@ -351,7 +354,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    private void LoadData(RecordingDTO dto) {
+    private void LoadData(BookEntryDto dto) {
       if (this.IsNew) {
         this.MainDocument = dto.MainDocument;
       }
