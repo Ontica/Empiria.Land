@@ -10,7 +10,7 @@
 namespace Empiria.Land.Pages {
 
 
-  public partial class PhysicalRecordingStamp {
+  public partial class BookEntryRegistrationStamp {
 
     /// <summary>
     /// Head1 control.

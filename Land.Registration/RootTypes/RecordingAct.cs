@@ -47,35 +47,34 @@ namespace Empiria.Land.Registration {
 
 
     protected RecordingAct(RecordingActType recordingActType, RecordingDocument document,
-                           PhysicalRecording physicalRecording) : base(recordingActType) {
-      Assertion.Require(recordingActType, "recordingActType");
-      Assertion.Require(document, "document");
-      Assertion.Require(physicalRecording, "physicalRecording");
+                           BookEntry bookEntry) : base(recordingActType) {
+      Assertion.Require(recordingActType, nameof(recordingActType));
+      Assertion.Require(document, nameof(document));
+      Assertion.Require(bookEntry, nameof(bookEntry));
 
       Assertion.Require(!document.IsEmptyInstance, "document can't be the empty instance.");
 
       this.Document = document;
-      this.PhysicalRecording = physicalRecording;
-
+      this.BookEntry = bookEntry;
     }
 
 
     static internal RecordingAct Create(RecordingActType recordingActType,
                                         RecordingDocument document, Resource resource,
                                         RecordingAct amendmentOf, int index,
-                                        PhysicalRecording physicalRecording) {
-      Assertion.Require(recordingActType, "recordingActType");
-      Assertion.Require(document, "document");
-      Assertion.Require(resource, "resource");
-      Assertion.Require(amendmentOf, "amendmentOf");
-      Assertion.Require(physicalRecording, "physicalRecording");
+                                        BookEntry bookEntry) {
+      Assertion.Require(recordingActType, nameof(recordingActType));
+      Assertion.Require(document, nameof(document));
+      Assertion.Require(resource, nameof(resource));
+      Assertion.Require(amendmentOf, nameof(amendmentOf));
+      Assertion.Require(bookEntry, nameof(bookEntry));
 
       Assertion.Require(!document.IsEmptyInstance, "document can't be the empty instance.");
       Assertion.Require(!document.IsNew, "document can't be a new instance.");
       Assertion.Require(!amendmentOf.IsNew, "amendmentOf can't be a new instance.");
 
       RecordingAct recordingAct = recordingActType.CreateInstance();
-      recordingAct.PhysicalRecording = physicalRecording;
+      recordingAct.BookEntry = bookEntry;
       recordingAct.Index = index;
       recordingAct.Document = document;
       recordingAct.AmendmentOf = amendmentOf;
@@ -87,8 +86,8 @@ namespace Empiria.Land.Registration {
 
       recordingAct.Status = RecordableObjectStatus.Pending;
 
-      if (physicalRecording.IsNew) {
-        physicalRecording.Save();
+      if (bookEntry.IsNew) {
+        bookEntry.Save();
       }
       recordingAct.Save();
 
@@ -157,20 +156,20 @@ namespace Empiria.Land.Registration {
 
 
     [DataField("PhysicalRecordingId")]
-    private LazyInstance<PhysicalRecording> _physicalRecording = LazyInstance<PhysicalRecording>.Empty;
-    public PhysicalRecording PhysicalRecording {
+    private LazyInstance<BookEntry> _bookEntry = LazyInstance<BookEntry>.Empty;
+    public BookEntry BookEntry {
       get {
-        return _physicalRecording.Value;
+        return _bookEntry.Value;
       }
       private set {
-        _physicalRecording = LazyInstance<PhysicalRecording>.Parse(value);
+        _bookEntry = LazyInstance<BookEntry>.Parse(value);
       }
     }
 
 
-    public bool HasPhysicalRecording {
+    public bool HasBookEntry {
       get {
-        return !this.PhysicalRecording.IsEmptyInstance;
+        return !this.BookEntry.IsEmptyInstance;
       }
     }
 
@@ -304,8 +303,8 @@ namespace Empiria.Land.Registration {
     internal protected virtual string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName, this.Document.UID,
-                                           !this.PhysicalRecording.IsEmptyInstance ?
-                                           this.PhysicalRecording.AsText : String.Empty,
+                                           !this.BookEntry.IsEmptyInstance ?
+                                           this.BookEntry.AsText : String.Empty,
                                            this.Resource.Keywords);
       }
     }
@@ -402,7 +401,7 @@ namespace Empiria.Land.Registration {
 
     public bool IsHistoric {
       get {
-        return !this.PhysicalRecording.IsEmptyInstance;
+        return !this.BookEntry.IsEmptyInstance;
       }
     }
 
@@ -439,7 +438,7 @@ namespace Empiria.Land.Registration {
           1, "Id", this.Id, "RecordingActType", this.RecordingActType.Id,
           "Document", this.Document.Id, "Index", this.Index, "Notes", this.Notes,
           "ExtensionData", this.ExtensionData.ToString(), "AmendmentOf", this.AmendmentOf.Id,
-          "AmendedBy", this.AmendedBy.Id, "Recording", this.PhysicalRecording.Id,
+          "AmendedBy", this.AmendedBy.Id, "BookEntry", this.BookEntry.Id,
           "RegisteredBy", this.RegisteredBy.Id, "RegistrationTime", this.RegistrationTime,
           "Status", (char) this.Status
         };
@@ -680,8 +679,8 @@ namespace Empiria.Land.Registration {
                          " sólo puede aplicarse al folio real de un predio o asociación.");
       }
 
-      if (!this.PhysicalRecording.IsEmptyInstance) {
-        this.PhysicalRecording.AssertCanBeClosed();
+      if (!this.BookEntry.IsEmptyInstance) {
+        this.BookEntry.AssertCanBeClosed();
       }
 
       this.Resource.AssertIsStillAlive(this.Document);
@@ -781,7 +780,7 @@ namespace Empiria.Land.Registration {
     }
 
     internal void Delete() {
-      if (this.PhysicalRecording.Status == RecordableObjectStatus.Closed) {
+      if (this.BookEntry.Status == RecordableObjectStatus.Closed) {
         throw new LandRegistrationException(
                       LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
       }
@@ -831,8 +830,8 @@ namespace Empiria.Land.Registration {
         if (antecedent.IsEmptyInstance) {
           return String.Empty;
 
-        } else if (!antecedent.PhysicalRecording.IsEmptyInstance) {
-          return antecedent.PhysicalRecording.AsText;
+        } else if (!antecedent.BookEntry.IsEmptyInstance) {
+          return antecedent.BookEntry.AsText;
 
         } else if (!antecedent.Document.Equals(this.Document)) {
           return antecedent.Document.UID;
@@ -844,8 +843,8 @@ namespace Empiria.Land.Registration {
         if (antecedent2.IsEmptyInstance) {
           return "En este mismo documento";
 
-        } else if (!antecedent2.PhysicalRecording.IsEmptyInstance) {
-          return antecedent2.PhysicalRecording.AsText;
+        } else if (!antecedent2.BookEntry.IsEmptyInstance) {
+          return antecedent2.BookEntry.AsText;
 
         } else {
           return antecedent.Document.UID;
@@ -859,7 +858,7 @@ namespace Empiria.Land.Registration {
         if (amendedAct.IsEmptyInstance) {
           return this.GetRecordingAntecedent().Document.UID;
 
-        } else if (amendedAct.PhysicalRecording.IsEmptyInstance) {
+        } else if (amendedAct.BookEntry.IsEmptyInstance) {
           return amendedAct.RecordingActType.DisplayName +
                  (amendedAct.RecordingActType.FemaleGenre ?
                                               " registrada en " : " registrado en ") +
@@ -869,7 +868,7 @@ namespace Empiria.Land.Registration {
           return amendedAct.RecordingActType.DisplayName +
                  (amendedAct.RecordingActType.FemaleGenre ?
                                               " registrada en " : " registrado en ") +
-                 amendedAct.PhysicalRecording.AsText;
+                 amendedAct.BookEntry.AsText;
         }
       }  // GetAmendedItemCell()
 
@@ -921,8 +920,8 @@ namespace Empiria.Land.Registration {
     protected override void OnSave() {
       // Writes any change to the document and to the related physical recording
       this.Document.Save();
-      if (this.PhysicalRecording.IsNew) {
-        this.PhysicalRecording.Save();
+      if (this.BookEntry.IsNew) {
+        this.BookEntry.Save();
       }
       if (this.Resource.IsNew) {
         this.Resource.Save();
@@ -935,11 +934,6 @@ namespace Empiria.Land.Registration {
       RecordingActsData.WriteRecordingAct(this);
     }
 
-    public void SetAsMarginalNote(DateTime date, string marginalNote) {
-      Assertion.Require(!this.PhysicalRecording.IsEmptyInstance,
-                      "Marginal notes can be only set over acts belonging to physical recordings.");
-
-    }
 
     public void SetExtensionData(RecordingActExtData updatedData) {
       Assertion.Require(updatedData != null && !updatedData.IsEmptyInstance,
@@ -949,10 +943,10 @@ namespace Empiria.Land.Registration {
     }
 
 
-    internal void SetPhysicalRecording(PhysicalRecording bookEntry) {
+    internal void SetBookEntry(BookEntry bookEntry) {
       Assertion.Require(bookEntry, nameof(bookEntry));
 
-      this.PhysicalRecording = bookEntry;
+      this.BookEntry = bookEntry;
 
       this.Save();
     }

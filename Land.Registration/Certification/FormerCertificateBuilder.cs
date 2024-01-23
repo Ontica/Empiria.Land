@@ -50,7 +50,7 @@ namespace Empiria.Land.Certification {
 
       var o = this.Certificate;
 
-      template.Replace("{{DOCUMENT.OR.PHYSICAL.RECORDING}}", this.GetDocumentOrPhysicalRecording());
+      template.Replace("{{DOCUMENT.OR.PHYSICAL.RECORDING}}", this.GetDocumentOrBookEntry());
 
       template.Replace("{{SOLICITANTE}}", o.ExtensionData.SeekForName.ToUpperInvariant());
       template.Replace("{{DISTRITO}}", o.RecorderOffice.ShortName);
@@ -103,7 +103,7 @@ namespace Empiria.Land.Certification {
       }
     }
 
-    private string GetDocumentOrPhysicalRecording() {
+    private string GetDocumentOrBookEntry() {
       var antecedent = this.Certificate.Property.Tract.GetRecordingAntecedent();
 
       if (antecedent.Equals(RecordingAct.Empty)) {
@@ -111,23 +111,23 @@ namespace Empiria.Land.Certification {
                          "FAVOR DE REVISAR EL FOLIO DEL PREDIO. " +
                          "ES POSIBLE QUE EL CERTIFICADO NO DEBA SER EMITIDO");
       }
-      if (antecedent.PhysicalRecording.IsEmptyInstance) {
+      if (antecedent.BookEntry.IsEmptyInstance) {
         return this.GetPhysicalDocument(antecedent.Document);
       } else {
-        return this.GetPhysicalRecording(antecedent.PhysicalRecording);
+        return this.GetBookEntry(antecedent.BookEntry);
       }
     }
 
-    private string GetPhysicalRecording(PhysicalRecording physicalRecording) {
+    private string GetBookEntry(BookEntry bookEntry) {
       const string template =
               "Que bajo la partida {{NUMBER}} de la Sección {{SECTION}} Volumen {{BOOK}} " +
               "del Distrito Judicial de {{DISTRICT}} de fecha {{DATE}}";
       var text = new StringBuilder(template);
 
-      text.Replace("{{NUMBER}}", physicalRecording.Number);
-      text.Replace("{{SECTION}}", physicalRecording.RecordingBook.RecordingSection.Name);
-      text.Replace("{{BOOK}}", physicalRecording.RecordingBook.BookNumber);
-      text.Replace("{{DISTRICT}}", physicalRecording.RecordingBook.RecorderOffice.ShortName);
+      text.Replace("{{NUMBER}}", bookEntry.Number);
+      text.Replace("{{SECTION}}", bookEntry.RecordingBook.RecordingSection.Name);
+      text.Replace("{{BOOK}}", bookEntry.RecordingBook.BookNumber);
+      text.Replace("{{DISTRICT}}", bookEntry.RecordingBook.RecorderOffice.ShortName);
       text.Replace("{{DATE}}",
                     this.Certificate.ExtensionData.OperationDate.ToString("dd \\de MMMM \\de yyyy"));
 

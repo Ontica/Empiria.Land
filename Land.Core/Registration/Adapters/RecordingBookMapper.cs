@@ -25,19 +25,19 @@ namespace Empiria.Land.Registration.Adapters {
         RecorderOffice = book.RecorderOffice.MapToNamedEntity(),
         RecordingSection = book.RecordingSection.MapToNamedEntity(),
         Status = book.Status,
-        BookEntries = MapBookEntriesListDto(book.Recordings)
+        BookEntries = MapBookEntriesListDto(book.BookEntries)
       };
     }
 
 
-    static internal FixedList<BookEntryOutputDto> MapBookEntriesListDto(FixedList<PhysicalRecording> list) {
+    static internal FixedList<BookEntryOutputDto> MapBookEntriesListDto(FixedList<BookEntry> list) {
       var mappedItems = list.Select((x) => MapBookEntry(x));
 
       return new FixedList<BookEntryOutputDto>(mappedItems);
     }
 
 
-    static internal FixedList<BookEntryShortDto> MapBookEntriesListShortDto(FixedList<PhysicalRecording> list) {
+    static internal FixedList<BookEntryShortDto> MapBookEntriesListShortDto(FixedList<BookEntry> list) {
       var mappedItems = list.Select((x) => MapBookEntryToShortDto(x));
 
       return new FixedList<BookEntryShortDto>(mappedItems);
@@ -47,7 +47,7 @@ namespace Empiria.Land.Registration.Adapters {
 
     #region Helper methods
 
-    static private BookEntryOutputDto MapBookEntry(PhysicalRecording bookEntry) {
+    static private BookEntryOutputDto MapBookEntry(BookEntry bookEntry) {
       var dto = new BookEntryOutputDto();
 
       dto.UID = bookEntry.UID;
@@ -75,7 +75,7 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    static private FixedList<LandMediaFileDto> MapBookEntryMediaFiles(PhysicalRecording bookEntry) {
+    static private FixedList<LandMediaFileDto> MapBookEntryMediaFiles(BookEntry bookEntry) {
       var mediaBuilder = new LandMediaBuilder();
 
       var files = mediaBuilder.GetLandMediaPostings(LandMediaContent.BookEntryMediaFiles, bookEntry);
@@ -85,7 +85,7 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    static private BookEntryShortDto MapBookEntryToShortDto(PhysicalRecording bookEntry) {
+    static private BookEntryShortDto MapBookEntryToShortDto(BookEntry bookEntry) {
       return new BookEntryShortDto {
         UID = bookEntry.UID,
         RecordingNo = bookEntry.Number,

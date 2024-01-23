@@ -22,11 +22,11 @@ namespace Empiria.Land.Data {
 
     #region Public methods
 
-    static public FixedList<RecordingAct> GetPhysicalRecordingRecordedActs(PhysicalRecording recording) {
-      if (recording.IsEmptyInstance) {
+    static public FixedList<RecordingAct> GetBookEntryRecordedActs(BookEntry bookEntry) {
+      if (bookEntry.IsEmptyInstance) {
         return new FixedList<RecordingAct>();
       }
-      var operation = DataOperation.Parse("qryLRSPhysicalRecordingRecordedActs", recording.Id);
+      var operation = DataOperation.Parse("qryLRSPhysicalRecordingRecordedActs", bookEntry.Id);
 
       return DataReader.GetFixedList<RecordingAct>(operation);
     }
@@ -38,10 +38,8 @@ namespace Empiria.Land.Data {
       }
 
       string sql = "SELECT * FROM LRSRecordingActs " +
-                   "WHERE DocumentId = {0} AND RecordingActStatus <> 'X' " +
+                   $"WHERE DocumentId = {document.Id} AND RecordingActStatus <> 'X' " +
                    "ORDER BY RecordingActIndex, RegistrationTime";
-
-      sql = String.Format(sql, document.Id);
 
       var operation = DataOperation.Parse(sql);
 
@@ -70,7 +68,7 @@ namespace Empiria.Land.Data {
                       o.Resource.Id, (char) o.ResourceRole, o.RelatedResource.Id, o.Percentage,
                       o.Kind, o.OperationAmount, o.OperationCurrency.Id, o.Summary,
                       o.Notes, /* o.ResourceExtData, */ o.ExtensionData.ToString(), o.Keywords,
-                      o.AmendmentOf.Id, o.AmendedBy.Id, o.PhysicalRecording.Id,
+                      o.AmendmentOf.Id, o.AmendedBy.Id, o.BookEntry.Id,
                       o.RegisteredBy.Id, o.RegistrationTime, (char) o.Status, o.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(op);

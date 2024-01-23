@@ -23,7 +23,7 @@ namespace Empiria.Land.Registration {
 
     private readonly RecordingDocument _document;
     private readonly Instrument _instrument;
-    private readonly PhysicalRecording _bookEntry;
+    private readonly BookEntry _bookEntry;
     private readonly LRSTransaction _transaction;
 
     #endregion Fields
@@ -63,7 +63,7 @@ namespace Empiria.Land.Registration {
 
     public bool HasBookEntry => !_bookEntry.IsEmptyInstance;
 
-    public PhysicalRecording BookEntry => _bookEntry;
+    public BookEntry BookEntry => _bookEntry;
 
     public bool HasTransaction => !_transaction.IsEmptyInstance;
 
@@ -73,11 +73,11 @@ namespace Empiria.Land.Registration {
 
     #region Methods
 
-    static private PhysicalRecording LoadBookEntry(RecordingDocument document) {
-      PhysicalRecording bookEntry = document.TryGetHistoricRecording();
+    static private BookEntry LoadBookEntry(RecordingDocument document) {
+      BookEntry bookEntry = document.TryGetBookEntry();
 
       if (bookEntry == null) {
-        return PhysicalRecording.Empty;
+        return BookEntry.Empty;
       }
 
       return bookEntry;

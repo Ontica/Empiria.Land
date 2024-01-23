@@ -28,8 +28,8 @@ namespace Empiria.Land.Registration {
     }
 
     internal DomainAct(RecordingActType recordingActType, RecordingDocument document,
-                       RealEstate property, PhysicalRecording physicalRecording,
-                       decimal percentage = decimal.One) : base(recordingActType, document, physicalRecording) {
+                       RealEstate property, BookEntry bookEntry,
+                       decimal percentage = decimal.One) : base(recordingActType, document, bookEntry) {
       this.AttachRealEstate(property, percentage);
     }
 

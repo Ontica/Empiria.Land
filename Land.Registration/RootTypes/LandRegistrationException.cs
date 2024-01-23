@@ -23,6 +23,8 @@ namespace Empiria.Land.Registration {
       AnnotationNotBelongsToRecording,
       AskIfAppendPropertyToExistingAnnotation,
       AttachmentFolderNotFound,
+      BookEntryNotBelongsToRecordingBook,
+      BookEntryNumberAlreadyExists,
       CantAlterAnnotationOnClosedRecording,
       CantAlterClosedAnnotation,
       CantAlterClosedRecordingAct,
@@ -54,8 +56,6 @@ namespace Empiria.Land.Registration {
       RecordingActNotBelongsToRecording,
       RecordingActWithOnlyOneOwnerParty,
       RecordingActWithoutOwnerParties,
-      RecordingNotBelongsToRecordingBook,
-      RecordingNumberAlreadyExists,
       UnrecognizedRecordingBookType,
       VolumeRecordingBooksCantHaveChilds,
     }

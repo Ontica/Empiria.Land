@@ -127,7 +127,7 @@ namespace Empiria.Land.Media {
 
 
     [DataField("BookEntryId")]
-    internal PhysicalRecording BookEntry {
+    internal BookEntry BookEntry {
       get;
       private set;
     }

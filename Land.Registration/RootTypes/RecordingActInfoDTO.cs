@@ -33,27 +33,31 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public RecordingActInfoDTO(int recordingActTypeId, int physicalBookId,
-                               int physicalRecordingId = -1, string recordingNumber = "") {
+    public RecordingActInfoDTO(int recordingActTypeId, int recordingBookId,
+                               int bookEntryId = -1, string bookEntryNumber = "") {
       Initialize();
-      this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
-      this.PhysicalBook = RecordingBook.Parse(physicalBookId);
 
-      if (physicalRecordingId != -1) {
-        this.PhysicalRecording = PhysicalRecording.Parse(physicalRecordingId);
-      } else if (recordingNumber != String.Empty) {
-        this.PhysicalRecording = this.PhysicalBook.AddBookEntry(recordingNumber);
-        this.PhysicalRecordingWasCreated = true;
+      this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
+      this.RecordingBook = RecordingBook.Parse(recordingBookId);
+
+      if (bookEntryId != -1) {
+        this.BookEntry = BookEntry.Parse(bookEntryId);
+
+      } else if (bookEntryNumber != String.Empty) {
+        this.BookEntry = this.RecordingBook.AddBookEntry(bookEntryNumber);
+        this.BookEntryWasCreated = true;
+
       } else {
-        this.PhysicalRecording = PhysicalRecording.Empty;
+        this.BookEntry = BookEntry.Empty;
+
       }
     }
 
     private void Initialize() {
       this.RecordingActId = -1;
       this.RecordingActType = RecordingActType.Empty;
-      this.PhysicalBook = RecordingBook.Empty;
-      this.PhysicalRecording = PhysicalRecording.Empty;
+      this.RecordingBook = RecordingBook.Empty;
+      this.BookEntry = BookEntry.Empty;
     }
 
     static public RecordingActInfoDTO Empty {
@@ -66,7 +70,7 @@ namespace Empiria.Land.Registration {
       get {
         return (RecordingActId == -1 &&
                 RecordingActType.Equals(RecordingActType.Empty) &&
-                PhysicalBook.IsEmptyInstance);
+                RecordingBook.IsEmptyInstance);
       }
     }
 
@@ -80,17 +84,17 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    public RecordingBook PhysicalBook {
+    public RecordingBook RecordingBook {
       get;
       private set;
     }
 
-    public PhysicalRecording PhysicalRecording {
+    public BookEntry BookEntry {
       get;
       private set;
     }
 
-    public bool PhysicalRecordingWasCreated {
+    public bool BookEntryWasCreated {
       get;
       private set;
     }

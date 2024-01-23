@@ -40,9 +40,9 @@ namespace Empiria.Land.Registration.UseCases {
 
       var book = RecordingBook.Parse(recordingBookUID);
 
-      var bookEntry = PhysicalRecording.Parse(bookEntryUID);
+      var bookEntry = BookEntry.Parse(bookEntryUID);
 
-      Assertion.Require(book.Recordings.Contains(bookEntry),
+      Assertion.Require(book.BookEntries.Contains(bookEntry),
           $"Book entry '{bookEntry.UID}' does not belong to recording book {book.AsText}");
 
       ApplicableRecordingActTypeList applicableActTypes = bookEntry.ApplicableRecordingActTypes();

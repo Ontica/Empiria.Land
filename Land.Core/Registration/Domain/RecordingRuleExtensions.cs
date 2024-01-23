@@ -28,7 +28,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static internal ApplicableRecordingActTypeList ApplicableRecordingActTypes(this PhysicalRecording bookEntry) {
+    static internal ApplicableRecordingActTypeList ApplicableRecordingActTypes(this BookEntry bookEntry) {
       var list = RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
 
       var builder = new ApplicableRecordingActTypesBuilder(list);

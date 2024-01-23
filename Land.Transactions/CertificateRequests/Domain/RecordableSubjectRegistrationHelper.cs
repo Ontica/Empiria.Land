@@ -40,7 +40,7 @@ namespace Empiria.Land.Transactions.CertificateRequests {
 
       EnsureHasBookEntry(_command);
 
-      var bookEntry = PhysicalRecording.Parse(_command.Payload.BookEntryUID);
+      var bookEntry = BookEntry.Parse(_command.Payload.BookEntryUID);
 
       Resource recordableSubject = CreateRecordableSubject(_command.Type.Rules().SubjectType);
 
@@ -65,7 +65,7 @@ namespace Empiria.Land.Transactions.CertificateRequests {
 
       var book = RecordingBook.Parse(command.Payload.RecordingBookUID);
 
-      PhysicalRecording entry = book.TryGetBookEntry(bookEntryNo);
+      BookEntry entry = book.TryGetBookEntry(bookEntryNo);
 
       if (entry == null) {
         entry = RegistrationEngine.CreatePrecedentBookEntry(book, bookEntryNo,

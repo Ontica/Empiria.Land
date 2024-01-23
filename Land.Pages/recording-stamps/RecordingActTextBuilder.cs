@@ -122,7 +122,7 @@ namespace Empiria.Land.Pages {
 
         var legend = amendedAct.RecordingActType.FemaleGenre ? "la cual está inscrito" : "el cual está inscrito";
 
-        if (amendedAct.PhysicalRecording.IsEmptyInstance) {
+        if (amendedAct.BookEntry.IsEmptyInstance) {
           x = x.Replace("{AMENDMENT.ACT.RECORDING}",
                         "sobre " + amendedActName + " " +
                         $"{legend}  en el acto número {amendedAct.Index + 1} del documento <b> {amendedAct.Document.UID}</b> el día " +
@@ -131,8 +131,8 @@ namespace Empiria.Land.Pages {
         } else {
           x = x.Replace("{AMENDMENT.ACT.RECORDING}",
                         "sobre " + amendedActName + " " +
-                        legend + " en la " + amendedAct.PhysicalRecording.AsText + " el día " +
-                        CommonMethods.GetDateAsText(amendedAct.PhysicalRecording.MainDocument.AuthorizationTime));
+                        legend + " en la " + amendedAct.BookEntry.AsText + " el día " +
+                        CommonMethods.GetDateAsText(amendedAct.BookEntry.MainDocument.AuthorizationTime));
         }
 
       }
@@ -364,9 +364,9 @@ namespace Empiria.Land.Pages {
       var parentAntecedent =
               newPartition.IsPartitionOf.Tract.GetRecordingAntecedent(_recordingAct.Document.PresentationTime);
 
-      if (!parentAntecedent.PhysicalRecording.IsEmptyInstance) {
+      if (!parentAntecedent.BookEntry.IsEmptyInstance) {
         x = x.Replace("{PARTITION.OF}", "<u>" + newPartition.IsPartitionOf.UID + "</u> " +
-                      "y antecedente registral en " + parentAntecedent.PhysicalRecording.AsText);
+                      "y antecedente registral en " + parentAntecedent.BookEntry.AsText);
       } else {
         x = x.Replace("{PARTITION.OF}", "<u>" + newPartition.IsPartitionOf.UID + "</u>");
       }
@@ -393,9 +393,9 @@ namespace Empiria.Land.Pages {
       } else if (!property.IsPartitionOf.IsEmptyInstance && domainAntecedent.Equals(RecordingAct.Empty)) {
         // no-op
 
-      } else if (!domainAntecedent.PhysicalRecording.IsEmptyInstance) {
-        if (!recordingAct.AmendmentOf.PhysicalRecording.Equals(domainAntecedent.PhysicalRecording)) {
-          x += ", con antecedente registral en " + domainAntecedent.PhysicalRecording.AsText;
+      } else if (!domainAntecedent.BookEntry.IsEmptyInstance) {
+        if (!recordingAct.AmendmentOf.BookEntry.Equals(domainAntecedent.BookEntry)) {
+          x += ", con antecedente registral en " + domainAntecedent.BookEntry.AsText;
         }
 
       } else if (domainAntecedent.Document.Equals(recordingAct.Document)) {
@@ -441,14 +441,14 @@ namespace Empiria.Land.Pages {
       if (_recordingAct.Equals(incorporationAct)) {
         x = incorporationActText.Replace("{INDEX}", index.ToString());
 
-      } else if (incorporationAct.PhysicalRecording.IsEmptyInstance) {
+      } else if (incorporationAct.BookEntry.IsEmptyInstance) {
         x = overAssociationWithIncorporationActInDigitalRecording.Replace("{INDEX}", index.ToString());
         x = x.Replace("{RECORDING.ACT}", recordingActName);
 
-      } else if (!incorporationAct.PhysicalRecording.IsEmptyInstance) {
+      } else if (!incorporationAct.BookEntry.IsEmptyInstance) {
         x = overAssociationWithIncorporationActInPhysicalRecording.Replace("{INDEX}", index.ToString());
         x = x.Replace("{RECORDING.ACT}", recordingActName);
-        x = x.Replace("{ANTECEDENT}", incorporationAct.PhysicalRecording.AsText);
+        x = x.Replace("{ANTECEDENT}", incorporationAct.BookEntry.AsText);
 
       } else {
         throw Assertion.EnsureNoReachThisCode();

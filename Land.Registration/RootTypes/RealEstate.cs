@@ -309,7 +309,7 @@ namespace Empiria.Land.Registration {
 
         var lastDomainAct = tract.FindLast((x) => x.WasAliveOn(DateTime.Now) &&
                                             x.RecordingActType.IsDomainActType &&
-                                            (x.Document.IsClosed || !x.PhysicalRecording.IsEmptyInstance));
+                                            (x.Document.IsClosed || !x.BookEntry.IsEmptyInstance));
         return lastDomainAct;
       }
     }

@@ -312,11 +312,11 @@ namespace Empiria.Land.WebApi {
 
       propertyBag.AddRange(ResourceTractSection(association));
 
-      var physicalRecording = association.Tract.GetLastPhysicalRecording();
+      BookEntry lastBookEntry = association.Tract.GetLastBookEntry();
 
-      if (!physicalRecording.IsEmptyInstance) {
+      if (!lastBookEntry.IsEmptyInstance) {
         propertyBag.Add(new PropertyBagItem("Partida origen de la sociedad en libros físicos", String.Empty, "section"));
-        propertyBag.Add(new PropertyBagItem("Partida", physicalRecording.AsText));
+        propertyBag.Add(new PropertyBagItem("Partida", lastBookEntry.AsText));
         propertyBag.Add(new PropertyBagItem("Nota importante", "Los datos de la partida sólo se muestran con fines informativos.<br/>" +
                                             "A partir de junio del año 2022, todas las sociedades se deben identificar mediante su folio único, " +
                                             "no con el número de inscripción que tenían en libros físicos."));
@@ -337,11 +337,11 @@ namespace Empiria.Land.WebApi {
 
       propertyBag.AddRange(ResourceTractSection(noproperty));
 
-      var physicalRecording = noproperty.Tract.GetLastPhysicalRecording();
+      BookEntry lastBookEntry = noproperty.Tract.GetLastBookEntry();
 
-      if (!physicalRecording.IsEmptyInstance) {
+      if (!lastBookEntry.IsEmptyInstance) {
         propertyBag.Add(new PropertyBagItem("Partida origen del documento en libros físicos", String.Empty, "section"));
-        propertyBag.Add(new PropertyBagItem("Partida", physicalRecording.AsText));
+        propertyBag.Add(new PropertyBagItem("Partida", lastBookEntry.AsText));
         propertyBag.Add(new PropertyBagItem("Nota importante", "Los datos de la partida sólo se muestran con fines informativos.<br/>" +
                                             "A partir de junio del año 2022, todos los documentos se deben identificar mediante su folio electrónico, " +
                                             "no con el número de inscripción que tenían en libros físicos."));
@@ -364,11 +364,11 @@ namespace Empiria.Land.WebApi {
       propertyBag.AddRange(ResourceTractSection(property));
 
 
-      var physicalRecording = property.Tract.GetLastPhysicalRecording();
+      BookEntry lastBookEntry = property.Tract.GetLastBookEntry();
 
-      if (!physicalRecording.IsEmptyInstance) {
+      if (!lastBookEntry.IsEmptyInstance) {
         propertyBag.Add(new PropertyBagItem("Partida origen del predio en libros físicos", String.Empty, "section"));
-        propertyBag.Add(new PropertyBagItem("Partida", physicalRecording.AsText));
+        propertyBag.Add(new PropertyBagItem("Partida", lastBookEntry.AsText));
         propertyBag.Add(new PropertyBagItem("Nota importante", "Los datos de la partida sólo se muestran con fines informativos.<br/>" +
                                             "A partir de junio del año 2022, todos los predios se deben identificar mediante su folio real, " +
                                             "no con el número de inscripción que tenían en libros físicos."));

@@ -77,7 +77,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var recordingBook = RecordingBook.Parse(recordingBookUID);
 
-      FixedList<PhysicalRecording> bookEntries = recordingBook.GetRecordings();
+      FixedList<BookEntry> bookEntries = recordingBook.GetBookEntries();
 
       return RecordingBookMapper.MapBookEntriesListShortDto(bookEntries);
     }
@@ -160,7 +160,7 @@ namespace Empiria.Land.Registration.UseCases {
       Assertion.Require(command, "command");
 
       var book = RecordingBook.Parse(recordingBookUID);
-      var bookEntry = PhysicalRecording.Parse(bookEntryUID);
+      var bookEntry = BookEntry.Parse(bookEntryUID);
 
       var instrumentRecording = bookEntry.MainDocument;
 
@@ -184,9 +184,9 @@ namespace Empiria.Land.Registration.UseCases {
 
       var book = RecordingBook.Parse(recordingBookUID);
 
-      var bookEntry = PhysicalRecording.Parse(bookEntryUID);
+      var bookEntry = BookEntry.Parse(bookEntryUID);
 
-      Assertion.Require(book.Recordings.Contains(bookEntry),
+      Assertion.Require(book.BookEntries.Contains(bookEntry),
                        $"Book entry '{bookEntryUID}', does not belong to book '{book.AsText}'.");
 
       bookEntry.Delete();
@@ -206,13 +206,13 @@ namespace Empiria.Land.Registration.UseCases {
 
       var book = RecordingBook.Parse(recordingBookUID);
 
-      var bookEntry = PhysicalRecording.Parse(bookEntryUID);
+      var bookEntry = BookEntry.Parse(bookEntryUID);
 
       var recordingAct = RecordingAct.Parse(recordingActUID);
 
       var instrumentRecording = recordingAct.Document;
 
-      Assertion.Require(book.Recordings.Contains(bookEntry),
+      Assertion.Require(book.BookEntries.Contains(bookEntry),
                        $"Book entry '{bookEntryUID}', does not belong to book '{book.AsText}'.");
 
       Assertion.Require(bookEntry.RecordingActs.Contains(recordingAct),
@@ -235,12 +235,12 @@ namespace Empiria.Land.Registration.UseCases {
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
-      var instrumentRecordings = PhysicalRecording.GetDocumentRecordings(instrumentRecording.Id);
+      var instrumentBookEntries = BookEntry.GetBookEntriesForDocument(instrumentRecording.Id);
 
-      var bookEntry = instrumentRecordings.Find(x => x.UID == bookEntryUID);
+      var bookEntry = instrumentBookEntries.Find(x => x.UID == bookEntryUID);
 
       Assertion.Require(bookEntry,
-            $"Book recording entry '{bookEntryUID}', does not belong to instrument recording '{instrumentRecordingUID}'.");
+            $"Book recording entry '{bookEntryUID}' does not belong to instrument recording '{instrumentRecordingUID}'.");
 
       bookEntry.Delete();
 
@@ -257,7 +257,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       fields.EnsureIsValid();
 
-      var bookEntry = PhysicalRecording.Parse(bookEntryUID);
+      var bookEntry = BookEntry.Parse(bookEntryUID);
 
       bookEntry.Update(fields.BookEntry.MapToBookEntryDto(bookEntry.RecordingBook,
                        bookEntry.MainDocument));

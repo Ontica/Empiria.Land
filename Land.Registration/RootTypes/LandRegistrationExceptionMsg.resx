@@ -126,6 +126,12 @@
   <data name="AttachmentFolderNotFound" xml:space="preserve">
     <value>No encontré el directorio con nombre '{0}' con las imágenes del libro de apéndices.</value>
   </data>
+  <data name="BookEntryNotBelongsToRecordingBook" xml:space="preserve">
+    <value>La inscripción con id = {0} no pertenece al libro registral {1}. Puede ser que este problema sea ocasionado por un error de programación.</value>
+  </data>
+  <data name="BookEntryNumberAlreadyExists" xml:space="preserve">
+    <value>En este libro ya ha sido registrada otra inscripción con el número {0}.</value>
+  </data>
   <data name="CantAlterAnnotationOnClosedRecording" xml:space="preserve">
     <value>No puedo modificar o eliminar la anotación con identificador {0} ya que la inscripción a la que pertenece está cerrada y ya no pueden hacérsele cambios. La única forma de hacerlo es mediante la creación de un acto jurídico que la modifique o cancele .</value>
   </data>
@@ -221,12 +227,6 @@
   </data>
   <data name="RecordingActWithoutOwnerParties" xml:space="preserve">
     <value>Requiero se registre cuando menos a un propietario actual del predio o predios a los que hace referencia el acto jurídico.</value>
-  </data>
-  <data name="RecordingNotBelongsToRecordingBook" xml:space="preserve">
-    <value>La inscripción con id = {0} no pertenece al libro registral {1}. Puede ser que este problema sea ocasionado por un error de programación.</value>
-  </data>
-  <data name="RecordingNumberAlreadyExists" xml:space="preserve">
-    <value>En este libro ya ha sido registrada otra inscripción con el número {0}.</value>
   </data>
   <data name="UnrecognizedRecordingBookType" xml:space="preserve">
     <value>El programa que se ejecutó no está preparado para manejar libros registrales de tipo '{0}'.</value>

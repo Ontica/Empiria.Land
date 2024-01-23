@@ -65,31 +65,35 @@ namespace Empiria.Land.Registration {
       return null;
     }
 
-    static public LandRegistrationException ValidateRecordingNumber(RecordingBook recordingBook, PhysicalRecording recording,
-                                                                    string recordingNumberToValidate) {
-      string recordingNo = RecordingBook.FormatBookEntryNumber(recordingNumberToValidate);
-      string filter = "PhysicalRecordingId <> " + recording.Id + " AND RecordingNo = '" + recordingNo + "'";
-      PhysicalRecording findResult = RecordingBooksData.FindRecording(recordingBook, filter);
+    static public LandRegistrationException ValidateBookEntryNumber(RecordingBook recordingBook, BookEntry bookEntry,
+                                                                    string bookEntryNumberToValidate) {
+      string formatted = RecordingBook.FormatBookEntryNumber(bookEntryNumberToValidate);
+
+      string filter = "PhysicalRecordingId <> " + bookEntry.Id + " AND RecordingNo = '" + formatted + "'";
+
+      BookEntry findResult = RecordingBooksData.FindRecordingBookEntry(recordingBook, filter);
 
       if (!findResult.IsEmptyInstance) {
-        return new LandRegistrationException(LandRegistrationException.Msg.RecordingNumberAlreadyExists, recordingNo);
+        return new LandRegistrationException(LandRegistrationException.Msg.BookEntryNumberAlreadyExists, formatted);
       }
 
       return null;
     }
 
-    static public LandRegistrationException ValidateRecordingDates(RecordingBook recordingBook, PhysicalRecording recording,
+    static public LandRegistrationException ValidateRecordingDates(RecordingBook recordingBook,
                                                                    DateTime presentationTime, DateTime authorizationDate) {
-      if (!recordingBook.RecordingsControlTimePeriod.Includes(presentationTime)) {
+      if (!recordingBook.BookEntriesControlTimePeriod.Includes(presentationTime)) {
         return new LandRegistrationException(LandRegistrationException.Msg.InvalidBookEntryPresentationTime,
-                                             recordingBook.RecordingsControlTimePeriod.StartTime.ToString("dd/MMM/yyyy"),
-                                             recordingBook.RecordingsControlTimePeriod.EndTime.ToString("dd/MMM/yyyy"), recordingBook.AsText);
+                                             recordingBook.BookEntriesControlTimePeriod.StartTime.ToString("dd/MMM/yyyy"),
+                                             recordingBook.BookEntriesControlTimePeriod.EndTime.ToString("dd/MMM/yyyy"), recordingBook.AsText);
       }
-      if (!recordingBook.RecordingsControlTimePeriod.Includes(authorizationDate)) {
+
+      if (!recordingBook.BookEntriesControlTimePeriod.Includes(authorizationDate)) {
         return new LandRegistrationException(LandRegistrationException.Msg.InvalidBookEntryAuthorizationDate,
-                                             recordingBook.RecordingsControlTimePeriod.StartTime.ToString("dd/MMM/yyyy"),
-                                             recordingBook.RecordingsControlTimePeriod.EndTime.ToString("dd/MMM/yyyy"), recordingBook.AsText);
+                                             recordingBook.BookEntriesControlTimePeriod.StartTime.ToString("dd/MMM/yyyy"),
+                                             recordingBook.BookEntriesControlTimePeriod.EndTime.ToString("dd/MMM/yyyy"), recordingBook.AsText);
       }
+
       return null;
     }
 

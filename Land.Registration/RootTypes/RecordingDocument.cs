@@ -74,8 +74,8 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static internal RecordingDocument TryParse(PhysicalRecording recording) {
-      return DocumentsData.TryGetRecordingMainDocument(recording);
+    static internal RecordingDocument TryParse(BookEntry bookEntry) {
+      return DocumentsData.TryGetBookEntryMainDocument(bookEntry);
     }
 
 
@@ -297,7 +297,7 @@ namespace Empiria.Land.Registration {
 
     public bool IsRegisteredInRecordingBook {
       get {
-        return (PhysicalRecording.GetDocumentRecordings(this.Id).Count != 0);
+        return (BookEntry.GetBookEntriesForDocument(this.Id).Count != 0);
       }
     }
 
@@ -348,21 +348,21 @@ namespace Empiria.Land.Registration {
 
     public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Resource resource,
                                            RecordingAct amendmentOf = null,
-                                           PhysicalRecording physicalRecording = null) {
-      Assertion.Require(resource, "resource");
+                                           BookEntry bookEntry = null) {
+      Assertion.Require(resource, nameof(resource));
 
       Assertion.Require(!resource.IsEmptyInstance, "Resource can't be an empty instance.");
 
       amendmentOf = amendmentOf ?? RecordingAct.Empty;
-      physicalRecording = physicalRecording ?? PhysicalRecording.Empty;
+      bookEntry = bookEntry ?? BookEntry.Empty;
 
       Assertion.Require(!this.IsEmptyInstance, "Document can't be the empty instance.");
 
       Assertion.Require(this.IsHistoricDocument || !this.IsClosed,
                        "Recording acts can't be added to closed documents");
 
-      Assertion.Require(recordingActType, "recordingActType");
-      Assertion.Require(amendmentOf, "amendmentOf");
+      Assertion.Require(recordingActType, nameof(recordingActType));
+      Assertion.Require(amendmentOf, nameof(amendmentOf));
 
 
       if (this.IsNew) {
@@ -370,7 +370,7 @@ namespace Empiria.Land.Registration {
       }
 
       var recordingAct = RecordingAct.Create(recordingActType, this, resource, amendmentOf,
-                                             this.RecordingActs.Count, physicalRecording);
+                                             this.RecordingActs.Count, bookEntry);
       recordingActList.Value.Add(recordingAct);
 
       return recordingAct;
@@ -518,7 +518,7 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnLoadObjectData(DataRow row) {
-      recordingActList = new Lazy<List<RecordingAct>>(() => RecordingActsData.GetDocumentRecordingActs(this));
+      RefreshRecordingActs();
       this.ExtensionData = RecordingDocumentExtData.Parse((string) row["DocumentExtData"]);
     }
 
@@ -559,16 +559,16 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public PhysicalRecording TryGetHistoricRecording() {
+    public BookEntry TryGetBookEntry() {
       if (!this.IsHistoricDocument) {
         return null;
       }
-      PhysicalRecording historicRecording = this.RecordingActs[0].PhysicalRecording;
+      BookEntry bookEntry = this.RecordingActs[0].BookEntry;
 
-      Assertion.Require(!historicRecording.IsEmptyInstance,
-                        "historicRecording can't be the empty instance.");
+      Assertion.Require(!bookEntry.IsEmptyInstance,
+                        "bookEntry can't be the empty instance.");
 
-      return historicRecording;
+      return bookEntry;
     }
 
     #endregion Public methods

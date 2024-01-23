@@ -193,15 +193,15 @@ namespace Empiria.Land.Instruments {
     }
 
 
-    public FixedList<PhysicalRecording> RecordingBookEntries {
+    public FixedList<BookEntry> RecordingBookEntries {
       get {
         if (!this.HasDocument) {
-          return new FixedList<PhysicalRecording>();
+          return new FixedList<BookEntry>();
         }
 
         var document = this.TryGetRecordingDocument();
 
-        return PhysicalRecording.GetDocumentRecordings(document.Id);
+        return BookEntry.GetBookEntriesForDocument(document.Id);
       }
     }
 

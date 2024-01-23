@@ -93,7 +93,7 @@ namespace Empiria.Land.Registration {
       if (this.Document.RecordingActs.Count == 0) {
         return false;
       }
-      if (this.Document.RecordingActs.CountAll((x) => !x.PhysicalRecording.IsEmptyInstance) != 0) {
+      if (this.Document.RecordingActs.CountAll((x) => !x.BookEntry.IsEmptyInstance) != 0) {
         return false;
       }
       return true;
@@ -108,8 +108,8 @@ namespace Empiria.Land.Registration {
                         "Document has already assigned an imaging control number.");
 
       Assertion.Require(this.Document.RecordingActs.Count > 0, "Document should have recording acts.");
-      Assertion.Require(this.Document.RecordingActs.CountAll((x) => !x.PhysicalRecording.IsEmptyInstance) == 0,
-                        "Document can't have any recording acts that are related to physical recordings.");
+      Assertion.Require(this.Document.RecordingActs.CountAll((x) => !x.BookEntry.IsEmptyInstance) == 0,
+                        "Document can't have any recording acts that are related to physical book entries.");
 
 
       this.ImagingControlID = DocumentsData.GetNextImagingControlID(this.Document);

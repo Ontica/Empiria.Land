@@ -36,8 +36,8 @@ namespace Empiria.Land.Registration {
 
     internal LimitationAct(RecordingActType recordingActType,
                            RecordingDocument document, RealEstate property,
-                           PhysicalRecording physicalRecording,
-                           decimal percentage = decimal.One) : base(recordingActType, document, physicalRecording) {
+                           BookEntry bookEntry,
+                           decimal percentage = decimal.One) : base(recordingActType, document, bookEntry) {
       Assertion.Require(recordingActType.AppliesTo == RecordingRuleApplication.RealEstate,
                        $"{recordingActType.DisplayName} doesn't apply to properties (real estate).");
 

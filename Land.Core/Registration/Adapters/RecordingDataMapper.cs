@@ -18,8 +18,8 @@ namespace Empiria.Land.Registration.Adapters {
     static internal RecordingDataDto MapRecordingData(RecordingAct recordingAct) {
       RecordingDocument document = recordingAct.Document;
 
-      PhysicalRecording volumeEntry = recordingAct.HasPhysicalRecording ?
-                                            recordingAct.PhysicalRecording : PhysicalRecording.Empty;
+      BookEntry bookEntry = recordingAct.HasBookEntry ?
+                                            recordingAct.BookEntry : BookEntry.Empty;
 
       var transaction = recordingAct.Document.GetTransaction();
 
@@ -27,9 +27,9 @@ namespace Empiria.Land.Registration.Adapters {
         UID = document.GUID,
         Type = document.DocumentType.DisplayName,
         RecordingID = document.UID,
-        Description = volumeEntry.IsEmptyInstance ? document.UID : recordingAct.PhysicalRecording.AsText,
+        Description = bookEntry.IsEmptyInstance ? document.UID : recordingAct.BookEntry.AsText,
         Office = document.RecorderOffice.MapToNamedEntity(),
-        VolumeEntryData = MapVolumeEntry(volumeEntry),
+        VolumeEntryData = MapVolumeEntry(bookEntry),
         RecordingTime = document.AuthorizationTime,
         RecordedBy = document.GetRecordingOfficials()[0].ShortName,
         AuthorizedBy = document.AuthorizedBy.ShortName,
@@ -41,15 +41,15 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    static private VolumeEntryDataDto MapVolumeEntry(PhysicalRecording volumeEntry) {
-      if (volumeEntry.IsEmptyInstance) {
+    static private VolumeEntryDataDto MapVolumeEntry(BookEntry bookEntry) {
+      if (bookEntry.IsEmptyInstance) {
         return null;
       }
 
       return new VolumeEntryDataDto {
-        UID = volumeEntry.UID,
-        RecordingBookUID = volumeEntry.RecordingBook.UID,
-        InstrumentRecordingUID = volumeEntry.MainDocument.GUID,
+        UID = bookEntry.UID,
+        RecordingBookUID = bookEntry.RecordingBook.UID,
+        InstrumentRecordingUID = bookEntry.MainDocument.GUID,
       };
     }
 

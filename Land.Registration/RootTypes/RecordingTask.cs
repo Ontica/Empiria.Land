@@ -90,7 +90,7 @@ namespace Empiria.Land.Registration {
       this.Document = RecordingDocument.ParseGuid(fields.RecordingDocumentUID);
 
       if (!String.IsNullOrWhiteSpace(fields.RecordingBookEntryUID)) {
-        this.BookEntry = PhysicalRecording.Parse(fields.RecordingBookEntryUID);
+        this.BookEntry = BookEntry.Parse(fields.RecordingBookEntryUID);
       }
 
       this.RecordingActType = RecordingActType.Parse(fields.RecordingActTypeUID);
@@ -100,7 +100,7 @@ namespace Empiria.Land.Registration {
       }
 
       if (!String.IsNullOrWhiteSpace(fields.PrecedentBookEntryUID)) {
-        this.PrecedentRecording = PhysicalRecording.Parse(fields.PrecedentBookEntryUID);
+        this.PrecedentBookEntry = BookEntry.Parse(fields.PrecedentBookEntryUID);
       }
 
       if (this.RecordingTaskType == RecordingTaskType.createPartition ||
@@ -126,7 +126,7 @@ namespace Empiria.Land.Registration {
       this.RecordingTaskType = recordingTaskType;
       this.ResourceName = EmpiriaString.TrimAll(resourceName);
       this.CadastralKey = cadastralKey;
-      this.PrecedentRecording = PhysicalRecording.Parse(precedentRecordingId);
+      this.PrecedentBookEntry = BookEntry.Parse(precedentRecordingId);
 
       if (precedentResourceId == 0) {
         var data = new RealEstateExtData() { CadastralKey = cadastralKey };
@@ -166,10 +166,10 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    public PhysicalRecording BookEntry {
+    public BookEntry BookEntry {
       get;
       internal set;
-    } = PhysicalRecording.Empty;
+    } = BookEntry.Empty;
 
 
     public RecordingActType RecordingActType {
@@ -189,10 +189,10 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public PhysicalRecording PrecedentRecording {
+    public BookEntry PrecedentBookEntry {
       get;
       internal set;
-    } = PhysicalRecording.Empty;
+    } = BookEntry.Empty;
 
 
     public string ResourceName {

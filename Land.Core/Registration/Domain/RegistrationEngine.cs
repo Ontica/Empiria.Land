@@ -29,14 +29,14 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public PhysicalRecording CreatePrecedentBookEntry(RecordingBook book,
-                                                             string bookEntryNo,
-                                                             DateTime presentationTime,
-                                                             DateTime authorizationDate) {
+    static public BookEntry CreatePrecedentBookEntry(RecordingBook book,
+                                                     string bookEntryNumber,
+                                                     DateTime presentationTime,
+                                                     DateTime authorizationDate) {
       Assertion.Require(book.IsAvailableForManualEditing,
           $"El {book.AsText} está cerrado, por lo que no es posible agregarle nuevas inscripciones.");
 
-      if (book.ExistsBookEntry(bookEntryNo)) {
+      if (book.ExistsBookEntry(bookEntryNumber)) {
         Assertion.RequireFail(
           "La partida indicada ya existe en el libro seleccionado,\n" +
           "y no es posible generar más de un folio de predio\n" +
@@ -47,7 +47,7 @@ namespace Empiria.Land.Registration {
 
       var fields = new InstrumentFields();
 
-      fields.Summary = $"Instrumento de la inscripción {bookEntryNo} del {book.AsText}.";
+      fields.Summary = $"Instrumento de la inscripción {bookEntryNumber} del {book.AsText}.";
 
       var instrument = new Instrument(InstrumentType.Parse(InstrumentTypeEnum.Resumen), fields);
 
@@ -59,7 +59,7 @@ namespace Empiria.Land.Registration {
 
       document.Save();
 
-      PhysicalRecording bookEntry = book.AddBookEntry(document, bookEntryNo);
+      BookEntry bookEntry = book.AddBookEntry(document, bookEntryNumber);
 
       bookEntry.Save();
 
@@ -81,7 +81,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    internal void Execute(PhysicalRecording bookEntry,
+    internal void Execute(BookEntry bookEntry,
                           RegistrationCommand command) {
       Assertion.Require(bookEntry, nameof(bookEntry));
       Assertion.Require(command, nameof(command));

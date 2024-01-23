@@ -1,11 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : PhysicalRecording                              Pattern  : Empiria Object Type                 *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Land Registration                            Component : Domain Layer                          *
+*  Assembly : Empiria.Land.Registration.dll                Pattern   : Information holder                    *
+*  Type     : BookEntry                                    License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Represents a general recording in Land Registration System.                                   *
+*  Summary  : DTO that holds data about a physical book recording entry.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -18,8 +17,8 @@ using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Represents a general recording in Land Registration System.</summary>
-  public class PhysicalRecording : BaseObject, IProtected {
+  /// <summary>DTO that holds data about a physical book recording entry.</summary>
+  public class BookEntry : BaseObject, IProtected {
 
     #region Fields
 
@@ -29,16 +28,16 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private PhysicalRecording() {
+    private BookEntry() {
       // Required by Empiria Framework.
       recordingActList = GetNewRecordingActListLazyInstance();
     }
 
-    internal PhysicalRecording(RecordingBook recordingBook,
-                               RecordingDocument mainDocument, string recordingNumber) {
-      Assertion.Require(recordingBook, "recordingBook");
-      Assertion.Require(mainDocument, "mainDocument");
-      Assertion.Require(recordingNumber, "recordingNumber");
+    internal BookEntry(RecordingBook recordingBook,
+                       RecordingDocument mainDocument, string recordingNumber) {
+      Assertion.Require(recordingBook, nameof(recordingBook));
+      Assertion.Require(mainDocument, nameof(mainDocument));
+      Assertion.Require(recordingNumber, nameof(recordingNumber));
 
       Assertion.Require(!recordingBook.IsEmptyInstance, "recordingBook can't be the empty instance.");
       Assertion.Require(!mainDocument.IsEmptyInstance, "mainDocument can't be the empty instance.");
@@ -46,10 +45,11 @@ namespace Empiria.Land.Registration {
       this.RecordingBook = recordingBook;
       this.MainDocument = mainDocument;
       this.Number = recordingNumber;
+
       recordingActList = GetNewRecordingActListLazyInstance();
     }
 
-    internal PhysicalRecording(BookEntryDto dto) : this(dto?.RecordingBook, dto?.MainDocument, dto?.Number) {
+    internal BookEntry(BookEntryDto dto) : this(dto?.RecordingBook, dto?.MainDocument, dto?.Number) {
       LoadData(dto);
       recordingActList = GetNewRecordingActListLazyInstance();
     }
@@ -60,25 +60,25 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public PhysicalRecording Parse(int id) {
-      return BaseObject.ParseId<PhysicalRecording>(id);
+    static public BookEntry Parse(int id) {
+      return BaseObject.ParseId<BookEntry>(id);
     }
 
 
-    static public PhysicalRecording Parse(string uid) {
-      return BaseObject.ParseKey<PhysicalRecording>(uid);
+    static public BookEntry Parse(string uid) {
+      return BaseObject.ParseKey<BookEntry>(uid);
     }
 
 
-    static public FixedList<PhysicalRecording> GetDocumentRecordings(int documentId) {
-      return RecordingBooksData.GetPhysicalRecordingsForDocument(documentId);
+    static public FixedList<BookEntry> GetBookEntriesForDocument(int documentId) {
+      return RecordingBooksData.GetBookEntriesForDocument(documentId);
     }
 
 
-    static private readonly PhysicalRecording _empty = BaseObject.ParseEmpty<PhysicalRecording>();
-    static public PhysicalRecording Empty {
+    static private readonly BookEntry _empty = BaseObject.ParseEmpty<BookEntry>();
+    static public BookEntry Empty {
       get {
-        return _empty.Clone<PhysicalRecording>();
+        return _empty.Clone<BookEntry>();
       }
     }
 
@@ -129,6 +129,7 @@ namespace Empiria.Land.Registration {
       get;
       private set;
     } = new BookEntryExtData();
+
 
     public int StartImageIndex {
       get {
@@ -279,7 +280,7 @@ namespace Empiria.Land.Registration {
     }
 
     public FixedList<Resource> GetResources() {
-      return ResourceData.GetPhysicalRecordingResources(this);
+      return ResourceData.GetBookEntryResources(this);
     }
 
     public FixedList<RecordingAct> GetAnnotationActs() {
@@ -299,7 +300,7 @@ namespace Empiria.Land.Registration {
           this.MainDocument.Save();
         }
       }
-      RecordingBooksData.WriteRecording(this);
+      RecordingBooksData.WriteBookEntry(this);
     }
 
     public void Refresh() {
@@ -350,7 +351,7 @@ namespace Empiria.Land.Registration {
 
 
     private Lazy<FixedList<RecordingAct>> GetNewRecordingActListLazyInstance() {
-      return new Lazy<FixedList<RecordingAct>>(() => RecordingActsData.GetPhysicalRecordingRecordedActs(this));
+      return new Lazy<FixedList<RecordingAct>>(() => RecordingActsData.GetBookEntryRecordedActs(this));
     }
 
 
@@ -372,6 +373,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Private methods
 
-  } // class PhysicalRecording
+  } // class BookEntry
 
 } // namespace Empiria.Land.Registration

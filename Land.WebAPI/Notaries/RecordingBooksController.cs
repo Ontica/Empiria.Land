@@ -5,7 +5,7 @@
 *  Type      : RecordingBooksController                         Pattern  : Web API                           *
 *  Version   : 3.0                                              License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Web API used to retrive physical recording books and recordings information.                  *
+*  Summary   : Web API used to retrive physical recording books and book entries information.                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -21,7 +21,7 @@ using Empiria.Land.Registration;
 namespace Empiria.Land.WebApi {
 
 
-  /// <summary>Web API used to retrive physical recording books and recordings information.</summary>
+  /// <summary>Web API used to retrive physical recording books and book entries information.</summary>
   public class RecordingBooksController : WebApiController {
 
     #region Public APIs

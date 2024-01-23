@@ -35,10 +35,7 @@ namespace Empiria.Land.Registration {
           var item = new ApplicableRecordingActType(actType,
                                                     actType.RegistrationCommandTypes(),
                                                     category);
-
-          if (IsApplicableTo(instrument, item)) {
-            list.Add(item);
-          }
+          list.Add(item);
         }
       }
 
@@ -65,7 +62,7 @@ namespace Empiria.Land.Registration {
       return list;
     }
 
-    internal ApplicableRecordingActTypeList BuildFor(PhysicalRecording bookEntry) {
+    internal ApplicableRecordingActTypeList BuildFor(BookEntry bookEntry) {
       var list = new ApplicableRecordingActTypeList();
 
       foreach (var category in _baseList) {
@@ -73,20 +70,11 @@ namespace Empiria.Land.Registration {
           var item = new ApplicableRecordingActType(actType,
                                                     actType.RegistrationCommandTypes(),
                                                     category);
-
-          if (IsApplicableTo(bookEntry, item)) {
-            list.Add(item);
-          }
+          list.Add(item);
         }
       }
 
       return list;
-    }
-
-
-    private bool IsApplicableTo(Instrument instrument,
-                                ApplicableRecordingActType actType) {
-      return true;
     }
 
 
@@ -112,13 +100,6 @@ namespace Empiria.Land.Registration {
 
       return false;
     }
-
-
-    private bool IsApplicableTo(PhysicalRecording bookEntry,
-                                ApplicableRecordingActType actType) {
-      return true;
-    }
-
 
   }  // class ApplicableRecordingActTypesBuilder
 

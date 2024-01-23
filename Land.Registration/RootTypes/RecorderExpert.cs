@@ -54,11 +54,11 @@ namespace Empiria.Land.Registration {
     }
 
 
-    private bool CreateResourceOnPhysicalRecording {
+    private bool CreateResourceOnBookEntry {
       get {
         return ((Task.RecordingTaskType == RecordingTaskType.createPropertyOnAntecedent ||
                  Task.RecordingTaskType == RecordingTaskType.createPartitionAndPropertyOnAntecedent) &&
-                !Task.PrecedentRecording.IsEmptyInstance);
+                !Task.PrecedentBookEntry.IsEmptyInstance);
       }
     }
 
@@ -99,7 +99,7 @@ namespace Empiria.Land.Registration {
         Task.PrecedentProperty.AssertCanBeAddedTo(Task.Document, Task.RecordingActType);
       }
 
-      if ((this.CreateResourceOnPhysicalRecording) &&
+      if ((this.CreateResourceOnBookEntry) &&
            Task.RecordingActType.RecordingRule.HasChainedRule) {
         if (OperationalCondition(Task.Document)) {
           return;
@@ -114,8 +114,8 @@ namespace Empiria.Land.Registration {
       }
 
 
-      if (CreateResourceOnPhysicalRecording) {
-        var resources = Task.PrecedentRecording.RecordingActs.Select(x => x.Resource)
+      if (CreateResourceOnBookEntry) {
+        var resources = Task.PrecedentBookEntry.RecordingActs.Select(x => x.Resource)
                                                              .Distinct()
                                                              .ToFixedList();
 
@@ -310,18 +310,18 @@ namespace Empiria.Land.Registration {
 
 
     private RecordingAct CreateTargetRecordingAct(Resource resource) {
-      PhysicalRecording recording = Task.TargetActInfo.PhysicalRecording;
+      BookEntry bookEntry = Task.TargetActInfo.BookEntry;
 
       RecordingDocument document = null;
 
-      if (Task.TargetActInfo.PhysicalRecordingWasCreated) {
-        document = recording.MainDocument;
+      if (Task.TargetActInfo.BookEntryWasCreated) {
+        document = bookEntry.MainDocument;
       } else {
         document = new RecordingDocument(RecordingDocumentType.Empty);
       }
 
       return document.AppendRecordingAct(Task.TargetActInfo.RecordingActType,
-                                         resource, physicalRecording: recording);
+                                         resource, bookEntry: bookEntry);
     }
 
 
@@ -352,7 +352,7 @@ namespace Empiria.Land.Registration {
                                             this.Task.Document, resource, targetAct) };
 
       if (!this.Task.BookEntry.IsEmptyInstance) {
-        act[0].SetPhysicalRecording(this.Task.BookEntry);
+        act[0].SetBookEntry(this.Task.BookEntry);
       }
 
       return act;
@@ -366,7 +366,7 @@ namespace Empiria.Land.Registration {
                                             this.Task.Document, resource) };
 
       if (!this.Task.BookEntry.IsEmptyInstance) {
-        act[0].SetPhysicalRecording(this.Task.BookEntry);
+        act[0].SetBookEntry(this.Task.BookEntry);
       }
 
       return act;
@@ -419,10 +419,10 @@ namespace Empiria.Land.Registration {
       if (this.CreateNewResource) {
         return new Association[] { new Association() };
 
-      } else if (this.CreateResourceOnPhysicalRecording) {
+      } else if (this.CreateResourceOnBookEntry) {
         var association = new Association();
 
-        this.AttachResourceToPhysicalRecording(association);
+        this.AttachResourceToBookEntry(association);
 
         return new Association[] { association };
 
@@ -443,10 +443,10 @@ namespace Empiria.Land.Registration {
       if (this.CreateNewResource) {
         return new NoPropertyResource[] { new NoPropertyResource() };
 
-      } else if (this.CreateResourceOnPhysicalRecording) {
+      } else if (this.CreateResourceOnBookEntry) {
         var noPropertyResource = new NoPropertyResource();
 
-        this.AttachResourceToPhysicalRecording(noPropertyResource);
+        this.AttachResourceToBookEntry(noPropertyResource);
 
         return new NoPropertyResource[] { noPropertyResource };
 
@@ -470,12 +470,12 @@ namespace Empiria.Land.Registration {
 
       RealEstate property;
 
-      if (this.CreateResourceOnPhysicalRecording) {
+      if (this.CreateResourceOnBookEntry) {
         var data = new RealEstateExtData();
 
         property = new RealEstate(data);
 
-        this.AttachResourceToPhysicalRecording(property);
+        this.AttachResourceToBookEntry(property);
 
       } else if (this.SelectResource) {
         property = (RealEstate) this.Task.PrecedentProperty;
@@ -494,17 +494,16 @@ namespace Empiria.Land.Registration {
 
     #endregion Get resources methods
 
-    #region Physical recording methods
+    #region Book entry recording methods
 
-
-    private void AttachResourceToPhysicalRecording(Resource resource) {
-      Assertion.Require(this.CreateResourceOnPhysicalRecording,
+    private void AttachResourceToBookEntry(Resource resource) {
+      Assertion.Require(this.CreateResourceOnBookEntry,
                        "Wrong RecordingTask values to execute this method.");
 
-      var document = Task.PrecedentRecording.MainDocument;
+      var document = Task.PrecedentBookEntry.MainDocument;
 
       var precedentAct = new InformationAct(RecordingActType.Empty, document,
-                                            resource, Task.PrecedentRecording);
+                                            resource, Task.PrecedentBookEntry);
       precedentAct.Save();
     }
 
@@ -528,7 +527,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    #endregion Physical recording methods
+    #endregion Book entry recording methods
 
   }  // class RecorderExpert
 

@@ -57,7 +57,7 @@ namespace Empiria.Land.Pages {
       string x = template.Replace("{DATE}", CommonMethods.GetDateAsText(presentationTime));
 
       if (_transaction.HasInstrument) {
-        var instrument = Instrument.Parse(_document.InstrumentId);
+        var instrument = Instrument.Parse(_document.InstrumentId, true);
         x = x.Replace("{INSTRUMENT_AS_TEXT}", instrument.AsText);
 
       } else {
@@ -89,7 +89,7 @@ namespace Empiria.Land.Pages {
     }
 
     private string PrelationTextForHistoricDocuments() {
-      return "<h3>" + _document.RecordingActs[0].PhysicalRecording.AsText + "</h3>";
+      return "<h3>" + _document.RecordingActs[0].BookEntry.AsText + "</h3>";
     }
 
 

@@ -107,7 +107,7 @@
     <Content Include="receipts\control.voucher.aspx" />
     <Content Include="receipts\payment.order.aspx" />
     <Content Include="receipts\transaction.receipt.aspx" />
-    <Content Include="recording-stamps\physical-recording.stamp.aspx" />
+    <Content Include="recording-stamps\book.entry.registration.stamp.aspx" />
     <Content Include="recording-stamps\recording.stamp.aspx" />
     <Content Include="themes\default\css\certificates.css" />
     <Content Include="themes\default\css\official.document.css" />
@@ -163,12 +163,12 @@
     <Compile Include="recording-stamps\RecordingActTextBuilder.cs" />
     <Compile Include="RootTypes\Reloaders.cs" />
     <Compile Include="recording-stamps\RecordingStampBuilder.cs" />
-    <Compile Include="recording-stamps\physical-recording.stamp.aspx.cs">
-      <DependentUpon>physical-recording.stamp.aspx</DependentUpon>
+    <Compile Include="recording-stamps\book.entry.registration.stamp.aspx.cs">
+      <DependentUpon>book.entry.registration.stamp.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="recording-stamps\physical-recording.stamp.aspx.designer.cs">
-      <DependentUpon>physical-recording.stamp.aspx</DependentUpon>
+    <Compile Include="recording-stamps\book.entry.registration.stamp.aspx.designer.cs">
+      <DependentUpon>book.entry.registration.stamp.aspx</DependentUpon>
     </Compile>
     <Compile Include="recording-stamps\recording.stamp.aspx.cs">
       <DependentUpon>recording.stamp.aspx</DependentUpon>

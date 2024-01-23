@@ -59,10 +59,10 @@ namespace Empiria.Land.Registration {
         return null;
       }
 
-      if (!reload) {
-        return resource;
+      if (reload) {
+        return BaseObject.ParseId<Resource>(resource.Id, true);
       } else {
-        return BaseObject.ParseId<Resource>(resource.Id);
+        return resource;
       }
     }
 
@@ -266,7 +266,7 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public bool AllowHistoricChanges() {
-      return (!this.Tract.FirstRecordingAct.PhysicalRecording.IsEmptyInstance);
+      return (!this.Tract.FirstRecordingAct.BookEntry.IsEmptyInstance);
     }
 
 

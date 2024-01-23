@@ -28,8 +28,8 @@ namespace Empiria.Land.Data {
       return (DataReader.Count(operation) != 0);
     }
 
-    static internal FixedList<Resource> GetPhysicalRecordingResources(PhysicalRecording recording) {
-      var operation = DataOperation.Parse("qryLRSPhysicalRecordingResources", recording.Id);
+    static internal FixedList<Resource> GetBookEntryResources(BookEntry bookEntry) {
+      var operation = DataOperation.Parse("qryLRSPhysicalRecordingResources", bookEntry.Id);
 
       return DataReader.GetFixedList<Resource>(operation);
     }

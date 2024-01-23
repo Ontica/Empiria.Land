@@ -90,8 +90,8 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal RecordingDocument TryGetRecordingMainDocument(PhysicalRecording recording) {
-      var op = DataOperation.Parse("getLRSRecordingMainDocument", recording.Id);
+    static internal RecordingDocument TryGetBookEntryMainDocument(BookEntry bookEntry) {
+      var op = DataOperation.Parse("getLRSRecordingMainDocument", bookEntry.Id);
 
       return DataReader.GetObject<RecordingDocument>(op, null);
     }

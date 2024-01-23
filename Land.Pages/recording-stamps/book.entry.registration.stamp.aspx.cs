@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Empiria Land Pages                         Component : Presentation Layer                      *
 *  Assembly : Empiria.Land.Pages.dll                     Pattern   : Web Page                                *
-*  Type     : PhysicalRecordingStamp                     License   : Please read LICENSE.txt file            *
+*  Type     : BookEntryRegistrationStamp                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Recording stamp for instrument recording in physical books.                                    *
+*  Summary  : Book entry stamp for instrument recording in physical books.                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -16,14 +16,14 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Pages {
 
-	/// <summary>Recording stamp for instrument recording in physical books.</summary>
-	public partial class PhysicalRecordingStamp : Page {
+  /// <summary>Book entry stamp for instrument recording in physical books.</summary>
+  public partial class BookEntryRegistrationStamp : Page {
 
     #region Fields
 
 		protected LRSTransaction transaction = null;
-		private FixedList<PhysicalRecording> recordings = null;
-		private PhysicalRecording baseRecording = null;
+		private FixedList<BookEntry> bookEntries = null;
+		private BookEntry baseBookEntry = null;
 
     #endregion Fields
 
@@ -42,28 +42,28 @@ namespace Empiria.Land.Pages {
 
 			Assertion.Require(!transaction.Document.IsEmptyInstance, "Transaction does not have a registration document.");
 
-			recordings = PhysicalRecording.GetDocumentRecordings(transaction.Document.Id);
+			bookEntries = BookEntry.GetBookEntriesForDocument(transaction.Document.Id);
 
-			Assertion.Require(recordings.Count > 0, "Document does not have recordings.");
+			Assertion.Require(bookEntries.Count > 0, "Document does not have book entries.");
 
 			int recordingId = int.Parse(Request.QueryString["id"]);
 			if (recordingId != -1) {
-				baseRecording = recordings.Find((x) => x.Id == recordingId);
+				baseBookEntry = bookEntries.Find((x) => x.Id == recordingId);
 			} else {
-				recordings.Sort((x, y) => x.RecordingTime.CompareTo(y.RecordingTime));
-				baseRecording = recordings[recordings.Count - 1];
+				bookEntries.Sort((x, y) => x.RecordingTime.CompareTo(y.RecordingTime));
+				baseBookEntry = bookEntries[bookEntries.Count - 1];
 			}
 
-			Assertion.Ensure(baseRecording, "We have a problem reading document recording data.");
+			Assertion.Ensure(baseBookEntry, "We have a problem reading document recording data.");
 		}
 
 
     private LRSTransaction GetTransaction() {
 			if (String.IsNullOrWhiteSpace(Request.QueryString["transactionId"]) ||
 					Request.QueryString["transactionId"] == "-1") {
-				var physicalRecording = PhysicalRecording.Parse(int.Parse(Request.QueryString["id"]));
+				var bookEntry = BookEntry.Parse(int.Parse(Request.QueryString["id"]));
 
-				return physicalRecording.MainDocument.GetTransaction();
+				return bookEntry.MainDocument.GetTransaction();
 			}
 
 			return LRSTransaction.Parse(int.Parse(Request.QueryString["transactionId"]));
@@ -132,11 +132,11 @@ namespace Empiria.Land.Pages {
 			const string template = "Registrado bajo el número de <b>inscripción {NUMBER}</b> del <b>Volumen {VOL}</b> <b>{SECTION}</b> del <b>Distrito Judicial de {DISTRICT}</b>.";
 			string x = String.Empty;
 
-			x = template.Replace("{NUMBER}", baseRecording.Number);
+			x = template.Replace("{NUMBER}", baseBookEntry.Number);
 
-			x = x.Replace("{VOL}", baseRecording.RecordingBook.BookNumber);
-			x = x.Replace("{SECTION}", baseRecording.RecordingBook.RecordingSection.Name);
-			x = x.Replace("{DISTRICT}", baseRecording.RecordingBook.RecorderOffice.ShortName);
+			x = x.Replace("{VOL}", baseBookEntry.RecordingBook.BookNumber);
+			x = x.Replace("{SECTION}", baseBookEntry.RecordingBook.RecordingSection.Name);
+			x = x.Replace("{DISTRICT}", baseBookEntry.RecordingBook.RecorderOffice.ShortName);
 			x = x.Replace("{DOCUMENT}", transaction.Document.UID);
 
 			return x;
@@ -146,8 +146,8 @@ namespace Empiria.Land.Pages {
     protected string GetRecordingOfficialsInitials() {
       string temp = String.Empty;
 
-      for (int i = 0; i < recordings.Count; i++) {
-        string initials = recordings[i].RecordedBy.Initials;
+      for (int i = 0; i < bookEntries.Count; i++) {
+        string initials = bookEntries[i].RecordedBy.Initials;
         if (initials.Length == 0) {
           continue;
         }
@@ -170,20 +170,20 @@ namespace Empiria.Land.Pages {
 			string html = String.Empty;
 
 
-			if (this.recordings.Count > 1) {
+			if (this.bookEntries.Count > 1) {
 				html = docMulti.Replace("{DOCUMENT}", transaction.Document.UID);
-				html = html.Replace("{COUNT}", this.recordings.Count.ToString() + " (" + EmpiriaSpeech.SpeechInteger(this.recordings.Count).ToLower() + ")");
-			} else if (this.recordings.Count == 1) {
+				html = html.Replace("{COUNT}", this.bookEntries.Count.ToString() + " (" + EmpiriaSpeech.SpeechInteger(this.bookEntries.Count).ToLower() + ")");
+			} else if (this.bookEntries.Count == 1) {
 				html = docOne.Replace("{DOCUMENT}", transaction.Document.UID);
-			} else if (this.recordings.Count == 0) {
+			} else if (this.bookEntries.Count == 0) {
 				throw new Exception("Document does not have recordings.");
 			}
 
-			for (int i = 0; i < recordings.Count; i++) {
-				string x = t1.Replace("{NUMBER}", recordings[i].Number);
-				x = x.Replace("{VOL}", recordings[i].RecordingBook.BookNumber);
-				x = x.Replace("{SECTION}", recordings[i].RecordingBook.RecordingSection.Name);
-				x = x.Replace("{DISTRICT}", recordings[i].RecordingBook.RecorderOffice.ShortName);
+			for (int i = 0; i < bookEntries.Count; i++) {
+				string x = t1.Replace("{NUMBER}", bookEntries[i].Number);
+				x = x.Replace("{VOL}", bookEntries[i].RecordingBook.BookNumber);
+				x = x.Replace("{SECTION}", bookEntries[i].RecordingBook.RecordingSection.Name);
+				x = x.Replace("{DISTRICT}", bookEntries[i].RecordingBook.RecorderOffice.ShortName);
 				html += x;
 			}
 			return html;
@@ -193,8 +193,8 @@ namespace Empiria.Land.Pages {
 		protected string GetRecordingPlaceAndDate() {
 			const string t = "Registrado en {CITY}, a las {TIME} horas del {DATE}. Doy Fe.";
 
-			string x = t.Replace("{DATE}", baseRecording.RecordingTime.ToString(@"dd \de MMMM \de yyyy"));
-			x = x.Replace("{TIME}", baseRecording.RecordingTime.ToString(@"HH:mm"));
+			string x = t.Replace("{DATE}", baseBookEntry.RecordingTime.ToString(@"dd \de MMMM \de yyyy"));
+			x = x.Replace("{TIME}", baseBookEntry.RecordingTime.ToString(@"HH:mm"));
 
 			x = x.Replace("{CITY}", "Zacatecas, Zacatecas");
 
@@ -203,12 +203,12 @@ namespace Empiria.Land.Pages {
 
 
 		protected string GetRecordingSignerPosition() {
-			return $"C. Oficial Registrador del Distrito Judicial de {baseRecording.MainDocument.RecorderOffice.ShortName}";
+			return $"C. Oficial Registrador del Distrito Judicial de {baseBookEntry.MainDocument.RecorderOffice.ShortName}";
 		}
 
 
 		protected string GetRecordingSignerName() {
-			if (baseRecording.RecordingTime >= new DateTime(2022, 4, 1)) {
+			if (baseBookEntry.RecordingTime >= new DateTime(2022, 4, 1)) {
 				return "Lic. Roberto López Arellano";
 			} else {
 				return "Lic. Teresa de Jesús Alvarado Ortiz";
@@ -219,11 +219,11 @@ namespace Empiria.Land.Pages {
 		protected string GetDigitalSeal() {
 			string s = "||" + transaction.UID + "|" + transaction.Document.UID;
 			if (this.ShowAllRecordings) {
-				for (int i = 0; i < recordings.Count; i++) {
-					s += "|" + recordings[i].Id.ToString();
+				for (int i = 0; i < bookEntries.Count; i++) {
+					s += "|" + bookEntries[i].Id.ToString();
 				}
 			} else {
-				s += "|" + this.baseRecording.Id.ToString();
+				s += "|" + this.baseBookEntry.Id.ToString();
 			}
 			s += "||";
 			return Empiria.Security.Cryptographer.SignTextWithSystemCredentials(s);
@@ -233,11 +233,11 @@ namespace Empiria.Land.Pages {
 		protected string GetDigitalSignature() {
 			string s = "||" + transaction.UID + "|" + transaction.Document.UID;
 			if (this.ShowAllRecordings) {
-				for (int i = 0; i < recordings.Count; i++) {
-					s += "|" + recordings[i].Id.ToString();
+				for (int i = 0; i < bookEntries.Count; i++) {
+					s += "|" + bookEntries[i].Id.ToString();
 				}
 			} else {
-				s += "|" + this.baseRecording.Id.ToString();
+				s += "|" + this.baseBookEntry.Id.ToString();
 			}
 			return Empiria.Security.Cryptographer.SignTextWithSystemCredentials(s + "eSign");
 		}
@@ -249,8 +249,8 @@ namespace Empiria.Land.Pages {
 			return (centimeters * 28.3464657m).ToString("G4");
 		}
 
-		#endregion Private methods
+    #endregion Private methods
 
-	} // class RecordingSeal
+  } // class BookEntryRegistrationStamp
 
-} // namespace Empiria.Web.UI.FSM
+} // namespace Empiria.Land.Pages

@@ -76,7 +76,7 @@ namespace Empiria.Land.Media {
           return $"InstrumentId = {instrument.Id}";
         }
 
-      } else if (instance is PhysicalRecording bookEntry) {
+      } else if (instance is BookEntry bookEntry) {
         return $"BookEntryId = {bookEntry.Id}";
 
       }

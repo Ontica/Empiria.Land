@@ -79,10 +79,10 @@ namespace Empiria.Land.Registration {
         return RecordingAct.Empty;
       }
       RecordingAct incorporationAct = tract.Find((x) => EmpiriaMath.IsMemberOf(x.RecordingActType.Id,
-                                                 new int[] { 2750, 2709, 2710, 2711, 2712 }));    // Incorporation acts
+                                                 new int[] { 2279 }));    // Incorporation acts
       if (incorporationAct != null) {
         return incorporationAct;
-      } else if (!tract[0].PhysicalRecording.IsEmptyInstance) {
+      } else if (!tract[0].BookEntry.IsEmptyInstance) {
         return tract[0];
       } else {
         return RecordingAct.Empty;

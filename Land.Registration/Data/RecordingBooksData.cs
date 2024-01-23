@@ -23,7 +23,7 @@ namespace Empiria.Land.Data {
     #region Public methods
 
 
-    static internal DataTable GetBookRecordingNumbers(RecordingBook book) {
+    static internal DataTable GetBookEntriesNumbers(RecordingBook book) {
       string sql = "SELECT RecordingNo FROM LRSPhysicalRecordings" +
                    $" WHERE PhysicalBookId = {book.Id}" +
                    " AND RecordingStatus <> 'X' ORDER BY RecordingNo";
@@ -32,7 +32,7 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal int GetLastBookRecordingNumber(RecordingBook book) {
+    static internal int GetLastBookEntryNumber(RecordingBook book) {
       string sql = "SELECT MAX(RecordingNo) FROM LRSPhysicalRecordings" +
                    " WHERE PhysicalBookId = " + book.Id.ToString() +
                    " AND RecordingStatus <> 'X'";
@@ -40,32 +40,38 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal int GetNextRecordingNumberWithReuse(RecordingBook book) {
-      DataTable table = GetBookRecordingNumbers(book);
+    static internal int GetNextBookEntryNumberWithReuse(RecordingBook book) {
+      DataTable table = GetBookEntriesNumbers(book);
 
       if (table.Rows.Count == 0 && book.UsePerpetualNumbering) {
         return book.StartRecordingIndex;
       } else if (table.Rows.Count == 0 && !book.UsePerpetualNumbering) {
         return 1;
       }
+
       int indexValue = book.UsePerpetualNumbering ? book.StartRecordingIndex : 1;
+
       for (int i = 0; i < table.Rows.Count; i++, indexValue++) {
-        int currentRecordNumber = int.Parse((string) table.Rows[i]["RecordingNo"]);
-        if (indexValue == currentRecordNumber) {
+
+        int currentBookEntryNumber = int.Parse((string) table.Rows[i]["RecordingNo"]);
+
+        if (indexValue == currentBookEntryNumber) {
           continue;
-        } else if ((indexValue) < currentRecordNumber) {
+        } else if ((indexValue) < currentBookEntryNumber) {
           return indexValue;
-        } else if ((indexValue) > currentRecordNumber) {
-          throw new LandRegistrationException(LandRegistrationException.Msg.RecordingNumberAlreadyExists,
-                                              currentRecordNumber);
+        } else if ((indexValue) > currentBookEntryNumber) {
+          throw new LandRegistrationException(LandRegistrationException.Msg.BookEntryNumberAlreadyExists,
+                                              currentBookEntryNumber);
         }
       }
+
       return indexValue;
     }
 
 
-    static internal int GetNextRecordingNumberWithNoReuse(RecordingBook book) {
-      int currentRecordNumber = GetLastBookRecordingNumber(book);
+    static internal int GetNextBookEntryNumberWithNoReuse(RecordingBook book) {
+      int currentRecordNumber = GetLastBookEntryNumber(book);
+
       if (currentRecordNumber > 0) {
         return currentRecordNumber + 1;
       } else if (currentRecordNumber == 0 && book.UsePerpetualNumbering) {
@@ -107,12 +113,12 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal FixedList<PhysicalRecording> GetPhysicalRecordingsForDocument(int documentId) {
+    static internal FixedList<BookEntry> GetBookEntriesForDocument(int documentId) {
       string sql = $"SELECT * FROM LRSPhysicalRecordings " +
                    $"WHERE MainDocumentId = {documentId} AND RecordingStatus <> 'X' " +
                    $"ORDER BY PhysicalRecordingId";
 
-      return DataReader.GetFixedList<PhysicalRecording>(DataOperation.Parse(sql));
+      return DataReader.GetFixedList<BookEntry>(DataOperation.Parse(sql));
     }
 
 
@@ -134,20 +140,21 @@ namespace Empiria.Land.Data {
     }
 
 
-    static public FixedList<PhysicalRecording> GetRecordings(RecordingBook recordingBook) {
+    static public FixedList<BookEntry> GetRecordingBookEntries(RecordingBook recordingBook) {
       var operation = DataOperation.Parse("qryLRSPhysicalBookRecordings", recordingBook.Id);
 
-      return DataReader.GetFixedList<PhysicalRecording>(operation);
+      return DataReader.GetFixedList<BookEntry>(operation);
     }
 
 
-    static public DataRow GetRecordingWithRecordingNumber(RecordingBook recordingBook, string recordingNumber) {
+    static public DataRow GetRecordingWithBookEntryNumber(RecordingBook recordingBook,
+                                                          string bookEntryNumber) {
       return DataReader.GetDataRow(DataOperation.Parse("getLRSRecordingWithRecordingNumber",
-                                                       recordingBook.Id, recordingNumber));
+                                                       recordingBook.Id, bookEntryNumber));
     }
 
 
-    static internal PhysicalRecording FindRecording(RecordingBook recordingBook, string filter) {
+    static internal BookEntry FindRecordingBookEntry(RecordingBook recordingBook, string filter) {
       string sql = "SELECT * FROM LRSPhysicalRecordings WHERE " +
                    $"(PhysicalBookId = {recordingBook.Id} AND RecordingStatus <> 'X')";
 
@@ -157,15 +164,8 @@ namespace Empiria.Land.Data {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetObject<PhysicalRecording>(op, PhysicalRecording.Empty);
+      return DataReader.GetObject<BookEntry>(op, BookEntry.Empty);
     }
-
-
-    //static public DataView GetVolumeRecordingBooks(RecorderOffice recorderOffice, RecordingBookStatus status,
-    //                                               string filter, string sort) {
-    //  return DataReader.GetDataView(DataOperation.Parse("rptLRSVolumeBooks", recorderOffice.Id, (char) status),
-    //                                                    filter, sort);
-    //}
 
 
     static internal void UpdateRecordingsImageIndex(RecordingBook recordingBook, int startImageIndex, int offset) {
@@ -176,9 +176,9 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal void WriteRecording(PhysicalRecording o) {
+    static internal void WriteBookEntry(BookEntry o) {
       Assertion.Require(o.MainDocument.Id > 0,
-                       "Wrong data for physical recording. MainDocument was missed.");
+                       "Wrong data for book entry. MainDocument was missed.");
 
       var op = DataOperation.Parse("writeLRSPhysicalRecording", o.Id, o.UID, o.RecordingBook.Id,
                                    o.MainDocument.Id, o.Number, o.AsText, o.ExtendedData.GetJson().ToString(),

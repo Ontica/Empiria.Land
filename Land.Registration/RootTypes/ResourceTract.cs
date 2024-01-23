@@ -91,15 +91,16 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public PhysicalRecording GetLastPhysicalRecording() {
-      var lastRecodingAct = this.GetRecordingActs().FindLast(x => !x.PhysicalRecording.IsEmptyInstance &&
-                                                                  (x.RecordingActType.IsDomainActType || x.RecordingActType.IsStructureActType));
+    public BookEntry GetLastBookEntry() {
+      var lastRecodingAct = this.GetRecordingActs()
+                                .FindLast(x => !x.BookEntry.IsEmptyInstance &&
+                                               (x.RecordingActType.IsDomainActType || x.RecordingActType.IsStructureActType));
 
       if (lastRecodingAct == null) {
-        return PhysicalRecording.Empty;
+        return BookEntry.Empty;
       }
 
-      return lastRecodingAct.PhysicalRecording;
+      return lastRecodingAct.BookEntry;
     }
 
 
