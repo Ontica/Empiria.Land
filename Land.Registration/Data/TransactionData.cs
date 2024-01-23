@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Filing                                       Component : Filing Data Services                  *
-*  Assembly : Empiria.Land.Registration.dll                Pattern   : Data Services                         *
+*  Module   : Filing                                       Component : Data Services Layer                   *
+*  Assembly : Empiria.Land.Transactions.dll                Pattern   : Data Services                         *
 *  Type     : TransactionData                              License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Provides database read and write methods for recording office filings.                         *
@@ -117,8 +117,8 @@ namespace Empiria.Land.Data {
     static internal void WritePayment(LRSPayment o) {
       var op = DataOperation.Parse("writeLRSPayment", o.Id, o.Transaction.Id,
                                    o.PaymentOffice.Id, o.ReceiptNo, o.ReceiptTotal, o.ReceiptIssuedTime,
-                                   o.ExtensionData.ToString(), o.Recording.Id, o.PostingTime,
-                                   o.PostedBy.Id, (char) o.Status, String.Empty);
+                                   o.ExtensionData.ToString(), o.PostingTime,
+                                   o.PostedBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(op);
     }

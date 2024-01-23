@@ -1,11 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSPayment                                     Pattern  : Empiria Object Type                 *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Filing                                     Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data holder                             *
+*  Type     : LRSPayment                                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Represents a payment for a recorder office transaction.                                       *
+*  Summary  : Builds Record objects for Land entities.                                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -31,27 +30,13 @@ namespace Empiria.Land.Registration.Transactions {
     /// <summary>Initialize payment for transaction.</summary>
     internal LRSPayment(LRSTransaction transaction, string receiptNo,
                         decimal receiptTotal) {
-      Assertion.Require(transaction, "transaction");
+      Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(!transaction.Equals(LRSTransaction.Empty),
                         "transaction shouldn't be the empty instance.");
-      Assertion.Require(receiptNo, "receiptNo");
+      Assertion.Require(receiptNo, nameof(receiptNo));
       Assertion.Require(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
 
       this.Transaction = transaction;
-      this.ReceiptNo = receiptNo;
-      this.ReceiptTotal = receiptTotal;
-    }
-
-    /// <summary>Initialize payment for recording. Used for historic recordings
-    /// without a transaction.</summary>
-    internal LRSPayment(PhysicalRecording recording, string receiptNo,
-                        decimal receiptTotal) {
-      Assertion.Require(recording, "recording");
-      Assertion.Require(recording != PhysicalRecording.Empty, "recording shouldn't be the empty instance.");
-      Assertion.Require(receiptNo, "receiptNo");
-      Assertion.Require(receiptTotal >= 0, "receiptTotal shouldn't be a negative amount.");
-
-      this.Recording = recording;
       this.ReceiptNo = receiptNo;
       this.ReceiptTotal = receiptTotal;
     }
@@ -87,20 +72,6 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    [DataField("PhysicalRecordingId")]
-    LazyInstance<PhysicalRecording> _recording = LazyInstance<PhysicalRecording>.Empty;
-    public PhysicalRecording Recording {
-      get { return _recording.Value; }
-      private set {
-        _recording = LazyInstance<PhysicalRecording>.Parse(value);
-      }
-    }
-
-    //[DataField("PaymentExternalID")]
-    public string PaymentExternalID {
-      get;
-      private set;
-    }
 
     [DataField("PaymentOfficeId")]
     LazyInstance<Organization> _paymentOffice = LazyInstance<Organization>.Empty;
@@ -173,8 +144,8 @@ namespace Empiria.Land.Registration.Transactions {
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
       if (version == 1) {
         return new object[] {
-          1, "Id", this.Id, "TransactionId", this.Transaction.Id, "RecordingId", this.Recording.Id,
-          "PaymentExternalID", this.PaymentExternalID, "PaymentOfficeId", this.PaymentOffice.Id,
+          1, "Id", this.Id, "TransactionId", this.Transaction.Id, "RecordingId",
+          "PaymentOfficeId", this.PaymentOffice.Id,
           "ReceiptNo", this.ReceiptNo, "ReceiptTotal", this.ReceiptTotal,
           "ReceiptIssuedTime", this.ReceiptIssuedTime, "VerificationTime", this.VerificationTime,
           "PostingTime", this.PostingTime, "PostedById", this.PostedBy.Id
@@ -214,10 +185,6 @@ namespace Empiria.Land.Registration.Transactions {
         this.PostingTime = DateTime.Now;
       }
       TransactionData.WritePayment(this);
-    }
-
-    public void Verify() {
-      throw new NotImplementedException();
     }
 
     #endregion Public methods
