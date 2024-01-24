@@ -218,7 +218,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
       //    using (var context = StorageContext.Open()) {
-      _transaction.SetInternalControlNo();
+      _transaction.SetInternalControlNumber();
       _transaction.PresentationTime = DateTime.Now;
       _transaction.ClosingTime = ExecutionServer.DateMaxValue;
 

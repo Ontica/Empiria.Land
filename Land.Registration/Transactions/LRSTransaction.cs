@@ -167,30 +167,18 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     [DataField("InternalControlNo")]
-    public string InternalControlNo {
+    public string InternalControlNumber {
       get;
       private set;
     }
 
 
-    public string InternalControlNoFormatted {
+    public string InternalControlNumberFormatted {
       get {
-        if (this.InternalControlNo.Length == 0) {
+        if (this.InternalControlNumber.Length == 0) {
           return string.Empty;
         }
-        return string.Format("{0:n0}", int.Parse(this.InternalControlNo));
-      }
-    }
-
-    private string OldTransactionUID {
-      get {
-        var temp = this.UID.Replace("TR-ZS-", "ZS");
-
-        temp = temp.Replace("-", string.Empty);
-
-        temp = temp.Substring(0, temp.Length - 1) + "-" + temp.Substring(temp.Length - 1);
-
-        return temp;
+        return string.Format("{0:n0}", int.Parse(this.InternalControlNumber));
       }
     }
 
@@ -255,25 +243,11 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public bool ComesFromCitysFilingSystem {
-      get {
-        return !String.IsNullOrWhiteSpace(this.ExternalTransactionNo) && !this.ExternalTransaction.IsEmptyInstance
-               && this.DocumentDescriptor.StartsWith("CITyS");
-      }
-    }
-
-
     [DataField("ExternalTransactionNo")]
     public string ExternalTransactionNo {
       get;
       internal set;
     }
-
-
-    public string GetInstrumentUID() {
-      return TransactionData.GetTransactionInstrumentUID(this);
-    }
-
 
     public void SetInstrument(IIdentifiable instrument) {
       this.InstrumentId = instrument.Id;
@@ -348,23 +322,6 @@ namespace Empiria.Land.Registration.Transactions {
     public decimal ComplexityIndex {
       get;
       private set;
-    }
-
-
-    public DateTime EstimatedDueTime {
-      get {
-        int addedDays = (this.TransactionType.Id == 699 || this.TransactionType.Id == 702) ? 2 : 7;
-        DateTime date = this.PresentationTime.Date.AddDays(addedDays);
-        if (this.PresentationTime.Hour > 12) {
-          addedDays++;
-        }
-        if (date.DayOfWeek == DayOfWeek.Saturday) {
-          date = date.AddDays(2);
-        } else if (date.DayOfWeek == DayOfWeek.Sunday) {
-          date = date.AddDays(1);
-        }
-        return date;
-      }
     }
 
     public TransactionControlData ControlData {
@@ -685,8 +642,8 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    internal void SetInternalControlNo() {
-      this.InternalControlNo = this.BuildControlNumber();
+    internal void SetInternalControlNumber() {
+      this.InternalControlNumber = this.BuildControlNumber();
     }
 
     public void RemoveDocument() {
@@ -739,7 +696,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     public FixedList<FormerCertificate> GetIssuedCertificates() {
-      return Empiria.Land.Data.FormerCertificatesData.GetTransactionIssuedCertificates(this);
+      return FormerCertificatesData.GetTransactionIssuedCertificates(this);
     }
 
 
@@ -770,7 +727,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (base.IsNew) {
         this.GUID = Guid.NewGuid().ToString();
       }
-      this.Keywords = EmpiriaString.BuildKeywords(this.InternalControlNo, this.UID, this.OldTransactionUID,
+      this.Keywords = EmpiriaString.BuildKeywords(this.InternalControlNumber, this.UID,
                                                   this.Document.UID,
                                                   this.Payments.Count == 1 ? this.Payments[0].ReceiptNo : string.Empty,
                                                   this.DocumentDescriptor, this.RequestedBy,
@@ -790,7 +747,7 @@ namespace Empiria.Land.Registration.Transactions {
     public string QRCodeSecurityHash() {
       if (!this.IsNew) {
         return Cryptographer.CreateHashCode(this.Id.ToString("00000000"), this.UID)
-                             .Substring(0, 8);
+                            .Substring(0, 8);
       } else {
         return String.Empty;
       }

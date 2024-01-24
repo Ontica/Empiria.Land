@@ -128,7 +128,7 @@ namespace Empiria.Land.Data {
       var op = DataOperation.Parse("writeLRSTransaction", o.Id, o.TransactionType.Id, o.GUID, o.UID,
                   o.DocumentType.Id, o.DocumentDescriptor, o.Document.Id, o.BaseResource.Id,
                   o.RecorderOffice.Id, o.RequestedBy, o.Agency.Id,
-                  o.ExternalTransactionNo, o.InternalControlNo, o.ExtensionData.ToString(),
+                  o.ExternalTransactionNo, o.InternalControlNumber, o.ExtensionData.ToString(),
                   o.Keywords, o.PresentationTime, o.ExpectedDelivery, o.LastReentryTime, o.ClosingTime,
                   o.LastDeliveryTime, o.NonWorkingTime, o.ComplexityIndex, o.IsArchived,
                   (char) o.Workflow.CurrentStatus, o.Integrity.GetUpdatedHashCode());

@@ -42,7 +42,7 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public InstrumentRecordingDto GetInstrumentRecording(string instrumentRecordingUID) {
-      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(instrumentRecordingUID, nameof(instrumentRecordingUID));
 
       RecordingDocument instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -51,7 +51,7 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public InstrumentRecordingDto CloseInstrumentRecording(string instrumentRecordingUID) {
-      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(instrumentRecordingUID, nameof(instrumentRecordingUID));
 
       RecordingDocument instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -64,7 +64,7 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public InstrumentRecordingDto OpenInstrumentRecording(string instrumentRecordingUID) {
-      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
+      Assertion.Require(instrumentRecordingUID, nameof(instrumentRecordingUID));
 
       RecordingDocument instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
@@ -77,7 +77,6 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     #endregion Use cases
-
 
   }  // class InstrumentRecordingUseCases
 

@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration {
       _document = document;
       _instrument = Instrument.Parse(_document.InstrumentId);
       _bookEntry = LoadBookEntry(_document);
-      _transaction = LoadTransaction(document);
+      _transaction = LoadTransaction(_document);
     }
 
     #endregion Constructors and parsers

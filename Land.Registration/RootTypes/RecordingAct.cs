@@ -966,7 +966,7 @@ namespace Empiria.Land.Registration {
       this.RelatedResource = relatedResource ?? Resource.Empty;
       this.Percentage = percentage;
 
-      this.Index = this.Document.AddRecordingAct(this);
+      this.Index = this.Document.AppendRecordingAct(this);
     }
 
     public void Update(RecordingActFields fields) {

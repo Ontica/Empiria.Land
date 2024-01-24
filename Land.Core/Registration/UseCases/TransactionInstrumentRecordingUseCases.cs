@@ -38,7 +38,7 @@ namespace Empiria.Land.Registration.UseCases {
     #region Use cases
 
     public InstrumentRecordingDto GetTransactionInstrumentRecording(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
@@ -48,9 +48,10 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
-    public InstrumentRecordingDto CreateTransactionInstrumentRecording(string transactionUID, InstrumentFields fields) {
-      Assertion.Require(transactionUID, "transactionUID");
-      Assertion.Require(fields, "fields");
+    public InstrumentRecordingDto CreateTransactionInstrumentRecording(string transactionUID,
+                                                                       InstrumentFields fields) {
+      Assertion.Require(transactionUID, nameof(transactionUID));
+      Assertion.Require(fields, nameof(fields));
       Assertion.Require(fields.Type.HasValue, "Instrument.Type value is required.");
 
       var transaction = LRSTransaction.Parse(transactionUID);
@@ -76,8 +77,8 @@ namespace Empiria.Land.Registration.UseCases {
 
     public InstrumentRecordingDto UpdateTransactionInstrumentRecording(string transactionUID,
                                                                        InstrumentFields fields) {
-      Assertion.Require(transactionUID, "transactionUID");
-      Assertion.Require(fields, "fields");
+      Assertion.Require(transactionUID, nameof(transactionUID));
+      Assertion.Require(fields, nameof(fields));
 
       var transaction = LRSTransaction.Parse(transactionUID);
 

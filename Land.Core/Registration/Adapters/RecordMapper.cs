@@ -40,7 +40,7 @@ namespace Empiria.Land.Registration.Adapters {
       return new RecordTransactionDto {
         UID = transaction.GUID,
         TransactionID = transaction.UID,
-        InternalControlNo = transaction.InternalControlNo
+        InternalControlNo = transaction.InternalControlNumber
       };
     }
 

@@ -24,37 +24,36 @@ namespace Empiria.Land.Transactions {
   static internal class TransactionMapper {
 
     static internal FixedList<TransactionDto> Map(FixedList<LRSTransaction> list) {
-      return new FixedList<TransactionDto>(list.Select((x) => Map(x)));
+      return list.Select((x) => Map(x))
+                 .ToFixedList();
     }
 
     static internal TransactionDto Map(LRSTransaction transaction) {
       var currentTask = transaction.Workflow.GetCurrentTask();
 
-      var dto = new TransactionDto();
-
-      dto.UID = transaction.UID;
-      dto.TransactionID = transaction.UID;
-      dto.Type = transaction.TransactionType.MapToNamedEntity();
-      dto.Subtype = transaction.DocumentType.MapToNamedEntity();
-      dto.RequestedBy = GetRequestedByDto(transaction);
-      dto.PresentationTime = transaction.PresentationTime;
-      dto.InternalControlNo = transaction.InternalControlNoFormatted;
-      dto.Agency = transaction.Agency.MapToNamedEntity();
-      dto.FilingOffice = transaction.RecorderOffice.MapToNamedEntity();
-      dto.InstrumentDescriptor = transaction.DocumentDescriptor;
-      dto.RequestedServices = GetRequestedServicesDtoArray(transaction);
-      dto.ControlVoucher = GetControlVoucherDto(transaction);
-      dto.PaymentOrder = GetPaymentOrderDto(transaction);
-      dto.Payment = GetPaymentDto(transaction);
-      dto.Billing = GetBillingDto(transaction);
-      dto.SubmissionReceipt = GetSubmissionReceiptDto(transaction);
-      dto.StatusName = currentTask.CurrentStatusName;
-      dto.AssignedTo = currentTask.Responsible.MapToNamedEntity();
-      dto.NextStatusName = currentTask.NextStatusName;
-      dto.NextAssignedTo = currentTask.NextContact.MapToNamedEntity();
-      dto.Actions = GetControlDataDto(transaction);
-
-      return dto;
+      return new TransactionDto {
+        UID = transaction.UID,
+        TransactionID = transaction.UID,
+        Type = transaction.TransactionType.MapToNamedEntity(),
+        Subtype = transaction.DocumentType.MapToNamedEntity(),
+        RequestedBy = GetRequestedByDto(transaction),
+        PresentationTime = transaction.PresentationTime,
+        InternalControlNo = transaction.InternalControlNumberFormatted,
+        Agency = transaction.Agency.MapToNamedEntity(),
+        FilingOffice = transaction.RecorderOffice.MapToNamedEntity(),
+        InstrumentDescriptor = transaction.DocumentDescriptor,
+        RequestedServices = GetRequestedServicesDtoArray(transaction),
+        ControlVoucher = GetControlVoucherDto(transaction),
+        PaymentOrder = GetPaymentOrderDto(transaction),
+        Payment = GetPaymentDto(transaction),
+        Billing = GetBillingDto(transaction),
+        SubmissionReceipt = GetSubmissionReceiptDto(transaction),
+        StatusName = currentTask.CurrentStatusName,
+        AssignedTo = currentTask.Responsible.MapToNamedEntity(),
+        NextStatusName = currentTask.NextStatusName,
+        NextAssignedTo = currentTask.NextContact.MapToNamedEntity(),
+        Actions = GetControlDataDto(transaction)
+      };
     }
 
 
@@ -65,27 +64,24 @@ namespace Empiria.Land.Transactions {
 
 
     static internal TransactionDescriptor MapToDescriptor(LRSTransaction transaction) {
-      var dto = new TransactionDescriptor();
-
       var currentTask = transaction.Workflow.GetCurrentTask();
 
-      dto.UID = transaction.UID;
-      dto.TransactionID = transaction.UID;
-      dto.Type = transaction.TransactionType.Name;
-      dto.Subtype = transaction.DocumentType.Name;
-      dto.RequestedBy = transaction.RequestedBy;
-      dto.PresentationTime = transaction.PresentationTime;
-      dto.InternalControlNo = transaction.InternalControlNoFormatted;
-      dto.Status = currentTask.CurrentStatus.ToString();
-      dto.StatusName = currentTask.CurrentStatusName;
-      dto.AssignedToUID = currentTask.Responsible.UID;
-      dto.AssignedToName = currentTask.Responsible.ShortName;
-
-      dto.NextStatus = currentTask.NextStatus.ToString();
-      dto.NextStatusName = currentTask.NextStatusName;
-      dto.NextAssignedToName = currentTask.NextContact.ShortName;
-
-      return dto;
+      return new TransactionDescriptor {
+        UID = transaction.UID,
+        TransactionID = transaction.UID,
+        Type = transaction.TransactionType.Name,
+        Subtype = transaction.DocumentType.Name,
+        RequestedBy = transaction.RequestedBy,
+        PresentationTime = transaction.PresentationTime,
+        InternalControlNo = transaction.InternalControlNumberFormatted,
+        Status = currentTask.CurrentStatus.ToString(),
+        StatusName = currentTask.CurrentStatusName,
+        AssignedToUID = currentTask.Responsible.UID,
+        AssignedToName = currentTask.Responsible.ShortName,
+        NextStatus = currentTask.NextStatus.ToString(),
+        NextStatusName = currentTask.NextStatusName,
+        NextAssignedToName = currentTask.NextContact.ShortName
+      };
     }
 
     static internal LRSTransactionStatus MapStatus(TransactionStatus currentStatus) {
@@ -107,6 +103,7 @@ namespace Empiria.Land.Transactions {
 
     static private TransactionControlDataDto GetControlDataDto(LRSTransaction transaction) {
       TransactionControlData controlData = transaction.ControlData;
+
       TransactionControlDataDto dto = new TransactionControlDataDto();
 
       dto.Can.Edit = controlData.CanEdit;

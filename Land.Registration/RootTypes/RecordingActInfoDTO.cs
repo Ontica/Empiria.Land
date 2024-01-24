@@ -17,41 +17,19 @@ namespace Empiria.Land.Registration {
   /// and send it to the recorder expert.</summary>
   public class RecordingActInfoDTO {
 
-    public RecordingActInfoDTO(int recordingActId) {
+    private RecordingActInfoDTO() {
       Initialize();
-      this.RecordingActId = recordingActId;
-      this.RecordingActType = RecordingAct.Parse(this.RecordingActId).RecordingActType;
     }
-
 
     public RecordingActInfoDTO(string recordingActUID) {
       Initialize();
+
       var recordingAct = RecordingAct.Parse(recordingActUID);
 
       this.RecordingActType = recordingAct.RecordingActType;
       this.RecordingActId = recordingAct.Id;
     }
 
-
-    public RecordingActInfoDTO(int recordingActTypeId, int recordingBookId,
-                               int bookEntryId = -1, string bookEntryNumber = "") {
-      Initialize();
-
-      this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
-      this.RecordingBook = RecordingBook.Parse(recordingBookId);
-
-      if (bookEntryId != -1) {
-        this.BookEntry = BookEntry.Parse(bookEntryId);
-
-      } else if (bookEntryNumber != String.Empty) {
-        this.BookEntry = this.RecordingBook.AddBookEntry(bookEntryNumber);
-        this.BookEntryWasCreated = true;
-
-      } else {
-        this.BookEntry = BookEntry.Empty;
-
-      }
-    }
 
     private void Initialize() {
       this.RecordingActId = -1;
@@ -62,7 +40,7 @@ namespace Empiria.Land.Registration {
 
     static public RecordingActInfoDTO Empty {
       get {
-        return new RecordingActInfoDTO(-1, -1);
+        return new RecordingActInfoDTO();
       }
     }
 

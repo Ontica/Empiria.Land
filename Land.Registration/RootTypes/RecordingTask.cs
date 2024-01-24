@@ -84,7 +84,7 @@ namespace Empiria.Land.Registration {
     #region Constructors and parsers
 
     public RecordingTask(RecordingTaskFields fields) {
-      Assertion.Require(fields, "fields");
+      Assertion.Require(fields, nameof(fields));
 
       this.RecordingTaskType = fields.RecordingTaskType;
       this.Document = RecordingDocument.ParseGuid(fields.RecordingDocumentUID);
@@ -110,50 +110,6 @@ namespace Empiria.Land.Registration {
 
       if (!String.IsNullOrWhiteSpace(fields.TargetRecordingActUID)) {
         this.TargetActInfo = new RecordingActInfoDTO(fields.TargetRecordingActUID);
-      }
-    }
-
-
-    /// <summary>Used only by TLX v4.0</summary>
-    public RecordingTask(int documentId = -1,
-                         int recordingActTypeId = -1,
-                         RecordingTaskType recordingTaskType = RecordingTaskType.actNotApplyToProperty,
-                         int precedentRecordingId = -1, int precedentResourceId = -1,
-                         string resourceName = "", string cadastralKey = "",
-                         RealEstatePartitionDTO partition = null, RecordingActInfoDTO targetActInfo = null) {
-      this.Document = RecordingDocument.Parse(documentId);
-      this.RecordingActType = RecordingActType.Parse(recordingActTypeId);
-      this.RecordingTaskType = recordingTaskType;
-      this.ResourceName = EmpiriaString.TrimAll(resourceName);
-      this.CadastralKey = cadastralKey;
-      this.PrecedentBookEntry = BookEntry.Parse(precedentRecordingId);
-
-      if (precedentResourceId == 0) {
-        var data = new RealEstateExtData() { CadastralKey = cadastralKey };
-
-        this.PrecedentProperty = new RealEstate(data);
-
-      } else if (precedentResourceId == -1) {
-        this.PrecedentProperty = Resource.Empty;
-
-      } else {
-        this.PrecedentProperty = Resource.Parse(precedentResourceId);
-
-      }
-
-      if (partition != null) {
-        this.PartitionInfo = partition;
-
-      } else {
-        this.PartitionInfo = RealEstatePartitionDTO.Empty;
-
-      }
-
-      if (targetActInfo != null) {
-        this.TargetActInfo = targetActInfo;
-
-      } else {
-        this.TargetActInfo = RecordingActInfoDTO.Empty;
       }
     }
 
@@ -226,16 +182,6 @@ namespace Empiria.Land.Registration {
 
 
     #endregion Properties
-
-    #region Public methods
-
-    public void AssertValid() {
-      var expert = new RecorderExpert(this);
-
-      expert.AssertValidTask();
-    }
-
-    #endregion Public methods
 
   }  // class RecordingTask
 

@@ -252,6 +252,7 @@ namespace Empiria.Land.Registration {
       set;
     } = new RecordingDocumentExtData();
 
+
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.UID,
@@ -334,7 +335,7 @@ namespace Empiria.Land.Registration {
     /// <summary>Adds a recording act to the document's recording acts collection.</summary>
     /// <param name="recordingAct">The item to be added at the end of the RecordingActs collection.</param>
     /// <returns> The recording act's index inside the RecordingActs collection.</returns>
-    internal int AddRecordingAct(RecordingAct recordingAct) {
+    internal int AppendRecordingAct(RecordingAct recordingAct) {
       Assertion.Require(recordingAct, "recordingAct");
 
       Assertion.Require(this.IsHistoricDocument || !this.IsClosed,
@@ -478,13 +479,6 @@ namespace Empiria.Land.Registration {
         } else {
           return RecorderOffice.Empty;
         }
-      }
-    }
-
-
-    public string TransactionID {
-      get {
-        return this.HasTransaction ? GetTransaction().UID : string.Empty;
       }
     }
 
