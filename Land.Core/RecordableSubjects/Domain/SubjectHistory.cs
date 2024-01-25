@@ -10,7 +10,6 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.Land.RecordableSubjects.Adapters;
 using Empiria.Land.Registration;
 
 namespace Empiria.Land.RecordableSubjects {
@@ -39,9 +38,9 @@ namespace Empiria.Land.RecordableSubjects {
     }
 
 
-    public SubjectEditionRules EditionRules {
+    public EditionRules EditionRules {
       get {
-        return new SubjectEditionRules {
+        return new EditionRules {
           CanBeClosed = true,
           CanBeUpdated = true
         };

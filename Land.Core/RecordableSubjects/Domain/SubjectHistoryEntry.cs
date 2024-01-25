@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.RecordableSubjects.Adapters;
 using Empiria.Land.Registration;
 
 namespace Empiria.Land.RecordableSubjects {
@@ -80,7 +79,7 @@ namespace Empiria.Land.RecordableSubjects {
     }
 
 
-    public SubjectEditionRules EditionRules {
+    public EditionRules EditionRules {
       get {
         return GetEditionRules();
       }
@@ -91,11 +90,11 @@ namespace Empiria.Land.RecordableSubjects {
 
     #region Helpers
 
-    private SubjectEditionRules GetEditionRules() {
+    private EditionRules GetEditionRules() {
       bool isHistoric = RecordingAct.Document.IsHistoricDocument;
       bool isClosed = RecordingAct.Document.IsClosed;
 
-      return new SubjectEditionRules {
+      return new EditionRules {
         CanBeDeleted = isHistoric && !isClosed,
         CanBeClosed = isHistoric && !isClosed,
         CanBeOpened = isHistoric && isClosed,
