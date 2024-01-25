@@ -49,7 +49,7 @@
 						      <tr>
 							      <td align="right">
                       <img style="margin-left:8pt" alt="" title="" src="../user.controls/barcode.aspx?data=<%=transaction.UID%>" />
-                        <br />Control: <b><%=transaction.InternalControlNoFormatted%></b>
+                        <br />Control: <b><%=transaction.InternalControlNumberFormatted%></b>
 							      </td>
 						      </tr>
 					      </table>
