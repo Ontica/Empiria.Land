@@ -20,9 +20,8 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-
     private RecordingDocumentImaging() {
-
+      // Used by Empiria Framework
     }
 
     public RecordingDocumentImaging(RecordingDocument document) {

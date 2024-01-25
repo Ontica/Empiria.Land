@@ -23,6 +23,10 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
+    private RecordingDocumentSecurity() {
+      // Used by Empiria Framework
+    }
+
     internal RecordingDocumentSecurity(RecordingDocument document) {
       this.Document = document;
     }
