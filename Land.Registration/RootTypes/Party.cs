@@ -127,9 +127,6 @@ namespace Empiria.Land.Registration {
       this.Save();
     }
 
-    public FixedList<RecordingActParty> GetRecordingActs() {
-      return PartyData.GetRecordingActs(this);
-    }
 
     protected override void OnSave() {
       PartyData.WriteParty(this);

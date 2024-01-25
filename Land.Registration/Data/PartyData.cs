@@ -85,20 +85,6 @@ namespace Empiria.Land.Data {
       return secondaries.Find((x) => x.Party.Equals(party));
     }
 
-    internal static FixedList<RecordingActParty> GetRecordingActs(Party party) {
-      string sql = "SELECT * FROM LRSRecordingActParties " +
-                   "WHERE (PartyId = {0} OR PartyOfId = {0}) AND " +
-                   "RecActPartyStatus <> 'X'";
-
-      sql = String.Format(sql, party.Id);
-
-      var list = DataReader.GetList<RecordingActParty>(DataOperation.Parse(sql));
-
-      list.Sort((x, y) => (((IResourceTractItem) x.RecordingAct).TractPrelationStamp).CompareTo(
-                                                      ((IResourceTractItem) y.RecordingAct).TractPrelationStamp));
-      return list.ToFixedList();
-    }
-
 
     static internal void WriteParty(Party o) {
       var dataOperation = DataOperation.Parse("writeLRSParty", o.Id, o.UID, o.GetEmpiriaType().Id,
