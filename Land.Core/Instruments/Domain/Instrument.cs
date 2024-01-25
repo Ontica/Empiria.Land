@@ -88,7 +88,6 @@ namespace Empiria.Land.Instruments {
     }
 
 
-
     public string AsText {
       get {
         return GetInstrumentAsText();

@@ -37,6 +37,7 @@ namespace Empiria.Land.Transactions.Workflow {
         var transaction = LRSTransaction.Parse(transactionUID);
 
         assertions.AssertExecution(transaction, command, user);
+
         Execute(transaction, command);
       }
     }
@@ -46,8 +47,7 @@ namespace Empiria.Land.Transactions.Workflow {
       return _changesList.ToFixedList();
     }
 
-    #region Private methods
-
+    #region Helpers
 
     private void Execute(LRSTransaction transaction, WorkflowCommand command) {
       var workflow = transaction.Workflow;
@@ -90,6 +90,7 @@ namespace Empiria.Land.Transactions.Workflow {
         case WorkflowCommandType.Unarchive:
         case WorkflowCommandType.Unsign:
           break;
+
         default:
           throw Assertion.EnsureNoReachThisCode();
       }
@@ -99,7 +100,7 @@ namespace Empiria.Land.Transactions.Workflow {
       _changesList.Add(mapped);
     }
 
-    #endregion Private methods
+    #endregion Helpers
 
   }  // class WorkflowEngine
 

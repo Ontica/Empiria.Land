@@ -11,7 +11,6 @@
 using System;
 using System.Data;
 
-using Empiria.Contacts;
 using Empiria.DataTypes;
 using Empiria.Json;
 using Empiria.Security;
@@ -214,7 +213,7 @@ namespace Empiria.Land.Registration.Transactions {
     protected override void OnSave() {
       TransactionData.WriteTransactionItem(this);
 
-      this.Transaction.OnRecordingActsUpdated();
+      this.Transaction.OnTransactionItemsUpdated();
     }
 
     #endregion Public methods

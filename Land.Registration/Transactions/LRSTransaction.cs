@@ -36,9 +36,9 @@ namespace Empiria.Land.Registration.Transactions {
 
     private static readonly decimal BaseSalaryValue = decimal.Parse(ConfigurationData.GetString("BaseSalaryValue"));
 
-    private Lazy<LRSTransactionItemList> recordingActs = null;
-    private Lazy<LRSPaymentList> payments = null;
-    private Lazy<LRSWorkflow> workflow = null;
+    private Lazy<LRSTransactionItemList> _transactionItems = null;
+    private Lazy<LRSPaymentList> _payments = null;
+    private Lazy<LRSWorkflow> _workflow = null;
 
     #endregion Fields
 
@@ -66,9 +66,9 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     private void Initialize() {
-      recordingActs = new Lazy<LRSTransactionItemList>(() => new LRSTransactionItemList());
-      payments = new Lazy<LRSPaymentList>(() => new LRSPaymentList());
-      workflow = new Lazy<LRSWorkflow>(() => new LRSWorkflow(this));
+      _transactionItems = new Lazy<LRSTransactionItemList>(() => new LRSTransactionItemList());
+      _payments = new Lazy<LRSPaymentList>(() => new LRSPaymentList());
+      _workflow = new Lazy<LRSWorkflow>(() => new LRSWorkflow(this));
     }
 
 
@@ -338,7 +338,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public LRSTransactionItemList Items {
       get {
-        return recordingActs.Value;
+        return _transactionItems.Value;
       }
     }
 
@@ -378,13 +378,13 @@ namespace Empiria.Land.Registration.Transactions {
 
     public LRSPaymentList Payments {
       get {
-        return payments.Value;
+        return _payments.Value;
       }
     }
 
     public LRSWorkflow Workflow {
       get {
-        return workflow.Value;
+        return _workflow.Value;
       }
     }
 
@@ -701,17 +701,17 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     protected override void OnLoadObjectData(System.Data.DataRow row) {
-      recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
-      payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
+      _transactionItems = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
+      _payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
 
-      workflow = new Lazy<LRSWorkflow>(
+      _workflow = new Lazy<LRSWorkflow>(
                             () => LRSWorkflow.Parse(this, (LRSTransactionStatus) Convert.ToChar(row["TransactionStatus"])));
 
       this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);
     }
 
-    internal void OnRecordingActsUpdated() {
-      recordingActs = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
+    internal void OnTransactionItemsUpdated() {
+      _transactionItems = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
       this.UpdateComplexityIndex();
     }
 
@@ -737,7 +737,7 @@ namespace Empiria.Land.Registration.Transactions {
       TransactionData.WriteTransaction(this);
       if (base.IsNew) {
         var newWorkflow = LRSWorkflow.Create(this);
-        workflow = new Lazy<LRSWorkflow>(() => newWorkflow);
+        _workflow = new Lazy<LRSWorkflow>(() => newWorkflow);
 
         // this.AddAutomaticItems();
       }

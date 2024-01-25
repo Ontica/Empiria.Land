@@ -137,14 +137,14 @@ namespace Empiria.Land.Transactions.Workflow {
       var currentStatus = transaction.Workflow.GetCurrentTask().CurrentStatus;
 
       return NextStatusList(transaction.TransactionType,
-                               transaction.DocumentType,
-                               currentStatus).ToFixedList();
+                            transaction.DocumentType,
+                            currentStatus).ToFixedList();
     }
 
 
-    public List<LRSTransactionStatus> NextStatusList(LRSTransactionType type,
-                                                     LRSDocumentType docType,
-                                                     LRSTransactionStatus currentStatus) {
+    private List<LRSTransactionStatus> NextStatusList(LRSTransactionType type,
+                                                      LRSDocumentType docType,
+                                                      LRSTransactionStatus currentStatus) {
       Assertion.Require(type, "type");
       Assertion.Require(docType, "docType");
 
