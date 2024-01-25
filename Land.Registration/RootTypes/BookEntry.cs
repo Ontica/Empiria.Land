@@ -155,15 +155,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public Contact ReviewedBy {
-      get {
-        return ExtendedData.ReviewedBy;
-      }
-      private set {
-        ExtendedData.ReviewedBy = value;
-      }
-    }
-
     public Contact AuthorizedBy {
       get {
         return ExtendedData.AuthorizedBy;
@@ -266,7 +257,15 @@ namespace Empiria.Land.Registration {
     }
 
     public void Delete() {
-      Delete(true);
+      Assertion.Require(this.RecordingActs.Count == 0,
+                            "This recording can't be deleted because it has recording acts.");
+      Assertion.Require(this.RecordingBook.IsAvailableForManualEditing ||
+                        this.RecordingBook.Status == RecordingBookStatus.Opened,
+                       "This recording can't be deleted because its recording book is not available for manual editing.");
+
+      this.Status = RecordableObjectStatus.Deleted;
+
+      this.Save();
     }
 
     public RecordingAct GetRecordingAct(int recordingActId) {
@@ -277,18 +276,6 @@ namespace Empiria.Land.Registration {
         throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording,
                                             recordingActId, this.Id);
       }
-    }
-
-    public FixedList<Resource> GetResources() {
-      return ResourceData.GetBookEntryResources(this);
-    }
-
-    public FixedList<RecordingAct> GetAnnotationActs() {
-      return this.RecordingActs.FindAll((x) => x.IsAnnotation);
-    }
-
-    public FixedList<RecordingAct> GetNoAnnotationActs() {
-      return this.RecordingActs.FindAll((x) => !x.IsAnnotation);
     }
 
     protected override void OnSave() {
@@ -307,14 +294,6 @@ namespace Empiria.Land.Registration {
       this.recordingActList = GetNewRecordingActListLazyInstance();
     }
 
-    public void SortRecordingActs() {
-      this.recordingActList = GetNewRecordingActListLazyInstance();
-      for (int i = 0; i < this.RecordingActs.Count; i++) {
-        RecordingActs[i].Index = i + 1;
-        RecordingActs[i].Save();
-      }
-      this.recordingActList = GetNewRecordingActListLazyInstance();
-    }
 
     public void Update(BookEntryDto data) {
       this.LoadData(data);
@@ -325,30 +304,6 @@ namespace Empiria.Land.Registration {
     #endregion Public methods
 
     #region Private methods
-
-    private void Delete(bool publicCall) {
-      Assertion.Require(this.RecordingActs.Count == 0,
-                        "This recording can't be deleted because it has recording acts.");
-      Assertion.Require(!publicCall || this.RecordingBook.IsAvailableForManualEditing ||
-                        this.RecordingBook.Status == RecordingBookStatus.Opened,
-                       "This recording can't be deleted because its recording book is not available for manual editing.");
-      this.Status = RecordableObjectStatus.Deleted;
-      //this.canceledBy = Contact.Parse(ExecutionServer.CurrentUserId);
-      //this.canceledTime = DateTime.Now;
-      this.Save();
-    }
-
-    private void DeleteMeIfNecessary() {
-      if (this.RecordingBook.IsAvailableForManualEditing) {
-        return;
-      }
-      if (this.RecordingActs.Count != 0) {
-        return;
-      }
-      this.Delete(false);
-    }
-
-
 
     private Lazy<FixedList<RecordingAct>> GetNewRecordingActListLazyInstance() {
       return new Lazy<FixedList<RecordingAct>>(() => RecordingActsData.GetBookEntryRecordedActs(this));
