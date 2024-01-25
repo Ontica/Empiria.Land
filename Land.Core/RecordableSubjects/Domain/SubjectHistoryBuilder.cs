@@ -77,7 +77,7 @@ namespace Empiria.Land.RecordableSubjects {
       string temp = BuildRecordingActText(recordingAct);
 
 
-      if (!Resource.IsCreationalRole(recordingAct.ResourceRole)) {
+      if (!recordingAct.ResourceRole.IsCreationalRole()) {
         return temp;
       }
 

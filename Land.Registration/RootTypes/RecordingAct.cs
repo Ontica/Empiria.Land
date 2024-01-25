@@ -469,7 +469,7 @@ namespace Empiria.Land.Registration {
     public bool AppliedOverNewPartition {
       get {
           return this.Resource is RealEstate realEstate &&
-                 Resource.IsCreationalRole(this.ResourceRole) &&
+                 this.ResourceRole.IsCreationalRole() &&
                  !realEstate.IsPartitionOf.IsEmptyInstance &&
                  realEstate.IsInTheRankOfTheFirstDomainAct(this);
       }

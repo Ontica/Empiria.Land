@@ -95,4 +95,36 @@ namespace Empiria.Land.Registration {
 
   }  // enum ResourceRole
 
+
+
+  /// <summary>Extension  methods for ResourceRoleExtension enum instances</summary>
+  public static class ResourceRoleExtensionMethods {
+
+    static public bool IsCancelationRole(this ResourceRole resourceRole) {
+      return (resourceRole == ResourceRole.Canceled ||
+              resourceRole == ResourceRole.MergedInto ||
+              resourceRole == ResourceRole.Split);
+    }
+
+
+    static public bool IsCreationalRole(this ResourceRole resourceRole) {
+      return (resourceRole == ResourceRole.Created ||
+              resourceRole == ResourceRole.DivisionOf ||
+              resourceRole == ResourceRole.Extended ||
+              resourceRole == ResourceRole.PartitionOf);
+    }
+
+
+    static public bool IsInformativeRole(this ResourceRole resourceRole) {
+      return (resourceRole == ResourceRole.Edited ||
+              resourceRole == ResourceRole.Informative);
+    }
+
+
+    static public bool IsResourceEditingRole(this ResourceRole resourceRole) {
+      return (IsCreationalRole(resourceRole) || resourceRole == ResourceRole.Edited);
+    }
+
+  }  // class ResourceRoleExtensionMethods
+
 } // namespace Empiria.Land.Registration

@@ -80,32 +80,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-
-    static public bool IsCancelationRole(ResourceRole resourceRole) {
-      return (resourceRole == ResourceRole.Canceled ||
-              resourceRole == ResourceRole.MergedInto ||
-              resourceRole == ResourceRole.Split);
-    }
-
-
-    static public bool IsCreationalRole(ResourceRole resourceRole) {
-      return (resourceRole == ResourceRole.Created ||
-              resourceRole == ResourceRole.DivisionOf ||
-              resourceRole == ResourceRole.Extended ||
-              resourceRole == ResourceRole.PartitionOf);
-    }
-
-
-    static public bool IsInformativeRole(ResourceRole resourceRole) {
-      return (resourceRole == ResourceRole.Edited ||
-              resourceRole == ResourceRole.Informative);
-    }
-
-
-    static public bool IsResourceEditingRole(ResourceRole resourceRole) {
-      return (IsCreationalRole(resourceRole) || resourceRole == ResourceRole.Edited);
-    }
-
     #endregion Constructors and parsers
 
     #region Public properties
@@ -264,10 +238,6 @@ namespace Empiria.Land.Registration {
     #endregion Public properties
 
     #region Public methods
-
-    public bool AllowHistoricChanges() {
-      return (!this.Tract.FirstRecordingAct.BookEntry.IsEmptyInstance);
-    }
 
 
     public virtual void AssertCanBeClosed() {
