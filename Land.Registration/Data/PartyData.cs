@@ -9,10 +9,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Data;
 
 using Empiria.Data;
-using Empiria.Ontology;
 
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Adapters;
@@ -86,19 +84,6 @@ namespace Empiria.Land.Data {
 
       return secondaries.Find((x) => x.Party.Equals(party));
     }
-
-
-    static private string GetPartyTypeInfoFilter(ObjectTypeInfo partyType) {
-      if (partyType == null) {
-        return "(PartyTypeId <> 0)";
-      }
-      if (partyType.IsAbstract) {
-        return "(PartyTypeId IN (" + partyType.GetSubclassesFilter() + "))";
-      } else {
-        return "(PartyTypeId = " + partyType.Id.ToString() + ")";
-      }
-    }
-
 
     internal static FixedList<RecordingActParty> GetRecordingActs(Party party) {
       string sql = "SELECT * FROM LRSRecordingActParties " +

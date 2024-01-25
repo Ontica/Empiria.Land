@@ -9,10 +9,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Data;
-
-using Empiria.Json;
-using Empiria.Ontology;
 
 using Empiria.Land.Data;
 using Empiria.Land.Registration.Adapters;
@@ -25,13 +21,6 @@ namespace Empiria.Land.Registration {
     Registered = 'R',
     Closed = 'C',
     Deleted = 'X'
-  }
-
-  /// <summary>Used to describe the filtering mode to use on parties searching.</summary>
-  public enum PartyFilterType {
-    ByKeywords = 1,
-    OnInscription = 2,
-    Involved = 4,
   }
 
   /// <summary>Abstract class that represents a recording act party.</summary>

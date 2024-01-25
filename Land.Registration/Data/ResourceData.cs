@@ -28,13 +28,6 @@ namespace Empiria.Land.Data {
       return (DataReader.Count(operation) != 0);
     }
 
-    static internal FixedList<Resource> GetBookEntryResources(BookEntry bookEntry) {
-      var operation = DataOperation.Parse("qryLRSPhysicalRecordingResources", bookEntry.Id);
-
-      return DataReader.GetFixedList<Resource>(operation);
-    }
-
-
     static internal RealEstate[] GetRealEstatePartitions(RealEstate property) {
       if (property.IsNew || property.IsEmptyInstance) {
         return new RealEstate[0];

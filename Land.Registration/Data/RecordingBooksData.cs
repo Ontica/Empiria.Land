@@ -168,14 +168,6 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal void UpdateRecordingsImageIndex(RecordingBook recordingBook, int startImageIndex, int offset) {
-      DataOperation dataOperation = DataOperation.Parse("doLRSUpdateRecordingsImageIndexes",
-                                                        recordingBook.Id, startImageIndex, offset);
-
-      DataWriter.Execute(dataOperation);
-    }
-
-
     static internal void WriteBookEntry(BookEntry o) {
       Assertion.Require(o.MainDocument.Id > 0,
                        "Wrong data for book entry. MainDocument was missed.");
