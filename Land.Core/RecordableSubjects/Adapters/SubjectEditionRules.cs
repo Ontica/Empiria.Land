@@ -1,20 +1,20 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Commons                                    Component : Domain Layer                            *
+*  Module   : RecordableSubjects                         Component : Domain Layer                            *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Information Holder                      *
-*  Type     : EditionRules                               License   : Please read LICENSE.txt file            *
+*  Type     : SubjectEditionRules                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Flags holder with object's edition rules.                                                      *
+*  Summary  : Flags holder with recordable subject's edition rules.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land {
+namespace Empiria.Land.RecordableSubjects.Adapters {
 
-  /// <summary>Flags holder with object's edition rules.</summary>
-  public class EditionRules {
+  /// <summary>Flags holder with recordable subject's edition rules.</summary>
+  public class SubjectEditionRules {
 
-    internal EditionRules() {
+    internal SubjectEditionRules() {
       // no-op
     }
 
@@ -37,6 +37,6 @@ namespace Empiria.Land {
       get; internal set;
     }
 
-  }  // class EditionRules
+  }  // class SubjectEditionRules
 
-}  // namespace Empiria.Land
+}  // namespace Empiria.Land.RecordableSubjects.Adapters

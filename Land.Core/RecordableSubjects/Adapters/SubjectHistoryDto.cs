@@ -34,9 +34,9 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     } = new FixedList<SubjectHistoryEntryDto>();
 
 
-    public EditionRules Actions {
+    public SubjectEditionRules Actions {
       get; internal set;
-    } = new EditionRules();
+    } = new SubjectEditionRules();
 
   }  // class SubjectHistoryDto
 
@@ -92,9 +92,9 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     }
 
 
-    public EditionRules Actions {
+    public SubjectEditionRules Actions {
       get; internal set;
-    } = new EditionRules();
+    } = new SubjectEditionRules();
 
 
   }  // class SubjectHistoryEntryDto

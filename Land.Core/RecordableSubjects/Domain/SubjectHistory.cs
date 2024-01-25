@@ -10,10 +10,10 @@
 using System;
 using System.Collections.Generic;
 
+using Empiria.Land.RecordableSubjects.Adapters;
 using Empiria.Land.Registration;
 
-namespace Empiria.Land.RecordableSubjects
-{
+namespace Empiria.Land.RecordableSubjects {
 
   /// <summary>Contains the recording entries in which a given subject was involved.</summary>
   internal class SubjectHistory {
@@ -39,9 +39,9 @@ namespace Empiria.Land.RecordableSubjects
     }
 
 
-    public EditionRules EditionRules {
+    public SubjectEditionRules EditionRules {
       get {
-        return new EditionRules {
+        return new SubjectEditionRules {
           CanBeClosed = true,
           CanBeUpdated = true
         };
