@@ -10,7 +10,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Contacts;
 using Empiria.DataTypes.Time;
 using Empiria.Json;
 
@@ -34,9 +33,6 @@ namespace Empiria.Land.Registration {
 
     #region Fields
 
-    static public bool UseBookAttachments = ConfigurationData.GetBoolean("RecordingBook.UseAttachments");
-    static public bool UseBookLevel = ConfigurationData.GetBoolean("RecordingBookType.UseBookLevel");
-
     private FixedList<BookEntry> bookEntries = null;
 
     #endregion Fields
@@ -45,14 +41,6 @@ namespace Empiria.Land.Registration {
 
     private RecordingBook() {
       // Required by Empiria Framework.
-    }
-
-    internal RecordingBook(RecorderOffice recorderOffice, string recordingBookTag) {
-      throw new NotImplementedException();
-      //this.RecorderOffice = recorderOffice;
-      //this.BookNumber = recordingBookTag;
-      //this.AsText = recordingBookTag;
-      //this.FullName = recorderOffice.ShortName + " " + this.Parent.BuildChildFullName(recordingBookTag);
     }
 
 
@@ -124,21 +112,6 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    public bool HasImageSet {
-      get {
-        return (this.ImageSetId != -1);
-      }
-    }
-
-    private int _imageSetId = 0;
-    public int ImageSetId {
-      get {
-        if (_imageSetId == 0) {
-          _imageSetId = this.ExtensionData.Get<int>("ImageSetId", -1);
-        }
-        return _imageSetId;
-      }
-    }
 
     public bool IsAvailableForManualEditing {
       get {
@@ -178,26 +151,13 @@ namespace Empiria.Land.Registration {
       set;
     }
 
-    public string RecordIntegrityHashCode {
-      get;
-      set;
-    } = string.Empty;
-
-
 
     public FixedList<BookEntry> BookEntries {
       get {
         if (bookEntries == null) {
-          bookEntries = RecordingBooksData.GetRecordingBookEntries(this);
+          bookEntries = GetBookEntries();
         }
         return bookEntries;
-      }
-    }
-
-
-    public bool ReuseUnusedRecordingNumbers {
-      get {
-        return (ExecutionServer.LicenseName == "Tlaxcala");
       }
     }
 
@@ -219,16 +179,6 @@ namespace Empiria.Land.Registration {
       bookEntry.Save();
 
       return bookEntry;
-    }
-
-
-    /// <summary>Adds a new recording to the book, creating a main empty document.</summary>
-    public BookEntry AddBookEntry(string bookEntryNumber) {
-      Assertion.Require(bookEntryNumber, nameof(bookEntryNumber));
-
-      var newDocument = new RecordingDocument(RecordingDocumentType.Empty);
-
-      return new BookEntry(this, newDocument, RecordingBook.FormatBookEntryNumber(bookEntryNumber));
     }
 
 
@@ -306,31 +256,12 @@ namespace Empiria.Land.Registration {
     }
 
     protected override void OnSave() {
-      if (this.IsNew) {
-        this.CreationDate = DateTime.Now;
-        this.CreatedBy = ExecutionServer.CurrentContact;
-      }
       RecordingBooksData.WriteRecordingBook(this);
     }
 
     #endregion Public methods
 
     #region Workflow data and methods
-
-    public Contact ApprovedBy {
-      get;
-      set;
-    }
-
-    public Contact AssignedTo {
-      get;
-      set;
-    }
-
-    public DateTime ClosingDate {
-      get;
-      set;
-    }
 
 
     private TimeFrame _timePeriod = TimeFrame.Default;
@@ -341,41 +272,10 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public Contact CreatedBy {
-      get;
-      set;
-    }
-
-    public DateTime CreationDate {
-      get;
-      set;
-    }
 
     public string Description {
       get;
       set;
-    }
-
-    public Contact ReviewedBy {
-      get;
-      set;
-    }
-
-    public void Assign(Contact assignedTo, string notes) {
-      this.AssignedTo = assignedTo;
-      this.Status = RecordingBookStatus.Assigned;
-      Save();
-    }
-
-    public void SendToRevision() {
-      this.Status = RecordingBookStatus.Revision;
-      Save();
-    }
-
-    public void Unassign(string notes) {
-      this.AssignedTo = RecorderOffice.Empty;
-      this.Status = RecordingBookStatus.Pending;
-      Save();
     }
 
     #endregion Workflow data and methods
@@ -392,9 +292,6 @@ namespace Empiria.Land.Registration {
       newBook.RecorderOffice = this.RecorderOffice;
       newBook.RecordingSection = this.RecordingSection;
       newBook.BookEntriesControlTimePeriod = this.BookEntriesControlTimePeriod;
-      newBook.AssignedTo = this.AssignedTo;
-      newBook.ReviewedBy = this.ReviewedBy;
-      newBook.ApprovedBy = this.ApprovedBy;
       newBook.Status = this.Status;
 
       return newBook;
@@ -402,7 +299,6 @@ namespace Empiria.Land.Registration {
 
     private RecordingBook CloseAndCreateNew() {
       this.Status = RecordingBookStatus.Closed;
-      this.ClosingDate = DateTime.Now;
       if (!this.UsePerpetualNumbering) {
         this.EndRecordingIndex = this.BookEntries.Count;
       }

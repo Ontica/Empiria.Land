@@ -185,7 +185,7 @@ namespace Empiria.Land.Data {
       var op = DataOperation.Parse("writeLRSPhysicalBook", o.Id, o.UID, o.RecorderOffice.Id, o.RecordingSection.Id,
                                    o.BookNumber, o.AsText, o.ExtensionData.ToString(), o.Keywords,
                                    o.StartRecordingIndex, o.EndRecordingIndex, (char) o.Status,
-                                   o.RecordIntegrityHashCode);
+                                   string.Empty);
 
       DataWriter.Execute(op);
     }
