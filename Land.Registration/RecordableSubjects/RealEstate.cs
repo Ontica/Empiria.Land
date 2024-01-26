@@ -334,9 +334,7 @@ namespace Empiria.Land.Registration {
 
     public FixedList<RecordingActParty> CurrentOwnersList {
       get {
-        var parties = this.LastDomainAct.GetParties();
-
-        parties = parties.FindAll((x) => x.PartyOf.IsEmptyInstance);
+        var parties = this.LastDomainAct.Parties.PrimaryParties;
 
         if (parties != null) {
           return parties;

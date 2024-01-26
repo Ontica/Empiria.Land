@@ -39,15 +39,14 @@ namespace Empiria.Land.Pages {
 
 
     internal string GetPartiesText() {
-      var parties = _recordingAct.GetParties();
-      var primaryParties = parties.FindAll(x => x.RoleType == Registration.Adapters.RecordingActPartyType.Primary);
+      var primaryParties = _recordingAct.Parties.PrimaryParties;
 
       var html = string.Empty;
 
       foreach (var primaryParty in primaryParties) {
         html += GetPartyText(primaryParty, 1);
 
-        var secondaryParties = parties.FindAll(x => x.PartyOf.Equals(primaryParty.Party));
+        var secondaryParties = _recordingAct.Parties.GetSecondaryPartiesOf(primaryParty.Party);
 
         foreach (var secondaryParty in secondaryParties) {
           html += GetPartyText(secondaryParty, 2);

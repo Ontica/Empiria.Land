@@ -29,7 +29,7 @@ static internal class RecordingActMapper {
           CurrencyUID = recordingAct.OperationCurrency.UID,
           RecordableSubject = new NamedEntityDto(recordingAct.Resource.UID,
                                                  recordingAct.Resource.Description),
-          Parties = PartyMapper.Map(recordingAct.GetParties()),
+          Parties = PartyMapper.Map(recordingAct.Parties.List),
           Status = recordingAct.Status,
           Actions = MapControlData(recordingAct)
       };

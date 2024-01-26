@@ -119,10 +119,9 @@ namespace Empiria.Land.RecordableSubjects {
 
 
     private string BuildRecordingActParties(RecordingAct recordingAct) {
-      FixedList<RecordingActParty> parties = recordingAct.GetParties();
 
-      var primaries = parties.FindAll(x => x.RoleType == Registration.Adapters.RecordingActPartyType.Primary);
-      var secondaries = parties.FindAll(x => x.RoleType == Registration.Adapters.RecordingActPartyType.Secondary);
+      var primaries = recordingAct.Parties.PrimaryParties;
+      var secondaries = recordingAct.Parties.SecondaryParties;
 
       if (primaries.Count == 0 && recordingAct.RecordingActType.RecordingRule.AllowNoParties) {
         return string.Empty;

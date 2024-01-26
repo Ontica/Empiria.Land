@@ -93,9 +93,9 @@ namespace Empiria.Land.Certification {
                                     EmpiriaSpeech.SpeechDate(act.Document.AuthorizationTime),
                                     act.Document.UID);
         if (act.RecordingActType.RecordingRule.IsHardLimitation) {
-          var p = act.GetParties().Find((x) => !x.PartyOf.IsEmptyInstance);
-          if (p != null) {
-            temp += " a favor de " + p.Party.FullName;
+          var p = act.Parties.SecondaryParties;
+          if (p.Count > 0) {
+            temp += " a favor de " + p[0].Party.FullName;
           }
         }
         notes += temp + ".\n";

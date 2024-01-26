@@ -39,7 +39,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
 
-      recordingAct.AppendParty(partyFields);
+      recordingAct.Parties.AppendParty(partyFields);
 
       return RecordingActMapper.Map(recordingAct);
     }
@@ -58,7 +58,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var party = RecordingActParty.Parse(partyUID);
 
-      recordingAct.RemoveParty(party);
+      recordingAct.Parties.RemoveParty(party);
 
       return RecordingActMapper.Map(recordingAct);
     }
