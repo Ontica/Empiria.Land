@@ -1,54 +1,25 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSValidator                                   Pattern  : Validation Services Static Class    *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Land Registration                          Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Registration.dll              Pattern   : Service provider                        *
+*  Type     : RecordingBookValidator                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Static class that provides Land Registration System validation methods.                       *
+*  Summary  : Provides validation services for recording books.                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Contacts;
-using Empiria.DataTypes;
 using Empiria.DataTypes.Time;
 
 using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Static class that provides Land Registration System validation methods.</summary>
-  static public class LRSValidator {
+  /// <summary>Provides validation services for recording books.</summary>
+  static public class RecordingBookValidator {
 
     #region Public methods
-
-    static public LandRegistrationException ValidateRecordingActAsComplete(RecordingAct recordingAct) {
-      if (recordingAct.RecordingActType.RecordingRule.EditAppraisalAmount &&
-          recordingAct.ExtensionData.AppraisalAmount.Equals(Money.Empty)) {
-        return new LandRegistrationException(LandRegistrationException.Msg.EmptyAppraisalAmount);
-      }
-      if (recordingAct.RecordingActType.RecordingRule.EditOperationAmount &&
-          recordingAct.ExtensionData.OperationAmount.Equals(Money.Empty)) {
-        return new LandRegistrationException(LandRegistrationException.Msg.EmptyOperationAmount);
-      }
-      // Parties Validation
-      if (recordingAct.RecordingActType.RecordingRule.AllowNoParties) {
-        return null;
-      }
-      if (!recordingAct.IsAnnotation) {
-        FixedList<RecordingActParty> parties = PartyData.GetInvolvedDomainParties(recordingAct);
-        if (parties.Count == 0) {
-          return new LandRegistrationException(LandRegistrationException.Msg.RecordingActWithoutOwnerParties);
-        }
-      } else {
-        FixedList<RecordingActParty> parties = PartyData.GetRecordingPartyList(recordingAct);
-        if (parties.Count == 0) {
-          return new LandRegistrationException(LandRegistrationException.Msg.RecordingActWithoutOwnerParties);
-        }
-      }
-      return null;
-    }
 
     static public LandRegistrationException ValidateRecordingAuthorizer(RecordingBook recordingBook, Person authorizedBy,
                                                                         DateTime autorizationDate) {
@@ -99,6 +70,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Public methods
 
-  } // class LRSValidator
+  } // class RecordingBookValidator
 
 } // namespace Empiria.Land.Registration
