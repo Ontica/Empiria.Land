@@ -96,20 +96,6 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal FixedList<RecordingDocument> SearchClosedDocuments(string filter, string keywords) {
-      filter += " AND (DocumentStatus = 'C')";
-
-      if (keywords.Length != 0) {
-        filter += " AND ";
-        filter += SearchExpression.ParseAndLike("DocumentKeywords",
-                                                EmpiriaString.BuildKeywords(keywords));
-      }
-
-      return BaseObject.GetList<RecordingDocument>(filter, "AuthorizationTime")
-                       .ToFixedList();
-    }
-
-
     static internal void SaveImagingControlID(RecordingDocument document) {
       var op = DataOperation.Parse("setLRSDocumentImagingControlID",
                                    document.Id, document.Imaging.ImagingControlID);

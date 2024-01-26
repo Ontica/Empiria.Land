@@ -29,7 +29,7 @@ namespace Empiria.Land.Registration {
 
     #region Fields
 
-    private Lazy<List<RecordingAct>> recordingActList = new Lazy<List<RecordingAct>>();
+    private Lazy<List<RecordingAct>> _recordingActs = new Lazy<List<RecordingAct>>();
 
     #endregion Fields
 
@@ -87,12 +87,6 @@ namespace Empiria.Land.Registration {
     static public RecordingDocument Empty {
       get { return BaseObject.ParseEmpty<RecordingDocument>(); }
     }
-
-
-    static public FixedList<RecordingDocument> SearchClosed(string filter, string keywords = "") {
-      return DocumentsData.SearchClosedDocuments(filter, keywords);
-    }
-
 
     public static RecordingDocument CreateFromInstrument(int instrumentId,
                                                          int instrumentTypeId,
@@ -281,10 +275,8 @@ namespace Empiria.Land.Registration {
 
     public FixedList<RecordingAct> RecordingActs {
       get {
-        Predicate<RecordingAct> match = (x) => x.Status != RecordableObjectStatus.Deleted;
-
-        return recordingActList.Value.FindAll(match)
-                                     .ToFixedList();
+        return _recordingActs.Value.FindAll(x => x.Status != RecordableObjectStatus.Deleted)
+                                   .ToFixedList();
       }
     }
 
@@ -341,10 +333,10 @@ namespace Empiria.Land.Registration {
       Assertion.Require(this.IsHistoricDocument || !this.IsClosed,
                        "Recording acts can't be added to closed documents.");
 
-      recordingActList.Value.Add(recordingAct);
+      _recordingActs.Value.Add(recordingAct);
 
       /// returns the collection's index of the recording act
-      return recordingActList.Value.Count - 1;
+      return _recordingActs.Value.Count - 1;
     }
 
     public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Resource resource,
@@ -372,7 +364,7 @@ namespace Empiria.Land.Registration {
 
       var recordingAct = RecordingAct.Create(recordingActType, this, resource, amendmentOf,
                                              this.RecordingActs.Count, bookEntry);
-      recordingActList.Value.Add(recordingAct);
+      _recordingActs.Value.Add(recordingAct);
 
       return recordingAct;
     }
@@ -396,17 +388,6 @@ namespace Empiria.Land.Registration {
       }
 
       this.AuthorizationTime = authorizationTime;
-    }
-
-
-    public void ChangeDocumentType(RecordingDocumentType newRecordingDocumentType) {
-      if (this.DocumentType.Equals(newRecordingDocumentType)) {
-        return;
-      }
-      base.ReclassifyAs(newRecordingDocumentType);
-      this.IssueDate = ExecutionServer.DateMinValue;
-      this.ExtensionData = RecordingDocumentExtData.Empty;
-      this.PostedBy = ExecutionServer.CurrentContact;
     }
 
     private void SetAuthorizationTime() {
@@ -517,7 +498,7 @@ namespace Empiria.Land.Registration {
     }
 
     public void RefreshRecordingActs() {
-      recordingActList = new Lazy<List<RecordingAct>>(() => RecordingActsData.GetDocumentRecordingActs(this));
+      _recordingActs = new Lazy<List<RecordingAct>>(() => RecordingActsData.GetDocumentRecordingActs(this));
     }
 
     protected override void OnBeforeSave() {
@@ -546,7 +527,7 @@ namespace Empiria.Land.Registration {
                         "The recording act doesn't belong to this document.");
 
       recordingAct.Delete();
-      recordingActList.Value.Remove(recordingAct);
+      _recordingActs.Value.Remove(recordingAct);
 
       if (this.RecordingActs.Count == 0 && this.IsEmptyDocumentType) {
         this.Delete();
