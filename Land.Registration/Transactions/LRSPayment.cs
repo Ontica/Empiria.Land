@@ -144,7 +144,7 @@ namespace Empiria.Land.Registration.Transactions {
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
       if (version == 1) {
         return new object[] {
-          1, "Id", this.Id, "TransactionId", this.Transaction.Id, "RecordingId",
+          1, "Id", this.Id, "TransactionId", this.Transaction.Id,
           "PaymentOfficeId", this.PaymentOffice.Id,
           "ReceiptNo", this.ReceiptNo, "ReceiptTotal", this.ReceiptTotal,
           "ReceiptIssuedTime", this.ReceiptIssuedTime, "VerificationTime", this.VerificationTime,
