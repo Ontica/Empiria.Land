@@ -253,7 +253,7 @@ namespace Empiria.Land.Registration {
 
     public bool IsParent {
       get {
-        return ExtData.Get("isParent", false);
+        return ParentChidrenExtData.Get("isParent", false);
       }
     }
 
@@ -267,23 +267,16 @@ namespace Empiria.Land.Registration {
 
     public int ParentId {
       get {
-        return ExtData.Get("parentId", -1);
+        return ParentChidrenExtData.Get("parentId", -1);
       }
     }
 
 
     [DataField("RecordingActExtData")]
-    private JsonObject ExtData {
+    private JsonObject ParentChidrenExtData {
       get;
       set;
     } = new JsonObject();
-
-
-    public RecordingActExtData ExtensionData {
-      get;
-      private set;
-    } = RecordingActExtData.Empty;
-
 
 
     internal ResourceShapshotData ResourceShapshotData {
@@ -293,7 +286,7 @@ namespace Empiria.Land.Registration {
 
 
 
-    public bool ResourceUpdated {
+    public bool ResourceWasUpdated {
       get {
         return (!this.ResourceShapshotData.IsEmptyInstance);
       }
@@ -439,8 +432,7 @@ namespace Empiria.Land.Registration {
         return new object[] {
           1, "Id", this.Id, "RecordingActType", this.RecordingActType.Id,
           "Document", this.Document.Id, "Index", this.Index, "Notes", this.Notes,
-          "ExtensionData", this.ExtensionData.ToString(), "AmendmentOf", this.AmendmentOf.Id,
-          "AmendedBy", this.AmendedBy.Id, "BookEntry", this.BookEntry.Id,
+          "AmendmentOf", this.AmendmentOf.Id, "AmendedBy", this.AmendedBy.Id, "BookEntry", this.BookEntry.Id,
           "RegisteredBy", this.RegisteredBy.Id, "RegistrationTime", this.RegistrationTime,
           "Status", (char) this.Status
         };
@@ -504,13 +496,6 @@ namespace Empiria.Land.Registration {
       this.ReclassifyAs(recordingActType);
 
       RecordingActsData.UpdateRecordingActType(this);
-    }
-
-
-    public void ChangeStatusTo(RecordableObjectStatus newStatus) {
-      this.Status = newStatus;
-
-      this.Save();
     }
 
 
@@ -599,7 +584,7 @@ namespace Empiria.Land.Registration {
 
     /// <summary>Gets the resource data as it was when it was applied to this recording act.</summary>
     public ResourceShapshotData GetResourceSnapshotData() {
-      if (!this.ResourceShapshotData.IsEmptyInstance) {
+      if (this.ResourceWasUpdated) {
         return this.ResourceShapshotData;
       }
 
@@ -608,7 +593,7 @@ namespace Empiria.Land.Registration {
       /// Look for the first recording act with ResourceExtData added before this act in the tract.
       /// If it is found then return it, if not then return the an empty resource snapshot.
       var lastActWithSnapshot = tract.FindLast(x => x.Document.PresentationTime < this.Document.PresentationTime &&
-                                                   !x.ResourceShapshotData.IsEmptyInstance);
+                                                    x.ResourceWasUpdated);
       if (lastActWithSnapshot != null) {
         return lastActWithSnapshot.ResourceShapshotData;
       } else {
@@ -628,8 +613,6 @@ namespace Empiria.Land.Registration {
 
 
     protected override void OnLoadObjectData(DataRow row) {
-      this.ExtensionData = RecordingActExtData.Parse((string) row["RecordingActExtData"]);
-
       this.ResourceShapshotData = ResourceShapshotData.Parse(this.Resource, (string) row["RecordingActResourceExtData"]);
     }
 
@@ -649,14 +632,6 @@ namespace Empiria.Land.Registration {
         this.RegisteredBy = ExecutionServer.CurrentContact;
       }
       RecordingActsData.WriteRecordingAct(this);
-    }
-
-
-    public void SetExtensionData(RecordingActExtData updatedData) {
-      Assertion.Require(updatedData != null && !updatedData.IsEmptyInstance,
-                       "updatedData can't be null or the empty instance");
-
-      this.ExtensionData = updatedData;
     }
 
 

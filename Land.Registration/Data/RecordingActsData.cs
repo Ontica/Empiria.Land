@@ -67,7 +67,7 @@ namespace Empiria.Land.Data {
                       o.RecordingActType.Id, o.Document.Id, o.Index,
                       o.Resource.Id, (char) o.ResourceRole, o.RelatedResource.Id, o.Percentage,
                       o.Kind, o.OperationAmount, o.OperationCurrency.Id, o.Summary,
-                      o.Notes, /* o.ResourceExtData, */ o.ExtensionData.ToString(), o.Keywords,
+                      o.Notes, /* o.ResourceExtData, o.ExtensionData.ToString(), */ o.Keywords,
                       o.AmendmentOf.Id, o.AmendedBy.Id, o.BookEntry.Id,
                       o.RegisteredBy.Id, o.RegistrationTime, (char) o.Status, o.Integrity.GetUpdatedHashCode());
 

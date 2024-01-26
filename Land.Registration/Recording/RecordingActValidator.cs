@@ -61,7 +61,9 @@ namespace Empiria.Land.Registration {
       if (!_recordingAct.RecordingActType.RecordingRule.AllowUncompletedResource) {
         _recordingAct.Resource.AssertCanBeClosed();
       }
-      _recordingAct.ExtensionData.AssertIsComplete(_recordingAct);
+
+      // TODO: Validate recording act fields are completed
+
       this.AssertParties();
     }
 
@@ -292,14 +294,8 @@ namespace Empiria.Land.Registration {
 
 
     private LandRegistrationException FormerIsComplete() {
-      if (_recordingAct.RecordingActType.RecordingRule.EditAppraisalAmount &&
-          _recordingAct.ExtensionData.AppraisalAmount.Equals(Money.Empty)) {
-        return new LandRegistrationException(LandRegistrationException.Msg.EmptyAppraisalAmount);
-      }
-      if (_recordingAct.RecordingActType.RecordingRule.EditOperationAmount &&
-          _recordingAct.ExtensionData.OperationAmount.Equals(Money.Empty)) {
-        return new LandRegistrationException(LandRegistrationException.Msg.EmptyOperationAmount);
-      }
+      // Include recording act fields validation code
+
       // Parties Validation
       if (_recordingAct.RecordingActType.RecordingRule.AllowNoParties) {
         return null;
