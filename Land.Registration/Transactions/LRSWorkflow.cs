@@ -479,7 +479,7 @@ namespace Empiria.Land.Registration.Transactions {
         return;
       }
       foreach (var recordingAct in _transaction.Document.RecordingActs) {
-        recordingAct.AssertIsLastInPrelationOrder();
+        recordingAct.Validator.AssertIsLastInPrelationOrder();
       }
     }
 

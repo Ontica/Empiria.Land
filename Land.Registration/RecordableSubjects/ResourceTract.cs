@@ -251,7 +251,7 @@ namespace Empiria.Land.Registration {
       // Lookup for the last chainedRecordingActType occurrence, possibly including acts in beforeThisDocument
       RecordingAct lastChainedAct =
             tract.FindLast( (x) => (x.RecordingActType.Equals(chainedRecordingActType) &&
-                                    x.WasAliveOn(beforeThisDocument.PresentationTime)));
+                                    x.Validator.WasAliveOn(beforeThisDocument.PresentationTime)));
 
       // If there aren't any chainedRecordingActType acts in the tract, then return null.
       if (lastChainedAct == null) {

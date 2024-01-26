@@ -14,12 +14,12 @@ using System.Data;
 
 using Empiria.Contacts;
 using Empiria.DataTypes;
+using Empiria.Json;
 using Empiria.Security;
 using Empiria.Ontology;
 
 using Empiria.Land.Data;
 using Empiria.Land.Registration.Adapters;
-using Empiria.Json;
 
 namespace Empiria.Land.Registration {
 
@@ -37,8 +37,8 @@ namespace Empiria.Land.Registration {
 
     protected RecordingAct(RecordingActType recordingActType,
                            RecordingDocument document) : base(recordingActType) {
-      Assertion.Require(recordingActType, "recordingActType");
-      Assertion.Require(document, "document");
+      Assertion.Require(recordingActType, nameof(recordingActType));
+      Assertion.Require(document, nameof(document));
 
       Assertion.Require(!document.IsEmptyInstance, "document can't be the empty instance.");
 
@@ -113,12 +113,6 @@ namespace Empiria.Land.Registration {
     static public RecordingAct Parse(string uid) {
       return BaseObject.ParseKey<RecordingAct>(uid);
     }
-
-
-    static public FixedList<RecordingAct> GetList(RecordingDocument document) {
-      return RecordingActsData.GetDocumentRecordingActs(document).ToFixedList();
-    }
-
 
     static private readonly RecordingAct _empty = BaseObject.ParseEmpty<RecordingAct>();
     static public RecordingAct Empty {
@@ -387,20 +381,22 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public bool IsAppliedOverNewPartition {
+      get {
+        return this.Validator.IsAppliedOverNewPartition();
+      }
+    }
+
     public bool IsCompleted {
       get {
-        return (this.Status == RecordableObjectStatus.Registered ||
-                this.Status == RecordableObjectStatus.Closed ||
-                this.HasCompleteInformation());
+        return this.Validator.IsCompleted();
       }
     }
 
 
     public bool IsEditable {
       get {
-        return (this.Status != RecordableObjectStatus.Registered &&
-                this.Status != RecordableObjectStatus.Closed &&
-                this.Document.Status != RecordableObjectStatus.Closed);
+        return this.Validator.IsEditable();
       }
     }
 
@@ -453,15 +449,16 @@ namespace Empiria.Land.Registration {
     }
 
 
-    private IntegrityValidator _validator = null;
+    private IntegrityValidator _integrityValidator = null;
     public IntegrityValidator Integrity {
       get {
-        if (_validator == null) {
-          _validator = new IntegrityValidator(this);
+        if (_integrityValidator == null) {
+          _integrityValidator = new IntegrityValidator(this);
         }
-        return _validator;
+        return _integrityValidator;
       }
     }
+
 
     string IResourceTractItem.TractPrelationStamp {
       get {
@@ -472,18 +469,16 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public bool AppliedOverNewPartition {
+
+    internal RecordingActValidator Validator {
       get {
-          return this.Resource is RealEstate realEstate &&
-                 this.ResourceRole.IsCreationalRole() &&
-                 !realEstate.IsPartitionOf.IsEmptyInstance &&
-                 realEstate.IsInTheRankOfTheFirstDomainAct(this);
+        return new RecordingActValidator(this);
       }
     }
 
-   #endregion Public properties
+    #endregion Public properties
 
-   #region Public methods
+    #region Methods
 
     internal void Amend(CancelationAct cancelationAct) {
       cancelationAct.AmendmentOf = this;
@@ -501,104 +496,8 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public void AssertCanBeClosed() {
-      var rule = this.RecordingActType.RecordingRule;
-
-      if (!this.Resource.IsEmptyInstance) {
-        this.RecordingActType.AssertIsApplicableResource(this.Resource);
-      } else {
-        Assertion.Require(rule.AppliesTo == RecordingRuleApplication.NoProperty,
-                         "El acto jurídico " + this.IndexedName +
-                         " sólo puede aplicarse al folio real de un predio o asociación.");
-      }
-
-      if (!this.BookEntry.IsEmptyInstance) {
-        this.BookEntry.AssertCanBeClosed();
-      }
-
-      this.Resource.AssertIsStillAlive(this.Document);
-
-      this.AssertIsLastInPrelationOrder();
-
-      this.AssertNoTrappedActs();
-
-      this.AssertChainedRecordingAct();
-
-      if (!this.RecordingActType.RecordingRule.AllowUncompletedResource) {
-        this.Resource.AssertCanBeClosed();
-      }
-      this.ExtensionData.AssertIsComplete(this);
-      this.AssertParties();
-    }
-
-    private void AssertNoTrappedActs() {
-      var tract = this.Resource.Tract.GetRecordingActs();
-
-      var trappedAct = tract.Find((x) => x.Document.PresentationTime < this.Document.PresentationTime &&
-                                  !x.Document.IsClosed && !x.Document.IsHistoricDocument);
-
-      //if (trappedAct != null) {
-      //  Assertion.AssertFail("Este documento no puede ser cerrado, ya que el acto jurídico\n" +
-      //                       "{0} hace referencia al folio real '{1}' que tiene registrado " +
-      //                       "movimientos en otro documento que está abierto y que tiene una prelación " +
-      //                       "anterior al de este.\n\n" +
-      //                       "Primero debe cerrarse dicho documento para evitar que sus actos " +
-      //                       "queden atrapados en el orden de prelación y luego no pueda cerrarse.\n\n" +
-      //                       "El documento en cuestión es el: {2}\n",
-      //                       this.IndexedName, this.Resource.UID, trappedAct.Document.UID);
-      //}
-    }
-
-    internal void AssertCanBeOpened() {
-      this.AssertIsLastInPrelationOrder();
-      this.AssertDoesntHasEmittedCertificates();
-    }
-
-    private void AssertDoesntHasEmittedCertificates() {
-      var certificates = this.Resource.Tract.GetEmittedCerificates();
-
-      bool wrongPrelation = certificates.Contains((x) => x.IsClosed && x.IssueTime > this.Document.AuthorizationTime &&
-                                                         !x.Transaction.Equals(this.Document.GetTransaction()));
-
-      if (wrongPrelation) {
-        Assertion.RequireFail("El acto jurídico " + this.IndexedName +
-                             " hace referencia a un folio real al cual se le " +
-                             "emitió un certificado con fecha posterior " +
-                             "a la fecha de autorización de este documento.\n\n" +
-                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
-                             "Favor de revisar la historia del predio involucrado.");
-      }
-    }
-
-    public void AssertIsLastInPrelationOrder() {
-
-      // ToDo: Review this rule (seems like an operation issue)
-
-      // Cancelation acts don't follow prelation rules
-      // if (this.RecordingActType.IsCancelationActType) {
-      //  return;
-      // }
-
-      var fullTract = this.Resource.Tract.GetFullRecordingActs();
-
-      fullTract = fullTract.FindAll((x) => !x.RecordingActType.RecordingRule.SkipPrelation);
-
-      bool wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > this.Document.PresentationTime &&
-                                                      x.Document.IsClosed);
-
-      //if (wrongPrelation) {
-      //  Assertion.AssertFail("El acto jurídico " + this.IndexedName +
-      //                       " hace referencia a un folio real que tiene registrado " +
-      //                       "cuando menos otro acto jurídico con una prelación posterior " +
-      //                       "a la de este documento.\n\n" +
-      //                       "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
-      //                       "Favor de revisar la historia del predio involucrado.");
-      //}
-
-    }
-
     public void ChangeRecordingActType(RecordingActType recordingActType) {
-      Assertion.Require(recordingActType, "recordingActType");
+      Assertion.Require(recordingActType, nameof(recordingActType));
       Assertion.Require(this.RecordingActType.RecordingRule.ReplaceableBy.Contains(recordingActType),
           $"El acto jurídico {this.DisplayName} no puede ser reemplazado por {recordingActType.DisplayName}.");
 
@@ -607,20 +506,17 @@ namespace Empiria.Land.Registration {
       RecordingActsData.UpdateRecordingActType(this);
     }
 
+
     public void ChangeStatusTo(RecordableObjectStatus newStatus) {
       this.Status = newStatus;
+
       this.Save();
     }
 
+
     internal void Delete() {
-      if (this.BookEntry.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(
-                      LandRegistrationException.Msg.CantAlterRecordingActOnClosedRecording, this.Id);
-      }
-      if (this.Status == RecordableObjectStatus.Closed) {
-        throw new LandRegistrationException(
-                      LandRegistrationException.Msg.CantAlterClosedRecordingAct, this.Id);
-      }
+      this.Validator.AssertCanBeDeleted();
+
       if (this.IsEmptyInstance) {
         return;
       }
@@ -636,9 +532,6 @@ namespace Empiria.Land.Registration {
       this.Resource.TryDelete();
     }
 
-    public RecordingAct GetRecordingAntecedent() {
-      return this.Resource.Tract.GetRecordingAntecedent(this, true);
-    }
 
     public string GetRecordingAntecedentText() {
       var antecedentText = GetAntecedentOrTargetText();
@@ -654,7 +547,7 @@ namespace Empiria.Land.Registration {
           return GetAmendedText();
         }
 
-        var antecedent = this.GetRecordingAntecedent();
+        var antecedent = this.GetAntecedent();
 
         if (antecedent.IsEmptyInstance) {
           return String.Empty;
@@ -667,7 +560,7 @@ namespace Empiria.Land.Registration {
 
         }
 
-        var antecedent2 = antecedent.GetRecordingAntecedent();
+        var antecedent2 = antecedent.GetAntecedent();
 
         if (antecedent2.IsEmptyInstance) {
           return "En este mismo documento";
@@ -685,7 +578,7 @@ namespace Empiria.Land.Registration {
         var amendedAct = this.AmendmentOf;
 
         if (amendedAct.IsEmptyInstance) {
-          return this.GetRecordingAntecedent().Document.UID;
+          return this.GetAntecedent().Document.UID;
 
         } else if (amendedAct.BookEntry.IsEmptyInstance) {
           return amendedAct.RecordingActType.DisplayName +
@@ -721,11 +614,6 @@ namespace Empiria.Land.Registration {
       } else {
         return ResourceShapshotData.ParseEmptyFor(this.Resource);
       }
-    }
-
-
-    private bool HasCompleteInformation() {
-      return false;
     }
 
 
@@ -798,8 +686,9 @@ namespace Empiria.Land.Registration {
       this.Index = this.Document.AppendRecordingAct(this);
     }
 
+
     public void Update(RecordingActFields fields) {
-      Assertion.Require(fields, "fields");
+      Assertion.Require(fields, nameof(fields));
 
       this.Summary = fields.Description;
 
@@ -814,145 +703,22 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public bool WasAliveOn(DateTime onDate) {
-      if (this.WasCanceledOn(onDate)) {
-        return false;
-      }
 
-      var autoCancelDays = this.RecordingActType.RecordingRule.AutoCancel;
-      if (autoCancelDays == 0) {
-        return true;
-      }
-      return this.Document.PresentationTime.Date.AddDays(autoCancelDays) >= onDate.Date;
+    #endregion Methods
+
+    #region Helpers
+
+    private RecordingAct GetAntecedent() {
+      return this.Resource.Tract.GetRecordingAntecedent(this, true);
     }
 
-    public bool WasCanceledOn(DateTime onDate) {
-      if (!this.AmendedBy.IsEmptyInstance && this.AmendedBy.RecordingActType.IsCancelationActType &&
-           this.AmendedBy.Document.PresentationTime > onDate) {
-        return true;
-      }
-      return false;
-    }
-
-    #endregion Public methods
-
-    #region Private methods
-
-    internal void AssertChainedRecordingAct() {
-      if (TlaxcalaOperationalCondition()) {
-        return;
-      }
-
-      var chainedRecordingActType = this.RecordingActType.RecordingRule.ChainedRecordingActType;
-
-      if (chainedRecordingActType.Equals(RecordingActType.Empty)) {
-        return;
-      }
-
-      // Lookup the last chained act
-      var lastChainedActInstance = this.Resource.Tract.TryGetLastActiveChainedAct(chainedRecordingActType,
-                                                                                  this.Document);
-      // If exists an active chained act, then the assertion meets
-      if (lastChainedActInstance != null) {
-        return;
-      }
-
-      // Try to assert that the act is in the very first recorded document
-      var tract = this.Resource.Tract.GetClosedRecordingActsUntil(this.Document, true);
-
-      // First check no real estates
-      if (!(this.Resource is RealEstate) &&
-          (tract.Count == 0 || tract[0].Document.Equals(this.Document))) {
-        return;
-      }
-
-      // For real estates, this rule apply for new no-partitions
-      if (this.Resource is RealEstate && !((RealEstate) this.Resource).IsPartition &&
-          (tract.Count == 0 || tract[0].Document.Equals(this.Document))) {
-        return;
-      }
-
-      // When the chained act rule applies to a modification act, then lookup in this
-      // recorded document for an act applied to a partition of this real estate
-      // with the same ChainedRecordingActType, if it is found then the assertion meets.
-      // Ejemplo: Tanto CV como Rectificación de medidas requieren aviso preventivo.
-      // Si en el documento hay una CV sobre una fracción F de P, y también hay una
-      // rectificación de medidas del predio P, entonces basta con que el aviso preventivo
-      // exista para la fraccion F de P.
-      if (this.Resource is RealEstate && this.RecordingActType.IsModificationActType) {
-        foreach (RecordingAct recordingAct in this.Document.RecordingActs) {
-          if (recordingAct.Equals(this)) {
-            break;
-          }
-          if (recordingAct.Resource is RealEstate &&
-              ((RealEstate) recordingAct.Resource).IsPartitionOf.Equals(this.Resource) &&
-              recordingAct.RecordingActType.RecordingRule.ChainedRecordingActType.Equals(chainedRecordingActType)) {
-            recordingAct.AssertChainedRecordingAct();
-            return;
-          }
-        }
-      }
-
-      Assertion.RequireFail("El acto jurídico " + this.IndexedName +
-                            " no pude ser inscrito debido a que el folio real no tiene registrado " +
-                            "un acto de: '" + chainedRecordingActType.DisplayName + "'.\n\n" +
-                            "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
-                            "Favor de revisar la historia del predio involucrado. Es posible que el trámite donde " +
-                            "viene el acto faltante aún no haya sido procesado o que el documento esté abierto.");
-    }
-
-
-    private void AssertParties() {
-      var rule = this.RecordingActType.RecordingRule;
-      var parties = this.Parties.List;
-      var roles = this.RecordingActType.GetPrimaryRoles();
-
-      if (roles.Count == 0 || rule.AllowNoParties || roles.Count == 0) {
-        return;
-      }
-
-      if (this.IsChild) {
-        return;
-      }
-
-      Assertion.Require(parties.Count != 0, "El acto jurídico " + this.IndexedName +
-                                           " requiere cuando menos una persona o propietario.");
-      foreach (var role in roles) {
-        var found = parties.Contains((x) => x.PartyRole == role);
-        if (found) {
-          return;
-        }
-      }
-      Assertion.RequireFail("En el acto jurídico " + this.IndexedName +
-                           " no hay registradas personas o propietarios jugando alguno de" +
-                           " los roles obligatorios para dicho tipo de acto.");
-    }
 
     private void RemoveAmendment() {
       this.AmendmentOf = RecordingAct.Empty;
       this.Save();
     }
 
-    private bool TlaxcalaOperationalCondition() {
-      // Fixed rule, based on law
-      if (this.Document.IssueDate < DateTime.Parse("2014-01-01")) {
-        return true;
-      }
-
-      // Temporarily rule, based on Tlaxcala Recording Office operation
-      if (this.Document.PresentationTime < DateTime.Parse("2016-01-01")) {
-        return true;
-      }
-
-      // Temporarily rule, based on Tlaxcala Recording Office operation
-      if (this.Document.PresentationTime < DateTime.Parse("2016-09-26") &&
-          DateTime.Today < DateTime.Parse("2016-10-02")) {
-        return true;
-      }
-      return false;
-    }
-
-    #endregion Private methods
+    #endregion Helpers
 
   } // class RecordingAct
 

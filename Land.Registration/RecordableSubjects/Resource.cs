@@ -300,7 +300,7 @@ namespace Empiria.Land.Registration {
           if (recordingAct.Resource is RealEstate &&
               ((RealEstate) recordingAct.Resource).IsPartitionOf.Equals(this) &&
               recordingAct.RecordingActType.RecordingRule.ChainedRecordingActType.Equals(chainedRecordingActType)) {
-              recordingAct.AssertChainedRecordingAct();
+              recordingAct.Validator.AssertChainedRecordingAct();
             return;
           }
         }

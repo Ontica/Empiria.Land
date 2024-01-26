@@ -135,7 +135,7 @@ namespace Empiria.Land.Registration.Adapters {
       dto.RecordableSubject = RecordableSubjectsMapper.Map(recordingAct.Resource);
       dto.RecordableSubject.RecordingContext = MapRecordingContext(recordingAct);
 
-      if (recordingAct.AppliedOverNewPartition) {
+      if (recordingAct.IsAppliedOverNewPartition) {
         dto.RelatedSubject = RecordableSubjectsMapper.Map(recordingAct.RelatedResource);
         dto.RelatedSubject.RecordingContext = MapRecordingContext(recordingAct.RelatedResource.Tract.GetRecordingAntecedent());
       }

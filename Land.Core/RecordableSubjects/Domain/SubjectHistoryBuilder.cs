@@ -59,7 +59,7 @@ namespace Empiria.Land.RecordableSubjects {
 
 
     private string GetName(RecordingAct recordingAct) {
-      bool isPartition = recordingAct.AppliedOverNewPartition;
+      bool isPartition = recordingAct.IsAppliedOverNewPartition;
 
       if (recordingAct.Kind.Length != 0) {
         return recordingAct.Kind + (isPartition ? " de una fracción" : String.Empty);

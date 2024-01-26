@@ -119,7 +119,7 @@ namespace Empiria.Land.Registration {
       Assertion.Require(this.Document.RecordingActs.Count > 0, "El documento no tiene actos jurídicos.");
 
       foreach (var recordingAct in this.Document.RecordingActs) {
-        recordingAct.AssertCanBeClosed();
+        recordingAct.Validator.AssertCanBeClosed();
       }
     }
 
@@ -132,7 +132,7 @@ namespace Empiria.Land.Registration {
       //this.AssertGraceDaysForEdition();
 
       foreach (var recordingAct in this.Document.RecordingActs) {
-        recordingAct.AssertCanBeOpened();
+        recordingAct.Validator.AssertCanBeOpened();
       }
     }
 
