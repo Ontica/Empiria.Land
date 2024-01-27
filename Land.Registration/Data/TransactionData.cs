@@ -104,7 +104,7 @@ namespace Empiria.Land.Data {
                   o.RecorderOffice.Id, o.RequestedBy, o.Agency.Id,
                   o.ExternalTransactionNo, o.InternalControlNumber, o.ExtensionData.ToString(),
                   o.Keywords, o.PresentationTime, o.ExpectedDelivery, o.LastReentryTime, o.ClosingTime,
-                  o.LastDeliveryTime, o.NonWorkingTime, o.ComplexityIndex, o.IsArchived,
+                  o.LastDeliveryTime, o.NonWorkingTime, o.Services.ComplexityIndex, o.IsArchived,
                   (char) o.Workflow.CurrentStatus, o.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(op);

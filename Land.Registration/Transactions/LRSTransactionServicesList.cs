@@ -9,8 +9,12 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
+using Empiria.DataTypes;
 
 using Empiria.Land.Data;
+using Empiria.Land.Transactions;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -19,24 +23,33 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Fields
 
+    private static readonly decimal BASE_SALARY_VALUE = decimal.Parse(ConfigurationData.GetString("BaseSalaryValue"));
+
+    private readonly LRSTransaction _transaction;
+
     private LRSFee totalFee = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    internal LRSTransactionServicesList() {
-      this.CalculateTotals();
+    internal LRSTransactionServicesList(LRSTransaction transaction) {
+      _transaction = transaction;
+
+      this.RecalculateTotalFee();
     }
 
-    internal LRSTransactionServicesList(IEnumerable<LRSTransactionService> list) : base(list) {
-      this.CalculateTotals();
+    internal LRSTransactionServicesList(LRSTransaction transaction,
+                                        IEnumerable<LRSTransactionService> services) : base(services) {
+      _transaction = transaction;
+
+      this.RecalculateTotalFee();
     }
 
     static internal LRSTransactionServicesList Parse(LRSTransaction transaction) {
       var services = TransactionData.GetTransactionServicesList(transaction);
 
-      return new LRSTransactionServicesList(services);
+      return new LRSTransactionServicesList(transaction, services);
     }
 
     #endregion Constructors and parsers
@@ -49,6 +62,28 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
+    public decimal ComplexityIndex {
+      get {
+        return this.Sum(x => x.ComplexityIndex);
+      }
+    }
+
+
+    public bool HasPayableServices {
+      get {
+        return PayableServices.Count != 0;
+      }
+    }
+
+
+    public FixedList<LRSTransactionService> PayableServices {
+      get {
+        return base.FindAll(x => x.IsPayable);
+      }
+    }
+
+
     public LRSFee TotalFee {
       get {
         if (this.totalFee == null) {
@@ -58,25 +93,58 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
     #endregion Public properties
 
     #region Public methods
 
-    protected internal new void Add(LRSTransactionService service) {
-      base.Add(service);
-      this.CalculateTotals();
+    public LRSTransactionService Add(RecordingActType serviceType,
+                                     LRSLawArticle treasuryCode, decimal recordingRights) {
+      this.EnsureCanEditServices();
+
+      var service = new LRSTransactionService(_transaction, serviceType, treasuryCode,
+                                              Money.Zero, Quantity.One,
+                                              new LRSFee() { RecordingRights = recordingRights });
+
+      return this.ExecuteAddService(service);
     }
 
-    public bool ContainsPayableItems() {
-      return (base.Find(x => x.IsPayable) != null);
+
+    public LRSTransactionService Add(RequestedServiceFields requestedService) {
+      this.EnsureCanEditServices();
+
+      var serviceType = RecordingActType.Parse(requestedService.ServiceUID);
+      var treasuryCode = LRSLawArticle.Parse(requestedService.FeeConceptUID);
+      var operationValue = Money.Parse(requestedService.TaxableBase);
+      var quantity = Quantity.Parse(Unit.Parse(requestedService.UnitUID),
+                                    requestedService.Quantity);
+
+      var fee = new LRSFee {
+        RecordingRights = requestedService.Subtotal
+      };
+
+      var service = new LRSTransactionService(_transaction, serviceType, treasuryCode,
+                                              operationValue, quantity, fee);
+
+      if (requestedService.Notes.Length != 0) {
+        service.Notes = requestedService.Notes;
+      }
+
+      return this.ExecuteAddService(service);
     }
 
 
-    public FixedList<LRSTransactionService> PayableItems {
-      get {
-        return base.FindAll(x => x.IsPayable);
+    public void AddPreconfiguredServicesIfApplicable() {
+      if (!_transaction.ControlData.CanEditServices || this.Count > 0) {
+        return;
+      }
+
+      foreach (var item in _transaction.DocumentType.DefaultRecordingActs) {
+        this.Add(item, item.GetFinancialLawArticles()[0],
+                 BASE_SALARY_VALUE * item.GetFeeUnits());
       }
     }
+
 
     public override void CopyTo(LRSTransactionService[] array, int index) {
       for (int i = index, j = Count; i < j; i++) {
@@ -84,31 +152,45 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public new LRSTransactionService Find(Predicate<LRSTransactionService> match) {
-      return base.Find(match);
-    }
 
-    protected internal new bool Remove(LRSTransactionService service) {
-      bool result = base.Remove(service);
+    public new void Remove(LRSTransactionService service) {
+      EnsureCanEditServices();
 
-      this.CalculateTotals();
+      service.Delete();
 
-      return result;
-    }
+      base.Remove(service);
 
-    public new void Sort(Comparison<LRSTransactionService> comparison) {
-      base.Sort(comparison);
+      this.RecalculateTotalFee();
     }
 
     #endregion Public methods
 
-    #region Private methods
+    #region Helpers
 
-    private void CalculateTotals() {
+    private void EnsureCanEditServices() {
+      Assertion.Require(_transaction.ControlData.CanEditServices,
+          "The transaction is in a status that doesn't permit aggregate new services or products," +
+          "or the user doesn't have enough privileges.");
+
+    }
+
+    private LRSTransactionService ExecuteAddService(LRSTransactionService service) {
+
+      service.Save();
+
+      base.Add(service);
+
+      this.RecalculateTotalFee();
+
+      return service;
+    }
+
+
+    private void RecalculateTotalFee() {
       this.totalFee = LRSFee.Parse(this);
     }
 
-    #endregion Private methods;
+    #endregion Helpers;
 
   } // class LRSTransactionServicesList
 

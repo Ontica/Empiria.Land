@@ -48,7 +48,7 @@ namespace Empiria.Land.Transactions.UseCases {
       Assertion.Require(service,
           $"Transaction {transactionUID} do not have a service with uid '{requestedServiceUID}'.");
 
-      transaction.RemoveService(service);
+      transaction.Services.Remove(service);
 
       transaction.Save();
 
@@ -73,7 +73,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       requestedServiceFields.Subtotal = fee;
 
-      transaction.AddService(requestedServiceFields);
+      transaction.Services.Add(requestedServiceFields);
 
       return TransactionMapper.Map(transaction);
     }

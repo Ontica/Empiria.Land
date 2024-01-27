@@ -55,7 +55,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       transaction.Save();
 
-      transaction.AddPreconfiguredServicesIfApplicable();
+      transaction.Services.AddPreconfiguredServicesIfApplicable();
 
       // ToDo: Call it in a service or in IIS Application.OnStart()
       if (!LandMessenger.IsRunning) {

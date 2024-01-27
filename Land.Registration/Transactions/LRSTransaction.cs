@@ -34,8 +34,6 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Fields
 
-    private static readonly decimal BaseSalaryValue = decimal.Parse(ConfigurationData.GetString("BaseSalaryValue"));
-
     private Lazy<LRSTransactionServicesList> _services = null;
     private Lazy<LRSPaymentList> _payments = null;
     private Lazy<LRSWorkflow> _workflow = null;
@@ -66,7 +64,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     private void Initialize() {
-      _services = new Lazy<LRSTransactionServicesList>(() => new LRSTransactionServicesList());
+      _services = new Lazy<LRSTransactionServicesList>(() => new LRSTransactionServicesList(this));
       _payments = new Lazy<LRSPaymentList>(() => new LRSPaymentList());
       _workflow = new Lazy<LRSWorkflow>(() => new LRSWorkflow(this));
     }
@@ -318,12 +316,6 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    [DataField("ComplexityIndex")]
-    public decimal ComplexityIndex {
-      get;
-      private set;
-    }
-
     public TransactionControlData ControlData {
       get {
         return new TransactionControlData(this);
@@ -429,7 +421,7 @@ namespace Empiria.Land.Registration.Transactions {
           "PresentationTime", this.PresentationTime, "ExpectedDelivery", this.ExpectedDelivery,
           "LastReentryTime", this.LastReentryTime, "ClosingTime", this.ClosingTime,
           "LastDeliveryTime", this.LastDeliveryTime, "NonWorkingTime", this.NonWorkingTime,
-          "ComplexityIndex", this.ComplexityIndex, "Status", (char) this.Workflow.CurrentStatus
+          "ComplexityIndex", this.Services.ComplexityIndex, "Status", (char) this.Workflow.CurrentStatus
         };
       }
       throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
@@ -448,63 +440,6 @@ namespace Empiria.Land.Registration.Transactions {
     #endregion Public properties
 
     #region Public methods
-
-    public void AddPreconfiguredServicesIfApplicable() {
-      if (!this.ControlData.CanEditServices || this.Services.Count > 0) {
-        return;
-      }
-
-      foreach (var item in this.DocumentType.DefaultRecordingActs) {
-        this.AddService(item, item.GetFinancialLawArticles()[0],
-                        BaseSalaryValue * item.GetFeeUnits());
-      }
-    }
-
-    public LRSTransactionService AddService(RecordingActType transactionServiceType,
-                                            LRSLawArticle treasuryCode, decimal recordingRights) {
-      this.EnsureCanEditServices();
-
-      var service = new LRSTransactionService(this, transactionServiceType, treasuryCode,
-                                              Money.Zero, Quantity.One,
-                                              new LRSFee() { RecordingRights = recordingRights });
-
-      return this.ExecuteAddService(service);
-    }
-
-
-    public LRSTransactionService AddService(RequestedServiceFields requestedService) {
-      this.EnsureCanEditServices();
-
-      var serviceType = RecordingActType.Parse(requestedService.ServiceUID);
-      var treasuryCode = LRSLawArticle.Parse(requestedService.FeeConceptUID);
-      var operationValue = Money.Parse(requestedService.TaxableBase);
-      var quantity = Quantity.Parse(Unit.Parse(requestedService.UnitUID),
-                                    requestedService.Quantity);
-
-      var fee = new LRSFee {
-        RecordingRights = requestedService.Subtotal
-      };
-
-      var service = new LRSTransactionService(this, serviceType, treasuryCode,
-                                              operationValue, quantity, fee);
-
-      if (requestedService.Notes.Length != 0) {
-        service.Notes = requestedService.Notes;
-
-        service.Save();
-      }
-
-      return this.ExecuteAddService(service);
-    }
-
-
-    private LRSTransactionService ExecuteAddService(LRSTransactionService service) {
-      this.Services.Add(service);
-
-      service.Save();
-
-      return service;
-    }
 
     public void Delete() {
       this.Workflow.Delete();
@@ -572,14 +507,6 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public void RemoveService(LRSTransactionService service) {
-      EnsureCanEditServices();
-
-      this.Services.Remove(service);
-
-      service.Delete();
-    }
-
     public LRSTransaction MakeCopy() {
       LRSTransaction copy = new LRSTransaction(this.TransactionType);
       copy.RecorderOffice = this.RecorderOffice;
@@ -594,12 +521,12 @@ namespace Empiria.Land.Registration.Transactions {
 
       copy.Save();
 
-      foreach (LRSTransactionService item in this.Services) {
-        LRSTransactionService itemCopy = item.MakeCopy();
+      foreach (LRSTransactionService service in this.Services) {
+        LRSTransactionService serviceCopy = service.MakeCopy();
         if (this.IsFeeWaiverApplicable) {
           // ToDo: Apply Fee Waiver on payment for each itemCopy ???
         }
-        itemCopy.Save();
+        serviceCopy.Save();
       }
       return copy;
     }
@@ -688,11 +615,6 @@ namespace Empiria.Land.Registration.Transactions {
       this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);
     }
 
-    internal void OnTransactionServicesUpdated() {
-      _services = new Lazy<LRSTransactionServicesList>(() => LRSTransactionServicesList.Parse(this));
-
-      this.UpdateComplexityIndex();
-    }
 
     protected override void OnBeforeSave() {
       if (base.IsNew) {
@@ -701,6 +623,7 @@ namespace Empiria.Land.Registration.Transactions {
         _transactionUID = provider.GenerateTransactionID();
       }
     }
+
 
     protected override void OnSave() {
       if (base.IsNew) {
@@ -867,22 +790,6 @@ namespace Empiria.Land.Registration.Transactions {
       current++;
 
       return $"{current:000000}";
-    }
-
-
-    private void EnsureCanEditServices() {
-      Assertion.Require(this.ControlData.CanEditServices,
-          "The transaction is in a status that doesn't permit aggregate new services or products," +
-          "or the user doesn't have enough privileges.");
-
-    }
-
-
-    private void UpdateComplexityIndex() {
-      this.ComplexityIndex = 0;
-      foreach (LRSTransactionService act in this.Services) {
-        this.ComplexityIndex += act.ComplexityIndex;
-      }
     }
 
     #endregion Private methods

@@ -58,13 +58,13 @@ namespace Empiria.Land.Transactions.Payments.Providers {
         return Task.FromResult(GetDisconnectedPaymentOrder(transaction));
       }
 
-      var payableItems = transaction.Services.PayableItems;
+      var payableServices = transaction.Services.PayableServices;
 
-      if (HasServicesThanCanNotBeAutoCalculated(payableItems)) {
+      if (HasServicesThanCanNotBeAutoCalculated(payableServices)) {
         return Task.FromResult(GetDisconnectedPaymentOrder(transaction));
       }
 
-      PaymentOrderRequestDto paymentOrderRequest = MapToPaymentOrderRequest(transaction, payableItems);
+      PaymentOrderRequestDto paymentOrderRequest = MapToPaymentOrderRequest(transaction, payableServices);
 
       IPaymentService externalService = GetPaymentOrderService();
 

@@ -174,7 +174,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!_transaction.Services.ContainsPayableItems()) {
+        if (!_transaction.Services.HasPayableServices) {
           return false;
         }
 

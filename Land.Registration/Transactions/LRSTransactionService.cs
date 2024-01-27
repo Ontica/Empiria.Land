@@ -190,8 +190,6 @@ namespace Empiria.Land.Registration.Transactions {
 
     protected override void OnSave() {
       TransactionData.WriteTransactionService(this);
-
-      this.Transaction.OnTransactionServicesUpdated();
     }
 
     #endregion Public methods
