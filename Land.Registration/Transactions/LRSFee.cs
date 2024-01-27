@@ -34,11 +34,11 @@ namespace Empiria.Land.Registration.Transactions {
       return fee;
     }
 
-    static internal LRSFee Parse(FixedList<LRSTransactionItem> list) {
+    static internal LRSFee Parse(FixedList<LRSTransactionService> services) {
       LRSFee fee = new LRSFee();
 
-      foreach (LRSTransactionItem act in list) {
-        fee.Sum(act.Fee);
+      foreach (LRSTransactionService service in services) {
+        fee.Sum(service.Fee);
       }
       return fee;
     }

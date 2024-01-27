@@ -143,7 +143,7 @@ namespace Empiria.Land.Providers {
 
       Assertion.Require(transaction, nameof(transaction));
 
-      transaction.SetPayment(receiptNo, transaction.Items.TotalFee.Total);
+      transaction.SetPayment(receiptNo, transaction.Services.TotalFee.Total);
 
       return ConvertToDTOInterface(transaction);
     }
@@ -183,7 +183,7 @@ namespace Empiria.Land.Providers {
       var paymentOrder = ((IPayable) transaction).TryGetFormerPaymentOrderData();
 
       if (paymentOrder != null) {
-        paymentOrder.PaymentTotal = transaction.Items.TotalFee.Total;
+        paymentOrder.PaymentTotal = transaction.Services.TotalFee.Total;
       }
 
       return paymentOrder;

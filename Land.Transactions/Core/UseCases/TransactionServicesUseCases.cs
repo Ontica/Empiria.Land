@@ -36,19 +36,19 @@ namespace Empiria.Land.Transactions.UseCases {
     #region Use cases
 
     public TransactionDto DeleteService(string transactionUID, string requestedServiceUID) {
-      Assertion.Require(requestedServiceUID, "requestedServiceUID");
+      Assertion.Require(requestedServiceUID, nameof(requestedServiceUID));
 
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
       Assertion.Require(transaction.ControlData.CanEditServices,
                        $"Can not delete services for transaction '{transactionUID}'.");
 
-      LRSTransactionItem item = transaction.Items.Find((x) => x.UID == requestedServiceUID);
+      LRSTransactionService service = transaction.Services.Find((x) => x.UID == requestedServiceUID);
 
-      Assertion.Require(item,
+      Assertion.Require(service,
           $"Transaction {transactionUID} do not have a service with uid '{requestedServiceUID}'.");
 
-      transaction.RemoveItem(item);
+      transaction.RemoveService(service);
 
       transaction.Save();
 
@@ -58,7 +58,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
     public async Task<TransactionDto> RequestService(string transactionUID,
                                                      RequestedServiceFields requestedServiceFields) {
-      Assertion.Require(requestedServiceFields, "requestedServiceFields");
+      Assertion.Require(requestedServiceFields, nameof(requestedServiceFields));
 
       requestedServiceFields.AssertValid();
 
@@ -73,7 +73,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
       requestedServiceFields.Subtotal = fee;
 
-      transaction.AddItem(requestedServiceFields);
+      transaction.AddService(requestedServiceFields);
 
       return TransactionMapper.Map(transaction);
     }
@@ -84,7 +84,7 @@ namespace Empiria.Land.Transactions.UseCases {
     #region Helper methods
 
     private LRSTransaction ParseTransaction(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.TryParse(transactionUID);
 

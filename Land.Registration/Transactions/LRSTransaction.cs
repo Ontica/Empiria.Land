@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     private static readonly decimal BaseSalaryValue = decimal.Parse(ConfigurationData.GetString("BaseSalaryValue"));
 
-    private Lazy<LRSTransactionItemList> _transactionItems = null;
+    private Lazy<LRSTransactionServicesList> _services = null;
     private Lazy<LRSPaymentList> _payments = null;
     private Lazy<LRSWorkflow> _workflow = null;
 
@@ -66,7 +66,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     private void Initialize() {
-      _transactionItems = new Lazy<LRSTransactionItemList>(() => new LRSTransactionItemList());
+      _services = new Lazy<LRSTransactionServicesList>(() => new LRSTransactionServicesList());
       _payments = new Lazy<LRSPaymentList>(() => new LRSPaymentList());
       _workflow = new Lazy<LRSWorkflow>(() => new LRSWorkflow(this));
     }
@@ -336,9 +336,9 @@ namespace Empiria.Land.Registration.Transactions {
       private set;
     }
 
-    public LRSTransactionItemList Items {
+    public LRSTransactionServicesList Services {
       get {
-        return _transactionItems.Value;
+        return _services.Value;
       }
     }
 
@@ -372,7 +372,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public bool HasServices {
       get {
-        return this.Items.Count != 0;
+        return this.Services.Count != 0;
       }
     }
 
@@ -450,32 +450,32 @@ namespace Empiria.Land.Registration.Transactions {
     #region Public methods
 
     public void AddPreconfiguredServicesIfApplicable() {
-      if (!this.ControlData.CanEditServices || this.Items.Count > 0) {
+      if (!this.ControlData.CanEditServices || this.Services.Count > 0) {
         return;
       }
 
       foreach (var item in this.DocumentType.DefaultRecordingActs) {
-        this.AddItem(item, item.GetFinancialLawArticles()[0],
-                     BaseSalaryValue * item.GetFeeUnits());
+        this.AddService(item, item.GetFinancialLawArticles()[0],
+                        BaseSalaryValue * item.GetFeeUnits());
       }
     }
 
-    public LRSTransactionItem AddItem(RecordingActType transactionItemType,
-                                      LRSLawArticle treasuryCode, decimal recordingRights) {
+    public LRSTransactionService AddService(RecordingActType transactionServiceType,
+                                            LRSLawArticle treasuryCode, decimal recordingRights) {
       this.EnsureCanEditServices();
 
-      var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
-                                        Money.Zero, Quantity.One,
-                                        new LRSFee() { RecordingRights = recordingRights });
+      var service = new LRSTransactionService(this, transactionServiceType, treasuryCode,
+                                              Money.Zero, Quantity.One,
+                                              new LRSFee() { RecordingRights = recordingRights });
 
-      return this.PerformAddItem(item);
+      return this.ExecuteAddService(service);
     }
 
 
-    public LRSTransactionItem AddItem(RequestedServiceFields requestedService) {
+    public LRSTransactionService AddService(RequestedServiceFields requestedService) {
       this.EnsureCanEditServices();
 
-      var service = RecordingActType.Parse(requestedService.ServiceUID);
+      var serviceType = RecordingActType.Parse(requestedService.ServiceUID);
       var treasuryCode = LRSLawArticle.Parse(requestedService.FeeConceptUID);
       var operationValue = Money.Parse(requestedService.TaxableBase);
       var quantity = Quantity.Parse(Unit.Parse(requestedService.UnitUID),
@@ -485,48 +485,25 @@ namespace Empiria.Land.Registration.Transactions {
         RecordingRights = requestedService.Subtotal
       };
 
-      var item = new LRSTransactionItem(this, service, treasuryCode,
-                                        operationValue, quantity, fee);
+      var service = new LRSTransactionService(this, serviceType, treasuryCode,
+                                              operationValue, quantity, fee);
 
       if (requestedService.Notes.Length != 0) {
-        item.Notes = requestedService.Notes;
+        service.Notes = requestedService.Notes;
 
-        item.Save();
+        service.Save();
       }
 
-      return this.PerformAddItem(item);
+      return this.ExecuteAddService(service);
     }
 
 
-    public LRSTransactionItem AddItem(RecordingActType transactionItemType,
-                                      LRSLawArticle treasuryCode, Money operationValue,
-                                      Quantity quantity, LRSFee fee) {
-      this.EnsureCanEditServices();
-      var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
-                                        operationValue, quantity, fee);
+    private LRSTransactionService ExecuteAddService(LRSTransactionService service) {
+      this.Services.Add(service);
 
-      return this.PerformAddItem(item);
-    }
+      service.Save();
 
-
-    public LRSTransactionItem AddItem(RecordingActType transactionItemType,
-                                      LRSLawArticle treasuryCode, Quantity quantity,
-                                      Money operationValue) {
-      this.EnsureCanEditServices();
-
-      var item = new LRSTransactionItem(this, transactionItemType, treasuryCode,
-                                        operationValue, quantity);
-
-      return this.PerformAddItem(item);
-    }
-
-
-    private LRSTransactionItem PerformAddItem(LRSTransactionItem item) {
-      this.Items.Add(item);
-
-      item.Save();
-
-      return item;
+      return service;
     }
 
     public void Delete() {
@@ -595,11 +572,12 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public void RemoveItem(LRSTransactionItem item) {
+    public void RemoveService(LRSTransactionService service) {
       EnsureCanEditServices();
 
-      this.Items.Remove(item);
-      item.Delete();
+      this.Services.Remove(service);
+
+      service.Delete();
     }
 
     public LRSTransaction MakeCopy() {
@@ -616,8 +594,8 @@ namespace Empiria.Land.Registration.Transactions {
 
       copy.Save();
 
-      foreach (LRSTransactionItem item in this.Items) {
-        LRSTransactionItem itemCopy = item.MakeCopy();
+      foreach (LRSTransactionService item in this.Services) {
+        LRSTransactionService itemCopy = item.MakeCopy();
         if (this.IsFeeWaiverApplicable) {
           // ToDo: Apply Fee Waiver on payment for each itemCopy ???
         }
@@ -674,8 +652,8 @@ namespace Empiria.Land.Registration.Transactions {
       if (this.PresentationTime != ExecutionServer.DateMaxValue) {
         temp += this.PresentationTime.ToString("yyyyMMddTHH:mm:ss") + "|";
       }
-      foreach (LRSTransactionItem act in this.Items) {
-        temp += "|" + act.Id.ToString() + "^" + act.TransactionItemType.Id.ToString() + "^";
+      foreach (LRSTransactionService act in this.Services) {
+        temp += "|" + act.Id.ToString() + "^" + act.ServiceType.Id.ToString() + "^";
         if (act.OperationValue.Amount != decimal.Zero) {
           temp += "B" + act.OperationValue.Amount.ToString("F4") + "^";
         }
@@ -701,7 +679,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     protected override void OnLoadObjectData(System.Data.DataRow row) {
-      _transactionItems = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
+      _services = new Lazy<LRSTransactionServicesList>(() => LRSTransactionServicesList.Parse(this));
       _payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
 
       _workflow = new Lazy<LRSWorkflow>(
@@ -710,8 +688,9 @@ namespace Empiria.Land.Registration.Transactions {
       this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);
     }
 
-    internal void OnTransactionItemsUpdated() {
-      _transactionItems = new Lazy<LRSTransactionItemList>(() => LRSTransactionItemList.Parse(this));
+    internal void OnTransactionServicesUpdated() {
+      _services = new Lazy<LRSTransactionServicesList>(() => LRSTransactionServicesList.Parse(this));
+
       this.UpdateComplexityIndex();
     }
 
@@ -727,6 +706,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (base.IsNew) {
         this.GUID = Guid.NewGuid().ToString();
       }
+
       this.Keywords = EmpiriaString.BuildKeywords(this.InternalControlNumber, this.UID,
                                                   this.Document.UID,
                                                   this.Payments.Count == 1 ? this.Payments[0].ReceiptNo : string.Empty,
@@ -734,7 +714,9 @@ namespace Empiria.Land.Registration.Transactions {
                                                   this.Agency.FullName,
                                                   this.DocumentType.Name, this.TransactionType.Name,
                                                   this.RecorderOffice.ShortName);
+
       TransactionData.WriteTransaction(this);
+
       if (base.IsNew) {
         var newWorkflow = LRSWorkflow.Create(this);
         _workflow = new Lazy<LRSWorkflow>(() => newWorkflow);
@@ -898,7 +880,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     private void UpdateComplexityIndex() {
       this.ComplexityIndex = 0;
-      foreach (LRSTransactionItem act in this.Items) {
+      foreach (LRSTransactionService act in this.Services) {
         this.ComplexityIndex += act.ComplexityIndex;
       }
     }

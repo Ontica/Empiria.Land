@@ -146,26 +146,26 @@ namespace Empiria.Land.Pages {
                       "<td align='right'>{SUBTOTAL}</td>" +
                       "<td align='right'>{DISCOUNTS}</td>" +
                       "<td align='right'><b>{TOTAL}</b></td></tr>";
-      FixedList<LRSTransactionItem> list = transaction.Items;
+      FixedList<LRSTransactionService> services = transaction.Services;
       string html = String.Empty;
 
-      for (int i = 0; i < list.Count; i++) {
-        LRSTransactionItem recordingAct = list[i];
+      for (int i = 0; i < services.Count; i++) {
+        LRSTransactionService service = services[i];
         string temp = cert.Replace("{NUMBER}", (i + 1).ToString("00"));
-        temp = temp.Replace("{CODE}", recordingAct.TreasuryCode.FinancialConceptCode);
-        temp = temp.Replace("{CONCEPT}", recordingAct.TransactionItemType.DisplayName);
-        temp = temp.Replace("{LAW.ARTICLE}", recordingAct.TreasuryCode.Name);
-        if (!recordingAct.Quantity.Unit.IsEmptyInstance) {
-          temp = temp.Replace("{QTY}", recordingAct.Quantity.Amount.ToString("N0"));
-          temp = temp.Replace("{UNIT}", recordingAct.Quantity.Unit.Name);
+        temp = temp.Replace("{CODE}", service.TreasuryCode.FinancialConceptCode);
+        temp = temp.Replace("{CONCEPT}", service.ServiceType.DisplayName);
+        temp = temp.Replace("{LAW.ARTICLE}", service.TreasuryCode.Name);
+        if (!service.Quantity.Unit.IsEmptyInstance) {
+          temp = temp.Replace("{QTY}", service.Quantity.Amount.ToString("N0"));
+          temp = temp.Replace("{UNIT}", service.Quantity.Unit.Name);
         } else {
           temp = temp.Replace("{QTY}", "&nbsp;");
           temp = temp.Replace("{UNIT}", "&nbsp;");
         }
-        temp = temp.Replace("{SUBTOTAL}", recordingAct.Fee.SubTotal.ToString("C2"));
-        temp = temp.Replace("{DISCOUNTS}", recordingAct.Fee.Discount.Amount.ToString("C2"));
-        temp = temp.Replace("{TOTAL}", recordingAct.Fee.Total.ToString("C2"));
-        temp = temp.Replace("{NOTES}", recordingAct.Notes);
+        temp = temp.Replace("{SUBTOTAL}", service.Fee.SubTotal.ToString("C2"));
+        temp = temp.Replace("{DISCOUNTS}", service.Fee.Discount.Amount.ToString("C2"));
+        temp = temp.Replace("{TOTAL}", service.Fee.Total.ToString("C2"));
+        temp = temp.Replace("{NOTES}", service.Notes);
         html += temp;
       }
       return html;
@@ -180,31 +180,30 @@ namespace Empiria.Land.Pages {
                               "<td style='white-space:nowrap'>{UNIT}</td>" +
                               "<td style='white-space:normal'><b>{LAW.ARTICLE}</b></td>" +
                               "<td style='white-space:nowrap'>{NOTES}</td></tr>";
-      FixedList<LRSTransactionItem> list = transaction.Items;
+      FixedList<LRSTransactionService> services = transaction.Services;
       string html = String.Empty;
 
-      for (int i = 0; i < list.Count; i++) {
-        LRSTransactionItem recordingAct = list[i];
+      for (int i = 0; i < services.Count; i++) {
+        LRSTransactionService service = services[i];
         string temp = template.Replace("{NUMBER}", (i + 1).ToString("00"));
-        temp = temp.Replace("{CODE}", recordingAct.TreasuryCode.FinancialConceptCode);
-        temp = temp.Replace("{CONCEPT}", recordingAct.TransactionItemType.DisplayName);
-        temp = temp.Replace("{OPERATION.VALUE}", recordingAct.OperationValue.Amount != decimal.Zero ? recordingAct.OperationValue.ToString() : "&nbsp;");
-        if (!recordingAct.Quantity.Unit.IsEmptyInstance) {
-          temp = temp.Replace("{QTY}", recordingAct.Quantity.Amount.ToString("N0"));
-          temp = temp.Replace("{UNIT}", recordingAct.Quantity.Unit.Name);
+        temp = temp.Replace("{CODE}", service.TreasuryCode.FinancialConceptCode);
+        temp = temp.Replace("{CONCEPT}", service.ServiceType.DisplayName);
+        temp = temp.Replace("{OPERATION.VALUE}", service.OperationValue.Amount != decimal.Zero ? service.OperationValue.ToString() : "&nbsp;");
+        if (!service.Quantity.Unit.IsEmptyInstance) {
+          temp = temp.Replace("{QTY}", service.Quantity.Amount.ToString("N0"));
+          temp = temp.Replace("{UNIT}", service.Quantity.Unit.Name);
         } else {
           temp = temp.Replace("{QTY}", "&nbsp;");
           temp = temp.Replace("{UNIT}", "&nbsp;");
         }
-        temp = temp.Replace("{LAW.ARTICLE}", recordingAct.TreasuryCode.Name);
-        temp = temp.Replace("{NOTES}", recordingAct.Notes);
+        temp = temp.Replace("{LAW.ARTICLE}", service.TreasuryCode.Name);
+        temp = temp.Replace("{NOTES}", service.Notes);
         html += temp;
       }
       return html;
     }
 
     protected string GetRecordingActsWithTotals() {
-      FixedList<LRSTransactionItem> list = transaction.Items;
       const string template = "<tr width='24px'><td>{NUMBER}</td><td>{CONCEPT.CODE}</td>" +
                               "<td style='white-space:normal'>{RECORDING.ACT}&nbsp; &nbsp; &nbsp;</td>" +
                               "<td style='white-space:nowrap'>{LAW.ARTICLE}</td>" +
@@ -222,33 +221,35 @@ namespace Empiria.Land.Pages {
                 "<td align='right'><b>{0}</b></td><td align='right'><b>{1}</b></td><td align='right'><b>{2}</b></td>" +
                 "<td align='right'><b>{3}</b></td><td align='right'><b>{4}</b></td><td align='right' style='font-size:11pt'><b>{5}</b></td></tr>";
 
+      FixedList<LRSTransactionService> services = transaction.Services;
+
       string html = String.Empty;
 
-      for (int i = 0; i < list.Count; i++) {
-        LRSTransactionItem recordingAct = list[i];
+      for (int i = 0; i < services.Count; i++) {
+        LRSTransactionService service = services[i];
         string temp = template.Replace("{NUMBER}", (i + 1).ToString("00"));
-        temp = temp.Replace("{RECORDING.ACT}", recordingAct.TransactionItemType.DisplayName);
-        temp = temp.Replace("{LAW.ARTICLE}", recordingAct.TreasuryCode.Name);
-        temp = temp.Replace("{CONCEPT.CODE}", recordingAct.TreasuryCode.FinancialConceptCode);
-        temp = temp.Replace("{OPERATION.VALUE}", recordingAct.OperationValue.ToString());
-        temp = temp.Replace("{RECORDING.RIGHTS}", recordingAct.Fee.RecordingRights.ToString("C2"));
-        temp = temp.Replace("{SHEETS.REVISION}", recordingAct.Fee.SheetsRevision.ToString("C2"));
-        decimal othersFee = recordingAct.Fee.ForeignRecordingFee;
+        temp = temp.Replace("{RECORDING.ACT}", service.ServiceType.DisplayName);
+        temp = temp.Replace("{LAW.ARTICLE}", service.TreasuryCode.Name);
+        temp = temp.Replace("{CONCEPT.CODE}", service.TreasuryCode.FinancialConceptCode);
+        temp = temp.Replace("{OPERATION.VALUE}", service.OperationValue.ToString());
+        temp = temp.Replace("{RECORDING.RIGHTS}", service.Fee.RecordingRights.ToString("C2"));
+        temp = temp.Replace("{SHEETS.REVISION}", service.Fee.SheetsRevision.ToString("C2"));
+        decimal othersFee = service.Fee.ForeignRecordingFee;
         temp = temp.Replace("{OTHERS.FEE}", (othersFee).ToString("C2"));
-        temp = temp.Replace("{SUBTOTAL}", recordingAct.Fee.SubTotal.ToString("C2"));
-        temp = temp.Replace("{DISCOUNTS}", recordingAct.Fee.Discount.Amount.ToString("C2"));
-        temp = temp.Replace("{TOTAL}", recordingAct.Fee.Total.ToString("C2"));
+        temp = temp.Replace("{SUBTOTAL}", service.Fee.SubTotal.ToString("C2"));
+        temp = temp.Replace("{DISCOUNTS}", service.Fee.Discount.Amount.ToString("C2"));
+        temp = temp.Replace("{TOTAL}", service.Fee.Total.ToString("C2"));
         html += temp;
         if (othersFee != decimal.Zero) {
           temp = String.Empty;
-          if (recordingAct.Fee.ForeignRecordingFee != decimal.Zero) {
-            temp += " Trámite foráneo: " + recordingAct.Fee.ForeignRecordingFee.ToString("C2") + " &nbsp;";
+          if (service.Fee.ForeignRecordingFee != decimal.Zero) {
+            temp += " Trámite foráneo: " + service.Fee.ForeignRecordingFee.ToString("C2") + " &nbsp;";
           }
           html += othersTemplate.Replace("{CONCEPTS}", temp);
         }
       }
 
-      LRSFee totalFee = transaction.Items.TotalFee;
+      LRSFee totalFee = transaction.Services.TotalFee;
 
       string temp1 = totalsTemplate.Replace("{0}", totalFee.RecordingRights.ToString("C2"));
       temp1 = temp1.Replace("{1}", totalFee.SheetsRevision.ToString("C2"));

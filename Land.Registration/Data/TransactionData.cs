@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Data;
 
 using Empiria.Data;
 
@@ -18,7 +17,7 @@ using Empiria.Land.Registration.Transactions;
 namespace Empiria.Land.Data {
 
   /// <summary>Provides database read and write methods for recording office filings.</summary>
-  static public class TransactionData {
+  static internal class TransactionData {
 
     #region Public methods
 
@@ -48,32 +47,6 @@ namespace Empiria.Land.Data {
     }
 
 
-    static public DataView GetLRSTransactionsForUI(string filter, string sort) {
-      string sql = "SELECT TOP 200 * FROM vwLRSTransactionsAndCurrentTrack";
-      if (filter.Length != 0 && sort.Length != 0) {
-        sql += " WHERE " + filter + " ORDER BY " + sort;
-      } else if (filter.Length != 0 && sort.Length == 0) {
-        sql += " WHERE " + filter;
-      } else if (filter.Length == 0 && sort.Length != 0) {
-        sql += " ORDER BY " + sort;
-      } else if (filter.Length == 0 && sort.Length == 0) {
-        // no-op
-      }
-      return DataReader.GetDataView(DataOperation.Parse(sql));
-    }
-
-
-    static internal string GetTransactionInstrumentUID(LRSTransaction transaction) {
-      var sql = $"SELECT InstrumentUID " +
-                $"FROM LRSInstruments " +
-                $"WHERE (InstrumentId = {transaction.InstrumentId})";
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetScalar<string>(op, "Empty");
-    }
-
-
     static internal FixedList<LRSTransaction> GetTransactionsList(string filter, string orderBy, int pageSize) {
       string sql = $"SELECT TOP {pageSize} LRSTransactions.* " +
                     "FROM LRSTransactions INNER JOIN vwLRSLastTransactionTrack " +
@@ -86,10 +59,10 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal FixedList<LRSTransactionItem> GetTransactionItemsList(LRSTransaction transaction) {
+    static internal FixedList<LRSTransactionService> GetTransactionServicesList(LRSTransaction transaction) {
       var operation = DataOperation.Parse("qryLRSTransactionItems", transaction.Id);
 
-      return DataReader.GetFixedList<LRSTransactionItem>(operation);
+      return DataReader.GetFixedList<LRSTransactionService>(operation);
     }
 
 
@@ -102,6 +75,7 @@ namespace Empiria.Land.Data {
 
       return DataReader.GetFixedList<LRSPayment>(operation);
     }
+
 
     static internal void SetTransactionInstrument(LRSTransaction transaction, IIdentifiable instrument) {
       var sql = $"UPDATE LRSTransactions " +
@@ -137,18 +111,17 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal void WriteTransactionItem(LRSTransactionItem o) {
-      Assertion.Require(o.ExtensionData, "o.ExtensionData");
+    static internal void WriteTransactionService(LRSTransactionService o) {
       Assertion.Require(o.Fee, "o.Fee");
       Assertion.Require(o.Payment, "o.Payment");
 
       var op = DataOperation.Parse("writeLRSTransactionItem", o.Id, o.UID, o.Transaction.Id,
-                                    o.TransactionItemType.Id, o.TreasuryCode.Id,
+                                    o.ServiceType.Id, o.TreasuryCode.Id,
                                     o.Payment.Id, o.Quantity.Amount, o.Quantity.Unit.Id,
                                     o.OperationValue.Amount, o.OperationValue.Currency.Id,
                                     o.Fee.RecordingRights, o.Fee.SheetsRevision,
                                     o.Fee.ForeignRecordingFee, o.Fee.Discount.Amount,
-                                    o.Notes, o.ExtensionData.ToString(), o.Status,
+                                    o.Notes, string.Empty, o.Status,
                                     o.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(op);

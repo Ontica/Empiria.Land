@@ -58,7 +58,7 @@ namespace Empiria.Land.Transactions.Payments.Providers {
         return Task.FromResult(GetDisconnectedPaymentOrder(transaction));
       }
 
-      var payableItems = transaction.Items.PayableItems;
+      var payableItems = transaction.Services.PayableItems;
 
       if (HasServicesThanCanNotBeAutoCalculated(payableItems)) {
         return Task.FromResult(GetDisconnectedPaymentOrder(transaction));
@@ -133,7 +133,7 @@ namespace Empiria.Land.Transactions.Payments.Providers {
 
 
     private PaymentOrderRequestDto MapToPaymentOrderRequest(LRSTransaction transaction,
-                                                            FixedList<LRSTransactionItem> items) {
+                                                            FixedList<LRSTransactionService> items) {
       return new PaymentOrderRequestDto {
 
         BaseTransactionUID = transaction.UID,
@@ -145,7 +145,7 @@ namespace Empiria.Land.Transactions.Payments.Providers {
     }
 
 
-    private PaymentOrderRequestConceptDto[] MapToPaymentOrderRequestConceptsArray(FixedList<LRSTransactionItem> items) {
+    private PaymentOrderRequestConceptDto[] MapToPaymentOrderRequestConceptsArray(FixedList<LRSTransactionService> items) {
       var conceptsArray = new PaymentOrderRequestConceptDto[items.Count];
 
       for (int i = 0; i < items.Count; i++) {
@@ -156,7 +156,7 @@ namespace Empiria.Land.Transactions.Payments.Providers {
     }
 
 
-    private PaymentOrderRequestConceptDto MapToPaymentOrderRequestConceptDto(LRSTransactionItem item) {
+    private PaymentOrderRequestConceptDto MapToPaymentOrderRequestConceptDto(LRSTransactionService item) {
       var concept = new PaymentOrderRequestConceptDto();
 
       concept.ConceptUID = item.TreasuryCode.FinancialConceptCode;
@@ -172,7 +172,7 @@ namespace Empiria.Land.Transactions.Payments.Providers {
     #region Helper methods
 
 
-    static private bool HasServicesThanCanNotBeAutoCalculated(FixedList<LRSTransactionItem> payableItems) {
+    static private bool HasServicesThanCanNotBeAutoCalculated(FixedList<LRSTransactionService> payableItems) {
       return payableItems.CountAll(x => !x.TreasuryCode.Autocalculated) > 0;
     }
 

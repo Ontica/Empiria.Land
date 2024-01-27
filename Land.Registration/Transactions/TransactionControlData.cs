@@ -174,7 +174,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!_transaction.Items.ContainsPayableItems()) {
+        if (!_transaction.Services.ContainsPayableItems()) {
           return false;
         }
 
@@ -308,7 +308,7 @@ namespace Empiria.Land.Transactions {
           return true;
         }
 
-        return !LRSWorkflowRules.IsEmptyItemsTransaction(_transaction);
+        return !LRSWorkflowRules.IsEmptyServicesTransaction(_transaction);
       }
     }
 

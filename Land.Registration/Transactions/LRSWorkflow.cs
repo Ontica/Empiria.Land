@@ -101,9 +101,9 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public bool IsEmptyItemsTransaction {
+    public bool IsEmptyServicesTransaction {
       get {
-        return LRSWorkflowRules.IsEmptyItemsTransaction(_transaction);
+        return LRSWorkflowRules.IsEmptyServicesTransaction(_transaction);
       }
     }
 
@@ -212,7 +212,7 @@ namespace Empiria.Land.Registration.Transactions {
                                             _transaction.UID);
       }
       if (_transaction.Payments.Count == 0 && !_transaction.IsFeeWaiverApplicable
-          && !this.IsEmptyItemsTransaction) {
+          && !this.IsEmptyServicesTransaction) {
         throw new NotImplementedException("Este trámite todavía no tiene registrada una boleta de pago.");
       }
 

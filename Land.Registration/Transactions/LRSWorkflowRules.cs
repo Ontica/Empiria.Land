@@ -132,7 +132,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    static public bool IsEmptyItemsTransaction(LRSTransaction transaction) {
+    static public bool IsEmptyServicesTransaction(LRSTransaction transaction) {
       if (transaction.TransactionType.Id == 704 ||
           transaction.TransactionType.Id == 705) {
         return true;

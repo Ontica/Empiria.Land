@@ -1,55 +1,40 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSTransactionItem                             Pattern  : Association Class                   *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Transaction services                         Component : Domain Layer                          *
+*  Assembly : Empiria.Land.Registration.dll                Pattern   : Information Holder                    *
+*  Type     : LRSTransactionService                        License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Represents a transaction concept in the context of a land registration transaction.           *
+*  Summary  : Represents a service provided in the context of a land registration transaction.               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Data;
 
 using Empiria.DataTypes;
-using Empiria.Json;
 using Empiria.Security;
 
 using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration.Transactions {
 
-  /// <summary>Represents a transaction concept in the context of a land registration transaction.</summary>
-  public class LRSTransactionItem : BaseObject, IProtected {
+  /// <summary>Represents a service provided in the context of a land registration transaction.</summary>
+  public class LRSTransactionService : BaseObject, IProtected {
 
     #region Constructors and parsers
 
-    private LRSTransactionItem() {
+    private LRSTransactionService() {
       // Required by Empiria Framework.
     }
 
-    internal LRSTransactionItem(LRSTransaction transaction, RecordingActType transactionItemType,
-                                LRSLawArticle treasuryCode, Money operationValue,
-                                Quantity quantity, LRSFee fee) {
+    internal LRSTransactionService(LRSTransaction transaction, RecordingActType serviceType,
+                                   LRSLawArticle treasuryCode, Money operationValue,
+                                   Quantity quantity, LRSFee fee) {
       this.Transaction = transaction;
-      this.TransactionItemType = transactionItemType;
+      this.ServiceType = serviceType;
       this.TreasuryCode = treasuryCode;
       this.Quantity = quantity;
       this.OperationValue = operationValue;
       this.Fee = fee;
-    }
-
-    internal LRSTransactionItem(LRSTransaction transaction, RecordingActType transactionItemType,
-                                LRSLawArticle treasuryCode, Money operationValue,
-                                Quantity quantity) {
-      this.Transaction = transaction;
-      this.TransactionItemType = transactionItemType;
-      this.TreasuryCode = treasuryCode;
-      this.Quantity = quantity;
-      this.OperationValue = operationValue;
-
-      // Derives the calculation rule from parameters and automatically calculates the right fee
-      this.Fee = new LRSFee();
     }
 
     #endregion Constructors and parsers
@@ -66,7 +51,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     [DataField("TransactionItemTypeId")]
-    public RecordingActType TransactionItemType {
+    public RecordingActType ServiceType {
       get;
       private set;
     }
@@ -106,12 +91,6 @@ namespace Empiria.Land.Registration.Transactions {
     public string Notes {
       get;
       internal set;
-    }
-
-    [DataField("TransactionItemExtData")]
-    internal JsonObject ExtensionData {
-      get;
-      private set;
     }
 
     [DataField("TransactionItemStatus", Default = 'A')]
@@ -160,8 +139,9 @@ namespace Empiria.Land.Registration.Transactions {
       if (version == 1) {
         return new object[] {
           1, "Id", this.Id, "TransactionId", this.Transaction.Id,
-          "TransactionItemTypeId", this.TransactionItemType.Id,
-          "TreasuryCodeId", this.TreasuryCode.Id, "PaymentId", this.Payment.Id, "Qty", this.Quantity.Amount, "QtyUnitId", this.Quantity.Unit.Id,
+          "TransactionItemTypeId", this.ServiceType.Id,
+          "TreasuryCodeId", this.TreasuryCode.Id, "PaymentId", this.Payment.Id,
+          "Qty", this.Quantity.Amount, "QtyUnitId", this.Quantity.Unit.Id,
           "OpValue", this.OperationValue.Amount, "OpValueCurrencyId", this.OperationValue.Currency.Id,
           "RecordingRightsFee", this.Fee.RecordingRights, "SheetsRevisionFee", this.Fee.SheetsRevision,
           "ForeignFee", this.Fee.ForeignRecordingFee, "Discount", this.Fee.Discount.Amount,
@@ -190,18 +170,16 @@ namespace Empiria.Land.Registration.Transactions {
       this.Save();
     }
 
-    internal LRSTransactionItem MakeCopy() {
-      LRSTransactionItem newItem = new LRSTransactionItem();
-
-      newItem.TransactionItemType = this.TransactionItemType;
-      newItem.TreasuryCode = this.TreasuryCode;
-      newItem.OperationValue = this.OperationValue;
-      newItem.Quantity = this.Quantity;
-      newItem.Notes = this.Notes;
-      newItem.Fee = this.Fee;
-
-      return newItem;
-    }
+    internal LRSTransactionService MakeCopy() {
+      return new LRSTransactionService {
+        ServiceType = this.ServiceType,
+        TreasuryCode = this.TreasuryCode,
+        OperationValue = this.OperationValue,
+        Quantity = this.Quantity,
+        Notes = this.Notes,
+        Fee = this.Fee,
+    };
+  }
 
     protected override void OnLoadObjectData(DataRow row) {
       this.Quantity = Quantity.Parse(Unit.Parse((int) row["UnitId"]), (decimal) row["Quantity"]);
@@ -211,13 +189,13 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     protected override void OnSave() {
-      TransactionData.WriteTransactionItem(this);
+      TransactionData.WriteTransactionService(this);
 
-      this.Transaction.OnTransactionItemsUpdated();
+      this.Transaction.OnTransactionServicesUpdated();
     }
 
     #endregion Public methods
 
-  } // class LRSTransactionItem
+  } // class LRSTransactionService
 
 } // namespace Empiria.Land.Registration.Transactions

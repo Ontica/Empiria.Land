@@ -173,7 +173,7 @@ namespace Empiria.Land.Transactions {
 
 
     static private RequestedServiceDto[] GetRequestedServicesDtoArray(LRSTransaction transaction) {
-      var servicesList = transaction.Items;
+      var servicesList = transaction.Services;
 
       RequestedServiceDto[] array = new RequestedServiceDto[servicesList.Count];
 
@@ -185,11 +185,11 @@ namespace Empiria.Land.Transactions {
     }
 
 
-    static private RequestedServiceDto GetRequestedServiceDto(LRSTransactionItem service) {
+    static private RequestedServiceDto GetRequestedServiceDto(LRSTransactionService service) {
       return new RequestedServiceDto {
         UID = service.UID,
-        Type = service.TransactionItemType.Name,
-        TypeName = service.TransactionItemType.DisplayName,
+        Type = service.ServiceType.Name,
+        TypeName = service.ServiceType.DisplayName,
         TreasuryCode = service.TreasuryCode.FinancialConceptCode,
         LegalBasis = service.TreasuryCode.Name,
         Notes = service.Notes,
