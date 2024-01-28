@@ -67,7 +67,7 @@ namespace Empiria.Land.RecordableSubjects {
 
     public string StatusName {
       get {
-        return RecordingAct.StatusName;
+        return RecordingAct.Status.StatusName();
       }
     }
 

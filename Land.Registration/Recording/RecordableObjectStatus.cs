@@ -1,18 +1,17 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : RecordableObjectStatus                         Pattern  : Enumeration Type                    *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Land Registration                            Component : Domain Layer                          *
+*  Assembly : Empiria.Land.Registration.dll                Pattern   : Enumeration Type                      *
+*  Type     : RecordableObjectStatus                       License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Enumerates the statuses for recordable documents and objects inside Empiria Land.             *
+*  Summary   : Enumerates the status for recordable objects inside Empiria Land.                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Enumerates the statuses for recordable documents and objects inside Empiria Land.</summary>
+  /// <summary>Enumerates the status for recordable objects inside Empiria Land.</summary>
   public enum RecordableObjectStatus {
 
     /// <summary>Element exists and it was noted down, but requires further revision to
@@ -49,6 +48,34 @@ namespace Empiria.Land.Registration {
     /// <summary>The recordable element was deleted.</summary>
     Deleted = 'X'
 
-  }
+  }  // enum RecordableObjectStatus
+
+
+
+  /// <summary>Extension methods for RecordableObjectStatus enumeration instances.</summary>
+  static public class RecordableObjectStatusExtensionMethods {
+
+    static public string StatusName(this RecordableObjectStatus status) {
+      switch (status) {
+        case RecordableObjectStatus.Obsolete:
+          return "No vigente";
+        case RecordableObjectStatus.NotLegible:
+          return "No legible";
+        case RecordableObjectStatus.Incomplete:
+          return "Incompleto";
+        case RecordableObjectStatus.Pending:
+          return "Pendiente";
+        case RecordableObjectStatus.Registered:
+          return "Registrado";
+        case RecordableObjectStatus.Closed:
+          return "Cerrado";
+        case RecordableObjectStatus.Deleted:
+          return "Eliminado";
+        default:
+          return "No determinado";
+      }
+    }
+
+  }  // RecordableObjectStatusExtensionMethods
 
 } // namespace Empiria.Land.Registration

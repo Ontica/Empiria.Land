@@ -186,30 +186,6 @@ namespace Empiria.Land.Registration {
       get { return recordingActList.Value; }
     }
 
-    public string StatusName {
-      get {
-        switch (this.Status) {
-          case RecordableObjectStatus.Obsolete:
-            return "No vigente";
-          case RecordableObjectStatus.NotLegible:
-            return "No legible";
-          case RecordableObjectStatus.Incomplete:
-            return "Incompleta";
-          case RecordableObjectStatus.Pending:
-            return "Pendiente";
-          case RecordableObjectStatus.Registered:
-            return "Registrada";
-          case RecordableObjectStatus.Closed:
-            return "Cerrada";
-          case RecordableObjectStatus.Deleted:
-            return "Eliminada";
-          default:
-            return "No determinado";
-        }
-      }
-    }
-
-
     #endregion Public properties
 
     int IProtected.CurrentDataIntegrityVersion {
