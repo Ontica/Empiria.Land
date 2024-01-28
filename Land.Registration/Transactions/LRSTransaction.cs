@@ -11,7 +11,6 @@
 using System;
 
 using Empiria.Contacts;
-using Empiria.DataTypes;
 using Empiria.Security;
 
 using Empiria.OnePoint.EPayments;
@@ -81,19 +80,19 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static public LRSTransaction TryParse(string transactionUID, bool reload = false) {
-      return BaseObject.TryParse<LRSTransaction>("TransactionUID = '" + transactionUID + "'", reload);
+      return BaseObject.TryParse<LRSTransaction>($"TransactionUID = '{transactionUID}'", reload);
     }
 
 
     public static LRSTransaction TryParseWithAnyKey(string transactionKey, bool reload = false) {
       if (EmpiriaString.IsInteger(transactionKey)) {
-        return BaseObject.TryParse<LRSTransaction>("InternalControlNo = '" + transactionKey + "'", reload);
+        return BaseObject.TryParse<LRSTransaction>($"InternalControlNo = '{transactionKey}'", reload);
       }
 
       if (MatchesWithTransactionOldKey(transactionKey)) {
         transactionKey = LRSTransaction.GetTransactionUIDFromOldKey(transactionKey);
       }
-      return BaseObject.TryParse<LRSTransaction>("TransactionUID = '" + transactionKey + "'", reload);
+      return BaseObject.TryParse<LRSTransaction>($"TransactionUID = '{transactionKey}'", reload);
     }
 
 
@@ -348,20 +347,6 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public bool HasPayment {
-      get {
-        return (this.Payments.Count != 0 &&
-                this.Payments[0].ReceiptNo.Length != 0);
-      }
-    }
-
-    public bool HasPaymentOrder {
-      get {
-        return (!this.PaymentOrder.IsEmpty ||
-                this.FormerPaymentOrderData.RouteNumber.Length != 0);
-      }
-    }
-
     public bool HasServices {
       get {
         return this.Services.Count != 0;
@@ -441,64 +426,22 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Public methods
 
+    public bool HasPayment {
+      get {
+        return (this.Payments.Count != 0 &&
+                this.Payments[0].ReceiptNo.Length != 0);
+      }
+    }
+
+    public bool HasPaymentOrder {
+      get {
+        return (!this.PaymentOrder.IsEmpty ||
+                this.FormerPaymentOrderData.RouteNumber.Length != 0);
+      }
+    }
+
     public void Delete() {
       this.Workflow.Delete();
-    }
-
-    public bool IsFeeWaiverApplicable {
-      get {
-        return LRSPaymentRules.IsFeeWaiverApplicable(this);
-      }
-    }
-
-    public void SetPayment(PaymentFields paymentFields) {
-      this.SetPayment(paymentFields.ReceiptNo, paymentFields.Total);
-
-      this.PaymentOrder.Status = paymentFields.Status;
-
-      this.Save();
-    }
-
-
-    public void SetPayment(string receiptNo, decimal receiptTotal) {
-      LRSPayment payment = null;
-
-      if (this.Payments.Count == 0) {
-        payment = new LRSPayment(this, receiptNo, receiptTotal);
-
-        this.Payments.Add(payment);
-
-      } else {
-        payment = this.Payments[0];
-
-        payment.SetReceipt(receiptNo, receiptTotal);
-      }
-
-      payment.Save();
-    }
-
-
-    public void CancelPayment() {
-      Assertion.Require(this.HasPayment,
-                       $"There are not any registered payments for transaction '{this.UID}'.");
-
-      Assertion.Require(this.ControlData.CanCancelPayment,
-                       $"It's not possible to cancel the payment for transaction '{this.UID}'.");
-
-      var payment = this.Payments[0];
-
-      this.Payments.Remove(payment);
-
-      payment.Delete();
-
-      this.PaymentOrder.Status = String.Empty;
-
-      this.Save();
-    }
-
-
-    public void ApplyFeeWaiver() {
-      // this.Payments.Add(LRSPayment.FeeWaiver);
     }
 
 
@@ -728,6 +671,36 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region IPayable implementation
 
+    public bool IsFeeWaiverApplicable {
+      get {
+        return LRSPaymentRules.IsFeeWaiverApplicable(this);
+      }
+    }
+
+    public void CancelPayment() {
+      Assertion.Require(this.HasPayment,
+                       $"There are not any registered payments for transaction '{this.UID}'.");
+
+      Assertion.Require(this.ControlData.CanCancelPayment,
+                       $"It's not possible to cancel the payment for transaction '{this.UID}'.");
+
+      var payment = this.Payments[0];
+
+      this.Payments.Remove(payment);
+
+      payment.Delete();
+
+      this.PaymentOrder.Status = String.Empty;
+
+      this.Save();
+    }
+
+
+    public void ApplyFeeWaiver() {
+      // this.Payments.Add(LRSPayment.FeeWaiver);
+    }
+
+
     public void CancelPaymentOrder() {
       this.ExtensionData.PaymentOrder = PaymentOrder.Empty;
 
@@ -750,6 +723,34 @@ namespace Empiria.Land.Registration.Transactions {
         return this.ExtensionData.FormerPaymentOrderData;
       }
     }
+
+
+    public void SetPayment(PaymentFields paymentFields) {
+      this.SetPayment(paymentFields.ReceiptNo, paymentFields.Total);
+
+      this.PaymentOrder.Status = paymentFields.Status;
+
+      this.Save();
+    }
+
+
+    public void SetPayment(string receiptNo, decimal receiptTotal) {
+      LRSPayment payment = null;
+
+      if (this.Payments.Count == 0) {
+        payment = new LRSPayment(this, receiptNo, receiptTotal);
+
+        this.Payments.Add(payment);
+
+      } else {
+        payment = this.Payments[0];
+
+        payment.SetReceipt(receiptNo, receiptTotal);
+      }
+
+      payment.Save();
+    }
+
 
     public void SetPaymentOrder(IPaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, "paymentOrder");

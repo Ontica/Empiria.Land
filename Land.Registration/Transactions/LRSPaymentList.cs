@@ -28,11 +28,11 @@ namespace Empiria.Land.Registration.Transactions {
     #region Constructors and parsers
 
     internal LRSPaymentList() {
-      this.CalculateTotals();
+      this.CalculateTotalsAndReceiptNumbers();
     }
 
     internal LRSPaymentList(IEnumerable<LRSPayment> list) : base(list) {
-      this.CalculateTotals();
+      this.CalculateTotalsAndReceiptNumbers();
     }
 
     static internal LRSPaymentList Parse(LRSTransaction transaction) {
@@ -54,7 +54,7 @@ namespace Empiria.Land.Registration.Transactions {
     public string ReceiptNumbers {
       get {
         if (receiptNumbers == null) {
-          this.CalculateTotals();
+          this.CalculateTotalsAndReceiptNumbers();
         }
         return receiptNumbers;
       }
@@ -63,7 +63,7 @@ namespace Empiria.Land.Registration.Transactions {
     public decimal Total {
       get {
         if (total == -1m) {
-          this.CalculateTotals();
+          this.CalculateTotalsAndReceiptNumbers();
         }
         return total;
       }
@@ -75,15 +75,8 @@ namespace Empiria.Land.Registration.Transactions {
 
     protected internal new void Add(LRSPayment item) {
       base.Add(item);
-      this.CalculateTotals();
-    }
 
-    public new bool Contains(LRSPayment item) {
-      return base.Contains(item);
-    }
-
-    public new bool Contains(Predicate<LRSPayment> match) {
-      return (base.Find(match) != null);
+      this.CalculateTotalsAndReceiptNumbers();
     }
 
     public override void CopyTo(LRSPayment[] array, int index) {
@@ -92,35 +85,25 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public new LRSPayment Find(Predicate<LRSPayment> match) {
-      return base.Find(match);
-    }
-
-    public new FixedList<LRSPayment> FindAll(Predicate<LRSPayment> match) {
-      return base.FindAll(match);
-    }
-
     protected internal new bool Remove(LRSPayment item) {
       bool result = base.Remove(item);
 
-      this.CalculateTotals();
+      this.CalculateTotalsAndReceiptNumbers();
 
       return result;
-    }
-
-    public new void Sort(Comparison<LRSPayment> comparison) {
-      base.Sort(comparison);
     }
 
     #endregion Public methods
 
     #region Private methods
 
-    private void CalculateTotals() {
+    private void CalculateTotalsAndReceiptNumbers() {
       total = 0;
       receiptNumbers = String.Empty;
+
       for (int i = 0; i < this.Count; i++) {
         total += this[i].ReceiptTotal;
+
         if (receiptNumbers.Length == 0) {
           receiptNumbers = this[i].ReceiptNo;
         } else {

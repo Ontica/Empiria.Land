@@ -106,15 +106,15 @@ namespace Empiria.Land.Registration.Transactions {
     } = LRSExternalTransaction.Empty;
 
 
-    public PaymentOrder PaymentOrder {
+    internal PaymentOrder PaymentOrder {
       get;
-      internal set;
+      set;
     } = PaymentOrder.Empty;
 
 
-    public FormerPaymentOrderDTO FormerPaymentOrderData {
+    internal FormerPaymentOrderDTO FormerPaymentOrderData {
       get;
-      internal set;
+      set;
     } = FormerPaymentOrderDTO.Empty;
 
 
