@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Recording services                           Component : Land Recording Documents              *
-*  Assembly : Empiria.Land.Registration.dll                Pattern   : Data Services                         *
+*  Module   : Recording services                           Component : Data services                         *
+*  Assembly : Empiria.Land.Registration.dll                Pattern   : Data services provider                *
 *  Type     : DocumentsData                                License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Provides database read and write methods for recording documents.                              *
@@ -10,7 +10,6 @@
 using System;
 
 using Empiria.Data;
-using Empiria.Contacts;
 
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
@@ -20,54 +19,19 @@ namespace Empiria.Land.Data {
   /// <summary>Provides database read and write methods for recording documents.</summary>
   static internal class DocumentsData {
 
-    #region Public methods
+    #region Methods
 
     static internal LRSTransaction GetDocumentTransaction(RecordingDocument document) {
       if (document.IsEmptyInstance) {
         return LRSTransaction.Empty;
       }
 
-      var sql = $"SELECT * FROM LRSTransactions WHERE DocumentId = {document.Id}";
+      var sql = $"SELECT * FROM LRSTransactions " +
+                $"WHERE DocumentId = {document.Id}";
 
       var op = DataOperation.Parse(sql);
 
       return DataReader.GetObject(op, LRSTransaction.Empty);
-    }
-
-    static internal bool IsSigned(RecordingDocument document) {
-      var sql = $"SELECT * FROM vwLRSDocumentSign WHERE DocumentNo = '{document.UID}' " +
-                $"AND SignStatus = 'S' AND DigitalSign <> ''";
-
-      var dataRow = DataReader.GetDataRow(DataOperation.Parse(sql));
-
-      return dataRow != null;
-    }
-
-
-    static internal string GetDigitalSignature(RecordingDocument document) {
-      var sql = $"SELECT DigitalSign FROM vwLRSDocumentSign WHERE DocumentNo = '{document.UID}' " +
-                $"AND SignStatus = 'S' AND DigitalSign <> ''";
-
-      return DataReader.GetScalar<string>(DataOperation.Parse(sql),
-                                          "NO TIENE FIRMA ELECTRÓNICA.");
-    }
-
-
-    static internal Person GetDigitalSignatureSignedBy(RecordingDocument document) {
-      var sql = $"SELECT RequestedToId FROM vwLRSDocumentSign WHERE DocumentNo = '{document.UID}' " +
-                $"AND SignStatus = 'S' AND DigitalSign <> ''";
-
-      var signedById = DataReader.GetScalar<int>(DataOperation.Parse(sql), -1);
-
-      return Person.Parse(signedById);
-    }
-
-
-    static internal DateTime GetLastSignTimeForAllTransactionDocuments(LRSTransaction transaction) {
-      var sql = $"SELECT MAX(SignTime) FROM vwLRSDocumentSign WHERE TransactionNo = '{transaction.UID}' " +
-                $"AND SignStatus = 'S' AND DigitalSign <> ''";
-
-      return DataReader.GetScalar<DateTime>(DataOperation.Parse(sql));
     }
 
 
@@ -75,7 +39,8 @@ namespace Empiria.Land.Data {
       string prefix = document.AuthorizationTime.ToString("yyyy-MM");
 
       var sql = "SELECT MAX(ImagingControlID) " +
-                $"FROM LRSDocuments WHERE ImagingControlID LIKE '{prefix}-%'";
+                $"FROM LRSDocuments " +
+                $"WHERE ImagingControlID LIKE '{prefix}-%'";
 
       var imagingControlID = DataReader.GetScalar<String>(DataOperation.Parse(sql), String.Empty);
 
@@ -89,13 +54,6 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal RecordingDocument TryGetBookEntryMainDocument(BookEntry bookEntry) {
-      var op = DataOperation.Parse("getLRSRecordingMainDocument", bookEntry.Id);
-
-      return DataReader.GetObject<RecordingDocument>(op, null);
-    }
-
-
     static internal void SaveImagingControlID(RecordingDocument document) {
       var op = DataOperation.Parse("setLRSDocumentImagingControlID",
                                    document.Id, document.Imaging.ImagingControlID);
@@ -103,7 +61,14 @@ namespace Empiria.Land.Data {
       DataWriter.Execute(op);
     }
 
-    #endregion Public methods
+
+    static internal RecordingDocument TryGetBookEntryMainDocument(BookEntry bookEntry) {
+      var op = DataOperation.Parse("getLRSRecordingMainDocument", bookEntry.Id);
+
+      return DataReader.GetObject<RecordingDocument>(op, null);
+    }
+
+    #endregion Methods
 
   } // class DocumentsData
 

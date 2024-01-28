@@ -12,6 +12,8 @@ using System;
 using Empiria.Contacts;
 using Empiria.Security;
 
+using Empiria.Land.Data;
+
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {
@@ -54,6 +56,7 @@ namespace Empiria.Land.Registration {
 
     public void Close() {
       this.AssertCanBeClosed();
+
       this.Document.Close();
     }
 
@@ -65,7 +68,7 @@ namespace Empiria.Land.Registration {
 
 
     public bool Signed() {
-      return Data.DocumentsData.IsSigned(this.Document);
+      return DigitalSignatureData.IsSigned(this.Document);
     }
 
 
@@ -178,15 +181,15 @@ namespace Empiria.Land.Registration {
       if (this.Unsigned()) {
         return "NO TIENE FIRMA ELECTRÓNICA";
       } else {
-        return Data.DocumentsData.GetDigitalSignature(this.Document)
-                                 .Substring(0, 64);
+        return DigitalSignatureData.GetDigitalSignature(this.Document)
+                                   .Substring(0, 64);
       }
     }
 
 
     public Person GetSignedBy() {
       if (UseESign) {
-        return Data.DocumentsData.GetDigitalSignatureSignedBy(this.Document);
+        return DigitalSignatureData.GetDigitalSignatureSignedBy(this.Document);
       } else {
         return this.Document.RecorderOffice.GetSigner();
       }

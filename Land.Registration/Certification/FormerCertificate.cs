@@ -149,7 +149,7 @@ namespace Empiria.Land.Certification {
     public Person SignedBy {
       get {
         if (this.UseESign) {
-          return FormerCertificatesData.GetDigitalSignatureSignedBy(this);
+          return DigitalSignatureData.GetDigitalSignatureSignedBy(this);
         } else {
           return RecorderOffice.GetSigner();
         }
@@ -388,7 +388,7 @@ namespace Empiria.Land.Certification {
 
 
     public bool Signed() {
-      return Data.FormerCertificatesData.IsSigned(this);
+      return DigitalSignatureData.IsSigned(this);
     }
 
 
@@ -404,8 +404,8 @@ namespace Empiria.Land.Certification {
       if (this.Unsigned()) {
         return "NO SE HA FIRMADO ELECTRÓNICAMENTE";
       } else {
-        return Data.FormerCertificatesData.GetDigitalSignature(this)
-                                    .Substring(0, 64);
+        return DigitalSignatureData.GetDigitalSignature(this)
+                                   .Substring(0, 64);
       }
     }
 
