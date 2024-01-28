@@ -8,8 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Web.Http;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 using Empiria.WebApi;
 
@@ -24,10 +24,10 @@ namespace Empiria.Land.Transactions.Payments.WebApi {
 
     [HttpPost]
     [Route("v5/land/transactions/{transactionUID:length(19)}/cancel-payment")]
-    public async Task<SingleObjectModel> CancelPayment([FromUri] string transactionUID) {
+    public SingleObjectModel CancelPayment([FromUri] string transactionUID) {
 
       using (var usecases = TransactionPaymentUseCases.UseCaseInteractor()) {
-        TransactionDto transactionDto = await usecases.CancelPayment(transactionUID);
+        TransactionDto transactionDto = usecases.CancelPayment(transactionUID);
 
         return new SingleObjectModel(this.Request, transactionDto);
       }
@@ -36,10 +36,10 @@ namespace Empiria.Land.Transactions.Payments.WebApi {
 
     [HttpPost]
     [Route("v5/land/transactions/{transactionUID:length(19)}/cancel-payment-order")]
-    public async Task<SingleObjectModel> CancelPaymentOrder([FromUri] string transactionUID) {
+    public SingleObjectModel CancelPaymentOrder([FromUri] string transactionUID) {
 
       using (var usecases = TransactionPaymentUseCases.UseCaseInteractor()) {
-        TransactionDto transactionDto = await usecases.CancelPaymentOrder(transactionUID);
+        TransactionDto transactionDto = usecases.CancelPaymentOrder(transactionUID);
 
         return new SingleObjectModel(this.Request, transactionDto);
       }
@@ -60,11 +60,11 @@ namespace Empiria.Land.Transactions.Payments.WebApi {
 
     [HttpPost]
     [Route("v5/land/transactions/{transactionUID:length(19)}/set-payment")]
-    public async Task<SingleObjectModel> SetPayment([FromUri] string transactionUID,
-                                                    [FromBody] PaymentFields fields) {
+    public SingleObjectModel SetPayment([FromUri] string transactionUID,
+                                        [FromBody] PaymentFields fields) {
 
       using (var usecases = TransactionPaymentUseCases.UseCaseInteractor()) {
-        TransactionDto transactionDto = await usecases.SetPayment(transactionUID, fields);
+        TransactionDto transactionDto = usecases.SetPayment(transactionUID, fields);
 
         return new SingleObjectModel(this.Request, transactionDto);
       }

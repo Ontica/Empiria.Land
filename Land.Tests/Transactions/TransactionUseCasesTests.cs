@@ -229,22 +229,25 @@ namespace Empiria.Land.Tests.Transactions {
     }
 
     internal async Task<TransactionDto> GeneratePaymentOrderAndPaymentIfApplicable(TransactionDto transaction) {
-      if (transaction.Actions.Can.GeneratePaymentOrder) {
-        Assert.False(transaction.Actions.Can.Submit);
-
-        using (var paymentUseCases = TransactionPaymentUseCases.UseCaseInteractor()) {
-          transaction = await paymentUseCases.GeneratePaymentOrder(transaction.UID);
-          Assert.True(transaction.Actions.Can.EditPayment);
-
-          PaymentFields paymentFields =
-                TransactionRandomizer.GetRandomPaymentFields(transaction.PaymentOrder.Total);
-
-
-          transaction = await paymentUseCases.SetPayment(transaction.UID, paymentFields);
-        }
-
-        Assert.False(transaction.Actions.Can.GeneratePaymentOrder);
+      if (!transaction.Actions.Can.GeneratePaymentOrder) {
+        return transaction;
       }
+
+      Assert.False(transaction.Actions.Can.Submit);
+
+      using (var paymentUseCases = TransactionPaymentUseCases.UseCaseInteractor()) {
+        transaction = await paymentUseCases.GeneratePaymentOrder(transaction.UID);
+        Assert.True(transaction.Actions.Can.EditPayment);
+
+        PaymentFields paymentFields =
+              TransactionRandomizer.GetRandomPaymentFields(transaction.PaymentOrder.Total);
+
+
+        transaction = paymentUseCases.SetPayment(transaction.UID, paymentFields);
+      }
+
+      Assert.False(transaction.Actions.Can.GeneratePaymentOrder);
+
       return transaction;
     }
 

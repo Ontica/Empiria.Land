@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Land.Transactions.dll              Pattern   : Use case interactor class               *
 *  Type     : TransactionPaymentUseCases                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Partial class with use cases for transaction requested services.                               *
+*  Summary  : Use cases for transaction payment.                                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -18,7 +18,7 @@ using Empiria.Land.Transactions.Payments.Providers;
 
 namespace Empiria.Land.Transactions.Payments.UseCases {
 
-  /// <summary>Transaction payment use cases.</summary>
+  /// <summary>Use cases for transaction payment.</summary>
   public class TransactionPaymentUseCases : UseCase {
 
     #region Constructors and parsers
@@ -35,16 +35,16 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
 
     #region Use cases
 
-    public async Task<TransactionDto> CancelPayment(string transactionUID) {
+    public TransactionDto CancelPayment(string transactionUID) {
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
       transaction.CancelPayment();
 
-      return await Task.FromResult(TransactionMapper.Map(transaction));
+      return TransactionMapper.Map(transaction);
     }
 
 
-    public async Task<TransactionDto> CancelPaymentOrder(string transactionUID) {
+    public TransactionDto CancelPaymentOrder(string transactionUID) {
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
       Assertion.Require(transaction.HasPaymentOrder,
@@ -56,7 +56,7 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
 
       transaction.CancelPaymentOrder();
 
-      return await Task.FromResult(TransactionMapper.Map(transaction));
+      return TransactionMapper.Map(transaction);
     }
 
 
@@ -80,9 +80,9 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
     }
 
 
-    public async Task<TransactionDto> SetPayment(string transactionUID,
-                                                 PaymentFields paymentFields) {
-      Assertion.Require(paymentFields, "paymentFields");
+    public TransactionDto SetPayment(string transactionUID,
+                                     PaymentFields paymentFields) {
+      Assertion.Require(paymentFields, nameof(paymentFields));
 
       paymentFields.AssertValid();
 
@@ -91,19 +91,9 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
       Assertion.Require(transaction.ControlData.CanEditPayment,
                        $"Can not set payment for transaction '{transactionUID}'.");
 
-      //Assertion.Assert(transaction.PaymentOrder.Total == 0 ||
-      //                 transaction.PaymentOrder.Total >= paymentFields.Total,
-      //                $"Payment total must be less or equal than payment order total.");
-
-      //var connector = new PaymentServicesConnector();
-
-      //string status = await connector.GetPaymentStatus(transaction.PaymentOrder);
-
-      //paymentFields.Status = status;
-
       transaction.SetPayment(paymentFields);
 
-      return await Task.FromResult(TransactionMapper.Map(transaction));
+      return TransactionMapper.Map(transaction);
     }
 
     #endregion Use cases
@@ -111,7 +101,7 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
     #region Helper methods
 
     private LRSTransaction ParseTransaction(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.TryParse(transactionUID);
 

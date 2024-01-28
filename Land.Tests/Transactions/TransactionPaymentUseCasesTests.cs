@@ -63,7 +63,7 @@ namespace Empiria.Land.Tests.Transactions {
       Assert.False(withPaymentOrder.Actions.Can.GeneratePaymentOrder);
       Assert.True(withPaymentOrder.Actions.Can.CancelPaymentOrder);
 
-      TransactionDto withCanceledPaymentOrder = await _usecases.CancelPaymentOrder(transaction.UID);
+      TransactionDto withCanceledPaymentOrder = _usecases.CancelPaymentOrder(transaction.UID);
 
       Assert.Equal(transaction.UID, withCanceledPaymentOrder.UID);
       Assert.Null(withCanceledPaymentOrder.PaymentOrder);
@@ -73,13 +73,13 @@ namespace Empiria.Land.Tests.Transactions {
 
 
     [Fact]
-    public async Task Should_Set_And_Cancel_A_Transaction_Payment() {
+    public void Should_Set_And_Cancel_A_Transaction_Payment() {
       TransactionDto transaction = TransactionRandomizer.TryGetAReadyForPaymentTransaction();
 
       PaymentFields payment =
             TransactionRandomizer.GetRandomPaymentFields(transaction.PaymentOrder.Total);
 
-      TransactionDto withPayment = await _usecases.SetPayment(transaction.UID, payment);
+      TransactionDto withPayment = _usecases.SetPayment(transaction.UID, payment);
 
       Assert.Equal(transaction.UID, withPayment.UID);
       Assert.False(withPayment.Actions.Can.GeneratePaymentOrder);
@@ -90,7 +90,7 @@ namespace Empiria.Land.Tests.Transactions {
       Assert.True(!string.IsNullOrEmpty(withPayment.Payment.Status));
       Assert.Equal(transaction.PaymentOrder.Total, withPayment.Payment.Total);
 
-      TransactionDto withCanceledPayment = await _usecases.CancelPayment(transaction.UID);
+      TransactionDto withCanceledPayment = _usecases.CancelPayment(transaction.UID);
 
       Assert.Equal(transaction.UID, withCanceledPayment.UID);
       Assert.True(withCanceledPayment.Actions.Can.EditPayment);
