@@ -55,9 +55,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       RecordingDocument instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
-      instrumentRecording.Security.AssertCanBeClosed();
-
-      instrumentRecording.Security.Close();
+      instrumentRecording.Close();
 
       return InstrumentRecordingMapper.Map(instrumentRecording);
     }
@@ -68,13 +66,10 @@ namespace Empiria.Land.Registration.UseCases {
 
       RecordingDocument instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
-      instrumentRecording.Security.AssertCanBeOpened();
-
-      instrumentRecording.Security.Open();
+      instrumentRecording.Open();
 
       return InstrumentRecordingMapper.Map(instrumentRecording);
     }
-
 
     #endregion Use cases
 

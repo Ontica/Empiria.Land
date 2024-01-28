@@ -53,20 +53,6 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-
-    public void Close() {
-      this.AssertCanBeClosed();
-
-      this.Document.Close();
-    }
-
-
-    public void Open() {
-      this.AssertCanBeOpened();
-      this.Document.Open();
-    }
-
-
     public bool Signed() {
       return DigitalSignatureData.IsSigned(this.Document);
     }

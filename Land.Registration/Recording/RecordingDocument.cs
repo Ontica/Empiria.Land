@@ -390,20 +390,30 @@ namespace Empiria.Land.Registration {
       this.AuthorizationTime = authorizationTime;
     }
 
+
     private void SetAuthorizationTime() {
       if (!this.IsHistoricDocument) {
         this.AuthorizationTime = DateTime.Now;
       }
     }
 
-    internal void Close() {
+
+    public void Close() {
+      this.Security.AssertCanBeClosed();
+
       this.SetAuthorizationTime();
+
       this.Status = RecordableObjectStatus.Closed;
+
       this.Save();
     }
 
-    internal void Open() {
+
+    public void Open() {
+      this.Security.AssertCanBeOpened();
+
       this.Status = RecordableObjectStatus.Incomplete;
+
       this.Save();
     }
 
