@@ -197,9 +197,9 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public ResourceTract Tract {
+    public RecordbleSubjectTract Tract {
       get {
-        return ResourceTract.Parse(this);
+        return RecordbleSubjectTract.Parse(this);
       }
     }
 
@@ -236,6 +236,7 @@ namespace Empiria.Land.Registration {
       }
 
       var chainedRecordingActType = newRecordingActType.RecordingRule.ChainedRecordingActType;
+
       if (chainedRecordingActType.Equals(RecordingActType.Empty)) {
         return;
       }

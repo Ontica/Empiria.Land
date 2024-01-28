@@ -1,11 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Registration                      Assembly : Empiria.Land.Registration           *
-*  Type      : ResourceTract                                  Pattern  : Information holder                  *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Land Recording services                      Component : Domain Layer                          *
+*  Assembly : Empiria.Land.Registration.dll                Pattern   : Service provider                      *
+*  Type     : RecordbleSubjectTract                        License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Gets information about a resource historic recording acts tract.                              *
+*  Summary  : Gets information about a recordable subject's historic recording acts tract.                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -16,64 +15,70 @@ using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Gets information about a resource historic recording acts tract.</summary>
-  public class ResourceTract {
+  /// <summary>Gets information about a recordable subject's historic recording acts tract.</summary>
+  public class RecordbleSubjectTract {
+
+    #region Fields
+
+    private readonly Resource _recordableSubject;
+
+    #endregion Fields
 
     #region Constructors and parsers
 
-    private ResourceTract(Resource resource) {
-      this.Resource = resource;
+    private RecordbleSubjectTract(Resource recordableSubject) {
+      _recordableSubject = recordableSubject;
     }
 
-    static internal ResourceTract Parse(Resource resource) {
-      Assertion.Require(resource, "resource");
 
-      return new ResourceTract(resource);
+    static internal RecordbleSubjectTract Parse(Resource recordableSubject) {
+      Assertion.Require(recordableSubject, nameof(recordableSubject));
+
+      return new RecordbleSubjectTract(recordableSubject);
     }
 
     #endregion Constructors and parsers
 
     #region Properties
 
-    public RecordingAct FirstRecordingAct {
+    public RecordingAct LastRecordingAct {
       get {
         FixedList<RecordingAct> recordingActs = this.GetRecordingActs();
         if (recordingActs.Count != 0) {
-          return recordingActs[0];
-        } else {
-          throw new LandRegistrationException(LandRegistrationException.Msg.PropertyDoesNotHaveAnyRecordingActs,
-                                              this.Resource.UID);
-        }
-      }
-    }
-
-    public RecordingAct LastRecordingAct {
-      get {
-        FixedList<RecordingAct> domainActs = this.GetRecordingActs();
-        if (domainActs.Count != 0) {
-          return domainActs[domainActs.Count - 1];
+          return recordingActs[recordingActs.Count - 1];
         } else {
           return RecordingAct.Empty;
         }
       }
     }
 
-    public Resource Resource {
-      get;
-      private set;
-    }
-
     #endregion Properties
 
     #region Methods
 
+
+    public FixedList<RecordingAct> GetClosedRecordingActsUntil(RecordingDocument breakingDocument,
+                                                           bool includeBreakingDocument) {
+      var tract = ResourceTractData.GetResourceRecordingActList(_recordableSubject);
+
+      if (includeBreakingDocument) {
+        return tract.FindAll((x) => ((x.Document.IsClosed &&
+                                      x.Document.PresentationTime < breakingDocument.PresentationTime)) ||
+                                      x.Document.Equals(breakingDocument));
+      } else {
+        return tract.FindAll((x) => ((x.Document.IsClosed &&
+                                      x.Document.PresentationTime < breakingDocument.PresentationTime)));
+      }
+    }
+
+
     public FixedList<FormerCertificate> GetEmittedCerificates() {
-      return FormerCertificatesData.ResourceEmittedCertificates(this.Resource);
+      return FormerCertificatesData.ResourceEmittedCertificates(_recordableSubject);
     }
 
 
     public FixedList<RecordingAct> GetFullRecordingActs() {
-      return ResourceTractData.GetResourceFullTractIndex(this.Resource);
+      return ResourceTractData.GetResourceFullTractIndex(_recordableSubject);
     }
 
 
@@ -111,37 +116,23 @@ namespace Empiria.Land.Registration {
 
       Assertion.Require(recordingAct,
                         $"The recording act with UID '{recordingActUID}' does not " +
-                        $"belong to resource '{this.Resource.UID}' tract index");
+                        $"belong to resource '{_recordableSubject.UID}' tract index");
 
       return recordingAct;
     }
 
 
     public FixedList<RecordingAct> GetRecordingActs() {
-      return ResourceTractData.GetResourceRecordingActList(this.Resource);
+      return ResourceTractData.GetResourceRecordingActList(_recordableSubject);
     }
 
 
     public FixedList<RecordingAct> GetRecordingActsUntil(RecordingAct breakAct,
                                                          bool includeBreakAct) {
-      return ResourceTractData.GetResourceRecordingActListUntil(this.Resource,
+      return ResourceTractData.GetResourceRecordingActListUntil(_recordableSubject,
                                                                 breakAct, includeBreakAct);
     }
 
-
-    public FixedList<RecordingAct> GetClosedRecordingActsUntil(RecordingDocument breakingDocument,
-                                                               bool includeBreakingDocument) {
-      var tract = ResourceTractData.GetResourceRecordingActList(this.Resource);
-
-      if (includeBreakingDocument) {
-        return tract.FindAll((x) => ((x.Document.IsClosed &&
-                                      x.Document.PresentationTime < breakingDocument.PresentationTime)) ||
-                                      x.Document.Equals(breakingDocument));
-      } else {
-        return tract.FindAll((x) => ((x.Document.IsClosed &&
-                                      x.Document.PresentationTime < breakingDocument.PresentationTime)));
-      }
-    }
 
     public RecordingAct GetRecordingAntecedent() {
       return this.GetRecordingAntecedent(RecordingAct.Empty, false);
@@ -157,7 +148,7 @@ namespace Empiria.Land.Registration {
 
       /// For no real estate, return always the first act that is the creational act.
       /// Resources different than real estates don't have domain or structure acts.
-      if (!(this.Resource is RealEstate)) {
+      if (!(_recordableSubject is RealEstate)) {
         return tract[0];
       }
 
@@ -187,13 +178,14 @@ namespace Empiria.Land.Registration {
       /// Returns the empty recording act if there are not antecedents.
       if (tract.Count == 0) {
 
-        if (!(this.Resource is RealEstate)) {
+        if (!(_recordableSubject is RealEstate)) {
           return RecordingAct.Empty;
         }
 
         /// If no antecedent, then look if the real estate is a new partition.
         /// If it is then return the antecedent of the partitioned or parent real estate.
-        var parentRealEstate = ((RealEstate) this.Resource).IsPartitionOf;
+        var parentRealEstate = ((RealEstate) _recordableSubject).IsPartitionOf;
+
         if (!parentRealEstate.IsEmptyInstance) {
           return parentRealEstate.Tract.GetRecordingAntecedent(beforeRecordingAct.Document.PresentationTime);
         } else {
@@ -201,7 +193,7 @@ namespace Empiria.Land.Registration {
         }
       }
 
-      if (this.Resource is RealEstate) {
+      if (_recordableSubject is RealEstate) {
         /// Returns the last NO-CANCELED domain or structure act if founded, otherwise
         /// return the very first act of the real estate.
 
@@ -215,36 +207,9 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public bool IsFirstRecordingAct(RecordingAct recordingAct) {
-      if (recordingAct.IsAnnotation) {
-        return false;
-      }
-
-      RecordingAct firstRecordingAct = this.FirstRecordingAct;
-      if (firstRecordingAct != RecordingAct.Empty) {
-        return firstRecordingAct.Equals(recordingAct);
-      } else {
-        return true;
-      }
-    }
-
-
-    public bool IsLastRecordingAct(RecordingAct recordingAct) {
-      if (recordingAct.IsAnnotation) {
-        return false;
-      }
-
-      RecordingAct lastRecordingAct = this.LastRecordingAct;
-      if (lastRecordingAct != RecordingAct.Empty) {
-        return lastRecordingAct.Equals(recordingAct);
-      } else {
-        return true;
-      }
-    }
-
     internal RecordingAct TryGetLastActiveChainedAct(RecordingActType chainedRecordingActType,
                                                      RecordingDocument beforeThisDocument) {
-      //var tract = this.Resource.Tract.GetRecordingActsUntil(this, false); /// From RecordingAct rule
+      //var tract = _resource.Tract.GetRecordingActsUntil(this, false); /// From RecordingAct rule
 
       var tract = this.GetClosedRecordingActsUntil(beforeThisDocument, true);
 
@@ -270,6 +235,7 @@ namespace Empiria.Land.Registration {
       int endIndex = lastActToSearch != null ? tract.IndexOf(lastActToSearch) : tract.Count - 1;
 
       for (int i = startIndex + 1; i <= endIndex; i++) {
+
         var rule = tract[startIndex].RecordingActType.RecordingRule;
 
         // If there are a recording act with the same chaining rule, then lastChainedAct was already used.
@@ -283,6 +249,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Methods
 
-  }  // class ResourceTract
+  }  // class RecordbleSubjectTract
 
 }  // namespace Empiria.Land.Registration
