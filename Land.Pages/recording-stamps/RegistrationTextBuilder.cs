@@ -114,19 +114,19 @@ namespace Empiria.Land.Pages {
 
       var payment = LRSPayment.Empty;
 
-      if (_transaction.Payments.Count > 0) {
-        payment = _transaction.Payments[0];
+      if (_transaction.PaymentData.Payments.Count > 0) {
+        payment = _transaction.PaymentData.Payments[0];
       }
 
-      if (!this._transaction.FormerPaymentOrderData.IsEmptyInstance) {
+      if (!this._transaction.PaymentData.FormerPaymentOrderData.IsEmptyInstance) {
         template = "Derechos por <b>{AMOUNT}</b> según la línea de captura <b>{RECEIPT}</b> expedida por " +
                    "la Secretaría de Finanzas del Estado, y cuyo comprobante se archiva.";
-        template = template.Replace("{RECEIPT}", _transaction.FormerPaymentOrderData.RouteNumber);
+        template = template.Replace("{RECEIPT}", _transaction.PaymentData.FormerPaymentOrderData.RouteNumber);
 
       } else {
         template = "Derechos por <b>{AMOUNT}</b> según recibo <b>{RECEIPT}</b> expedido por " +
                    "la Secretaría de Finanzas del Estado, que se archiva.";
-        template = template.Replace("{RECEIPT}", _transaction.Payments.ReceiptNumbers);
+        template = template.Replace("{RECEIPT}", _transaction.PaymentData.Payments.ReceiptNumbers);
       }
 
       template = template.Replace("{AMOUNT}", payment.ReceiptTotal.ToString("C2"));

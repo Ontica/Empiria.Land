@@ -33,7 +33,7 @@ namespace Empiria.Land.Tests.Providers {
     public async Task Should_Get_PaymentOrderData() {
       TestsCommonMethods.Authenticate();
 
-      IPayable payable = LRSTransaction.Parse(_PAYABLE_UID);
+      IPayable payable = LRSTransaction.Parse(_PAYABLE_UID).PaymentData;
 
       FormerPaymentOrderDTO paymentOrderData = await EPaymentsUseCases.RequestPaymentOrderData(payable);
 

@@ -59,8 +59,8 @@ namespace Empiria.Land.Pages {
 
     protected bool PaymentOrderWasGenerated {
       get {
-        return (!transaction.PaymentOrder.IsEmpty &&
-                 transaction.PaymentOrder.Issuer != "Empiria.Land");
+        return (!transaction.PaymentData.PaymentOrder.IsEmpty &&
+                 transaction.PaymentData.PaymentOrder.Issuer != "Empiria.Land");
       }
     }
 
@@ -201,8 +201,8 @@ namespace Empiria.Land.Pages {
     protected string GetPaymentTotal() {
       var payment = LRSPayment.Empty;
 
-      if (transaction.Payments.Count > 0) {
-        payment = transaction.Payments[0];
+      if (transaction.PaymentData.Payments.Count > 0) {
+        payment = transaction.PaymentData.Payments[0];
       }
 
       return payment.ReceiptTotal.ToString("C2");

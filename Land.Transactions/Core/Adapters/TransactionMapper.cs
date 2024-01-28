@@ -142,24 +142,24 @@ namespace Empiria.Land.Transactions {
 
 
     static private PaymentFields GetPaymentDto(LRSTransaction transaction) {
-      if (!transaction.HasPayment) {
+      if (!transaction.PaymentData.HasPayment) {
         return null;
       }
-      var payment = transaction.Payments[0];
+      var payment = transaction.PaymentData.Payments[0];
 
       return new PaymentFields {
         ReceiptNo = payment.ReceiptNo,
         Total = payment.ReceiptTotal,
-        Status = transaction.PaymentOrder.Status
+        Status = transaction.PaymentData.PaymentOrder.Status
       };
     }
 
     static private PaymentOrderDto GetPaymentOrderDto(LRSTransaction transaction) {
-      if (!transaction.HasPaymentOrder) {
+      if (!transaction.PaymentData.HasPaymentOrder) {
         return null;
       }
 
-      var po = transaction.PaymentOrder;
+      var po = transaction.PaymentData.PaymentOrder;
 
       return new PaymentOrderDto {
         UID = po.UID,

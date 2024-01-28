@@ -97,8 +97,8 @@ namespace Empiria.Land.Pages {
 
 			var payment = LRSPayment.Empty;
 
-			if (transaction.Payments.Count > 0) {
-				payment = transaction.Payments[0];
+			if (transaction.PaymentData.Payments.Count > 0) {
+				payment = transaction.PaymentData.Payments[0];
 			}
 			string x = t.Replace("{AMOUNT}", payment.ReceiptTotal.ToString("C2"));
 			x = x.Replace("{RECEIPT}", payment.ReceiptNo);

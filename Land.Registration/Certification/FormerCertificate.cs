@@ -338,10 +338,10 @@ namespace Empiria.Land.Certification {
       var seal = new StringBuilder("||1|" + this.UID +
                                       "|" + this.Transaction.UID);
 
-      if (!this.Transaction.FormerPaymentOrderData.IsEmptyInstance) {
-        seal.Append("|" + this.Transaction.FormerPaymentOrderData.RouteNumber);
+      if (!this.Transaction.PaymentData.FormerPaymentOrderData.IsEmptyInstance) {
+        seal.Append("|" + this.Transaction.PaymentData.FormerPaymentOrderData.RouteNumber);
       } else {
-        seal.Append("|" + this.Transaction.Payments.ReceiptNumbers);
+        seal.Append("|" + this.Transaction.PaymentData.Payments.ReceiptNumbers);
       }
 
       if (!this.Property.IsEmptyInstance) {

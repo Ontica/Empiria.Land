@@ -1,19 +1,16 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : RecorderOfficeTransaction                      Pattern  : Association Class                   *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Transaction services                         Component : Domain Layer                          *
+*  Assembly : Empiria.Land.Registration.dll                Pattern   : Information Holder                    *
+*  Type     : LRSTransaction                               License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Represents a transaction or process in a land registration office.                            *
+*  Summary  : Represents a transaction or procedure in the context of a land registration office.            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Contacts;
 using Empiria.Security;
-
-using Empiria.OnePoint.EPayments;
 
 using Empiria.Land.Data;
 using Empiria.Land.Providers;
@@ -22,19 +19,16 @@ using Empiria.Land.Certification;
 using Empiria.Land.Registration.Forms;
 
 using Empiria.Land.Transactions;
-using Empiria.Land.Transactions.Payments;
-
-using Empiria.Land.Integration.PaymentServices;
 
 namespace Empiria.Land.Registration.Transactions {
 
-  /// <summary>Represents a transaction or process on a land registration office.</summary>
-  public class LRSTransaction : BaseObject, IPayable, IProtected {
+  /// <summary>Represents a transaction or procedure in the context of a land registration office.</summary>
+  public class LRSTransaction : BaseObject, IProtected {
 
     #region Fields
 
     private Lazy<LRSTransactionServicesList> _services = null;
-    private Lazy<LRSPaymentList> _payments = null;
+    private Lazy<LRSTransactionPaymentData> _paymentData = null;
     private Lazy<LRSWorkflow> _workflow = null;
 
     #endregion Fields
@@ -64,7 +58,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     private void Initialize() {
       _services = new Lazy<LRSTransactionServicesList>(() => new LRSTransactionServicesList(this));
-      _payments = new Lazy<LRSPaymentList>(() => new LRSPaymentList());
+      _paymentData = new Lazy<LRSTransactionPaymentData>(() => new LRSTransactionPaymentData(this));
       _workflow = new Lazy<LRSWorkflow>(() => new LRSWorkflow(this));
     }
 
@@ -104,6 +98,7 @@ namespace Empiria.Land.Registration.Transactions {
       return TransactionData.GetTransactionsList(filter, orderBy, pageSize);
     }
 
+
     static public LRSTransaction Empty {
       get {
         return BaseObject.ParseEmpty<LRSTransaction>();
@@ -138,13 +133,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     #endregion Constructors and parsers
 
-    #region Public properties
-
-    [DataField("TransactionTypeId")]
-    public LRSTransactionType TransactionType {
-      get;
-      private set;
-    }
+    #region Properties
 
     [DataField("TransactionUID", IsOptional = false)]
     private string _transactionUID = "Nuevo trámite";
@@ -180,38 +169,24 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
+    [DataField("ExternalTransactionNo")]
+    public string ExternalTransactionNo {
+      get;
+      internal set;
+    }
+
+
+    [DataField("TransactionTypeId")]
+    public LRSTransactionType TransactionType {
+      get;
+      private set;
+    }
+
+
     [DataField("DocumentTypeId")]
     public LRSDocumentType DocumentType {
       get;
       set;
-    }
-
-    [DataField("DocumentDescriptor")]
-    public string DocumentDescriptor {
-      get;
-      set;
-    }
-
-    [DataField("DocumentId")]
-    LazyInstance<RecordingDocument> _document = LazyInstance<RecordingDocument>.Empty;
-    public RecordingDocument Document {
-      get { return _document.Value; }
-      private set {
-        _document = LazyInstance<RecordingDocument>.Parse(value);
-      }
-    }
-
-
-    [DataField("InstrumentId", Default = -1)]
-    public int InstrumentId {
-      get;
-      private set;
-    } = -1;
-
-    public Resource BaseResource {
-      get {
-        return this.ExtensionData.BaseResource;
-      }
     }
 
     [DataField("RecorderOfficeId")]
@@ -233,23 +208,35 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public bool ComesFromAgencyExternalFilingSystem {
-      get {
-        return !String.IsNullOrWhiteSpace(this.ExternalTransactionNo) && !this.Agency.IsEmptyInstance;
+    [DataField("DocumentDescriptor")]
+    public string DocumentDescriptor {
+      get;
+      set;
+    }
+
+
+    [DataField("DocumentId")]
+    LazyInstance<RecordingDocument> _document = LazyInstance<RecordingDocument>.Empty;
+
+    public RecordingDocument Document {
+      get { return _document.Value; }
+      private set {
+        _document = LazyInstance<RecordingDocument>.Parse(value);
       }
     }
 
 
-    [DataField("ExternalTransactionNo")]
-    public string ExternalTransactionNo {
+    [DataField("InstrumentId", Default = -1)]
+    public int InstrumentId {
       get;
-      internal set;
-    }
+      private set;
+    } = -1;
 
-    public void SetInstrument(IIdentifiable instrument) {
-      this.InstrumentId = instrument.Id;
 
-      TransactionData.SetTransactionInstrument(this, instrument);
+    public Resource BaseResource {
+      get {
+        return this.ExtensionData.BaseResource;
+      }
     }
 
 
@@ -273,63 +260,9 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    [DataField("PresentationTime", Default = "ExecutionServer.DateMaxValue")]
-    public DateTime PresentationTime {
-      get;
-      internal set;
-    }
-
-
-    [DataField("ExpectedDelivery")]
-    public DateTime ExpectedDelivery {
-      get;
-      private set;
-    }
-
-
-    [DataField("LastReentryTime")]
-    public DateTime LastReentryTime {
-      get;
-      internal set;
-    }
-
-
-    [DataField("ClosingTime")]
-    public DateTime ClosingTime {
-      get;
-      internal set;
-    }
-
-
-    [DataField("LastDeliveryTime")]
-    public DateTime LastDeliveryTime {
-      get;
-      internal set;
-    }
-
-
-    [DataField("NonWorkingTime")]
-    public int NonWorkingTime {
-      get;
-      private set;
-    }
-
-
-    public TransactionControlData ControlData {
+    public bool HasCertificates {
       get {
-        return new TransactionControlData(this);
-      }
-    }
-
-    [DataField("IsArchived")]
-    public bool IsArchived {
-      get;
-      private set;
-    }
-
-    public LRSTransactionServicesList Services {
-      get {
-        return _services.Value;
+        return this.GetIssuedCertificates().Count != 0;
       }
     }
 
@@ -341,53 +274,26 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public bool HasCertificates {
-      get {
-        return this.GetIssuedCertificates().Count != 0;
-      }
-    }
-
     public bool HasServices {
       get {
         return this.Services.Count != 0;
       }
     }
 
-    public LRSPaymentList Payments {
+
+    public LRSTransactionPaymentData PaymentData {
       get {
-        return _payments.Value;
+        return _paymentData.Value;
       }
     }
 
-    public LRSWorkflow Workflow {
+
+    public LRSTransactionServicesList Services {
       get {
-        return _workflow.Value;
+        return _services.Value;
       }
     }
 
-    public Contact PostedBy {
-      get {
-        return this.Workflow.GetPostedBy();
-      }
-    }
-
-    public DateTime PostingTime {
-      get {
-        return this.Workflow.GetPostingTime();
-      }
-    }
-
-    public Contact ReceivedBy {
-      get {
-        return this.Workflow.GetReceivedBy();
-      } // get
-    }
-
-    public bool IsReentry {
-      get {
-        return this.LastReentryTime <= DateTime.Now;
-      }
-    }
 
     int IProtected.CurrentDataIntegrityVersion {
       get {
@@ -422,57 +328,108 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    #endregion Public properties
+    #endregion Properties
 
-    #region Public methods
+    #region Workflow related properties
 
-    public bool HasPayment {
+    [DataField("ClosingTime")]
+    public DateTime ClosingTime {
+      get;
+      internal set;
+    }
+
+
+    public bool ComesFromAgencyExternalFilingSystem {
       get {
-        return (this.Payments.Count != 0 &&
-                this.Payments[0].ReceiptNo.Length != 0);
+        return !String.IsNullOrWhiteSpace(this.ExternalTransactionNo) && !this.Agency.IsEmptyInstance;
       }
     }
 
-    public bool HasPaymentOrder {
+
+    public TransactionControlData ControlData {
       get {
-        return (!this.PaymentOrder.IsEmpty ||
-                this.FormerPaymentOrderData.RouteNumber.Length != 0);
+        return new TransactionControlData(this);
       }
     }
 
-    public void Delete() {
-      this.Workflow.Delete();
+
+    [DataField("ExpectedDelivery")]
+    public DateTime ExpectedDelivery {
+      get;
+      private set;
     }
 
 
-    public IForm GetForm() {
-      return FormsProvider.GetForm(this);
+    [DataField("IsArchived")]
+    public bool IsArchived {
+      get;
+      private set;
     }
 
-
-    public LRSTransaction MakeCopy() {
-      LRSTransaction copy = new LRSTransaction(this.TransactionType);
-      copy.RecorderOffice = this.RecorderOffice;
-      copy.DocumentDescriptor = this.DocumentDescriptor;
-      copy.DocumentType = this.DocumentType;
-      copy.RequestedBy = this.RequestedBy;
-      copy.Agency = this.Agency;
-
-      if (this.IsFeeWaiverApplicable) {
-        copy.ApplyFeeWaiver();
+    public bool IsReentry {
+      get {
+        return this.LastReentryTime <= DateTime.Now;
       }
-
-      copy.Save();
-
-      foreach (LRSTransactionService service in this.Services) {
-        LRSTransactionService serviceCopy = service.MakeCopy();
-        if (this.IsFeeWaiverApplicable) {
-          // ToDo: Apply Fee Waiver on payment for each itemCopy ???
-        }
-        serviceCopy.Save();
-      }
-      return copy;
     }
+
+
+    [DataField("LastDeliveryTime")]
+    public DateTime LastDeliveryTime {
+      get;
+      internal set;
+    }
+
+
+    [DataField("LastReentryTime")]
+    public DateTime LastReentryTime {
+      get;
+      internal set;
+    }
+
+
+    [DataField("NonWorkingTime")]
+    public int NonWorkingTime {
+      get;
+      private set;
+    }
+
+
+    public Contact PostedBy {
+      get {
+        return this.Workflow.GetPostedBy();
+      }
+    }
+
+    public DateTime PostingTime {
+      get {
+        return this.Workflow.GetPostingTime();
+      }
+    }
+
+
+    [DataField("PresentationTime", Default = "ExecutionServer.DateMaxValue")]
+    public DateTime PresentationTime {
+      get;
+      internal set;
+    }
+
+
+    public Contact ReceivedBy {
+      get {
+        return this.Workflow.GetReceivedBy();
+      } // get
+    }
+
+
+    public LRSWorkflow Workflow {
+      get {
+        return _workflow.Value;
+      }
+    }
+
+    #endregion Workflow related properties
+
+    #region Methods
 
     public void AttachDocument(RecordingDocument documentToAttach) {
       Assertion.Require(!this.IsEmptyInstance && !this.IsNew,
@@ -484,36 +441,25 @@ namespace Empiria.Land.Registration.Transactions {
 
       /// ToDo: Should be a DB transactional op
       documentToAttach.PresentationTime = this.PresentationTime;
+
       documentToAttach.Save();
+
       this.Document = documentToAttach;
+
       this.Save();
     }
 
 
-    internal void SetInternalControlNumber() {
-      this.InternalControlNumber = this.BuildControlNumber();
+    public void Delete() {
+      this.Workflow.Delete();
     }
 
-    public void RemoveDocument() {
-      Assertion.Require(!this.IsEmptyInstance && !this.IsNew,
-                       "Document can't be detached from a new or empty transaction.");
-      Assertion.Require(!this.Document.IsEmptyInstance,
-                       "Document can't be removed because it's the empty instance.");
-      Assertion.Require(this.Document.RecordingActs.Count == 0,
-                       "Document has recording acts. It's not possible to delete it.");
-
-      var tempDocument = this.Document;
-
-      this.Document = RecordingDocument.Empty;
-      this.Save();
-
-      tempDocument.Delete();
-    }
 
     public string GetDigitalSign() {
       return Cryptographer.SignTextWithSystemCredentials(GetDigitalString())
                           .Substring(0, 64);
     }
+
 
     public string GetDigitalString() {
       string temp = String.Empty;
@@ -543,19 +489,44 @@ namespace Empiria.Land.Registration.Transactions {
       return temp;
     }
 
+
+    public IForm GetForm() {
+      return FormsProvider.GetForm(this);
+    }
+
+
     public FixedList<FormerCertificate> GetIssuedCertificates() {
       return FormerCertificatesData.GetTransactionIssuedCertificates(this);
     }
 
 
-    protected override void OnLoadObjectData(System.Data.DataRow row) {
-      _services = new Lazy<LRSTransactionServicesList>(() => LRSTransactionServicesList.Parse(this));
-      _payments = new Lazy<LRSPaymentList>(() => LRSPaymentList.Parse(this));
+    public LRSTransaction MakeCopy() {
+      var copy = new LRSTransaction(this.TransactionType);
 
-      _workflow = new Lazy<LRSWorkflow>(
-                            () => LRSWorkflow.Parse(this, (LRSTransactionStatus) Convert.ToChar(row["TransactionStatus"])));
+      copy.RecorderOffice = this.RecorderOffice;
+      copy.DocumentDescriptor = this.DocumentDescriptor;
+      copy.DocumentType = this.DocumentType;
+      copy.RequestedBy = this.RequestedBy;
+      copy.Agency = this.Agency;
 
-      this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);
+      if (this.PaymentData.IsFeeWaiverApplicable) {
+        copy.PaymentData.ApplyFeeWaiver();
+      }
+
+      copy.Save();
+
+      foreach (LRSTransactionService service in this.Services) {
+
+        LRSTransactionService serviceCopy = service.MakeCopy();
+
+        if (this.PaymentData.IsFeeWaiverApplicable) {
+          // ToDo: Apply Fee Waiver on payment for each itemCopy ???
+        }
+
+        serviceCopy.Save();
+      }
+
+      return copy;
     }
 
 
@@ -568,6 +539,18 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
+    protected override void OnLoadObjectData(System.Data.DataRow row) {
+      _services = new Lazy<LRSTransactionServicesList>(() => LRSTransactionServicesList.Parse(this));
+
+      _paymentData = new Lazy<LRSTransactionPaymentData>(() => LRSTransactionPaymentData.Parse(this));
+
+      _workflow = new Lazy<LRSWorkflow>(
+                            () => LRSWorkflow.Parse(this, (LRSTransactionStatus) Convert.ToChar(row["TransactionStatus"])));
+
+      this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);
+    }
+
+
     protected override void OnSave() {
       if (base.IsNew) {
         this.GUID = Guid.NewGuid().ToString();
@@ -575,7 +558,7 @@ namespace Empiria.Land.Registration.Transactions {
 
       this.Keywords = EmpiriaString.BuildKeywords(this.InternalControlNumber, this.UID,
                                                   this.Document.UID,
-                                                  this.Payments.Count == 1 ? this.Payments[0].ReceiptNo : string.Empty,
+                                                  this.PaymentData.Payments.Count == 1 ? this.PaymentData.Payments[0].ReceiptNo : string.Empty,
                                                   this.DocumentDescriptor, this.RequestedBy,
                                                   this.Agency.FullName,
                                                   this.DocumentType.Name, this.TransactionType.Name,
@@ -584,7 +567,9 @@ namespace Empiria.Land.Registration.Transactions {
       TransactionData.WriteTransaction(this);
 
       if (base.IsNew) {
+
         var newWorkflow = LRSWorkflow.Create(this);
+
         _workflow = new Lazy<LRSWorkflow>(() => newWorkflow);
 
         // this.AddAutomaticItems();
@@ -602,25 +587,65 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
+    public void RemoveDocument() {
+      Assertion.Require(!this.IsEmptyInstance && !this.IsNew,
+                       "Document can't be detached from a new or empty transaction.");
+      Assertion.Require(!this.Document.IsEmptyInstance,
+                       "Document can't be removed because it's the empty instance.");
+      Assertion.Require(this.Document.RecordingActs.Count == 0,
+                       "Document has recording acts. It's not possible to delete it.");
+
+      var tempDocument = this.Document;
+
+      this.Document = RecordingDocument.Empty;
+
+      this.Save();
+
+      tempDocument.Delete();
+    }
+
+
     internal void SetExternalTransaction(LRSExternalTransaction externalTransaction) {
-      Assertion.Require(externalTransaction, "externalTransaction");
+      Assertion.Require(externalTransaction, nameof(externalTransaction));
 
       this.ExtensionData.ExternalTransaction = externalTransaction;
       this.ExternalTransactionNo = this.ExtensionData.ExternalTransaction.ExternalTransactionNo;
     }
 
-    #endregion Public methods
 
-    #region TransactionFields related methods
+    public void SetInstrument(IIdentifiable instrument) {
+      this.InstrumentId = instrument.Id;
+
+      TransactionData.SetTransactionInstrument(this, instrument);
+    }
+
+
+    internal void SetInternalControlNumber() {
+      this.InternalControlNumber = this.BuildControlNumber();
+    }
+
 
     public void Update(TransactionFields fields) {
-      Assertion.Require(fields, "fields");
+      Assertion.Require(fields, nameof(fields));
 
       this.UpdateFields(fields);
     }
 
+    #endregion Methods
+
+    #region Helpers
+
+    private string BuildControlNumber() {
+      int current = TransactionData.GetLastControlNumber(this.RecorderOffice);
+
+      current++;
+
+      return $"{current:000000}";
+    }
+
+
     private void EnsureFieldsAreValid(TransactionFields fields) {
-      Assertion.Require(fields, "fields");
+      Assertion.Require(fields, nameof(fields));
 
       Assertion.Require(fields.TypeUID, "fields.TypeUID");
       Assertion.Require(fields.SubtypeUID, "fields.SubtypeUID");
@@ -628,6 +653,7 @@ namespace Empiria.Land.Registration.Transactions {
       Assertion.Require(fields.AgencyUID, "fields.AgencyUID");
       Assertion.Require(fields.RequestedBy, "fields.RequestedBy");
     }
+
 
     private void LoadFields(TransactionFields fields) {
       this.TransactionType = LRSTransactionType.Parse(fields.TypeUID);
@@ -649,6 +675,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.ExtensionData.Load(fields);
     }
 
+
     private void UpdateFields(TransactionFields fields) {
       this.TransactionType = PatchField(fields.TypeUID, this.TransactionType);
       this.DocumentType = PatchField(fields.SubtypeUID, this.DocumentType);
@@ -659,141 +686,14 @@ namespace Empiria.Land.Registration.Transactions {
       this.RequestedBy = PatchField(fields.RequestedBy, this.RequestedBy);
       this.RequestedBy = EmpiriaString.TrimAll(this.RequestedBy);
 
-      Assertion.Require(RequestedBy, "RequestedBy");
+      Assertion.Require(RequestedBy, nameof(RequestedBy));
 
       this.DocumentDescriptor = EmpiriaString.TrimAll(fields.InstrumentDescriptor);
 
       this.ExtensionData.Update(fields);
     }
 
-
-    #endregion TransactionFields related methods
-
-    #region IPayable implementation
-
-    public bool IsFeeWaiverApplicable {
-      get {
-        return LRSPaymentRules.IsFeeWaiverApplicable(this);
-      }
-    }
-
-    public void CancelPayment() {
-      Assertion.Require(this.HasPayment,
-                       $"There are not any registered payments for transaction '{this.UID}'.");
-
-      Assertion.Require(this.ControlData.CanCancelPayment,
-                       $"It's not possible to cancel the payment for transaction '{this.UID}'.");
-
-      var payment = this.Payments[0];
-
-      this.Payments.Remove(payment);
-
-      payment.Delete();
-
-      this.PaymentOrder.Status = String.Empty;
-
-      this.Save();
-    }
-
-
-    public void ApplyFeeWaiver() {
-      // this.Payments.Add(LRSPayment.FeeWaiver);
-    }
-
-
-    public void CancelPaymentOrder() {
-      this.ExtensionData.PaymentOrder = PaymentOrder.Empty;
-
-      ((IPayable) this).SetFormerPaymentOrderData(FormerPaymentOrderDTO.Empty);
-
-      if (!this.IsNew) {
-        this.Save();
-      }
-    }
-
-
-    public PaymentOrder PaymentOrder {
-      get {
-        return this.ExtensionData.PaymentOrder;
-      }
-    }
-
-    public FormerPaymentOrderDTO FormerPaymentOrderData {
-      get {
-        return this.ExtensionData.FormerPaymentOrderData;
-      }
-    }
-
-
-    public void SetPayment(PaymentFields paymentFields) {
-      this.SetPayment(paymentFields.ReceiptNo, paymentFields.Total);
-
-      this.PaymentOrder.Status = paymentFields.Status;
-
-      this.Save();
-    }
-
-
-    public void SetPayment(string receiptNo, decimal receiptTotal) {
-      LRSPayment payment = null;
-
-      if (this.Payments.Count == 0) {
-        payment = new LRSPayment(this, receiptNo, receiptTotal);
-
-        this.Payments.Add(payment);
-
-      } else {
-        payment = this.Payments[0];
-
-        payment.SetReceipt(receiptNo, receiptTotal);
-      }
-
-      payment.Save();
-    }
-
-
-    public void SetPaymentOrder(IPaymentOrder paymentOrder) {
-      Assertion.Require(paymentOrder, "paymentOrder");
-
-      this.ExtensionData.PaymentOrder = new PaymentOrder(paymentOrder);
-
-      if (!this.IsNew) {
-        this.Save();
-      }
-    }
-
-
-    /// <summary>Former Version 4. Tlaxcala.</summary>
-    void IPayable.SetFormerPaymentOrderData(FormerPaymentOrderDTO paymentOrderData) {
-      this.ExtensionData.FormerPaymentOrderData = paymentOrderData;
-
-      if (!this.IsNew) {
-        this.Save();
-      }
-    }
-
-
-    FormerPaymentOrderDTO IPayable.TryGetFormerPaymentOrderData() {
-      if (!this.ExtensionData.FormerPaymentOrderData.IsEmptyInstance) {
-        return this.ExtensionData.FormerPaymentOrderData;
-      } else {
-        return null;
-      }
-    }
-
-    #endregion IPayable implementation
-
-    #region Private methods
-
-    private string BuildControlNumber() {
-      int current = TransactionData.GetLastControlNumber(this.RecorderOffice);
-
-      current++;
-
-      return $"{current:000000}";
-    }
-
-    #endregion Private methods
+    #endregion Helpers
 
   } // class LRSTransaction
 

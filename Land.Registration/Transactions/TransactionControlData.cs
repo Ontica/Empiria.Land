@@ -32,7 +32,7 @@ namespace Empiria.Land.Transactions {
         if (IsSubmitted) {
           return false;
         }
-        return (_transaction.HasPaymentOrder && !_transaction.HasPayment);
+        return (_transaction.PaymentData.HasPaymentOrder && !_transaction.PaymentData.HasPayment);
       }
     }
 
@@ -52,7 +52,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (_transaction.HasPaymentOrder || _transaction.HasPayment) {
+        if (_transaction.PaymentData.HasPaymentOrder || _transaction.PaymentData.HasPayment) {
           return false;
         }
 
@@ -129,7 +129,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!_transaction.HasPaymentOrder) {
+        if (!_transaction.PaymentData.HasPaymentOrder) {
           return false;
         }
 
@@ -140,7 +140,7 @@ namespace Empiria.Land.Transactions {
 
     public bool CanCancelPayment {
       get {
-        return _transaction.HasPayment && CanEditPayment;
+        return _transaction.PaymentData.HasPayment && CanEditPayment;
       }
     }
 
@@ -166,7 +166,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (_transaction.IsFeeWaiverApplicable) {
+        if (_transaction.PaymentData.IsFeeWaiverApplicable) {
           return false;
         }
 
@@ -178,7 +178,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        return (!_transaction.HasPaymentOrder);
+        return (!_transaction.PaymentData.HasPaymentOrder);
       }
     }
 
@@ -193,8 +193,8 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!_transaction.IsFeeWaiverApplicable &&
-            !_transaction.HasPayment) {
+        if (!_transaction.PaymentData.IsFeeWaiverApplicable &&
+            !_transaction.PaymentData.HasPayment) {
           return false;
         }
 
@@ -216,11 +216,11 @@ namespace Empiria.Land.Transactions {
         if (IsSubmitted) {
           return false;
         }
-        if (_transaction.IsFeeWaiverApplicable) {
+        if (_transaction.PaymentData.IsFeeWaiverApplicable) {
           return true;
         }
-        if (_transaction.HasPaymentOrder &&
-            _transaction.PaymentOrder.Issuer != "Empiria.Land") {
+        if (_transaction.PaymentData.HasPaymentOrder &&
+            _transaction.PaymentData.PaymentOrder.Issuer != "Empiria.Land") {
           return true;
         }
         return false;
@@ -293,11 +293,11 @@ namespace Empiria.Land.Transactions {
 
     public bool ShowPaymentReceiptEditor {
       get {
-        if (_transaction.HasPayment) {
+        if (_transaction.PaymentData.HasPayment) {
           return true;
         }
 
-        return _transaction.HasPaymentOrder;
+        return _transaction.PaymentData.HasPaymentOrder;
       }
     }
 

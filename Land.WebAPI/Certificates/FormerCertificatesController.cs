@@ -144,9 +144,9 @@ namespace Empiria.Land.WebApi {
           uid = o.Transaction.UID,
           requestedBy = o.Transaction.RequestedBy,
           presentationTime = o.Transaction.PresentationTime,
-          paymentReceipt = !o.Transaction.FormerPaymentOrderData.IsEmptyInstance ?
-                                o.Transaction.FormerPaymentOrderData.RouteNumber :
-                                o.Transaction.Payments.ReceiptNumbers,
+          paymentReceipt = !o.Transaction.PaymentData.FormerPaymentOrderData.IsEmptyInstance ?
+                                o.Transaction.PaymentData.FormerPaymentOrderData.RouteNumber :
+                                o.Transaction.PaymentData.Payments.ReceiptNumbers,
         },
         status = new {
           uid = o.Status.ToString(),

@@ -211,7 +211,7 @@ namespace Empiria.Land.Registration.Transactions {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
                                             _transaction.UID);
       }
-      if (_transaction.Payments.Count == 0 && !_transaction.IsFeeWaiverApplicable
+      if (_transaction.PaymentData.Payments.Count == 0 && !_transaction.PaymentData.IsFeeWaiverApplicable
           && !this.IsEmptyServicesTransaction) {
         throw new NotImplementedException("Este trámite todavía no tiene registrada una boleta de pago.");
       }

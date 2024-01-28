@@ -232,7 +232,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static public string ValidateStatusChange(LRSTransaction transaction, LRSTransactionStatus nextStatus) {
-      if (nextStatus == LRSTransactionStatus.Received && transaction.Payments.Count == 0) {
+      if (nextStatus == LRSTransactionStatus.Received && transaction.PaymentData.Payments.Count == 0) {
         return "Este trámite todavía no tiene registrada una boleta de pago.";
       }
 

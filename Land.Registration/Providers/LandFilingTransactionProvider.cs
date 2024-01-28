@@ -68,7 +68,7 @@ namespace Empiria.Land.Providers {
 
       transaction.Save();
 
-      return transaction;
+      return transaction.PaymentData;
     }
 
 
@@ -132,7 +132,7 @@ namespace Empiria.Land.Providers {
 
       Assertion.Require(transaction, nameof(transaction));
 
-      return transaction;
+      return transaction.PaymentData;
     }
 
 
@@ -143,7 +143,7 @@ namespace Empiria.Land.Providers {
 
       Assertion.Require(transaction, nameof(transaction));
 
-      transaction.SetPayment(receiptNo, transaction.Services.TotalFee.Total);
+      transaction.PaymentData.SetPayment(receiptNo, transaction.Services.TotalFee.Total);
 
       return ConvertToDTOInterface(transaction);
     }

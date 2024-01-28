@@ -175,22 +175,22 @@ namespace Empiria.Land.WebApi {
                                             "Este trámite no ha sido ingresado en ventanilla.", "warning-status-text"));
       }
 
-      if (!transaction.FormerPaymentOrderData.IsEmptyInstance) {
+      if (!transaction.PaymentData.FormerPaymentOrderData.IsEmptyInstance) {
         propertyBag.Add(new PropertyBagItem("Línea de captura",
-                                            transaction.FormerPaymentOrderData.RouteNumber, "bold-text"));
+                                            transaction.PaymentData.FormerPaymentOrderData.RouteNumber, "bold-text"));
       } else {
-        propertyBag.Add(new PropertyBagItem("Boleta de pago", transaction.Payments.ReceiptNumbers));
+        propertyBag.Add(new PropertyBagItem("Boleta de pago", transaction.PaymentData.Payments.ReceiptNumbers));
       }
 
-      if (transaction.Payments.Count > 0 && transaction.Payments.Total != decimal.Zero) {
+      if (transaction.PaymentData.Payments.Count > 0 && transaction.PaymentData.Payments.Total != decimal.Zero) {
         propertyBag.Add(new PropertyBagItem("Pago de derechos",
-                                            transaction.Payments.Total.ToString("C2"), "bold-text"));
+                                            transaction.PaymentData.Payments.Total.ToString("C2"), "bold-text"));
 
       } else if (transaction.Services.TotalFee.Total > 0) {
         propertyBag.Add(new PropertyBagItem("Derechos a pagar",
                                             transaction.Services.TotalFee.Total.ToString("C2"), "bold-text"));
 
-      } else if (transaction.IsFeeWaiverApplicable) {
+      } else if (transaction.PaymentData.IsFeeWaiverApplicable) {
         propertyBag.Add(new PropertyBagItem("Pago de derechos", "Este trámite no requiere pago alguno."));
       } else {
         // propertyBag.Add(new PropertyBagItem("Pago de derechos", "Este trámite no pagó derechos", "warning-status-text"));
@@ -487,8 +487,8 @@ namespace Empiria.Land.WebApi {
       var items = new List<PropertyBagItem>(8);
 
       bool transactionHasErrors = !transaction.Workflow.IsFinished ||
-                                  (transaction.Payments.Count == 0 &&
-                                  transaction.Services.TotalFee.Total > 0 && !transaction.IsFeeWaiverApplicable);
+                                  (transaction.PaymentData.Payments.Count == 0 &&
+                                  transaction.Services.TotalFee.Total > 0 && !transaction.PaymentData.IsFeeWaiverApplicable);
 
       items.Add(new PropertyBagItem("Información del trámite", String.Empty,
                                     transactionHasErrors ? "section-error" : "section"));
@@ -499,22 +499,22 @@ namespace Empiria.Land.WebApi {
       items.Add(new PropertyBagItem("Solicitado por", transaction.RequestedBy));
       items.Add(new PropertyBagItem("Fecha de presentación", GetDateTime(transaction.PresentationTime), "date-time"));
 
-      if (!transaction.FormerPaymentOrderData.IsEmptyInstance) {
+      if (!transaction.PaymentData.FormerPaymentOrderData.IsEmptyInstance) {
         items.Add(new PropertyBagItem("Línea de captura",
-                                       transaction.FormerPaymentOrderData.RouteNumber, "bold-text"));
+                                       transaction.PaymentData.FormerPaymentOrderData.RouteNumber, "bold-text"));
       } else {
-        items.Add(new PropertyBagItem("Boleta de pago", transaction.Payments.ReceiptNumbers));
+        items.Add(new PropertyBagItem("Boleta de pago", transaction.PaymentData.Payments.ReceiptNumbers));
       }
 
-      if (transaction.Payments.Count > 0 && transaction.Payments.Total != decimal.Zero) {
+      if (transaction.PaymentData.Payments.Count > 0 && transaction.PaymentData.Payments.Total != decimal.Zero) {
         items.Add(new PropertyBagItem("Pago de derechos",
-                                       transaction.Payments.Total.ToString("C2"), "bold-text"));
+                                       transaction.PaymentData.Payments.Total.ToString("C2"), "bold-text"));
 
       } else if (transaction.Services.TotalFee.Total > 0) {
         items.Add(new PropertyBagItem("Derechos a pagar",
                                        transaction.Services.TotalFee.Total.ToString("C2"), "bold-text"));
 
-      } else if (transaction.IsFeeWaiverApplicable) {
+      } else if (transaction.PaymentData.IsFeeWaiverApplicable) {
         items.Add(new PropertyBagItem("Pago de derechos", "Este trámite no requiere pago alguno."));
       } else {
         items.Add(new PropertyBagItem("Pago de derechos", "Este trámite no pagó derechos.", "warning-status-text"));

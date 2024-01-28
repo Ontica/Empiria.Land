@@ -38,7 +38,7 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
     public TransactionDto CancelPayment(string transactionUID) {
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
-      transaction.CancelPayment();
+      transaction.PaymentData.CancelPayment();
 
       return TransactionMapper.Map(transaction);
     }
@@ -47,14 +47,14 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
     public TransactionDto CancelPaymentOrder(string transactionUID) {
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
-      Assertion.Require(transaction.HasPaymentOrder,
+      Assertion.Require(transaction.PaymentData.HasPaymentOrder,
                 $"Transaction '{transactionUID}' has not a payment order.");
 
       Assertion.Require(transaction.ControlData.CanCancelPaymentOrder,
             "The payment order can not be canceled because business rules restrict it, " +
             "or the user account does not has enough privileges.");
 
-      transaction.CancelPaymentOrder();
+      transaction.PaymentData.CancelPaymentOrder();
 
       return TransactionMapper.Map(transaction);
     }
@@ -63,7 +63,7 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
     public async Task<TransactionDto> GeneratePaymentOrder(string transactionUID) {
       LRSTransaction transaction = ParseTransaction(transactionUID);
 
-      Assertion.Require(!transaction.HasPaymentOrder,
+      Assertion.Require(!transaction.PaymentData.HasPaymentOrder,
           $"A payment order has already been generated for transaction '{transactionUID}'.");
 
       Assertion.Require(transaction.ControlData.CanGeneratePaymentOrder,
@@ -74,7 +74,7 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
 
       var paymentOrder = await connector.GeneratePaymentOrder(transaction);
 
-      transaction.SetPaymentOrder(paymentOrder);
+      transaction.PaymentData.SetPaymentOrder(paymentOrder);
 
       return TransactionMapper.Map(transaction);
     }
@@ -91,7 +91,7 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
       Assertion.Require(transaction.ControlData.CanEditPayment,
                        $"Can not set payment for transaction '{transactionUID}'.");
 
-      transaction.SetPayment(paymentFields);
+      transaction.PaymentData.SetPayment(paymentFields);
 
       return TransactionMapper.Map(transaction);
     }
