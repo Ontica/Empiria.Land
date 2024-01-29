@@ -18,7 +18,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Properties
 
-    static internal Contact InterestedContact {
+    static public Contact InterestedContact {
       get {
         return Person.Parse(-6);
       }
@@ -28,29 +28,29 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Methods
 
-    static internal LRSTransactionStatus GetNextStatusAfterReceive(LRSTransaction transaction) {
+    static internal TransactionStatus GetNextStatusAfterReceive(LRSTransaction transaction) {
       if (ExecutionServer.LicenseName == "Zacatecas") {
-        return LRSTransactionStatus.Control;
+        return TransactionStatus.Control;
       }
 
       if (LRSWorkflowRules.IsRecorderOfficerCase(transaction.TransactionType,
                                                  transaction.RecorderOffice)) {
-        return LRSTransactionStatus.Revision;
+        return TransactionStatus.Revision;
 
       } else if (LRSWorkflowRules.IsJuridicCase(transaction.TransactionType,
                                                 transaction.DocumentType)) {
-        return LRSTransactionStatus.Juridic;
+        return TransactionStatus.Juridic;
 
       } else if (LRSWorkflowRules.IsRecordingDocumentCase(transaction.TransactionType,
                                                           transaction.DocumentType)) {
-        return LRSTransactionStatus.Recording;
+        return TransactionStatus.Recording;
 
       } else if (LRSWorkflowRules.IsCertificateIssueCase(transaction.TransactionType,
                                                          transaction.DocumentType)) {
-        return LRSTransactionStatus.Elaboration;
+        return TransactionStatus.Elaboration;
 
       } else {
-        return LRSTransactionStatus.Control;
+        return TransactionStatus.Control;
       }
     }
 
@@ -67,54 +67,6 @@ namespace Empiria.Land.Registration.Transactions {
       if (type.Id == 706 && docType.Id == 734) {
         return true;
       }
-      return false;
-    }
-
-
-    static public string GetStatusName(LRSTransactionStatus status) {
-      switch (status) {
-        case LRSTransactionStatus.Payment:
-          return "Precalificación";
-        case LRSTransactionStatus.Received:
-          return "Trámite recibido";
-        case LRSTransactionStatus.Reentry:
-          return "Trámite reingresado";
-        case LRSTransactionStatus.Process:
-          return "En mesas de trabajo";
-        case LRSTransactionStatus.Control:
-          return "En mesa de control";
-        case LRSTransactionStatus.Qualification:
-          return "En calificación";
-        case LRSTransactionStatus.Recording:
-          return "En registro en libros";
-        case LRSTransactionStatus.Elaboration:
-          return "En elaboración";
-        case LRSTransactionStatus.Revision:
-          return "En revisión";
-        case LRSTransactionStatus.Juridic:
-          return "En área jurídica";
-        case LRSTransactionStatus.OnSign:
-          return "En firma";
-        case LRSTransactionStatus.Digitalization:
-          return "En digitalización y resguardo";
-        case LRSTransactionStatus.ToDeliver:
-          return "En ventanilla de entregas";
-        case LRSTransactionStatus.Delivered:
-          return "Entregado al interesado";
-        case LRSTransactionStatus.ToReturn:
-          return "En ventanilla de devoluciones";
-        case LRSTransactionStatus.Returned:
-          return "Devuelto al interesado";
-        case LRSTransactionStatus.Deleted:
-          return "Trámite eliminado";
-        case LRSTransactionStatus.Archived:
-          return "Archivado/Concluido";
-        default:
-          return "No determinado";
-      }
-    }
-
-    static public bool IsNotSignable(LRSTransactionType type, LRSDocumentType docType) {
       return false;
     }
 
@@ -145,9 +97,9 @@ namespace Empiria.Land.Registration.Transactions {
     static public bool IsReadyForReentry(LRSTransaction transaction) {
       var user = ExecutionServer.CurrentPrincipal;
 
-      return ((transaction.Workflow.CurrentStatus == LRSTransactionStatus.Returned ||
-              (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Delivered ||
-               transaction.Workflow.CurrentStatus == LRSTransactionStatus.Archived)) &&
+      return ((transaction.Workflow.CurrentStatus == TransactionStatus.Returned ||
+              (transaction.Workflow.CurrentStatus == TransactionStatus.Delivered ||
+               transaction.Workflow.CurrentStatus == TransactionStatus.Archived)) &&
                user.IsInRole("Supervisor"));
     }
 
@@ -171,9 +123,9 @@ namespace Empiria.Land.Registration.Transactions {
       if (!IsDigitalizable(transaction.TransactionType, transaction.DocumentType)) {
         return false;
       }
-      if (transaction.Workflow.CurrentStatus == LRSTransactionStatus.Digitalization ||
-          transaction.Workflow.CurrentStatus == LRSTransactionStatus.ToDeliver ||
-          transaction.Workflow.CurrentStatus == LRSTransactionStatus.Delivered) {
+      if (transaction.Workflow.CurrentStatus == TransactionStatus.Digitalization ||
+          transaction.Workflow.CurrentStatus == TransactionStatus.ToDeliver ||
+          transaction.Workflow.CurrentStatus == TransactionStatus.Delivered) {
         return true;
       }
 
@@ -207,9 +159,9 @@ namespace Empiria.Land.Registration.Transactions {
       Assertion.Require(!transaction.IsEmptyInstance,
                         "Transaction can't be the empty instance, because the document is not historic.");
 
-      if (!(transaction.Workflow.CurrentStatus == LRSTransactionStatus.Recording ||
-            transaction.Workflow.CurrentStatus == LRSTransactionStatus.Elaboration ||
-            transaction.Workflow.CurrentStatus == LRSTransactionStatus.Juridic)) {
+      if (!(transaction.Workflow.CurrentStatus == TransactionStatus.Recording ||
+            transaction.Workflow.CurrentStatus == TransactionStatus.Elaboration ||
+            transaction.Workflow.CurrentStatus == TransactionStatus.Juridic)) {
         return false;
       }
 
@@ -221,18 +173,18 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    static public bool IsStatusOfficeWork(LRSTransactionStatus currentStatus) {
-      if (currentStatus == LRSTransactionStatus.Payment || currentStatus == LRSTransactionStatus.ToDeliver ||
-          currentStatus == LRSTransactionStatus.ToReturn || currentStatus == LRSTransactionStatus.Delivered ||
-          currentStatus == LRSTransactionStatus.Returned || currentStatus == LRSTransactionStatus.Archived) {
+    static public bool IsStatusOfficeWork(TransactionStatus currentStatus) {
+      if (currentStatus == TransactionStatus.Payment || currentStatus == TransactionStatus.ToDeliver ||
+          currentStatus == TransactionStatus.ToReturn || currentStatus == TransactionStatus.Delivered ||
+          currentStatus == TransactionStatus.Returned || currentStatus == TransactionStatus.Archived) {
         return false;
       }
       return true;
     }
 
 
-    static public string ValidateStatusChange(LRSTransaction transaction, LRSTransactionStatus nextStatus) {
-      if (nextStatus == LRSTransactionStatus.Received && transaction.PaymentData.Payments.Count == 0) {
+    static public string ValidateStatusChange(LRSTransaction transaction, TransactionStatus nextStatus) {
+      if (nextStatus == TransactionStatus.Received && transaction.PaymentData.Payments.Count == 0) {
         return "Este trámite todavía no tiene registrada una boleta de pago.";
       }
 
@@ -244,8 +196,8 @@ namespace Empiria.Land.Registration.Transactions {
         return String.Empty;
       }
 
-      if (nextStatus == LRSTransactionStatus.Revision || nextStatus == LRSTransactionStatus.OnSign ||
-          nextStatus == LRSTransactionStatus.Archived || nextStatus == LRSTransactionStatus.ToDeliver) {
+      if (nextStatus == TransactionStatus.Revision || nextStatus == TransactionStatus.OnSign ||
+          nextStatus == TransactionStatus.Archived || nextStatus == TransactionStatus.ToDeliver) {
         if (transaction.Document.IsEmptyInstance) {
           return "Necesito primero se ingrese la información del documento a inscribir.";
         }
@@ -254,10 +206,6 @@ namespace Empiria.Land.Registration.Transactions {
       return String.Empty;
     }
 
-
-    static public string ValidateTakeTransaction(LRSTransaction transaction) {
-      return String.Empty;
-    }
 
     #endregion Methods
 

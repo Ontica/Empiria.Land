@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Land.Registration.Transactions;
+
 namespace Empiria.Land.Transactions.Workflow {
 
   /// <summary>Output DTO that represents a workflow task.</summary>

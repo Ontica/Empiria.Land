@@ -11,6 +11,8 @@ using System;
 
 using Empiria.Services;
 
+using Empiria.Land.Registration.Transactions;
+
 namespace Empiria.Land.Transactions.Workflow.UseCases {
 
   /// <summary>Use cases that execute workflow commands for land transactions.</summary>

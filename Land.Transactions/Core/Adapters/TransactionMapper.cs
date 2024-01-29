@@ -84,14 +84,6 @@ namespace Empiria.Land.Transactions {
       };
     }
 
-    static internal LRSTransactionStatus MapStatus(TransactionStatus currentStatus) {
-      return ((LRSTransactionStatus) (char) currentStatus);
-    }
-
-    static internal TransactionStatus MapStatus(LRSTransactionStatus currentStatus) {
-      return ((TransactionStatus) (char) currentStatus);
-    }
-
     #region Helpers
 
     static private BillingDto GetBillingDto(LRSTransaction transaction) {

@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Contacts;
+using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Transactions.Workflow {
 

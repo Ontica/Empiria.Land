@@ -93,13 +93,11 @@ namespace Empiria.Land.Transactions.Workflow {
     }
 
 
-    private NextStateDto BuildNextStateDto(LRSTransactionStatus status) {
-      var nextState = new NextStateDto();
-
-      nextState.Type = status.ToString();
-      nextState.Name = LRSWorkflowRules.GetStatusName(status);
-
-      return nextState;
+    private NextStateDto BuildNextStateDto(TransactionStatus status) {
+      return new NextStateDto {
+        Type = status.ToString(),
+        Name = status.GetStatusName(),
+      };
     }
 
 

@@ -545,7 +545,7 @@ namespace Empiria.Land.Registration.Transactions {
       _paymentData = new Lazy<LRSTransactionPaymentData>(() => LRSTransactionPaymentData.Parse(this));
 
       _workflow = new Lazy<LRSWorkflow>(
-                            () => LRSWorkflow.Parse(this, (LRSTransactionStatus) Convert.ToChar(row["TransactionStatus"])));
+                            () => LRSWorkflow.Parse(this, (TransactionStatus) Convert.ToChar(row["TransactionStatus"])));
 
       this.ExtensionData = LRSTransactionExtData.Parse((string) row["TransactionExtData"]);
     }

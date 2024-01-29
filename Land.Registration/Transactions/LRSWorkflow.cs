@@ -31,24 +31,24 @@ namespace Empiria.Land.Registration.Transactions {
 
     internal LRSWorkflow(LRSTransaction transaction) {
       _transaction = transaction;
-      this.CurrentStatus = LRSTransactionStatus.Payment;
+      this.CurrentStatus = TransactionStatus.Payment;
       this.taskList = new Lazy<LRSWorkflowTaskList>(() => new LRSWorkflowTaskList());
     }
 
     internal static LRSWorkflow Create(LRSTransaction transaction) {
       var workflow = new LRSWorkflow(transaction);
 
-      workflow.CurrentStatus = LRSTransactionStatus.Payment;
+      workflow.CurrentStatus = TransactionStatus.Payment;
       workflow.Tasks.Add(LRSWorkflowTask.CreateFirst(transaction));
 
       return workflow;
     }
 
     static internal LRSWorkflow Parse(LRSTransaction transaction,
-                                      LRSTransactionStatus onLoadStatus = LRSTransactionStatus.Undefined) {
+                                      TransactionStatus onLoadStatus = TransactionStatus.Undefined) {
       var workflow = new LRSWorkflow(transaction);
 
-      if (onLoadStatus != LRSTransactionStatus.Undefined) {
+      if (onLoadStatus != TransactionStatus.Undefined) {
         workflow.CurrentStatus = onLoadStatus;
       } else {
         workflow.CurrentStatus = workflow.GetCurrentTask().CurrentStatus;
@@ -62,16 +62,16 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Properties
 
-    public LRSTransactionStatus CurrentStatus {
+    public TransactionStatus CurrentStatus {
       get;
       private set;
-    } = LRSTransactionStatus.Payment;
+    } = TransactionStatus.Payment;
 
 
-    public LRSTransactionStatus NextStatus {
+    public TransactionStatus NextStatus {
       get {
         if (this._transaction.IsNew) {
-          return LRSTransactionStatus.Undefined;
+          return TransactionStatus.Undefined;
         } else {
           return this.GetCurrentTask().NextStatus;
         }
@@ -81,15 +81,15 @@ namespace Empiria.Land.Registration.Transactions {
 
     public string CurrentStatusName {
       get {
-        return LRSWorkflowRules.GetStatusName(this.CurrentStatus);
+        return this.CurrentStatus.GetStatusName();
       }
     }
 
 
     public bool DeliveredOrReturned {
       get {
-        return (this.CurrentStatus == LRSTransactionStatus.Delivered ||
-                this.CurrentStatus == LRSTransactionStatus.Returned);
+        return (this.CurrentStatus == TransactionStatus.Delivered ||
+                this.CurrentStatus == TransactionStatus.Returned);
       }
     }
 
@@ -111,15 +111,15 @@ namespace Empiria.Land.Registration.Transactions {
     public bool IsFinished {
       get {
         return (this.DeliveredOrReturned ||
-                this.CurrentStatus == LRSTransactionStatus.Archived);
+                this.CurrentStatus == TransactionStatus.Archived);
       }
     }
 
 
     public bool IsReadyForDeliveryOrReturn {
       get {
-        return (this.CurrentStatus == LRSTransactionStatus.ToDeliver ||
-                this.CurrentStatus == LRSTransactionStatus.ToReturn);
+        return (this.CurrentStatus == TransactionStatus.ToDeliver ||
+                this.CurrentStatus == TransactionStatus.ToReturn);
       }
     }
 
@@ -139,7 +139,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     public bool CanBeDeleted {
       get {
-        return (this.CurrentStatus == LRSTransactionStatus.Payment);
+        return (this.CurrentStatus == TransactionStatus.Payment);
       }
     }
 
@@ -151,7 +151,7 @@ namespace Empiria.Land.Registration.Transactions {
 
       Assertion.Require(this.CanBeDeleted, "This transaction cannot be deleted.");
 
-      this.Close(LRSTransactionStatus.Deleted,
+      this.Close(TransactionStatus.Deleted,
             $"Deleted by user {ExecutionServer.CurrentContact.FullName} on {DateTime.Now}.");
 
     }
@@ -162,13 +162,13 @@ namespace Empiria.Land.Registration.Transactions {
       Assertion.Require(this.IsReadyForDeliveryOrReturn,
         $"Transaction {_transaction.UID} is not ready to be electronically delivered to the agency.");
 
-      if (this.CurrentStatus == LRSTransactionStatus.ToDeliver) {
-        this.Close(LRSTransactionStatus.Delivered,
+      if (this.CurrentStatus == TransactionStatus.ToDeliver) {
+        this.Close(TransactionStatus.Delivered,
                    "Entregado a través del sistema de notarías.",
                    LRSWorkflowRules.InterestedContact, DateTime.Now);
 
-      } else if (this.CurrentStatus == LRSTransactionStatus.ToReturn) {
-        this.Close(LRSTransactionStatus.Returned,
+      } else if (this.CurrentStatus == TransactionStatus.ToReturn) {
+        this.Close(TransactionStatus.Returned,
                    "Devuelto a través del sistema de notarías.",
                    LRSWorkflowRules.InterestedContact, DateTime.Now);
 
@@ -184,7 +184,7 @@ namespace Empiria.Land.Registration.Transactions {
         throw new LandRegistrationException(LandRegistrationException.Msg.NotReadyForElectronicalDelivery,
                                             _transaction.UID);
       }
-      this.Close(LRSTransactionStatus.Delivered,
+      this.Close(TransactionStatus.Delivered,
                  "Entregado al interesado a través del portal de consultas.",
                  LRSWorkflowRules.InterestedContact, DateTime.Now);
     }
@@ -207,7 +207,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     public void Receive(string notes) {
-      if (this.CurrentStatus != LRSTransactionStatus.Payment) {
+      if (this.CurrentStatus != TransactionStatus.Payment) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
                                             _transaction.UID);
       }
@@ -222,10 +222,10 @@ namespace Empiria.Land.Registration.Transactions {
       _transaction.PresentationTime = DateTime.Now;
       _transaction.ClosingTime = ExecutionServer.DateMaxValue;
 
-      this.CurrentStatus = LRSTransactionStatus.Received;
+      this.CurrentStatus = TransactionStatus.Received;
 
       LRSWorkflowTask currentTask = this.GetCurrentTask();
-      currentTask.NextStatus = LRSTransactionStatus.Received;
+      currentTask.NextStatus = TransactionStatus.Received;
       currentTask.NextContact = LRSWorkflowRules.InterestedContact;
 
       currentTask = currentTask.CreateNext(notes);
@@ -273,7 +273,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     internal Contact GetReceivedBy() {
-      var task = this.Tasks.Find((x) => x.CurrentStatus == LRSTransactionStatus.Received);
+      var task = this.Tasks.Find((x) => x.CurrentStatus == TransactionStatus.Received);
 
       if (task != null) {
         return task.Responsible;
@@ -293,14 +293,14 @@ namespace Empiria.Land.Registration.Transactions {
       //this.AssertRecordingActsPrelation();
       //this.AssertDigitalizedDocument();
 
-      this.CurrentStatus = LRSTransactionStatus.Reentry;
+      this.CurrentStatus = TransactionStatus.Reentry;
       _transaction.ClosingTime = ExecutionServer.DateMaxValue;
       _transaction.LastReentryTime = DateTime.Now;
       LRSWorkflowTask currentTask = this.GetCurrentTask();
-      currentTask.NextStatus = LRSTransactionStatus.Reentry;
+      currentTask.NextStatus = TransactionStatus.Reentry;
 
       currentTask = currentTask.CreateNext("Trámite reingresado");
-      currentTask.NextStatus = LRSTransactionStatus.Control;
+      currentTask.NextStatus = TransactionStatus.Control;
       currentTask.Status = WorkflowTaskStatus.OnDelivery;
       currentTask.EndProcessTime = currentTask.CheckInTime;
       currentTask.AssignedBy = LRSWorkflowRules.InterestedContact;
@@ -312,12 +312,12 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact,
+    public void SetNextStatus(TransactionStatus nextStatus, Contact nextContact,
                               string notes, DateTime? date = null) {
 
-      if (nextStatus == LRSTransactionStatus.Returned ||
-          nextStatus == LRSTransactionStatus.Delivered ||
-          nextStatus == LRSTransactionStatus.Archived) {
+      if (nextStatus == TransactionStatus.Returned ||
+          nextStatus == TransactionStatus.Delivered ||
+          nextStatus == TransactionStatus.Archived) {
         if (date.HasValue) {
           this.Close(nextStatus, notes, nextContact, date.Value);
         } else {
@@ -330,10 +330,10 @@ namespace Empiria.Land.Registration.Transactions {
 
       currentTask.SetNextStatus(nextStatus, nextContact, notes, date);
 
-      if (nextStatus == LRSTransactionStatus.OnSign || nextStatus == LRSTransactionStatus.Revision) {
+      if (nextStatus == TransactionStatus.OnSign || nextStatus == TransactionStatus.Revision) {
         _transaction.Save();
-      } else if (this.CurrentStatus == LRSTransactionStatus.OnSign &&
-                (nextStatus == LRSTransactionStatus.ToDeliver || nextStatus == LRSTransactionStatus.Archived)) {
+      } else if (this.CurrentStatus == TransactionStatus.OnSign &&
+                (nextStatus == TransactionStatus.ToDeliver || nextStatus == TransactionStatus.Archived)) {
         _transaction.Save();
       }
     }
@@ -348,7 +348,7 @@ namespace Empiria.Land.Registration.Transactions {
     public void Take(string notes, Contact responsible, DateTime date) {
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
-      if (currentTask.NextStatus == LRSTransactionStatus.EndPoint) {
+      if (currentTask.NextStatus == TransactionStatus.EndPoint) {
         throw new LandRegistrationException(LandRegistrationException.Msg.NextStatusCantBeEndPoint,
                                             currentTask.Id);
       }
@@ -364,15 +364,15 @@ namespace Empiria.Land.Registration.Transactions {
       currentTask.CreateNext(notes, responsible, date);
       ResetTasksList();
 
-      if (this.CurrentStatus == LRSTransactionStatus.ToDeliver ||
-          this.CurrentStatus == LRSTransactionStatus.ToReturn ||
-          this.CurrentStatus == LRSTransactionStatus.Archived) {
+      if (this.CurrentStatus == TransactionStatus.ToDeliver ||
+          this.CurrentStatus == TransactionStatus.ToReturn ||
+          this.CurrentStatus == TransactionStatus.Archived) {
         _transaction.ClosingTime = currentTask.EndProcessTime;
       }
       _transaction.Save();
-      if (this.CurrentStatus == LRSTransactionStatus.ToDeliver) {
+      if (this.CurrentStatus == TransactionStatus.ToDeliver) {
         LandMessenger.Notify(_transaction, TransactionEventType.TransactionReadyToDelivery);
-      } else if (this.CurrentStatus == LRSTransactionStatus.ToReturn) {
+      } else if (this.CurrentStatus == TransactionStatus.ToReturn) {
         LandMessenger.Notify(_transaction, TransactionEventType.TransactionReturned);
       }
     }
@@ -405,7 +405,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (notes.Length == 0) {
         notes = "Se trajo a la mesa de control";
       }
-      this.SetNextStatus(LRSTransactionStatus.Control,
+      this.SetNextStatus(TransactionStatus.Control,
                          Person.Empty, notes);
       this.Take(String.Empty);
     }
@@ -484,14 +484,14 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    private void Close(LRSTransactionStatus closeStatus, string notes) {
+    private void Close(TransactionStatus closeStatus, string notes) {
       var responsible = ExecutionServer.CurrentContact;
 
       this.Close(closeStatus, notes, responsible, DateTime.Now);
     }
 
 
-    private void Close(LRSTransactionStatus closeStatus, string notes,
+    private void Close(TransactionStatus closeStatus, string notes,
                        Contact responsible, DateTime date) {
 
       LRSWorkflowTask currentTask = this.GetCurrentTask();
@@ -508,7 +508,7 @@ namespace Empiria.Land.Registration.Transactions {
       this.CurrentStatus = closeStatus;
       _transaction.Save();
 
-      if (closeStatus == LRSTransactionStatus.Archived) {
+      if (closeStatus == TransactionStatus.Archived) {
         LandMessenger.Notify(_transaction, TransactionEventType.TransactionArchived);
       }
     }

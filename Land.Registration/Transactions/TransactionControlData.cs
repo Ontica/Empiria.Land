@@ -70,8 +70,8 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!IsTransactionInStatus(LRSTransactionStatus.Elaboration,
-                                   LRSTransactionStatus.Recording)) {
+        if (!IsTransactionInStatus(TransactionStatus.Elaboration,
+                                   TransactionStatus.Recording)) {
           return false;
         }
 
@@ -94,7 +94,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!IsTransactionInStatus(LRSTransactionStatus.Recording)) {
+        if (!IsTransactionInStatus(TransactionStatus.Recording)) {
           return false;
         }
 
@@ -234,7 +234,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!IsTransactionInStatus(LRSTransactionStatus.Digitalization)) {
+        if (!IsTransactionInStatus(TransactionStatus.Digitalization)) {
           return false;
         }
 
@@ -249,7 +249,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!IsTransactionInStatus(LRSTransactionStatus.Digitalization)) {
+        if (!IsTransactionInStatus(TransactionStatus.Digitalization)) {
           return false;
         }
 
@@ -344,11 +344,11 @@ namespace Empiria.Land.Transactions {
 
     private bool IsSubmitted {
       get {
-        return !IsTransactionInStatus(LRSTransactionStatus.Payment);
+        return !IsTransactionInStatus(TransactionStatus.Payment);
       }
     }
 
-    private bool IsTransactionInStatus(params LRSTransactionStatus[] statusList) {
+    private bool IsTransactionInStatus(params TransactionStatus[] statusList) {
       foreach (var status in statusList) {
         if (_transaction.Workflow.CurrentStatus == status) {
           return true;

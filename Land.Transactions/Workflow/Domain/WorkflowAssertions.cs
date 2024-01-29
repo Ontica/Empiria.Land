@@ -61,11 +61,11 @@ namespace Empiria.Land.Transactions.Workflow {
     internal void CanTake(LRSTransaction transaction, Contact user) {
       var task = transaction.Workflow.GetCurrentTask();
 
-      if (task.NextStatus == LRSTransactionStatus.EndPoint) {
+      if (task.NextStatus == TransactionStatus.EndPoint) {
         Assertion.RequireFail($"El trámite '{transaction.UID}' todavía no está listo para ser recibido.");
       }
 
-      if (task.Responsible.Id == user.Id && task.CurrentStatus != LRSTransactionStatus.Reentry) {
+      if (task.Responsible.Id == user.Id && task.CurrentStatus != TransactionStatus.Reentry) {
         Assertion.RequireFail($"El trámite '{transaction.UID}' todavía no está listo para ser recibido.");
       }
 
@@ -83,11 +83,9 @@ namespace Empiria.Land.Transactions.Workflow {
 
       var allNextStatusList = _rules.NextStatusList(transaction);
 
-      LRSTransactionStatus mappedStatus = TransactionMapper.MapStatus(nextStatus);
-
-      Assertion.Require(allNextStatusList.Contains(mappedStatus),
+      Assertion.Require(allNextStatusList.Contains(nextStatus),
                        $"No es posible mover el trámite '{transaction.UID}' a " +
-                       $"'{LRSWorkflowRules.GetStatusName(mappedStatus)}', " +
+                       $"'{nextStatus.GetStatusName()}', " +
                        $"debido a que se encuentra en '{task.CurrentStatusName}'.");
     }
 

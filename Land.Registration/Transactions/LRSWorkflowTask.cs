@@ -104,24 +104,24 @@ namespace Empiria.Land.Registration.Transactions {
       set;
     }
 
-    [DataField("CurrentTransactionStatus", Default = LRSTransactionStatus.Undefined)]
-    public LRSTransactionStatus CurrentStatus {
+    [DataField("CurrentTransactionStatus", Default = TransactionStatus.Undefined)]
+    public TransactionStatus CurrentStatus {
       get;
       set;
     }
 
     public string CurrentStatusName {
-      get { return LRSWorkflowRules.GetStatusName(this.CurrentStatus); }
+      get { return this.CurrentStatus.GetStatusName(); }
     }
 
-    [DataField("NextTransactionStatus", Default = LRSTransactionStatus.EndPoint)]
-    public LRSTransactionStatus NextStatus {
+    [DataField("NextTransactionStatus", Default = TransactionStatus.EndPoint)]
+    public TransactionStatus NextStatus {
       get;
       set;
     }
 
     public string NextStatusName {
-      get { return LRSWorkflowRules.GetStatusName(this.NextStatus); }
+      get { return this.NextStatus.GetStatusName(); }
     }
 
     [DataField("CheckInTime", Default = "DateTime.Now")]
@@ -221,7 +221,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
       this.CheckOutTime = closingDate;
       this.NextContact = LRSWorkflowRules.InterestedContact;
-      this.NextStatus = LRSTransactionStatus.EndPoint;
+      this.NextStatus = TransactionStatus.EndPoint;
       this.NextTask = LRSWorkflowTask.Empty;
       this.Status = WorkflowTaskStatus.Closed;
 
@@ -230,10 +230,10 @@ namespace Empiria.Land.Registration.Transactions {
 
     private void ExecuteSpecialCase(LRSWorkflowTask nextTrack) {
       if (nextTrack.IsNew) {
-        if (nextTrack.CurrentStatus == LRSTransactionStatus.ToDeliver ||
-            nextTrack.CurrentStatus == LRSTransactionStatus.ToReturn) {
-          nextTrack.NextStatus = (nextTrack.CurrentStatus == LRSTransactionStatus.ToDeliver) ?
-                    LRSTransactionStatus.Delivered : LRSTransactionStatus.Returned;
+        if (nextTrack.CurrentStatus == TransactionStatus.ToDeliver ||
+            nextTrack.CurrentStatus == TransactionStatus.ToReturn) {
+          nextTrack.NextStatus = (nextTrack.CurrentStatus == TransactionStatus.ToDeliver) ?
+                    TransactionStatus.Delivered : TransactionStatus.Returned;
           nextTrack.EndProcessTime = nextTrack.CheckInTime;
           nextTrack.Status = WorkflowTaskStatus.OnDelivery;
         }
@@ -279,7 +279,7 @@ namespace Empiria.Land.Registration.Transactions {
       return newTrack;
     }
 
-    internal void SetNextStatus(LRSTransactionStatus nextStatus, Contact nextContact,
+    internal void SetNextStatus(TransactionStatus nextStatus, Contact nextContact,
                                 string notes, DateTime? date = null) {
       this.NextStatus = nextStatus;
       this.NextContact = nextContact;
@@ -292,7 +292,7 @@ namespace Empiria.Land.Registration.Transactions {
     internal void SetPending() {
       this.EndProcessTime = ExecutionServer.DateMaxValue;
       this.CheckOutTime = ExecutionServer.DateMaxValue;
-      this.NextStatus = LRSTransactionStatus.EndPoint;
+      this.NextStatus = TransactionStatus.EndPoint;
       this.NextTask = LRSWorkflowTask.Empty;
       this.NextContact = Person.Empty;
       this.Status = WorkflowTaskStatus.Pending;

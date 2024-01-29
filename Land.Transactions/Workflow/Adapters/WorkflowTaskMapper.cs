@@ -28,7 +28,7 @@ namespace Empiria.Land.Transactions.Workflow {
         EndProcessTime = task.EndProcessTime,
         CheckOutTime = task.CheckOutTime,
         ElapsedTime = task.ElapsedTime.ToString(@"dd\:hh\:mm") + ":00",
-        NextTask = TransactionMapper.MapStatus(task.NextStatus),
+        NextTask = task.NextStatus,
         NextTaskName = task.NextStatusName,
         NextAssigneeUID = task.NextContact.UID,
         NextAssigneeName = task.NextContact.ShortName,

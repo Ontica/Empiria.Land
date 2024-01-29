@@ -60,7 +60,7 @@ namespace Empiria.Land.Transactions.Workflow {
           break;
 
         case WorkflowCommandType.SetNextStatus:
-          var status = TransactionMapper.MapStatus(command.Payload.NextStatus);
+          var status = command.Payload.NextStatus;
 
           workflow.SetNextStatus(status, assignTo, command.Payload.Note);
           break;
@@ -70,11 +70,11 @@ namespace Empiria.Land.Transactions.Workflow {
           break;
 
         case WorkflowCommandType.Finish:
-          if (workflow.CurrentStatus == LRSTransactionStatus.ToDeliver) {
-            workflow.SetNextStatus(LRSTransactionStatus.Delivered, Contact.Parse(-6),
+          if (workflow.CurrentStatus == TransactionStatus.ToDeliver) {
+            workflow.SetNextStatus(TransactionStatus.Delivered, LRSWorkflowRules.InterestedContact,
                                    command.Payload.Note);
-          } else if (workflow.CurrentStatus == LRSTransactionStatus.ToReturn) {
-            workflow.SetNextStatus(LRSTransactionStatus.Returned, Contact.Parse(-6),
+          } else if (workflow.CurrentStatus == TransactionStatus.ToReturn) {
+            workflow.SetNextStatus(TransactionStatus.Returned, LRSWorkflowRules.InterestedContact,
                                    command.Payload.Note);
           }
 

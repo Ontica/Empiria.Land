@@ -22,8 +22,8 @@ namespace Empiria.Land.Transactions.Workflow {
   public class WorkflowRules {
 
 
-    public bool CanReceiveFor(Contact user, LRSTransactionStatus nextStatus) {
-      return nextStatus != LRSTransactionStatus.EndPoint;
+    public bool CanReceiveFor(Contact user, TransactionStatus nextStatus) {
+      return nextStatus != TransactionStatus.EndPoint;
     }
 
 
@@ -81,10 +81,10 @@ namespace Empiria.Land.Transactions.Workflow {
           return IsInRole(user, WorkflowRole.ControlClerk);
 
         case WorkflowCommandType.Take:
-          if (nextStatus == LRSTransactionStatus.EndPoint) {
+          if (nextStatus == TransactionStatus.EndPoint) {
             return false;
           }
-          if (task.Responsible.Id == user.Id && task.CurrentStatus != LRSTransactionStatus.Reentry) {
+          if (task.Responsible.Id == user.Id && task.CurrentStatus != TransactionStatus.Reentry) {
             return false;
           }
           return CanReceiveFor(user, nextStatus);
@@ -93,7 +93,7 @@ namespace Empiria.Land.Transactions.Workflow {
           return IsInRole(user, WorkflowRole.Supervisor);
 
         case WorkflowCommandType.ReturnToMe:
-          return task.Responsible.Equals(user) && nextStatus != LRSTransactionStatus.EndPoint;
+          return task.Responsible.Equals(user) && nextStatus != TransactionStatus.EndPoint;
 
         case WorkflowCommandType.SetNextStatus:
           return true;
@@ -103,8 +103,8 @@ namespace Empiria.Land.Transactions.Workflow {
           return IsInRole(user, WorkflowRole.Signer);
 
         case WorkflowCommandType.Finish:
-          if ((task.CurrentStatus == LRSTransactionStatus.ToDeliver ||
-              task.CurrentStatus == LRSTransactionStatus.ToReturn)) {
+          if ((task.CurrentStatus == TransactionStatus.ToDeliver ||
+              task.CurrentStatus == TransactionStatus.ToReturn)) {
             return IsInRole(user, WorkflowRole.DeliveryClerk);
           }
           return false;
@@ -115,23 +115,23 @@ namespace Empiria.Land.Transactions.Workflow {
     }
 
 
-    public FixedList<LRSTransactionStatus> NextStatusList() {
-      List<LRSTransactionStatus> list = new List<LRSTransactionStatus>();
+    public FixedList<TransactionStatus> NextStatusList() {
+      List<TransactionStatus> list = new List<TransactionStatus>();
 
-      list.Add(LRSTransactionStatus.Control);
-      list.Add(LRSTransactionStatus.Qualification);
-      list.Add(LRSTransactionStatus.Recording);
-      list.Add(LRSTransactionStatus.Elaboration);
-      list.Add(LRSTransactionStatus.Revision);
-      list.Add(LRSTransactionStatus.OnSign);
-      list.Add(LRSTransactionStatus.ToDeliver);
-      list.Add(LRSTransactionStatus.ToReturn);
+      list.Add(TransactionStatus.Control);
+      list.Add(TransactionStatus.Qualification);
+      list.Add(TransactionStatus.Recording);
+      list.Add(TransactionStatus.Elaboration);
+      list.Add(TransactionStatus.Revision);
+      list.Add(TransactionStatus.OnSign);
+      list.Add(TransactionStatus.ToDeliver);
+      list.Add(TransactionStatus.ToReturn);
 
       return list.ToFixedList();
     }
 
 
-    public FixedList<LRSTransactionStatus> NextStatusList(LRSTransaction transaction) {
+    public FixedList<TransactionStatus> NextStatusList(LRSTransaction transaction) {
       Assertion.Require(transaction, "transaction");
 
       var currentStatus = transaction.Workflow.GetCurrentTask().CurrentStatus;
@@ -142,147 +142,147 @@ namespace Empiria.Land.Transactions.Workflow {
     }
 
 
-    private List<LRSTransactionStatus> NextStatusList(LRSTransactionType type,
+    private List<TransactionStatus> NextStatusList(LRSTransactionType type,
                                                       LRSDocumentType docType,
-                                                      LRSTransactionStatus currentStatus) {
+                                                      TransactionStatus currentStatus) {
       Assertion.Require(type, "type");
       Assertion.Require(docType, "docType");
 
-      List<LRSTransactionStatus> list = new List<LRSTransactionStatus>();
+      List<TransactionStatus> list = new List<TransactionStatus>();
 
       switch (currentStatus) {
 
-        case LRSTransactionStatus.Payment:
-          list.Add(LRSTransactionStatus.Received);
-          list.Add(LRSTransactionStatus.Deleted);
+        case TransactionStatus.Payment:
+          list.Add(TransactionStatus.Received);
+          list.Add(TransactionStatus.Deleted);
           break;
 
-        case LRSTransactionStatus.Received:
-        case LRSTransactionStatus.Reentry:
-          list.Add(LRSTransactionStatus.Control);
+        case TransactionStatus.Received:
+        case TransactionStatus.Reentry:
+          list.Add(TransactionStatus.Control);
           break;
 
-        case LRSTransactionStatus.Process:
-        case LRSTransactionStatus.Control:
+        case TransactionStatus.Process:
+        case TransactionStatus.Control:
           // Certificado || Cancelación || Copia simple
           if (type.Id == 701 || docType.Id == 734) {
-            list.Add(LRSTransactionStatus.Elaboration);
+            list.Add(TransactionStatus.Elaboration);
           } else {
-            list.Add(LRSTransactionStatus.Qualification);
-            list.Add(LRSTransactionStatus.Recording);
-            list.Add(LRSTransactionStatus.Elaboration);
+            list.Add(TransactionStatus.Qualification);
+            list.Add(TransactionStatus.Recording);
+            list.Add(TransactionStatus.Elaboration);
           }
 
-          list.Add(LRSTransactionStatus.Revision);
-          list.Add(LRSTransactionStatus.OnSign);
+          list.Add(TransactionStatus.Revision);
+          list.Add(TransactionStatus.OnSign);
 
-          list.Add(LRSTransactionStatus.ToReturn);
+          list.Add(TransactionStatus.ToReturn);
 
           if (LRSWorkflowRules.IsCertificateIssueCase(type, docType)) {
-            list.Add(LRSTransactionStatus.ToDeliver);
+            list.Add(TransactionStatus.ToDeliver);
           }
           break;
 
-        case LRSTransactionStatus.Juridic:
+        case TransactionStatus.Juridic:
           break;
 
-        case LRSTransactionStatus.Qualification:       // Only used in Zacatecas
+        case TransactionStatus.Qualification:       // Only used in Zacatecas
 
-          list.Add(LRSTransactionStatus.Recording);
-          list.Add(LRSTransactionStatus.Elaboration);
-          list.Add(LRSTransactionStatus.Revision);
-          list.Add(LRSTransactionStatus.Qualification);
-          list.Add(LRSTransactionStatus.ToReturn);
-          list.Add(LRSTransactionStatus.Control);
+          list.Add(TransactionStatus.Recording);
+          list.Add(TransactionStatus.Elaboration);
+          list.Add(TransactionStatus.Revision);
+          list.Add(TransactionStatus.Qualification);
+          list.Add(TransactionStatus.ToReturn);
+          list.Add(TransactionStatus.Control);
 
           break;
 
-        case LRSTransactionStatus.Recording:
-          list.Add(LRSTransactionStatus.Revision);
-          list.Add(LRSTransactionStatus.Recording);
-          list.Add(LRSTransactionStatus.Control);
+        case TransactionStatus.Recording:
+          list.Add(TransactionStatus.Revision);
+          list.Add(TransactionStatus.Recording);
+          list.Add(TransactionStatus.Control);
 
-          list.Add(LRSTransactionStatus.ToReturn);
+          list.Add(TransactionStatus.ToReturn);
           if (LRSWorkflowRules.IsArchivable(type, docType)) {
-            list.Add(LRSTransactionStatus.Archived);
+            list.Add(TransactionStatus.Archived);
           }
           if (docType.Id == 728) {
-            list.Add(LRSTransactionStatus.OnSign);
+            list.Add(TransactionStatus.OnSign);
           }
 
           break;
 
-        case LRSTransactionStatus.Elaboration:
-          list.Add(LRSTransactionStatus.Elaboration);
-          list.Add(LRSTransactionStatus.Revision);
-          list.Add(LRSTransactionStatus.OnSign);
-          list.Add(LRSTransactionStatus.Control);
-          list.Add(LRSTransactionStatus.ToReturn);
+        case TransactionStatus.Elaboration:
+          list.Add(TransactionStatus.Elaboration);
+          list.Add(TransactionStatus.Revision);
+          list.Add(TransactionStatus.OnSign);
+          list.Add(TransactionStatus.Control);
+          list.Add(TransactionStatus.ToReturn);
 
           break;
 
-        case LRSTransactionStatus.Revision:
+        case TransactionStatus.Revision:
 
-          list.Add(LRSTransactionStatus.OnSign);
+          list.Add(TransactionStatus.OnSign);
 
           if (type.Id == 701) {
-            list.Add(LRSTransactionStatus.Elaboration);
+            list.Add(TransactionStatus.Elaboration);
           } else {
-            list.Add(LRSTransactionStatus.Qualification);
-            list.Add(LRSTransactionStatus.Recording);
-            list.Add(LRSTransactionStatus.Elaboration);
+            list.Add(TransactionStatus.Qualification);
+            list.Add(TransactionStatus.Recording);
+            list.Add(TransactionStatus.Elaboration);
           }
 
           if (LRSWorkflowRules.IsArchivable(type, docType)) {
-            list.Add(LRSTransactionStatus.Archived);
+            list.Add(TransactionStatus.Archived);
           }
 
-          list.Add(LRSTransactionStatus.Revision);
-          list.Add(LRSTransactionStatus.Control);
-          list.Add(LRSTransactionStatus.ToReturn);
+          list.Add(TransactionStatus.Revision);
+          list.Add(TransactionStatus.Control);
+          list.Add(TransactionStatus.ToReturn);
 
           break;
 
-        case LRSTransactionStatus.OnSign:
-          list.Add(LRSTransactionStatus.ToDeliver);
-          list.Add(LRSTransactionStatus.Revision);
+        case TransactionStatus.OnSign:
+          list.Add(TransactionStatus.ToDeliver);
+          list.Add(TransactionStatus.Revision);
           if (type.Id == 701) {
-            list.Add(LRSTransactionStatus.Elaboration);
+            list.Add(TransactionStatus.Elaboration);
           } else {
-            list.Add(LRSTransactionStatus.Qualification);
-            list.Add(LRSTransactionStatus.Recording);
-            list.Add(LRSTransactionStatus.Elaboration);
+            list.Add(TransactionStatus.Qualification);
+            list.Add(TransactionStatus.Recording);
+            list.Add(TransactionStatus.Elaboration);
           }
 
-          list.Add(LRSTransactionStatus.Control);
-          list.Add(LRSTransactionStatus.ToReturn);
+          list.Add(TransactionStatus.Control);
+          list.Add(TransactionStatus.ToReturn);
 
           break;
 
-        case LRSTransactionStatus.Digitalization:
-          list.Add(LRSTransactionStatus.Delivered);
+        case TransactionStatus.Digitalization:
+          list.Add(TransactionStatus.Delivered);
           if (LRSWorkflowRules.IsDigitalizable(type, docType)) {
-            list.Add(LRSTransactionStatus.Digitalization);
+            list.Add(TransactionStatus.Digitalization);
           }
-          list.Add(LRSTransactionStatus.Control);
+          list.Add(TransactionStatus.Control);
 
           break;
 
-        case LRSTransactionStatus.ToDeliver:
-          list.Add(LRSTransactionStatus.Control);
+        case TransactionStatus.ToDeliver:
+          list.Add(TransactionStatus.Control);
           AddRecordingOrElaborationStatus(list, type, docType);
-          list.Add(LRSTransactionStatus.Juridic);
-          list.Add(LRSTransactionStatus.OnSign);
+          list.Add(TransactionStatus.Juridic);
+          list.Add(TransactionStatus.OnSign);
 
           break;
 
-        case LRSTransactionStatus.Archived:
-          list.Add(LRSTransactionStatus.Control);
+        case TransactionStatus.Archived:
+          list.Add(TransactionStatus.Control);
           break;
 
-        case LRSTransactionStatus.ToReturn:
-          list.Add(LRSTransactionStatus.Returned);
-          list.Add(LRSTransactionStatus.Control);
+        case TransactionStatus.ToReturn:
+          list.Add(TransactionStatus.Returned);
+          list.Add(TransactionStatus.Control);
           break;
       }
       return list;
@@ -315,53 +315,53 @@ namespace Empiria.Land.Transactions.Workflow {
 
       var currentStatus = currentTask.CurrentStatus;
 
-      if (AnyOf(currentStatus, LRSTransactionStatus.Payment, LRSTransactionStatus.Deleted)) {
+      if (AnyOf(currentStatus, TransactionStatus.Payment, TransactionStatus.Deleted)) {
         return new FixedList<WorkflowCommandType>();
       }
 
-      if (AnyOf(currentStatus, LRSTransactionStatus.Returned, LRSTransactionStatus.Delivered)) {
+      if (AnyOf(currentStatus, TransactionStatus.Returned, TransactionStatus.Delivered)) {
         return BuildCommandTypeList(WorkflowCommandType.Reentry);
       }
 
-      if (currentStatus == LRSTransactionStatus.Archived) {
+      if (currentStatus == TransactionStatus.Archived) {
         return BuildCommandTypeList(WorkflowCommandType.Unarchive);
       }
 
-      if (AnyOf(currentStatus, LRSTransactionStatus.ToDeliver, LRSTransactionStatus.ToReturn)) {
+      if (AnyOf(currentStatus, TransactionStatus.ToDeliver, TransactionStatus.ToReturn)) {
         return BuildCommandTypeList(WorkflowCommandType.Finish,
                                     WorkflowCommandType.SetNextStatus);
       }
 
-      if (currentStatus == LRSTransactionStatus.Control) {
+      if (currentStatus == TransactionStatus.Control) {
         return BuildCommandTypeList(WorkflowCommandType.Take,
                                     WorkflowCommandType.SetNextStatus,
                                     WorkflowCommandType.AssignTo);
       }
 
-      if (currentStatus == LRSTransactionStatus.Qualification) {
+      if (currentStatus == TransactionStatus.Qualification) {
         return BuildCommandTypeList(WorkflowCommandType.Take,
                                     WorkflowCommandType.SetNextStatus,
                                     WorkflowCommandType.AssignTo);
       }
 
-      if (currentStatus == LRSTransactionStatus.OnSign) {
+      if (currentStatus == TransactionStatus.OnSign) {
         return BuildCommandTypeList(WorkflowCommandType.Take,
                                 WorkflowCommandType.Sign,
                                 WorkflowCommandType.SetNextStatus);
       }
 
-      if (currentStatus == LRSTransactionStatus.Revision) {
+      if (currentStatus == TransactionStatus.Revision) {
         return BuildCommandTypeList(WorkflowCommandType.Take,
                                     WorkflowCommandType.SetNextStatus);
       }
 
-      if (currentStatus == LRSTransactionStatus.Received) {
+      if (currentStatus == TransactionStatus.Received) {
         return BuildCommandTypeList(WorkflowCommandType.Take,
                                     WorkflowCommandType.SetNextStatus,
                                     WorkflowCommandType.AssignTo);
       }
 
-      if (currentStatus == LRSTransactionStatus.Reentry) {
+      if (currentStatus == TransactionStatus.Reentry) {
         return BuildCommandTypeList(WorkflowCommandType.Take,
                                     WorkflowCommandType.SetNextStatus,
                                     WorkflowCommandType.AssignTo);
@@ -369,13 +369,13 @@ namespace Empiria.Land.Transactions.Workflow {
 
       var nextStatus = currentTask.NextStatus;
 
-      if (AnyOf(currentStatus, LRSTransactionStatus.Recording, LRSTransactionStatus.Elaboration) &&
-          nextStatus == LRSTransactionStatus.EndPoint) {
+      if (AnyOf(currentStatus, TransactionStatus.Recording, TransactionStatus.Elaboration) &&
+          nextStatus == TransactionStatus.EndPoint) {
         return BuildCommandTypeList(WorkflowCommandType.Take,
                                     WorkflowCommandType.SetNextStatus);
       }
 
-      if (nextStatus != LRSTransactionStatus.EndPoint) {
+      if (nextStatus != TransactionStatus.EndPoint) {
         return BuildCommandTypeList(WorkflowCommandType.Take,
                                     WorkflowCommandType.ReturnToMe);
       }
@@ -386,18 +386,18 @@ namespace Empiria.Land.Transactions.Workflow {
 
     #region Helper methods
 
-    private void AddRecordingOrElaborationStatus(List<LRSTransactionStatus> list,
+    private void AddRecordingOrElaborationStatus(List<TransactionStatus> list,
                                                  LRSTransactionType type,
                                                  LRSDocumentType docType) {
       if (LRSWorkflowRules.IsRecordingDocumentCase(type, docType)) {
-        list.Add(LRSTransactionStatus.Recording);
+        list.Add(TransactionStatus.Recording);
 
       } else if (LRSWorkflowRules.IsCertificateIssueCase(type, docType)) {
-        list.Add(LRSTransactionStatus.Elaboration);
+        list.Add(TransactionStatus.Elaboration);
 
       } else {
-        list.Add(LRSTransactionStatus.Elaboration);
-        list.Add(LRSTransactionStatus.Recording);
+        list.Add(TransactionStatus.Elaboration);
+        list.Add(TransactionStatus.Recording);
       }
     }
 
