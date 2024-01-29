@@ -76,7 +76,7 @@
               <td style="white-space:nowrap;width:30%"><b><%=transaction.TransactionType.Name%></b></td>
               <td style="white-space:nowrap">Importe:</td>
               <td style="white-space:nowrap;width:30%"><b><%=GetPaymentTotal()%></b>
-                &nbsp; (R: <b><%=transaction.Payments.ReceiptNumbers%>)</b>
+                &nbsp; (R: <b><%=transaction.PaymentData.Payments.ReceiptNumbers%>)</b>
               </td>
             </tr>
             <tr>
@@ -121,7 +121,7 @@
                 <b>Línea de captura del pago:</b>
                 <br />
                 <span style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:12pt">
-                  <%=base.transaction.PaymentOrder.UID%>
+                  <%=base.transaction.PaymentData.PaymentOrder.UID%>
                 </span>
                 <% } %>
                 <br />
