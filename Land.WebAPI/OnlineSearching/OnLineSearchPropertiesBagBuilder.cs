@@ -162,117 +162,13 @@ namespace Empiria.Land.WebApi {
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      propertyBag.Add(new PropertyBagItem("Información del trámite", String.Empty, "section"));
-      propertyBag.Add(new PropertyBagItem("Número de trámite", transaction.UID, "enhanced-text"));
-      propertyBag.Add(new PropertyBagItem("Tipo de trámite", transaction.TransactionType.Name, "bold-text"));
-      propertyBag.Add(new PropertyBagItem("Tipo de documento", transaction.DocumentType.Name));
-      propertyBag.Add(new PropertyBagItem("Solicitado por", transaction.RequestedBy));
+      BuildTransactionMainInfoSection(transaction, propertyBag);
 
-      if (transaction.PresentationTime != ExecutionServer.DateMaxValue) {
-        propertyBag.Add(new PropertyBagItem("Fecha de presentación", GetDateTime(transaction.PresentationTime), "bold-text"));
-      } else {
-        propertyBag.Add(new PropertyBagItem("Fecha de presentación",
-                                            "Este trámite no ha sido ingresado en ventanilla.", "warning-status-text"));
-      }
+      BuildTransactionPaymentSection(transaction, propertyBag);
 
-      if (!transaction.PaymentData.FormerPaymentOrderData.IsEmptyInstance) {
-        propertyBag.Add(new PropertyBagItem("Línea de captura",
-                                            transaction.PaymentData.FormerPaymentOrderData.RouteNumber, "bold-text"));
-      } else {
-        propertyBag.Add(new PropertyBagItem("Boleta de pago", transaction.PaymentData.Payments.ReceiptNumbers));
-      }
+      BuildTransactionStatusSection(transaction, propertyBag, messageUID);
 
-      if (transaction.PaymentData.Payments.Count > 0 && transaction.PaymentData.Payments.Total != decimal.Zero) {
-        propertyBag.Add(new PropertyBagItem("Pago de derechos",
-                                            transaction.PaymentData.Payments.Total.ToString("C2"), "bold-text"));
-
-      } else if (transaction.Services.TotalFee.Total > 0) {
-        propertyBag.Add(new PropertyBagItem("Derechos a pagar",
-                                            transaction.Services.TotalFee.Total.ToString("C2"), "bold-text"));
-
-      } else if (transaction.PaymentData.IsFeeWaiverApplicable) {
-        propertyBag.Add(new PropertyBagItem("Pago de derechos", "Este trámite no requiere pago alguno."));
-      } else {
-        // propertyBag.Add(new PropertyBagItem("Pago de derechos", "Este trámite no pagó derechos", "warning-status-text"));
-
-      }
-
-      if (transaction.PresentationTime == ExecutionServer.DateMaxValue) {
-        // no-op
-      } else if (transaction.Workflow.CurrentStatus == TransactionStatus.Delivered) {
-        propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                            transaction.Workflow.CurrentStatus.GetStatusName(), "ok-status-text"));
-        propertyBag.Add(new PropertyBagItem("Fecha de entrega", GetDateTime(transaction.LastDeliveryTime)));
-
-      } else if (transaction.Workflow.CurrentStatus == TransactionStatus.Returned) {
-        propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                             transaction.Workflow.CurrentStatus.GetStatusName(), "warning-status-text"));
-        propertyBag.Add(new PropertyBagItem("Fecha de devolución",
-                                            GetDateTime(transaction.LastDeliveryTime), "warning-status-text"));
-
-      } else if (transaction.Workflow.CurrentStatus == TransactionStatus.Archived) {
-        propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                            transaction.Workflow.CurrentStatus.GetStatusName(), "ok-status-text"));
-        propertyBag.Add(new PropertyBagItem("Fecha de entrega",
-                                            "Por su naturaleza, este trámite se procesa pero no se entrega al interesado en ventanilla."));
-
-      } else if (LRSWorkflowRules.IsArchivable(transaction)) {
-        propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                            transaction.Workflow.CurrentStatus.GetStatusName(), "in-process-status-text"));
-        propertyBag.Add(new PropertyBagItem("Fecha de entrega", "Este trámite se procesa pero no se entrega al interesado en ventanilla."));
-
-      } else if (transaction.Workflow.CurrentStatus == TransactionStatus.ToDeliver) {
-
-        if (LRSWorkflowRules.IsReadyForElectronicDelivery(transaction, messageUID)) {
-          propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                              "<b>¡Su trámite está listo!</b><br />" +
-                                              "Puede pasar a recoger sus documentos, o mejor aún,<br/>" +
-                                              "recíbalos electrónicamente oprimiendo el botón de abajo."));
-          propertyBag.Add(new PropertyBagItem("Entrega electrónica",
-                                              "ELECTRONIC_DELIVERY_COMMAND", "command"));
-        } else {
-          propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                              "<b>¡Su trámite está listo!</b><br />" +
-                                              "Ya puede pasar a recoger sus documentos.", "ok-status-text"));
-          propertyBag.Add(new PropertyBagItem("Entrega electrónica",
-                                              "Desafortunadamente este trámite no puede entregársele de forma electrónica."));
-
-        }
-
-      } else if (transaction.Workflow.CurrentStatus == TransactionStatus.ToReturn) {
-        propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                            transaction.Workflow.CurrentStatus.GetStatusName(), "warning-status-text"));
-        propertyBag.Add(new PropertyBagItem("Fecha de entrega",
-                                            "Desafortunadamente el trámite no procedió.<br />" +
-                                            "Requiere pasar a recoger su oficio de devolución.", "warning-status-text"));
-
-
-      } else {
-        propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                            transaction.Workflow.CurrentStatus.GetStatusName(), "in-process-status-text"));
-
-        propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada", "Por COVID-19, desafortunadamente no podemos determinarla."));
-
-        //if (transaction.EstimatedDueTime < DateTime.Today) {
-        //  propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada",
-        //                                      transaction.EstimatedDueTime.ToString("dd/MMM/yyyy") + " (atrasado)<br/>" +
-        //                                      "Lo sentimos, este trámite nos ha llevado hacerlo un poco más de lo normal.",
-        //                                      "warning-status-text"));
-        //} else {
-        //  propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada",
-        //                                      transaction.EstimatedDueTime.ToString("dd/MMM/yyyy")));
-        //}
-      }
-
-      if (transaction.Services.Count > 0) {
-        propertyBag.Add(new PropertyBagItem("Conceptos", String.Empty, "section"));
-        foreach (var service in transaction.Services) {
-          string value = service.Fee.Total == 0m ? service.TreasuryCode.Name : service.Fee.Total.ToString("C2");
-
-          propertyBag.Add(new PropertyBagItem(service.ServiceType.DisplayName,
-                                              value));
-        }
-      }
+      BuildTransactionServicesSection(transaction, propertyBag);
 
       if ((transaction.Workflow.CurrentStatus != TransactionStatus.Delivered &&
            transaction.Workflow.CurrentStatus != TransactionStatus.Archived) ||
@@ -280,24 +176,10 @@ namespace Empiria.Land.WebApi {
         return propertyBag;
       }
 
-      propertyBag.Add(new PropertyBagItem("Documentos inscritos y certificados expedidos bajo este trámite",
-                                           String.Empty, "section"));
-
-      if (!transaction.Document.IsEmptyInstance) {
-        propertyBag.Add(new PropertyBagItem("Documento inscrito", transaction.Document.DocumentType.DisplayName + "<br/>" +
-                                                                  GetDocumentUIDAsLink(transaction.Document.UID) +
-                                                                  GetPrintableDocumentLink(transaction.Document.UID, transaction.Workflow.CurrentStatus, messageUID)));
-      }
-
-      foreach (var certificate in transaction.GetIssuedCertificates()) {
-        propertyBag.Add(new PropertyBagItem("Certificado", certificate.CertificateType.DisplayName + "<br/>" +
-                                                           GetCertificateUIDAsLink(certificate.UID) +
-                                                           GetPrintableCertificateLink(certificate.UID, transaction.Workflow.CurrentStatus, messageUID)));
-      }
+      BuildTransactionDocumentsSection(transaction, propertyBag, messageUID);
 
       return propertyBag;
     }
-
 
     #endregion Internal methods
 
@@ -584,6 +466,148 @@ namespace Empiria.Land.WebApi {
 
       return items;
     }
+
+
+    private void BuildTransactionDocumentsSection(LRSTransaction transaction, List<PropertyBagItem> propertyBag, string messageUID) {
+      propertyBag.Add(new PropertyBagItem("Documentos inscritos y certificados expedidos bajo este trámite",
+                                           String.Empty, "section"));
+
+      if (!transaction.Document.IsEmptyInstance) {
+        propertyBag.Add(new PropertyBagItem("Documento inscrito", transaction.Document.DocumentType.DisplayName + "<br/>" +
+                                                                  GetDocumentUIDAsLink(transaction.Document.UID) +
+                                                                  GetPrintableDocumentLink(transaction.Document.UID, transaction.Workflow.CurrentStatus, messageUID)));
+      }
+
+      foreach (var certificate in transaction.GetIssuedCertificates()) {
+        propertyBag.Add(new PropertyBagItem("Certificado", certificate.CertificateType.DisplayName + "<br/>" +
+                                                           GetCertificateUIDAsLink(certificate.UID) +
+                                                           GetPrintableCertificateLink(certificate.UID, transaction.Workflow.CurrentStatus, messageUID)));
+      }
+    }
+
+
+    private void BuildTransactionServicesSection(LRSTransaction transaction, List<PropertyBagItem> propertyBag) {
+      if (transaction.Services.Count == 0) {
+        return;
+      }
+      propertyBag.Add(new PropertyBagItem("Conceptos", String.Empty, "section"));
+      foreach (var service in transaction.Services) {
+        string value = service.Fee.Total == 0m ? service.TreasuryCode.Name : service.Fee.Total.ToString("C2");
+
+        propertyBag.Add(new PropertyBagItem(service.ServiceType.DisplayName,
+                                            value));
+      }
+    }
+
+
+    private void BuildTransactionStatusSection(LRSTransaction transaction, List<PropertyBagItem> propertyBag, string messageUID) {
+      if (transaction.PresentationTime == ExecutionServer.DateMaxValue) {
+        // no-op
+      } else if (transaction.Workflow.CurrentStatus == TransactionStatus.Delivered) {
+        propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                            transaction.Workflow.CurrentStatus.GetStatusName(), "ok-status-text"));
+        propertyBag.Add(new PropertyBagItem("Fecha de entrega", GetDateTime(transaction.LastDeliveryTime)));
+
+      } else if (transaction.Workflow.CurrentStatus == TransactionStatus.Returned) {
+        propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                             transaction.Workflow.CurrentStatus.GetStatusName(), "warning-status-text"));
+        propertyBag.Add(new PropertyBagItem("Fecha de devolución",
+                                            GetDateTime(transaction.LastDeliveryTime), "warning-status-text"));
+
+      } else if (transaction.Workflow.CurrentStatus == TransactionStatus.Archived) {
+        propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                            transaction.Workflow.CurrentStatus.GetStatusName(), "ok-status-text"));
+        propertyBag.Add(new PropertyBagItem("Fecha de entrega",
+                                            "Por su naturaleza, este trámite se procesa pero no se entrega al interesado en ventanilla."));
+
+      } else if (LRSWorkflowRules.IsArchivable(transaction)) {
+        propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                            transaction.Workflow.CurrentStatus.GetStatusName(), "in-process-status-text"));
+        propertyBag.Add(new PropertyBagItem("Fecha de entrega", "Este trámite se procesa pero no se entrega al interesado en ventanilla."));
+
+      } else if (transaction.Workflow.CurrentStatus == TransactionStatus.ToDeliver) {
+
+        if (LRSWorkflowRules.IsReadyForElectronicDelivery(transaction, messageUID)) {
+          propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                              "<b>¡Su trámite está listo!</b><br />" +
+                                              "Puede pasar a recoger sus documentos, o mejor aún,<br/>" +
+                                              "recíbalos electrónicamente oprimiendo el botón de abajo."));
+          propertyBag.Add(new PropertyBagItem("Entrega electrónica",
+                                              "ELECTRONIC_DELIVERY_COMMAND", "command"));
+        } else {
+          propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                              "<b>¡Su trámite está listo!</b><br />" +
+                                              "Ya puede pasar a recoger sus documentos.", "ok-status-text"));
+          propertyBag.Add(new PropertyBagItem("Entrega electrónica",
+                                              "Desafortunadamente este trámite no puede entregársele de forma electrónica."));
+
+        }
+
+      } else if (transaction.Workflow.CurrentStatus == TransactionStatus.ToReturn) {
+        propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                            transaction.Workflow.CurrentStatus.GetStatusName(), "warning-status-text"));
+        propertyBag.Add(new PropertyBagItem("Fecha de entrega",
+                                            "Desafortunadamente el trámite no procedió.<br />" +
+                                            "Requiere pasar a recoger su oficio de devolución.", "warning-status-text"));
+
+
+      } else {
+        propertyBag.Add(new PropertyBagItem("Estado del trámite",
+                                            transaction.Workflow.CurrentStatus.GetStatusName(), "in-process-status-text"));
+
+        propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada", "Por COVID-19, desafortunadamente no podemos determinarla."));
+
+        //if (transaction.EstimatedDueTime < DateTime.Today) {
+        //  propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada",
+        //                                      transaction.EstimatedDueTime.ToString("dd/MMM/yyyy") + " (atrasado)<br/>" +
+        //                                      "Lo sentimos, este trámite nos ha llevado hacerlo un poco más de lo normal.",
+        //                                      "warning-status-text"));
+        //} else {
+        //  propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada",
+        //                                      transaction.EstimatedDueTime.ToString("dd/MMM/yyyy")));
+        //}
+      }
+    }
+
+    private void BuildTransactionPaymentSection(LRSTransaction transaction, List<PropertyBagItem> propertyBag) {
+      if (!transaction.PaymentData.FormerPaymentOrderData.IsEmptyInstance) {
+        propertyBag.Add(new PropertyBagItem("Línea de captura",
+                                            transaction.PaymentData.FormerPaymentOrderData.RouteNumber, "bold-text"));
+      } else {
+        propertyBag.Add(new PropertyBagItem("Boleta de pago", transaction.PaymentData.Payments.ReceiptNumbers));
+      }
+
+      if (transaction.PaymentData.Payments.Count > 0 && transaction.PaymentData.Payments.Total != decimal.Zero) {
+        propertyBag.Add(new PropertyBagItem("Pago de derechos",
+                                            transaction.PaymentData.Payments.Total.ToString("C2"), "bold-text"));
+
+      } else if (transaction.Services.TotalFee.Total > 0) {
+        propertyBag.Add(new PropertyBagItem("Derechos a pagar",
+                                            transaction.Services.TotalFee.Total.ToString("C2"), "bold-text"));
+
+      } else if (transaction.PaymentData.IsFeeWaiverApplicable) {
+        propertyBag.Add(new PropertyBagItem("Pago de derechos", "Este trámite no requiere pago alguno."));
+      } else {
+        // propertyBag.Add(new PropertyBagItem("Pago de derechos", "Este trámite no pagó derechos", "warning-status-text"));
+
+      }
+    }
+
+    private void BuildTransactionMainInfoSection(LRSTransaction transaction, List<PropertyBagItem> propertyBag) {
+      propertyBag.Add(new PropertyBagItem("Información del trámite", String.Empty, "section"));
+      propertyBag.Add(new PropertyBagItem("Número de trámite", transaction.UID, "enhanced-text"));
+      propertyBag.Add(new PropertyBagItem("Tipo de trámite", transaction.TransactionType.Name, "bold-text"));
+      propertyBag.Add(new PropertyBagItem("Tipo de documento", transaction.DocumentType.Name));
+      propertyBag.Add(new PropertyBagItem("Solicitado por", transaction.RequestedBy));
+
+      if (transaction.PresentationTime != ExecutionServer.DateMaxValue) {
+        propertyBag.Add(new PropertyBagItem("Fecha de presentación", GetDateTime(transaction.PresentationTime), "bold-text"));
+      } else {
+        propertyBag.Add(new PropertyBagItem("Fecha de presentación",
+                                            "Este trámite no ha sido ingresado en ventanilla.", "warning-status-text"));
+      }
+    }
+
 
     #endregion Private methods
 
