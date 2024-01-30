@@ -152,15 +152,6 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public TimeSpan OfficeWorkElapsedTime {
-      get {
-        if (LRSWorkflowRules.IsStatusOfficeWork(this.CurrentStatus)) {
-          return this.ElapsedTime;
-        } else {
-          return TimeSpan.Zero;
-        }
-      }
-    }
 
     [DataField("TrackNotes")]
     public string Notes {

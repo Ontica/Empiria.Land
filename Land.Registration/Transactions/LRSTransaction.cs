@@ -16,7 +16,6 @@ using Empiria.Land.Data;
 using Empiria.Land.Providers;
 
 using Empiria.Land.Certification;
-using Empiria.Land.Registration.Forms;
 
 using Empiria.Land.Transactions;
 
@@ -93,6 +92,7 @@ namespace Empiria.Land.Registration.Transactions {
     static public LRSTransaction TryParseForInstrument(int instrumentId) {
       return BaseObject.TryParse<LRSTransaction>($"InstrumentId = {instrumentId}", true);
     }
+
 
     static public FixedList<LRSTransaction> GetList(string filter, string orderBy, int pageSize) {
       return TransactionData.GetTransactionsList(filter, orderBy, pageSize);
@@ -339,13 +339,6 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public bool ComesFromAgencyExternalFilingSystem {
-      get {
-        return !String.IsNullOrWhiteSpace(this.ExternalTransactionNo) && !this.Agency.IsEmptyInstance;
-      }
-    }
-
-
     public TransactionControlData ControlData {
       get {
         return new TransactionControlData(this);
@@ -487,11 +480,6 @@ namespace Empiria.Land.Registration.Transactions {
       temp += "||";
 
       return temp;
-    }
-
-
-    public IForm GetForm() {
-      return FormsProvider.GetForm(this);
     }
 
 

@@ -162,7 +162,7 @@ namespace Empiria.Land.WebApi {
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      if (!transaction.Workflow.IsReadyForElectronicDelivery(messageUID)) {
+      if (!(LRSWorkflowRules.IsReadyForElectronicDelivery(transaction, messageUID))) {
         throw new ResourceNotFoundException("Land.Transaction.NotReadyForElectronicalDelivery",
                                             "El trámite {0} NO está disponible para entrega electrónica.\n\n" +
                                             "Posiblemente su estado cambió después de que usted recibió el mensaje.\n" +

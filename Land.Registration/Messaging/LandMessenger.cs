@@ -285,7 +285,7 @@ namespace Empiria.Land.Messaging {
 
 
     static private void NotifyAgency(LRSTransaction transaction, TransactionEventType eventType) {
-      if (transaction.ComesFromAgencyExternalFilingSystem) {
+      if (transaction.ControlData.ComesFromAgencyExternalFilingSystem) {
         NotifyAgencyExternalFilingSystem(transaction, eventType);
 
         return;

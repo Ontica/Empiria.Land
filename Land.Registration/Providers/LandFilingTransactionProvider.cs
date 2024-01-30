@@ -43,9 +43,8 @@ namespace Empiria.Land.Providers {
 
     #region Methods
 
-
     public IPayable CreateTransaction(EFilingRequest filingRequest) {
-      Assertion.Require(filingRequest, "filingRequest");
+      Assertion.Require(filingRequest, nameof(filingRequest));
 
       Procedure procedure = filingRequest.Procedure;
 
@@ -73,26 +72,26 @@ namespace Empiria.Land.Providers {
 
 
     public void EventProcessed(string transactionUID, string eventName) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
       Assertion.Require(transaction, nameof(transaction));
 
-      if (transaction.Workflow.IsReadyForDeliveryOrReturn) {
-        transaction.Workflow.DeliveredElectronicallyToAgency();
+      if (LRSWorkflowRules.IsReadyForDeliveryOrReturn(transaction)) {
+        transaction.Workflow.DeliverElectronicallyToAgency();
       }
     }
 
 
     public FixedList<EFilingDocument> GetOutputDocuments(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
       Assertion.Require(transaction, nameof(transaction));
 
-      if (!transaction.Workflow.IsFinished) {
+      if (!LRSWorkflowRules.IsFinished(transaction)) {
         return new FixedList<EFilingDocument>();
       }
 
@@ -117,7 +116,7 @@ namespace Empiria.Land.Providers {
 
 
     public IFilingTransaction GetTransaction(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
@@ -126,7 +125,7 @@ namespace Empiria.Land.Providers {
 
 
     public IPayable GetTransactionAsPayable(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
@@ -137,7 +136,7 @@ namespace Empiria.Land.Providers {
 
 
     public IFilingTransaction SetPayment(string transactionUID, string receiptNo) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
@@ -151,8 +150,8 @@ namespace Empiria.Land.Providers {
 
     public IFilingTransaction SetPaymentOrder(IPayable transaction,
                                               FormerPaymentOrderDTO paymentOrderData) {
-      Assertion.Require(transaction, "transaction");
-      Assertion.Require(paymentOrderData, "paymentOrderData");
+      Assertion.Require(transaction, nameof(transaction));
+      Assertion.Require(paymentOrderData, nameof(paymentOrderData));
 
       transaction.SetFormerPaymentOrderData(paymentOrderData);
 
@@ -161,7 +160,7 @@ namespace Empiria.Land.Providers {
 
 
     public IFilingTransaction SubmitTransaction(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
@@ -174,7 +173,7 @@ namespace Empiria.Land.Providers {
 
 
     public FormerPaymentOrderDTO TryGetPaymentOrderData(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
@@ -191,7 +190,7 @@ namespace Empiria.Land.Providers {
 
 
     public IFilingTransaction UpdateTransaction(EFilingRequest filingRequest) {
-      Assertion.Require(filingRequest, "filingRequest");
+      Assertion.Require(filingRequest, nameof(filingRequest));
 
       Assertion.Require(filingRequest.HasTransaction, "filingRequest.HasTransaction must be true.");
 
@@ -267,7 +266,7 @@ namespace Empiria.Land.Providers {
         this.Id = transaction.Id;
         this.UID = transaction.UID;
         this.PresentationTime = transaction.PresentationTime;
-        this.StatusName = transaction.Workflow.CurrentStatusName;
+        this.StatusName = transaction.Workflow.CurrentStatus.GetStatusName();
       }
 
       public int Id {

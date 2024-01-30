@@ -79,69 +79,12 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public string CurrentStatusName {
-      get {
-        return this.CurrentStatus.GetStatusName();
-      }
-    }
-
-
-    public bool DeliveredOrReturned {
-      get {
-        return (this.CurrentStatus == TransactionStatus.Delivered ||
-                this.CurrentStatus == TransactionStatus.Returned);
-      }
-    }
-
-
-    public bool IsArchivable {
-      get {
-        return LRSWorkflowRules.IsArchivable(_transaction.TransactionType,
-                                             _transaction.DocumentType);
-      }
-    }
-
-    public bool IsEmptyServicesTransaction {
-      get {
-        return LRSWorkflowRules.IsEmptyServicesTransaction(_transaction);
-      }
-    }
-
-
-    public bool IsFinished {
-      get {
-        return (this.DeliveredOrReturned ||
-                this.CurrentStatus == TransactionStatus.Archived);
-      }
-    }
-
-
-    public bool IsReadyForDeliveryOrReturn {
-      get {
-        return (this.CurrentStatus == TransactionStatus.ToDeliver ||
-                this.CurrentStatus == TransactionStatus.ToReturn);
-      }
-    }
-
-
-    public bool IsReadyForReentry {
-      get {
-        return LRSWorkflowRules.IsReadyForReentry(_transaction);
-      }
-    }
-
-
     public LRSWorkflowTaskList Tasks {
       get {
         return taskList.Value;
       }
     }
 
-    public bool CanBeDeleted {
-      get {
-        return (this.CurrentStatus == TransactionStatus.Payment);
-      }
-    }
 
     #endregion Properties
 
@@ -149,7 +92,8 @@ namespace Empiria.Land.Registration.Transactions {
 
     internal void Delete() {
 
-      Assertion.Require(this.CanBeDeleted, "This transaction cannot be deleted.");
+      Assertion.Require(LRSWorkflowRules.CanBeDeleted(_transaction),
+                        "This transaction workflow cannot be deleted.");
 
       this.Close(TransactionStatus.Deleted,
             $"Deleted by user {ExecutionServer.CurrentContact.FullName} on {DateTime.Now}.");
@@ -157,9 +101,9 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public void DeliveredElectronicallyToAgency() {
+    public void DeliverElectronicallyToAgency() {
 
-      Assertion.Require(this.IsReadyForDeliveryOrReturn,
+      Assertion.Require(LRSWorkflowRules.IsReadyForDeliveryOrReturn(_transaction),
         $"Transaction {_transaction.UID} is not ready to be electronically delivered to the agency.");
 
       if (this.CurrentStatus == TransactionStatus.ToDeliver) {
@@ -179,78 +123,25 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public void DeliverElectronically(string messageUID) {
-      if (!IsReadyForElectronicDelivery(messageUID)) {
+    public void DeliverElectronicallyToRequester(string messageUID) {
+
+      if (!LRSWorkflowRules.IsReadyForElectronicDelivery(_transaction, messageUID)) {
         throw new LandRegistrationException(LandRegistrationException.Msg.NotReadyForElectronicalDelivery,
                                             _transaction.UID);
       }
+
       this.Close(TransactionStatus.Delivered,
                  "Entregado al interesado a través del portal de consultas.",
                  LRSWorkflowRules.InterestedContact, DateTime.Now);
     }
 
 
-    public bool IsReadyForElectronicDelivery(string messageUID) {
-      if (String.IsNullOrWhiteSpace(messageUID)) {
-        return false;
+    private LRSWorkflowTask _currentTask = null;
+    public LRSWorkflowTask GetCurrentTask() {
+      if (_currentTask == null) {
+        _currentTask = WorkflowData.GetWorkflowLastTask(_transaction);
       }
-      if (!this.IsReadyForDeliveryOrReturn) {
-        return false;
-      }
-      if (LRSWorkflowRules.IsDigitalizable(_transaction.TransactionType,
-                                            _transaction.DocumentType)) {
-        return false;
-      }
-      return false;
-      // return true;
-    }
-
-
-    public void Receive(string notes) {
-      if (this.CurrentStatus != TransactionStatus.Payment) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
-                                            _transaction.UID);
-      }
-      if (_transaction.PaymentData.Payments.Count == 0 && !_transaction.PaymentData.IsFeeWaiverApplicable
-          && !this.IsEmptyServicesTransaction) {
-        throw new NotImplementedException("Este trámite todavía no tiene registrada una boleta de pago.");
-      }
-
-
-      //    using (var context = StorageContext.Open()) {
-      _transaction.SetInternalControlNumber();
-      _transaction.PresentationTime = DateTime.Now;
-      _transaction.ClosingTime = ExecutionServer.DateMaxValue;
-
-      this.CurrentStatus = TransactionStatus.Received;
-
-      LRSWorkflowTask currentTask = this.GetCurrentTask();
-      currentTask.NextStatus = TransactionStatus.Received;
-      currentTask.NextContact = LRSWorkflowRules.InterestedContact;
-
-      currentTask = currentTask.CreateNext(notes);
-      currentTask.NextStatus = LRSWorkflowRules.GetNextStatusAfterReceive(_transaction);
-      currentTask.Status = WorkflowTaskStatus.OnDelivery;
-      currentTask.EndProcessTime = currentTask.CheckInTime;
-      currentTask.AssignedBy = LRSWorkflowRules.InterestedContact;
-      currentTask.Save();
-
-      _transaction.Save();
-      this.ResetTasksList();
-
-      LandMessenger.Notify(_transaction, TransactionEventType.TransactionReceived);
-
-      //  }
-    }
-
-
-    public void ReturnToMe() {
-      LRSWorkflowTask currentTask = this.GetCurrentTask();
-
-      currentTask.SetPending();
-
-      _transaction.Save();
-      ResetTasksList();
+      return _currentTask;
     }
 
 
@@ -283,15 +174,55 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
+    public void PullToControlDesk(string notes) {
+      if (notes.Length == 0) {
+        notes = "Se trajo a la mesa de control";
+      }
+
+      this.SetNextStatus(TransactionStatus.Control, Person.Empty, notes);
+
+      this.Take(String.Empty);
+    }
+
+
+    public void Receive(string notes) {
+      LRSWorkflowRules.CanBeReceived(_transaction);
+
+
+      _transaction.SetInternalControlNumber();
+      _transaction.PresentationTime = DateTime.Now;
+      _transaction.ClosingTime = ExecutionServer.DateMaxValue;
+
+      this.CurrentStatus = TransactionStatus.Received;
+
+      LRSWorkflowTask currentTask = this.GetCurrentTask();
+      currentTask.NextStatus = TransactionStatus.Received;
+      currentTask.NextContact = LRSWorkflowRules.InterestedContact;
+
+      currentTask = currentTask.CreateNext(notes);
+      currentTask.NextStatus = LRSWorkflowRules.GetNextStatusAfterReceive(_transaction);
+      currentTask.Status = WorkflowTaskStatus.OnDelivery;
+      currentTask.EndProcessTime = currentTask.CheckInTime;
+      currentTask.AssignedBy = LRSWorkflowRules.InterestedContact;
+      currentTask.Save();
+
+      _transaction.Save();
+
+      this.ResetTasksList();
+
+      LandMessenger.Notify(_transaction, TransactionEventType.TransactionReceived);
+    }
+
+
     public void Reentry() {
-      if (!this.IsReadyForReentry) {
+      if (!LRSWorkflowRules.IsReadyForReentry(_transaction)) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
                                             _transaction.UID);
       }
 
-      // this.AssertGraceDaysForReentry();
-      //this.AssertRecordingActsPrelation();
-      //this.AssertDigitalizedDocument();
+      // LRSWorkflowRules.AssertGraceDaysForReentry(_transaction);
+      // LRSWorkflowRules.AssertRecordingActsPrelation(_transaction);
+      // LRSWorkflowRules.AssertDigitalizedDocument(_transaction);
 
       this.CurrentStatus = TransactionStatus.Reentry;
       _transaction.ClosingTime = ExecutionServer.DateMaxValue;
@@ -309,6 +240,16 @@ namespace Empiria.Land.Registration.Transactions {
       this.ResetTasksList();
 
       LandMessenger.Notify(_transaction, TransactionEventType.TransactionReentered);
+    }
+
+
+    public void ReturnToMe() {
+      LRSWorkflowTask currentTask = this.GetCurrentTask();
+
+      currentTask.SetPending();
+
+      _transaction.Save();
+      ResetTasksList();
     }
 
 
@@ -338,6 +279,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+
     public void Take(string notes) {
       var responsible = ExecutionServer.CurrentContact;
 
@@ -361,7 +303,9 @@ namespace Empiria.Land.Registration.Transactions {
       }
 
       this.CurrentStatus = currentTask.NextStatus;
+
       currentTask.CreateNext(notes, responsible, date);
+
       ResetTasksList();
 
       if (this.CurrentStatus == TransactionStatus.ToDeliver ||
@@ -369,13 +313,16 @@ namespace Empiria.Land.Registration.Transactions {
           this.CurrentStatus == TransactionStatus.Archived) {
         _transaction.ClosingTime = currentTask.EndProcessTime;
       }
+
       _transaction.Save();
+
       if (this.CurrentStatus == TransactionStatus.ToDeliver) {
         LandMessenger.Notify(_transaction, TransactionEventType.TransactionReadyToDelivery);
       } else if (this.CurrentStatus == TransactionStatus.ToReturn) {
         LandMessenger.Notify(_transaction, TransactionEventType.TransactionReturned);
       }
     }
+
 
     public void Undelete() {
       LRSWorkflowTask currentTask = this.GetCurrentTask();
@@ -388,101 +335,13 @@ namespace Empiria.Land.Registration.Transactions {
         throw new LandRegistrationException(LandRegistrationException.Msg.NextStatusCantBeEndPoint,
                                             currentTask.Id);
       }
+
       _transaction.Save();
-    }
-
-
-    private LRSWorkflowTask _currentTask = null;
-    public LRSWorkflowTask GetCurrentTask() {
-      if (_currentTask == null) {
-        _currentTask = WorkflowData.GetWorkflowLastTask(_transaction);
-      }
-      return _currentTask;
-    }
-
-
-    public void PullToControlDesk(string notes) {
-      if (notes.Length == 0) {
-        notes = "Se trajo a la mesa de control";
-      }
-      this.SetNextStatus(TransactionStatus.Control,
-                         Person.Empty, notes);
-      this.Take(String.Empty);
     }
 
     #endregion Public methods
 
     #region Private methods
-
-    private void AssertDigitalizedDocument() {
-      if (!LRSWorkflowRules.IsDigitalizable(_transaction.TransactionType,
-                                            _transaction.DocumentType)) {
-        return;
-      }
-
-      if (_transaction.Document.IsEmptyInstance) {
-        return;
-      }
-
-      if (_transaction.Document.Imaging.HasImageSet) {
-        return;
-      }
-
-      if (ExecutionServer.CurrentUserId == 2) {
-        return;
-      }
-
-      // int graceDaysForImaging = ConfigurationData.GetInteger("GraceDaysForImaging");
-      int graceDaysForImaging = 90;
-
-      DateTime lastDate = _transaction.Document.AuthorizationTime;
-
-      if (lastDate.AddDays(graceDaysForImaging) <= DateTime.Now) {
-        Assertion.RequireFail("No es posible reingresar este trámite debido a que el documento " +
-                              "que se registró aún no ha sido digitalizado y ya " +
-                              $"transcurrieron más de {graceDaysForImaging} días desde que éste se cerró.\n\n" +
-                              "Favor de preguntar en la mesa de armado acerca de este documento.");
-      }
-    }
-
-
-    private void AssertGraceDaysForReentry() {
-      // int graceDaysForReentry = ConfigurationData.GetInteger("GraceDaysForReentry");
-
-      if (ExecutionServer.CurrentUserId == 2) {
-        return;
-      }
-
-      int graceDaysForReentry = 10;
-
-      DateTime lastDate = _transaction.PresentationTime;
-
-      //if (_transaction.LastReentryTime != ExecutionServer.DateMaxValue) {
-      //  lastDate = _transaction.LastReentryTime;
-      //}
-      if (!_transaction.Document.IsEmptyInstance) {
-        lastDate = _transaction.Document.AuthorizationTime;
-      }
-
-      if (lastDate.AddDays(graceDaysForReentry) <= DateTime.Now) {
-        Assertion.RequireFail("Por motivos de seguridad y calidad en el registro de la información, " +
-                             $"no es posible reingresar trámites después de {graceDaysForReentry} días contados " +
-                              "a partir de su fecha de presentación original, de su fecha de registro, o bien, " +
-                              "de la fecha del último reingreso.\n\n" +
-                              "En su lugar se debe optar por registrar un nuevo trámite.");
-      }
-    }
-
-
-    private void AssertRecordingActsPrelation() {
-      if (_transaction.Document.IsEmptyInstance || _transaction.Document.IsEmptyDocumentType) {
-        return;
-      }
-      foreach (var recordingAct in _transaction.Document.RecordingActs) {
-        recordingAct.Validator.AssertIsLastInPrelationOrder();
-      }
-    }
-
 
     private void Close(TransactionStatus closeStatus, string notes) {
       var responsible = ExecutionServer.CurrentContact;
@@ -502,10 +361,12 @@ namespace Empiria.Land.Registration.Transactions {
       ResetTasksList();
 
       currentTask.Notes = notes;
+
       currentTask.Close(date);
 
       _transaction.LastDeliveryTime = currentTask.EndProcessTime;
       this.CurrentStatus = closeStatus;
+
       _transaction.Save();
 
       if (closeStatus == TransactionStatus.Archived) {
@@ -515,6 +376,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     private void ResetTasksList() {
       taskList = new Lazy<LRSWorkflowTaskList>(() => LRSWorkflowTaskList.Parse(_transaction));
+
       _currentTask = null;
     }
 

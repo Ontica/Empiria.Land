@@ -19,7 +19,7 @@ namespace Empiria.Land.WebApi {
     internal void DeliverTransaction(string transactionUID, string messageUID) {
       var transaction = LRSTransaction.TryParse(transactionUID, true);
 
-      transaction.Workflow.DeliverElectronically(messageUID);
+      transaction.Workflow.DeliverElectronicallyToRequester(messageUID);
     }
 
   }  // class ElectronicDeliveryService

@@ -27,14 +27,9 @@ namespace Empiria.Land.Transactions.Workflow {
     }
 
 
-    internal bool IsInRole(Contact user, WorkflowRole role) {
-      return AuthorizationService.IsSubjectInRole(user, $"{role}");
-    }
-
-
     public bool IsApplicable(Contact user, WorkflowCommandType commandType) {
-      Assertion.Require(user, "user");
-      Assertion.Require(commandType, "commandType");
+      Assertion.Require(user, nameof(user));
+      Assertion.Require(commandType, nameof(commandType));
 
       switch (commandType) {
         // case WorkflowCommandType.AssignTo:
@@ -67,9 +62,9 @@ namespace Empiria.Land.Transactions.Workflow {
     public bool IsApplicable(WorkflowCommandType commandType,
                              LRSTransaction transaction,
                              Contact user) {
-      Assertion.Require(commandType, "commandType");
-      Assertion.Require(transaction, "transaction");
-      Assertion.Require(user, "user");
+      Assertion.Require(commandType, nameof(commandType));
+      Assertion.Require(transaction, nameof(transaction));
+      Assertion.Require(user, nameof(user));
 
       var task = transaction.Workflow.GetCurrentTask();
       var nextStatus = transaction.Workflow.GetCurrentTask().NextStatus;
@@ -115,38 +110,38 @@ namespace Empiria.Land.Transactions.Workflow {
     }
 
 
+    internal bool IsInRole(Contact user, WorkflowRole role) {
+      return AuthorizationService.IsSubjectInRole(user, $"{role}");
+    }
+
+
     public FixedList<TransactionStatus> NextStatusList() {
-      List<TransactionStatus> list = new List<TransactionStatus>();
-
-      list.Add(TransactionStatus.Control);
-      list.Add(TransactionStatus.Qualification);
-      list.Add(TransactionStatus.Recording);
-      list.Add(TransactionStatus.Elaboration);
-      list.Add(TransactionStatus.Revision);
-      list.Add(TransactionStatus.OnSign);
-      list.Add(TransactionStatus.ToDeliver);
-      list.Add(TransactionStatus.ToReturn);
-
-      return list.ToFixedList();
+      return new List<TransactionStatus> {
+        TransactionStatus.Control,
+        TransactionStatus.Qualification,
+        TransactionStatus.Recording,
+        TransactionStatus.Elaboration,
+        TransactionStatus.Revision,
+        TransactionStatus.OnSign,
+        TransactionStatus.ToDeliver,
+        TransactionStatus.ToReturn
+      }.ToFixedList();
     }
 
 
     public FixedList<TransactionStatus> NextStatusList(LRSTransaction transaction) {
-      Assertion.Require(transaction, "transaction");
+      Assertion.Require(transaction, nameof(transaction));
 
       var currentStatus = transaction.Workflow.GetCurrentTask().CurrentStatus;
 
-      return NextStatusList(transaction.TransactionType,
-                            transaction.DocumentType,
-                            currentStatus).ToFixedList();
+      return NextStatusList(transaction, currentStatus).ToFixedList();
     }
 
 
-    private List<TransactionStatus> NextStatusList(LRSTransactionType type,
-                                                      LRSDocumentType docType,
-                                                      TransactionStatus currentStatus) {
-      Assertion.Require(type, "type");
-      Assertion.Require(docType, "docType");
+    private List<TransactionStatus> NextStatusList(LRSTransaction transaction,
+                                                   TransactionStatus currentStatus) {
+      Assertion.Require(transaction.TransactionType, "type");
+      Assertion.Require(transaction.DocumentType, "docType");
 
       List<TransactionStatus> list = new List<TransactionStatus>();
 
@@ -165,7 +160,7 @@ namespace Empiria.Land.Transactions.Workflow {
         case TransactionStatus.Process:
         case TransactionStatus.Control:
           // Certificado || Cancelación || Copia simple
-          if (type.Id == 701 || docType.Id == 734) {
+          if (LRSWorkflowRules.IsForElaborationOnly(transaction)) {
             list.Add(TransactionStatus.Elaboration);
           } else {
             list.Add(TransactionStatus.Qualification);
@@ -178,7 +173,7 @@ namespace Empiria.Land.Transactions.Workflow {
 
           list.Add(TransactionStatus.ToReturn);
 
-          if (LRSWorkflowRules.IsCertificateIssueCase(type, docType)) {
+          if (LRSWorkflowRules.IsCertificateIssueCase(transaction)) {
             list.Add(TransactionStatus.ToDeliver);
           }
           break;
@@ -203,10 +198,11 @@ namespace Empiria.Land.Transactions.Workflow {
           list.Add(TransactionStatus.Control);
 
           list.Add(TransactionStatus.ToReturn);
-          if (LRSWorkflowRules.IsArchivable(type, docType)) {
+
+          if (LRSWorkflowRules.IsArchivable(transaction)) {
             list.Add(TransactionStatus.Archived);
           }
-          if (docType.Id == 728) {
+          if (transaction.DocumentType.Id == 728) {
             list.Add(TransactionStatus.OnSign);
           }
 
@@ -225,7 +221,7 @@ namespace Empiria.Land.Transactions.Workflow {
 
           list.Add(TransactionStatus.OnSign);
 
-          if (type.Id == 701) {
+          if (LRSWorkflowRules.IsForElaborationOnly(transaction)) {
             list.Add(TransactionStatus.Elaboration);
           } else {
             list.Add(TransactionStatus.Qualification);
@@ -233,7 +229,7 @@ namespace Empiria.Land.Transactions.Workflow {
             list.Add(TransactionStatus.Elaboration);
           }
 
-          if (LRSWorkflowRules.IsArchivable(type, docType)) {
+          if (LRSWorkflowRules.IsArchivable(transaction)) {
             list.Add(TransactionStatus.Archived);
           }
 
@@ -246,7 +242,8 @@ namespace Empiria.Land.Transactions.Workflow {
         case TransactionStatus.OnSign:
           list.Add(TransactionStatus.ToDeliver);
           list.Add(TransactionStatus.Revision);
-          if (type.Id == 701) {
+
+          if (LRSWorkflowRules.IsForElaborationOnly(transaction)) {
             list.Add(TransactionStatus.Elaboration);
           } else {
             list.Add(TransactionStatus.Qualification);
@@ -261,16 +258,18 @@ namespace Empiria.Land.Transactions.Workflow {
 
         case TransactionStatus.Digitalization:
           list.Add(TransactionStatus.Delivered);
-          if (LRSWorkflowRules.IsDigitalizable(type, docType)) {
+
+          if (LRSWorkflowRules.IsDigitalizable(transaction)) {
             list.Add(TransactionStatus.Digitalization);
           }
+
           list.Add(TransactionStatus.Control);
 
           break;
 
         case TransactionStatus.ToDeliver:
           list.Add(TransactionStatus.Control);
-          AddRecordingOrElaborationStatus(list, type, docType);
+          AddRecordingOrElaborationStatus(list, transaction);
           list.Add(TransactionStatus.Juridic);
           list.Add(TransactionStatus.OnSign);
 
@@ -309,7 +308,7 @@ namespace Empiria.Land.Transactions.Workflow {
 
 
     public FixedList<WorkflowCommandType> WorkflowCommandTypeCandidates(LRSTransaction transaction) {
-      Assertion.Require(transaction, "transaction");
+      Assertion.Require(transaction, nameof(transaction));
 
       var currentTask = transaction.Workflow.GetCurrentTask();
 
@@ -387,12 +386,11 @@ namespace Empiria.Land.Transactions.Workflow {
     #region Helper methods
 
     private void AddRecordingOrElaborationStatus(List<TransactionStatus> list,
-                                                 LRSTransactionType type,
-                                                 LRSDocumentType docType) {
-      if (LRSWorkflowRules.IsRecordingDocumentCase(type, docType)) {
+                                                 LRSTransaction transaction) {
+      if (LRSWorkflowRules.IsRecordingDocumentCase(transaction)) {
         list.Add(TransactionStatus.Recording);
 
-      } else if (LRSWorkflowRules.IsCertificateIssueCase(type, docType)) {
+      } else if (LRSWorkflowRules.IsCertificateIssueCase(transaction)) {
         list.Add(TransactionStatus.Elaboration);
 
       } else {

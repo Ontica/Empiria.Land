@@ -257,6 +257,13 @@ namespace Empiria.Land.Transactions {
       }
     }
 
+
+    public bool ComesFromAgencyExternalFilingSystem {
+      get {
+        return !String.IsNullOrWhiteSpace(_transaction.ExternalTransactionNo) && !_transaction.Agency.IsEmptyInstance;
+      }
+    }
+
     #endregion User's action flags
 
     #region Flags used to control the user interface
@@ -271,8 +278,7 @@ namespace Empiria.Land.Transactions {
           return true;
         }
 
-        return LRSWorkflowRules.IsCertificateIssueCase(_transaction.TransactionType,
-                                                       _transaction.DocumentType);
+        return LRSWorkflowRules.IsCertificateIssueCase(_transaction);
       }
     }
 
@@ -286,8 +292,7 @@ namespace Empiria.Land.Transactions {
           return true;
         }
 
-        return LRSWorkflowRules.IsRecordingDocumentCase(_transaction.TransactionType,
-                                                        _transaction.DocumentType);
+        return LRSWorkflowRules.IsRecordingDocumentCase(_transaction);
       }
     }
 
@@ -324,8 +329,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        return LRSWorkflowRules.IsDigitalizable(_transaction.TransactionType,
-                                                _transaction.DocumentType);
+        return LRSWorkflowRules.IsDigitalizable(_transaction);
       }
     }
 

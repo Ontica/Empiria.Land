@@ -201,28 +201,29 @@ namespace Empiria.Land.WebApi {
         // no-op
       } else if (transaction.Workflow.CurrentStatus == TransactionStatus.Delivered) {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                            transaction.Workflow.CurrentStatusName, "ok-status-text"));
+                                            transaction.Workflow.CurrentStatus.GetStatusName(), "ok-status-text"));
         propertyBag.Add(new PropertyBagItem("Fecha de entrega", GetDateTime(transaction.LastDeliveryTime)));
 
       } else if (transaction.Workflow.CurrentStatus == TransactionStatus.Returned) {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                             transaction.Workflow.CurrentStatusName, "warning-status-text"));
+                                             transaction.Workflow.CurrentStatus.GetStatusName(), "warning-status-text"));
         propertyBag.Add(new PropertyBagItem("Fecha de devolución",
                                             GetDateTime(transaction.LastDeliveryTime), "warning-status-text"));
 
       } else if (transaction.Workflow.CurrentStatus == TransactionStatus.Archived) {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                            transaction.Workflow.CurrentStatusName, "ok-status-text"));
+                                            transaction.Workflow.CurrentStatus.GetStatusName(), "ok-status-text"));
         propertyBag.Add(new PropertyBagItem("Fecha de entrega",
                                             "Por su naturaleza, este trámite se procesa pero no se entrega al interesado en ventanilla."));
 
-      } else if (transaction.Workflow.IsArchivable) {
+      } else if (LRSWorkflowRules.IsArchivable(transaction)) {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                            transaction.Workflow.CurrentStatusName, "in-process-status-text"));
+                                            transaction.Workflow.CurrentStatus.GetStatusName(), "in-process-status-text"));
         propertyBag.Add(new PropertyBagItem("Fecha de entrega", "Este trámite se procesa pero no se entrega al interesado en ventanilla."));
 
       } else if (transaction.Workflow.CurrentStatus == TransactionStatus.ToDeliver) {
-        if (transaction.Workflow.IsReadyForElectronicDelivery(messageUID)) {
+
+        if (LRSWorkflowRules.IsReadyForElectronicDelivery(transaction, messageUID)) {
           propertyBag.Add(new PropertyBagItem("Estado del trámite",
                                               "<b>¡Su trámite está listo!</b><br />" +
                                               "Puede pasar a recoger sus documentos, o mejor aún,<br/>" +
@@ -240,7 +241,7 @@ namespace Empiria.Land.WebApi {
 
       } else if (transaction.Workflow.CurrentStatus == TransactionStatus.ToReturn) {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                            transaction.Workflow.CurrentStatusName, "warning-status-text"));
+                                            transaction.Workflow.CurrentStatus.GetStatusName(), "warning-status-text"));
         propertyBag.Add(new PropertyBagItem("Fecha de entrega",
                                             "Desafortunadamente el trámite no procedió.<br />" +
                                             "Requiere pasar a recoger su oficio de devolución.", "warning-status-text"));
@@ -248,7 +249,7 @@ namespace Empiria.Land.WebApi {
 
       } else {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
-                                            transaction.Workflow.CurrentStatusName, "in-process-status-text"));
+                                            transaction.Workflow.CurrentStatus.GetStatusName(), "in-process-status-text"));
 
         propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada", "Por COVID-19, desafortunadamente no podemos determinarla."));
 
@@ -486,7 +487,7 @@ namespace Empiria.Land.WebApi {
 
       var items = new List<PropertyBagItem>(8);
 
-      bool transactionHasErrors = !transaction.Workflow.IsFinished ||
+      bool transactionHasErrors = !LRSWorkflowRules.IsFinished(transaction) ||
                                   (transaction.PaymentData.Payments.Count == 0 &&
                                   transaction.Services.TotalFee.Total > 0 && !transaction.PaymentData.IsFeeWaiverApplicable);
 
@@ -520,8 +521,8 @@ namespace Empiria.Land.WebApi {
         items.Add(new PropertyBagItem("Pago de derechos", "Este trámite no pagó derechos.", "warning-status-text"));
       }
 
-      if (transaction.Workflow.IsFinished) {
-        items.Add(new PropertyBagItem("Estado del trámite", transaction.Workflow.CurrentStatusName, "ok-status-text"));
+      if (LRSWorkflowRules.IsFinished(transaction)) {
+        items.Add(new PropertyBagItem("Estado del trámite", transaction.Workflow.CurrentStatus.GetStatusName(), "ok-status-text"));
 
         if (transaction.Workflow.CurrentStatus == TransactionStatus.Archived) {
           items.Add(new PropertyBagItem("Fecha de entrega",
@@ -530,7 +531,7 @@ namespace Empiria.Land.WebApi {
 
       } else {
         var msg = $"Este trámite aún NO ha sido marcado como entregado al interesado.<br/><br/>" +
-                  $"Su estado actual es '{transaction.Workflow.CurrentStatusName}'.<br/><br/>" +
+                  $"Su estado actual es '{transaction.Workflow.CurrentStatus.GetStatusName()}'.<br/><br/>" +
                   $"Debido a lo anterior, <u>usted corre el riesgo</u> de que los documentos registrados " +
                   $"o certificados expedidos en el trámite <u>puedan ser alterados sin previo aviso</u>.<br/><br/>" +
                   $"Favor de comunicarse al Registro Público para que lo cierren correctamente.<br/>";
