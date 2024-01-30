@@ -20,10 +20,29 @@ namespace Empiria.Land.Registration {
 
     private readonly FixedList<RecordingActTypeCategory> _baseList;
 
-    internal ApplicableRecordingActTypesBuilder(FixedList<RecordingActTypeCategory> baseList) {
-      Assertion.Require(baseList, nameof(baseList));
+    private ApplicableRecordingActTypesBuilder() {
+      _baseList = RecordingActTypeCategory.GetList("RecordingActTypesCategories.List");
+    }
 
-      _baseList = baseList;
+
+    static internal ApplicableRecordingActTypeList ApplicableRecordingActTypes(Instrument instrument) {
+      var builder = new ApplicableRecordingActTypesBuilder();
+
+      return builder.BuildFor(instrument);
+    }
+
+
+    static internal ApplicableRecordingActTypeList ApplicableRecordingActTypes(BookEntry bookEntry) {
+      var builder = new ApplicableRecordingActTypesBuilder();
+
+      return builder.BuildFor(bookEntry);
+    }
+
+
+    static internal ApplicableRecordingActTypeList ApplicableRecordingActTypes(Resource recordableSubject) {
+      var builder = new ApplicableRecordingActTypesBuilder();
+
+      return builder.BuildFor(recordableSubject);
     }
 
 
@@ -31,9 +50,9 @@ namespace Empiria.Land.Registration {
       var list = new ApplicableRecordingActTypeList();
 
       foreach (var category in _baseList) {
-        foreach (var actType in category.RecordingActTypes) {
-          var item = new ApplicableRecordingActType(actType,
-                                                    actType.RegistrationCommandTypes(),
+        foreach (var recordingActType in category.RecordingActTypes) {
+          var item = new ApplicableRecordingActType(recordingActType,
+                                                    recordingActType.RegistrationCommandTypes(),
                                                     category);
           list.Add(item);
         }
@@ -43,17 +62,16 @@ namespace Empiria.Land.Registration {
     }
 
 
-
     internal ApplicableRecordingActTypeList BuildFor(Resource recordableSubject) {
       var list = new ApplicableRecordingActTypeList();
 
       foreach (var category in _baseList) {
-        foreach (var actType in category.RecordingActTypes) {
-          var item = new ApplicableRecordingActType(actType,
-                                                    actType.TractIndexRegistrationCommandTypes(),
+        foreach (var recordingActType in category.RecordingActTypes) {
+          var item = new ApplicableRecordingActType(recordingActType,
+                                                    recordingActType.TractIndexRegistrationCommandTypes(),
                                                     category);
 
-          if (IsApplicableTo(recordableSubject, item)) {
+          if (IsApplicableTo(item.RecordingActType, recordableSubject)) {
             list.Add(item);
           }
         }
@@ -62,13 +80,14 @@ namespace Empiria.Land.Registration {
       return list;
     }
 
+
     internal ApplicableRecordingActTypeList BuildFor(BookEntry bookEntry) {
       var list = new ApplicableRecordingActTypeList();
 
       foreach (var category in _baseList) {
-        foreach (var actType in category.RecordingActTypes) {
-          var item = new ApplicableRecordingActType(actType,
-                                                    actType.RegistrationCommandTypes(),
+        foreach (var recordingActType in category.RecordingActTypes) {
+          var item = new ApplicableRecordingActType(recordingActType,
+                                                    recordingActType.RegistrationCommandTypes(),
                                                     category);
           list.Add(item);
         }
@@ -78,23 +97,24 @@ namespace Empiria.Land.Registration {
     }
 
 
-    private bool IsApplicableTo(Resource recordableSubject,
-                                ApplicableRecordingActType actType) {
+    private bool IsApplicableTo(RecordingActType recordingActType,
+                                Resource recordableSubject) {
+
       if (recordableSubject is RealEstate &&
-          (actType.RecordingActType.AppliesTo == RecordingRuleApplication.RealEstate ||
-           actType.RecordingActType.AppliesTo == RecordingRuleApplication.RealEstateAct)) {
+          (recordingActType.AppliesTo == RecordingRuleApplication.RealEstate ||
+           recordingActType.AppliesTo == RecordingRuleApplication.RealEstateAct)) {
         return true;
       }
 
       if (recordableSubject is NoPropertyResource &&
-          (actType.RecordingActType.AppliesTo == RecordingRuleApplication.NoProperty ||
-           actType.RecordingActType.AppliesTo == RecordingRuleApplication.NoPropertyAct)) {
+          (recordingActType.AppliesTo == RecordingRuleApplication.NoProperty ||
+           recordingActType.AppliesTo == RecordingRuleApplication.NoPropertyAct)) {
         return true;
       }
 
       if (recordableSubject is Association &&
-          (actType.RecordingActType.AppliesTo == RecordingRuleApplication.Association ||
-           actType.RecordingActType.AppliesTo == RecordingRuleApplication.AssociationAct)) {
+          (recordingActType.AppliesTo == RecordingRuleApplication.Association ||
+           recordingActType.AppliesTo == RecordingRuleApplication.AssociationAct)) {
         return true;
       }
 

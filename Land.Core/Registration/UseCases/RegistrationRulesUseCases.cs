@@ -45,7 +45,7 @@ namespace Empiria.Land.Registration.UseCases {
       Assertion.Require(book.BookEntries.Contains(bookEntry),
           $"Book entry '{bookEntry.UID}' does not belong to recording book {book.AsText}");
 
-      ApplicableRecordingActTypeList applicableActTypes = bookEntry.ApplicableRecordingActTypes();
+      ApplicableRecordingActTypeList applicableActTypes = ApplicableRecordingActTypesBuilder.ApplicableRecordingActTypes(bookEntry);
 
       return RecordingActTypeMapper.Map(applicableActTypes);
     }
@@ -56,7 +56,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var instrument = Instrument.Parse(instrumentUID);
 
-      ApplicableRecordingActTypeList applicableActTypes = instrument.ApplicableRecordingActTypes();
+      ApplicableRecordingActTypeList applicableActTypes = ApplicableRecordingActTypesBuilder.ApplicableRecordingActTypes(instrument);
 
       return RecordingActTypeMapper.Map(applicableActTypes);
     }
@@ -67,7 +67,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var recordableSubject = Resource.ParseGuid(recordableSubjectUID);
 
-      ApplicableRecordingActTypeList applicableActTypes = recordableSubject.ApplicableRecordingActTypes();
+      ApplicableRecordingActTypeList applicableActTypes = ApplicableRecordingActTypesBuilder.ApplicableRecordingActTypes(recordableSubject);
 
       return RecordingActTypeMapper.Map(applicableActTypes);
     }
