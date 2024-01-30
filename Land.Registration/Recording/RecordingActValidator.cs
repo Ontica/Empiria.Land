@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.DataTypes;
 using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration {
@@ -50,7 +49,7 @@ namespace Empiria.Land.Registration {
         _recordingAct.BookEntry.AssertCanBeClosed();
       }
 
-      _recordingAct.Resource.AssertIsStillAlive(_recordingAct.Document);
+      _recordingAct.Resource.AssertIsStillAlive(_recordingAct.Document.PresentationTime);
 
       this.AssertIsLastInPrelationOrder();
 

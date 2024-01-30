@@ -86,7 +86,7 @@ namespace Empiria.Land.Registration {
 
         this.AssertIsApplicableResource(Task.PrecedentProperty);
 
-        Task.PrecedentProperty.AssertIsStillAlive(Task.Document);
+        Task.PrecedentProperty.AssertIsStillAlive(Task.Document.PresentationTime);
 
         if (this.AppliesOverNewPartition && Task.RecordingActType.RecordingRule.HasChainedRule) {
           if (!OperationalCondition(Task.Document)) {
@@ -183,7 +183,7 @@ namespace Empiria.Land.Registration {
 
 
     private DomainAct[] CreateDomainAct() {
-      // Cast because limitation acts supposed to be applicable only to real estates
+      // Cast because domain acts supposed to be applicable only to real estates
       RealEstate[] realEstates = (RealEstate[]) this.GetResources();
 
       var domainActs = new DomainAct[realEstates.Length];
@@ -468,26 +468,26 @@ namespace Empiria.Land.Registration {
         return new RealEstate[] { new RealEstate(data) };
       }
 
-      RealEstate property;
+      RealEstate realEstate;
 
       if (this.CreateResourceOnBookEntry) {
         var data = new RealEstateExtData();
 
-        property = new RealEstate(data);
+        realEstate = new RealEstate(data);
 
-        this.AttachResourceToBookEntry(property);
+        this.AttachResourceToBookEntry(realEstate);
 
       } else if (this.SelectResource) {
-        property = (RealEstate) this.Task.PrecedentProperty;
+        realEstate = (RealEstate) this.Task.PrecedentProperty;
 
       } else {
-        property = (RealEstate) this.Task.PrecedentProperty;
+        realEstate = (RealEstate) this.Task.PrecedentProperty;
       }
 
       if (this.AppliesOverNewPartition) {
-        return property.Subdivide(Task.PartitionInfo);
+        return realEstate.Subdivide(Task.PartitionInfo);
       } else {
-        return new RealEstate[] { property };
+        return new RealEstate[] { realEstate };
       }
     }
 

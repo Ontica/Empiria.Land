@@ -631,7 +631,7 @@ namespace Empiria.Land.Registration {
       Assertion.Require(decimal.Zero < percentage && percentage <= decimal.One,
                        "Percentage should be set between zero and one inclusive.");
 
-      resource.AssertIsStillAlive(this.Document);
+      resource.AssertIsStillAlive(this.Document.PresentationTime);
 
       this.Resource = resource;
       this.ResourceRole = role;

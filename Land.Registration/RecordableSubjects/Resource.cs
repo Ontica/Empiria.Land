@@ -316,13 +316,13 @@ namespace Empiria.Land.Registration {
     }
 
 
-    internal void AssertIsStillAlive(RecordingDocument document) {
+    internal void AssertIsStillAlive(DateTime presentationTime) {
       Assertion.Require(this.Status != RecordableObjectStatus.Deleted,
                        $"El folio real '{this.UID}' está marcado como eliminado.");
 
       var tract = this.Tract.GetRecordingActs();
       if (0 != tract.CountAll((x) => x.RecordingActType.RecordingRule.IsEndingAct &&
-                                     x.Document.PresentationTime < document.PresentationTime)) {
+                                     x.Document.PresentationTime < presentationTime)) {
         Assertion.RequireFail($"El folio real '{this.UID}' ya fue cancelado, fusionado o dividido en su totalidad. " +
                              "Ya no es posible agregarlo en este documento.");
       }
