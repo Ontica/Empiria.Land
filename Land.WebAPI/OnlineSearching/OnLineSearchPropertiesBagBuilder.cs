@@ -195,15 +195,7 @@ namespace Empiria.Land.WebApi {
 
       propertyBag.AddRange(ResourceTractSection(association));
 
-      BookEntry lastBookEntry = association.Tract.GetLastBookEntry();
-
-      if (!lastBookEntry.IsEmptyInstance) {
-        propertyBag.Add(new PropertyBagItem("Partida origen de la sociedad en libros físicos", String.Empty, "section"));
-        propertyBag.Add(new PropertyBagItem("Partida", lastBookEntry.AsText));
-        propertyBag.Add(new PropertyBagItem("Nota importante", "Los datos de la partida sólo se muestran con fines informativos.<br/>" +
-                                            "A partir de junio del año 2022, todas las sociedades se deben identificar mediante su folio único, " +
-                                            "no con el número de inscripción que tenían en libros físicos."));
-      }
+      BookEntrySection(association, propertyBag);
 
       return propertyBag;
     }
@@ -220,46 +212,57 @@ namespace Empiria.Land.WebApi {
 
       propertyBag.AddRange(ResourceTractSection(noproperty));
 
-      BookEntry lastBookEntry = noproperty.Tract.GetLastBookEntry();
+      BookEntrySection(noproperty, propertyBag);
 
-      if (!lastBookEntry.IsEmptyInstance) {
-        propertyBag.Add(new PropertyBagItem("Partida origen del documento en libros físicos", String.Empty, "section"));
-        propertyBag.Add(new PropertyBagItem("Partida", lastBookEntry.AsText));
+      return propertyBag;
+    }
+
+
+    private List<PropertyBagItem> BuildRealEstateStatusResponse(RealEstate realEstate) {
+      var propertyBag = new List<PropertyBagItem>(16);
+
+      propertyBag.Add(new PropertyBagItem("Información del predio", String.Empty, "section"));
+      propertyBag.Add(new PropertyBagItem("Folio real", realEstate.UID, "enhanced-text"));
+      propertyBag.Add(new PropertyBagItem("Clave catastral",
+                                           realEstate.CadastralKey.Length != 0 ?
+                                           realEstate.CadastralKey : "Clave catastral no proporcionada.", "bold-text"));
+      propertyBag.Add(new PropertyBagItem("Descripción", realEstate.Description));
+
+      propertyBag.AddRange(ResourceTractSection(realEstate));
+
+      BookEntrySection(realEstate, propertyBag);
+
+      return propertyBag;
+    }
+
+    private void BookEntrySection(Resource recordableSubject, List<PropertyBagItem> propertyBag) {
+      BookEntry lastBookEntry = recordableSubject.Tract.GetLastBookEntry();
+
+      if (lastBookEntry.IsEmptyInstance) {
+        return;
+      }
+      propertyBag.Add(new PropertyBagItem("Partida origen del predio en libros físicos", String.Empty, "section"));
+      propertyBag.Add(new PropertyBagItem("Partida", lastBookEntry.AsText));
+
+      if (recordableSubject is RealEstate) {
+
+        propertyBag.Add(new PropertyBagItem("Nota importante", "Los datos de la partida sólo se muestran con fines informativos.<br/>" +
+                                            "A partir de junio del año 2022, todos los predios se deben identificar mediante su folio real, " +
+                                            "no con el número de inscripción que tenían en libros físicos."));
+
+      } else if (recordableSubject is Association) {
+
+        propertyBag.Add(new PropertyBagItem("Nota importante", "Los datos de la partida sólo se muestran con fines informativos.<br/>" +
+                                            "A partir de junio del año 2022, todas las sociedades se deben identificar mediante su folio único, " +
+                                            "no con el número de inscripción que tenían en libros físicos."));
+
+      } else if (recordableSubject is NoPropertyResource) {
+
         propertyBag.Add(new PropertyBagItem("Nota importante", "Los datos de la partida sólo se muestran con fines informativos.<br/>" +
                                             "A partir de junio del año 2022, todos los documentos se deben identificar mediante su folio electrónico, " +
                                             "no con el número de inscripción que tenían en libros físicos."));
       }
-
-      return propertyBag;
     }
-
-
-    private List<PropertyBagItem> BuildRealEstateStatusResponse(RealEstate property) {
-      var propertyBag = new List<PropertyBagItem>(16);
-
-      propertyBag.Add(new PropertyBagItem("Información del predio", String.Empty, "section"));
-      propertyBag.Add(new PropertyBagItem("Folio real", property.UID, "enhanced-text"));
-      propertyBag.Add(new PropertyBagItem("Clave catastral",
-                                           property.CadastralKey.Length != 0 ?
-                                           property.CadastralKey : "Clave catastral no proporcionada.", "bold-text"));
-      propertyBag.Add(new PropertyBagItem("Descripción", property.Description));
-
-      propertyBag.AddRange(ResourceTractSection(property));
-
-
-      BookEntry lastBookEntry = property.Tract.GetLastBookEntry();
-
-      if (!lastBookEntry.IsEmptyInstance) {
-        propertyBag.Add(new PropertyBagItem("Partida origen del predio en libros físicos", String.Empty, "section"));
-        propertyBag.Add(new PropertyBagItem("Partida", lastBookEntry.AsText));
-        propertyBag.Add(new PropertyBagItem("Nota importante", "Los datos de la partida sólo se muestran con fines informativos.<br/>" +
-                                            "A partir de junio del año 2022, todos los predios se deben identificar mediante su folio real, " +
-                                            "no con el número de inscripción que tenían en libros físicos."));
-      }
-
-      return propertyBag;
-    }
-
 
     private string GetDateTime(DateTime dateTime) {
       var temp = dateTime.ToString("dd/MMM/yyyy a la\\s HH:mm");
