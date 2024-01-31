@@ -68,7 +68,7 @@ namespace Empiria.Land.Media {
         return $"TransactionId = {instance.Id}";
 
       } else if (instance is Instrument instrument) {
-        LRSTransaction transaction = instrument.GetTransaction();
+        LRSTransaction transaction = LRSTransaction.TryParseForInstrument(instrument.Id);
 
         if (!instrument.IsEmptyInstance && transaction != null && !transaction.IsEmptyInstance) {
           return $"(InstrumentId = {instrument.Id} OR TransactionId = {transaction.Id})";

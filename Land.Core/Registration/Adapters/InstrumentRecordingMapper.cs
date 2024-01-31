@@ -20,24 +20,16 @@ using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Registration.Transactions;
 using Empiria.Land.RecordableSubjects.Adapters;
 
-
 namespace Empiria.Land.Registration.Adapters {
 
   /// <summary>Methods to map legal instruments to InstrumentDto objects.</summary>
   static internal partial class InstrumentRecordingMapper {
 
     static internal InstrumentRecordingDto Map(RecordingDocument instrumentRecording) {
-      return Map(instrumentRecording, instrumentRecording.GetTransaction());
-    }
-
-
-    static internal InstrumentRecordingDto Map(RecordingDocument instrumentRecording,
-                                               LRSTransaction transaction) {
       var dto = new InstrumentRecordingDto();
 
       Instrument instrument = Instrument.Parse(instrumentRecording.InstrumentId);
-
-      var actions = new InstrumentRecordingControlData(instrumentRecording, instrument, transaction);
+      LRSTransaction transaction = instrumentRecording.GetTransaction();
 
       var bookEntries = instrument.RecordingBookEntries;
 
@@ -53,24 +45,26 @@ namespace Empiria.Land.Registration.Adapters {
         dto.RecordingActs = MapRecordingActsListDto(instrumentRecording.RecordingActs);
       }
 
-      dto.StampMedia = MapStampMedia(instrumentRecording, transaction);
+      dto.StampMedia = MapStampMedia(instrumentRecording);
 
       dto.TransactionUID = transaction.UID;
+
+      var actions = new InstrumentRecordingControlData(instrumentRecording);
+
       dto.Actions = GetControlDataDto(actions);
 
       return dto;
     }
 
 
-    static internal MediaData MapStampMedia(RecordingDocument instrumentRecording,
-                                            LRSTransaction transaction) {
+    static internal MediaData MapStampMedia(RecordingDocument instrumentRecording) {
       var mediaBuilder = new LandMediaBuilder();
 
       Instrument instrument = Instrument.Parse(instrumentRecording.InstrumentId);
 
       if (instrument.RecordingBookEntries.Count > 0) {
         return mediaBuilder.GetMediaDto(LandMediaContent.BookEntryRegistrationStamp,
-                                        "-1", transaction.Id.ToString());
+                                        "-1", instrumentRecording.GetTransaction().Id.ToString());
       } else {
         return mediaBuilder.GetMediaDto(LandMediaContent.RegistrationStamp,
                                         instrumentRecording.UID);

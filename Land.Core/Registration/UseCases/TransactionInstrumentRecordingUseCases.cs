@@ -44,7 +44,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       RecordingDocument instrumentRecording = transaction.Document;
 
-      return InstrumentRecordingMapper.Map(instrumentRecording, transaction);
+      return InstrumentRecordingMapper.Map(instrumentRecording);
     }
 
 
@@ -67,11 +67,11 @@ namespace Empiria.Land.Registration.UseCases {
 
       transaction.SetInstrument(instrument);
 
-      RecordingDocument recordingDocument = instrument.TryGetRecordingDocument();
+      RecordingDocument instrumentRecording = instrument.TryGetRecordingDocument();
 
-      transaction.AttachDocument(recordingDocument);
+      transaction.AttachDocument(instrumentRecording);
 
-      return InstrumentRecordingMapper.Map(recordingDocument, transaction);
+      return InstrumentRecordingMapper.Map(instrumentRecording);
     }
 
 
@@ -90,7 +90,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       RecordingDocument recordingDocument = instrument.TryGetRecordingDocument();
 
-      return InstrumentRecordingMapper.Map(recordingDocument, transaction);
+      return InstrumentRecordingMapper.Map(recordingDocument);
     }
 
     #endregion Use cases

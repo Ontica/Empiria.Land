@@ -10,9 +10,8 @@
 using System;
 
 using Empiria.Land.Instruments;
-using Empiria.Land.Transactions;
-using Empiria.Land.Registration.Transactions;
 using Empiria.Land.Media;
+using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {
 
@@ -23,23 +22,18 @@ namespace Empiria.Land.Registration {
 
     private readonly RecordingDocument _instrumentRecording;
     private readonly Instrument _instrument;
-    private readonly TransactionControlData _transactionControlData;
+    private readonly LRSTransaction _transaction;
     private readonly bool _isHistoricRegistration;
     private readonly bool _isNewRegistration;
 
-    internal InstrumentRecordingControlData(RecordingDocument instrumentRecording,
-                                            Instrument instrument,
-                                            LRSTransaction transaction) {
+    internal InstrumentRecordingControlData(RecordingDocument instrumentRecording) {
+      Assertion.Require(instrumentRecording, nameof(instrumentRecording));
+
       _instrumentRecording = instrumentRecording;
-      _instrument = instrument;
+      _instrument = Instrument.Parse(instrumentRecording.InstrumentId);
+      _transaction = instrumentRecording.GetTransaction();
 
-      if (transaction == null) {
-        transaction = instrument.GetTransaction();
-      }
-
-      _transactionControlData = transaction.ControlData;
-
-      _isHistoricRegistration = transaction.IsEmptyInstance;
+      _isHistoricRegistration = _transaction.IsEmptyInstance;
 
       _isNewRegistration = _instrumentRecording.IsEmptyInstance || _instrumentRecording.IsNew;
     }
@@ -57,7 +51,7 @@ namespace Empiria.Land.Registration {
         if (_isHistoricRegistration) {
           return true;
         }
-        return _transactionControlData.CanEditInstrument;
+        return _transaction.ControlData.CanEditInstrument;
       }
     }
 
@@ -94,7 +88,7 @@ namespace Empiria.Land.Registration {
         if (CanOpen) {
           return false;
         }
-        return (this.ShowRecordingActs && _transactionControlData.CanEditRecordingActs);
+        return (this.ShowRecordingActs && _transaction.ControlData.CanEditRecordingActs);
       }
     }
 
@@ -141,7 +135,7 @@ namespace Empiria.Land.Registration {
       get {
         return (!_isHistoricRegistration &&
                 _instrument.HasDocument &&
-                !_instrument.GetTransaction().IsEmptyInstance &&
+                !_transaction.IsEmptyInstance &&
                 !_instrument.HasRecordingBookEntries &&
                 !UseRecordingBookRegistation);
       }

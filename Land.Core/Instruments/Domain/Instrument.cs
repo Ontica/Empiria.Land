@@ -15,8 +15,8 @@ using Empiria.StateEnums;
 
 using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Instruments.Data;
+
 using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Instruments {
 
@@ -272,16 +272,6 @@ namespace Empiria.Land.Instruments {
 
       return temp;
     }
-
-
-    private LRSTransaction _transaction;
-    internal LRSTransaction GetTransaction() {
-      if (_transaction == null) {
-        _transaction = LRSTransaction.TryParseForInstrument(this.Id);
-      }
-      return _transaction;
-    }
-
 
     private void LoadData(InstrumentFields data) {
       Kind = data.Kind ?? Kind;

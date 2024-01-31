@@ -21,8 +21,6 @@ namespace Empiria.Land.Registration.Adapters {
       BookEntry bookEntry = recordingAct.HasBookEntry ?
                                             recordingAct.BookEntry : BookEntry.Empty;
 
-      var transaction = recordingAct.Document.GetTransaction();
-
       return new RecordingDataDto {
         UID = document.GUID,
         Type = document.DocumentType.DisplayName,
@@ -34,9 +32,9 @@ namespace Empiria.Land.Registration.Adapters {
         RecordedBy = document.GetRecordingOfficials()[0].ShortName,
         AuthorizedBy = document.AuthorizedBy.ShortName,
         PresentationTime = document.PresentationTime,
-        TransactionUID = transaction.UID,
+        TransactionUID = recordingAct.Document.GetTransaction().UID,
         Status = document.Status.ToString(),
-        Media = InstrumentRecordingMapper.MapStampMedia(document, document.GetTransaction())
+        Media = InstrumentRecordingMapper.MapStampMedia(document)
       };
     }
 

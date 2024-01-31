@@ -52,11 +52,11 @@ namespace Empiria.Land.Instruments.Adapters {
         return Map(instrument);
       }
 
-      InstrumentDto dto = Map(instrument);
-
       FixedList<LandMediaPosting> mediaPostings = LandMediaReadServices.TransactionFiles(transaction);
 
       FixedList<LandMediaFileDto> mediaFilesDtos = LandMediaFileMapper.Map(mediaPostings);
+
+      InstrumentDto dto = Map(instrument);
 
       dto.Media = mediaFilesDtos;
 
