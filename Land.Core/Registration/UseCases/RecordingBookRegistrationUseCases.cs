@@ -235,7 +235,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
 
-      var instrumentBookEntries = BookEntry.GetBookEntriesForDocument(instrumentRecording.Id);
+      var instrumentBookEntries = BookEntry.GetBookEntriesForDocument(instrumentRecording);
 
       var bookEntry = instrumentBookEntries.Find(x => x.UID == bookEntryUID);
 

@@ -42,7 +42,7 @@ namespace Empiria.Land.Pages {
 
 			Assertion.Require(!transaction.Document.IsEmptyInstance, "Transaction does not have a registration document.");
 
-			bookEntries = BookEntry.GetBookEntriesForDocument(transaction.Document.Id);
+			bookEntries = BookEntry.GetBookEntriesForDocument(transaction.Document);
 
 			Assertion.Require(bookEntries.Count > 0, "Document does not have book entries.");
 

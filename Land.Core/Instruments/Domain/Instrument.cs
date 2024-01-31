@@ -200,7 +200,7 @@ namespace Empiria.Land.Instruments {
 
         var document = this.TryGetRecordingDocument();
 
-        return BookEntry.GetBookEntriesForDocument(document.Id);
+        return BookEntry.GetBookEntriesForDocument(document);
       }
     }
 
@@ -231,7 +231,7 @@ namespace Empiria.Land.Instruments {
     }
 
 
-    public void EnsureHasRecordingDocument() {
+    private void EnsureHasRecordingDocument() {
       if (!this.HasDocument) {
         CreateRecordingDocument();
       }

@@ -113,9 +113,9 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal FixedList<BookEntry> GetBookEntriesForDocument(int documentId) {
+    static internal FixedList<BookEntry> GetBookEntriesForDocument(RecordingDocument document) {
       string sql = $"SELECT * FROM LRSPhysicalRecordings " +
-                   $"WHERE MainDocumentId = {documentId} AND RecordingStatus <> 'X' " +
+                   $"WHERE MainDocumentId = {document.Id} AND RecordingStatus <> 'X' " +
                    $"ORDER BY PhysicalRecordingId";
 
       return DataReader.GetFixedList<BookEntry>(DataOperation.Parse(sql));

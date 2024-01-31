@@ -290,7 +290,7 @@ namespace Empiria.Land.Registration {
 
     public bool IsRegisteredInRecordingBook {
       get {
-        return (BookEntry.GetBookEntriesForDocument(this.Id).Count != 0);
+        return (BookEntry.GetBookEntriesForDocument(this).Count != 0);
       }
     }
 

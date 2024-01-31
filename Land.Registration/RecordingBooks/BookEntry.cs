@@ -70,8 +70,8 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public FixedList<BookEntry> GetBookEntriesForDocument(int documentId) {
-      return RecordingBooksData.GetBookEntriesForDocument(documentId);
+    static public FixedList<BookEntry> GetBookEntriesForDocument(RecordingDocument document) {
+      return RecordingBooksData.GetBookEntriesForDocument(document);
     }
 
 
