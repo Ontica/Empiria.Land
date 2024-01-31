@@ -197,9 +197,9 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public RecordbleSubjectTract Tract {
+    public RecordableSubjectTract Tract {
       get {
-        return RecordbleSubjectTract.Parse(this);
+        return RecordableSubjectTract.Parse(this);
       }
     }
 

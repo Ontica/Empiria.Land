@@ -236,7 +236,7 @@ namespace Empiria.Land.WebApi {
     }
 
     private void BookEntrySection(Resource recordableSubject, List<PropertyBagItem> propertyBag) {
-      BookEntry lastBookEntry = recordableSubject.Tract.GetLastBookEntry();
+      BookEntry lastBookEntry = recordableSubject.Tract.GetLastDomainBookEntry();
 
       if (lastBookEntry.IsEmptyInstance) {
         return;

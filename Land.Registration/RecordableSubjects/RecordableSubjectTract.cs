@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Land Recording services                      Component : Domain Layer                          *
 *  Assembly : Empiria.Land.Registration.dll                Pattern   : Service provider                      *
-*  Type     : RecordbleSubjectTract                        License   : Please read LICENSE.txt file          *
+*  Type     : RecordableSubjectTract                       License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Gets information about a recordable subject's historic recording acts tract.                   *
 *                                                                                                            *
@@ -16,7 +16,7 @@ using Empiria.Land.Data;
 namespace Empiria.Land.Registration {
 
   /// <summary>Gets information about a recordable subject's historic recording acts tract.</summary>
-  public class RecordbleSubjectTract {
+  public class RecordableSubjectTract {
 
     #region Fields
 
@@ -26,15 +26,15 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private RecordbleSubjectTract(Resource recordableSubject) {
+    private RecordableSubjectTract(Resource recordableSubject) {
       _recordableSubject = recordableSubject;
     }
 
 
-    static internal RecordbleSubjectTract Parse(Resource recordableSubject) {
+    static internal RecordableSubjectTract Parse(Resource recordableSubject) {
       Assertion.Require(recordableSubject, nameof(recordableSubject));
 
-      return new RecordbleSubjectTract(recordableSubject);
+      return new RecordableSubjectTract(recordableSubject);
     }
 
     #endregion Constructors and parsers
@@ -90,13 +90,14 @@ namespace Empiria.Land.Registration {
 
       list.AddRange(recordingActs);
       list.AddRange(certificates);
+
       list.Sort((x, y) => x.TractPrelationStamp.CompareTo(y.TractPrelationStamp));
 
       return list.ToFixedList();
     }
 
 
-    public BookEntry GetLastBookEntry() {
+    public BookEntry GetLastDomainBookEntry() {
       var lastRecodingAct = this.GetRecordingActs()
                                 .FindLast(x => !x.BookEntry.IsEmptyInstance &&
                                                (x.RecordingActType.IsDomainActType || x.RecordingActType.IsStructureActType));
@@ -209,7 +210,6 @@ namespace Empiria.Land.Registration {
 
     internal RecordingAct TryGetLastActiveChainedAct(RecordingActType chainedRecordingActType,
                                                      RecordingDocument beforeThisDocument) {
-      //var tract = _resource.Tract.GetRecordingActsUntil(this, false); /// From RecordingAct rule
 
       var tract = this.GetClosedRecordingActsUntil(beforeThisDocument, true);
 
@@ -249,6 +249,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Methods
 
-  }  // class RecordbleSubjectTract
+  }  // class RecordableSubjectTract
 
 }  // namespace Empiria.Land.Registration
