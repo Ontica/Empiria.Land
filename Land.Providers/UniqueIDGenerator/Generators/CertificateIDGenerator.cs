@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Certificates.Services;
+using Empiria.Land.Certificates.UseCases;
 
 namespace Empiria.Land.Providers {
 
@@ -73,9 +73,9 @@ namespace Empiria.Land.Providers {
 
 
     static private bool ExistsCertificateID(string generatedID) {
-      using (var searcher = SearchCertificatesServices.ServiceInteractor()) {
+      using (var usecases = CertificateIssuingUseCases.UseCaseInteractor()) {
 
-        return searcher.ExistsCertificateID(generatedID);
+        return usecases.ExistsCertificateID(generatedID);
       }
     }
 

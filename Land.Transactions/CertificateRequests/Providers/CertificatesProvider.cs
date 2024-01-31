@@ -13,7 +13,7 @@ using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
 using Empiria.Land.Certificates;
-using Empiria.Land.Certificates.Services;
+using Empiria.Land.Certificates.UseCases;
 
 namespace Empiria.Land.Transactions.CertificateRequests.Providers {
 
@@ -24,7 +24,7 @@ namespace Empiria.Land.Transactions.CertificateRequests.Providers {
 
     static internal CertificateDto CloseCertificate(Guid certificateGuid) {
 
-      using (var issuingService = CertificateIssuingServices.ServiceInteractor()) {
+      using (var issuingService = CertificateIssuingUseCases.UseCaseInteractor()) {
 
         return issuingService.CloseCertificate(certificateGuid);
       }
@@ -35,7 +35,7 @@ namespace Empiria.Land.Transactions.CertificateRequests.Providers {
                                                      LRSTransaction transaction,
                                                      Resource recordableSubject) {
 
-      using (var certificateCreator = CertificateIssuingServices.ServiceInteractor()) {
+      using (var certificateCreator = CertificateIssuingUseCases.UseCaseInteractor()) {
 
         return certificateCreator.CreateCertificate(certificateType, transaction, recordableSubject);
       }
@@ -44,7 +44,7 @@ namespace Empiria.Land.Transactions.CertificateRequests.Providers {
 
     static internal void DeleteCertificate(Guid certificateGuid) {
 
-      using (var service = CertificateIssuingServices.ServiceInteractor()) {
+      using (var service = CertificateIssuingUseCases.UseCaseInteractor()) {
 
         service.DeleteCertificate(certificateGuid);
       }
@@ -63,8 +63,8 @@ namespace Empiria.Land.Transactions.CertificateRequests.Providers {
     static internal CertificateDto GetTransactionCertificate(LRSTransaction transaction,
                                                              Guid certificateGuid) {
 
-      using (var service = SearchCertificatesServices.ServiceInteractor()) {
-        CertificateDto certificate = service.GetCertificate(certificateGuid);
+      using (var usecases = CertificateIssuingUseCases.UseCaseInteractor()) {
+        CertificateDto certificate = usecases.GetCertificate(certificateGuid);
 
         EnsureTransactionHasCertificate(transaction, certificate);
 
@@ -75,18 +75,18 @@ namespace Empiria.Land.Transactions.CertificateRequests.Providers {
 
     static internal FixedList<CertificateDto> GetTransactionCertificates(LRSTransaction transaction) {
 
-      using (var searcher = SearchCertificatesServices.ServiceInteractor()) {
+      using (var usecases = CertificateIssuingUseCases.UseCaseInteractor()) {
 
-        return searcher.GetTransactionCertificates(transaction);
+        return usecases.GetTransactionCertificates(transaction);
       }
     }
 
 
     static internal CertificateDto OpenCertificate(Guid certificateGuid) {
 
-      using (var issuingService = CertificateIssuingServices.ServiceInteractor()) {
+      using (var usecases = CertificateIssuingUseCases.UseCaseInteractor()) {
 
-        return issuingService.OpenCertificate(certificateGuid);
+        return usecases.OpenCertificate(certificateGuid);
       }
     }
 
