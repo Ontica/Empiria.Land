@@ -1,22 +1,20 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Documentation                     Assembly : Empiria.Land.Documentation          *
-*  Type      : LandMediaException                             Pattern  : Exception Class                     *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Land Digitalization Services               Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Digitalization.dll            Pattern   : Exception Class                         *
+*  Type     : DigitalizationException                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : The exception that is thrown when a problem occurs in Empiria Land documentation services.    *
+*  Summary  : The exception that is thrown when a problem occurs in Empiria Land digitalization services.    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Reflection;
 
-namespace Empiria.Land.Media {
+namespace Empiria.Land.Digitalization {
 
-  /// <summary>The exception that is thrown when a problem occurs in Empiria Land
-  /// documentation services.</summary>
+  /// <summary>The exception that is thrown when a problem occurs in Empiria Land digitalization services.</summary>
   [Serializable]
-  public sealed class LandMediaException : EmpiriaException {
+  internal sealed class DigitalizationException : EmpiriaException {
 
     public enum Msg {
       AttachmentFolderNotFound,
@@ -32,7 +30,7 @@ namespace Empiria.Land.Media {
     }
 
     static private string resourceBaseName =
-                    "Empiria.Land.Core.RootTypes.LandMediaException";
+                    "Empiria.Land.Digitalization.Domain.DigitalizationExceptionMsg";
 
     #region Constructors and parsers
 
@@ -40,7 +38,7 @@ namespace Empiria.Land.Media {
     /// message.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
-    public LandMediaException(Msg message, params object[] args) :
+    public DigitalizationException(Msg message, params object[] args) :
                                                  base(message.ToString(), GetMessage(message, args)) {
 
     }
@@ -50,7 +48,7 @@ namespace Empiria.Land.Media {
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="innerException">This is the inner exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
-    public LandMediaException(Msg message, Exception innerException, params object[] args) :
+    public DigitalizationException(Msg message, Exception innerException, params object[] args) :
                                                  base(message.ToString(), GetMessage(message, args), innerException) {
 
     }
@@ -65,6 +63,6 @@ namespace Empiria.Land.Media {
 
     #endregion Private methods
 
-  } // class LandMediaException
+  } // class DigitalizationException
 
 } // namespace Empiria.Land.Documentation

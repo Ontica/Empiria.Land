@@ -60,7 +60,6 @@
     <PackageReference Include="Empiria.Geography" Version="7.0.0" />
     <PackageReference Include="Empiria.Land.Registration" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Integration" Version="5.0.0" />
-    <PackageReference Include="Empiria.Land.Documentation" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />

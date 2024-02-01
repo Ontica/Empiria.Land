@@ -52,10 +52,6 @@
     <WarningsAsErrors />
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Land.ESign\Empiria.Land.ESign.csproj" />
-    <ProjectReference Include="..\Land.SearchServices\Empiria.Land.SearchServices.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
@@ -67,6 +63,9 @@
     <PackageReference Include="Empiria.Land.Analytics" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Certificates" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Transactions" Version="5.0.0" />
+    <PackageReference Include="Empiria.Land.ESign" Version="5.0.0" />
+    <PackageReference Include="Empiria.Land.SearchServices" Version="5.0.0" />
+    <PackageReference Include="Empiria.Land.Digitalization" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\extensions\WebApi\Empiria.WebApi.csproj" />
@@ -77,5 +76,8 @@
     <ProjectReference Include="..\Land.Analytics\Empiria.Land.Analytics.csproj" />
     <ProjectReference Include="..\Land.Certificates\Empiria.Land.Certificates.csproj" />
     <ProjectReference Include="..\Land.Transactions\Empiria.Land.Transactions.csproj" />
+    <ProjectReference Include="..\Land.ESign\Empiria.Land.ESign.csproj" />
+    <ProjectReference Include="..\Land.SearchServices\Empiria.Land.SearchServices.csproj" />
+    <ProjectReference Include="..\Land.Digitalization\Empiria.Land.Digitalization.csproj" />
   </ItemGroup>
 </Project>

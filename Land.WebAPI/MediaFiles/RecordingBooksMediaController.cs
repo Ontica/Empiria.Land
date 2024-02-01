@@ -44,17 +44,6 @@ namespace Empiria.Land.Media.WebApi {
       }
     }
 
-
-    [HttpPost]
-    [Route("v5/land/media-files/process-images")]
-    public NoDataModel ProcessRecordingBooksImages() {
-      var processor = MediaFilesProcessor.GetInstance();
-
-      processor.ProcessImages();
-
-      return new NoDataModel(this.Request);
-    }
-
     #endregion Web Apis
 
   }  // class RecordingBooksMediaController

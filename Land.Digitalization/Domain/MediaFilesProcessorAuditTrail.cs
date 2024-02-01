@@ -1,16 +1,15 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Documentation                     Assembly : Empiria.Land.Documentation          *
-*  Type      : FileAuditTrail                                 Pattern  : Service provider                    *
-*  Version   : 6.8                                            License  : Please read license.txt file        *
+*  Module   : Land Digitalization Services               Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Digitalization.dll            Pattern   : Information holder                      *
+*  Type     : MediaFilesProcessorAuditTrail              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Audit trail services for Land file system operations.                                         *
+*  Summary  : Audit trail services for Land file system operations.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land.Media {
+namespace Empiria.Land.Digitalization {
 
   /// <summary>Audit trail services for Land file system operations.</summary>
   internal class MediaFilesProcessorAuditTrail {
@@ -75,6 +74,6 @@ namespace Empiria.Land.Media {
       this.log += message + Environment.NewLine;
     }
 
-  } // class FileAuditTrail
+  } // class MediaFilesProcessorAuditTrail
 
-} // namespace Empiria.Land.Documentation
+} // namespace Empiria.Land.Digitalization

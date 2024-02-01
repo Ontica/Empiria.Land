@@ -1,11 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Documentation                     Assembly : Empiria.Land.Documentation          *
-*  Type      : ImageProcessor                                 Pattern  : Domain Service                      *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Land Digitalization Services               Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Digitalization.dll            Pattern   : Service provider                        *
+*  Type     : ImageProcessor                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : It is the responsible of the image processing service.                                        *
+*  Summary  : It is the responsible of the image processing service.                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,10 +12,10 @@ using System.IO;
 
 using Empiria.Documents.IO;
 
-namespace Empiria.Land.Media {
+namespace Empiria.Land.Digitalization {
 
   /// <summary>It is the responsible of the image processing service.</summary>
-  static public class ImageProcessor {
+  static internal class ImageProcessor {
 
     #region Fields
 
@@ -79,7 +78,7 @@ namespace Empiria.Land.Media {
 
     static private void AssertFileExists(string sourceFileName) {
       if (!File.Exists(sourceFileName)) {
-        throw new LandMediaException(LandMediaException.Msg.FileNotExists,
+        throw new DigitalizationException(DigitalizationException.Msg.FileNotExists,
                                      sourceFileName);
       }
     }
@@ -180,16 +179,16 @@ namespace Empiria.Land.Media {
     //}
 
     private static string GetShortExceptionMessage(Exception exception) {
-      if (!(exception is LandMediaException)) {
+      if (!(exception is DigitalizationException)) {
         return exception.Message;
       }
-      string exceptionTag = ((LandMediaException) exception).ExceptionTag;
+      string exceptionTag = ((DigitalizationException) exception).ExceptionTag;
 
-      if (exceptionTag == LandMediaException.Msg.FileNameBadFormed.ToString()) {
+      if (exceptionTag == DigitalizationException.Msg.FileNameBadFormed.ToString()) {
         return "Archivo mal nombrado";
-      } else if (exceptionTag == LandMediaException.Msg.DocumentAlreadyDigitalized.ToString()) {
+      } else if (exceptionTag == DigitalizationException.Msg.DocumentAlreadyDigitalized.ToString()) {
         return "Ya fue digitalizado";
-      } else if (exceptionTag == LandMediaException.Msg.DocumentForFileNameNotFound.ToString()) {
+      } else if (exceptionTag == DigitalizationException.Msg.DocumentForFileNameNotFound.ToString()) {
         return "El documento registral no existe";
       } else {
         return exception.Message;
@@ -197,16 +196,16 @@ namespace Empiria.Land.Media {
     }
 
     private static string GetSpecialErrorFolder(Exception exception) {
-      if (!(exception is LandMediaException)) {
+      if (!(exception is DigitalizationException)) {
         return @"\otros.errores";
       }
-      string exceptionTag = ((LandMediaException) exception).ExceptionTag;
+      string exceptionTag = ((DigitalizationException) exception).ExceptionTag;
 
-      if (exceptionTag == LandMediaException.Msg.FileNameBadFormed.ToString()) {
+      if (exceptionTag == DigitalizationException.Msg.FileNameBadFormed.ToString()) {
         return @"\mal.nombrados";
-      } else if (exceptionTag == LandMediaException.Msg.DocumentAlreadyDigitalized.ToString()) {
+      } else if (exceptionTag == DigitalizationException.Msg.DocumentAlreadyDigitalized.ToString()) {
         return @"\duplicados";
-      } else if (exceptionTag == LandMediaException.Msg.DocumentForFileNameNotFound.ToString()) {
+      } else if (exceptionTag == DigitalizationException.Msg.DocumentForFileNameNotFound.ToString()) {
         return @"\sin.documento";
       } else {
         return @"\otros.errores";
@@ -217,4 +216,4 @@ namespace Empiria.Land.Media {
 
   } // class ImageProcessor
 
-} // namespace Empiria.Land.Documentation
+} // namespace Empiria.Land.Digitalization

@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Land Media Files Management                Component : Use cases Layer                         *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Service provider, Singleton             *
+*  Module   : Land Digitalization Services               Component : Services Layer                          *
+*  Assembly : Empiria.Land.Digitalization.dll            Pattern   : Service provider                        *
 *  Type     : MediaFilesProcessor                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Image processing engine.                                                                       *
@@ -12,7 +12,7 @@ using System.IO;
 
 using System.Runtime.Remoting.Messaging;
 
-namespace Empiria.Land.Media {
+namespace Empiria.Land.Digitalization {
 
   /// <summary>Image processing engine.</summary>
   public class MediaFilesProcessor {
@@ -164,4 +164,4 @@ namespace Empiria.Land.Media {
 
   }  // class RecordingBookMediaUseCases
 
-}  // namespace Empiria.Land.Media
+}  // namespace Empiria.Land.Digitalization
