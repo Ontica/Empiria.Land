@@ -36,47 +36,47 @@ namespace Empiria.Land.Registration {
 
 
     protected RecordingAct(RecordingActType recordingActType,
-                           RecordingDocument document) : base(recordingActType) {
+                           RecordingDocument landRecord) : base(recordingActType) {
       Assertion.Require(recordingActType, nameof(recordingActType));
-      Assertion.Require(document, nameof(document));
+      Assertion.Require(landRecord, nameof(landRecord));
 
-      Assertion.Require(!document.IsEmptyInstance, "document can't be the empty instance.");
+      Assertion.Require(!landRecord.IsEmptyInstance, "land record can't be the empty instance.");
 
-      this.Document = document;
+      this.LandRecord = landRecord;
     }
 
 
-    protected RecordingAct(RecordingActType recordingActType, RecordingDocument document,
+    protected RecordingAct(RecordingActType recordingActType, RecordingDocument landRecord,
                            BookEntry bookEntry) : base(recordingActType) {
       Assertion.Require(recordingActType, nameof(recordingActType));
-      Assertion.Require(document, nameof(document));
+      Assertion.Require(landRecord, nameof(landRecord));
       Assertion.Require(bookEntry, nameof(bookEntry));
 
-      Assertion.Require(!document.IsEmptyInstance, "document can't be the empty instance.");
+      Assertion.Require(!landRecord.IsEmptyInstance, "land record can't be the empty instance.");
 
-      this.Document = document;
+      this.LandRecord = landRecord;
       this.BookEntry = bookEntry;
     }
 
 
     static internal RecordingAct Create(RecordingActType recordingActType,
-                                        RecordingDocument document, Resource resource,
+                                        RecordingDocument landRecord, Resource resource,
                                         RecordingAct amendmentOf, int index,
                                         BookEntry bookEntry) {
       Assertion.Require(recordingActType, nameof(recordingActType));
-      Assertion.Require(document, nameof(document));
+      Assertion.Require(landRecord, nameof(landRecord));
       Assertion.Require(resource, nameof(resource));
       Assertion.Require(amendmentOf, nameof(amendmentOf));
       Assertion.Require(bookEntry, nameof(bookEntry));
 
-      Assertion.Require(!document.IsEmptyInstance, "document can't be the empty instance.");
-      Assertion.Require(!document.IsNew, "document can't be a new instance.");
+      Assertion.Require(!landRecord.IsEmptyInstance, "land record can't be the empty instance.");
+      Assertion.Require(!landRecord.IsNew, "land record can't be a new instance.");
       Assertion.Require(!amendmentOf.IsNew, "amendmentOf can't be a new instance.");
 
       RecordingAct recordingAct = recordingActType.CreateInstance();
       recordingAct.BookEntry = bookEntry;
       recordingAct.Index = index;
-      recordingAct.Document = document;
+      recordingAct.LandRecord = landRecord;
       recordingAct.AmendmentOf = amendmentOf;
 
       if (resource.IsNew) {
@@ -143,7 +143,7 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("DocumentId")]
-    public RecordingDocument Document {
+    public RecordingDocument LandRecord {
       get;
       private set;
     }
@@ -295,7 +295,7 @@ namespace Empiria.Land.Registration {
 
     internal protected virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName, this.Document.UID,
+        return EmpiriaString.BuildKeywords(this.RecordingActType.DisplayName, this.LandRecord.UID,
                                            !this.BookEntry.IsEmptyInstance ?
                                            this.BookEntry.AsText : String.Empty,
                                            this.Resource.Keywords);
@@ -411,7 +411,7 @@ namespace Empiria.Land.Registration {
       if (version == 1) {
         return new object[] {
           1, "Id", this.Id, "RecordingActType", this.RecordingActType.Id,
-          "Document", this.Document.Id, "Index", this.Index, "Notes", this.Notes,
+          "LandRecord", this.LandRecord.Id, "Index", this.Index, "Notes", this.Notes,
           "AmendmentOf", this.AmendmentOf.Id, "AmendedBy", this.AmendedBy.Id, "BookEntry", this.BookEntry.Id,
           "RegisteredBy", this.RegisteredBy.Id, "RegistrationTime", this.RegistrationTime,
           "Status", (char) this.Status
@@ -434,8 +434,8 @@ namespace Empiria.Land.Registration {
 
     string IResourceTractItem.TractPrelationStamp {
       get {
-        return this.Document.PresentationTime.ToString("yyyyMMddTHH:mm@") +
-               this.Document.AuthorizationTime.ToString("yyyyMMddTHH:mm@") +
+        return this.LandRecord.PresentationTime.ToString("yyyyMMddTHH:mm@") +
+               this.LandRecord.AuthorizationTime.ToString("yyyyMMddTHH:mm@") +
                this.RegistrationTime.ToString("yyyyMMddTHH:mm") +
                this.Id.ToString("000000000000");
       }
@@ -489,9 +489,9 @@ namespace Empiria.Land.Registration {
       this.Status = RecordableObjectStatus.Deleted;
       this.Save();
 
-      if (this.IsAmendment && this.AmendmentOf.Document.IsEmptyDocumentType) {
+      if (this.IsAmendment && this.AmendmentOf.LandRecord.IsEmptyDocumentType) {
         this.AmendmentOf.Delete();
-      } else if (this.IsAmendment && !this.AmendmentOf.Document.IsEmptyDocumentType) {
+      } else if (this.IsAmendment && !this.AmendmentOf.LandRecord.IsEmptyDocumentType) {
         this.AmendmentOf.RemoveAmendment();
       }
       this.Resource.TryDelete();
@@ -520,8 +520,8 @@ namespace Empiria.Land.Registration {
         } else if (!antecedent.BookEntry.IsEmptyInstance) {
           return antecedent.BookEntry.AsText;
 
-        } else if (!antecedent.Document.Equals(this.Document)) {
-          return antecedent.Document.UID;
+        } else if (!antecedent.LandRecord.Equals(this.LandRecord)) {
+          return antecedent.LandRecord.UID;
 
         }
 
@@ -534,7 +534,7 @@ namespace Empiria.Land.Registration {
           return antecedent2.BookEntry.AsText;
 
         } else {
-          return antecedent.Document.UID;
+          return antecedent.LandRecord.UID;
         }
       }  // GetAntecedentOrTarget()
 
@@ -543,13 +543,13 @@ namespace Empiria.Land.Registration {
         var amendedAct = this.AmendmentOf;
 
         if (amendedAct.IsEmptyInstance) {
-          return this.GetAntecedent().Document.UID;
+          return this.GetAntecedent().LandRecord.UID;
 
         } else if (amendedAct.BookEntry.IsEmptyInstance) {
           return amendedAct.RecordingActType.DisplayName +
                  (amendedAct.RecordingActType.FemaleGenre ?
                                               " registrada en " : " registrado en ") +
-                 "Doc: " + amendedAct.Document.UID;
+                 "Doc: " + amendedAct.LandRecord.UID;
 
         } else {
           return amendedAct.RecordingActType.DisplayName +
@@ -572,7 +572,7 @@ namespace Empiria.Land.Registration {
 
       /// Look for the first recording act with ResourceExtData added before this act in the tract.
       /// If it is found then return it, if not then return the an empty resource snapshot.
-      var lastActWithSnapshot = tract.FindLast(x => x.Document.PresentationTime < this.Document.PresentationTime &&
+      var lastActWithSnapshot = tract.FindLast(x => x.LandRecord.PresentationTime < this.LandRecord.PresentationTime &&
                                                     x.ResourceWasUpdated);
       if (lastActWithSnapshot != null) {
         return lastActWithSnapshot.ResourceShapshotData;
@@ -599,7 +599,7 @@ namespace Empiria.Land.Registration {
 
     protected override void OnSave() {
       // Writes any change to the document and to the related physical recording
-      this.Document.Save();
+      this.LandRecord.Save();
       if (this.BookEntry.IsNew) {
         this.BookEntry.Save();
       }
@@ -631,14 +631,14 @@ namespace Empiria.Land.Registration {
       Assertion.Require(decimal.Zero < percentage && percentage <= decimal.One,
                        "Percentage should be set between zero and one inclusive.");
 
-      resource.AssertIsStillAlive(this.Document.PresentationTime);
+      resource.AssertIsStillAlive(this.LandRecord.PresentationTime);
 
       this.Resource = resource;
       this.ResourceRole = role;
       this.RelatedResource = relatedResource ?? Resource.Empty;
       this.Percentage = percentage;
 
-      this.Index = this.Document.AppendRecordingAct(this);
+      this.Index = this.LandRecord.AppendRecordingAct(this);
     }
 
 

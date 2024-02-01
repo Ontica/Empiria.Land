@@ -97,7 +97,7 @@ namespace Empiria.Land.Providers {
 
       var list = new List<EFilingDocument>();
 
-      var document = transaction.Document;
+      var document = transaction.LandRecord;
 
       if (!document.IsEmptyInstance && document.Security.Signed()) {
         list.Add(MapToEFilingDocumentDTO(document));
@@ -242,15 +242,15 @@ namespace Empiria.Land.Providers {
     }
 
 
-    static private EFilingDocument MapToEFilingDocumentDTO(RecordingDocument document) {
+    static private EFilingDocument MapToEFilingDocumentDTO(RecordingDocument landRecord) {
       return new EFilingDocument() {
-        UID = document.UID,
-        Type = document.Subtype.Name,
+        UID = landRecord.UID,
+        Type = landRecord.Subtype.Name,
         TypeName = "Sello registral",
-        Name = $"Sello registral {document.UID} del trámite {document.GetTransaction().UID}.",
+        Name = $"Sello registral {landRecord.UID} del trámite {landRecord.GetTransaction().UID}.",
         ContentType = "text/html",
-        Uri = $"{PRINT_SERVICES_SERVER_BASE_ADDRESS}/recording.seal.aspx?uid={document.UID}&" +
-              $"externalUID={document.GetTransaction().ExternalTransactionNo}"
+        Uri = $"{PRINT_SERVICES_SERVER_BASE_ADDRESS}/recording.seal.aspx?uid={landRecord.UID}&" +
+              $"externalUID={landRecord.GetTransaction().ExternalTransactionNo}"
       };
     }
 

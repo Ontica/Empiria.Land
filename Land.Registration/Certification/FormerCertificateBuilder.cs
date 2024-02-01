@@ -50,7 +50,7 @@ namespace Empiria.Land.Certification {
 
       var o = this.Certificate;
 
-      template.Replace("{{DOCUMENT.OR.PHYSICAL.RECORDING}}", this.GetDocumentOrBookEntry());
+      template.Replace("{{DOCUMENT.OR.PHYSICAL.RECORDING}}", this.GetLandRecordOrBookEntry());
 
       template.Replace("{{SOLICITANTE}}", o.ExtensionData.SeekForName.ToUpperInvariant());
       template.Replace("{{DISTRITO}}", o.RecorderOffice.ShortName);
@@ -103,7 +103,7 @@ namespace Empiria.Land.Certification {
       }
     }
 
-    private string GetDocumentOrBookEntry() {
+    private string GetLandRecordOrBookEntry() {
       var antecedent = this.Certificate.Property.Tract.GetRecordingAntecedent();
 
       if (antecedent.Equals(RecordingAct.Empty)) {
@@ -112,7 +112,7 @@ namespace Empiria.Land.Certification {
                          "ES POSIBLE QUE EL CERTIFICADO NO DEBA SER EMITIDO");
       }
       if (antecedent.BookEntry.IsEmptyInstance) {
-        return this.GetPhysicalDocument(antecedent.Document);
+        return this.GetLandRecord(antecedent.LandRecord);
       } else {
         return this.GetBookEntry(antecedent.BookEntry);
       }
@@ -134,16 +134,16 @@ namespace Empiria.Land.Certification {
       return text.ToString();
     }
 
-    private string GetPhysicalDocument(RecordingDocument document) {
+    private string GetLandRecord(RecordingDocument landRecord) {
       const string template =
               "Que bajo el documento con número electrónico {{DOCUMENT}} " +
               "registrado en esta oficina el {{DATE}}";
 
       var text = new StringBuilder(template);
 
-      text.Replace("{{DOCUMENT}}", document.UID);
-      if (document.AuthorizationTime != ExecutionServer.DateMinValue) {
-        text.Replace("{{DATE}}", document.AuthorizationTime.ToString("dd \\de MMMM \\de yyyy"));
+      text.Replace("{{DOCUMENT}}", landRecord.UID);
+      if (landRecord.AuthorizationTime != ExecutionServer.DateMinValue) {
+        text.Replace("{{DATE}}", landRecord.AuthorizationTime.ToString("dd \\de MMMM \\de yyyy"));
 
       } else {
         text.Replace("{{DATE}}", AsWarning("FECHA DE INSCRIPCIÓN NO DETERMINADA"));

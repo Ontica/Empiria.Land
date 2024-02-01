@@ -18,14 +18,14 @@ namespace Empiria.Land.Registration {
 
   public class RegistrationEngine {
 
-    private readonly RecordingDocument _recordingDocument;
+    private readonly RecordingDocument _landRecord;
 
     #region Public methods
 
-    public RegistrationEngine(RecordingDocument recordingDocument) {
-      Assertion.Require(recordingDocument, nameof(recordingDocument));
+    public RegistrationEngine(RecordingDocument landRecord) {
+      Assertion.Require(landRecord, nameof(landRecord));
 
-      _recordingDocument = recordingDocument;
+      _landRecord = landRecord;
     }
 
 
@@ -109,7 +109,7 @@ namespace Empiria.Land.Registration {
       var fields = new RecordingTaskFields();
 
       fields.RecordingTaskType = MapToRecordingTaskType(command.Type);
-      fields.RecordingDocumentUID = _recordingDocument.GUID;
+      fields.LandRecordUID = _landRecord.GUID;
       fields.RecordingActTypeUID = command.Payload.RecordingActTypeUID;
       fields.RecordableSubjectUID = command.Payload.RecordableSubjectUID;
       fields.PartitionType = command.Payload.PartitionType;

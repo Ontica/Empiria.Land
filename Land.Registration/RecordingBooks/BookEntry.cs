@@ -34,22 +34,22 @@ namespace Empiria.Land.Registration {
     }
 
     internal BookEntry(RecordingBook recordingBook,
-                       RecordingDocument mainDocument, string recordingNumber) {
+                       RecordingDocument landRecord, string recordingNumber) {
       Assertion.Require(recordingBook, nameof(recordingBook));
-      Assertion.Require(mainDocument, nameof(mainDocument));
+      Assertion.Require(landRecord, nameof(landRecord));
       Assertion.Require(recordingNumber, nameof(recordingNumber));
 
       Assertion.Require(!recordingBook.IsEmptyInstance, "recordingBook can't be the empty instance.");
-      Assertion.Require(!mainDocument.IsEmptyInstance, "mainDocument can't be the empty instance.");
+      Assertion.Require(!landRecord.IsEmptyInstance, "landRecord can't be the empty instance.");
 
       this.RecordingBook = recordingBook;
-      this.MainDocument = mainDocument;
+      this.LandRecord = landRecord;
       this.Number = recordingNumber;
 
       recordingActList = GetNewRecordingActListLazyInstance();
     }
 
-    internal BookEntry(BookEntryDto dto) : this(dto?.RecordingBook, dto?.MainDocument, dto?.Number) {
+    internal BookEntry(BookEntryDto dto) : this(dto?.RecordingBook, dto?.LandRecord, dto?.Number) {
       LoadData(dto);
       recordingActList = GetNewRecordingActListLazyInstance();
     }
@@ -70,8 +70,8 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public FixedList<BookEntry> GetBookEntriesForDocument(RecordingDocument document) {
-      return RecordingBooksData.GetBookEntriesForDocument(document);
+    static public FixedList<BookEntry> GetBookEntriesForLandRecord(RecordingDocument landRecord) {
+      return RecordingBooksData.GetBookEntriesForLandRecord(landRecord);
     }
 
 
@@ -87,7 +87,7 @@ namespace Empiria.Land.Registration {
     #region Public properties
 
     [DataField("MainDocumentId")]
-    public RecordingDocument MainDocument {
+    public RecordingDocument LandRecord {
       get;
       private set;
     }
@@ -225,7 +225,7 @@ namespace Empiria.Land.Registration {
 
       amendmentOf = amendmentOf ?? RecordingAct.Empty;
 
-      return this.MainDocument.AppendRecordingAct(recordingActType, resource, amendmentOf, this);
+      return this.LandRecord.AppendRecordingAct(recordingActType, resource, amendmentOf, this);
     }
 
     public void AssertCanBeClosed() {
@@ -259,8 +259,8 @@ namespace Empiria.Land.Registration {
         this.RecordingTime = DateTime.Now;
         this.RecordedBy = ExecutionServer.CurrentContact;
 
-        if (this.MainDocument.IsNew) {
-          this.MainDocument.Save();
+        if (this.LandRecord.IsNew) {
+          this.LandRecord.Save();
         }
       }
       RecordingBooksData.WriteBookEntry(this);
@@ -273,7 +273,7 @@ namespace Empiria.Land.Registration {
 
     public void Update(BookEntryDto data) {
       this.LoadData(data);
-      data.MainDocument.Save();
+      data.LandRecord.Save();
       this.Save();
     }
 
@@ -288,11 +288,11 @@ namespace Empiria.Land.Registration {
 
     private void LoadData(BookEntryDto dto) {
       if (this.IsNew) {
-        this.MainDocument = dto.MainDocument;
+        this.LandRecord = dto.LandRecord;
       }
 
-      this.MainDocument.PresentationTime = dto.PresentationTime;
-      this.MainDocument.SetAuthorizationTime(dto.AuthorizationDate);
+      this.LandRecord.PresentationTime = dto.PresentationTime;
+      this.LandRecord.SetAuthorizationTime(dto.AuthorizationDate);
 
       this.StartImageIndex = dto.StartImageIndex;
       this.EndImageIndex = dto.EndImageIndex;

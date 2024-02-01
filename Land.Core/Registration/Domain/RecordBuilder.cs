@@ -19,16 +19,16 @@ namespace Empiria.Land.SearchServices {
     static public Record GetLastDomainActRecord(Resource resource) {
       Assertion.Require(resource, nameof(resource));
 
-      RecordingDocument lastRecordingDocument = resource.Tract.LastRecordingAct.Document;
+      RecordingDocument landRecord = resource.Tract.LastRecordingAct.LandRecord;
 
-      return new Record(lastRecordingDocument);
+      return new Record(landRecord);
     }
 
 
     static public Record GetRecordingActPartyRecord(RecordingActParty recordingActParty) {
       Assertion.Require(recordingActParty, nameof(recordingActParty));
 
-      return new Record(recordingActParty.RecordingAct.Document);
+      return new Record(recordingActParty.RecordingAct.LandRecord);
     }
 
   }  // class RecordBuilder

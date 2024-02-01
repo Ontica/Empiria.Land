@@ -164,7 +164,7 @@ namespace Empiria.Land.Registration.UseCases {
       var book = RecordingBook.Parse(recordingBookUID);
       var bookEntry = BookEntry.Parse(bookEntryUID);
 
-      var landRecord = bookEntry.MainDocument;
+      var landRecord = bookEntry.LandRecord;
 
       var registrationEngine = new RegistrationEngine(landRecord);
 
@@ -211,7 +211,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var recordingAct = RecordingAct.Parse(recordingActUID);
 
-      var landRecord = recordingAct.Document;
+      var landRecord = recordingAct.LandRecord;
 
       Assertion.Require(book.BookEntries.Contains(bookEntry),
                        $"Book entry '{bookEntryUID}', does not belong to book '{book.AsText}'.");
@@ -236,7 +236,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 
-      var instrumentBookEntries = BookEntry.GetBookEntriesForDocument(landRecord);
+      var instrumentBookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
 
       var bookEntry = instrumentBookEntries.Find(x => x.UID == bookEntryUID);
 
@@ -261,7 +261,7 @@ namespace Empiria.Land.Registration.UseCases {
       var bookEntry = BookEntry.Parse(bookEntryUID);
 
       bookEntry.Update(fields.BookEntry.MapToBookEntryDto(bookEntry.RecordingBook,
-                       bookEntry.MainDocument));
+                       bookEntry.LandRecord));
 
       var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 

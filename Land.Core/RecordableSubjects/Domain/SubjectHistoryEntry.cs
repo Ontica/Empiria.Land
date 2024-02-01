@@ -91,8 +91,8 @@ namespace Empiria.Land.RecordableSubjects {
     #region Helpers
 
     private EditionRules GetEditionRules() {
-      bool isHistoric = RecordingAct.Document.IsHistoricDocument;
-      bool isClosed = RecordingAct.Document.IsClosed;
+      bool isHistoric = RecordingAct.LandRecord.IsHistoricRecord;
+      bool isClosed = RecordingAct.LandRecord.IsClosed;
 
       return new EditionRules {
         CanBeDeleted = isHistoric && !isClosed,

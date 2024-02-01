@@ -146,40 +146,40 @@ namespace Empiria.Land.Registration {
       this.AuxiliarImageSetId = json.Get<Int32>("AuxiliarImageSetId", -1);
     }
 
-    public JsonObject GetJson(RecordingDocument document) {
+    public JsonObject GetJson(RecordingDocument landRecord) {
       var json = new JsonObject();
 
-      switch (document.DocumentType.Id) {
+      switch (landRecord.DocumentType.Id) {
         case 2410:
-          json.AddIfValue("DocumentNo", document.Number);
+          json.AddIfValue("DocumentNo", landRecord.Number);
           json.AddIfValue("NotaryBook", this.BookNo);
           json.AddIfValue("StartSheet", this.StartSheet);
           json.AddIfValue("EndSheet", this.EndSheet);
           break;
 
         case 2411:
-          json.AddIfValue("DocumentNo", document.Number);
-          json.AddIfValue("CaseRecordNo", document.ExpedientNo);
+          json.AddIfValue("DocumentNo", landRecord.Number);
+          json.AddIfValue("CaseRecordNo", landRecord.ExpedientNo);
           break;
 
         case 2412:
-          json.AddIfValue("DocumentNo", document.Number);
-          json.AddIfValue("CaseRecordNo", document.ExpedientNo);
+          json.AddIfValue("DocumentNo", landRecord.Number);
+          json.AddIfValue("CaseRecordNo", landRecord.ExpedientNo);
           break;
 
         case 2413:
-          json.AddIfValue("DocumentNo", document.Number);
+          json.AddIfValue("DocumentNo", landRecord.Number);
           if (this.MainWitness != null) {
             json.AddIfValue("WitnessId", this.MainWitness.Id);
           }
           break;
 
         case 2414:
-          json.AddIfValue("DocumentNo", document.Number);
+          json.AddIfValue("DocumentNo", landRecord.Number);
           break;
 
         default:
-          json.AddIfValue("DocumentNo", document.Number);
+          json.AddIfValue("DocumentNo", landRecord.Number);
           json.AddIfValue("NotaryBook", this.BookNo);
           json.AddIfValue("StartSheet", this.StartSheet);
           json.AddIfValue("EndSheet", this.EndSheet);

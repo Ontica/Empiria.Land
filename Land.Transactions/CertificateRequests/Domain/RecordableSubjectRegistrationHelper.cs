@@ -46,7 +46,7 @@ namespace Empiria.Land.Transactions.CertificateRequests {
 
       recordableSubject.Save();
 
-      var precedentAct = new InformationAct(RecordingActType.Empty, bookEntry.MainDocument,
+      var precedentAct = new InformationAct(RecordingActType.Empty, bookEntry.LandRecord,
                                             recordableSubject, bookEntry);
       precedentAct.Save();
 

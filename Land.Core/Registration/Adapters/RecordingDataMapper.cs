@@ -16,25 +16,25 @@ namespace Empiria.Land.Registration.Adapters {
     #region Public methods
 
     static internal RecordingDataDto MapRecordingData(RecordingAct recordingAct) {
-      RecordingDocument document = recordingAct.Document;
+      RecordingDocument landRecord = recordingAct.LandRecord;
 
       BookEntry bookEntry = recordingAct.HasBookEntry ?
                                             recordingAct.BookEntry : BookEntry.Empty;
 
       return new RecordingDataDto {
-        UID = document.GUID,
-        Type = document.DocumentType.DisplayName,
-        RecordingID = document.UID,
-        Description = bookEntry.IsEmptyInstance ? document.UID : recordingAct.BookEntry.AsText,
-        Office = document.RecorderOffice.MapToNamedEntity(),
+        UID = landRecord.GUID,
+        Type = landRecord.DocumentType.DisplayName,
+        RecordingID = landRecord.UID,
+        Description = bookEntry.IsEmptyInstance ? landRecord.UID : recordingAct.BookEntry.AsText,
+        Office = landRecord.RecorderOffice.MapToNamedEntity(),
         VolumeEntryData = MapVolumeEntry(bookEntry),
-        RecordingTime = document.AuthorizationTime,
-        RecordedBy = document.GetRecordingOfficials()[0].ShortName,
-        AuthorizedBy = document.AuthorizedBy.ShortName,
-        PresentationTime = document.PresentationTime,
-        TransactionUID = recordingAct.Document.GetTransaction().UID,
-        Status = document.Status.ToString(),
-        Media = LandRecordMapper.MapStampMedia(document)
+        RecordingTime = landRecord.AuthorizationTime,
+        RecordedBy = landRecord.GetRecordingOfficials()[0].ShortName,
+        AuthorizedBy = landRecord.AuthorizedBy.ShortName,
+        PresentationTime = landRecord.PresentationTime,
+        TransactionUID = recordingAct.LandRecord.GetTransaction().UID,
+        Status = landRecord.Status.ToString(),
+        Media = LandRecordMapper.MapStampMedia(landRecord)
       };
     }
 
@@ -47,7 +47,7 @@ namespace Empiria.Land.Registration.Adapters {
       return new VolumeEntryDataDto {
         UID = bookEntry.UID,
         RecordingBookUID = bookEntry.RecordingBook.UID,
-        InstrumentRecordingUID = bookEntry.MainDocument.GUID,
+        InstrumentRecordingUID = bookEntry.LandRecord.GUID,
       };
     }
 

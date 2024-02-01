@@ -95,27 +95,27 @@ namespace Empiria.Land.WebApi {
     }
 
 
-    internal void ValidateDocument(string documentUID, string hash) {
+    internal void ValidateLandRecord(string landRecordUID, string hash) {
 
-      var document = RecordingDocument.TryParse(documentUID, true);
+      var landRecord = RecordingDocument.TryParse(landRecordUID, true);
 
-      if (document == null && hash.Length == 0) {
-        throw new ResourceNotFoundException("Land.RecordingDocument.NotFound",
+      if (landRecord == null && hash.Length == 0) {
+        throw new ResourceNotFoundException("Land.LandRecord.NotFound",
                                             "No tenemos registrado ningún documento o sello registral con número '{0}'.\n" +
                                             "Favor de revisar la información proporcionada.",
-                                            documentUID);
+                                            landRecordUID);
 
-      } else if (document == null && hash.Length != 0) {
-        throw new ResourceNotFoundException("Land.RecordingDocument.InvalidQRCode",
+      } else if (landRecord == null && hash.Length != 0) {
+        throw new ResourceNotFoundException("Land.LandRecord.InvalidQRCode",
                                             "El código QR que está impreso en su documento y que acaba de escanear hace " +
                                             "referencia al sello registral con número '{0}' que NO está registrado en nuestros archivos.\n\n" +
                                             "MUY IMPORTANTE: Es posible que su documento sea falso.\n\n" +
                                             "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                            documentUID);
+                                            landRecordUID);
 
-      } else if (document != null && hash.Length != 0 &&
-                 document.AuthorizationTime >= hashCodeValidationStartDate && hash != document.Security.QRCodeSecurityHash()) {
-        throw new ResourceNotFoundException("Land.RecordingDocument.InvalidQRCode",
+      } else if (landRecord != null && hash.Length != 0 &&
+                 landRecord.AuthorizationTime >= hashCodeValidationStartDate && hash != landRecord.Security.QRCodeSecurityHash()) {
+        throw new ResourceNotFoundException("Land.LandRecord.InvalidQRCode",
                                             "El código QR que está impreso en su documento y que acaba de escanear hace " +
                                             "referencia al sello registral con número '{0}' que sí tenemos registrado " +
                                             "pero el código de validación del QR no es correcto.\n\n" +
@@ -123,7 +123,7 @@ namespace Empiria.Land.WebApi {
                                             "posteriormente a la impresión que tiene en la mano.\n\nEsto último significa que su " +
                                             "documento impreso no es válido y que debe solicitar una reposición del mismo.\n\n" +
                                             "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                            documentUID);
+                                            landRecordUID);
 
       }
     }

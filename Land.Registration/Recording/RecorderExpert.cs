@@ -86,22 +86,22 @@ namespace Empiria.Land.Registration {
 
         this.AssertIsApplicableResource(Task.PrecedentProperty);
 
-        Task.PrecedentProperty.AssertIsStillAlive(Task.Document.PresentationTime);
+        Task.PrecedentProperty.AssertIsStillAlive(Task.LandRecord.PresentationTime);
 
         if (this.AppliesOverNewPartition && Task.RecordingActType.RecordingRule.HasChainedRule) {
-          if (!OperationalCondition(Task.Document)) {
+          if (!OperationalCondition(Task.LandRecord)) {
             var msg = "Este acto no puede aplicarse a una nueva fracción ya que requiere " +
                       "previamente un acto de: '" +
                       Task.RecordingActType.RecordingRule.ChainedRecordingActType.DisplayName + "'.";
             Assertion.RequireFail(msg);
           }
         }
-        Task.PrecedentProperty.AssertCanBeAddedTo(Task.Document, Task.RecordingActType);
+        Task.PrecedentProperty.AssertCanBeAddedTo(Task.LandRecord, Task.RecordingActType);
       }
 
       if ((this.CreateResourceOnBookEntry) &&
            Task.RecordingActType.RecordingRule.HasChainedRule) {
-        if (OperationalCondition(Task.Document)) {
+        if (OperationalCondition(Task.LandRecord)) {
           return;
         }
         var msg = "Este acto no puede aplicarse a una nueva fracción ya que requiere " +
@@ -189,7 +189,7 @@ namespace Empiria.Land.Registration {
       var domainActs = new DomainAct[realEstates.Length];
       for (int i = 0; i < realEstates.Length; i++) {
         domainActs[i] = new DomainAct(this.Task.RecordingActType,
-                                      this.Task.Document, realEstates[i],
+                                      this.Task.LandRecord, realEstates[i],
                                       this.Task.BookEntry,
                                       this.Task.RecordingActPercentage);
         domainActs[i].Save();
@@ -204,7 +204,7 @@ namespace Empiria.Land.Registration {
       var informationActs = new InformationAct[resources.Length];
       for (int i = 0; i < resources.Length; i++) {
         informationActs[i] = new InformationAct(this.Task.RecordingActType,
-                                                this.Task.Document, resources[i],
+                                                this.Task.LandRecord, resources[i],
                                                 this.Task.BookEntry);
         informationActs[i].Save();
       }
@@ -219,7 +219,7 @@ namespace Empiria.Land.Registration {
       var recordingActs = new LimitationAct[realEstates.Length];
       for (int i = 0; i < realEstates.Length; i++) {
         recordingActs[i] = new LimitationAct(this.Task.RecordingActType,
-                                             this.Task.Document, realEstates[i],
+                                             this.Task.LandRecord, realEstates[i],
                                              this.Task.BookEntry,
                                              this.Task.RecordingActPercentage);
         recordingActs[i].Save();
@@ -292,7 +292,7 @@ namespace Empiria.Land.Registration {
       RecordingAct targetAct = this.GetTargetRecordingAct(resource);
 
       return new[] { new CancelationAct(this.Task.RecordingActType,
-                                        this.Task.Document, resource, targetAct) };
+                                        this.Task.LandRecord, resource, targetAct) };
     }
 
 
@@ -300,7 +300,7 @@ namespace Empiria.Land.Registration {
       var resource = this.GetOneResource();
 
       return new[] { new CancelationAct(this.Task.RecordingActType,
-                                        this.Task.Document, resource) };
+                                        this.Task.LandRecord, resource) };
     }
 
 
@@ -312,16 +312,16 @@ namespace Empiria.Land.Registration {
     private RecordingAct CreateTargetRecordingAct(Resource resource) {
       BookEntry bookEntry = Task.TargetActInfo.BookEntry;
 
-      RecordingDocument document = null;
+      RecordingDocument landRecord = null;
 
       if (Task.TargetActInfo.BookEntryWasCreated) {
-        document = bookEntry.MainDocument;
+        landRecord = bookEntry.LandRecord;
       } else {
-        document = new RecordingDocument(RecordingDocumentType.Empty);
+        landRecord = new RecordingDocument(RecordingDocumentType.Empty);
       }
 
-      return document.AppendRecordingAct(Task.TargetActInfo.RecordingActType,
-                                         resource, bookEntry: bookEntry);
+      return landRecord.AppendRecordingAct(Task.TargetActInfo.RecordingActType,
+                                           resource, bookEntry: bookEntry);
     }
 
 
@@ -349,7 +349,7 @@ namespace Empiria.Land.Registration {
       RecordingAct targetAct = this.GetTargetRecordingAct(resource);
 
       var act = new[] { new ModificationAct(this.Task.RecordingActType,
-                                            this.Task.Document, resource, targetAct) };
+                                            this.Task.LandRecord, resource, targetAct) };
 
       if (!this.Task.BookEntry.IsEmptyInstance) {
         act[0].SetBookEntry(this.Task.BookEntry);
@@ -363,7 +363,7 @@ namespace Empiria.Land.Registration {
       var resource = this.GetOneResource();
 
       var act = new[] { new ModificationAct(this.Task.RecordingActType,
-                                            this.Task.Document, resource) };
+                                            this.Task.LandRecord, resource) };
 
       if (!this.Task.BookEntry.IsEmptyInstance) {
         act[0].SetBookEntry(this.Task.BookEntry);
@@ -500,7 +500,7 @@ namespace Empiria.Land.Registration {
       Assertion.Require(this.CreateResourceOnBookEntry,
                        "Wrong RecordingTask values to execute this method.");
 
-      var document = Task.PrecedentBookEntry.MainDocument;
+      var document = Task.PrecedentBookEntry.LandRecord;
 
       var precedentAct = new InformationAct(RecordingActType.Empty, document,
                                             resource, Task.PrecedentBookEntry);
@@ -508,19 +508,19 @@ namespace Empiria.Land.Registration {
     }
 
 
-    private bool OperationalCondition(RecordingDocument document) {
+    private bool OperationalCondition(RecordingDocument landRecord) {
       // Fixed rule, based on law
-      if (document.IssueDate < DateTime.Parse("2014-01-01")) {
+      if (landRecord.IssueDate < DateTime.Parse("2014-01-01")) {
         return true;
       }
 
       // Temporarily rule, based on customer's Recording Office operation
-      if (document.PresentationTime < DateTime.Parse("2016-10-01")) {
+      if (landRecord.PresentationTime < DateTime.Parse("2016-10-01")) {
         return true;
       }
 
       // Temporarily rule, based on customer's Recording Office operation
-      if (document.PresentationTime < DateTime.Parse("2016-09-26") && DateTime.Today < DateTime.Parse("2016-10-01")) {
+      if (landRecord.PresentationTime < DateTime.Parse("2016-09-26") && DateTime.Today < DateTime.Parse("2016-10-01")) {
         return true;
       }
       return false;

@@ -230,7 +230,7 @@ namespace Empiria.Land.Registration {
 
         var lastAct = tract.FindLast((x) => (x.Validator.WasAliveOn(DateTime.Now) &&
                                              x.RecordingActType.RecordingRule.IsHardLimitation &&
-                                             x.Document.IsClosed
+                                             x.LandRecord.IsClosed
                                              ));
         return lastAct != null;
       }
@@ -297,7 +297,7 @@ namespace Empiria.Land.Registration {
 
       tract = tract.FindAll((x) => (x.Validator.WasAliveOn(DateTime.Now) &&
                                     x.RecordingActType.RecordingRule.IsHardLimitation &&
-                                    x.Document.IsClosed
+                                    x.LandRecord.IsClosed
                             ));
       return tract;
     }
@@ -309,7 +309,7 @@ namespace Empiria.Land.Registration {
 
         var lastDomainAct = tract.FindLast((x) => x.Validator.WasAliveOn(DateTime.Now) &&
                                             x.RecordingActType.IsDomainActType &&
-                                            (x.Document.IsClosed || !x.BookEntry.IsEmptyInstance));
+                                            (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
         return lastDomainAct;
       }
     }

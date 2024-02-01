@@ -16,21 +16,21 @@ namespace Empiria.Land.Pages {
   /// <summary>Recording stamp builder methods.</summary>
   internal class RecordingStampBuilder {
 
-    private readonly RecordingDocument _document;
+    private readonly RecordingDocument _landRecord;
 
-    internal RecordingStampBuilder(RecordingDocument document) {
-      Assertion.Require(document, nameof(document));
+    internal RecordingStampBuilder(RecordingDocument landRecord) {
+      Assertion.Require(landRecord, nameof(landRecord));
 
-      _document = document;
+      _landRecord = landRecord;
     }
 
 
-    internal string RecordingActsText(RecordingAct selectedRecordingAct, bool isMainDocument) {
+    internal string RecordingActsText(RecordingAct selectedRecordingAct, bool isMainLandRecord) {
       string html = String.Empty;
 
       int index = 0;
 
-      foreach (RecordingAct recordingAct in _document.RecordingActs) {
+      foreach (RecordingAct recordingAct in _landRecord.RecordingActs) {
         string temp = String.Empty;
 
         index++;
@@ -39,7 +39,7 @@ namespace Empiria.Land.Pages {
 
         if (recordingAct.IsParent) {
           temp = builder.GetParentActText(index, GetChildren(recordingAct));
-          html += Decorate(recordingAct, selectedRecordingAct, isMainDocument, temp);
+          html += Decorate(recordingAct, selectedRecordingAct, isMainLandRecord, temp);
           html += builder.GetPartiesText();
           html += builder.GetNotesText();
           html += "<br/>";
@@ -51,7 +51,7 @@ namespace Empiria.Land.Pages {
         // If amendment act, process it and continue
         if (recordingAct.RecordingActType.IsAmendmentActType) {
           temp =  builder.GetAmendmentActText(index);
-          html += Decorate(recordingAct, selectedRecordingAct, isMainDocument, temp);
+          html += Decorate(recordingAct, selectedRecordingAct, isMainLandRecord, temp);
           html += builder.GetPartiesText();
           html += builder.GetNotesText();
           html += "<br/>";
@@ -77,7 +77,7 @@ namespace Empiria.Land.Pages {
 
         }
 
-        html += Decorate(recordingAct, selectedRecordingAct, isMainDocument, temp);
+        html += Decorate(recordingAct, selectedRecordingAct, isMainLandRecord, temp);
         html += builder.GetPartiesText();
         html += builder.GetNotesText();
         html += "<br/>";
@@ -87,20 +87,20 @@ namespace Empiria.Land.Pages {
     }
 
     private FixedList<RecordingAct> GetChildren(RecordingAct parentRecordingAct) {
-      return _document.RecordingActs.FindAll(x => x.ParentId == parentRecordingAct.Id);
+      return _landRecord.RecordingActs.FindAll(x => x.ParentId == parentRecordingAct.Id);
     }
 
 
     private string Decorate(RecordingAct currentRecordingAct,
                             RecordingAct selectedRecordingAct,
-                            bool isMainDocument, string text) {
+                            bool isMainLandRecord, string text) {
       if (selectedRecordingAct.IsEmptyInstance) {
         return text;
       }
       if (!currentRecordingAct.Equals(selectedRecordingAct)) {
         return text;
       }
-      if (isMainDocument) {
+      if (isMainLandRecord) {
         return "<span class='selectedItem'> " + text + "</span>";
       } else {
         return "<span class='markedItem'> " + text + "</span>";
@@ -109,19 +109,19 @@ namespace Empiria.Land.Pages {
 
 
     internal string PrelationText() {
-      var builder = new RegistrationTextBuilder(_document);
+      var builder = new RegistrationTextBuilder(_landRecord);
 
       return builder.PrelationText();
     }
 
     internal string RecordingPlaceAndDate() {
-      var builder = new RegistrationTextBuilder(_document);
+      var builder = new RegistrationTextBuilder(_landRecord);
 
       return builder.RecordingPlaceAndDate();
     }
 
     internal string PaymentText() {
-       var builder = new RegistrationTextBuilder(_document);
+       var builder = new RegistrationTextBuilder(_landRecord);
 
       return builder.PaymentText();
     }

@@ -4,14 +4,14 @@
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : LandRecordControlDataDto                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO that holds legal instrument control data flags.                                     *
+*  Summary  : Output DTO that holds land records control data flags.                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Land.Registration.Adapters {
 
-  /// <summary>Output DTO that holds legal instrument control data flags.</summary>
+  /// <summary>Output DTO that holds land records control data flags.</summary>
   public class LandRecordControlDataDto {
 
     public LandRecordCanControlData Can {

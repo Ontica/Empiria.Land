@@ -29,15 +29,15 @@ namespace Empiria.Land.Registration {
       // Used by Empiria Framework
     }
 
-    internal RecordingDocumentSecurity(RecordingDocument document) {
-      this.Document = document;
+    internal RecordingDocumentSecurity(RecordingDocument landRecord) {
+      this.LandRecord = landRecord;
     }
 
     #endregion Constructors and parsers
 
     #region Public properties
 
-    internal RecordingDocument Document {
+    internal RecordingDocument LandRecord {
       get;
     }
 
@@ -54,7 +54,7 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public bool Signed() {
-      return DigitalSignatureData.IsSigned(this.Document);
+      return DigitalSignatureData.IsSigned(this.LandRecord);
     }
 
 
@@ -64,38 +64,38 @@ namespace Empiria.Land.Registration {
 
 
     public bool IsReadyForEdition() {
-      if (this.Document.IsEmptyInstance) {
+      if (this.LandRecord.IsEmptyInstance) {
         return false;
       }
-      if (this.Document.Status != RecordableObjectStatus.Incomplete) {
+      if (this.LandRecord.Status != RecordableObjectStatus.Incomplete) {
         return false;
       }
-      return LRSWorkflowRules.UserCanEditDocument(this.Document);
+      return LRSWorkflowRules.UserCanEditLandRecord(this.LandRecord);
     }
 
 
     public bool IsReadyToClose() {
-      if (this.Document.IsEmptyInstance) {
+      if (this.LandRecord.IsEmptyInstance) {
         return false;
       }
-      if (this.Document.Status != RecordableObjectStatus.Incomplete) {
+      if (this.LandRecord.Status != RecordableObjectStatus.Incomplete) {
         return false;
       }
-      return LRSWorkflowRules.UserCanEditDocument(this.Document);
+      return LRSWorkflowRules.UserCanEditLandRecord(this.LandRecord);
     }
 
 
     public bool IsReadyToOpen() {
-      if (this.Document.IsEmptyInstance) {
+      if (this.LandRecord.IsEmptyInstance) {
         return false;
       }
-      if (this.Document.Status != RecordableObjectStatus.Closed) {
+      if (this.LandRecord.Status != RecordableObjectStatus.Closed) {
         return false;
       }
-      if (this.Document.Security.Signed()) {
+      if (this.LandRecord.Security.Signed()) {
         return false;
       }
-      return LRSWorkflowRules.UserCanEditDocument(this.Document);
+      return LRSWorkflowRules.UserCanEditLandRecord(this.LandRecord);
     }
 
     public void AssertCanBeClosed() {
@@ -105,9 +105,9 @@ namespace Empiria.Land.Registration {
 
       //this.AssertGraceDaysForEdition();
 
-      Assertion.Require(this.Document.RecordingActs.Count > 0, "El documento no tiene actos jurídicos.");
+      Assertion.Require(this.LandRecord.RecordingActs.Count > 0, "El documento no tiene actos jurídicos.");
 
-      foreach (var recordingAct in this.Document.RecordingActs) {
+      foreach (var recordingAct in this.LandRecord.RecordingActs) {
         recordingAct.Validator.AssertCanBeClosed();
       }
     }
@@ -120,13 +120,13 @@ namespace Empiria.Land.Registration {
 
       //this.AssertGraceDaysForEdition();
 
-      foreach (var recordingAct in this.Document.RecordingActs) {
+      foreach (var recordingAct in this.LandRecord.RecordingActs) {
         recordingAct.Validator.AssertCanBeOpened();
       }
     }
 
     private void AssertGraceDaysForEdition() {
-      var transaction = this.Document.GetTransaction();
+      var transaction = this.LandRecord.GetTransaction();
 
       if (transaction.IsEmptyInstance) {
         return;
@@ -148,11 +148,11 @@ namespace Empiria.Land.Registration {
 
 
     public string GetDigitalSeal() {
-      var transaction = this.Document.GetTransaction();
+      var transaction = this.LandRecord.GetTransaction();
 
-      string s = "||" + transaction.UID + "|" + this.Document.UID;
-      for (int i = 0; i < this.Document.RecordingActs.Count; i++) {
-        s += "|" + this.Document.RecordingActs[i].Id.ToString();
+      string s = "||" + transaction.UID + "|" + this.LandRecord.UID;
+      for (int i = 0; i < this.LandRecord.RecordingActs.Count; i++) {
+        s += "|" + this.LandRecord.RecordingActs[i].Id.ToString();
       }
       s += "||";
 
@@ -167,7 +167,7 @@ namespace Empiria.Land.Registration {
       if (this.Unsigned()) {
         return "NO TIENE FIRMA ELECTRÓNICA";
       } else {
-        return DigitalSignatureData.GetDigitalSignature(this.Document)
+        return DigitalSignatureData.GetDigitalSignature(this.LandRecord)
                                    .Substring(0, 64);
       }
     }
@@ -175,21 +175,21 @@ namespace Empiria.Land.Registration {
 
     public Person GetSignedBy() {
       if (UseESign) {
-        return DigitalSignatureData.GetDigitalSignatureSignedBy(this.Document);
+        return DigitalSignatureData.GetDigitalSignatureSignedBy(this.LandRecord);
       } else {
-        return this.Document.RecorderOffice.GetSigner();
+        return this.LandRecord.RecorderOffice.GetSigner();
       }
     }
 
 
     public string QRCodeSecurityHash() {
-      if (this.Document.IsNew) {
+      if (this.LandRecord.IsNew) {
         return String.Empty;
       }
 
-      return Cryptographer.CreateHashCode(this.Document.Id.ToString("00000000") +
-                                          this.Document.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
-                                          this.Document.UID)
+      return Cryptographer.CreateHashCode(this.LandRecord.Id.ToString("00000000") +
+                                          this.LandRecord.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
+                                          this.LandRecord.UID)
                            .Substring(0, 8)
                            .ToUpperInvariant();
     }
@@ -206,7 +206,7 @@ namespace Empiria.Land.Registration {
     }
 
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
-      var doc = this.Document;
+      var doc = this.LandRecord;
       if (version == 1) {
         return new object[] {
           1, "Id", doc.Id, "DocumentTypeId", doc.DocumentType.Id,

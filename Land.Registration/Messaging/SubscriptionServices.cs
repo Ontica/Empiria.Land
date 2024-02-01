@@ -95,7 +95,7 @@ namespace Empiria.Land.Messaging {
             return SubscriptionEventType.SubscribedForCertificateChanges;
 
           case SubscriptionType.RecordingDocumentChangesSubscription:
-            return SubscriptionEventType.SubscribedForRecordingDocumentChanges;
+            return SubscriptionEventType.SubscribedForLandRecordChanges;
 
           case SubscriptionType.ResourceChangesSubscription:
             return SubscriptionEventType.SubscribedForResourceChanges;
@@ -108,7 +108,7 @@ namespace Empiria.Land.Messaging {
             return SubscriptionEventType.ConfirmedForCertificateChanges;
 
           case SubscriptionType.RecordingDocumentChangesSubscription:
-            return SubscriptionEventType.ConfirmedForRecordingDocumentChanges;
+            return SubscriptionEventType.ConfirmedForLandRecordChanges;
 
           case SubscriptionType.ResourceChangesSubscription:
             return SubscriptionEventType.ConfirmedForResourceChanges;
@@ -121,7 +121,7 @@ namespace Empiria.Land.Messaging {
             return SubscriptionEventType.UnsubscribedForCertificateChanges;
 
           case SubscriptionType.RecordingDocumentChangesSubscription:
-            return SubscriptionEventType.UnsubscribedForRecordingDocumentChanges;
+            return SubscriptionEventType.UnsubscribedForLandRecordChanges;
 
           case SubscriptionType.ResourceChangesSubscription:
             return SubscriptionEventType.UnsubscribedForResourceChanges;

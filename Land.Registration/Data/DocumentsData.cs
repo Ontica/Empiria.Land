@@ -21,13 +21,13 @@ namespace Empiria.Land.Data {
 
     #region Methods
 
-    static internal LRSTransaction GetDocumentTransaction(RecordingDocument document) {
-      if (document.IsEmptyInstance) {
+    static internal LRSTransaction GetLandRecordTransaction(RecordingDocument landRecord) {
+      if (landRecord.IsEmptyInstance) {
         return LRSTransaction.Empty;
       }
 
       var sql = $"SELECT * FROM LRSTransactions " +
-                $"WHERE DocumentId = {document.Id}";
+                $"WHERE DocumentId = {landRecord.Id}";
 
       var op = DataOperation.Parse(sql);
 
@@ -35,8 +35,8 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal string GetNextImagingControlID(RecordingDocument document) {
-      string prefix = document.AuthorizationTime.ToString("yyyy-MM");
+    static internal string GetNextImagingControlID(RecordingDocument landRecord) {
+      string prefix = landRecord.AuthorizationTime.ToString("yyyy-MM");
 
       var sql = "SELECT MAX(ImagingControlID) " +
                 $"FROM LRSDocuments " +
@@ -54,15 +54,15 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal void SaveImagingControlID(RecordingDocument document) {
+    static internal void SaveImagingControlID(RecordingDocument landRecord) {
       var op = DataOperation.Parse("setLRSDocumentImagingControlID",
-                                   document.Id, document.Imaging.ImagingControlID);
+                                   landRecord.Id, landRecord.Imaging.ImagingControlID);
 
       DataWriter.Execute(op);
     }
 
 
-    static internal RecordingDocument TryGetBookEntryMainDocument(BookEntry bookEntry) {
+    static internal RecordingDocument TryGetBookEntryMainLandRecord(BookEntry bookEntry) {
       var op = DataOperation.Parse("getLRSRecordingMainDocument", bookEntry.Id);
 
       return DataReader.GetObject<RecordingDocument>(op, null);

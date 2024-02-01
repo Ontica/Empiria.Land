@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public RecordingDocument MainDocument {
+    public RecordingDocument LandRecord {
       get; set;
     } = new RecordingDocument(RecordingDocumentType.Empty);
 

@@ -31,11 +31,11 @@ namespace Empiria.Land.Data {
     }
 
 
-    static public FixedList<RecordingActParty> GetRecordingPartyList(RecordingDocument document, Party party) {
+    static public FixedList<RecordingActParty> GetRecordingPartyList(RecordingDocument landRecord, Party party) {
       string sql = "SELECT LRSRecordingActParties.* " +
               "FROM LRSRecordingActParties INNER JOIN LRSRecordingActs " +
               "ON LRSRecordingActParties.RecordingActId = LRSRecordingActs.RecordingActId " +
-              "WHERE (LRSRecordingActs.DocumentId = " + document.Id.ToString() + ") " +
+              "WHERE (LRSRecordingActs.DocumentId = " + landRecord.Id.ToString() + ") " +
               "AND (LRSRecordingActParties.RecActPartyStatus <> 'X') " +
               "AND (LRSRecordingActParties.PartyId = " + party.Id.ToString() +
               " OR LRSRecordingActParties.PartyOfId = " + party.Id.ToString() + ")";

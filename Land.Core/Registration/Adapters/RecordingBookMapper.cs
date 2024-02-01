@@ -57,10 +57,10 @@ namespace Empiria.Land.Registration.Adapters {
       dto.RecordingSectionName = bookEntry.RecordingBook.RecordingSection.Name;
       dto.VolumeNo = bookEntry.RecordingBook.BookNumber;
       dto.RecordingNo = bookEntry.Number;
-      dto.PresentationTime = bookEntry.MainDocument.PresentationTime;
-      dto.AuthorizationDate = bookEntry.MainDocument.AuthorizationTime;
+      dto.PresentationTime = bookEntry.LandRecord.PresentationTime;
+      dto.AuthorizationDate = bookEntry.LandRecord.AuthorizationTime;
       dto.RecordedBy = bookEntry.RecordedBy.ShortName;
-      dto.InstrumentRecording = LandRecordMapper.MapToShort(bookEntry.MainDocument);
+      dto.InstrumentRecording = LandRecordMapper.MapToShort(bookEntry.LandRecord);
       dto.RecordingActs = LandRecordMapper.MapRecordingActsListDto(bookEntry.RecordingActs);
       dto.Status = bookEntry.Status;
 
@@ -89,8 +89,8 @@ namespace Empiria.Land.Registration.Adapters {
       return new BookEntryShortDto {
         UID = bookEntry.UID,
         RecordingNo = bookEntry.Number,
-        InstrumentRecordingUID = bookEntry.MainDocument.GUID,
-        AuthorizationDate = bookEntry.MainDocument.AuthorizationTime
+        InstrumentRecordingUID = bookEntry.LandRecord.GUID,
+        AuthorizationDate = bookEntry.LandRecord.AuthorizationTime
       };
     }
 

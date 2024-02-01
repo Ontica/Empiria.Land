@@ -55,17 +55,17 @@ namespace Empiria.Land.Registration {
 
 
     static public RecordingDocument ParseGuid(string guid) {
-      var recordingDocument = BaseObject.TryParse<RecordingDocument>($"DocumentGUID = '{guid}'");
+      var landRecord = BaseObject.TryParse<RecordingDocument>($"DocumentGUID = '{guid}'");
 
-      Assertion.Require(recordingDocument,
-                             $"There is not registered a recording document with guid '{guid}'.");
+      Assertion.Require(landRecord,
+                        $"There is not registered a land record with guid '{guid}'.");
 
-      return recordingDocument;
+      return landRecord;
     }
 
 
-    static public RecordingDocument TryParse(string documentUID, bool reload = false) {
-      return BaseObject.TryParse<RecordingDocument>($"DocumentUID = '{documentUID}'", reload);
+    static public RecordingDocument TryParse(string landRecordUID, bool reload = false) {
+      return BaseObject.TryParse<RecordingDocument>($"DocumentUID = '{landRecordUID}'", reload);
     }
 
 
@@ -75,7 +75,7 @@ namespace Empiria.Land.Registration {
 
 
     static internal RecordingDocument TryParse(BookEntry bookEntry) {
-      return DocumentsData.TryGetBookEntryMainDocument(bookEntry);
+      return DocumentsData.TryGetBookEntryMainLandRecord(bookEntry);
     }
 
 
@@ -92,13 +92,14 @@ namespace Empiria.Land.Registration {
                                                          int instrumentTypeId,
                                                          string kind) {
       var documentType = RecordingDocumentType.ParseFromInstrumentTypeId(instrumentTypeId);
-      var doc = new RecordingDocument(documentType);
 
-      doc.GUID = Guid.NewGuid().ToString().ToLower();
-      doc.InstrumentId = instrumentId;
-      doc.Subtype = LRSDocumentType.ParseFromInstrumentKind(kind);
+      var landRecord = new RecordingDocument(documentType);
 
-      return doc;
+      landRecord.GUID = Guid.NewGuid().ToString().ToLower();
+      landRecord.InstrumentId = instrumentId;
+      landRecord.Subtype = LRSDocumentType.ParseFromInstrumentKind(kind);
+
+      return landRecord;
     }
 
 
@@ -140,7 +141,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public bool IsHistoricDocument {
+    public bool IsHistoricRecord {
       get {
         if (this.IsEmptyInstance) {
           return false;
@@ -290,7 +291,7 @@ namespace Empiria.Land.Registration {
 
     public bool IsRegisteredInRecordingBook {
       get {
-        return (BookEntry.GetBookEntriesForDocument(this).Count != 0);
+        return (BookEntry.GetBookEntriesForLandRecord(this).Count != 0);
       }
     }
 
@@ -330,7 +331,7 @@ namespace Empiria.Land.Registration {
     internal int AppendRecordingAct(RecordingAct recordingAct) {
       Assertion.Require(recordingAct, "recordingAct");
 
-      Assertion.Require(this.IsHistoricDocument || !this.IsClosed,
+      Assertion.Require(this.IsHistoricRecord || !this.IsClosed,
                        "Recording acts can't be added to closed documents.");
 
       _recordingActs.Value.Add(recordingAct);
@@ -351,7 +352,7 @@ namespace Empiria.Land.Registration {
 
       Assertion.Require(!this.IsEmptyInstance, "Document can't be the empty instance.");
 
-      Assertion.Require(this.IsHistoricDocument || !this.IsClosed,
+      Assertion.Require(this.IsHistoricRecord || !this.IsClosed,
                        "Recording acts can't be added to closed documents");
 
       Assertion.Require(recordingActType, nameof(recordingActType));
@@ -370,7 +371,7 @@ namespace Empiria.Land.Registration {
     }
 
     internal void SetAuthorizationTime(DateTime authorizationTime) {
-      Assertion.Require(this.IsNew || this.IsHistoricDocument,
+      Assertion.Require(this.IsNew || this.IsHistoricRecord,
          "AutorizationTime can be set only over new or historic documents.");
 
       this.AuthorizationTime = authorizationTime;
@@ -378,7 +379,7 @@ namespace Empiria.Land.Registration {
 
 
     public void SetDates(DateTime presentationTime, DateTime authorizationTime) {
-      Assertion.Require(this.IsHistoricDocument,
+      Assertion.Require(this.IsHistoricRecord,
         "Autorization and Presentation dates can be set only over new or historic documents.");
       Assertion.Require(!this.IsClosed,
         "Autorization and Presentation dates can be set only over opened documents.");
@@ -392,7 +393,7 @@ namespace Empiria.Land.Registration {
 
 
     private void SetAuthorizationTime() {
-      if (!this.IsHistoricDocument) {
+      if (!this.IsHistoricRecord) {
         this.AuthorizationTime = DateTime.Now;
       }
     }
@@ -493,7 +494,7 @@ namespace Empiria.Land.Registration {
         return LRSTransaction.Empty;
       }
       if (_transaction == null) {
-        _transaction = DocumentsData.GetDocumentTransaction(this);
+        _transaction = DocumentsData.GetLandRecordTransaction(this);
         if (_transaction.IsEmptyInstance) {
           _transaction = null;
           return LRSTransaction.Empty;
@@ -530,10 +531,10 @@ namespace Empiria.Land.Registration {
     public void RemoveRecordingAct(RecordingAct recordingAct) {
       Assertion.Require(recordingAct, "recordingAct");
 
-      Assertion.Require(this.IsHistoricDocument || !this.IsClosed,
+      Assertion.Require(this.IsHistoricRecord || !this.IsClosed,
                        "Recording acts can't be removed from closed documents.");
 
-      Assertion.Require(recordingAct.Document.Equals(this),
+      Assertion.Require(recordingAct.LandRecord.Equals(this),
                         "The recording act doesn't belong to this document.");
 
       recordingAct.Delete();
@@ -545,7 +546,7 @@ namespace Empiria.Land.Registration {
     }
 
     public BookEntry TryGetBookEntry() {
-      if (!this.IsHistoricDocument) {
+      if (!this.IsHistoricRecord) {
         return null;
       }
       BookEntry bookEntry = this.RecordingActs[0].BookEntry;

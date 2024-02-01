@@ -16,25 +16,25 @@ namespace Empiria.Land.Messaging {
 
     CertificateWasChanged,
 
-    DocumentWasChanged,
+    LandRecordWasChanged,
 
     ResourceWasChanged,
 
     SubscribedForCertificateChanges,
 
-    SubscribedForRecordingDocumentChanges,
+    SubscribedForLandRecordChanges,
 
     SubscribedForResourceChanges,
 
     ConfirmedForCertificateChanges,
 
-    ConfirmedForRecordingDocumentChanges,
+    ConfirmedForLandRecordChanges,
 
     ConfirmedForResourceChanges,
 
     UnsubscribedForCertificateChanges,
 
-    UnsubscribedForRecordingDocumentChanges,
+    UnsubscribedForLandRecordChanges,
 
     UnsubscribedForResourceChanges
 

@@ -182,24 +182,24 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public BookEntry AddBookEntry(RecordingDocument document, string bookEntryNumber) {
-      Assertion.Require(document, nameof(document));
+    public BookEntry AddBookEntry(RecordingDocument landRecord, string bookEntryNumber) {
+      Assertion.Require(landRecord, nameof(landRecord));
       Assertion.Require(bookEntryNumber, nameof(bookEntryNumber));
 
-      Assertion.Require(!document.IsEmptyInstance, "document can't be the empty instance.");
-      Assertion.Require(!document.IsEmptyDocumentType, "document can't be the special empty document.");
+      Assertion.Require(!landRecord.IsEmptyInstance, "landRecord can't be the empty instance.");
+      Assertion.Require(!landRecord.IsEmptyDocumentType, "landRecord can't be the special empty document.");
 
-      return new BookEntry(this, document, RecordingBook.FormatBookEntryNumber(bookEntryNumber));
+      return new BookEntry(this, landRecord, RecordingBook.FormatBookEntryNumber(bookEntryNumber));
     }
 
 
-    public BookEntry CreateNextBookEntry(RecordingDocument document) {
-      Assertion.Require(document, nameof(document));
-      Assertion.Require(document.SheetsCount > 0, "Document field SheetsCount must be greater than zero.");
+    public BookEntry CreateNextBookEntry(RecordingDocument landRecord) {
+      Assertion.Require(landRecord, nameof(landRecord));
+      Assertion.Require(landRecord.SheetsCount > 0, "Document field SheetsCount must be greater than zero.");
 
       int bookEntryNumber = RecordingBooksData.GetNextBookEntryNumberWithNoReuse(this);
 
-      return new BookEntry(this, document, RecordingBook.FormatBookEntryNumber(bookEntryNumber));
+      return new BookEntry(this, landRecord, RecordingBook.FormatBookEntryNumber(bookEntryNumber));
     }
 
 

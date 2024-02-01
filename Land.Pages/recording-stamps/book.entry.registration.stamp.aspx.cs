@@ -40,9 +40,9 @@ namespace Empiria.Land.Pages {
 		private void Initialize() {
 			transaction = GetTransaction();
 
-			Assertion.Require(!transaction.Document.IsEmptyInstance, "Transaction does not have a registration document.");
+			Assertion.Require(!transaction.LandRecord.IsEmptyInstance, "Transaction does not have a land record.");
 
-			bookEntries = BookEntry.GetBookEntriesForDocument(transaction.Document);
+			bookEntries = BookEntry.GetBookEntriesForLandRecord(transaction.LandRecord);
 
 			Assertion.Require(bookEntries.Count > 0, "Document does not have book entries.");
 
@@ -63,7 +63,7 @@ namespace Empiria.Land.Pages {
 					Request.QueryString["transactionId"] == "-1") {
 				var bookEntry = BookEntry.Parse(int.Parse(Request.QueryString["id"]));
 
-				return bookEntry.MainDocument.GetTransaction();
+				return bookEntry.LandRecord.GetTransaction();
 			}
 
 			return LRSTransaction.Parse(int.Parse(Request.QueryString["transactionId"]));
@@ -137,7 +137,7 @@ namespace Empiria.Land.Pages {
 			x = x.Replace("{VOL}", baseBookEntry.RecordingBook.BookNumber);
 			x = x.Replace("{SECTION}", baseBookEntry.RecordingBook.RecordingSection.Name);
 			x = x.Replace("{DISTRICT}", baseBookEntry.RecordingBook.RecorderOffice.ShortName);
-			x = x.Replace("{DOCUMENT}", transaction.Document.UID);
+			x = x.Replace("{DOCUMENT}", transaction.LandRecord.UID);
 
 			return x;
 		}
@@ -171,10 +171,10 @@ namespace Empiria.Land.Pages {
 
 
 			if (this.bookEntries.Count > 1) {
-				html = docMulti.Replace("{DOCUMENT}", transaction.Document.UID);
+				html = docMulti.Replace("{DOCUMENT}", transaction.LandRecord.UID);
 				html = html.Replace("{COUNT}", this.bookEntries.Count.ToString() + " (" + EmpiriaSpeech.SpeechInteger(this.bookEntries.Count).ToLower() + ")");
 			} else if (this.bookEntries.Count == 1) {
-				html = docOne.Replace("{DOCUMENT}", transaction.Document.UID);
+				html = docOne.Replace("{DOCUMENT}", transaction.LandRecord.UID);
 			} else if (this.bookEntries.Count == 0) {
 				throw new Exception("Document does not have recordings.");
 			}
@@ -203,7 +203,7 @@ namespace Empiria.Land.Pages {
 
 
 		protected string GetRecordingSignerPosition() {
-			return $"C. Oficial Registrador del Distrito Judicial de {baseBookEntry.MainDocument.RecorderOffice.ShortName}";
+			return $"C. Oficial Registrador del Distrito Judicial de {baseBookEntry.LandRecord.RecorderOffice.ShortName}";
 		}
 
 
@@ -217,7 +217,7 @@ namespace Empiria.Land.Pages {
 
 
 		protected string GetDigitalSeal() {
-			string s = "||" + transaction.UID + "|" + transaction.Document.UID;
+			string s = "||" + transaction.UID + "|" + transaction.LandRecord.UID;
 			if (this.ShowAllRecordings) {
 				for (int i = 0; i < bookEntries.Count; i++) {
 					s += "|" + bookEntries[i].Id.ToString();
@@ -231,7 +231,7 @@ namespace Empiria.Land.Pages {
 
 
 		protected string GetDigitalSignature() {
-			string s = "||" + transaction.UID + "|" + transaction.Document.UID;
+			string s = "||" + transaction.UID + "|" + transaction.LandRecord.UID;
 			if (this.ShowAllRecordings) {
 				for (int i = 0; i < bookEntries.Count; i++) {
 					s += "|" + bookEntries[i].Id.ToString();

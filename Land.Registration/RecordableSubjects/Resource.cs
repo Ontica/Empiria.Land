@@ -223,15 +223,15 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public void AssertCanBeAddedTo(RecordingDocument document, RecordingActType newRecordingActType) {
-      this.AssertIsLastInPrelationOrder(document, newRecordingActType);
-      this.AssertChainedRecordingAct(document, newRecordingActType);
+    public void AssertCanBeAddedTo(RecordingDocument landRecord, RecordingActType newRecordingActType) {
+      this.AssertIsLastInPrelationOrder(landRecord, newRecordingActType);
+      this.AssertChainedRecordingAct(landRecord, newRecordingActType);
     }
 
 
-    private void AssertChainedRecordingAct(RecordingDocument document, RecordingActType newRecordingActType) {
-      if (document.IssueDate < DateTime.Parse("2014-01-01") ||
-          document.PresentationTime < DateTime.Parse("2016-01-01")) {
+    private void AssertChainedRecordingAct(RecordingDocument landRecord, RecordingActType newRecordingActType) {
+      if (landRecord.IssueDate < DateTime.Parse("2014-01-01") ||
+          landRecord.PresentationTime < DateTime.Parse("2016-01-01")) {
         return;
       }
 
@@ -243,24 +243,24 @@ namespace Empiria.Land.Registration {
 
       // Lookup the tract for the last chained act
       var lastChainedActInstance = this.Tract.TryGetLastActiveChainedAct(chainedRecordingActType,
-                                                                         document);
+                                                                         landRecord);
       // If exists an active chained act, then the assertion meets
       if (lastChainedActInstance != null) {
         return;
       }
 
-      // Try to assert that the act is in the very first recorded document
-      var tract = this.Tract.GetClosedRecordingActsUntil(document, true);
+      // Try to assert that the act is in the very first land record
+      var tract = this.Tract.GetClosedRecordingActsUntil(landRecord, true);
 
       // First check no real estates
       if (!(this is RealEstate) &&
-          (tract.Count == 0 || tract[0].Document.Equals(document))) {
+          (tract.Count == 0 || tract[0].LandRecord.Equals(landRecord))) {
         return;
       }
 
       // For real estates, this rule apply for new no-partitions
       if (this is RealEstate && !((RealEstate) this).IsPartition &&
-          (tract.Count == 0 || tract[0].Document.Equals(document))) {
+          (tract.Count == 0 || tract[0].LandRecord.Equals(landRecord))) {
         return;
       }
 
@@ -272,7 +272,7 @@ namespace Empiria.Land.Registration {
       // rectificación de medidas del predio P, entonces basta con que el aviso preventivo
       // exista para la fraccion F de P.
       if (this is RealEstate && newRecordingActType.IsModificationActType) {
-        foreach (RecordingAct recordingAct in document.RecordingActs) {
+        foreach (RecordingAct recordingAct in landRecord.RecordingActs) {
           if (recordingAct.Equals(this)) {
             break;
           }
@@ -294,7 +294,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public void AssertIsLastInPrelationOrder(RecordingDocument document, RecordingActType newRecordingActType) {
+    public void AssertIsLastInPrelationOrder(RecordingDocument landRecord, RecordingActType newRecordingActType) {
       // Cancelation acts don't follow prelation rules
       if (newRecordingActType.IsCancelationActType) {
         return;
@@ -304,8 +304,8 @@ namespace Empiria.Land.Registration {
 
       fullTract = fullTract.FindAll((x) => !x.RecordingActType.RecordingRule.SkipPrelation);
 
-      var wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > document.PresentationTime &&
-                                                     x.Document.IsClosed);
+      var wrongPrelation = fullTract.Contains((x) => x.LandRecord.PresentationTime > landRecord.PresentationTime &&
+                                                     x.LandRecord.IsClosed);
 
       //if (wrongPrelation) {
       //  Assertion.AssertFail("El folio real '{0}' tiene registrado cuando menos otro acto jurídico " +
@@ -322,7 +322,7 @@ namespace Empiria.Land.Registration {
 
       var tract = this.Tract.GetRecordingActs();
       if (0 != tract.CountAll((x) => x.RecordingActType.RecordingRule.IsEndingAct &&
-                                     x.Document.PresentationTime < presentationTime)) {
+                                     x.LandRecord.PresentationTime < presentationTime)) {
         Assertion.RequireFail($"El folio real '{this.UID}' ya fue cancelado, fusionado o dividido en su totalidad. " +
                              "Ya no es posible agregarlo en este documento.");
       }

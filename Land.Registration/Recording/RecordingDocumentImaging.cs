@@ -24,8 +24,8 @@ namespace Empiria.Land.Registration {
       // Used by Empiria Framework
     }
 
-    public RecordingDocumentImaging(RecordingDocument document) {
-      this.Document = document;
+    public RecordingDocumentImaging(RecordingDocument landRecord) {
+      this.LandRecord = landRecord;
     }
 
 
@@ -34,35 +34,35 @@ namespace Empiria.Land.Registration {
     #region Public properties
 
 
-    public RecordingDocument Document {
+    public RecordingDocument LandRecord {
       get;
     }
 
 
     public int AuxiliarImageSetId {
       get {
-        return this.Document.ExtensionData.AuxiliarImageSetId;
+        return this.LandRecord.ExtensionData.AuxiliarImageSetId;
       }
     }
 
 
     public bool HasAuxiliarImageSet {
       get {
-        return (this.Document.ExtensionData.AuxiliarImageSetId != -1);
+        return (this.LandRecord.ExtensionData.AuxiliarImageSetId != -1);
       }
     }
 
 
     public bool HasImageSet {
       get {
-        return (this.Document.ExtensionData.DocumentImageSetId != -1);
+        return (this.LandRecord.ExtensionData.DocumentImageSetId != -1);
       }
     }
 
 
     public int ImageSetId {
       get {
-        return this.Document.ExtensionData.DocumentImageSetId;
+        return this.LandRecord.ExtensionData.DocumentImageSetId;
       }
     }
 
@@ -80,19 +80,19 @@ namespace Empiria.Land.Registration {
 
 
     public bool CanGenerateImagingControlID() {
-      if (this.Document.IsEmptyInstance) {
+      if (this.LandRecord.IsEmptyInstance) {
         return false;
       }
       if (this.ImagingControlID.Length != 0) {
         return false;
       }
-      if (!this.Document.IsClosed) {
+      if (!this.LandRecord.IsClosed) {
         return false;
       }
-      if (this.Document.RecordingActs.Count == 0) {
+      if (this.LandRecord.RecordingActs.Count == 0) {
         return false;
       }
-      if (this.Document.RecordingActs.CountAll((x) => !x.BookEntry.IsEmptyInstance) != 0) {
+      if (this.LandRecord.RecordingActs.CountAll((x) => !x.BookEntry.IsEmptyInstance) != 0) {
         return false;
       }
       return true;
@@ -100,44 +100,44 @@ namespace Empiria.Land.Registration {
 
 
     public void GenerateImagingControlID() {
-      Assertion.Require(!this.Document.IsEmptyInstance, "Document can't be the empty instance.");
-      Assertion.Require(this.Document.IsClosed, "Document is not closed.");
+      Assertion.Require(!this.LandRecord.IsEmptyInstance, "Document can't be the empty instance.");
+      Assertion.Require(this.LandRecord.IsClosed, "Document is not closed.");
 
       Assertion.Require(this.ImagingControlID.Length == 0,
                         "Document has already assigned an imaging control number.");
 
-      Assertion.Require(this.Document.RecordingActs.Count > 0, "Document should have recording acts.");
-      Assertion.Require(this.Document.RecordingActs.CountAll((x) => !x.BookEntry.IsEmptyInstance) == 0,
+      Assertion.Require(this.LandRecord.RecordingActs.Count > 0, "Document should have recording acts.");
+      Assertion.Require(this.LandRecord.RecordingActs.CountAll((x) => !x.BookEntry.IsEmptyInstance) == 0,
                         "Document can't have any recording acts that are related to physical book entries.");
 
 
-      this.ImagingControlID = DocumentsData.GetNextImagingControlID(this.Document);
+      this.ImagingControlID = DocumentsData.GetNextImagingControlID(this.LandRecord);
 
-      DocumentsData.SaveImagingControlID(this.Document);
+      DocumentsData.SaveImagingControlID(this.LandRecord);
     }
 
 
     public void SetAuxiliarImageSet(ImagingItem image) {
       Assertion.Require(image, "image");
 
-      this.Document.ExtensionData.AuxiliarImageSetId = image.Id;
+      this.LandRecord.ExtensionData.AuxiliarImageSetId = image.Id;
 
-      this.Document.Save();
+      this.LandRecord.Save();
     }
 
 
     public void SetImageSet(ImagingItem image) {
       Assertion.Require(image, "image");
 
-      this.Document.ExtensionData.DocumentImageSetId = image.Id;
+      this.LandRecord.ExtensionData.DocumentImageSetId = image.Id;
 
-      this.Document.Save();
+      this.LandRecord.Save();
     }
 
 
     public ImagingItem TryGetAuxiliarImageSet() {
-      if (this.Document.ExtensionData.AuxiliarImageSetId != -1) {
-        return ImagingItem.Parse(this.Document.ExtensionData.AuxiliarImageSetId);
+      if (this.LandRecord.ExtensionData.AuxiliarImageSetId != -1) {
+        return ImagingItem.Parse(this.LandRecord.ExtensionData.AuxiliarImageSetId);
       } else {
         return null;
       }
@@ -145,8 +145,8 @@ namespace Empiria.Land.Registration {
 
 
     public ImagingItem TryGetImageSet() {
-      if (this.Document.ExtensionData.DocumentImageSetId != -1) {
-        return ImagingItem.Parse(this.Document.ExtensionData.DocumentImageSetId);
+      if (this.LandRecord.ExtensionData.DocumentImageSetId != -1) {
+        return ImagingItem.Parse(this.LandRecord.ExtensionData.DocumentImageSetId);
       } else {
         return null;
       }

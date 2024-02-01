@@ -33,11 +33,11 @@ namespace Empiria.Land.Registration.Transactions {
         return;
       }
 
-      if (transaction.Document.IsEmptyInstance) {
+      if (transaction.LandRecord.IsEmptyInstance) {
         return;
       }
 
-      if (transaction.Document.Imaging.HasImageSet) {
+      if (transaction.LandRecord.Imaging.HasImageSet) {
         return;
       }
 
@@ -48,7 +48,7 @@ namespace Empiria.Land.Registration.Transactions {
       // int graceDaysForImaging = ConfigurationData.GetInteger("GraceDaysForImaging");
       int graceDaysForImaging = 90;
 
-      DateTime lastDate = transaction.Document.AuthorizationTime;
+      DateTime lastDate = transaction.LandRecord.AuthorizationTime;
 
       if (lastDate.AddDays(graceDaysForImaging) <= DateTime.Now) {
         Assertion.RequireFail("No es posible reingresar este trámite debido a que el documento " +
@@ -73,8 +73,8 @@ namespace Empiria.Land.Registration.Transactions {
       //if (transaction.LastReentryTime != ExecutionServer.DateMaxValue) {
       //  lastDate = transaction.LastReentryTime;
       //}
-      if (!transaction.Document.IsEmptyInstance) {
-        lastDate = transaction.Document.AuthorizationTime;
+      if (!transaction.LandRecord.IsEmptyInstance) {
+        lastDate = transaction.LandRecord.AuthorizationTime;
       }
 
       if (lastDate.AddDays(graceDaysForReentry) <= DateTime.Now) {
@@ -88,10 +88,10 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static internal void AssertRecordingActsPrelation(LRSTransaction transaction) {
-      if (transaction.Document.IsEmptyInstance || transaction.Document.IsEmptyDocumentType) {
+      if (transaction.LandRecord.IsEmptyInstance || transaction.LandRecord.IsEmptyDocumentType) {
         return;
       }
-      foreach (var recordingAct in transaction.Document.RecordingActs) {
+      foreach (var recordingAct in transaction.LandRecord.RecordingActs) {
         recordingAct.Validator.AssertIsLastInPrelationOrder();
       }
     }
@@ -205,19 +205,19 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static public bool IsReadyForGenerateImagingControlID(LRSTransaction transaction) {
-      if (transaction.IsEmptyInstance || transaction.Document.IsEmptyInstance) {
+      if (transaction.IsEmptyInstance || transaction.LandRecord.IsEmptyInstance) {
         return false;
       }
       if (!ExecutionServer.CurrentPrincipal.IsInRole("Digitizer")) {
         return false;
       }
-      if (transaction.Document.Imaging.ImagingControlID.Length != 0) {
+      if (transaction.LandRecord.Imaging.ImagingControlID.Length != 0) {
         return false;
       }
-      if (transaction.Document.RecordingActs.Count == 0) {
+      if (transaction.LandRecord.RecordingActs.Count == 0) {
         return false;
       }
-      if (!transaction.Document.IsClosed) {
+      if (!transaction.LandRecord.IsClosed) {
         return false;
       }
       if (!IsDigitalizable(transaction)) {
@@ -260,14 +260,14 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    static internal bool UserCanEditDocument(RecordingDocument document) {
+    static internal bool UserCanEditLandRecord(RecordingDocument landRecord) {
       if (!(ExecutionServer.CurrentPrincipal.IsInRole("LandRegistrar"))) {
         return false;
       }
-      if (document.IsHistoricDocument) {
+      if (landRecord.IsHistoricRecord) {
         return true;
       }
-      var transaction = document.GetTransaction();
+      var transaction = landRecord.GetTransaction();
 
       Assertion.Require(!transaction.IsEmptyInstance,
                         "Transaction can't be the empty instance, because the document is not historic.");
@@ -301,7 +301,7 @@ namespace Empiria.Land.Registration.Transactions {
 
       if (nextStatus == TransactionStatus.Revision || nextStatus == TransactionStatus.OnSign ||
           nextStatus == TransactionStatus.Archived || nextStatus == TransactionStatus.ToDeliver) {
-        if (transaction.Document.IsEmptyInstance) {
+        if (transaction.LandRecord.IsEmptyInstance) {
           return "Necesito primero se ingrese la información del documento a inscribir.";
         }
       }

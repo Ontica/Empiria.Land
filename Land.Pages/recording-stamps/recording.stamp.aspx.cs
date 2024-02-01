@@ -31,11 +31,12 @@ namespace Empiria.Land.Pages {
 
     RecordingStampBuilder builder;
 
-    protected RecordingDocument document = null;
+    protected RecordingDocument landRecord = null;
     protected LRSTransaction transaction = null;
 
     private RecordingAct _selectedRecordingAct;
-    private bool _isMainDocument;
+
+    private bool _isMainLandRecord;
 
     private Instrument instrument;
 
@@ -44,23 +45,23 @@ namespace Empiria.Land.Pages {
     #region Constructors and parsers
 
     protected void Page_Load(object sender, EventArgs e) {
-      string documentUID = Request.QueryString["uid"];
+      string landRecordUID = Request.QueryString["uid"];
 
       int selectedRecordingActId = int.Parse(Request.QueryString["selectedRecordingActId"] ?? "-1");
 
-      _isMainDocument = bool.Parse(Request.QueryString["main"] ?? "false");
+      _isMainLandRecord = bool.Parse(Request.QueryString["main"] ?? "false");
 
-      document = RecordingDocument.TryParse(documentUID, true);
+      landRecord = RecordingDocument.TryParse(landRecordUID, true);
 
-      transaction = document.GetTransaction();
+      transaction = landRecord.GetTransaction();
 
-      document.RefreshRecordingActs();
+      landRecord.RefreshRecordingActs();
 
       _selectedRecordingAct = RecordingAct.Parse(selectedRecordingActId);
 
-      this.instrument = Instrument.Parse(document.InstrumentId, true);
+      this.instrument = Instrument.Parse(landRecord.InstrumentId, true);
 
-      builder = new RecordingStampBuilder(document);
+      builder = new RecordingStampBuilder(landRecord);
     }
 
     #endregion Constructors and parsers
@@ -69,34 +70,34 @@ namespace Empiria.Land.Pages {
 
 
     protected string GetDigitalSeal() {
-      if (document.IsHistoricDocument) {
+      if (landRecord.IsHistoricRecord) {
         return CommonMethods.AsWarning("Los documentos históricos no tienen sello digital.");
 
-      } else if (document.Status != RecordableObjectStatus.Closed) {
+      } else if (landRecord.Status != RecordableObjectStatus.Closed) {
         return CommonMethods.AsWarning("El documento está ABIERTO por lo que no tiene sello digital.");
 
       } else {
-        return document.Security.GetDigitalSeal().Substring(0, 64);
+        return landRecord.Security.GetDigitalSeal().Substring(0, 64);
 
       }
     }
 
 
     protected string GetDigitalSignature() {
-      if (document.IsHistoricDocument) {
+      if (landRecord.IsHistoricRecord) {
         return CommonMethods.AsWarning("Los documentos históricos no tienen firma digital.");
       }
-      if (document.Status != RecordableObjectStatus.Closed) {
+      if (landRecord.Status != RecordableObjectStatus.Closed) {
         return CommonMethods.AsWarning("El documento está incompleto. No tiene validez.");
       }
-      if (!document.Security.UseESign) {
+      if (!landRecord.Security.UseESign) {
         return "Documento firmado de forma autógrafa. Requiere también sello oficial.";
 
-      } else if (document.Security.UseESign && document.Security.Unsigned()) {
+      } else if (landRecord.Security.UseESign && landRecord.Security.Unsigned()) {
         return CommonMethods.AsWarning("Este documento NO HA SIDO FIRMADO digitalmente. No tiene valor oficial.");
 
-      } else if (document.Security.UseESign && document.Security.Signed()) {
-        return document.Security.GetDigitalSignature();
+      } else if (landRecord.Security.UseESign && landRecord.Security.Signed()) {
+        return landRecord.Security.GetDigitalSignature();
 
       } else {
         throw Assertion.EnsureNoReachThisCode();
@@ -105,10 +106,10 @@ namespace Empiria.Land.Pages {
 
 
     protected bool CanBePrinted() {
-      if (document.Status != RecordableObjectStatus.Closed) {
+      if (landRecord.Status != RecordableObjectStatus.Closed) {
         return false;
       }
-      if (document.Security.UseESign && document.Security.Unsigned()) {
+      if (landRecord.Security.UseESign && landRecord.Security.Unsigned()) {
         return false;
       }
       //if (transaction.Workflow.IsFinished) {
@@ -124,10 +125,10 @@ namespace Empiria.Land.Pages {
 
 
     protected string GetDocumentDescriptionText() {
-      if (document.Notes.Length > 30) {
-        return "DESCRIPCIÓN:<br />" + document.Notes + "<br /><br />";
+      if (landRecord.Notes.Length > 30) {
+        return "DESCRIPCIÓN:<br />" + landRecord.Notes + "<br /><br />";
 
-      } else if (document.IsHistoricDocument) {
+      } else if (landRecord.IsHistoricRecord) {
         return "* PARTIDA HISTÓRICA SIN DESCRIPCIÓN *";
 
       } else {
@@ -151,13 +152,13 @@ namespace Empiria.Land.Pages {
 
     protected bool DocumentHasNotes {
       get {
-        return document.Notes.Length != 0;
+        return landRecord.Notes.Length != 0;
       }
     }
 
 
     protected string GetDocumentNotes() {
-      var notes = document.Notes.Replace("<br>", "<br/>");
+      var notes = landRecord.Notes.Replace("<br>", "<br/>");
 
       return notes;
     }
@@ -174,14 +175,14 @@ namespace Empiria.Land.Pages {
 
 
     protected string GetRecordingActsText() {
-      return builder.RecordingActsText(_selectedRecordingAct, _isMainDocument);
+      return builder.RecordingActsText(_selectedRecordingAct, _isMainLandRecord);
     }
 
 
     protected string GetRecordingOfficialsInitials() {
       string temp = String.Empty;
 
-      List<Contact> recordingOfficials = document.GetRecordingOfficials();
+      List<Contact> recordingOfficials = landRecord.GetRecordingOfficials();
 
       foreach (Contact official in recordingOfficials) {
         if (temp.Length != 0) {
@@ -207,7 +208,7 @@ namespace Empiria.Land.Pages {
     protected string GetRecordingOfficialsNames() {
       string temp = String.Empty;
 
-      List<Contact> recordingOfficials = document.GetRecordingOfficials();
+      List<Contact> recordingOfficials = landRecord.GetRecordingOfficials();
 
       foreach (Contact official in recordingOfficials) {
         if (temp.Length != 0) {
@@ -225,22 +226,22 @@ namespace Empiria.Land.Pages {
 
 
     protected string GetRecordingSignerName() {
-      if (document.IsHistoricDocument) {
+      if (landRecord.IsHistoricRecord) {
         return String.Empty;
       }
       if (!CanBePrinted()) {
         return CommonMethods.AsWarning("ESTE DOCUMENTO NO ES VÁLIDO EN EL ESTADO ACTUAL.");
       } else {
-        return document.Security.GetSignedBy().FullName;
+        return landRecord.Security.GetSignedBy().FullName;
       }
     }
 
 
     protected string GetRecordingSignerJobTitle() {
-      if (document.IsHistoricDocument) {
+      if (landRecord.IsHistoricRecord) {
         return String.Empty;
       }
-      return document.Security.GetSignedBy().JobTitle;
+      return landRecord.Security.GetSignedBy().JobTitle;
     }
 
 
@@ -248,7 +249,7 @@ namespace Empiria.Land.Pages {
     protected Resource UniqueInvolvedResource {
       get {
         if (_uniqueInvolvedResource == null) {
-          _uniqueInvolvedResource = document.GetUniqueInvolvedResource();
+          _uniqueInvolvedResource = landRecord.GetUniqueInvolvedResource();
         }
         return _uniqueInvolvedResource;
       }

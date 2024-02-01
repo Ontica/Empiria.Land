@@ -61,7 +61,7 @@ namespace Empiria.Land.Certification {
       data.PropertyCommonName = GetPropertyCommonName(property);
 
       data.Operation = property.LastDomainAct.DisplayName.ToUpperInvariant();
-      data.OperationDate = property.LastDomainAct.Document.AuthorizationTime;
+      data.OperationDate = property.LastDomainAct.LandRecord.AuthorizationTime;
 
       var assembler = new CertificateAssembler(data);
       var newCertificate = assembler.CreateCertificate();
@@ -90,8 +90,8 @@ namespace Empiria.Land.Certification {
 
       foreach (var act in recordingActs) {
         string temp = String.Format(template, act.DisplayName,
-                                    EmpiriaSpeech.SpeechDate(act.Document.AuthorizationTime),
-                                    act.Document.UID);
+                                    EmpiriaSpeech.SpeechDate(act.LandRecord.AuthorizationTime),
+                                    act.LandRecord.UID);
         if (act.RecordingActType.RecordingRule.IsHardLimitation) {
           var p = act.Parties.SecondaryParties;
           if (p.Count > 0) {

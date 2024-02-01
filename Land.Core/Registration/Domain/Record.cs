@@ -21,7 +21,7 @@ namespace Empiria.Land.Registration {
 
     #region Fields
 
-    private readonly RecordingDocument _document;
+    private readonly RecordingDocument _landRecord;
     private readonly Instrument _instrument;
     private readonly BookEntry _bookEntry;
     private readonly LRSTransaction _transaction;
@@ -30,36 +30,36 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    internal Record(RecordingDocument document) {
-      Assertion.Require(document, nameof(document));
+    internal Record(RecordingDocument landRecord) {
+      Assertion.Require(landRecord, nameof(landRecord));
 
-      _document = document;
-      _instrument = Instrument.Parse(_document.InstrumentId);
-      _bookEntry = LoadBookEntry(_document);
-      _transaction = LoadTransaction(_document);
+      _landRecord = landRecord;
+      _instrument = Instrument.Parse(_landRecord.InstrumentId);
+      _bookEntry = LoadBookEntry(_landRecord);
+      _transaction = LoadTransaction(_landRecord);
     }
 
     #endregion Constructors and parsers
 
     #region Properties
 
-    public int Id => _document.Id;
+    public int Id => _landRecord.Id;
 
-    public string UID => _document.GUID;
+    public string UID => _landRecord.GUID;
 
-    public string RecordingID => _document.UID;
+    public string RecordingID => _landRecord.UID;
 
     public Instrument Instrument => _instrument;
 
-    public RecorderOffice RecorderOffice => _document.RecorderOffice;
+    public RecorderOffice RecorderOffice => _landRecord.RecorderOffice;
 
-    public DateTime RecordingTime => _document.AuthorizationTime;
+    public DateTime RecordingTime => _landRecord.AuthorizationTime;
 
-    public DateTime PresentationTime => _document.PresentationTime;
+    public DateTime PresentationTime => _landRecord.PresentationTime;
 
-    public Contact RecordedBy => _document.PostedBy;
+    public Contact RecordedBy => _landRecord.PostedBy;
 
-    public Contact AuthorizedBy => _document.AuthorizedBy;
+    public Contact AuthorizedBy => _landRecord.AuthorizedBy;
 
     public bool HasBookEntry => !_bookEntry.IsEmptyInstance;
 
@@ -73,8 +73,8 @@ namespace Empiria.Land.Registration {
 
     #region Methods
 
-    static private BookEntry LoadBookEntry(RecordingDocument document) {
-      BookEntry bookEntry = document.TryGetBookEntry();
+    static private BookEntry LoadBookEntry(RecordingDocument landRecord) {
+      BookEntry bookEntry = landRecord.TryGetBookEntry();
 
       if (bookEntry == null) {
         return BookEntry.Empty;
@@ -84,9 +84,9 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static private LRSTransaction LoadTransaction(RecordingDocument document) {
-      if (document.HasTransaction) {
-        return document.GetTransaction();
+    static private LRSTransaction LoadTransaction(RecordingDocument landRecord) {
+      if (landRecord.HasTransaction) {
+        return landRecord.GetTransaction();
       }
 
       return LRSTransaction.Empty;

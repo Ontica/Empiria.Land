@@ -21,9 +21,9 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    internal ModificationAct(RecordingActType recordingActType, RecordingDocument document,
-                             Resource resource) : base(recordingActType, document) {
-      Assertion.Require(resource, "resource");
+    internal ModificationAct(RecordingActType recordingActType, RecordingDocument landRecord,
+                             Resource resource) : base(recordingActType, landRecord) {
+      Assertion.Require(resource, nameof(resource));
 
       this.SetResource(resource);
 
@@ -31,10 +31,10 @@ namespace Empiria.Land.Registration {
     }
 
     internal ModificationAct(RecordingActType recordingActType,
-                             RecordingDocument document, Resource resource,
-                             RecordingAct recordingActToModify) : base(recordingActType, document) {
-      Assertion.Require(resource, "resource");
-      Assertion.Require(recordingActToModify, "recordingActToModify");
+                             RecordingDocument landRecord, Resource resource,
+                             RecordingAct recordingActToModify) : base(recordingActType, landRecord) {
+      Assertion.Require(resource, nameof(resource));
+      Assertion.Require(recordingActToModify, nameof(recordingActToModify));
 
       base.SetResource(resource);
 

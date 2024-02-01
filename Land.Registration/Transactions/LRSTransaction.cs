@@ -216,12 +216,12 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     [DataField("DocumentId")]
-    LazyInstance<RecordingDocument> _document = LazyInstance<RecordingDocument>.Empty;
+    LazyInstance<RecordingDocument> _landRecord = LazyInstance<RecordingDocument>.Empty;
 
-    public RecordingDocument Document {
-      get { return _document.Value; }
+    public RecordingDocument LandRecord {
+      get { return _landRecord.Value; }
       private set {
-        _document = LazyInstance<RecordingDocument>.Parse(value);
+        _landRecord = LazyInstance<RecordingDocument>.Parse(value);
       }
     }
 
@@ -306,7 +306,7 @@ namespace Empiria.Land.Registration.Transactions {
         return new object[] {
           1, "Id", this.Id, "TransactionTypeId", this.TransactionType.Id,
           "UID", this.UID, "DocumentTypeId", this.DocumentType.Id,
-          "DocumentDescriptor", this.DocumentDescriptor, "DocumentId", this.Document.Id,
+          "DocumentDescriptor", this.DocumentDescriptor, "DocumentId", this.LandRecord.Id,
           "RecorderOfficeId", this.RecorderOffice.Id, "RequestedBy", this.RequestedBy,
           "AgencyId", this.Agency.Id, "ExtensionData", this.ExtensionData.ToString(),
           "PresentationTime", this.PresentationTime, "ExpectedDelivery", this.ExpectedDelivery,
@@ -424,20 +424,20 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Methods
 
-    public void AttachDocument(RecordingDocument documentToAttach) {
+    public void AttachLandRecord(RecordingDocument landRecord) {
       Assertion.Require(!this.IsEmptyInstance && !this.IsNew,
-                       "Document can't be attached to a new or empty transaction.");
-      Assertion.Require(!documentToAttach.IsEmptyInstance, "Attached documents can't be the empty instance.");
-      Assertion.Require(this.Document.IsEmptyInstance ||
-                        documentToAttach.Equals(this.Document),
-                        "Transaction's document should be empty in order to be changed.");
+                       "Land record can't be attached to a new or empty transaction.");
+      Assertion.Require(!landRecord.IsEmptyInstance, "Attached land records can't be the empty instance.");
+      Assertion.Require(this.LandRecord.IsEmptyInstance ||
+                        landRecord.Equals(this.LandRecord),
+                        "Transaction's land record should be empty in order to be changed.");
 
       /// ToDo: Should be a DB transactional op
-      documentToAttach.PresentationTime = this.PresentationTime;
+      landRecord.PresentationTime = this.PresentationTime;
 
-      documentToAttach.Save();
+      landRecord.Save();
 
-      this.Document = documentToAttach;
+      this.LandRecord = landRecord;
 
       this.Save();
     }
@@ -545,7 +545,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
 
       this.Keywords = EmpiriaString.BuildKeywords(this.InternalControlNumber, this.UID,
-                                                  this.Document.UID,
+                                                  this.LandRecord.UID,
                                                   this.PaymentData.Payments.Count == 1 ? this.PaymentData.Payments[0].ReceiptNo : string.Empty,
                                                   this.DocumentDescriptor, this.RequestedBy,
                                                   this.Agency.FullName,
@@ -578,14 +578,14 @@ namespace Empiria.Land.Registration.Transactions {
     public void RemoveDocument() {
       Assertion.Require(!this.IsEmptyInstance && !this.IsNew,
                        "Document can't be detached from a new or empty transaction.");
-      Assertion.Require(!this.Document.IsEmptyInstance,
+      Assertion.Require(!this.LandRecord.IsEmptyInstance,
                        "Document can't be removed because it's the empty instance.");
-      Assertion.Require(this.Document.RecordingActs.Count == 0,
+      Assertion.Require(this.LandRecord.RecordingActs.Count == 0,
                        "Document has recording acts. It's not possible to delete it.");
 
-      var tempDocument = this.Document;
+      var tempDocument = this.LandRecord;
 
-      this.Document = RecordingDocument.Empty;
+      this.LandRecord = RecordingDocument.Empty;
 
       this.Save();
 

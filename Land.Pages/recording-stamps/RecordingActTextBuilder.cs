@@ -124,14 +124,14 @@ namespace Empiria.Land.Pages {
         if (amendedAct.BookEntry.IsEmptyInstance) {
           x = x.Replace("{AMENDMENT.ACT.RECORDING}",
                         "sobre " + amendedActName + " " +
-                        $"{legend}  en el acto número {amendedAct.Index + 1} del documento <b> {amendedAct.Document.UID}</b> el día " +
-                        CommonMethods.GetDateAsText(amendedAct.Document.AuthorizationTime));
+                        $"{legend}  en el acto número {amendedAct.Index + 1} del documento <b> {amendedAct.LandRecord.UID}</b> el día " +
+                        CommonMethods.GetDateAsText(amendedAct.LandRecord.AuthorizationTime));
 
         } else {
           x = x.Replace("{AMENDMENT.ACT.RECORDING}",
                         "sobre " + amendedActName + " " +
                         legend + " en la " + amendedAct.BookEntry.AsText + " el día " +
-                        CommonMethods.GetDateAsText(amendedAct.BookEntry.MainDocument.AuthorizationTime));
+                        CommonMethods.GetDateAsText(amendedAct.BookEntry.LandRecord.AuthorizationTime));
         }
 
       }
@@ -361,7 +361,7 @@ namespace Empiria.Land.Pages {
       }
 
       var parentAntecedent =
-              newPartition.IsPartitionOf.Tract.GetRecordingAntecedent(_recordingAct.Document.PresentationTime);
+              newPartition.IsPartitionOf.Tract.GetRecordingAntecedent(_recordingAct.LandRecord.PresentationTime);
 
       if (!parentAntecedent.BookEntry.IsEmptyInstance) {
         x = x.Replace("{PARTITION.OF}", "<u>" + newPartition.IsPartitionOf.UID + "</u> " +
@@ -397,17 +397,17 @@ namespace Empiria.Land.Pages {
           x += ", con antecedente registral en " + domainAntecedent.BookEntry.AsText;
         }
 
-      } else if (domainAntecedent.Document.Equals(recordingAct.Document)) {
+      } else if (domainAntecedent.LandRecord.Equals(recordingAct.LandRecord)) {
         x += ", registrado en este documento";
 
       } else if (!(domainAntecedent is DomainAct)) {   // TODO: this is very strange, is a special case
         x += String.Format(" el {0} bajo el número de documento electrónico {1}",
-                           CommonMethods.GetDateAsText(domainAntecedent.Document.AuthorizationTime),
-                           domainAntecedent.Document.UID);
+                           CommonMethods.GetDateAsText(domainAntecedent.LandRecord.AuthorizationTime),
+                           domainAntecedent.LandRecord.UID);
       } else {
         x += String.Format(", con antecedente inscrito el {0} bajo el número de documento electrónico {1}",
-                           CommonMethods.GetDateAsText(domainAntecedent.Document.AuthorizationTime),
-                           domainAntecedent.Document.UID);
+                           CommonMethods.GetDateAsText(domainAntecedent.LandRecord.AuthorizationTime),
+                           domainAntecedent.LandRecord.UID);
       }
       return x;
     }

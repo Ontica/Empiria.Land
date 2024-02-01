@@ -59,10 +59,10 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
       FixedList<RecordingAct> acts = recordableSubject.Tract.GetRecordingActs();
 
       var amendableActs = acts.FindAll(x => appliesTo.Contains(x.RecordingActType) &&
-                                            ((x.Document.AuthorizationTime < date &&
-                                              x.Document.AuthorizationTime != ExecutionServer.DateMaxValue) ||
-                                              x.Document.PresentationTime < date &&
-                                              x.Document.AuthorizationTime == ExecutionServer.DateMaxValue));
+                                            ((x.LandRecord.AuthorizationTime < date &&
+                                              x.LandRecord.AuthorizationTime != ExecutionServer.DateMaxValue) ||
+                                              x.LandRecord.PresentationTime < date &&
+                                              x.LandRecord.AuthorizationTime == ExecutionServer.DateMaxValue));
 
       return SubjectHistoryMapper.Map(recordableSubject, amendableActs);
     }
@@ -123,7 +123,7 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
       RecordingAct recordingAct = recordableSubject.Tract.GetRecordingAct(recordingActUID);
 
-      RecordingDocument landRecord = recordingAct.Document;
+      RecordingDocument landRecord = recordingAct.LandRecord;
 
       landRecord.RemoveRecordingAct(recordingAct);
     }

@@ -49,7 +49,7 @@ namespace Empiria.Land.Registration {
         _recordingAct.BookEntry.AssertCanBeClosed();
       }
 
-      _recordingAct.Resource.AssertIsStillAlive(_recordingAct.Document.PresentationTime);
+      _recordingAct.Resource.AssertIsStillAlive(_recordingAct.LandRecord.PresentationTime);
 
       this.AssertIsLastInPrelationOrder();
 
@@ -98,24 +98,24 @@ namespace Empiria.Land.Registration {
 
       // Lookup the last chained act
       var lastChainedActInstance = _recordingAct.Resource.Tract.TryGetLastActiveChainedAct(chainedRecordingActType,
-                                                                                           _recordingAct.Document);
+                                                                                           _recordingAct.LandRecord);
       // If exists an active chained act, then the assertion meets
       if (lastChainedActInstance != null) {
         return;
       }
 
       // Try to assert that the act is in the very first recorded document
-      var tract = _recordingAct.Resource.Tract.GetClosedRecordingActsUntil(_recordingAct.Document, true);
+      var tract = _recordingAct.Resource.Tract.GetClosedRecordingActsUntil(_recordingAct.LandRecord, true);
 
       // First check no real estates
       if (!(_recordingAct.Resource is RealEstate) &&
-          (tract.Count == 0 || tract[0].Document.Equals(_recordingAct.Document))) {
+          (tract.Count == 0 || tract[0].LandRecord.Equals(_recordingAct.LandRecord))) {
         return;
       }
 
       // For real estates, this rule apply for new no-partitions
       if (_recordingAct.Resource is RealEstate && !((RealEstate) _recordingAct.Resource).IsPartition &&
-          (tract.Count == 0 || tract[0].Document.Equals(_recordingAct.Document))) {
+          (tract.Count == 0 || tract[0].LandRecord.Equals(_recordingAct.LandRecord))) {
         return;
       }
 
@@ -127,7 +127,7 @@ namespace Empiria.Land.Registration {
       // rectificación de medidas del predio P, entonces basta con que el aviso preventivo
       // exista para la fraccion F de P.
       if (_recordingAct.Resource is RealEstate && _recordingAct.RecordingActType.IsModificationActType) {
-        foreach (RecordingAct recordingAct in _recordingAct.Document.RecordingActs) {
+        foreach (RecordingAct recordingAct in _recordingAct.LandRecord.RecordingActs) {
           if (recordingAct.Equals(this)) {
             break;
           }
@@ -162,8 +162,8 @@ namespace Empiria.Land.Registration {
 
       fullTract = fullTract.FindAll((x) => !x.RecordingActType.RecordingRule.SkipPrelation);
 
-      bool wrongPrelation = fullTract.Contains((x) => x.Document.PresentationTime > _recordingAct.Document.PresentationTime &&
-                                                      x.Document.IsClosed);
+      bool wrongPrelation = fullTract.Contains((x) => x.LandRecord.PresentationTime > _recordingAct.LandRecord.PresentationTime &&
+                                                      x.LandRecord.IsClosed);
 
       //if (wrongPrelation) {
       //  Assertion.AssertFail("El acto jurídico " + this.IndexedName +
@@ -200,7 +200,7 @@ namespace Empiria.Land.Registration {
     internal bool IsEditable() {
       return (_recordingAct.Status != RecordableObjectStatus.Registered &&
               _recordingAct.Status != RecordableObjectStatus.Closed &&
-              _recordingAct.Document.Status != RecordableObjectStatus.Closed);
+              _recordingAct.LandRecord.Status != RecordableObjectStatus.Closed);
     }
 
 
@@ -213,13 +213,13 @@ namespace Empiria.Land.Registration {
       if (autoCancelDays == 0) {
         return true;
       }
-      return _recordingAct.Document.PresentationTime.Date.AddDays(autoCancelDays) >= onDate.Date;
+      return _recordingAct.LandRecord.PresentationTime.Date.AddDays(autoCancelDays) >= onDate.Date;
     }
 
 
     internal bool WasCanceledOn(DateTime onDate) {
       if (!_recordingAct.AmendedBy.IsEmptyInstance && _recordingAct.AmendedBy.RecordingActType.IsCancelationActType &&
-           _recordingAct.AmendedBy.Document.PresentationTime > onDate) {
+           _recordingAct.AmendedBy.LandRecord.PresentationTime > onDate) {
         return true;
       }
       return false;
@@ -232,8 +232,8 @@ namespace Empiria.Land.Registration {
     private void AssertDoesntHasEmittedCertificates() {
       var certificates = _recordingAct.Resource.Tract.GetEmittedCerificates();
 
-      bool wrongPrelation = certificates.Contains((x) => x.IsClosed && x.IssueTime > _recordingAct.Document.AuthorizationTime &&
-                                                         !x.Transaction.Equals(_recordingAct.Document.GetTransaction()));
+      bool wrongPrelation = certificates.Contains((x) => x.IsClosed && x.IssueTime > _recordingAct.LandRecord.AuthorizationTime &&
+                                                         !x.Transaction.Equals(_recordingAct.LandRecord.GetTransaction()));
 
       if (wrongPrelation) {
         Assertion.RequireFail("El acto jurídico " + _recordingAct.IndexedName +
@@ -249,8 +249,8 @@ namespace Empiria.Land.Registration {
     private void AssertNoTrappedActs() {
       var tract = _recordingAct.Resource.Tract.GetRecordingActs();
 
-      var trappedAct = tract.Find((x) => x.Document.PresentationTime < _recordingAct.Document.PresentationTime &&
-                                  !x.Document.IsClosed && !x.Document.IsHistoricDocument);
+      var trappedAct = tract.Find((x) => x.LandRecord.PresentationTime < _recordingAct.LandRecord.PresentationTime &&
+                                  !x.LandRecord.IsClosed && !x.LandRecord.IsHistoricRecord);
 
       //if (trappedAct != null) {
       //  Assertion.AssertFail("Este documento no puede ser cerrado, ya que el acto jurídico\n" +
@@ -321,17 +321,17 @@ namespace Empiria.Land.Registration {
 
     private bool MeetsOperationalCondition() {
       // Fixed rule, based on law
-      if (_recordingAct.Document.IssueDate < DateTime.Parse("2014-01-01")) {
+      if (_recordingAct.LandRecord.IssueDate < DateTime.Parse("2014-01-01")) {
         return true;
       }
 
       // Temporarily rule, based on Tlaxcala Recording Office operation
-      if (_recordingAct.Document.PresentationTime < DateTime.Parse("2016-01-01")) {
+      if (_recordingAct.LandRecord.PresentationTime < DateTime.Parse("2016-01-01")) {
         return true;
       }
 
       // Temporarily rule, based on Tlaxcala Recording Office operation
-      if (_recordingAct.Document.PresentationTime < DateTime.Parse("2016-09-26") &&
+      if (_recordingAct.LandRecord.PresentationTime < DateTime.Parse("2016-09-26") &&
           DateTime.Today < DateTime.Parse("2016-10-02")) {
         return true;
       }

@@ -32,13 +32,13 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal List<RecordingAct> GetDocumentRecordingActs(RecordingDocument document) {
-      if (document.IsEmptyInstance) {
+    static internal List<RecordingAct> GetDocumentRecordingActs(RecordingDocument landRecord) {
+      if (landRecord.IsEmptyInstance) {
         return new List<RecordingAct>();
       }
 
       string sql = "SELECT * FROM LRSRecordingActs " +
-                   $"WHERE DocumentId = {document.Id} AND RecordingActStatus <> 'X' " +
+                   $"WHERE DocumentId = {landRecord.Id} AND RecordingActStatus <> 'X' " +
                    "ORDER BY RecordingActIndex, RegistrationTime";
 
       var operation = DataOperation.Parse(sql);
@@ -60,11 +60,11 @@ namespace Empiria.Land.Data {
       Assertion.Require(!o.Resource.IsEmptyInstance && !o.Resource.IsNew,
                        "Resource can't be new or the empty instance.");
       Assertion.Require(!o.RelatedResource.IsNew, "Related resource was not saved.");
-      Assertion.Require(!o.Document.IsEmptyInstance, "Document can't be the empty instance.");
-      Assertion.Require(!o.Document.IsNew, "Document should be saved before add recording acts to it.");
+      Assertion.Require(!o.LandRecord.IsEmptyInstance, "Document can't be the empty instance.");
+      Assertion.Require(!o.LandRecord.IsNew, "Document should be saved before add recording acts to it.");
 
       var op = DataOperation.Parse("writeLRSRecordingAct", o.Id, o.UID,
-                      o.RecordingActType.Id, o.Document.Id, o.Index,
+                      o.RecordingActType.Id, o.LandRecord.Id, o.Index,
                       o.Resource.Id, (char) o.ResourceRole, o.RelatedResource.Id, o.Percentage,
                       o.Kind, o.OperationAmount, o.OperationCurrency.Id, o.Summary,
                       o.Notes, /* o.ResourceExtData, o.ExtensionData.ToString(), */ o.Keywords,

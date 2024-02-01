@@ -98,28 +98,28 @@ namespace Empiria.Land.WebApi {
     }
 
 
-    internal List<PropertyBagItem> BuildRecordingDocument(string documentUID, string hash) {
+    internal List<PropertyBagItem> BuildLandRecord(string landRecordUID, string hash) {
       var propertyBag = new List<PropertyBagItem>(16);
 
-      var document = RecordingDocument.TryParse(documentUID, true);
+      var landRecord = RecordingDocument.TryParse(landRecordUID, true);
 
       propertyBag.Add(new PropertyBagItem("Información del documento", String.Empty, "section"));
-      propertyBag.Add(new PropertyBagItem("Sello registral número", document.UID, "bold-text"));
-      propertyBag.Add(new PropertyBagItem("Tipo de documento", document.DocumentType.DisplayName, "bold-text"));
-      propertyBag.Add(new PropertyBagItem("Emitido por", document.IssuedBy.ShortName));
-      propertyBag.Add(new PropertyBagItem("Fecha de presentación", GetDateTime(document.PresentationTime), "date-time"));
-      propertyBag.Add(new PropertyBagItem("Fecha de registro", GetDateTime(document.AuthorizationTime), "date"));
-      propertyBag.Add(new PropertyBagItem("Registrado por", document.GetRecordingOfficials()[0].ShortName));
-      propertyBag.Add(new PropertyBagItem("Resumen", document.Notes, "small-text"));
+      propertyBag.Add(new PropertyBagItem("Sello registral número", landRecord.UID, "bold-text"));
+      propertyBag.Add(new PropertyBagItem("Tipo de documento", landRecord.DocumentType.DisplayName, "bold-text"));
+      propertyBag.Add(new PropertyBagItem("Emitido por", landRecord.IssuedBy.ShortName));
+      propertyBag.Add(new PropertyBagItem("Fecha de presentación", GetDateTime(landRecord.PresentationTime), "date-time"));
+      propertyBag.Add(new PropertyBagItem("Fecha de registro", GetDateTime(landRecord.AuthorizationTime), "date"));
+      propertyBag.Add(new PropertyBagItem("Registrado por", landRecord.GetRecordingOfficials()[0].ShortName));
+      propertyBag.Add(new PropertyBagItem("Resumen", landRecord.Notes, "small-text"));
 
-      if (document.RecordingActs.Count > 0) {
+      if (landRecord.RecordingActs.Count > 0) {
         propertyBag.Add(new PropertyBagItem("Actos jurídicos registrados", String.Empty, "section"));
-        foreach (var recordingAct in document.RecordingActs) {
+        foreach (var recordingAct in landRecord.RecordingActs) {
           propertyBag.Add(new PropertyBagItem(recordingAct.DisplayName, "Folio real: " + recordingAct.Resource.UID));
         }
       }
 
-      var uniqueResource = document.GetUniqueInvolvedResource();
+      var uniqueResource = landRecord.GetUniqueInvolvedResource();
       if (!uniqueResource.Equals(Resource.Empty) && uniqueResource is RealEstate) {
         propertyBag.Add(new PropertyBagItem("Documento registral expedido sobre el folio electrónico", String.Empty, "section"));
         propertyBag.Add(new PropertyBagItem("Folio real", uniqueResource.UID + "<br/>" +
@@ -131,27 +131,27 @@ namespace Empiria.Land.WebApi {
         propertyBag.Add(new PropertyBagItem("Descripción", uniqueResource.AsText));
       }
 
-      var unsigned = document.Security.UseESign && document.Security.Unsigned();
+      var unsigned = landRecord.Security.UseESign && landRecord.Security.Unsigned();
 
       propertyBag.Add(new PropertyBagItem("Verificación de elementos de seguridad", String.Empty,
                                           unsigned ? "section-error" : "section"));
 
-      if (hash.Length != 0 && document.AuthorizationTime < hashCodeValidationStartDate) {
+      if (hash.Length != 0 && landRecord.AuthorizationTime < hashCodeValidationStartDate) {
         propertyBag.Add(new PropertyBagItem("Código de verificación", hash, "bold-text"));
       } else {
-        propertyBag.Add(new PropertyBagItem("Código de verificación", document.Security.QRCodeSecurityHash(), "bold-text"));
+        propertyBag.Add(new PropertyBagItem("Código de verificación", landRecord.Security.QRCodeSecurityHash(), "bold-text"));
       }
-      propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(document.Security.GetDigitalSeal()), "mono-space-text"));
+      propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(landRecord.Security.GetDigitalSeal()), "mono-space-text"));
       if (unsigned) {
         propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada",
                         "MUY IMPORTANTE: El documento NO ES VÁLIDO. NO HA SIDO FIRMADO ELECTRÓNICAMENTE.", "warning-status-text"));
       } else {
-        propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada", document.Security.GetDigitalSignature()));
-        propertyBag.Add(new PropertyBagItem("Firmado por", document.Security.GetSignedBy().FullName, "bold-text"));
-        propertyBag.Add(new PropertyBagItem("Puesto", document.Security.GetSignedBy().JobTitle));
+        propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada", landRecord.Security.GetDigitalSignature()));
+        propertyBag.Add(new PropertyBagItem("Firmado por", landRecord.Security.GetSignedBy().FullName, "bold-text"));
+        propertyBag.Add(new PropertyBagItem("Puesto", landRecord.Security.GetSignedBy().JobTitle));
       }
 
-      propertyBag.AddRange(TransactionSectionItems(document.GetTransaction()));
+      propertyBag.AddRange(TransactionSectionItems(landRecord.GetTransaction()));
 
       return propertyBag;
     }
@@ -172,7 +172,7 @@ namespace Empiria.Land.WebApi {
 
       if ((transaction.Workflow.CurrentStatus != TransactionStatus.Delivered &&
            transaction.Workflow.CurrentStatus != TransactionStatus.Archived) ||
-          (transaction.Document.IsEmptyInstance && transaction.GetIssuedCertificates().Count == 0)) {
+          (transaction.LandRecord.IsEmptyInstance && transaction.GetIssuedCertificates().Count == 0)) {
         return propertyBag;
       }
 
@@ -282,18 +282,18 @@ namespace Empiria.Land.WebApi {
     }
 
 
-    private string GetDocumentUIDAsLink(string documentUID) {
-      return $"<a href='{SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?type=document&uid={documentUID}'>" +
-             $"{documentUID}</a>";
+    private string GetLandRecordUIDAsLink(string landRecordUID) {
+      return $"<a href='{SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?type=document&uid={landRecordUID}'>" +
+             $"{landRecordUID}</a>";
     }
 
 
-    private string GetPrintableDocumentLink(string documentUID, TransactionStatus status, string messageUID) {
+    private string GetPrintableLandRecordLink(string landRecordUID, TransactionStatus status, string messageUID) {
       if (String.IsNullOrWhiteSpace(messageUID)) {
         return String.Empty;
       }
       if (status == TransactionStatus.Archived || status == TransactionStatus.Delivered) {
-        return $" &nbsp; <a target='_blank' href='{PRINT_SERVICES_SERVER_BASE_ADDRESS}/recording.seal.aspx?uid={documentUID}&msg={messageUID}'>" +
+        return $" &nbsp; <a target='_blank' href='{PRINT_SERVICES_SERVER_BASE_ADDRESS}/recording.seal.aspx?uid={landRecordUID}&msg={messageUID}'>" +
                $"Imprimir</a>";
       }
       return String.Empty;
@@ -443,14 +443,14 @@ namespace Empiria.Land.WebApi {
         if (tractItem is RecordingAct) {
           RecordingAct recordingAct = (RecordingAct) tractItem;
 
-          if (!recordingAct.Document.IsClosed ||
-               recordingAct.Document.AuthorizationTime == ExecutionServer.DateMinValue) {
+          if (!recordingAct.LandRecord.IsClosed ||
+               recordingAct.LandRecord.AuthorizationTime == ExecutionServer.DateMinValue) {
             continue;
           }
 
-          items.Add(new PropertyBagItem(recordingAct.Document.AuthorizationTime.ToString("dd/MMM/yyyy"),
+          items.Add(new PropertyBagItem(recordingAct.LandRecord.AuthorizationTime.ToString("dd/MMM/yyyy"),
                                         (recordingAct.Kind.Length != 0 ? recordingAct.Kind : recordingAct.DisplayName) + "<br/>" +
-                                        $"{GetDocumentUIDAsLink(recordingAct.Document.UID)}"));
+                                        $"{GetLandRecordUIDAsLink(recordingAct.LandRecord.UID)}"));
 
         } else if (tractItem is FormerCertificate) {
           FormerCertificate certificate = (FormerCertificate) tractItem;
@@ -475,10 +475,10 @@ namespace Empiria.Land.WebApi {
       propertyBag.Add(new PropertyBagItem("Documentos inscritos y certificados expedidos bajo este trámite",
                                            String.Empty, "section"));
 
-      if (!transaction.Document.IsEmptyInstance) {
-        propertyBag.Add(new PropertyBagItem("Documento inscrito", transaction.Document.DocumentType.DisplayName + "<br/>" +
-                                                                  GetDocumentUIDAsLink(transaction.Document.UID) +
-                                                                  GetPrintableDocumentLink(transaction.Document.UID, transaction.Workflow.CurrentStatus, messageUID)));
+      if (!transaction.LandRecord.IsEmptyInstance) {
+        propertyBag.Add(new PropertyBagItem("Documento inscrito", transaction.LandRecord.DocumentType.DisplayName + "<br/>" +
+                                                                  GetLandRecordUIDAsLink(transaction.LandRecord.UID) +
+                                                                  GetPrintableLandRecordLink(transaction.LandRecord.UID, transaction.Workflow.CurrentStatus, messageUID)));
       }
 
       foreach (var certificate in transaction.GetIssuedCertificates()) {

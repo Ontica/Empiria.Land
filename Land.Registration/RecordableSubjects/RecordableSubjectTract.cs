@@ -56,18 +56,17 @@ namespace Empiria.Land.Registration {
 
     #region Methods
 
-
-    public FixedList<RecordingAct> GetClosedRecordingActsUntil(RecordingDocument breakingDocument,
-                                                           bool includeBreakingDocument) {
+    public FixedList<RecordingAct> GetClosedRecordingActsUntil(RecordingDocument breakingLandRecord,
+                                                               bool includeBreakingLandRecord) {
       var tract = ResourceTractData.GetResourceRecordingActList(_recordableSubject);
 
-      if (includeBreakingDocument) {
-        return tract.FindAll((x) => ((x.Document.IsClosed &&
-                                      x.Document.PresentationTime < breakingDocument.PresentationTime)) ||
-                                      x.Document.Equals(breakingDocument));
+      if (includeBreakingLandRecord) {
+        return tract.FindAll((x) => ((x.LandRecord.IsClosed &&
+                                      x.LandRecord.PresentationTime < breakingLandRecord.PresentationTime)) ||
+                                      x.LandRecord.Equals(breakingLandRecord));
       } else {
-        return tract.FindAll((x) => ((x.Document.IsClosed &&
-                                      x.Document.PresentationTime < breakingDocument.PresentationTime)));
+        return tract.FindAll((x) => ((x.LandRecord.IsClosed &&
+                                      x.LandRecord.PresentationTime < breakingLandRecord.PresentationTime)));
       }
     }
 
@@ -155,7 +154,7 @@ namespace Empiria.Land.Registration {
 
       /// Returns the last domain or structure act if founded, otherwise
       /// return the very first act of the real estate.
-      var antecedent = tract.FindLast((x) => x.Document.PresentationTime <= presentationTime &&
+      var antecedent = tract.FindLast((x) => x.LandRecord.PresentationTime <= presentationTime &&
                                       (x.RecordingActType.IsDomainActType || x.RecordingActType.IsStructureActType));
 
       if (antecedent != null) {
@@ -188,7 +187,7 @@ namespace Empiria.Land.Registration {
         var parentRealEstate = ((RealEstate) _recordableSubject).IsPartitionOf;
 
         if (!parentRealEstate.IsEmptyInstance) {
-          return parentRealEstate.Tract.GetRecordingAntecedent(beforeRecordingAct.Document.PresentationTime);
+          return parentRealEstate.Tract.GetRecordingAntecedent(beforeRecordingAct.LandRecord.PresentationTime);
         } else {
           return RecordingAct.Empty;
         }
@@ -209,14 +208,14 @@ namespace Empiria.Land.Registration {
 
 
     internal RecordingAct TryGetLastActiveChainedAct(RecordingActType chainedRecordingActType,
-                                                     RecordingDocument beforeThisDocument) {
+                                                     RecordingDocument beforeThisLandRecord) {
 
-      var tract = this.GetClosedRecordingActsUntil(beforeThisDocument, true);
+      var tract = this.GetClosedRecordingActsUntil(beforeThisLandRecord, true);
 
-      // Lookup for the last chainedRecordingActType occurrence, possibly including acts in beforeThisDocument
+      // Lookup for the last chainedRecordingActType occurrence, possibly including acts in beforeThisLandRecord
       RecordingAct lastChainedAct =
             tract.FindLast( (x) => (x.RecordingActType.Equals(chainedRecordingActType) &&
-                                    x.Validator.WasAliveOn(beforeThisDocument.PresentationTime)));
+                                    x.Validator.WasAliveOn(beforeThisLandRecord.PresentationTime)));
 
       // If there aren't any chainedRecordingActType acts in the tract, then return null.
       if (lastChainedAct == null) {
@@ -228,9 +227,9 @@ namespace Empiria.Land.Registration {
 
       int startIndex = tract.IndexOf(lastChainedAct);
 
-      // Get the index of the last closed recording act previous to beforeThisDocument
+      // Get the index of the last closed recording act previous to beforeThisLandRecord
       RecordingAct lastActToSearch =
-              tract.FindLast( (x) => x.Document.PresentationTime < beforeThisDocument.PresentationTime);
+              tract.FindLast( (x) => x.LandRecord.PresentationTime < beforeThisLandRecord.PresentationTime);
 
       int endIndex = lastActToSearch != null ? tract.IndexOf(lastActToSearch) : tract.Count - 1;
 

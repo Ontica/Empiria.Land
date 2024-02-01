@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration {
       _instrument = Instrument.Parse(landRecord.InstrumentId);
       _transaction = landRecord.GetTransaction();
 
-      _bookEntries = BookEntry.GetBookEntriesForDocument(_landRecord);
+      _bookEntries = BookEntry.GetBookEntriesForLandRecord(_landRecord);
 
       _isHistoricRegistration = _transaction.IsEmptyInstance;
 
@@ -141,7 +141,7 @@ namespace Empiria.Land.Registration {
         return (!UseRecordingBookRegistation &&
                 !_isHistoricRegistration &&
                 !_transaction.IsEmptyInstance &&
-                !_transaction.Document.IsEmptyInstance &&
+                !_transaction.LandRecord.IsEmptyInstance &&
                 _bookEntries.Count == 0
                 );
       }

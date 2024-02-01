@@ -46,20 +46,20 @@ namespace Empiria.Land.WebApi {
 
 
     [HttpGet, AllowAnonymous]
-    [Route("v1/online-services/documents/{documentUID}")]
-    public CollectionModel GetDocument([FromUri] string documentUID,
+    [Route("v1/online-services/documents/{landRecordUID}")]
+    public CollectionModel GetDocument([FromUri] string landRecordUID,
                                        [FromUri] string hash = "") {
       try {
-        documentUID = FormatParameter(documentUID);
+        landRecordUID = FormatParameter(landRecordUID);
         hash = FormatParameter(hash);
 
         var validator = new ResourceNotFoundValidator();
 
-        validator.ValidateDocument(documentUID, hash);
+        validator.ValidateLandRecord(landRecordUID, hash);
 
         var propertiesBagBuilder = new OnLineSearchPropertiesBagBuilder();
 
-        List<PropertyBagItem> propertiesBag = propertiesBagBuilder.BuildRecordingDocument(documentUID, hash);
+        List<PropertyBagItem> propertiesBag = propertiesBagBuilder.BuildLandRecord(landRecordUID, hash);
 
         return new CollectionModel(this.Request, propertiesBag, "Empiria.PropertyBag");
 

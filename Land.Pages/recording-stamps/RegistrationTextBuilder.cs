@@ -17,20 +17,20 @@ namespace Empiria.Land.Pages {
   /// <summary>Text builder for recording acts.</summary>
   internal class RegistrationTextBuilder {
 
-    private readonly RecordingDocument _document;
+    private readonly RecordingDocument _landRecord;
     private readonly LRSTransaction _transaction;
 
-    internal RegistrationTextBuilder(RecordingDocument document) {
-      Assertion.Require(document, nameof(document));
+    internal RegistrationTextBuilder(RecordingDocument landRecord) {
+      Assertion.Require(landRecord, nameof(landRecord));
 
-      _document = document;
-      _transaction = document.GetTransaction();
+      _landRecord = landRecord;
+      _transaction = landRecord.GetTransaction();
     }
 
 
 
     internal string PrelationText() {
-      if (_document.IsHistoricDocument) {
+      if (_landRecord.IsHistoricRecord) {
         return PrelationTextForHistoricDocuments();
       } else {
         return PrelationTextForDocumentsWithTransaction();
@@ -38,7 +38,7 @@ namespace Empiria.Land.Pages {
     }
 
     internal string RecordingPlaceAndDate() {
-      if (_document.IsHistoricDocument) {
+      if (_landRecord.IsHistoricRecord) {
         return PlaceAndDateTextForHistoricDocuments();
       } else {
         return PlaceAndDateTextForDocumentsWithTransaction();
@@ -57,7 +57,7 @@ namespace Empiria.Land.Pages {
       string x = template.Replace("{DATE}", CommonMethods.GetDateAsText(presentationTime));
 
       if (_transaction.HasInstrument) {
-        var instrument = Instrument.Parse(_document.InstrumentId, true);
+        var instrument = Instrument.Parse(_landRecord.InstrumentId, true);
         x = x.Replace("{INSTRUMENT_AS_TEXT}", instrument.AsText);
 
       } else {
@@ -85,28 +85,28 @@ namespace Empiria.Land.Pages {
     }
 
     private int GetRecordingActsCount() {
-      return _document.RecordingActs.CountAll(x => !x.IsChild);
+      return _landRecord.RecordingActs.CountAll(x => !x.IsChild);
     }
 
     private string PrelationTextForHistoricDocuments() {
-      return "<h3>" + _document.RecordingActs[0].BookEntry.AsText + "</h3>";
+      return "<h3>" + _landRecord.RecordingActs[0].BookEntry.AsText + "</h3>";
     }
 
 
     private string PlaceAndDateTextForDocumentsWithTransaction() {
       const string t = "Registrado en {CITY}, a las {TIME} horas del {DATE}. Doy Fe.";
 
-      string x = t.Replace("{DATE}", CommonMethods.GetDateAsText(_document.AuthorizationTime));
+      string x = t.Replace("{DATE}", CommonMethods.GetDateAsText(_landRecord.AuthorizationTime));
 
-      x = x.Replace("{TIME}", _document.AuthorizationTime.ToString(@"HH:mm"));
+      x = x.Replace("{TIME}", _landRecord.AuthorizationTime.ToString(@"HH:mm"));
 
-      x = x.Replace("{CITY}", _document.RecorderOffice.GetPlace());
+      x = x.Replace("{CITY}", _landRecord.RecorderOffice.GetPlace());
 
       return x;
     }
 
     internal string PaymentText() {
-      if (_document.IsHistoricDocument) {
+      if (_landRecord.IsHistoricRecord) {
         return String.Empty;
       }
 
@@ -144,13 +144,13 @@ namespace Empiria.Land.Pages {
             "Fecha de la captura histórica: <b>{RECORDING.DATE}<b>.<br/>";
 
       string x = template.Replace("{PRESENTATION.DATE}",
-                                  CommonMethods.GetDateAsText(_document.PresentationTime));
+                                  CommonMethods.GetDateAsText(_landRecord.PresentationTime));
 
       x = x.Replace("{AUTHORIZATION.DATE}",
-                    CommonMethods.GetDateAsText(_document.AuthorizationTime));
+                    CommonMethods.GetDateAsText(_landRecord.AuthorizationTime));
 
       x = x.Replace("{RECORDING.DATE}",
-                    CommonMethods.GetDateAsText(_document.PostingTime));
+                    CommonMethods.GetDateAsText(_landRecord.PostingTime));
 
       return x;
     }

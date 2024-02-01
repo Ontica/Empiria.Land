@@ -31,7 +31,7 @@ namespace Empiria.Land.Registration.Adapters {
       Instrument instrument = Instrument.Parse(landRecord.InstrumentId);
       LRSTransaction transaction = landRecord.GetTransaction();
 
-      var bookEntries = BookEntry.GetBookEntriesForDocument(landRecord);
+      var bookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
 
       dto.UID = landRecord.GUID;
       dto.InstrumentRecordingID = landRecord.UID;
@@ -60,7 +60,7 @@ namespace Empiria.Land.Registration.Adapters {
     static internal MediaData MapStampMedia(RecordingDocument landRecord) {
       var mediaBuilder = new LandMediaBuilder();
 
-      var bookEntries = BookEntry.GetBookEntriesForDocument(landRecord);
+      var bookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
 
       if (bookEntries.Count > 0) {
         return mediaBuilder.GetMediaDto(LandMediaContent.BookEntryRegistrationStamp,
@@ -90,7 +90,7 @@ namespace Empiria.Land.Registration.Adapters {
 
     static internal RecordingContextDto MapRecordingContext(RecordingAct recordingAct) {
       return new RecordingContextDto {
-        InstrumentRecordingUID = recordingAct.Document.GUID,
+        InstrumentRecordingUID = recordingAct.LandRecord.GUID,
         RecordingActUID = recordingAct.UID
       };
     }

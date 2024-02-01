@@ -22,9 +22,9 @@ namespace Empiria.Land.Registration {
     }
 
     /// <summary>Marks a resource as canceled. The resource won't be longer available.</summary>
-    internal CancelationAct(RecordingActType recordingActType, RecordingDocument document,
-                            Resource resource) : base(recordingActType, document) {
-      Assertion.Require(resource, "resource");
+    internal CancelationAct(RecordingActType recordingActType, RecordingDocument landRecord,
+                            Resource resource) : base(recordingActType, landRecord) {
+      Assertion.Require(resource, nameof(resource));
 
       base.SetResource(resource, ResourceRole.Canceled);
 
@@ -34,10 +34,10 @@ namespace Empiria.Land.Registration {
     /// <summary>Cancels a recording act. If it's a domain act and the unique one,
     /// then the resource will be canceled too.</summary>
     internal CancelationAct(RecordingActType recordingActType,
-                            RecordingDocument document, Resource resource,
-                            RecordingAct recordingActToCancel) : base(recordingActType, document) {
-      Assertion.Require(resource, "resource");
-      Assertion.Require(recordingActToCancel, "recordingActToCancel");
+                            RecordingDocument landRecord, Resource resource,
+                            RecordingAct recordingActToCancel) : base(recordingActType, landRecord) {
+      Assertion.Require(resource, nameof(resource));
+      Assertion.Require(recordingActToCancel, nameof(recordingActToCancel));
 
       if (recordingActToCancel.RecordingActType.IsDomainActType) {
         AssertIsValidCancelationForDomainAct(resource, recordingActToCancel);

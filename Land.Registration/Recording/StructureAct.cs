@@ -24,14 +24,14 @@ namespace Empiria.Land.Registration {
     }
 
     internal StructureAct(RecordingActType recordingActType,
-                          RecordingDocument document, RealEstate property,
-                          decimal percentage = decimal.One) : base(recordingActType, document) {
+                          RecordingDocument landRecord, RealEstate property,
+                          decimal percentage = decimal.One) : base(recordingActType, landRecord) {
       this.AttachRealEstate(property, percentage);
     }
 
-    internal StructureAct(RecordingActType recordingActType, RecordingDocument document,
+    internal StructureAct(RecordingActType recordingActType, RecordingDocument landRecord,
                           RealEstate property, BookEntry bookEntry,
-                          decimal percentage = decimal.One) : base(recordingActType, document, bookEntry) {
+                          decimal percentage = decimal.One) : base(recordingActType, landRecord, bookEntry) {
       this.AttachRealEstate(property, percentage);
     }
 

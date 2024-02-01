@@ -113,9 +113,9 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal FixedList<BookEntry> GetBookEntriesForDocument(RecordingDocument document) {
+    static internal FixedList<BookEntry> GetBookEntriesForLandRecord(RecordingDocument landRecord) {
       string sql = $"SELECT * FROM LRSPhysicalRecordings " +
-                   $"WHERE MainDocumentId = {document.Id} AND RecordingStatus <> 'X' " +
+                   $"WHERE MainDocumentId = {landRecord.Id} AND RecordingStatus <> 'X' " +
                    $"ORDER BY PhysicalRecordingId";
 
       return DataReader.GetFixedList<BookEntry>(DataOperation.Parse(sql));
@@ -169,11 +169,11 @@ namespace Empiria.Land.Data {
 
 
     static internal void WriteBookEntry(BookEntry o) {
-      Assertion.Require(o.MainDocument.Id > 0,
-                       "Wrong data for book entry. MainDocument was missed.");
+      Assertion.Require(o.LandRecord.Id > 0,
+                       "Wrong data for book entry. LandRecord was missed.");
 
       var op = DataOperation.Parse("writeLRSPhysicalRecording", o.Id, o.UID, o.RecordingBook.Id,
-                                   o.MainDocument.Id, o.Number, o.AsText, o.ExtendedData.GetJson().ToString(),
+                                   o.LandRecord.Id, o.Number, o.AsText, o.ExtendedData.GetJson().ToString(),
                                    o.Keywords, o.RecordedBy.Id, o.RecordingTime,
                                    (char) o.Status, o.Integrity.GetUpdatedHashCode());
 

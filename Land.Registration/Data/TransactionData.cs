@@ -100,7 +100,7 @@ namespace Empiria.Land.Data {
 
     static internal void WriteTransaction(LRSTransaction o) {
       var op = DataOperation.Parse("writeLRSTransaction", o.Id, o.TransactionType.Id, o.GUID, o.UID,
-                  o.DocumentType.Id, o.DocumentDescriptor, o.Document.Id, o.BaseResource.Id,
+                  o.DocumentType.Id, o.DocumentDescriptor, o.LandRecord.Id, o.BaseResource.Id,
                   o.RecorderOffice.Id, o.RequestedBy, o.Agency.Id,
                   o.ExternalTransactionNo, o.InternalControlNumber, o.ExtensionData.ToString(),
                   o.Keywords, o.PresentationTime, o.ExpectedDelivery, o.LastReentryTime, o.ClosingTime,
