@@ -20,6 +20,7 @@ using Empiria.Land.Data;
 using Empiria.Land.Providers;
 
 using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Instruments;
 
 namespace Empiria.Land.Registration {
 
@@ -88,16 +89,14 @@ namespace Empiria.Land.Registration {
       get { return BaseObject.ParseEmpty<RecordingDocument>(); }
     }
 
-    public static RecordingDocument CreateFromInstrument(int instrumentId,
-                                                         int instrumentTypeId,
-                                                         string kind) {
-      var documentType = RecordingDocumentType.ParseFromInstrumentTypeId(instrumentTypeId);
+    public static RecordingDocument CreateFromInstrument(IInstrument instrument) {
+      var documentType = RecordingDocumentType.ParseFromInstrumentTypeId(instrument.InstrumentType.Id);
 
       var landRecord = new RecordingDocument(documentType);
 
       landRecord.GUID = Guid.NewGuid().ToString().ToLower();
-      landRecord.InstrumentId = instrumentId;
-      landRecord.Subtype = LRSDocumentType.ParseFromInstrumentKind(kind);
+      landRecord.InstrumentId = instrument.Id;
+      landRecord.Subtype = LRSDocumentType.ParseFromInstrumentKind(instrument.Kind);
 
       return landRecord;
     }

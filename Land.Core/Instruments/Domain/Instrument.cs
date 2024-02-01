@@ -23,7 +23,7 @@ namespace Empiria.Land.Instruments {
   /// <summary>Represents a legal instrument like deeds, contracts, mortgages, court orders, prevention notes,
   /// and other kind of legally issued or attested instruments.</summary>
   [PartitionedType(typeof(InstrumentType))]
-  public partial class Instrument : BaseObject {
+  public partial class Instrument : BaseObject, IInstrument {
 
     #region Constructors and parsers
 
@@ -57,6 +57,11 @@ namespace Empiria.Land.Instruments {
       }
     }
 
+    IIdentifiable IInstrument.InstrumentType {
+      get {
+        return (InstrumentType) base.GetEmpiriaType();
+      }
+    }
 
     [DataField("InstrumentKind")]
     public string Kind {

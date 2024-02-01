@@ -64,7 +64,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       transaction.SetInstrument(instrument);
 
-      var landRecord = RecordingDocument.CreateFromInstrument(instrument.Id, instrument.InstrumentType.Id, instrument.Kind);
+      var landRecord = RecordingDocument.CreateFromInstrument(instrument);
 
       instrument.FillRecordingDocument(landRecord);
 

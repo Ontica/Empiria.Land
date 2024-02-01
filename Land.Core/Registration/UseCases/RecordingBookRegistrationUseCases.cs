@@ -114,7 +114,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       instrument.Save();
 
-      var landRecord = RecordingDocument.CreateFromInstrument(instrument.Id, instrument.InstrumentType.Id, instrument.Kind);
+      var landRecord = RecordingDocument.CreateFromInstrument(instrument);
 
       instrument.FillRecordingDocument(landRecord);
 
@@ -123,7 +123,6 @@ namespace Empiria.Land.Registration.UseCases {
       BookEntryDto bookEntryDto = fields.MapToBookEntryDto(recordingBook, landRecord);
 
       recordingBook.AddBookEntry(bookEntryDto);
-
 
       recordingBook.Refresh();
 
