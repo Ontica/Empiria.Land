@@ -60,9 +60,9 @@
 					<td style="font-size:8pt;vertical-align:middle;white-space:nowrap"><%=GetRecordingOfficialsInitials()%></td>
 					<td align="right">
 						<br />
-						<img alt="" title="" src="../user.controls/barcode.aspx?data=<%=transaction.Document.UID%>" />
+						<img alt="" title="" src="../user.controls/barcode.aspx?data=<%=transaction.LandRecord.UID%>" />
 						<br />
-						<span><%=transaction.Document.UID%></span>
+						<span><%=transaction.LandRecord.UID%></span>
 					</td>
 				</tr>
 			</table>

@@ -17,11 +17,11 @@
         <td style="vertical-align:top;text-align:center;width:95%">
 	        <h3><%=Empiria.Land.Pages.CommonMethods.CustomerOfficeName%></h3>
           <h4><%=Empiria.Land.Pages.CommonMethods.GovernmentName%></h4>
-          <% if (document.IsHistoricDocument) { %>
+          <% if (landRecord.IsHistoricRecord) { %>
           <h2 style="padding-top:0">SELLO REGISTRAL DE PARTIDA HISTÓRICA</h2>
-          <% } else if (!document.IsClosed) { %>
+          <% } else if (!landRecord.IsClosed) { %>
           <h2 class="warning" style="padding-top:0">EL SELLO REGISTRAL NO HA SIDO CERRADO</h2>
-          <% } else if (document.Security.UseESign && document.Security.Unsigned()) { %>
+          <% } else if (landRecord.Security.UseESign && landRecord.Security.Unsigned()) { %>
           <h2 class="warning" style="padding-top:0">EL SELLO REGISTRAL NO HA SIDO FIRMADO DIGITALMENTE</h2>
           <% } else if (!base.CanBePrinted()) { %>
           <h2 class="warning" style="padding-top:0">
@@ -31,7 +31,7 @@
           <% } else { %>
           <h2 style="padding-top:0">SELLO REGISTRAL</h2>
           <% } %>
-          <h5><%=document.UID%></h5>
+          <h5><%=landRecord.UID%></h5>
           <% if (transaction.IsReentry) { %>
             <h5><b>(Reingreso)</b></h5>
           <% } %>
@@ -47,7 +47,7 @@
       <tr>
         <td style="vertical-align:top">
           <% if (this.CanBePrinted()) { %>
-          <img style="margin-left:8pt" alt="" title="" src="../user.controls/barcode.aspx?data=<%=document.UID%>&#38;vertical=true&#38;show-text=true&#38;height=32" />
+          <img style="margin-left:8pt" alt="" title="" src="../user.controls/barcode.aspx?data=<%=landRecord.UID%>&#38;vertical=true&#38;show-text=true&#38;height=32" />
           <% } else { %>
           <img style="margin-left:8pt" alt="" title="" src="../user.controls/barcode.aspx?data=**SIN-VALOR**&#38;vertical=true&#38;show-text=true&#38;height=32" />
           <% } %>
@@ -78,7 +78,7 @@
     </table>
     <div class="footNotes">
       <table>
-        <% if (!document.IsClosed) { %>
+        <% if (!landRecord.IsClosed) { %>
         <tr>
           <td colspan="3" style="text-align:center;font-size:10pt" >
             <br /><br />
@@ -86,7 +86,7 @@
             <br />&#160;
           </td>
         </tr>
-        <% } else if (document.Security.UseESign && document.Security.Signed()) { %>
+        <% } else if (landRecord.Security.UseESign && landRecord.Security.Signed()) { %>
          <tr>
           <td colspan="3" style="text-align:center;font-size:11pt" >
             <span style="font-size:8.5pt">
@@ -103,7 +103,7 @@
           </td>
           <td style="text-wrap:none">&#160;&#160;&#160;&#160;&#160;</td>
         </tr>
-        <% } else if (document.Security.UseESign && document.Security.Unsigned()) { %>
+        <% } else if (landRecord.Security.UseESign && landRecord.Security.Unsigned()) { %>
          <tr>
           <td colspan="3" style="text-align:center;font-size:11pt" >
             <span style="font-size:8.5pt">
@@ -119,7 +119,7 @@
           </td>
           <td style="text-wrap:none">&#160;&#160;&#160;&#160;&#160;</td>
         </tr>
-        <% } else if (!document.IsHistoricDocument) { %>
+        <% } else if (!landRecord.IsHistoricRecord) { %>
         <tr>
           <td colspan="3" style="text-align:center;font-size:11pt" >
             <br /><br /><br />
@@ -135,18 +135,18 @@
           <td style="vertical-align:top;padding-right:12pt;width:100px">
             <% if (this.CanBePrinted()) { %>
             <img style="margin-left:-12pt;margin-top:-12pt" alt="" title=""
-                 src="../user.controls/qrcode.aspx?size=120&#38;data=<%=SEARCH_SERVICES_SERVER_BASE_ADDRESS%>/?type=document%26uid=<%=document.UID%>%26hash=<%=document.Security.QRCodeSecurityHash()%>" />
+                 src="../user.controls/qrcode.aspx?size=120&#38;data=<%=SEARCH_SERVICES_SERVER_BASE_ADDRESS%>/?type=document%26uid=<%=landRecord.UID%>%26hash=<%=landRecord.Security.QRCodeSecurityHash()%>" />
             <% } %>
             <div style="margin-top:-12pt;font-size:7pt;white-space:nowrap">
               Valide este documento<br />
-              <b><%=document.UID%></b>
+              <b><%=landRecord.UID%></b>
             </div>
           </td>
           <td style="vertical-align:top;width:90%;white-space:nowrap">
             <b>Código de verificación:</b>
             <br />
               <% if (this.CanBePrinted()) { %>
-              &#160;&#160;<%=base.document.Security.QRCodeSecurityHash()%>
+              &#160;&#160;<%=base.landRecord.Security.QRCodeSecurityHash()%>
 
               <% } else { %>
               <span class="warning">** SIN VALIDEZ **</span>
@@ -173,7 +173,7 @@
             </div>
           </td>
           <td style="vertical-align:top">
-            <% if (!base.UniqueInvolvedResource.IsEmptyInstance && document.IsClosed) { %>
+            <% if (!base.UniqueInvolvedResource.IsEmptyInstance && landRecord.IsClosed) { %>
             <img style="margin-right:-12pt;margin-left:-12pt;margin-top:-12pt" alt="" title=""
                  src="../user.controls/qrcode.aspx?size=120&#38;data=<%=SEARCH_SERVICES_SERVER_BASE_ADDRESS%>/?type=resource%26uid=<%=base.UniqueInvolvedResource.UID%>%26hash=<%=base.UniqueInvolvedResource.QRCodeSecurityHash()%>" />
             <div style="margin-top:-12pt;font-size:7pt;white-space:nowrap">
