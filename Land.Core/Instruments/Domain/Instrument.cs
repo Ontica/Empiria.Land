@@ -16,8 +16,6 @@ using Empiria.StateEnums;
 using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Instruments.Data;
 
-using Empiria.Land.Registration;
-
 namespace Empiria.Land.Instruments {
 
   /// <summary>Represents a legal instrument like deeds, contracts, mortgages, court orders, prevention notes,
@@ -80,6 +78,11 @@ namespace Empiria.Land.Instruments {
       get; private set;
     }
 
+    IIssuer IInstrument.Issuer {
+      get {
+        return this.Issuer;
+      }
+    }
 
     [DataField("IssueDate")]
     public DateTime IssueDate {
@@ -193,18 +196,6 @@ namespace Empiria.Land.Instruments {
       if (!instrumentType.Equals(this.InstrumentType)) {
         base.ReclassifyAs(instrumentType);
       }
-    }
-
-
-    /// <summary>TODO: Remove after Land 4.0 Registration have been merged into Land Core.</summary>
-    internal void FillRecordingDocument(RecordingDocument landRecord) {
-      landRecord.Notes = this.Summary;
-      landRecord.ExpedientNo = this.BinderNo;
-      landRecord.IssueDate = this.IssueDate;
-      landRecord.IssuedBy = this.Issuer.RelatedContact;
-      landRecord.IssueOffice = this.Issuer.RelatedEntity;
-      landRecord.IssuePlace = this.Issuer.RelatedPlace;
-      landRecord.SheetsCount = this.SheetsCount;
     }
 
 

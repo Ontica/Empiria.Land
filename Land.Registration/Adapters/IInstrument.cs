@@ -9,6 +9,9 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Contacts;
+using Empiria.Geography;
+
 namespace Empiria.Land.Instruments {
 
   /// <summary>Temporal interface used to link land records (RecordinDocuments) with their Instrument.</summary>
@@ -20,6 +23,29 @@ namespace Empiria.Land.Instruments {
 
     string Kind { get; }
 
-  }  // public class IInstrument
+    string Summary { get; }
+
+    string BinderNo { get; }
+
+    DateTime IssueDate { get; }
+
+    int SheetsCount { get; }
+
+    IIssuer Issuer { get; }
+
+  }  // interface IInstrument
+
+
+
+  public interface IIssuer {
+
+
+    Contact RelatedContact { get; }
+
+    Organization RelatedEntity { get; }
+
+    GeographicRegion RelatedPlace { get; }
+
+  }  // interface IIssuer
 
 }  // namespace Empiria.Land.Instruments

@@ -210,8 +210,8 @@ namespace Empiria.Land.Registration {
       if (version == 1) {
         return new object[] {
           1, "Id", doc.Id, "DocumentTypeId", doc.DocumentType.Id,
-          "SubtypeId", doc.Subtype.Id, "UID", doc.UID,
-          "IssuePlaceId", doc.IssuePlace.Id, "IssueOfficeId", doc.IssueOffice.Id,
+          "UID", doc.UID, "IssuePlaceId", doc.IssuePlace.Id,
+          "IssueOfficeId", doc.IssueOffice.Id,
           "IssuedById", doc.IssuedBy.Id, "IssueDate", doc.IssueDate,
           "AsText", doc.AsText, "SheetsCount", doc.SheetsCount,
           "ExtensionData", doc.ExtensionData.ToJson(),

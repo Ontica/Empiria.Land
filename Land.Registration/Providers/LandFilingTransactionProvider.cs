@@ -243,14 +243,16 @@ namespace Empiria.Land.Providers {
 
 
     static private EFilingDocument MapToEFilingDocumentDTO(RecordingDocument landRecord) {
+      var transaction = landRecord.GetTransaction();
+
       return new EFilingDocument() {
         UID = landRecord.UID,
-        Type = landRecord.Subtype.Name,
+        Type = transaction.DocumentType.Name,
         TypeName = "Sello registral",
-        Name = $"Sello registral {landRecord.UID} del trámite {landRecord.GetTransaction().UID}.",
+        Name = $"Sello registral {landRecord.UID} del trámite {transaction.UID}.",
         ContentType = "text/html",
         Uri = $"{PRINT_SERVICES_SERVER_BASE_ADDRESS}/recording.seal.aspx?uid={landRecord.UID}&" +
-              $"externalUID={landRecord.GetTransaction().ExternalTransactionNo}"
+              $"externalUID={transaction.ExternalTransactionNo}"
       };
     }
 

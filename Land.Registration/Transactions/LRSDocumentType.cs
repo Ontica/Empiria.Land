@@ -41,12 +41,6 @@ namespace Empiria.Land.Registration.Transactions {
       return GeneralObject.GetList<LRSDocumentType>();
     }
 
-    static internal LRSDocumentType ParseFromInstrumentKind(string kind) {
-      var documentType = GeneralObject.TryParse<LRSDocumentType>($"ObjectName = '{kind}'");
-
-      return documentType ?? LRSDocumentType.Empty;
-    }
-
 
     #endregion Constructors and parsers
 

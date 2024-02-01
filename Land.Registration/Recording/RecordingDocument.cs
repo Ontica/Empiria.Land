@@ -93,9 +93,7 @@ namespace Empiria.Land.Registration {
 
       var landRecord = new RecordingDocument(documentType);
 
-      landRecord.GUID = Guid.NewGuid().ToString().ToLower();
-      landRecord.InstrumentId = instrument.Id;
-      landRecord.Subtype = LRSDocumentType.ParseFromInstrumentKind(instrument.Kind);
+      landRecord.UpdateWithInstrument(instrument);
 
       return landRecord;
     }
@@ -123,11 +121,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    [DataField("DocumentSubtypeId")]
-    public LRSDocumentType Subtype {
-      get;
-      set;
-    }
 
     [DataField("DocumentUID", IsOptional = false)]
     private string _documentUID = String.Empty;
@@ -255,9 +248,7 @@ namespace Empiria.Land.Registration {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.UID,
-                    !this.Subtype.IsEmptyInstance ? this.AsText : this.DocumentType.DisplayName,
-                    this.Notes);
+        return EmpiriaString.BuildKeywords(UID, AsText, Notes);
       }
     }
 
@@ -533,6 +524,8 @@ namespace Empiria.Land.Registration {
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
+        this.GUID = Guid.NewGuid().ToString().ToLower();
+
         IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
 
         _documentUID  = provider.GenerateRecordID();
@@ -574,6 +567,20 @@ namespace Empiria.Land.Registration {
                         "bookEntry can't be the empty instance.");
 
       return bookEntry;
+    }
+
+
+    public void UpdateWithInstrument(IInstrument instrument) {
+      this.InstrumentId = instrument.Id;
+
+      this.Notes = instrument.Summary;
+      this.ExpedientNo = instrument.BinderNo;
+      this.IssueDate = instrument.IssueDate;
+      this.SheetsCount = instrument.SheetsCount;
+
+      this.IssuedBy = instrument.Issuer.RelatedContact;
+      this.IssueOffice = instrument.Issuer.RelatedEntity;
+      this.IssuePlace = instrument.Issuer.RelatedPlace;
     }
 
     #endregion Public methods

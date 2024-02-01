@@ -66,8 +66,6 @@ namespace Empiria.Land.Registration.UseCases {
 
       var landRecord = RecordingDocument.CreateFromInstrument(instrument);
 
-      instrument.FillRecordingDocument(landRecord);
-
       landRecord.Save();
 
       transaction.AttachLandRecord(landRecord);
@@ -91,7 +89,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var landRecord = transaction.LandRecord;
 
-      instrument.FillRecordingDocument(landRecord);
+      landRecord.UpdateWithInstrument(instrument);
 
       landRecord.Save();
 

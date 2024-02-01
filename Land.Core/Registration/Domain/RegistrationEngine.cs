@@ -55,8 +55,6 @@ namespace Empiria.Land.Registration {
 
       var landRecord = RecordingDocument.CreateFromInstrument(instrument);
 
-      instrument.FillRecordingDocument(landRecord);
-
       landRecord.SetDates(presentationTime, authorizationDate);
 
       landRecord.Save();

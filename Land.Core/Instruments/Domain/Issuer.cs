@@ -24,7 +24,7 @@ namespace Empiria.Land.Instruments {
   /// <summary>Represents a legal instrument issuer or attester, like a notary, judge or
   /// official authority.</summary>
   [PartitionedType(typeof(IssuerType))]
-  public class Issuer : BaseObject {
+  public class Issuer : BaseObject, IIssuer {
 
     #region Constructors and parsers
 
@@ -58,19 +58,19 @@ namespace Empiria.Land.Instruments {
 
 
     [DataField("IssuerName")]
-    internal string Name {
+    public string Name {
       get; private set;
     }
 
 
     [DataField("EntityName")]
-    internal string EntityName {
+    public string EntityName {
       get; private set;
     }
 
 
     [DataField("OfficialPosition")]
-    internal string OfficialPosition {
+    public string OfficialPosition {
       get; private set;
     }
 
@@ -82,7 +82,7 @@ namespace Empiria.Land.Instruments {
 
 
     [DataField("PlaceName")]
-    internal string PlaceName {
+    public string PlaceName {
       get; private set;
     }
 
@@ -102,25 +102,25 @@ namespace Empiria.Land.Instruments {
 
 
     [DataField("RelatedContactId")]
-    internal Contact RelatedContact {
+    public Contact RelatedContact {
       get; private set;
     }
 
 
     [DataField("RelatedEntityId")]
-    internal Organization RelatedEntity {
+    public Organization RelatedEntity {
       get; private set;
     }
 
 
     [DataField("RelatedOfficeId")]
-    internal Organization RelatedOffice {
+    public Organization RelatedOffice {
       get; private set;
     }
 
 
     [DataField("RelatedPlaceId")]
-    internal GeographicRegion RelatedPlace {
+    public GeographicRegion RelatedPlace {
       get; private set;
     }
 
