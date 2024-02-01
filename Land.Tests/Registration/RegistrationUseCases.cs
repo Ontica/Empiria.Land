@@ -43,10 +43,10 @@ namespace Empiria.Land.Tests.Registration {
           RecordingActTypeUID = TestingConstants.CREATE_ASSOCIATION_RECORDING_ACT_TYPE_UID
         }
       };
-      InstrumentRecordingDto instrumentRecording =
+      LandRecordDto landRecord =
                _usecases.CreateRecordingAct(TestingConstants.INSTRUMENT_RECORDING_UID, command);
 
-      Assert.NotNull(instrumentRecording);
+      Assert.NotNull(landRecord);
     }
 
 
@@ -59,10 +59,10 @@ namespace Empiria.Land.Tests.Registration {
         }
       };
 
-      InstrumentRecordingDto instrumentRecording =
+      LandRecordDto landRecord =
                  _usecases.CreateRecordingAct(TestingConstants.INSTRUMENT_RECORDING_UID, command);
 
-      Assert.NotNull(instrumentRecording);
+      Assert.NotNull(landRecord);
     }
 
 
@@ -75,10 +75,10 @@ namespace Empiria.Land.Tests.Registration {
         }
       };
 
-      InstrumentRecordingDto instrumentRecording =
+      LandRecordDto landRecord =
                 _usecases.CreateRecordingAct(TestingConstants.INSTRUMENT_RECORDING_UID, command);
 
-      Assert.NotNull(instrumentRecording);
+      Assert.NotNull(landRecord);
     }
 
 
@@ -92,10 +92,10 @@ namespace Empiria.Land.Tests.Registration {
         }
       };
 
-      InstrumentRecordingDto instrumentRecording =
+      LandRecordDto landRecord =
                _usecases.CreateRecordingAct(TestingConstants.INSTRUMENT_RECORDING_UID, command);
 
-      Assert.NotNull(instrumentRecording);
+      Assert.NotNull(landRecord);
     }
 
 
@@ -109,10 +109,10 @@ namespace Empiria.Land.Tests.Registration {
         }
       };
 
-      InstrumentRecordingDto instrumentRecording =
+      LandRecordDto landRecord =
                _usecases.CreateRecordingAct(TestingConstants.INSTRUMENT_RECORDING_UID, command);
 
-      Assert.NotNull(instrumentRecording);
+      Assert.NotNull(landRecord);
     }
 
 
@@ -126,10 +126,10 @@ namespace Empiria.Land.Tests.Registration {
         }
       };
 
-      InstrumentRecordingDto instrumentRecording =
+      LandRecordDto landRecord =
                _usecases.CreateRecordingAct(TestingConstants.INSTRUMENT_RECORDING_UID, command);
 
-      Assert.NotNull(instrumentRecording);
+      Assert.NotNull(landRecord);
     }
 
 
@@ -144,10 +144,10 @@ namespace Empiria.Land.Tests.Registration {
         }
       };
 
-      InstrumentRecordingDto instrumentRecording =
+      LandRecordDto landRecord =
                _usecases.CreateRecordingAct(TestingConstants.INSTRUMENT_RECORDING_UID, command);
 
-      Assert.NotNull(instrumentRecording);
+      Assert.NotNull(landRecord);
     }
 
 
@@ -162,10 +162,10 @@ namespace Empiria.Land.Tests.Registration {
         }
       };
 
-      InstrumentRecordingDto instrumentRecording =
+      LandRecordDto landRecord =
                _usecases.CreateRecordingAct(TestingConstants.INSTRUMENT_RECORDING_UID, command);
 
-      Assert.NotNull(instrumentRecording);
+      Assert.NotNull(landRecord);
     }
 
     #endregion Facts

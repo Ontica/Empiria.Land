@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Registration Services                      Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
-*  Type     : InstrumentRecordingMapper                  License   : Please read LICENSE.txt file            *
+*  Type     : LandRecordMapper                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Methods to map legal instruments to InstrumentDto objects.                                     *
+*  Summary  : Methods to map legal instruments to LandRecordDto objects.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -22,19 +22,19 @@ using Empiria.Land.RecordableSubjects.Adapters;
 
 namespace Empiria.Land.Registration.Adapters {
 
-  /// <summary>Methods to map legal instruments to InstrumentDto objects.</summary>
-  static internal partial class InstrumentRecordingMapper {
+  /// <summary>Methods to map legal instruments to LandRecordDto objects. </summary>
+  static internal partial class LandRecordMapper {
 
-    static internal InstrumentRecordingDto Map(RecordingDocument instrumentRecording) {
-      var dto = new InstrumentRecordingDto();
+    static internal LandRecordDto Map(RecordingDocument landRecord) {
+      var dto = new LandRecordDto();
 
-      Instrument instrument = Instrument.Parse(instrumentRecording.InstrumentId);
-      LRSTransaction transaction = instrumentRecording.GetTransaction();
+      Instrument instrument = Instrument.Parse(landRecord.InstrumentId);
+      LRSTransaction transaction = landRecord.GetTransaction();
 
-      var bookEntries = BookEntry.GetBookEntriesForDocument(instrumentRecording);
+      var bookEntries = BookEntry.GetBookEntriesForDocument(landRecord);
 
-      dto.UID = instrumentRecording.GUID;
-      dto.InstrumentRecordingID = instrumentRecording.UID;
+      dto.UID = landRecord.GUID;
+      dto.InstrumentRecordingID = landRecord.UID;
       dto.Instrument = InstrumentMapper.Map(instrument, transaction);
 
       if (bookEntries.Count > 0) {
@@ -42,14 +42,14 @@ namespace Empiria.Land.Registration.Adapters {
         dto.BookRecordingMode = true;
 
       } else {
-        dto.RecordingActs = MapRecordingActsListDto(instrumentRecording.RecordingActs);
+        dto.RecordingActs = MapRecordingActsListDto(landRecord.RecordingActs);
       }
 
-      dto.StampMedia = MapStampMedia(instrumentRecording);
+      dto.StampMedia = MapStampMedia(landRecord);
 
       dto.TransactionUID = transaction.UID;
 
-      var actions = new InstrumentRecordingControlData(instrumentRecording);
+      var actions = new LandRecordControlData(landRecord);
 
       dto.Actions = GetControlDataDto(actions);
 
@@ -57,26 +57,26 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    static internal MediaData MapStampMedia(RecordingDocument instrumentRecording) {
+    static internal MediaData MapStampMedia(RecordingDocument landRecord) {
       var mediaBuilder = new LandMediaBuilder();
 
-      var bookEntries = BookEntry.GetBookEntriesForDocument(instrumentRecording);
+      var bookEntries = BookEntry.GetBookEntriesForDocument(landRecord);
 
       if (bookEntries.Count > 0) {
         return mediaBuilder.GetMediaDto(LandMediaContent.BookEntryRegistrationStamp,
-                                        "-1", instrumentRecording.GetTransaction().Id.ToString());
+                                        "-1", landRecord.GetTransaction().Id.ToString());
       } else {
         return mediaBuilder.GetMediaDto(LandMediaContent.RegistrationStamp,
-                                        instrumentRecording.UID);
+                                        landRecord.UID);
       }
     }
 
 
-    static internal InstrumentRecordingShortDto MapToShort(RecordingDocument instrumentRecording) {
-      var dto = new InstrumentRecordingShortDto() {
-        UID = instrumentRecording.GUID,
-        ControlID = instrumentRecording.UID,
-        AsText = $"AsText {instrumentRecording.Id}"
+    static internal LandRecordDescriptorDto MapToShort(RecordingDocument landRecord) {
+      var dto = new LandRecordDescriptorDto() {
+        UID = landRecord.GUID,
+        ControlID = landRecord.UID,
+        AsText = $"AsText {landRecord.Id}"
       };
 
       return dto;
@@ -98,8 +98,8 @@ namespace Empiria.Land.Registration.Adapters {
 
     #region Private methods
 
-    static private InstrumentRecordingControlDataDto GetControlDataDto(InstrumentRecordingControlData controlData) {
-      var dto = new InstrumentRecordingControlDataDto();
+    static private LandRecordControlDataDto GetControlDataDto(LandRecordControlData controlData) {
+      var dto = new LandRecordControlDataDto();
 
       dto.Can.EditInstrument = controlData.CanEdit;
       dto.Can.OpenInstrument = controlData.CanOpen;
@@ -141,6 +141,6 @@ namespace Empiria.Land.Registration.Adapters {
 
     #endregion Private methods
 
-  }  // class InstrumentRecordingMapper
+  }  // class LandRecordMapper
 
 }  // namespace Empiria.Land.Registration.Adapters

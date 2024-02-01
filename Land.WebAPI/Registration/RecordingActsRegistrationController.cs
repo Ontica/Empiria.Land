@@ -22,28 +22,27 @@ namespace Empiria.Land.Registration.WebApi {
     #region Web Apis
 
     [HttpPost]
-    [Route("v5/land/registration/{instrumentRecordingUID:guid}/recording-acts")]
-    public SingleObjectModel CreateRecordingAct([FromUri] string instrumentRecordingUID,
+    [Route("v5/land/registration/{landRecordUID:guid}/recording-acts")]
+    public SingleObjectModel CreateRecordingAct([FromUri] string landRecordUID,
                                                 [FromBody] RegistrationCommand command) {
 
       base.RequireBody(command);
 
       using (var usecases = RegistrationUseCases.UseCaseInteractor()) {
-        InstrumentRecordingDto instrumentRecording =
-                                    usecases.CreateRecordingAct(instrumentRecordingUID, command);
+        LandRecordDto landRecord = usecases.CreateRecordingAct(landRecordUID, command);
 
-        return new SingleObjectModel(this.Request, instrumentRecording);
+        return new SingleObjectModel(this.Request, landRecord);
       }
     }
 
 
     [HttpGet]
-    [Route("v5/land/registration/{instrumentRecordingUID:guid}/recording-acts/{recordingActUID:guid}")]
-    public SingleObjectModel GetRecordingAct([FromUri] string instrumentRecordingUID,
+    [Route("v5/land/registration/{landRecordUID:guid}/recording-acts/{recordingActUID:guid}")]
+    public SingleObjectModel GetRecordingAct([FromUri] string landRecordUID,
                                              [FromUri] string recordingActUID) {
 
       using (var usecases = RegistrationUseCases.UseCaseInteractor()) {
-        RecordingActDto recordingAct = usecases.GetRecordingAct(instrumentRecordingUID, recordingActUID);
+        RecordingActDto recordingAct = usecases.GetRecordingAct(landRecordUID, recordingActUID);
 
         return new SingleObjectModel(this.Request, recordingAct);
       }
@@ -51,28 +50,27 @@ namespace Empiria.Land.Registration.WebApi {
 
 
     [HttpDelete]
-    [Route("v5/land/registration/{instrumentRecordingUID:guid}/recording-acts/{recordingActUID:guid}")]
-    public SingleObjectModel DeleteRecordingAct([FromUri] string instrumentRecordingUID,
+    [Route("v5/land/registration/{landRecordUID:guid}/recording-acts/{recordingActUID:guid}")]
+    public SingleObjectModel DeleteRecordingAct([FromUri] string landRecordUID,
                                                 [FromUri] string recordingActUID) {
 
       using (var usecases = RegistrationUseCases.UseCaseInteractor()) {
-        InstrumentRecordingDto instrumentRecording =
-                                    usecases.RemoveRecordingAct(instrumentRecordingUID, recordingActUID);
+        LandRecordDto landRecord = usecases.RemoveRecordingAct(landRecordUID, recordingActUID);
 
-        return new SingleObjectModel(this.Request, instrumentRecording);
+        return new SingleObjectModel(this.Request, landRecord);
       }
     }
 
 
     [HttpPatch, HttpPut]
-    [Route("v5/land/registration/{instrumentRecordingUID:guid}/recording-acts/{recordingActUID:guid}")]
-    public SingleObjectModel UpdateRecordingAct([FromUri] string instrumentRecordingUID,
+    [Route("v5/land/registration/{landRecordUID:guid}/recording-acts/{recordingActUID:guid}")]
+    public SingleObjectModel UpdateRecordingAct([FromUri] string landRecordUID,
                                                 [FromUri] string recordingActUID,
                                                 [FromBody] RecordingActFields fields) {
       base.RequireBody(fields);
 
       using (var usecases = RegistrationUseCases.UseCaseInteractor()) {
-        RecordingActDto recordingAct = usecases.UpdateRecordingAct(instrumentRecordingUID,
+        RecordingActDto recordingAct = usecases.UpdateRecordingAct(landRecordUID,
                                                                    recordingActUID,
                                                                    fields);
 

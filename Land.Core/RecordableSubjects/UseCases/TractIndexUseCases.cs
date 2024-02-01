@@ -38,16 +38,16 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
     public SubjectHistoryDto AmendableRecordingActs(string recordableSubjectUID,
                                                     string amendmentRecordingActTypeUID,
-                                                    string instrumentRecordingUID,
+                                                    string landRecordUID,
                                                     DateTime date) {
 
       Assertion.Require(recordableSubjectUID, nameof(recordableSubjectUID));
       Assertion.Require(amendmentRecordingActTypeUID, nameof(amendmentRecordingActTypeUID));
 
-      if (!string.IsNullOrWhiteSpace(instrumentRecordingUID)) {
-        var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
-        date = instrumentRecording.AuthorizationTime != ExecutionServer.DateMinValue ?
-                                      instrumentRecording.AuthorizationTime : instrumentRecording.PresentationTime;
+      if (!string.IsNullOrWhiteSpace(landRecordUID)) {
+        var landRecord = RecordingDocument.ParseGuid(landRecordUID);
+        date = landRecord.AuthorizationTime != ExecutionServer.DateMinValue ?
+                                      landRecord.AuthorizationTime : landRecord.PresentationTime;
       }
 
       var amendmentRecordingActType = RecordingActType.Parse(amendmentRecordingActTypeUID);
@@ -123,9 +123,9 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
       RecordingAct recordingAct = recordableSubject.Tract.GetRecordingAct(recordingActUID);
 
-      RecordingDocument instrumentRecording = recordingAct.Document;
+      RecordingDocument landRecord = recordingAct.Document;
 
-      instrumentRecording.RemoveRecordingAct(recordingAct);
+      landRecord.RemoveRecordingAct(recordingAct);
     }
 
     #endregion Use cases

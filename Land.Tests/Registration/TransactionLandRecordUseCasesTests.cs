@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Registration Services                        Component : Test cases                            *
 *  Assembly : Empiria.Land.Tests.dll                       Pattern   : Use cases tests class                 *
-*  Type     : TransactionInstrumentRecordingUseCasesTests  License   : Please read LICENSE.txt file          *
+*  Type     : TransactionLandRecordUseCasesTests           License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Test cases for transaction instrument registration use cases.                                  *
+*  Summary  : Test cases for transaction land record use cases.                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -19,31 +19,31 @@ using Empiria.Land.Registration.Adapters;
 namespace Empiria.Land.Tests.Registration {
 
   /// <summary>Test cases for transaction instrument registration use cases.</summary>
-  public class TransactionInstrumentRecordingUseCasesTests {
+  public class TransactionLandRecordUseCasesTests {
 
     #region Fields
 
     private readonly string TRANSACTION_UID = TestingConstants.TRANSACTION_UID;
 
-    private readonly TransactionInstrumentRecordingUseCases _usecases;
+    private readonly TransactionLandRecordUseCases _usecases;
 
     #endregion Fields
 
     #region Initialization
 
-    public TransactionInstrumentRecordingUseCasesTests() => _usecases = TransactionInstrumentRecordingUseCases.UseCaseInteractor();
+    public TransactionLandRecordUseCasesTests() => _usecases = TransactionLandRecordUseCases.UseCaseInteractor();
 
-    ~TransactionInstrumentRecordingUseCasesTests() => _usecases.Dispose();
+    ~TransactionLandRecordUseCasesTests() => _usecases.Dispose();
 
     #endregion Initialization
 
     #region Facts
 
     [Fact]
-    public void Should_Change_A_TransactionInstrumentRecordingType() {
-      InstrumentRecordingDto instrumentRecording = _usecases.GetTransactionInstrumentRecording(TRANSACTION_UID);
+    public void Should_Change_A_TransactionLandRecordType() {
+      LandRecordDto landRecord = _usecases.GetTransactionLandRecord(TRANSACTION_UID);
 
-      InstrumentDto instrument = instrumentRecording.Instrument;
+      InstrumentDto instrument = landRecord.Instrument;
 
       var fields = new InstrumentFields {
         Type = instrument.Type == InstrumentTypeEnum.DocumentoJuzgado ?
@@ -51,7 +51,7 @@ namespace Empiria.Land.Tests.Registration {
         BinderNo = EmpiriaString.BuildRandomString(48)
       };
 
-      InstrumentDto changed = _usecases.UpdateTransactionInstrumentRecording(TRANSACTION_UID, fields)
+      InstrumentDto changed = _usecases.UpdateTransactionLandRecord(TRANSACTION_UID, fields)
                                        .Instrument;
 
       Assert.Equal(fields.Type, changed.Type);
@@ -63,19 +63,19 @@ namespace Empiria.Land.Tests.Registration {
 
 
     [Fact]
-    public void Should_Get_A_Transaction_InstrumentRecording() {
-      InstrumentRecordingDto instrumentRecording = _usecases.GetTransactionInstrumentRecording(TRANSACTION_UID);
+    public void Should_Get_A_Transaction_LandRecord() {
+      LandRecordDto landRecord = _usecases.GetTransactionLandRecord(TRANSACTION_UID);
 
-      Assert.NotNull(instrumentRecording.UID);
-      Assert.NotNull(instrumentRecording.Instrument.UID);
-      Assert.NotNull(instrumentRecording.Instrument.TypeName);
-      Assert.NotNull(instrumentRecording.Instrument.Issuer);
-      Assert.NotNull(instrumentRecording.Instrument.Issuer.Name);
+      Assert.NotNull(landRecord.UID);
+      Assert.NotNull(landRecord.Instrument.UID);
+      Assert.NotNull(landRecord.Instrument.TypeName);
+      Assert.NotNull(landRecord.Instrument.Issuer);
+      Assert.NotNull(landRecord.Instrument.Issuer.Name);
     }
 
 
     [Fact]
-    public void Should_Create_A_Transaction_InstrumentRecording() {
+    public void Should_Create_A_Transaction_LandRecord() {
       var fields = new InstrumentFields {
         Type = InstrumentTypeEnum.EscrituraPublica,
         Summary = EmpiriaString.BuildRandomString(1760),
@@ -84,7 +84,7 @@ namespace Empiria.Land.Tests.Registration {
         IssueDate = DateTime.Parse("2018-10-05")
       };
 
-      InstrumentDto created = _usecases.CreateTransactionInstrumentRecording(TRANSACTION_UID, fields)
+      InstrumentDto created = _usecases.CreateTransactionLandRecord(TRANSACTION_UID, fields)
                                        .Instrument;
 
       Assert.Equal(fields.Type, created.Type);
@@ -96,14 +96,14 @@ namespace Empiria.Land.Tests.Registration {
 
 
     [Fact]
-    public void Should_Update_A_Transaction_InstrumentRecording() {
+    public void Should_Update_A_Transaction_LandRecord() {
       var fields = new InstrumentFields {
         Summary = EmpiriaString.BuildRandomString(3200),
         BinderNo = EmpiriaString.BuildRandomString(48),
         Folio = EmpiriaString.BuildRandomString(16)
       };
 
-      InstrumentDto changed = _usecases.UpdateTransactionInstrumentRecording(TRANSACTION_UID, fields)
+      InstrumentDto changed = _usecases.UpdateTransactionLandRecord(TRANSACTION_UID, fields)
                                        .Instrument;
 
       Assert.Equal(fields.Summary, changed.Summary);
@@ -113,6 +113,6 @@ namespace Empiria.Land.Tests.Registration {
 
     #endregion Facts
 
-  }  // class TransactionInstrumentRecordingUseCasesTests
+  }  // class TransactionLandRecordUseCasesTests
 
 }  // namespace Empiria.Land.Tests.Registration

@@ -76,9 +76,9 @@ namespace Empiria.Land.Providers {
 
 
     static private bool ExistsRecordID(string generatedID) {
-      using (var usecase = InstrumentRecordingUseCases.UseCaseInteractor()) {
+      using (var usecase = LandRecordUseCases.UseCaseInteractor()) {
 
-        return usecase.ExistsInstrumentRecordingID(generatedID);
+        return usecase.ExistsLandRecordID(generatedID);
       }
     }
 

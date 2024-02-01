@@ -25,14 +25,13 @@ namespace Empiria.Land.Registration.WebApi {
 
 
     [HttpGet]
-    [Route("v5/land/registration/{instrumentRecordingUID:guid}/" +
+    [Route("v5/land/registration/{landRecordUID:guid}/" +
            "recording-acts/{recordingActUID:guid}/tract-index")]
-    public SingleObjectModel GetTractIndex([FromUri] string instrumentRecordingUID,
+    public SingleObjectModel GetTractIndex([FromUri] string landRecordUID,
                                            [FromUri] string recordingActUID) {
 
       using (var usecases = RegistrationUseCases.UseCaseInteractor()) {
-        SubjectHistoryDto tractIndex = usecases.GetTractIndex(instrumentRecordingUID,
-                                                          recordingActUID);
+        SubjectHistoryDto tractIndex = usecases.GetTractIndex(landRecordUID, recordingActUID);
 
         return new SingleObjectModel(this.Request, tractIndex);
       }
@@ -40,11 +39,11 @@ namespace Empiria.Land.Registration.WebApi {
 
 
     [HttpPost, HttpPatch, HttpPut]
-    [Route("v5/land/registration/{instrumentRecordingUID:guid}/" +
+    [Route("v5/land/registration/{landRecordUID:guid}/" +
            "recording-acts/{recordingActUID:guid}/recordable-subject")]
-    [Route("v5/land/registration/{instrumentRecordingUID:guid}/" +
+    [Route("v5/land/registration/{landRecordUID:guid}/" +
            "recording-acts/{recordingActUID:guid}/update-recordable-subject")]
-    public SingleObjectModel UpdateRecordableSubject([FromUri] string instrumentRecordingUID,
+    public SingleObjectModel UpdateRecordableSubject([FromUri] string landRecordUID,
                                                      [FromUri] string recordingActUID,
                                                      [FromBody] object body) {
 
@@ -53,12 +52,11 @@ namespace Empiria.Land.Registration.WebApi {
       using (var usecases = RegistrationUseCases.UseCaseInteractor()) {
         RecordableSubjectFields recordableSubjectFields = MapToRecordableSubjectFields(body);
 
-        InstrumentRecordingDto instrumentRecording =
-                                      usecases.UpdateRecordableSubject(instrumentRecordingUID,
-                                                                       recordingActUID,
-                                                                       recordableSubjectFields);
+        LandRecordDto landRecord = usecases.UpdateRecordableSubject(landRecordUID,
+                                                                    recordingActUID,
+                                                                    recordableSubjectFields);
 
-        return new SingleObjectModel(this.Request, instrumentRecording);
+        return new SingleObjectModel(this.Request, landRecord);
       }
     }
 

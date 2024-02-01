@@ -131,14 +131,14 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
-    public InstrumentRecordingDto CreateNextBookEntry(string instrumentRecordingUID,
-                                                      CreateNextBookEntryFields fields) {
-      Assertion.Require(instrumentRecordingUID, nameof(instrumentRecordingUID));
+    public LandRecordDto CreateNextBookEntry(string landRecordUID,
+                                             CreateNextBookEntryFields fields) {
+      Assertion.Require(landRecordUID, nameof(landRecordUID));
       Assertion.Require(fields, nameof(fields));
 
-      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 
-      var instrument = Instrument.Parse(instrumentRecording.InstrumentId);
+      var instrument = Instrument.Parse(landRecord.InstrumentId);
 
       var office = RecorderOffice.Parse(fields.RecorderOfficeUID);
       var section = RecordingSection.Parse(fields.SectionUID);
@@ -146,17 +146,17 @@ namespace Empiria.Land.Registration.UseCases {
       var book = RecordingBook.GetAssignedBookForRecording(office, section,
                                                            instrument.SheetsCount);
 
-      var nextBookEntry = book.CreateNextBookEntry(instrumentRecording);
+      var nextBookEntry = book.CreateNextBookEntry(landRecord);
 
       nextBookEntry.Save();
 
-      return InstrumentRecordingMapper.Map(instrumentRecording);
+      return LandRecordMapper.Map(landRecord);
     }
 
 
-    public InstrumentRecordingDto CreateRecordingAct(string recordingBookUID,
-                                                     string bookEntryUID,
-                                                     RegistrationCommand command) {
+    public LandRecordDto CreateRecordingAct(string recordingBookUID,
+                                            string bookEntryUID,
+                                            RegistrationCommand command) {
       Assertion.Require(recordingBookUID, nameof(recordingBookUID));
       Assertion.Require(bookEntryUID, nameof(bookEntryUID));
       Assertion.Require(command, nameof(command));
@@ -164,16 +164,16 @@ namespace Empiria.Land.Registration.UseCases {
       var book = RecordingBook.Parse(recordingBookUID);
       var bookEntry = BookEntry.Parse(bookEntryUID);
 
-      var instrumentRecording = bookEntry.MainDocument;
+      var landRecord = bookEntry.MainDocument;
 
-      var registrationEngine = new RegistrationEngine(instrumentRecording);
+      var registrationEngine = new RegistrationEngine(landRecord);
 
       registrationEngine.Execute(bookEntry, command);
 
       book.Refresh();
       bookEntry.Refresh();
 
-      return InstrumentRecordingMapper.Map(instrumentRecording);
+      return LandRecordMapper.Map(landRecord);
     }
 
 
@@ -197,9 +197,10 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
-    public InstrumentRecordingDto RemoveRecordingAct(string recordingBookUID,
-                                                     string bookEntryUID,
-                                                     string recordingActUID) {
+    public LandRecordDto RemoveRecordingAct(string recordingBookUID,
+                                            string bookEntryUID,
+                                            string recordingActUID) {
+
       Assertion.Require(recordingBookUID, nameof(recordingBookUID));
       Assertion.Require(bookEntryUID, nameof(bookEntryUID));
       Assertion.Require(recordingActUID, nameof(recordingActUID));
@@ -210,7 +211,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var recordingAct = RecordingAct.Parse(recordingActUID);
 
-      var instrumentRecording = recordingAct.Document;
+      var landRecord = recordingAct.Document;
 
       Assertion.Require(book.BookEntries.Contains(bookEntry),
                        $"Book entry '{bookEntryUID}', does not belong to book '{book.AsText}'.");
@@ -219,39 +220,39 @@ namespace Empiria.Land.Registration.UseCases {
                       $"Book entry '{bookEntryUID}', does not contains recording act '{recordingAct.UID}'.");
 
 
-      instrumentRecording.RemoveRecordingAct(recordingAct);
+      landRecord.RemoveRecordingAct(recordingAct);
 
       book.Refresh();
       bookEntry.Refresh();
 
-      return InstrumentRecordingMapper.Map(instrumentRecording);
+      return LandRecordMapper.Map(landRecord);
     }
 
 
-    public InstrumentRecordingDto RemoveBookEntryFromInstrument(string instrumentRecordingUID,
-                                                                string bookEntryUID) {
-      Assertion.Require(instrumentRecordingUID, nameof(instrumentRecordingUID));
+    public LandRecordDto RemoveBookEntryFromInstrument(string landRecordUID,
+                                                       string bookEntryUID) {
+      Assertion.Require(landRecordUID, nameof(landRecordUID));
       Assertion.Require(bookEntryUID, nameof(bookEntryUID));
 
-      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 
-      var instrumentBookEntries = BookEntry.GetBookEntriesForDocument(instrumentRecording);
+      var instrumentBookEntries = BookEntry.GetBookEntriesForDocument(landRecord);
 
       var bookEntry = instrumentBookEntries.Find(x => x.UID == bookEntryUID);
 
       Assertion.Require(bookEntry,
-            $"Book recording entry '{bookEntryUID}' does not belong to instrument recording '{instrumentRecordingUID}'.");
+            $"Book recording entry '{bookEntryUID}' does not belong to instrument recording '{landRecordUID}'.");
 
       bookEntry.Delete();
 
-      return InstrumentRecordingMapper.Map(instrumentRecording);
+      return LandRecordMapper.Map(landRecord);
     }
 
 
-    public InstrumentRecordingDto UpdateBookEntryInstrument(string instrumentRecordingUID,
-                                                            string bookEntryUID,
-                                                            ManualEditBookEntryFields fields) {
-      Assertion.Require(instrumentRecordingUID, nameof(instrumentRecordingUID));
+    public LandRecordDto UpdateBookEntryInstrument(string landRecordUID,
+                                                   string bookEntryUID,
+                                                   ManualEditBookEntryFields fields) {
+      Assertion.Require(landRecordUID, nameof(landRecordUID));
       Assertion.Require(bookEntryUID, nameof(bookEntryUID));
       Assertion.Require(fields, nameof(fields));
 
@@ -262,20 +263,20 @@ namespace Empiria.Land.Registration.UseCases {
       bookEntry.Update(fields.BookEntry.MapToBookEntryDto(bookEntry.RecordingBook,
                        bookEntry.MainDocument));
 
-      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 
-      Instrument instrument = Instrument.Parse(instrumentRecording.InstrumentId);
+      Instrument instrument = Instrument.Parse(landRecord.InstrumentId);
 
       instrument.Update(fields.Instrument);
 
       instrument.Save();
 
-      if (!instrumentRecording.HasTransaction) {
-        instrumentRecording.SetDates(fields.BookEntry.PresentationTime,
+      if (!landRecord.HasTransaction) {
+        landRecord.SetDates(fields.BookEntry.PresentationTime,
                                      fields.BookEntry.AuthorizationDate);
       }
 
-      return InstrumentRecordingMapper.Map(instrumentRecording);
+      return LandRecordMapper.Map(landRecord);
     }
 
     #endregion Command Use cases

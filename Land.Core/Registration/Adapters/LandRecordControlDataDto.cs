@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Registration Services                      Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
-*  Type     : InstrumentRecordingControlDataDto          License   : Please read LICENSE.txt file            *
+*  Type     : LandRecordControlDataDto                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO that holds legal instrument control data flags.                                     *
 *                                                                                                            *
@@ -12,22 +12,22 @@ using System;
 namespace Empiria.Land.Registration.Adapters {
 
   /// <summary>Output DTO that holds legal instrument control data flags.</summary>
-  public class InstrumentRecordingControlDataDto {
+  public class LandRecordControlDataDto {
 
-    public InstrumentRecordingCanControlData Can {
+    public LandRecordCanControlData Can {
       get; private set;
-    } = new InstrumentRecordingCanControlData();
+    } = new LandRecordCanControlData();
 
 
-    public InstrumentRecordingShowControlData Show {
+    public LandRecordShowControlData Show {
       get; private set;
-    } = new InstrumentRecordingShowControlData();
+    } = new LandRecordShowControlData();
 
-  }  // class InstrumentControlDataDto
+  }  // class LandRecordControlDataDto
 
 
   /// <summary>Output DTO that holds the 'Can' part of control data flags.</summary>
-  public class InstrumentRecordingCanControlData {
+  public class LandRecordCanControlData {
 
     public bool EditInstrument {
       get; internal set;
@@ -61,12 +61,12 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     }
 
-  }  // class InstrumentRecordingCanControlData
+  }  // class LandRecordCanControlData
 
 
 
   /// <summary>Output DTO that holds the 'Show' part of control data flags.</summary>
-  public class InstrumentRecordingShowControlData {
+  public class LandRecordShowControlData {
 
     public bool Files {
       get; internal set;
@@ -85,6 +85,6 @@ namespace Empiria.Land.Registration.Adapters {
       internal set;
     }
 
-  }  // class InstrumentRecordingShowControlData
+  }  // class LandRecordShowControlData
 
 }  // namespace Empiria.Land.Registration.Adapters

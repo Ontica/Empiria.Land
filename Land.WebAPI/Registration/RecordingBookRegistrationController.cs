@@ -106,16 +106,15 @@ namespace Empiria.Land.Registration.WebApi {
 
 
     [HttpPost]
-    [Route("v5/land/registration/{instrumentRecordingUID:guid}/book-entries/create-next-book-entry")]
-    public SingleObjectModel CreateNextBookEntry([FromUri] string instrumentRecordingUID,
+    [Route("v5/land/registration/{landRecordUID:guid}/book-entries/create-next-book-entry")]
+    public SingleObjectModel CreateNextBookEntry([FromUri] string landRecordUID,
                                                  [FromBody] CreateNextBookEntryFields fields) {
       base.RequireBody(fields);
 
       using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
-        InstrumentRecordingDto instrumentRecording =
-                                     usecases.CreateNextBookEntry(instrumentRecordingUID, fields);
+        LandRecordDto landRecord = usecases.CreateNextBookEntry(landRecordUID, fields);
 
-        return new SingleObjectModel(this.Request, instrumentRecording);
+        return new SingleObjectModel(this.Request, landRecord);
       }
     }
 
@@ -129,10 +128,9 @@ namespace Empiria.Land.Registration.WebApi {
       base.RequireBody(command);
 
       using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
-        InstrumentRecordingDto instrumentRecording =
-                                    usecases.CreateRecordingAct(recordingBookUID, bookEntryUID, command);
+        LandRecordDto landRecord = usecases.CreateRecordingAct(recordingBookUID, bookEntryUID, command);
 
-        return new SingleObjectModel(this.Request, instrumentRecording);
+        return new SingleObjectModel(this.Request, landRecord);
       }
     }
 
@@ -145,10 +143,9 @@ namespace Empiria.Land.Registration.WebApi {
                                                          [FromUri] string recordingActUID) {
 
       using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
-        InstrumentRecordingDto instrumentRecording =
-                                    usecases.RemoveRecordingAct(recordingBookUID, bookEntryUID, recordingActUID);
+        LandRecordDto landRecord = usecases.RemoveRecordingAct(recordingBookUID, bookEntryUID, recordingActUID);
 
-        return new SingleObjectModel(this.Request, instrumentRecording);
+        return new SingleObjectModel(this.Request, landRecord);
       }
     }
 
@@ -166,32 +163,30 @@ namespace Empiria.Land.Registration.WebApi {
 
 
     [HttpDelete]
-    [Route("v5/land/registration/{instrumentRecordingUID:guid}/book-entries/{bookEntryUID:guid}")]
-    public SingleObjectModel RemoveInstrumentBookEntry([FromUri] string instrumentRecordingUID,
+    [Route("v5/land/registration/{landRecordUID:guid}/book-entries/{bookEntryUID:guid}")]
+    public SingleObjectModel RemoveInstrumentBookEntry([FromUri] string landRecordUID,
                                                        [FromUri] string bookEntryUID) {
 
       using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
-        InstrumentRecordingDto instrumentRecording =
-                                      usecases.RemoveBookEntryFromInstrument(instrumentRecordingUID, bookEntryUID);
+        LandRecordDto landRecord = usecases.RemoveBookEntryFromInstrument(landRecordUID, bookEntryUID);
 
-        return new SingleObjectModel(this.Request, instrumentRecording);
+        return new SingleObjectModel(this.Request, landRecord);
       }
     }
 
 
     [HttpPut, HttpPatch]
-    [Route("v5/land/registration/{instrumentRecordingUID:guid}/book-entries/{bookEntryUID:guid}/update-instrument")]
-    public SingleObjectModel UpdateBookEntryInstrument([FromUri] string instrumentRecordingUID,
+    [Route("v5/land/registration/{landRecordUID:guid}/book-entries/{bookEntryUID:guid}/update-instrument")]
+    public SingleObjectModel UpdateBookEntryInstrument([FromUri] string landRecordUID,
                                                        [FromUri] string bookEntryUID,
                                                        [FromBody] ManualEditBookEntryFields fields) {
 
       base.RequireBody(fields);
 
       using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
-        InstrumentRecordingDto instrumentRecording =
-                usecases.UpdateBookEntryInstrument(instrumentRecordingUID, bookEntryUID, fields);
+        LandRecordDto landRecord = usecases.UpdateBookEntryInstrument(landRecordUID, bookEntryUID, fields);
 
-        return new SingleObjectModel(this.Request, instrumentRecording);
+        return new SingleObjectModel(this.Request, landRecord);
       }
     }
 

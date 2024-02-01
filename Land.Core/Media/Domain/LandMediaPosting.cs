@@ -113,7 +113,7 @@ namespace Empiria.Land.Media {
 
 
     [DataField("DocumentId")]
-    internal RecordingDocument InstrumentRecording {
+    internal RecordingDocument LandRecord {
       get;
       private set;
     }
@@ -185,7 +185,7 @@ namespace Empiria.Land.Media {
           1, "Id", Id, "StorageItemId", StorageItem.Id, "ImagingControlID", ImagingControlID,
           "ExtensionData", ExtensionData.ToString(),
           "Transaction", Transaction.Id, "Instrument", Instrument.Id,
-          "InstrumentRecording", InstrumentRecording.Id,
+          "LandRecord", LandRecord.Id,
           "RecordingBook", RecordingBook.Id, "BookEntry", BookEntry.Id, "BookEntryNo", BookEntryNo,
           "ExternalTransaction", ExternalTransactionId,
           "PostingTime", PostingTime, "PostedBy", PostedBy.Id,

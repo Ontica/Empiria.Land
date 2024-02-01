@@ -49,7 +49,7 @@ namespace Empiria.Land.Media {
       var op = DataOperation.Parse("writeLRSMediaPosting",
                o.Id, o.UID, o.StorageItem.Id, o.MediaContent.ToString(), o.ImagingControlID,
                o.Keywords, o.ExtensionData.ToString(), o.Transaction.Id, o.Instrument.Id,
-               o.InstrumentRecording.Id, o.RecordingBook.Id, o.BookEntry.Id,
+               o.LandRecord.Id, o.RecordingBook.Id, o.BookEntry.Id,
                o.BookEntryNo, o.ExternalTransactionId, o.PostingTime, o.PostedBy.Id,
                (char) o.Status, o.Integrity.GetUpdatedHashCode());
 

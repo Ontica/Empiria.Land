@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Land Registration                          Component : Use cases Layer                         *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Use case interactor class               *
-*  Type     : TransactionInstrumentRecordingUseCases     License   : Please read LICENSE.txt file            *
+*  Type     : TransactionLandRecordUseCases              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases for transaction instrument edition and retrieving.                                   *
+*  Summary  : Use cases for transaction land record edition and retrieving.                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -20,36 +20,36 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration.UseCases {
 
-  /// <summary>Use cases for transaction instrument edition and retrieving.</summary>
-  public class TransactionInstrumentRecordingUseCases : UseCase {
+  /// <summary>Use cases for transaction land record edition and retrieving.</summary>
+  public class TransactionLandRecordUseCases : UseCase {
 
     #region Constructors and parsers
 
-    protected TransactionInstrumentRecordingUseCases() {
+    protected TransactionLandRecordUseCases() {
       // no-op
     }
 
-    static public TransactionInstrumentRecordingUseCases UseCaseInteractor() {
-      return UseCase.CreateInstance<TransactionInstrumentRecordingUseCases>();
+    static public TransactionLandRecordUseCases UseCaseInteractor() {
+      return UseCase.CreateInstance<TransactionLandRecordUseCases>();
     }
 
     #endregion Constructors and parsers
 
     #region Use cases
 
-    public InstrumentRecordingDto GetTransactionInstrumentRecording(string transactionUID) {
+    public LandRecordDto GetTransactionLandRecord(string transactionUID) {
       Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
-      RecordingDocument instrumentRecording = transaction.Document;
+      RecordingDocument landRecord = transaction.Document;
 
-      return InstrumentRecordingMapper.Map(instrumentRecording);
+      return LandRecordMapper.Map(landRecord);
     }
 
 
-    public InstrumentRecordingDto CreateTransactionInstrumentRecording(string transactionUID,
-                                                                       InstrumentFields fields) {
+    public LandRecordDto CreateTransactionLandRecord(string transactionUID,
+                                                     InstrumentFields fields) {
       Assertion.Require(transactionUID, nameof(transactionUID));
       Assertion.Require(fields, nameof(fields));
       Assertion.Require(fields.Type.HasValue, "Instrument.Type value is required.");
@@ -72,12 +72,12 @@ namespace Empiria.Land.Registration.UseCases {
 
       transaction.AttachDocument(landRecord);
 
-      return InstrumentRecordingMapper.Map(landRecord);
+      return LandRecordMapper.Map(landRecord);
     }
 
 
-    public InstrumentRecordingDto UpdateTransactionInstrumentRecording(string transactionUID,
-                                                                       InstrumentFields fields) {
+    public LandRecordDto UpdateTransactionLandRecord(string transactionUID,
+                                                     InstrumentFields fields) {
       Assertion.Require(transactionUID, nameof(transactionUID));
       Assertion.Require(fields, nameof(fields));
 
@@ -95,11 +95,11 @@ namespace Empiria.Land.Registration.UseCases {
 
       landRecord.Save();
 
-      return InstrumentRecordingMapper.Map(landRecord);
+      return LandRecordMapper.Map(landRecord);
     }
 
     #endregion Use cases
 
-  }  // class TransactionInstrumentRecordingUseCases
+  }  // class TransactionLandRecordUseCases
 
 }  // namespace Empiria.Land.Registration.UseCases

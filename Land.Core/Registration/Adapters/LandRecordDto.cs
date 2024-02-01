@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Registration Services                      Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
-*  Type     : InstrumentRecordingDto                     License   : Please read LICENSE.txt file            *
+*  Type     : LandRecordDto                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO with data representing a legal instrument registration.                             *
 *                                                                                                            *
@@ -16,7 +16,7 @@ using Empiria.Land.Instruments.Adapters;
 namespace Empiria.Land.Registration.Adapters {
 
   /// <summary>Output DTO with data representing a legal instrument registration.</summary>
-  public class InstrumentRecordingDto {
+  public class LandRecordDto {
 
     public string UID {
       get; internal set;
@@ -33,7 +33,7 @@ namespace Empiria.Land.Registration.Adapters {
     } = null;
 
 
-    public Boolean BookRecordingMode {
+    public bool BookRecordingMode {
       get; internal set;
     } = false;
 
@@ -48,9 +48,9 @@ namespace Empiria.Land.Registration.Adapters {
     } = string.Empty;
 
 
-    public InstrumentRecordingControlDataDto Actions {
+    public LandRecordControlDataDto Actions {
       get; internal set;
-    } = new InstrumentRecordingControlDataDto();
+    } = new LandRecordControlDataDto();
 
 
     public FixedList<RecordingActEntryDto> RecordingActs {
@@ -63,12 +63,12 @@ namespace Empiria.Land.Registration.Adapters {
     } = new FixedList<BookEntryOutputDto>();
 
 
-  }  // class InstrumentRecordingDto
+  }  // class LandRecordDto
 
 
 
-  /// <summary>Short DTO for instrument recordings.</summary>
-  public class InstrumentRecordingShortDto {
+  /// <summary>Short DTO descriptor for land records.</summary>
+  public class LandRecordDescriptorDto {
 
     public string UID {
       get; internal set;
@@ -84,8 +84,6 @@ namespace Empiria.Land.Registration.Adapters {
       get; internal set;
     } = string.Empty;
 
-
-  }  // class InstrumentRecordingShortDto
-
+  }  // class LandRecordDescriptorDto
 
 }  // namespace Empiria.Land.Registration.Adapters

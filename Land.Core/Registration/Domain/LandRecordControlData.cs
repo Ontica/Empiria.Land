@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Land Registration                          Component : Domain Layer                            *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Control data class                      *
-*  Type     : InstrumentRecordingControlData             License   : Please read LICENSE.txt file            *
+*  Type     : LandRecordControlData                      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides edition and other control data for a legal instrument for the current user.           *
 *                                                                                                            *
@@ -15,12 +15,12 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {
 
-  internal class InstrumentRecordingControlData {
+  internal class LandRecordControlData {
 
     static internal readonly bool UseRecordingBookRegistation =
                                         ConfigurationData.Get("UseRecordingBookRegistation", false);
 
-    private readonly RecordingDocument _instrumentRecording;
+    private readonly RecordingDocument _landRecord;
     private readonly Instrument _instrument;
     private readonly LRSTransaction _transaction;
 
@@ -29,18 +29,18 @@ namespace Empiria.Land.Registration {
     private readonly bool _isHistoricRegistration;
     private readonly bool _isNewRegistration;
 
-    internal InstrumentRecordingControlData(RecordingDocument instrumentRecording) {
-      Assertion.Require(instrumentRecording, nameof(instrumentRecording));
+    internal LandRecordControlData(RecordingDocument landRecord) {
+      Assertion.Require(landRecord, nameof(landRecord));
 
-      _instrumentRecording = instrumentRecording;
-      _instrument = Instrument.Parse(instrumentRecording.InstrumentId);
-      _transaction = instrumentRecording.GetTransaction();
+      _landRecord = landRecord;
+      _instrument = Instrument.Parse(landRecord.InstrumentId);
+      _transaction = landRecord.GetTransaction();
 
-      _bookEntries = BookEntry.GetBookEntriesForDocument(_instrumentRecording);
+      _bookEntries = BookEntry.GetBookEntriesForDocument(_landRecord);
 
       _isHistoricRegistration = _transaction.IsEmptyInstance;
 
-      _isNewRegistration = _instrumentRecording.IsEmptyInstance || _instrumentRecording.IsNew;
+      _isNewRegistration = _landRecord.IsEmptyInstance || _landRecord.IsNew;
     }
 
 
@@ -63,7 +63,7 @@ namespace Empiria.Land.Registration {
 
     public bool CanOpen {
       get {
-        return this.CanEdit && _instrumentRecording.IsClosed &&
+        return this.CanEdit && _landRecord.IsClosed &&
                !_isNewRegistration && !UseRecordingBookRegistation;
       }
     }
@@ -71,9 +71,9 @@ namespace Empiria.Land.Registration {
 
     public bool CanClose {
       get {
-        return this.CanEdit && !_instrumentRecording.IsClosed &&
+        return this.CanEdit && !_landRecord.IsClosed &&
                !_isNewRegistration && !UseRecordingBookRegistation &&
-               _instrumentRecording.HasRecordingActs;
+               _landRecord.HasRecordingActs;
       }
     }
 
@@ -149,10 +149,10 @@ namespace Empiria.Land.Registration {
 
     public bool ShowRegistrationStamps {
       get {
-        return _bookEntries.Count > 0 || _instrumentRecording.HasRecordingActs;
+        return _bookEntries.Count > 0 || _landRecord.HasRecordingActs;
       }
     }
 
-  }  // class InstrumentRecordingControlData
+  }  // class LandRecordControlData
 
 }  // namespace Empiria.Land.Registration

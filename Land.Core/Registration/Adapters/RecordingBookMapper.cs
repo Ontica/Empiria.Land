@@ -60,8 +60,8 @@ namespace Empiria.Land.Registration.Adapters {
       dto.PresentationTime = bookEntry.MainDocument.PresentationTime;
       dto.AuthorizationDate = bookEntry.MainDocument.AuthorizationTime;
       dto.RecordedBy = bookEntry.RecordedBy.ShortName;
-      dto.InstrumentRecording = InstrumentRecordingMapper.MapToShort(bookEntry.MainDocument);
-      dto.RecordingActs = InstrumentRecordingMapper.MapRecordingActsListDto(bookEntry.RecordingActs);
+      dto.InstrumentRecording = LandRecordMapper.MapToShort(bookEntry.MainDocument);
+      dto.RecordingActs = LandRecordMapper.MapRecordingActsListDto(bookEntry.RecordingActs);
       dto.Status = bookEntry.Status;
 
       dto.MediaFiles = MapBookEntryMediaFiles(bookEntry);

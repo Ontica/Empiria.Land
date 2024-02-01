@@ -22,14 +22,14 @@ namespace Empiria.Land.Registration.WebApi {
     #region Web Apis
 
     [HttpGet]
-    [Route("v5/land/registration/{instrumentRecordingUID:guid}/recording-acts/" +
+    [Route("v5/land/registration/{landRecordUID:guid}/recording-acts/" +
            "{recordingActUID:guid}/parties")]
-    public CollectionModel SearchParties([FromUri] string instrumentRecordingUID,
+    public CollectionModel SearchParties([FromUri] string landRecordUID,
                                          [FromUri] string recordingActUID,
                                          [FromUri] SearchPartiesCommand command) {
 
       using (var usecases = PartiesRegistrationUseCases.UseCaseInteractor()) {
-        FixedList<PartyDto> parties = usecases.SearchParties(instrumentRecordingUID,
+        FixedList<PartyDto> parties = usecases.SearchParties(landRecordUID,
                                                              recordingActUID, command);
 
         return new CollectionModel(this.Request, parties);
@@ -38,15 +38,15 @@ namespace Empiria.Land.Registration.WebApi {
 
 
     [HttpPost]
-    [Route("v5/land/registration/{instrumentRecordingUID:guid}/recording-acts/{recordingActUID:guid}/parties")]
-    public SingleObjectModel AppendParty([FromUri] string instrumentRecordingUID,
+    [Route("v5/land/registration/{landRecordUID:guid}/recording-acts/{recordingActUID:guid}/parties")]
+    public SingleObjectModel AppendParty([FromUri] string landRecordUID,
                                          [FromUri] string recordingActUID,
                                          [FromBody] RecordingActPartyFields fields) {
 
       base.RequireBody(fields);
 
       using (var usecases = PartiesRegistrationUseCases.UseCaseInteractor()) {
-        RecordingActDto recordingAct = usecases.AppendParty(instrumentRecordingUID,
+        RecordingActDto recordingAct = usecases.AppendParty(landRecordUID,
                                                             recordingActUID, fields);
 
         return new SingleObjectModel(this.Request, recordingAct);
@@ -55,14 +55,14 @@ namespace Empiria.Land.Registration.WebApi {
 
 
     [HttpDelete]
-    [Route("v5/land/registration/{instrumentRecordingUID:guid}/recording-acts/" +
+    [Route("v5/land/registration/{landRecordUID:guid}/recording-acts/" +
            "{recordingActUID:guid}/parties/{partyUID:guid}")]
-    public SingleObjectModel RemoveParty([FromUri] string instrumentRecordingUID,
+    public SingleObjectModel RemoveParty([FromUri] string landRecordUID,
                                          [FromUri] string recordingActUID,
                                          [FromUri] string partyUID) {
 
       using (var usecases = PartiesRegistrationUseCases.UseCaseInteractor()) {
-        RecordingActDto recordingAct = usecases.RemoveParty(instrumentRecordingUID,
+        RecordingActDto recordingAct = usecases.RemoveParty(landRecordUID,
                                                             recordingActUID, partyUID);
 
         return new SingleObjectModel(this.Request, recordingAct);

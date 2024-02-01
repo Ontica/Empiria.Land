@@ -27,31 +27,17 @@ namespace Empiria.Land.Registration.UseCases {
 
     #endregion Constructors and parsers
 
-    #region Command Use cases
 
-    public InstrumentRecordingDto CreateRecordingAct(string instrumentRecordingUID,
-                                                     RegistrationCommand command) {
-      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.Require(command, "command");
+    #region Query Use cases
 
-      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
-
-      var registrationEngine = new RegistrationEngine(instrumentRecording);
-
-      registrationEngine.Execute(command);
-
-      return InstrumentRecordingMapper.Map(instrumentRecording);
-    }
+    public SubjectHistoryDto GetTractIndex(string landRecordUID, string recordingActUID) {
+      Assertion.Require(landRecordUID, nameof(landRecordUID));
+      Assertion.Require(recordingActUID, nameof(recordingActUID));
 
 
-    public SubjectHistoryDto GetTractIndex(string instrumentRecordingUID, string recordingActUID) {
-      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.Require(recordingActUID, "recordingActUID");
+      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 
-
-      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
-
-      RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
+      RecordingAct recordingAct = landRecord.GetRecordingAct(recordingActUID);
 
       FixedList<RecordingAct> tract = recordingAct.Resource.Tract.GetRecordingActs();
 
@@ -59,62 +45,80 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
-    public RecordingActDto GetRecordingAct(string instrumentRecordingUID, string recordingActUID) {
-      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.Require(recordingActUID, "recordingActUID");
+    public RecordingActDto GetRecordingAct(string landRecordUID, string recordingActUID) {
+      Assertion.Require(landRecordUID, nameof(landRecordUID));
+      Assertion.Require(recordingActUID, nameof(recordingActUID));
 
-      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 
-      RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
+      RecordingAct recordingAct = landRecord.GetRecordingAct(recordingActUID);
 
       return RecordingActMapper.Map(recordingAct);
     }
 
+    #endregion Query Use cases
 
-    public InstrumentRecordingDto RemoveRecordingAct(string instrumentRecordingUID,
-                                                     string recordingActUID) {
-      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.Require(recordingActUID, "recordingActUID");
+    #region Command Use cases
 
-      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+    public LandRecordDto CreateRecordingAct(string landRecordUID,
+                                                     RegistrationCommand command) {
+      Assertion.Require(landRecordUID, nameof(landRecordUID));
+      Assertion.Require(command, nameof(command));
 
-      RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
+      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 
-      instrumentRecording.RemoveRecordingAct(recordingAct);
+      var registrationEngine = new RegistrationEngine(landRecord);
 
-      return InstrumentRecordingMapper.Map(instrumentRecording);
+      registrationEngine.Execute(command);
+
+      return LandRecordMapper.Map(landRecord);
     }
 
 
-    public InstrumentRecordingDto UpdateRecordableSubject(string instrumentRecordingUID,
+    public LandRecordDto RemoveRecordingAct(string landRecordUID,
+                                                     string recordingActUID) {
+      Assertion.Require(landRecordUID, nameof(landRecordUID));
+      Assertion.Require(recordingActUID, nameof(recordingActUID));
+
+      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
+
+      RecordingAct recordingAct = landRecord.GetRecordingAct(recordingActUID);
+
+      landRecord.RemoveRecordingAct(recordingAct);
+
+      return LandRecordMapper.Map(landRecord);
+    }
+
+
+    public LandRecordDto UpdateRecordableSubject(string landRecordUID,
                                                           string recordingActUID,
                                                           RecordableSubjectFields fields) {
-      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.Require(recordingActUID, "recordingActUID");
-      Assertion.Require(fields, "fields");
+      Assertion.Require(landRecordUID, nameof(landRecordUID));
+      Assertion.Require(recordingActUID, nameof(recordingActUID));
+      Assertion.Require(fields, nameof(fields));
 
-      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 
-      RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
+      RecordingAct recordingAct = landRecord.GetRecordingAct(recordingActUID);
 
       var updater = new RecordableSubjectUpdater();
 
       updater.Update(recordingAct, fields);
 
-      return InstrumentRecordingMapper.Map(instrumentRecording);
+      return LandRecordMapper.Map(landRecord);
     }
 
 
-    public RecordingActDto UpdateRecordingAct(string instrumentRecordingUID,
+    public RecordingActDto UpdateRecordingAct(string landRecordUID,
                                               string recordingActUID,
                                               RecordingActFields fields) {
-      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.Require(recordingActUID, "recordingActUID");
-      Assertion.Require(fields, "fields");
+      Assertion.Require(landRecordUID, nameof(landRecordUID));
+      Assertion.Require(recordingActUID, nameof(recordingActUID));
+      Assertion.Require(fields, nameof(fields));
 
-      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 
-      RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
+      RecordingAct recordingAct = landRecord.GetRecordingAct(recordingActUID);
 
       if (fields.TypeUID.Length != 0) {
         var newRecordingActType = RecordingActType.Parse(fields.TypeUID);

@@ -28,16 +28,16 @@ namespace Empiria.Land.Registration.UseCases {
 
     #region Command Use cases
 
-    public RecordingActDto AppendParty(string instrumentRecordingUID,
+    public RecordingActDto AppendParty(string landRecordUID,
                                        string recordingActUID,
                                        RecordingActPartyFields partyFields) {
-      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.Require(recordingActUID, "recordingActUID");
-      Assertion.Require(partyFields, "partyFields");
+      Assertion.Require(landRecordUID, nameof(landRecordUID));
+      Assertion.Require(recordingActUID, nameof(recordingActUID));
+      Assertion.Require(partyFields, nameof(partyFields));
 
-      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 
-      RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
+      RecordingAct recordingAct = landRecord.GetRecordingAct(recordingActUID);
 
       recordingAct.Parties.AppendParty(partyFields);
 
@@ -45,16 +45,16 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
-    public RecordingActDto RemoveParty(string instrumentRecordingUID,
+    public RecordingActDto RemoveParty(string landRecordUID,
                                        string recordingActUID,
                                        string partyUID) {
-      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.Require(recordingActUID, "recordingActUID");
-      Assertion.Require(partyUID, "partyUID");
+      Assertion.Require(landRecordUID, nameof(landRecordUID));
+      Assertion.Require(recordingActUID, nameof(recordingActUID));
+      Assertion.Require(partyUID, nameof(partyUID));
 
-      var instrumentRecording = RecordingDocument.ParseGuid(instrumentRecordingUID);
+      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 
-      RecordingAct recordingAct = instrumentRecording.GetRecordingAct(recordingActUID);
+      RecordingAct recordingAct = landRecord.GetRecordingAct(recordingActUID);
 
       var party = RecordingActParty.Parse(partyUID);
 
@@ -64,12 +64,12 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
-    public FixedList<PartyDto> SearchParties(string instrumentRecordingUID,
+    public FixedList<PartyDto> SearchParties(string landRecordUID,
                                              string recordingActUID,
                                              SearchPartiesCommand command) {
-      Assertion.Require(instrumentRecordingUID, "instrumentRecordingUID");
-      Assertion.Require(recordingActUID, "recordingActUID");
-      Assertion.Require(command, "command");
+      Assertion.Require(landRecordUID, nameof(landRecordUID));
+      Assertion.Require(recordingActUID, nameof(recordingActUID));
+      Assertion.Require(command, nameof(command));
 
       var list = Party.GetList(command);
 

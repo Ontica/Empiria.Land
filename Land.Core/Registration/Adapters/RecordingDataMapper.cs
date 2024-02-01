@@ -34,7 +34,7 @@ namespace Empiria.Land.Registration.Adapters {
         PresentationTime = document.PresentationTime,
         TransactionUID = recordingAct.Document.GetTransaction().UID,
         Status = document.Status.ToString(),
-        Media = InstrumentRecordingMapper.MapStampMedia(document)
+        Media = LandRecordMapper.MapStampMedia(document)
       };
     }
 

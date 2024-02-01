@@ -67,7 +67,7 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    public InstrumentRecordingShortDto InstrumentRecording {
+    public LandRecordDescriptorDto InstrumentRecording {
       get; internal set;
     }
 
