@@ -23,6 +23,9 @@ namespace Empiria.Land.Registration {
     private readonly RecordingDocument _instrumentRecording;
     private readonly Instrument _instrument;
     private readonly LRSTransaction _transaction;
+
+    private readonly FixedList<BookEntry> _bookEntries;
+
     private readonly bool _isHistoricRegistration;
     private readonly bool _isNewRegistration;
 
@@ -32,6 +35,8 @@ namespace Empiria.Land.Registration {
       _instrumentRecording = instrumentRecording;
       _instrument = Instrument.Parse(instrumentRecording.InstrumentId);
       _transaction = instrumentRecording.GetTransaction();
+
+      _bookEntries = BookEntry.GetBookEntriesForDocument(_instrumentRecording);
 
       _isHistoricRegistration = _transaction.IsEmptyInstance;
 
@@ -98,7 +103,7 @@ namespace Empiria.Land.Registration {
         if (!CanEdit) {
           return false;
         }
-        return (_instrument.HasRecordingBookEntries || UseRecordingBookRegistation);
+        return (_bookEntries.Count > 0 || UseRecordingBookRegistation);
       }
     }
 
@@ -126,24 +131,25 @@ namespace Empiria.Land.Registration {
 
     public bool ShowRecordingBookEntries {
       get {
-        return (_instrument.HasRecordingBookEntries || UseRecordingBookRegistation);
+        return (_bookEntries.Count > 0 || UseRecordingBookRegistation);
       }
     }
 
 
     public bool ShowRecordingActs {
       get {
-        return (!_isHistoricRegistration &&
-                _instrument.HasDocument &&
+        return (!UseRecordingBookRegistation &&
+                !_isHistoricRegistration &&
                 !_transaction.IsEmptyInstance &&
-                !_instrument.HasRecordingBookEntries &&
-                !UseRecordingBookRegistation);
+                !_transaction.Document.IsEmptyInstance &&
+                _bookEntries.Count == 0
+                );
       }
     }
 
     public bool ShowRegistrationStamps {
       get {
-        return _instrument.HasRecordingBookEntries || _instrumentRecording.HasRecordingActs;
+        return _bookEntries.Count > 0 || _instrumentRecording.HasRecordingActs;
       }
     }
 

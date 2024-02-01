@@ -174,37 +174,6 @@ namespace Empiria.Land.Instruments {
     }
 
 
-    internal bool HasDocument {
-      get {
-        var document = TryGetRecordingDocument();
-        if (document != null && !document.IsEmptyInstance) {
-          return true;
-        }
-        return false;
-      }
-    }
-
-
-    public bool HasRecordingBookEntries {
-      get {
-        return (this.RecordingBookEntries.Count != 0);
-      }
-    }
-
-
-    public FixedList<BookEntry> RecordingBookEntries {
-      get {
-        if (!this.HasDocument) {
-          return new FixedList<BookEntry>();
-        }
-
-        var document = this.TryGetRecordingDocument();
-
-        return BookEntry.GetBookEntriesForDocument(document);
-      }
-    }
-
-
     #endregion Properties
 
     #region Methods
@@ -222,6 +191,7 @@ namespace Empiria.Land.Instruments {
     }
 
 
+    /// <summary>TODO: Remove after Land 4.0 Registration have been merged into Land Core.</summary>
     internal void FillRecordingDocument(RecordingDocument landRecord) {
       landRecord.Notes = this.Summary;
       landRecord.ExpedientNo = this.BinderNo;
@@ -273,15 +243,6 @@ namespace Empiria.Land.Instruments {
 
     protected override void OnSave() {
       InstrumentsData.WriteInstrument(this);
-    }
-
-
-    private RecordingDocument _recordingDocument;
-    private RecordingDocument TryGetRecordingDocument() {
-      if (_recordingDocument == null) {
-        _recordingDocument = RecordingDocument.TryParseForInstrument(this.Id);
-      }
-      return _recordingDocument;
     }
 
 
