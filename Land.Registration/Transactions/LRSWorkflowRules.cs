@@ -37,7 +37,7 @@ namespace Empiria.Land.Registration.Transactions {
         return;
       }
 
-      if (transaction.LandRecord.Imaging.HasImageSet) {
+      if (transaction.LandRecord.ImagingControlID.Length != 0) {
         return;
       }
 
@@ -45,7 +45,6 @@ namespace Empiria.Land.Registration.Transactions {
         return;
       }
 
-      // int graceDaysForImaging = ConfigurationData.GetInteger("GraceDaysForImaging");
       int graceDaysForImaging = 90;
 
       DateTime lastDate = transaction.LandRecord.AuthorizationTime;
@@ -203,7 +202,6 @@ namespace Empiria.Land.Registration.Transactions {
       return false;
     }
 
-
     static public bool IsReadyForGenerateImagingControlID(LRSTransaction transaction) {
       if (transaction.IsEmptyInstance || transaction.LandRecord.IsEmptyInstance) {
         return false;
@@ -211,7 +209,10 @@ namespace Empiria.Land.Registration.Transactions {
       if (!ExecutionServer.CurrentPrincipal.IsInRole("Digitizer")) {
         return false;
       }
-      if (transaction.LandRecord.Imaging.ImagingControlID.Length != 0) {
+      if (transaction.LandRecord.IsEmptyInstance) {
+        return false;
+      }
+      if (transaction.LandRecord.ImagingControlID.Length != 0) {
         return false;
       }
       if (transaction.LandRecord.RecordingActs.Count == 0) {

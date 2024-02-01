@@ -40,7 +40,6 @@ namespace Empiria.Land.Registration {
       if (powerType.Equals(RecordingDocumentType.Empty)) {
         this.Status = RecordableObjectStatus.Closed;
       }
-      this.Imaging = new RecordingDocumentImaging(this);
       this.Security = new RecordingDocumentSecurity(this);
     }
 
@@ -241,6 +240,13 @@ namespace Empiria.Land.Registration {
       set;
     }
 
+    [DataField("ImagingControlID")]
+    public string ImagingControlID {
+      get;
+      private set;
+    } = string.Empty;
+
+
     public RecordingDocumentExtData ExtensionData {
       get;
       set;
@@ -307,11 +313,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    [DataObject]
-    public RecordingDocumentImaging Imaging {
-      get;
-      private set;
-    }
 
     [DataObject]
     public RecordingDocumentSecurity Security {
@@ -368,6 +369,25 @@ namespace Empiria.Land.Registration {
 
       return recordingAct;
     }
+
+
+    public void GenerateImagingControlID() {
+      Assertion.Require(!this.IsEmptyInstance, "Document can't be the empty instance.");
+      Assertion.Require(this.IsClosed, "Document is not closed.");
+
+      Assertion.Require(this.ImagingControlID.Length == 0,
+                        "Document has already assigned an imaging control number.");
+
+      Assertion.Require(this.RecordingActs.Count > 0, "Document should have recording acts.");
+      Assertion.Require(this.RecordingActs.CountAll((x) => !x.BookEntry.IsEmptyInstance) == 0,
+                        "Document can't have any recording acts that are related to physical book entries.");
+
+
+      this.ImagingControlID = DocumentsData.GetNextImagingControlID(this);
+
+      DocumentsData.SaveImagingControlID(this);
+    }
+
 
     internal void SetAuthorizationTime(DateTime authorizationTime) {
       Assertion.Require(this.IsNew || this.IsHistoricRecord,

@@ -56,7 +56,7 @@ namespace Empiria.Land.Data {
 
     static internal void SaveImagingControlID(RecordingDocument landRecord) {
       var op = DataOperation.Parse("setLRSDocumentImagingControlID",
-                                   landRecord.Id, landRecord.Imaging.ImagingControlID);
+                                   landRecord.Id, landRecord.ImagingControlID);
 
       DataWriter.Execute(op);
     }
