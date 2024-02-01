@@ -53,13 +53,15 @@ namespace Empiria.Land.Registration {
 
       instrument.Save();
 
-      RecordingDocument document = instrument.TryGetRecordingDocument();
+      var landRecord = RecordingDocument.CreateFromInstrument(instrument.Id, instrument.InstrumentType.Id, instrument.Kind);
 
-      document.SetDates(presentationTime, authorizationDate);
+      instrument.FillRecordingDocument(landRecord);
 
-      document.Save();
+      landRecord.SetDates(presentationTime, authorizationDate);
 
-      BookEntry bookEntry = book.AddBookEntry(document, bookEntryNumber);
+      landRecord.Save();
+
+      BookEntry bookEntry = book.AddBookEntry(landRecord, bookEntryNumber);
 
       bookEntry.Save();
 

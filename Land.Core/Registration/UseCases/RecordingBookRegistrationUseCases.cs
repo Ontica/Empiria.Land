@@ -114,16 +114,16 @@ namespace Empiria.Land.Registration.UseCases {
 
       instrument.Save();
 
-      Assertion.Ensure(instrument.HasDocument,
-                       "Instruments must have a recording document to be linked to a transaction.");
+      var landRecord = RecordingDocument.CreateFromInstrument(instrument.Id, instrument.InstrumentType.Id, instrument.Kind);
 
-      var document = instrument.TryGetRecordingDocument();
+      instrument.FillRecordingDocument(landRecord);
 
-      BookEntryDto bookEntryDto = fields.MapToBookEntryDto(recordingBook, document);
+      landRecord.Save();
+
+      BookEntryDto bookEntryDto = fields.MapToBookEntryDto(recordingBook, landRecord);
 
       recordingBook.AddBookEntry(bookEntryDto);
 
-      document.Save();
 
       recordingBook.Refresh();
 

@@ -222,30 +222,14 @@ namespace Empiria.Land.Instruments {
     }
 
 
-    private void CreateRecordingDocument() {
-      Assertion.Require(_recordingDocument == null, "RecordingDocument already exists.");
-
-      _recordingDocument = RecordingDocument.CreateFromInstrument(this.Id, InstrumentType.Id, this.Kind);
-
-      SaveRecordingDocument();
-    }
-
-
-    private void EnsureHasRecordingDocument() {
-      if (!this.HasDocument) {
-        CreateRecordingDocument();
-      }
-    }
-
-
-    private void FillRecordingDocument() {
-      _recordingDocument.Notes = this.Summary;
-      _recordingDocument.ExpedientNo = this.BinderNo;
-      _recordingDocument.IssueDate = this.IssueDate;
-      _recordingDocument.IssuedBy = this.Issuer.RelatedContact;
-      _recordingDocument.IssueOffice = this.Issuer.RelatedEntity;
-      _recordingDocument.IssuePlace = this.Issuer.RelatedPlace;
-      _recordingDocument.SheetsCount = this.SheetsCount;
+    internal void FillRecordingDocument(RecordingDocument landRecord) {
+      landRecord.Notes = this.Summary;
+      landRecord.ExpedientNo = this.BinderNo;
+      landRecord.IssueDate = this.IssueDate;
+      landRecord.IssuedBy = this.Issuer.RelatedContact;
+      landRecord.IssueOffice = this.Issuer.RelatedEntity;
+      landRecord.IssuePlace = this.Issuer.RelatedPlace;
+      landRecord.SheetsCount = this.SheetsCount;
     }
 
 
@@ -273,6 +257,7 @@ namespace Empiria.Land.Instruments {
       return temp;
     }
 
+
     private void LoadData(InstrumentFields data) {
       Kind = data.Kind ?? Kind;
       Summary = data.Summary ?? Summary;
@@ -287,31 +272,12 @@ namespace Empiria.Land.Instruments {
 
 
     protected override void OnSave() {
-      bool needsDocumentCreation = false;
-
-      if (!this.HasDocument) {
-        needsDocumentCreation = true;
-      }
-
       InstrumentsData.WriteInstrument(this);
-
-      if (needsDocumentCreation) {
-        this.EnsureHasRecordingDocument();
-      } else {
-        SaveRecordingDocument();
-      }
-    }
-
-
-    private void SaveRecordingDocument() {
-      FillRecordingDocument();
-
-      _recordingDocument.Save();
     }
 
 
     private RecordingDocument _recordingDocument;
-    internal RecordingDocument TryGetRecordingDocument() {
+    private RecordingDocument TryGetRecordingDocument() {
       if (_recordingDocument == null) {
         _recordingDocument = RecordingDocument.TryParseForInstrument(this.Id);
       }

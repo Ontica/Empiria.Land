@@ -62,16 +62,17 @@ namespace Empiria.Land.Registration.UseCases {
 
       instrument.Save();
 
-      Assertion.Ensure(instrument.HasDocument,
-                       "Instruments must have a recording document to be linked to a transaction.");
-
       transaction.SetInstrument(instrument);
 
-      RecordingDocument instrumentRecording = instrument.TryGetRecordingDocument();
+      var landRecord = RecordingDocument.CreateFromInstrument(instrument.Id, instrument.InstrumentType.Id, instrument.Kind);
 
-      transaction.AttachDocument(instrumentRecording);
+      instrument.FillRecordingDocument(landRecord);
 
-      return InstrumentRecordingMapper.Map(instrumentRecording);
+      landRecord.Save();
+
+      transaction.AttachDocument(landRecord);
+
+      return InstrumentRecordingMapper.Map(landRecord);
     }
 
 
@@ -88,9 +89,9 @@ namespace Empiria.Land.Registration.UseCases {
 
       instrument.Save();
 
-      RecordingDocument recordingDocument = instrument.TryGetRecordingDocument();
+      var landRecord = transaction.Document;
 
-      return InstrumentRecordingMapper.Map(recordingDocument);
+      return InstrumentRecordingMapper.Map(landRecord);
     }
 
     #endregion Use cases
