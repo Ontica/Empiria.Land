@@ -9,9 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Contacts;
-using Empiria.DataTypes.Time;
-
 using Empiria.Land.Data;
 
 namespace Empiria.Land.Registration {
@@ -20,21 +17,6 @@ namespace Empiria.Land.Registration {
   static public class RecordingBookValidator {
 
     #region Public methods
-
-    static public LandRegistrationException ValidateRecordingAuthorizer(RecordingBook recordingBook, Person authorizedBy,
-                                                                        DateTime autorizationDate) {
-      if (authorizedBy.IsEmptyInstance) {
-        return null;
-      }
-      RecorderOffice office = recordingBook.RecorderOffice;
-      FixedList<Person> officers = office.GetRecorderOfficials(new TimeFrame(autorizationDate, autorizationDate));
-
-      if (!officers.Contains(authorizedBy)) {
-        return new LandRegistrationException(LandRegistrationException.Msg.RecorderOfficialOutOfPeriod,
-                                             authorizedBy.FullName, office.FullName, autorizationDate.ToString("dd/MMM/yyyy"));
-      }
-      return null;
-    }
 
     static public LandRegistrationException ValidateBookEntryNumber(RecordingBook recordingBook, BookEntry bookEntry,
                                                                     string bookEntryNumberToValidate) {

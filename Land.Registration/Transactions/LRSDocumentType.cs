@@ -10,8 +10,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Contacts;
-
 namespace Empiria.Land.Registration.Transactions {
 
   /// <summary>Describes a recorder office document type.</summary>
@@ -66,25 +64,8 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    public string LArt {
-      get { return base.NamedKey; }
-    }
-
-    // private FixedList<Contact> _issuedByEntities = null;
-
-    public FixedList<Contact> IssuedByEntities {
-      get {
-        throw new NotImplementedException("IssuedByEntities");
-
-        //if (_issuedByEntities == null) {
-        //  _issuedByEntities = base.GetLinks<Contact>("DocumentType->IssuedBy");
-        //}
-        //return _issuedByEntities;
-      }
-    }
-
     #endregion Properties
 
-  } // class DocumentType
+  } // class LRSDocumentType
 
 } // namespace Empiria.Land.Registration.Transactions
