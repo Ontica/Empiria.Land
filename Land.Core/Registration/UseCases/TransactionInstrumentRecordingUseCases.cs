@@ -91,6 +91,10 @@ namespace Empiria.Land.Registration.UseCases {
 
       var landRecord = transaction.Document;
 
+      instrument.FillRecordingDocument(landRecord);
+
+      landRecord.Save();
+
       return InstrumentRecordingMapper.Map(landRecord);
     }
 
