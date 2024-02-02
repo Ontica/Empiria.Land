@@ -29,7 +29,7 @@ namespace Empiria.Land.Instruments {
 
     static internal new InstrumentType Parse(string typeName) => InstrumentType.Parse<InstrumentType>(typeName);
 
-    static internal InstrumentType Parse(InstrumentTypeEnum instrumentTypeName) {
+    static public InstrumentType Parse(InstrumentTypeEnum instrumentTypeName) {
       Assertion.Require(instrumentTypeName != InstrumentTypeEnum.All,
                       "instrumentTypeName cannot be equal to 'All'.");
 
@@ -39,7 +39,7 @@ namespace Empiria.Land.Instruments {
     }
 
 
-    internal static FixedList<InstrumentType> GetListForRecordingBooks() {
+    public static FixedList<InstrumentType> GetListForRecordingBooks() {
       var listType = GeneralList.Parse("RecordingBooks.InstrumentTypes");
 
       return listType.GetItems<InstrumentType>();

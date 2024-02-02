@@ -62,11 +62,11 @@ namespace Empiria.Land.Instruments.Adapters {
 
 
   /// <summary>Extension methods for type IssuersQuery.</summary>
-  static internal class IssuersQueryExtensions {
+  static public class IssuersQueryExtensions {
 
     #region Extension methods
 
-    static internal void EnsureIsValid(this IssuersQuery query) {
+    static public void EnsureIsValid(this IssuersQuery query) {
       if (EmpiriaString.NotIsEmpty(query.OnDate)) {
         Assertion.Require(EmpiriaString.IsDate(query.OnDate),
                          $"Unrecognized onDate search value: '{query.OnDate}'");
@@ -87,7 +87,7 @@ namespace Empiria.Land.Instruments.Adapters {
       string keywordsFilter = SearchExpression.ParseAndLikeKeywords("IssuerKeywords", query.Keywords);
 
 
-      Filter filter = new Filter(issuerTypeStatusFilter);
+      var filter = new Filter(issuerTypeStatusFilter);
 
       filter.AppendAnd(instrumentTypeFilter);
       filter.AppendAnd(instrumentKindFilter);

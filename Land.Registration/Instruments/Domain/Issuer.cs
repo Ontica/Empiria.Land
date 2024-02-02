@@ -126,19 +126,19 @@ namespace Empiria.Land.Instruments {
 
 
     [DataField("IssuerFromDate")]
-    internal DateTime FromDate {
+    public DateTime FromDate {
       get; private set;
     } = ExecutionServer.DateMinValue;
 
 
     [DataField("IssuerToDate")]
-    internal DateTime ToDate {
+    public DateTime ToDate {
       get; private set;
     } = ExecutionServer.DateMaxValue;
 
 
     [DataField("IssuerStatus", Default = EntityStatus.Active)]
-    internal EntityStatus Status {
+    public EntityStatus Status {
       get; private set;
     }
 

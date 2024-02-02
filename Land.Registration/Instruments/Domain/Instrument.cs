@@ -30,7 +30,7 @@ namespace Empiria.Land.Instruments {
     }
 
 
-    internal Instrument(InstrumentType instrumentType,
+    public Instrument(InstrumentType instrumentType,
                         InstrumentFields data) : base(instrumentType) {
       this.LoadData(data);
     }
