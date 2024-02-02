@@ -135,13 +135,11 @@ namespace Empiria.Land.Registration.UseCases {
 
       var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 
-      var instrument = Instrument.Parse(landRecord.InstrumentId);
-
       var office = RecorderOffice.Parse(fields.RecorderOfficeUID);
       var section = RecordingSection.Parse(fields.SectionUID);
 
       var book = RecordingBook.GetAssignedBookForRecording(office, section,
-                                                           instrument.SheetsCount);
+                                                           landRecord.Instrument.SheetsCount);
 
       var nextBookEntry = book.CreateNextBookEntry(landRecord);
 
@@ -263,7 +261,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 
-      Instrument instrument = Instrument.Parse(landRecord.InstrumentId);
+      Instrument instrument = landRecord.Instrument;
 
       instrument.Update(fields.Instrument);
 

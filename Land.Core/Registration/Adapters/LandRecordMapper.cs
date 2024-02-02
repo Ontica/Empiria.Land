@@ -28,14 +28,13 @@ namespace Empiria.Land.Registration.Adapters {
     static internal LandRecordDto Map(RecordingDocument landRecord) {
       var dto = new LandRecordDto();
 
-      Instrument instrument = Instrument.Parse(landRecord.InstrumentId);
       LRSTransaction transaction = landRecord.GetTransaction();
 
       var bookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
 
       dto.UID = landRecord.GUID;
       dto.InstrumentRecordingID = landRecord.UID;
-      dto.Instrument = InstrumentMapper.Map(instrument, transaction);
+      dto.Instrument = InstrumentMapper.Map(landRecord.Instrument, transaction);
 
       if (bookEntries.Count > 0) {
         dto.BookEntries = RecordingBookMapper.MapBookEntriesListDto(bookEntries);

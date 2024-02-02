@@ -21,7 +21,6 @@ namespace Empiria.Land.Registration {
                                         ConfigurationData.Get("UseRecordingBookRegistation", false);
 
     private readonly RecordingDocument _landRecord;
-    private readonly Instrument _instrument;
     private readonly LRSTransaction _transaction;
 
     private readonly FixedList<BookEntry> _bookEntries;
@@ -33,7 +32,6 @@ namespace Empiria.Land.Registration {
       Assertion.Require(landRecord, nameof(landRecord));
 
       _landRecord = landRecord;
-      _instrument = Instrument.Parse(landRecord.InstrumentId);
       _transaction = landRecord.GetTransaction();
 
       _bookEntries = BookEntry.GetBookEntriesForLandRecord(_landRecord);
@@ -124,7 +122,7 @@ namespace Empiria.Land.Registration {
 
     public bool ShowFiles {
       get {
-        return LandMediaReadServices.InstrumentFiles(_instrument).Count != 0;
+        return LandMediaReadServices.InstrumentFiles(_landRecord.Instrument).Count != 0;
       }
     }
 

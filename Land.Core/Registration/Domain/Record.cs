@@ -22,7 +22,6 @@ namespace Empiria.Land.Registration {
     #region Fields
 
     private readonly RecordingDocument _landRecord;
-    private readonly Instrument _instrument;
     private readonly BookEntry _bookEntry;
     private readonly LRSTransaction _transaction;
 
@@ -34,7 +33,7 @@ namespace Empiria.Land.Registration {
       Assertion.Require(landRecord, nameof(landRecord));
 
       _landRecord = landRecord;
-      _instrument = Instrument.Parse(_landRecord.InstrumentId);
+
       _bookEntry = LoadBookEntry(_landRecord);
       _transaction = LoadTransaction(_landRecord);
     }
@@ -49,7 +48,7 @@ namespace Empiria.Land.Registration {
 
     public string RecordingID => _landRecord.UID;
 
-    public Instrument Instrument => _instrument;
+    public Instrument Instrument => _landRecord.Instrument;
 
     public RecorderOffice RecorderOffice => _landRecord.RecorderOffice;
 

@@ -88,6 +88,8 @@ namespace Empiria.Land.Registration {
 
       var landRecord = new RecordingDocument(documentType);
 
+      landRecord.Instrument = instrument;
+
       landRecord.UpdateWithInstrument(instrument);
 
       return landRecord;
@@ -105,7 +107,7 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("InstrumentId")]
-    public int InstrumentId {
+    public Instrument Instrument {
       get;
       private set;
     }
@@ -566,8 +568,6 @@ namespace Empiria.Land.Registration {
 
 
     public void UpdateWithInstrument(Instrument instrument) {
-      this.InstrumentId = instrument.Id;
-
       this.Notes = instrument.Summary;
       this.ExpedientNo = instrument.BinderNo;
       this.IssueDate = instrument.IssueDate;

@@ -59,7 +59,7 @@ namespace Empiria.Land.Pages {
 
       _selectedRecordingAct = RecordingAct.Parse(selectedRecordingActId);
 
-      this.instrument = Instrument.Parse(landRecord.InstrumentId, true);
+      this.instrument = Instrument.Parse(landRecord.Instrument.Id, true);
 
       builder = new RecordingStampBuilder(landRecord);
     }
