@@ -163,9 +163,10 @@ namespace Empiria.Land.Registration {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(UID, Instrument.Summary);
+        return EmpiriaString.BuildKeywords(UID, Instrument.Keywords, ImagingControlID);
       }
     }
+
 
     [DataField("PostedById")]
     public Contact PostedBy {

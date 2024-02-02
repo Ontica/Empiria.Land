@@ -272,6 +272,8 @@ namespace Empiria.Land.Registration.UseCases {
                             fields.BookEntry.AuthorizationDate);
       }
 
+      landRecord.Save();
+
       return LandRecordMapper.Map(landRecord);
     }
 

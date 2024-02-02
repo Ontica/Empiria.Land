@@ -81,11 +81,13 @@ namespace Empiria.Land.Registration.UseCases {
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
-      Instrument instrument = Instrument.Parse(transaction.InstrumentId);
+      RecordingDocument landRecord = transaction.LandRecord;
 
-      instrument.Update(fields);
+      landRecord.Instrument.Update(fields);
 
-      instrument.Save();
+      landRecord.Instrument.Save();
+
+      landRecord.Save();
 
       return LandRecordMapper.Map(transaction.LandRecord);
     }
