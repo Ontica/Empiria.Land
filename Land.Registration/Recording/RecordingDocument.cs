@@ -44,15 +44,10 @@ namespace Empiria.Land.Registration {
     }
 
 
+    // TODO: Remove this
     static public RecordingDocument Parse(int id) {
       return BaseObject.ParseId<RecordingDocument>(id);
     }
-
-
-    static public RecordingDocument Parse(int id, bool reload) {
-      return BaseObject.ParseId<RecordingDocument>(id, reload);
-    }
-
 
     static public RecordingDocument ParseGuid(string guid) {
       var landRecord = BaseObject.TryParse<RecordingDocument>($"DocumentGUID = '{guid}'");
@@ -88,7 +83,7 @@ namespace Empiria.Land.Registration {
       get { return BaseObject.ParseEmpty<RecordingDocument>(); }
     }
 
-    public static RecordingDocument CreateFromInstrument(IInstrument instrument) {
+    public static RecordingDocument CreateFromInstrument(Instrument instrument) {
       var documentType = RecordingDocumentType.ParseFromInstrumentTypeId(instrument.InstrumentType.Id);
 
       var landRecord = new RecordingDocument(documentType);
@@ -570,7 +565,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public void UpdateWithInstrument(IInstrument instrument) {
+    public void UpdateWithInstrument(Instrument instrument) {
       this.InstrumentId = instrument.Id;
 
       this.Notes = instrument.Summary;
