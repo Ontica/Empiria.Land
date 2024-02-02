@@ -49,9 +49,8 @@ namespace Empiria.Land.Registration {
       recordingActList = GetNewRecordingActListLazyInstance();
     }
 
-    internal BookEntry(BookEntryDto dto) : this(dto?.RecordingBook, dto?.LandRecord, dto?.Number) {
+    internal BookEntry(BookEntryDto dto) : this(dto.RecordingBook, dto.LandRecord, dto.Number) {
       LoadData(dto);
-      recordingActList = GetNewRecordingActListLazyInstance();
     }
 
     protected override void OnLoadObjectData(DataRow row) {

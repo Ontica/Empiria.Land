@@ -52,9 +52,8 @@ namespace Empiria.Land.Registration.Adapters {
 
     internal BookEntryDto MapToBookEntryDto(RecordingBook book,
                                             RecordingDocument landRecord) {
-      var dto = new BookEntryDto(book, this.RecordingNo);
+      var dto = new BookEntryDto(book, landRecord, this.RecordingNo);
 
-      dto.LandRecord = landRecord;
       dto.PresentationTime = this.PresentationTime;
       dto.AuthorizationDate = this.AuthorizationDate;
       dto.EndImageIndex = this.EndImageIndex;
@@ -110,9 +109,8 @@ namespace Empiria.Land.Registration.Adapters {
 
     internal BookEntryDto MapToBookEntryDto(RecordingBook book,
                                             RecordingDocument landRecord) {
-      var dto = new BookEntryDto(book, this.BookEntry.RecordingNo);
+      var dto = new BookEntryDto(book, landRecord, this.BookEntry.RecordingNo);
 
-      dto.LandRecord = landRecord;
       dto.PresentationTime = this.BookEntry.PresentationTime;
       dto.AuthorizationDate = this.BookEntry.AuthorizationDate;
       dto.EndImageIndex = this.BookEntry.EndImageIndex;

@@ -257,8 +257,9 @@ namespace Empiria.Land.Registration.UseCases {
 
       var bookEntry = BookEntry.Parse(bookEntryUID);
 
-      bookEntry.Update(fields.BookEntry.MapToBookEntryDto(bookEntry.RecordingBook,
-                       bookEntry.LandRecord));
+      BookEntryDto bookEntryDto = fields.BookEntry.MapToBookEntryDto(bookEntry.RecordingBook,
+                                                                     bookEntry.LandRecord);
+      bookEntry.Update(bookEntryDto);
 
       var landRecord = RecordingDocument.ParseGuid(landRecordUID);
 
@@ -270,7 +271,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       if (!landRecord.HasTransaction) {
         landRecord.SetDates(fields.BookEntry.PresentationTime,
-                                     fields.BookEntry.AuthorizationDate);
+                            fields.BookEntry.AuthorizationDate);
       }
 
       return LandRecordMapper.Map(landRecord);

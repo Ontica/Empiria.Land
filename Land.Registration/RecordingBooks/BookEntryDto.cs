@@ -17,8 +17,16 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public BookEntryDto(RecordingBook book, string number) {
+    public BookEntryDto(RecordingBook book, RecordingDocument landRecord, string number) {
+      Assertion.Require(book, nameof(book));
+      Assertion.Require(landRecord, nameof(landRecord));
+      Assertion.Require(number, nameof(number));
+
+      Assertion.Require(!book.IsEmptyInstance, "book can't be the empty instance.");
+      Assertion.Require(!landRecord.IsEmptyInstance, "landRecord can't be the empty instance.");
+
       this.RecordingBook = book;
+      this.LandRecord = landRecord;
       this.Number = RecordingBook.FormatBookEntryNumber(number);
     }
 
@@ -27,18 +35,18 @@ namespace Empiria.Land.Registration {
     #region Public properties
 
     public RecordingBook RecordingBook {
-      get; private set;
+      get;
     }
 
 
     public string Number {
-      get; private set;
+      get;
     }
 
 
     public RecordingDocument LandRecord {
-      get; set;
-    } = new RecordingDocument(RecordingDocumentType.Empty);
+      get;
+    }
 
 
     public string Notes {
