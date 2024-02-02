@@ -106,11 +106,11 @@ namespace Empiria.Land.WebApi {
       propertyBag.Add(new PropertyBagItem("Información del documento", String.Empty, "section"));
       propertyBag.Add(new PropertyBagItem("Sello registral número", landRecord.UID, "bold-text"));
       propertyBag.Add(new PropertyBagItem("Tipo de documento", landRecord.DocumentType.DisplayName, "bold-text"));
-      propertyBag.Add(new PropertyBagItem("Emitido por", landRecord.IssuedBy.ShortName));
+      propertyBag.Add(new PropertyBagItem("Emitido por", landRecord.Instrument.Issuer.RelatedContact.ShortName));
       propertyBag.Add(new PropertyBagItem("Fecha de presentación", GetDateTime(landRecord.PresentationTime), "date-time"));
       propertyBag.Add(new PropertyBagItem("Fecha de registro", GetDateTime(landRecord.AuthorizationTime), "date"));
       propertyBag.Add(new PropertyBagItem("Registrado por", landRecord.GetRecordingOfficials()[0].ShortName));
-      propertyBag.Add(new PropertyBagItem("Resumen", landRecord.Notes, "small-text"));
+      propertyBag.Add(new PropertyBagItem("Resumen", landRecord.Instrument.Summary, "small-text"));
 
       if (landRecord.RecordingActs.Count > 0) {
         propertyBag.Add(new PropertyBagItem("Actos jurídicos registrados", String.Empty, "section"));

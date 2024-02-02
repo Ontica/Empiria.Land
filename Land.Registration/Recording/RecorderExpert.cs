@@ -310,15 +310,13 @@ namespace Empiria.Land.Registration {
 
 
     private RecordingAct CreateTargetRecordingAct(Resource resource) {
+      if (!Task.TargetActInfo.BookEntryWasCreated) {
+        throw Assertion.EnsureNoReachThisCode("Invalid option in CreateTargetRecordingAct. BookEntryWasCreated must be true.");
+      }
+
       BookEntry bookEntry = Task.TargetActInfo.BookEntry;
 
-      RecordingDocument landRecord = null;
-
-      if (Task.TargetActInfo.BookEntryWasCreated) {
-        landRecord = bookEntry.LandRecord;
-      } else {
-        landRecord = new RecordingDocument(RecordingDocumentType.Empty);
-      }
+      RecordingDocument landRecord = bookEntry.LandRecord;
 
       return landRecord.AppendRecordingAct(Task.TargetActInfo.RecordingActType,
                                            resource, bookEntry: bookEntry);
@@ -510,7 +508,7 @@ namespace Empiria.Land.Registration {
 
     private bool OperationalCondition(RecordingDocument landRecord) {
       // Fixed rule, based on law
-      if (landRecord.IssueDate < DateTime.Parse("2014-01-01")) {
+      if (landRecord.Instrument.IssueDate < DateTime.Parse("2014-01-01")) {
         return true;
       }
 

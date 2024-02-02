@@ -195,7 +195,7 @@ namespace Empiria.Land.Registration {
 
     public BookEntry CreateNextBookEntry(RecordingDocument landRecord) {
       Assertion.Require(landRecord, nameof(landRecord));
-      Assertion.Require(landRecord.SheetsCount > 0, "Document field SheetsCount must be greater than zero.");
+      Assertion.Require(landRecord.Instrument.SheetsCount > 0, "Instrument field SheetsCount must be greater than zero.");
 
       int bookEntryNumber = RecordingBooksData.GetNextBookEntryNumberWithNoReuse(this);
 

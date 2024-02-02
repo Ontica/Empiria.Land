@@ -211,11 +211,11 @@ namespace Empiria.Land.Registration {
         return new object[] {
           1, "Id", doc.Id, "DocumentTypeId", doc.DocumentType.Id,
           "UID", doc.UID, "InstrumentId", doc.Instrument.Id,
-          "IssuePlaceId", doc.IssuePlace.Id,
-          "IssueOfficeId", doc.IssueOffice.Id,
-          "IssuedById", doc.IssuedBy.Id, "IssueDate", doc.IssueDate,
-          "AsText", doc.AsText, "SheetsCount", doc.SheetsCount,
-          "ExtensionData", doc.ExtensionData.ToJson(),
+          "IssuePlaceId", doc.Instrument.Issuer.RelatedPlace.Id,
+          "IssueOfficeId", doc.Instrument.Issuer.RelatedEntity.Id,
+          "IssuedById", doc.Instrument.Issuer.RelatedContact.Id,
+          "IssueDate", doc.Instrument.IssueDate,
+          "Summary", doc.Instrument.Summary, "SheetsCount", doc.Instrument.SheetsCount,
           "PostedBy", doc.PostedBy.Id, "PostingTime", doc.PostingTime,
           "Status", (char) doc.Status,
         };

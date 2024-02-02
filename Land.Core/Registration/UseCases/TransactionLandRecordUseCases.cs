@@ -87,13 +87,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       instrument.Save();
 
-      var landRecord = transaction.LandRecord;
-
-      landRecord.UpdateWithInstrument(instrument);
-
-      landRecord.Save();
-
-      return LandRecordMapper.Map(landRecord);
+      return LandRecordMapper.Map(transaction.LandRecord);
     }
 
     #endregion Use cases

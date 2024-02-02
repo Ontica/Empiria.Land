@@ -125,8 +125,8 @@ namespace Empiria.Land.Pages {
 
 
     protected string GetDocumentDescriptionText() {
-      if (landRecord.Notes.Length > 30) {
-        return "DESCRIPCIÓN:<br />" + landRecord.Notes + "<br /><br />";
+      if (landRecord.Instrument.Summary.Length > 30) {
+        return "DESCRIPCIÓN:<br />" + landRecord.Instrument.Summary + "<br /><br />";
 
       } else if (landRecord.IsHistoricRecord) {
         return "* PARTIDA HISTÓRICA SIN DESCRIPCIÓN *";
@@ -152,13 +152,13 @@ namespace Empiria.Land.Pages {
 
     protected bool DocumentHasNotes {
       get {
-        return landRecord.Notes.Length != 0;
+        return landRecord.Instrument.Summary.Length != 0;
       }
     }
 
 
     protected string GetDocumentNotes() {
-      var notes = landRecord.Notes.Replace("<br>", "<br/>");
+      var notes = landRecord.Instrument.Summary.Replace("<br>", "<br/>");
 
       return notes;
     }

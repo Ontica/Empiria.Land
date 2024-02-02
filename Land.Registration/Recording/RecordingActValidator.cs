@@ -321,7 +321,7 @@ namespace Empiria.Land.Registration {
 
     private bool MeetsOperationalCondition() {
       // Fixed rule, based on law
-      if (_recordingAct.LandRecord.IssueDate < DateTime.Parse("2014-01-01")) {
+      if (_recordingAct.LandRecord.Instrument.IssueDate < DateTime.Parse("2014-01-01")) {
         return true;
       }
 

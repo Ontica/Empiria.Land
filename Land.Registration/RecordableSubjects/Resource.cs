@@ -230,7 +230,7 @@ namespace Empiria.Land.Registration {
 
 
     private void AssertChainedRecordingAct(RecordingDocument landRecord, RecordingActType newRecordingActType) {
-      if (landRecord.IssueDate < DateTime.Parse("2014-01-01") ||
+      if (landRecord.Instrument.IssueDate < DateTime.Parse("2014-01-01") ||
           landRecord.PresentationTime < DateTime.Parse("2016-01-01")) {
         return;
       }

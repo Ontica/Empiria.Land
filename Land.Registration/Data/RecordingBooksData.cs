@@ -193,10 +193,11 @@ namespace Empiria.Land.Data {
 
     static internal void WriteRecordingDocument(RecordingDocument o) {
       var op = DataOperation.Parse("writeLRSDocument", o.Id, o.GUID, o.Instrument.Id, o.DocumentType.Id, -1, o.UID,
-                                   o.ImagingControlID, o.Notes, o.AsText, o.ExtensionData.GetJson(o).ToString(),
+                                   o.ImagingControlID, o.Instrument.Summary, string.Empty, string.Empty,
                                    o.Keywords, o.PresentationTime, o.AuthorizationTime,
-                                   o.IssuePlace.Id, o.IssueOffice.Id, o.IssuedBy.Id, o.IssueDate,
-                                   o.SheetsCount, (char) o.Status, o.PostedBy.Id, o.PostingTime,
+                                   o.Instrument.Issuer.RelatedPlace.Id, o.Instrument.Issuer.RelatedEntity.Id,
+                                   o.Instrument.Issuer.RelatedContact.Id, o.Instrument.IssueDate,
+                                   o.Instrument.SheetsCount, (char) o.Status, o.PostedBy.Id, o.PostingTime,
                                    o.Security.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(op);

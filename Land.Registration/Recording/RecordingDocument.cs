@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Land Recording services                      Component : Recording documents                   *
 *  Assembly : Empiria.Land.Registration.dll                Pattern   : Partitioned type                      *
-*  Type     : RecordingDocumentSecurity                    License   : Please read LICENSE.txt file          *
+*  Type     : RecordingDocument                            License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Partitioned type that represents a recording document with one or more recording acts.         *
+*  Summary  : Partitioned type that represents a land instrument record with one or more recording acts.     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,7 +13,6 @@ using System.Data;
 using System.Linq;
 
 using Empiria.Contacts;
-using Empiria.Geography;
 using Empiria.Ontology;
 
 using Empiria.Land.Data;
@@ -24,7 +23,7 @@ using Empiria.Land.Instruments;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Partitioned type that represents a document that is attached to recordings.</summary>
+  /// <summary>Partitioned type that represents a land instrument record with one or more recording acts.</summary>
   [PartitionedType(typeof(RecordingDocumentType))]
   public class RecordingDocument : BaseObject {
 
@@ -89,8 +88,6 @@ namespace Empiria.Land.Registration {
       var landRecord = new RecordingDocument(documentType);
 
       landRecord.Instrument = instrument;
-
-      landRecord.UpdateWithInstrument(instrument);
 
       return landRecord;
     }
@@ -157,79 +154,6 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    [DataField("IssuePlaceId")]
-    private LazyInstance<GeographicRegion> _issuePlace = LazyInstance<GeographicRegion>.Empty;
-
-    public GeographicRegion IssuePlace {
-      get { return _issuePlace.Value; }
-      set {
-        _issuePlace = LazyInstance<GeographicRegion>.Parse(value);
-      }
-    }
-
-    [DataField("IssueOfficeId")]
-    private LazyInstance<Organization> _issueOffice = LazyInstance<Organization>.Empty;
-    public Organization IssueOffice {
-      get { return _issueOffice.Value; }
-      set {
-        _issueOffice = LazyInstance<Organization>.Parse(value);
-      }
-    }
-
-    [DataField("IssuedById")]
-    private LazyInstance<Contact> _issuedBy = LazyInstance<Contact>.Empty;
-
-
-    public Contact IssuedBy {
-      get { return _issuedBy.Value; }
-      set {
-        _issuedBy = LazyInstance<Contact>.Parse(value);
-      }
-    }
-
-    [DataField("IssueDate", Default = "ExecutionServer.DateMinValue")]
-    public DateTime IssueDate {
-      get;
-      set;
-    }
-
-
-    public string Number {
-      get {
-        return ExtensionData.DocumentNo;
-      }
-      set {
-        ExtensionData.DocumentNo = value;
-      }
-    }
-
-    public string ExpedientNo {
-      get {
-        return ExtensionData.ExpedientNo;
-      }
-      set {
-        ExtensionData.ExpedientNo = value;
-      }
-    }
-
-    [DataField("DocumentAsText")]
-    public string AsText {
-      get;
-      private set;
-    }
-
-    [DataField("DocumentOverview")]
-    public string Notes {
-      get;
-      set;
-    }
-
-    [DataField("SheetsCount")]
-    public int SheetsCount {
-      get;
-      set;
-    }
-
     [DataField("ImagingControlID")]
     public string ImagingControlID {
       get;
@@ -237,15 +161,9 @@ namespace Empiria.Land.Registration {
     } = string.Empty;
 
 
-    public RecordingDocumentExtData ExtensionData {
-      get;
-      set;
-    } = new RecordingDocumentExtData();
-
-
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(UID, AsText, Notes);
+        return EmpiriaString.BuildKeywords(UID, Instrument.Summary);
       }
     }
 
@@ -512,7 +430,6 @@ namespace Empiria.Land.Registration {
 
     protected override void OnLoadObjectData(DataRow row) {
       RefreshRecordingActs();
-      this.ExtensionData = RecordingDocumentExtData.Parse((string) row["DocumentExtData"]);
     }
 
     public void RefreshRecordingActs() {
@@ -564,18 +481,6 @@ namespace Empiria.Land.Registration {
                         "bookEntry can't be the empty instance.");
 
       return bookEntry;
-    }
-
-
-    public void UpdateWithInstrument(Instrument instrument) {
-      this.Notes = instrument.Summary;
-      this.ExpedientNo = instrument.BinderNo;
-      this.IssueDate = instrument.IssueDate;
-      this.SheetsCount = instrument.SheetsCount;
-
-      this.IssuedBy = instrument.Issuer.RelatedContact;
-      this.IssueOffice = instrument.Issuer.RelatedEntity;
-      this.IssuePlace = instrument.Issuer.RelatedPlace;
     }
 
     #endregion Public methods
