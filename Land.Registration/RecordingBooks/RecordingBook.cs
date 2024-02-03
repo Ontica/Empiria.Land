@@ -187,7 +187,6 @@ namespace Empiria.Land.Registration {
       Assertion.Require(bookEntryNumber, nameof(bookEntryNumber));
 
       Assertion.Require(!landRecord.IsEmptyInstance, "landRecord can't be the empty instance.");
-      Assertion.Require(!landRecord.IsEmptyDocumentType, "landRecord can't be the special empty document.");
 
       return new BookEntry(this, landRecord, RecordingBook.FormatBookEntryNumber(bookEntryNumber));
     }

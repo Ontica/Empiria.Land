@@ -575,24 +575,6 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public void RemoveDocument() {
-      Assertion.Require(!this.IsEmptyInstance && !this.IsNew,
-                       "Document can't be detached from a new or empty transaction.");
-      Assertion.Require(!this.LandRecord.IsEmptyInstance,
-                       "Document can't be removed because it's the empty instance.");
-      Assertion.Require(this.LandRecord.RecordingActs.Count == 0,
-                       "Document has recording acts. It's not possible to delete it.");
-
-      var tempDocument = this.LandRecord;
-
-      this.LandRecord = RecordingDocument.Empty;
-
-      this.Save();
-
-      tempDocument.Delete();
-    }
-
-
     internal void SetExternalTransaction(LRSExternalTransaction externalTransaction) {
       Assertion.Require(externalTransaction, nameof(externalTransaction));
 

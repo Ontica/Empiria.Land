@@ -86,11 +86,8 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    static internal void AssertRecordingActsPrelation(LRSTransaction transaction) {
-      if (transaction.LandRecord.IsEmptyInstance || transaction.LandRecord.IsEmptyDocumentType) {
-        return;
-      }
-      foreach (var recordingAct in transaction.LandRecord.RecordingActs) {
+    static internal void AssertRecordingActsPrelation(RecordingDocument landRecord) {
+      foreach (var recordingAct in landRecord.RecordingActs) {
         recordingAct.Validator.AssertIsLastInPrelationOrder();
       }
     }

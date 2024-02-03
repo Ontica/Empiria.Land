@@ -487,13 +487,9 @@ namespace Empiria.Land.Registration {
       }
 
       this.Status = RecordableObjectStatus.Deleted;
+
       this.Save();
 
-      if (this.IsAmendment && this.AmendmentOf.LandRecord.IsEmptyDocumentType) {
-        this.AmendmentOf.Delete();
-      } else if (this.IsAmendment && !this.AmendmentOf.LandRecord.IsEmptyDocumentType) {
-        this.AmendmentOf.RemoveAmendment();
-      }
       this.Resource.TryDelete();
     }
 
@@ -665,12 +661,6 @@ namespace Empiria.Land.Registration {
 
     private RecordingAct GetAntecedent() {
       return this.Resource.Tract.GetRecordingAntecedent(this, true);
-    }
-
-
-    private void RemoveAmendment() {
-      this.AmendmentOf = RecordingAct.Empty;
-      this.Save();
     }
 
     #endregion Helpers
