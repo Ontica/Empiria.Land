@@ -31,14 +31,6 @@ namespace Empiria.Land.Data {
     }
 
 
-    static public FixedList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
-      var op = DataOperation.Parse("qryLRSResourceActiveOwnershipRecordingActParties",
-                                   recordingAct.Resource.Id);
-
-      return DataReader.GetFixedList<RecordingActParty>(op, true);
-    }
-
-
     static internal FixedList<Party> GetParties(SearchPartiesCommand command) {
       string filter = SearchExpression.ParseAndLikeWithNoiseWords("PartyKeywords", command.Keywords);
 

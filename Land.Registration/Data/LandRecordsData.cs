@@ -92,13 +92,6 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal LandRecord TryGetBookEntryMainLandRecord(BookEntry bookEntry) {
-      var op = DataOperation.Parse("getLRSRecordingMainDocument", bookEntry.Id);
-
-      return DataReader.GetObject<LandRecord>(op, null);
-    }
-
-
     static internal void WriteLandRecord(LandRecord o) {
       var op = DataOperation.Parse("writeLRSDocument", o.Id, o.GUID, o.Instrument.Id, 2410, -1, o.UID,
                                    o.ImagingControlID, o.Instrument.Summary, string.Empty, string.Empty,

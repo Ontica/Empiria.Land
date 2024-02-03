@@ -10,9 +10,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
-using System.Data;
 
-using Empiria.Contacts;
 using Empiria.Data;
 
 using Empiria.Land.Registration.Transactions;
@@ -23,32 +21,6 @@ namespace Empiria.Land.Data {
   static public class WorkflowData {
 
     #region Public methods
-
-    static public FixedList<Contact> GetContactsWithWorkflowOutboxTasks() {
-      var operation = DataOperation.Parse("qryLRSContactsWithWorkflowOutboxTasks");
-
-      return DataReader.GetFixedList<Contact>(operation);
-    }
-
-    static public DataView GetResponsibleWorkflowInbox(Contact contact, WorkflowTaskStatus status,
-                                                       string filter, string sort) {
-      if (filter.Length == 0) {
-        filter = "(1 = 1)";
-      }
-      if (sort.Length == 0) {
-        sort = "PresentationTime ASC, CheckInTime ASC, TrackId ASC";
-      }
-      var op = DataOperation.Parse("@qryLRSResponsibleWorkflowInbox",
-                                   contact.Id, (char) status, filter);
-
-      return DataReader.GetDataView(op, String.Empty, sort);
-    }
-
-    static public DataView GetWorkflowActiveTasksTotals() {
-      string sql = "SELECT * FROM vwLRSWorkflowActiveTasksTotals ORDER BY Responsible";
-
-      return DataReader.GetDataView(DataOperation.Parse(sql));
-    }
 
     static public LRSWorkflowTask GetWorkflowLastTask(LRSTransaction transaction) {
 

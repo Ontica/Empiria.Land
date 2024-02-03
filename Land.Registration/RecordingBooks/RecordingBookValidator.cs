@@ -9,8 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Data;
-
 namespace Empiria.Land.Registration {
 
   /// <summary>Provides validation services for recording books.</summary>
@@ -18,20 +16,6 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    static public LandRegistrationException ValidateBookEntryNumber(RecordingBook recordingBook, BookEntry bookEntry,
-                                                                    string bookEntryNumberToValidate) {
-      string formatted = RecordingBook.FormatBookEntryNumber(bookEntryNumberToValidate);
-
-      string filter = "PhysicalRecordingId <> " + bookEntry.Id + " AND RecordingNo = '" + formatted + "'";
-
-      BookEntry findResult = RecordingBooksData.FindRecordingBookEntry(recordingBook, filter);
-
-      if (!findResult.IsEmptyInstance) {
-        return new LandRegistrationException(LandRegistrationException.Msg.BookEntryNumberAlreadyExists, formatted);
-      }
-
-      return null;
-    }
 
     static public LandRegistrationException ValidateRecordingDates(RecordingBook recordingBook,
                                                                    DateTime presentationTime, DateTime authorizationDate) {

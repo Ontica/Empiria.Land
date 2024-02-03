@@ -9,8 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Data;
-
 namespace Empiria.Land.Registration {
 
   /// <summary>Provides validation services for recording acts.</summary>
@@ -291,27 +289,6 @@ namespace Empiria.Land.Registration {
                            " los roles obligatorios para dicho tipo de acto.");
     }
 
-
-    private LandRegistrationException FormerIsComplete() {
-      // Include recording act fields validation code
-
-      // Parties Validation
-      if (_recordingAct.RecordingActType.RecordingRule.AllowNoParties) {
-        return null;
-      }
-      if (!_recordingAct.IsAnnotation) {
-        FixedList<RecordingActParty> parties = PartyData.GetInvolvedDomainParties(_recordingAct);
-        if (parties.Count == 0) {
-          return new LandRegistrationException(LandRegistrationException.Msg.RecordingActWithoutOwnerParties);
-        }
-      } else {
-        FixedList<RecordingActParty> parties = PartyData.GetRecordingPartyList(_recordingAct);
-        if (parties.Count == 0) {
-          return new LandRegistrationException(LandRegistrationException.Msg.RecordingActWithoutOwnerParties);
-        }
-      }
-      return null;
-    }
 
 
     private bool HasCompleteInformation() {

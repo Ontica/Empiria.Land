@@ -69,11 +69,6 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static internal LandRecord TryParse(BookEntry bookEntry) {
-      return LandRecordsData.TryGetBookEntryMainLandRecord(bookEntry);
-    }
-
-
     static public LandRecord TryParseForInstrument(int instrumentId) {
       return BaseObject.TryParse<LandRecord>($"InstrumentId = {instrumentId}", true);
     }

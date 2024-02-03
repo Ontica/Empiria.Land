@@ -147,27 +147,6 @@ namespace Empiria.Land.Data {
     }
 
 
-    static public DataRow GetRecordingWithBookEntryNumber(RecordingBook recordingBook,
-                                                          string bookEntryNumber) {
-      return DataReader.GetDataRow(DataOperation.Parse("getLRSRecordingWithRecordingNumber",
-                                                       recordingBook.Id, bookEntryNumber));
-    }
-
-
-    static internal BookEntry FindRecordingBookEntry(RecordingBook recordingBook, string filter) {
-      string sql = "SELECT * FROM LRSPhysicalRecordings WHERE " +
-                   $"(PhysicalBookId = {recordingBook.Id} AND RecordingStatus <> 'X')";
-
-      if (!String.IsNullOrWhiteSpace(filter)) {
-        sql += $" AND {filter}";
-      }
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetObject<BookEntry>(op, BookEntry.Empty);
-    }
-
-
     static internal void WriteBookEntry(BookEntry o) {
       Assertion.Require(o.LandRecord.Id > 0,
                        "Wrong data for book entry. LandRecord was missed.");
