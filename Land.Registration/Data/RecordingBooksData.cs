@@ -192,7 +192,7 @@ namespace Empiria.Land.Data {
 
 
     static internal void WriteRecordingDocument(RecordingDocument o) {
-      var op = DataOperation.Parse("writeLRSDocument", o.Id, o.GUID, o.Instrument.Id, o.DocumentType.Id, -1, o.UID,
+      var op = DataOperation.Parse("writeLRSDocument", o.Id, o.GUID, o.Instrument.Id, 2410, -1, o.UID,
                                    o.ImagingControlID, o.Instrument.Summary, string.Empty, string.Empty,
                                    o.Keywords, o.PresentationTime, o.AuthorizationTime,
                                    o.Instrument.Issuer.RelatedPlace.Id, o.Instrument.Issuer.RelatedEntity.Id,

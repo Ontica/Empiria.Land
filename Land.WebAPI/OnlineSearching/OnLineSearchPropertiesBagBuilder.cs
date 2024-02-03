@@ -105,7 +105,7 @@ namespace Empiria.Land.WebApi {
 
       propertyBag.Add(new PropertyBagItem("Información del documento", String.Empty, "section"));
       propertyBag.Add(new PropertyBagItem("Sello registral número", landRecord.UID, "bold-text"));
-      propertyBag.Add(new PropertyBagItem("Tipo de documento", landRecord.DocumentType.DisplayName, "bold-text"));
+      propertyBag.Add(new PropertyBagItem("Tipo de documento", landRecord.Instrument.InstrumentType.DisplayName, "bold-text"));
       propertyBag.Add(new PropertyBagItem("Emitido por", landRecord.Instrument.Issuer.RelatedContact.ShortName));
       propertyBag.Add(new PropertyBagItem("Fecha de presentación", GetDateTime(landRecord.PresentationTime), "date-time"));
       propertyBag.Add(new PropertyBagItem("Fecha de registro", GetDateTime(landRecord.AuthorizationTime), "date"));
@@ -476,7 +476,7 @@ namespace Empiria.Land.WebApi {
                                            String.Empty, "section"));
 
       if (!transaction.LandRecord.IsEmptyInstance) {
-        propertyBag.Add(new PropertyBagItem("Documento inscrito", transaction.LandRecord.DocumentType.DisplayName + "<br/>" +
+        propertyBag.Add(new PropertyBagItem("Documento inscrito", transaction.LandRecord.Instrument.InstrumentType.DisplayName + "<br/>" +
                                                                   GetLandRecordUIDAsLink(transaction.LandRecord.UID) +
                                                                   GetPrintableLandRecordLink(transaction.LandRecord.UID, transaction.Workflow.CurrentStatus, messageUID)));
       }

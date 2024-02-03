@@ -1,10 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Land Recording services                      Component : Recording documents                   *
-*  Assembly : Empiria.Land.Registration.dll                Pattern   : Partitioned type                      *
+*  Assembly : Empiria.Land.Registration.dll                Pattern   : Information Holder                    *
 *  Type     : RecordingDocument                            License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Partitioned type that represents a land instrument record with one or more recording acts.     *
+*  Summary  : Represents a land instrument record with one or more recording acts.                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,7 +13,6 @@ using System.Data;
 using System.Linq;
 
 using Empiria.Contacts;
-using Empiria.Ontology;
 
 using Empiria.Land.Data;
 using Empiria.Land.Providers;
@@ -23,8 +22,7 @@ using Empiria.Land.Instruments;
 
 namespace Empiria.Land.Registration {
 
-  /// <summary>Partitioned type that represents a land instrument record with one or more recording acts.</summary>
-  [PartitionedType(typeof(RecordingDocumentType))]
+  /// <summary>Represents a land instrument record with one or more recording acts.</summary>
   public class RecordingDocument : BaseObject {
 
     #region Fields
@@ -35,13 +33,16 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public RecordingDocument(RecordingDocumentType powerType) : base(powerType) {
-      if (powerType.Equals(RecordingDocumentType.Empty)) {
-        this.Status = RecordableObjectStatus.Closed;
-      }
-      this.Security = new RecordingDocumentSecurity(this);
+    private RecordingDocument() {
+      // Required by Empiria Framework.
     }
 
+    public RecordingDocument(Instrument instrument) {
+      Assertion.Require(instrument, nameof(instrument));
+      Assertion.Require(!instrument.IsEmptyInstance, "instrument can't be the empty instance.");
+
+      Instrument = instrument;
+    }
 
     // TODO: Remove this
     static public RecordingDocument Parse(int id) {
@@ -82,16 +83,6 @@ namespace Empiria.Land.Registration {
       get { return BaseObject.ParseEmpty<RecordingDocument>(); }
     }
 
-    public static RecordingDocument CreateFromInstrument(Instrument instrument) {
-      var documentType = RecordingDocumentType.ParseFromInstrumentTypeId(instrument.InstrumentType.Id);
-
-      var landRecord = new RecordingDocument(documentType);
-
-      landRecord.Instrument = instrument;
-
-      return landRecord;
-    }
-
 
     #endregion Constructors and parsers
 
@@ -103,16 +94,11 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+
     [DataField("InstrumentId")]
     public Instrument Instrument {
       get;
       private set;
-    }
-
-    public RecordingDocumentType DocumentType {
-      get {
-        return (RecordingDocumentType) base.GetEmpiriaType();
-      }
     }
 
 
@@ -211,12 +197,6 @@ namespace Empiria.Land.Registration {
     public bool IsClosed {
       get {
         return (this.Status == RecordableObjectStatus.Closed);
-      }
-    }
-
-    public bool IsEmptyDocumentType {
-      get {
-        return (this.DocumentType == RecordingDocumentType.Empty);
       }
     }
 
@@ -415,16 +395,13 @@ namespace Empiria.Land.Registration {
 
 
     private LRSTransaction _transaction = null;
+
     public LRSTransaction GetTransaction() {
-      if (this.IsEmptyInstance || this.IsEmptyDocumentType) {
+      if (this.IsEmptyInstance) {
         return LRSTransaction.Empty;
       }
       if (_transaction == null) {
         _transaction = DocumentsData.GetLandRecordTransaction(this);
-        if (_transaction.IsEmptyInstance) {
-          _transaction = null;
-          return LRSTransaction.Empty;
-        }
       }
       return _transaction;
     }
@@ -466,10 +443,6 @@ namespace Empiria.Land.Registration {
 
       recordingAct.Delete();
       _recordingActs.Value.Remove(recordingAct);
-
-      if (this.RecordingActs.Count == 0 && this.IsEmptyDocumentType) {
-        this.Delete();
-      }
     }
 
     public BookEntry TryGetBookEntry() {
@@ -485,18 +458,6 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Public methods
-
-    #region Private methods
-
-    internal void Delete() {
-      if (this.RecordingActs.Count == 0) {
-        this.Status = RecordableObjectStatus.Deleted;
-        this.Save();
-        _transaction = null;
-      }
-    }
-
-    #endregion Private methods
 
   } // class RecordingDocument
 

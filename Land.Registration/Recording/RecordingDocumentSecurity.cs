@@ -89,7 +89,7 @@ namespace Empiria.Land.Registration {
       if (this.LandRecord.IsEmptyInstance) {
         return false;
       }
-      if (this.LandRecord.Status != RecordableObjectStatus.Closed) {
+      if (!this.LandRecord.IsClosed) {
         return false;
       }
       if (this.LandRecord.Security.Signed()) {
@@ -209,7 +209,7 @@ namespace Empiria.Land.Registration {
       var doc = this.LandRecord;
       if (version == 1) {
         return new object[] {
-          1, "Id", doc.Id, "DocumentTypeId", doc.DocumentType.Id,
+          1, "Id", doc.Id, "DocumentTypeId", doc.Instrument.InstrumentType.Id,
           "UID", doc.UID, "InstrumentId", doc.Instrument.Id,
           "IssuePlaceId", doc.Instrument.Issuer.RelatedPlace.Id,
           "IssueOfficeId", doc.Instrument.Issuer.RelatedEntity.Id,

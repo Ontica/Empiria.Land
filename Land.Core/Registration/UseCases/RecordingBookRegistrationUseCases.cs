@@ -114,7 +114,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       instrument.Save();
 
-      var landRecord = RecordingDocument.CreateFromInstrument(instrument);
+      var landRecord = new RecordingDocument(instrument);
 
       landRecord.Save();
 

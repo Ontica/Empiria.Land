@@ -23,7 +23,7 @@ namespace Empiria.Land.Registration.Adapters {
 
       return new RecordingDataDto {
         UID = landRecord.GUID,
-        Type = landRecord.DocumentType.DisplayName,
+        Type = landRecord.Instrument.InstrumentType.DisplayName,
         RecordingID = landRecord.UID,
         Description = bookEntry.IsEmptyInstance ? landRecord.UID : recordingAct.BookEntry.AsText,
         Office = landRecord.RecorderOffice.MapToNamedEntity(),
