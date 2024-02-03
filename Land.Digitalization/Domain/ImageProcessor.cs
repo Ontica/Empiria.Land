@@ -10,8 +10,6 @@
 using System;
 using System.IO;
 
-using Empiria.Documents.IO;
-
 namespace Empiria.Land.Digitalization {
 
   /// <summary>It is the responsible of the image processing service.</summary>
@@ -69,7 +67,7 @@ namespace Empiria.Land.Digitalization {
     //}
 
     private static void CleanFolders(string rootPath) {
-      FileServices.DeleteEmptyDirectories(rootPath);
+      // FileServices.DeleteEmptyDirectories(rootPath);
     }
 
     #endregion Public methods
@@ -86,7 +84,7 @@ namespace Empiria.Land.Digitalization {
 
     static void DeleteSourceFolderIfEmpty(string sourceFolderToDelete) {
       if (sourceFolderToDelete != MainFolderPath) {
-        FileServices.DeleteWhenIsEmpty(sourceFolderToDelete);
+        // FileServices.DeleteWhenIsEmpty(sourceFolderToDelete);
       }
     }
 

@@ -52,7 +52,6 @@
     <WarningsAsErrors />
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
-    <PackageReference Include="Empiria.Documents" Version="7.0.0" />
     <PackageReference Include="Empiria.Geography" Version="7.0.0" />
     <PackageReference Include="Empiria.Messaging" Version="7.0.0" />
     <PackageReference Include="Empiria.OnePoint.EFiling" Version="2.0.0" />
