@@ -20,7 +20,7 @@ namespace Empiria.Land.Registration {
     static internal readonly bool UseRecordingBookRegistation =
                                         ConfigurationData.Get("UseRecordingBookRegistation", false);
 
-    private readonly RecordingDocument _landRecord;
+    private readonly LandRecord _landRecord;
     private readonly LRSTransaction _transaction;
 
     private readonly FixedList<BookEntry> _bookEntries;
@@ -28,7 +28,7 @@ namespace Empiria.Land.Registration {
     private readonly bool _isHistoricRegistration;
     private readonly bool _isNewRegistration;
 
-    internal LandRecordControlData(RecordingDocument landRecord) {
+    internal LandRecordControlData(LandRecord landRecord) {
       Assertion.Require(landRecord, nameof(landRecord));
 
       _landRecord = landRecord;

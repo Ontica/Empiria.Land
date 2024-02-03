@@ -34,7 +34,7 @@ namespace Empiria.Land.Registration {
     }
 
     internal BookEntry(RecordingBook recordingBook,
-                       RecordingDocument landRecord, string recordingNumber) {
+                       LandRecord landRecord, string recordingNumber) {
       Assertion.Require(recordingBook, nameof(recordingBook));
       Assertion.Require(landRecord, nameof(landRecord));
       Assertion.Require(recordingNumber, nameof(recordingNumber));
@@ -69,7 +69,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public FixedList<BookEntry> GetBookEntriesForLandRecord(RecordingDocument landRecord) {
+    static public FixedList<BookEntry> GetBookEntriesForLandRecord(LandRecord landRecord) {
       return RecordingBooksData.GetBookEntriesForLandRecord(landRecord);
     }
 
@@ -86,7 +86,7 @@ namespace Empiria.Land.Registration {
     #region Public properties
 
     [DataField("MainDocumentId")]
-    public RecordingDocument LandRecord {
+    public LandRecord LandRecord {
       get;
       private set;
     }

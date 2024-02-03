@@ -35,7 +35,7 @@ namespace Empiria.Land.Registration.UseCases {
       Assertion.Require(recordingActUID, nameof(recordingActUID));
 
 
-      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
+      var landRecord = LandRecord.ParseGuid(landRecordUID);
 
       RecordingAct recordingAct = landRecord.GetRecordingAct(recordingActUID);
 
@@ -49,7 +49,7 @@ namespace Empiria.Land.Registration.UseCases {
       Assertion.Require(landRecordUID, nameof(landRecordUID));
       Assertion.Require(recordingActUID, nameof(recordingActUID));
 
-      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
+      var landRecord = LandRecord.ParseGuid(landRecordUID);
 
       RecordingAct recordingAct = landRecord.GetRecordingAct(recordingActUID);
 
@@ -65,7 +65,7 @@ namespace Empiria.Land.Registration.UseCases {
       Assertion.Require(landRecordUID, nameof(landRecordUID));
       Assertion.Require(command, nameof(command));
 
-      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
+      var landRecord = LandRecord.ParseGuid(landRecordUID);
 
       var registrationEngine = new RegistrationEngine(landRecord);
 
@@ -80,7 +80,7 @@ namespace Empiria.Land.Registration.UseCases {
       Assertion.Require(landRecordUID, nameof(landRecordUID));
       Assertion.Require(recordingActUID, nameof(recordingActUID));
 
-      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
+      var landRecord = LandRecord.ParseGuid(landRecordUID);
 
       RecordingAct recordingAct = landRecord.GetRecordingAct(recordingActUID);
 
@@ -97,7 +97,7 @@ namespace Empiria.Land.Registration.UseCases {
       Assertion.Require(recordingActUID, nameof(recordingActUID));
       Assertion.Require(fields, nameof(fields));
 
-      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
+      var landRecord = LandRecord.ParseGuid(landRecordUID);
 
       RecordingAct recordingAct = landRecord.GetRecordingAct(recordingActUID);
 
@@ -116,7 +116,7 @@ namespace Empiria.Land.Registration.UseCases {
       Assertion.Require(recordingActUID, nameof(recordingActUID));
       Assertion.Require(fields, nameof(fields));
 
-      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
+      var landRecord = LandRecord.ParseGuid(landRecordUID);
 
       RecordingAct recordingAct = landRecord.GetRecordingAct(recordingActUID);
 

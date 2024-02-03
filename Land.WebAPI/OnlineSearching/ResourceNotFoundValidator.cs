@@ -97,7 +97,7 @@ namespace Empiria.Land.WebApi {
 
     internal void ValidateLandRecord(string landRecordUID, string hash) {
 
-      var landRecord = RecordingDocument.TryParse(landRecordUID, true);
+      var landRecord = LandRecord.TryParse(landRecordUID, true);
 
       if (landRecord == null && hash.Length == 0) {
         throw new ResourceNotFoundException("Land.LandRecord.NotFound",

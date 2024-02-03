@@ -113,7 +113,7 @@ namespace Empiria.Land.Media {
 
 
     [DataField("DocumentId")]
-    internal RecordingDocument LandRecord {
+    internal LandRecord LandRecord {
       get;
       private set;
     }

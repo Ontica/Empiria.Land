@@ -101,7 +101,7 @@ namespace Empiria.Land.WebApi {
     internal List<PropertyBagItem> BuildLandRecord(string landRecordUID, string hash) {
       var propertyBag = new List<PropertyBagItem>(16);
 
-      var landRecord = RecordingDocument.TryParse(landRecordUID, true);
+      var landRecord = LandRecord.TryParse(landRecordUID, true);
 
       propertyBag.Add(new PropertyBagItem("Información del documento", String.Empty, "section"));
       propertyBag.Add(new PropertyBagItem("Sello registral número", landRecord.UID, "bold-text"));

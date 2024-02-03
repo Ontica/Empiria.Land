@@ -51,7 +51,7 @@ namespace Empiria.Land.Registration.Adapters {
 
 
     internal BookEntryDto MapToBookEntryDto(RecordingBook book,
-                                            RecordingDocument landRecord) {
+                                            LandRecord landRecord) {
       var dto = new BookEntryDto(book, landRecord, this.RecordingNo);
 
       dto.PresentationTime = this.PresentationTime;
@@ -108,7 +108,7 @@ namespace Empiria.Land.Registration.Adapters {
 
 
     internal BookEntryDto MapToBookEntryDto(RecordingBook book,
-                                            RecordingDocument landRecord) {
+                                            LandRecord landRecord) {
       var dto = new BookEntryDto(book, landRecord, this.BookEntry.RecordingNo);
 
       dto.PresentationTime = this.BookEntry.PresentationTime;

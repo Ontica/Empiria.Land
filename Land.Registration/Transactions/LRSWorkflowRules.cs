@@ -86,7 +86,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    static internal void AssertRecordingActsPrelation(RecordingDocument landRecord) {
+    static internal void AssertRecordingActsPrelation(LandRecord landRecord) {
       foreach (var recordingAct in landRecord.RecordingActs) {
         recordingAct.Validator.AssertIsLastInPrelationOrder();
       }
@@ -258,7 +258,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    static internal bool UserCanEditLandRecord(RecordingDocument landRecord) {
+    static internal bool UserCanEditLandRecord(LandRecord landRecord) {
       if (!(ExecutionServer.CurrentPrincipal.IsInRole("LandRegistrar"))) {
         return false;
       }

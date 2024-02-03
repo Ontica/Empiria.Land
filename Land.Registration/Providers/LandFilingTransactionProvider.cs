@@ -242,7 +242,7 @@ namespace Empiria.Land.Providers {
     }
 
 
-    static private EFilingDocument MapToEFilingDocumentDTO(RecordingDocument landRecord) {
+    static private EFilingDocument MapToEFilingDocumentDTO(LandRecord landRecord) {
       var transaction = landRecord.GetTransaction();
 
       return new EFilingDocument() {

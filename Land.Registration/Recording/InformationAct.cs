@@ -23,14 +23,14 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    internal InformationAct(RecordingActType recordingActType, RecordingDocument landRecord,
+    internal InformationAct(RecordingActType recordingActType, LandRecord landRecord,
                             Resource resource) : base(recordingActType, landRecord) {
       recordingActType.AssertIsApplicableResource(resource);
 
       this.AttachResource(resource);
     }
 
-    public InformationAct(RecordingActType recordingActType, RecordingDocument landRecord,
+    public InformationAct(RecordingActType recordingActType, LandRecord landRecord,
                           Resource resource, BookEntry bookEntry)
                                       : base(recordingActType, landRecord, bookEntry) {
       recordingActType.AssertIsApplicableResource(resource);

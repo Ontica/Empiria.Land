@@ -21,7 +21,7 @@ namespace Empiria.Land.Registration {
 
     #region Fields
 
-    private readonly RecordingDocument _landRecord;
+    private readonly LandRecord _landRecord;
     private readonly BookEntry _bookEntry;
     private readonly LRSTransaction _transaction;
 
@@ -29,7 +29,7 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    internal Record(RecordingDocument landRecord) {
+    internal Record(LandRecord landRecord) {
       Assertion.Require(landRecord, nameof(landRecord));
 
       _landRecord = landRecord;
@@ -72,7 +72,7 @@ namespace Empiria.Land.Registration {
 
     #region Methods
 
-    static private BookEntry LoadBookEntry(RecordingDocument landRecord) {
+    static private BookEntry LoadBookEntry(LandRecord landRecord) {
       BookEntry bookEntry = landRecord.TryGetBookEntry();
 
       if (bookEntry == null) {
@@ -83,7 +83,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static private LRSTransaction LoadTransaction(RecordingDocument landRecord) {
+    static private LRSTransaction LoadTransaction(LandRecord landRecord) {
       if (landRecord.HasTransaction) {
         return landRecord.GetTransaction();
       }

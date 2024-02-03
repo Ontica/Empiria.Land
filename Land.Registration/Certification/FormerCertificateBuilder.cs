@@ -134,7 +134,7 @@ namespace Empiria.Land.Certification {
       return text.ToString();
     }
 
-    private string GetLandRecord(RecordingDocument landRecord) {
+    private string GetLandRecord(LandRecord landRecord) {
       const string template =
               "Que bajo el documento con número electrónico {{DOCUMENT}} " +
               "registrado en esta oficina el {{DATE}}";

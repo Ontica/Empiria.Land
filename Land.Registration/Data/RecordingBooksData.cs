@@ -113,7 +113,7 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal FixedList<BookEntry> GetBookEntriesForLandRecord(RecordingDocument landRecord) {
+    static internal FixedList<BookEntry> GetBookEntriesForLandRecord(LandRecord landRecord) {
       string sql = $"SELECT * FROM LRSPhysicalRecordings " +
                    $"WHERE MainDocumentId = {landRecord.Id} AND RecordingStatus <> 'X' " +
                    $"ORDER BY PhysicalRecordingId";
@@ -186,19 +186,6 @@ namespace Empiria.Land.Data {
                                    o.BookNumber, o.AsText, o.ExtensionData.ToString(), o.Keywords,
                                    o.StartRecordingIndex, o.EndRecordingIndex, (char) o.Status,
                                    string.Empty);
-
-      DataWriter.Execute(op);
-    }
-
-
-    static internal void WriteRecordingDocument(RecordingDocument o) {
-      var op = DataOperation.Parse("writeLRSDocument", o.Id, o.GUID, o.Instrument.Id, 2410, -1, o.UID,
-                                   o.ImagingControlID, o.Instrument.Summary, string.Empty, string.Empty,
-                                   o.Keywords, o.PresentationTime, o.AuthorizationTime,
-                                   o.Instrument.Issuer.RelatedPlace.Id, o.Instrument.Issuer.RelatedEntity.Id,
-                                   o.Instrument.Issuer.RelatedContact.Id, o.Instrument.IssueDate,
-                                   o.Instrument.SheetsCount, (char) o.Status, o.PostedBy.Id, o.PostingTime,
-                                   o.Security.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(op);
     }

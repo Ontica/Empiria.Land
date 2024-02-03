@@ -87,7 +87,8 @@ namespace Empiria.Land.Registration {
       Assertion.Require(fields, nameof(fields));
 
       this.RecordingTaskType = fields.RecordingTaskType;
-      this.LandRecord = RecordingDocument.ParseGuid(fields.LandRecordUID);
+
+      this.LandRecord = LandRecord.ParseGuid(fields.LandRecordUID);
 
       if (!String.IsNullOrWhiteSpace(fields.RecordingBookEntryUID)) {
         this.BookEntry = BookEntry.Parse(fields.RecordingBookEntryUID);
@@ -117,7 +118,7 @@ namespace Empiria.Land.Registration {
 
     #region Properties
 
-    public RecordingDocument LandRecord {
+    public LandRecord LandRecord {
       get;
       private set;
     }

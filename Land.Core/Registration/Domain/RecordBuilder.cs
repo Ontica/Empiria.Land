@@ -19,7 +19,7 @@ namespace Empiria.Land.SearchServices {
     static public Record GetLastDomainActRecord(Resource resource) {
       Assertion.Require(resource, nameof(resource));
 
-      RecordingDocument landRecord = resource.Tract.LastRecordingAct.LandRecord;
+      LandRecord landRecord = resource.Tract.LastRecordingAct.LandRecord;
 
       return new Record(landRecord);
     }

@@ -9,7 +9,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 
 using Empiria.Data;
 
@@ -29,21 +28,6 @@ namespace Empiria.Land.Data {
       var operation = DataOperation.Parse("qryLRSPhysicalRecordingRecordedActs", bookEntry.Id);
 
       return DataReader.GetFixedList<RecordingAct>(operation);
-    }
-
-
-    static internal List<RecordingAct> GetDocumentRecordingActs(RecordingDocument landRecord) {
-      if (landRecord.IsEmptyInstance) {
-        return new List<RecordingAct>();
-      }
-
-      string sql = "SELECT * FROM LRSRecordingActs " +
-                   $"WHERE DocumentId = {landRecord.Id} AND RecordingActStatus <> 'X' " +
-                   "ORDER BY RecordingActIndex, RegistrationTime";
-
-      var operation = DataOperation.Parse(sql);
-
-      return DataReader.GetList<RecordingAct>(operation, true);
     }
 
 

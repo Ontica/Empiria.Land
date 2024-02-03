@@ -216,12 +216,12 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     [DataField("DocumentId")]
-    LazyInstance<RecordingDocument> _landRecord = LazyInstance<RecordingDocument>.Empty;
+    LazyInstance<LandRecord> _landRecord = LazyInstance<LandRecord>.Empty;
 
-    public RecordingDocument LandRecord {
+    public LandRecord LandRecord {
       get { return _landRecord.Value; }
       private set {
-        _landRecord = LazyInstance<RecordingDocument>.Parse(value);
+        _landRecord = LazyInstance<LandRecord>.Parse(value);
       }
     }
 
@@ -424,7 +424,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Methods
 
-    public void AttachLandRecord(RecordingDocument landRecord) {
+    public void AttachLandRecord(LandRecord landRecord) {
       Assertion.Require(!this.IsEmptyInstance && !this.IsNew,
                        "Land record can't be attached to a new or empty transaction.");
       Assertion.Require(!landRecord.IsEmptyInstance, "Attached land records can't be the empty instance.");

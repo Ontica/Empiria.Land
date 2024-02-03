@@ -35,7 +35,7 @@ namespace Empiria.Land.Registration.UseCases {
       Assertion.Require(recordingActUID, nameof(recordingActUID));
       Assertion.Require(partyFields, nameof(partyFields));
 
-      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
+      var landRecord = LandRecord.ParseGuid(landRecordUID);
 
       RecordingAct recordingAct = landRecord.GetRecordingAct(recordingActUID);
 
@@ -52,7 +52,7 @@ namespace Empiria.Land.Registration.UseCases {
       Assertion.Require(recordingActUID, nameof(recordingActUID));
       Assertion.Require(partyUID, nameof(partyUID));
 
-      var landRecord = RecordingDocument.ParseGuid(landRecordUID);
+      var landRecord = LandRecord.ParseGuid(landRecordUID);
 
       RecordingAct recordingAct = landRecord.GetRecordingAct(recordingActUID);
 

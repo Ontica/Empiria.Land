@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Land Recording services                      Component : Recording documents                   *
 *  Assembly : Empiria.Land.Registration.dll                Pattern   : Separated entity                      *
-*  Type     : RecordingDocumentSecurity                    License   : Please read LICENSE.txt file          *
+*  Type     : LandRecordSecurity                           License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Contains security methods used to protect the integrity of recording documents.                *
 *                                                                                                            *
@@ -19,17 +19,17 @@ using Empiria.Land.Registration.Transactions;
 namespace Empiria.Land.Registration {
 
   /// <summary>Contains security methods used to protect the integrity of recording documents.</summary>
-  public class RecordingDocumentSecurity: IProtected {
+  public class LandRecordSecurity: IProtected {
 
     private readonly bool USE_E_SIGN = ConfigurationData.Get<bool>("UseESignature", false);
 
     #region Constructors and parsers
 
-    private RecordingDocumentSecurity() {
+    private LandRecordSecurity() {
       // Used by Empiria Framework
     }
 
-    internal RecordingDocumentSecurity(RecordingDocument landRecord) {
+    internal LandRecordSecurity(LandRecord landRecord) {
       this.LandRecord = landRecord;
     }
 
@@ -37,7 +37,7 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    internal RecordingDocument LandRecord {
+    internal LandRecord LandRecord {
       get;
     }
 
@@ -235,6 +235,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Integrity methods
 
-  } // class RecordingDocumentSecurity
+  } // class LandRecordSecurity
 
 } // namespace Empiria.Land.Registration

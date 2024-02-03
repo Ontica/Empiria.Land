@@ -16,9 +16,9 @@ namespace Empiria.Land.Pages {
   /// <summary>Recording stamp builder methods.</summary>
   internal class RecordingStampBuilder {
 
-    private readonly RecordingDocument _landRecord;
+    private readonly LandRecord _landRecord;
 
-    internal RecordingStampBuilder(RecordingDocument landRecord) {
+    internal RecordingStampBuilder(LandRecord landRecord) {
       Assertion.Require(landRecord, nameof(landRecord));
 
       _landRecord = landRecord;

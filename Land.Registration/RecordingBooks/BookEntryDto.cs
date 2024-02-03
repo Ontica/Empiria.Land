@@ -17,7 +17,7 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public BookEntryDto(RecordingBook book, RecordingDocument landRecord, string number) {
+    public BookEntryDto(RecordingBook book, LandRecord landRecord, string number) {
       Assertion.Require(book, nameof(book));
       Assertion.Require(landRecord, nameof(landRecord));
       Assertion.Require(number, nameof(number));
@@ -44,7 +44,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public RecordingDocument LandRecord {
+    public LandRecord LandRecord {
       get;
     }
 

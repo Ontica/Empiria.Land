@@ -45,7 +45,7 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
       Assertion.Require(amendmentRecordingActTypeUID, nameof(amendmentRecordingActTypeUID));
 
       if (!string.IsNullOrWhiteSpace(landRecordUID)) {
-        var landRecord = RecordingDocument.ParseGuid(landRecordUID);
+        var landRecord = LandRecord.ParseGuid(landRecordUID);
         date = landRecord.AuthorizationTime != ExecutionServer.DateMinValue ?
                                       landRecord.AuthorizationTime : landRecord.PresentationTime;
       }
@@ -123,7 +123,7 @@ namespace Empiria.Land.RecordableSubjects.UseCases {
 
       RecordingAct recordingAct = recordableSubject.Tract.GetRecordingAct(recordingActUID);
 
-      RecordingDocument landRecord = recordingAct.LandRecord;
+      LandRecord landRecord = recordingAct.LandRecord;
 
       landRecord.RemoveRecordingAct(recordingAct);
     }

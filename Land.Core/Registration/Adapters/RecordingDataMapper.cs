@@ -16,7 +16,7 @@ namespace Empiria.Land.Registration.Adapters {
     #region Public methods
 
     static internal RecordingDataDto MapRecordingData(RecordingAct recordingAct) {
-      RecordingDocument landRecord = recordingAct.LandRecord;
+      LandRecord landRecord = recordingAct.LandRecord;
 
       BookEntry bookEntry = recordingAct.HasBookEntry ?
                                             recordingAct.BookEntry : BookEntry.Empty;

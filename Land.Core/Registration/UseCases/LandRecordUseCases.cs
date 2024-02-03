@@ -35,7 +35,7 @@ namespace Empiria.Land.Registration.UseCases {
     public bool ExistsLandRecordID(string landRecordID) {
       Assertion.Require(landRecordID, nameof(landRecordID));
 
-      var landRecord = RecordingDocument.TryParse(landRecordID);
+      var landRecord = LandRecord.TryParse(landRecordID);
 
       return (landRecord != null);
     }
@@ -44,7 +44,7 @@ namespace Empiria.Land.Registration.UseCases {
     public LandRecordDto GetLandRecord(string landRecordUID) {
       Assertion.Require(landRecordUID, nameof(landRecordUID));
 
-      RecordingDocument landRecord = RecordingDocument.ParseGuid(landRecordUID);
+      LandRecord landRecord = LandRecord.ParseGuid(landRecordUID);
 
       return LandRecordMapper.Map(landRecord);
     }
@@ -53,7 +53,7 @@ namespace Empiria.Land.Registration.UseCases {
     public LandRecordDto CloseLandRecord(string landRecordUID) {
       Assertion.Require(landRecordUID, nameof(landRecordUID));
 
-      RecordingDocument landRecord = RecordingDocument.ParseGuid(landRecordUID);
+      LandRecord landRecord = LandRecord.ParseGuid(landRecordUID);
 
       landRecord.Close();
 
@@ -64,7 +64,7 @@ namespace Empiria.Land.Registration.UseCases {
     public LandRecordDto OpenLandRecord(string landRecordUID) {
       Assertion.Require(landRecordUID, nameof(landRecordUID));
 
-      RecordingDocument landRecord = RecordingDocument.ParseGuid(landRecordUID);
+      LandRecord landRecord = LandRecord.ParseGuid(landRecordUID);
 
       landRecord.Open();
 

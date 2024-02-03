@@ -31,21 +31,6 @@ namespace Empiria.Land.Data {
     }
 
 
-    static public FixedList<RecordingActParty> GetRecordingPartyList(RecordingDocument landRecord, Party party) {
-      string sql = "SELECT LRSRecordingActParties.* " +
-              "FROM LRSRecordingActParties INNER JOIN LRSRecordingActs " +
-              "ON LRSRecordingActParties.RecordingActId = LRSRecordingActs.RecordingActId " +
-              "WHERE (LRSRecordingActs.DocumentId = " + landRecord.Id.ToString() + ") " +
-              "AND (LRSRecordingActParties.RecActPartyStatus <> 'X') " +
-              "AND (LRSRecordingActParties.PartyId = " + party.Id.ToString() +
-              " OR LRSRecordingActParties.PartyOfId = " + party.Id.ToString() + ")";
-
-      var operation = DataOperation.Parse(sql);
-
-      return DataReader.GetFixedList<RecordingActParty>(operation, true);
-    }
-
-
     static public FixedList<RecordingActParty> GetInvolvedDomainParties(RecordingAct recordingAct) {
       var op = DataOperation.Parse("qryLRSResourceActiveOwnershipRecordingActParties",
                                    recordingAct.Resource.Id);

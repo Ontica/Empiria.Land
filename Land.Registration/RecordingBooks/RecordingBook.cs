@@ -182,7 +182,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public BookEntry AddBookEntry(RecordingDocument landRecord, string bookEntryNumber) {
+    public BookEntry AddBookEntry(LandRecord landRecord, string bookEntryNumber) {
       Assertion.Require(landRecord, nameof(landRecord));
       Assertion.Require(bookEntryNumber, nameof(bookEntryNumber));
 
@@ -192,7 +192,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public BookEntry CreateNextBookEntry(RecordingDocument landRecord) {
+    public BookEntry CreateNextBookEntry(LandRecord landRecord) {
       Assertion.Require(landRecord, nameof(landRecord));
       Assertion.Require(landRecord.Instrument.SheetsCount > 0, "Instrument field SheetsCount must be greater than zero.");
 

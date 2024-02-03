@@ -31,7 +31,7 @@ namespace Empiria.Land.Pages {
 
     RecordingStampBuilder builder;
 
-    protected RecordingDocument landRecord = null;
+    protected LandRecord landRecord = null;
     protected LRSTransaction transaction = null;
 
     private RecordingAct _selectedRecordingAct;
@@ -51,7 +51,7 @@ namespace Empiria.Land.Pages {
 
       _isMainLandRecord = bool.Parse(Request.QueryString["main"] ?? "false");
 
-      landRecord = RecordingDocument.TryParse(landRecordUID, true);
+      landRecord = LandRecord.TryParse(landRecordUID, true);
 
       transaction = landRecord.GetTransaction();
 
@@ -73,7 +73,7 @@ namespace Empiria.Land.Pages {
       if (landRecord.IsHistoricRecord) {
         return CommonMethods.AsWarning("Los documentos históricos no tienen sello digital.");
 
-      } else if (landRecord.Status != RecordableObjectStatus.Closed) {
+      } else if (!landRecord.IsClosed) {
         return CommonMethods.AsWarning("El documento está ABIERTO por lo que no tiene sello digital.");
 
       } else {
@@ -87,7 +87,7 @@ namespace Empiria.Land.Pages {
       if (landRecord.IsHistoricRecord) {
         return CommonMethods.AsWarning("Los documentos históricos no tienen firma digital.");
       }
-      if (landRecord.Status != RecordableObjectStatus.Closed) {
+      if (!landRecord.IsClosed) {
         return CommonMethods.AsWarning("El documento está incompleto. No tiene validez.");
       }
       if (!landRecord.Security.UseESign) {
@@ -106,7 +106,7 @@ namespace Empiria.Land.Pages {
 
 
     protected bool CanBePrinted() {
-      if (landRecord.Status != RecordableObjectStatus.Closed) {
+      if (!landRecord.IsClosed) {
         return false;
       }
       if (landRecord.Security.UseESign && landRecord.Security.Unsigned()) {

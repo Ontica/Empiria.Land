@@ -42,7 +42,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
-      RecordingDocument landRecord = transaction.LandRecord;
+      LandRecord landRecord = transaction.LandRecord;
 
       return LandRecordMapper.Map(landRecord);
     }
@@ -64,7 +64,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       transaction.SetInstrument(instrument);
 
-      var landRecord = new RecordingDocument(instrument);
+      var landRecord = new LandRecord(instrument);
 
       landRecord.Save();
 
@@ -81,7 +81,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
-      RecordingDocument landRecord = transaction.LandRecord;
+      LandRecord landRecord = transaction.LandRecord;
 
       landRecord.Instrument.Update(fields);
 

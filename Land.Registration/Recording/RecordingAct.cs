@@ -36,7 +36,7 @@ namespace Empiria.Land.Registration {
 
 
     protected RecordingAct(RecordingActType recordingActType,
-                           RecordingDocument landRecord) : base(recordingActType) {
+                           LandRecord landRecord) : base(recordingActType) {
       Assertion.Require(recordingActType, nameof(recordingActType));
       Assertion.Require(landRecord, nameof(landRecord));
 
@@ -46,7 +46,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    protected RecordingAct(RecordingActType recordingActType, RecordingDocument landRecord,
+    protected RecordingAct(RecordingActType recordingActType, LandRecord landRecord,
                            BookEntry bookEntry) : base(recordingActType) {
       Assertion.Require(recordingActType, nameof(recordingActType));
       Assertion.Require(landRecord, nameof(landRecord));
@@ -60,7 +60,7 @@ namespace Empiria.Land.Registration {
 
 
     static internal RecordingAct Create(RecordingActType recordingActType,
-                                        RecordingDocument landRecord, Resource resource,
+                                        LandRecord landRecord, Resource resource,
                                         RecordingAct amendmentOf, int index,
                                         BookEntry bookEntry) {
       Assertion.Require(recordingActType, nameof(recordingActType));
@@ -143,7 +143,7 @@ namespace Empiria.Land.Registration {
     }
 
     [DataField("DocumentId")]
-    public RecordingDocument LandRecord {
+    public LandRecord LandRecord {
       get;
       private set;
     }

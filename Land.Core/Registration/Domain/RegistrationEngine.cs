@@ -18,11 +18,11 @@ namespace Empiria.Land.Registration {
 
   public class RegistrationEngine {
 
-    private readonly RecordingDocument _landRecord;
+    private readonly LandRecord _landRecord;
 
     #region Public methods
 
-    public RegistrationEngine(RecordingDocument landRecord) {
+    public RegistrationEngine(LandRecord landRecord) {
       Assertion.Require(landRecord, nameof(landRecord));
 
       _landRecord = landRecord;
@@ -53,7 +53,7 @@ namespace Empiria.Land.Registration {
 
       instrument.Save();
 
-      var landRecord = new RecordingDocument(instrument);
+      var landRecord = new LandRecord(instrument);
 
       landRecord.SetDates(presentationTime, authorizationDate);
 

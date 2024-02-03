@@ -56,7 +56,7 @@ namespace Empiria.Land.Registration {
 
     #region Methods
 
-    public FixedList<RecordingAct> GetClosedRecordingActsUntil(RecordingDocument breakingLandRecord,
+    public FixedList<RecordingAct> GetClosedRecordingActsUntil(LandRecord breakingLandRecord,
                                                                bool includeBreakingLandRecord) {
       var tract = ResourceTractData.GetResourceRecordingActList(_recordableSubject);
 
@@ -208,7 +208,7 @@ namespace Empiria.Land.Registration {
 
 
     internal RecordingAct TryGetLastActiveChainedAct(RecordingActType chainedRecordingActType,
-                                                     RecordingDocument beforeThisLandRecord) {
+                                                     LandRecord beforeThisLandRecord) {
 
       var tract = this.GetClosedRecordingActsUntil(beforeThisLandRecord, true);
 

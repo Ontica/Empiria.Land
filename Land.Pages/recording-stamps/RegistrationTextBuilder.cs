@@ -17,10 +17,10 @@ namespace Empiria.Land.Pages {
   /// <summary>Text builder for recording acts.</summary>
   internal class RegistrationTextBuilder {
 
-    private readonly RecordingDocument _landRecord;
+    private readonly LandRecord _landRecord;
     private readonly LRSTransaction _transaction;
 
-    internal RegistrationTextBuilder(RecordingDocument landRecord) {
+    internal RegistrationTextBuilder(LandRecord landRecord) {
       Assertion.Require(landRecord, nameof(landRecord));
 
       _landRecord = landRecord;

@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Land Recording services                      Component : Recording documents                   *
 *  Assembly : Empiria.Land.Registration.dll                Pattern   : Information Holder                    *
-*  Type     : RecordingDocument                            License   : Please read LICENSE.txt file          *
+*  Type     : LandRecord                                   License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Represents a land instrument record with one or more recording acts.                           *
 *                                                                                                            *
@@ -23,7 +23,7 @@ using Empiria.Land.Instruments;
 namespace Empiria.Land.Registration {
 
   /// <summary>Represents a land instrument record with one or more recording acts.</summary>
-  public class RecordingDocument : BaseObject {
+  public class LandRecord : BaseObject {
 
     #region Fields
 
@@ -33,11 +33,11 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private RecordingDocument() {
+    private LandRecord() {
       // Required by Empiria Framework.
     }
 
-    public RecordingDocument(Instrument instrument) {
+    public LandRecord(Instrument instrument) {
       Assertion.Require(instrument, nameof(instrument));
       Assertion.Require(!instrument.IsEmptyInstance, "instrument can't be the empty instance.");
 
@@ -45,12 +45,12 @@ namespace Empiria.Land.Registration {
     }
 
     // TODO: Remove this
-    static public RecordingDocument Parse(int id) {
-      return BaseObject.ParseId<RecordingDocument>(id);
+    static public LandRecord Parse(int id) {
+      return BaseObject.ParseId<LandRecord>(id);
     }
 
-    static public RecordingDocument ParseGuid(string guid) {
-      var landRecord = BaseObject.TryParse<RecordingDocument>($"DocumentGUID = '{guid}'");
+    static public LandRecord ParseGuid(string guid) {
+      var landRecord = BaseObject.TryParse<LandRecord>($"DocumentGUID = '{guid}'");
 
       Assertion.Require(landRecord,
                         $"There is not registered a land record with guid '{guid}'.");
@@ -59,28 +59,28 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public RecordingDocument TryParse(string landRecordUID, bool reload = false) {
-      return BaseObject.TryParse<RecordingDocument>($"DocumentUID = '{landRecordUID}'", reload);
+    static public LandRecord TryParse(string landRecordUID, bool reload = false) {
+      return BaseObject.TryParse<LandRecord>($"DocumentUID = '{landRecordUID}'", reload);
     }
 
 
-    static public RecordingDocument TryParse(int id, bool reload = false) {
-      return BaseObject.TryParse<RecordingDocument>($"DocumentId = {id}", reload);
+    static public LandRecord TryParse(int id, bool reload = false) {
+      return BaseObject.TryParse<LandRecord>($"DocumentId = {id}", reload);
     }
 
 
-    static internal RecordingDocument TryParse(BookEntry bookEntry) {
-      return DocumentsData.TryGetBookEntryMainLandRecord(bookEntry);
+    static internal LandRecord TryParse(BookEntry bookEntry) {
+      return LandRecordsData.TryGetBookEntryMainLandRecord(bookEntry);
     }
 
 
-    static public RecordingDocument TryParseForInstrument(int instrumentId) {
-      return BaseObject.TryParse<RecordingDocument>($"InstrumentId = {instrumentId}", true);
+    static public LandRecord TryParseForInstrument(int instrumentId) {
+      return BaseObject.TryParse<LandRecord>($"InstrumentId = {instrumentId}", true);
     }
 
 
-    static public RecordingDocument Empty {
-      get { return BaseObject.ParseEmpty<RecordingDocument>(); }
+    static public LandRecord Empty {
+      get { return BaseObject.ParseEmpty<LandRecord>(); }
     }
 
 
@@ -201,10 +201,10 @@ namespace Empiria.Land.Registration {
     }
 
 
-    [DataObject]
-    public RecordingDocumentSecurity Security {
-      get;
-      private set;
+    public LandRecordSecurity Security {
+      get {
+        return new LandRecordSecurity(this);
+      }
     }
 
 
@@ -216,7 +216,7 @@ namespace Empiria.Land.Registration {
     /// <param name="recordingAct">The item to be added at the end of the RecordingActs collection.</param>
     /// <returns> The recording act's index inside the RecordingActs collection.</returns>
     internal int AppendRecordingAct(RecordingAct recordingAct) {
-      Assertion.Require(recordingAct, "recordingAct");
+      Assertion.Require(recordingAct, nameof(recordingAct));
 
       Assertion.Require(this.IsHistoricRecord || !this.IsClosed,
                        "Recording acts can't be added to closed documents.");
@@ -270,9 +270,9 @@ namespace Empiria.Land.Registration {
                         "Document can't have any recording acts that are related to physical book entries.");
 
 
-      this.ImagingControlID = DocumentsData.GetNextImagingControlID(this);
+      this.ImagingControlID = LandRecordsData.GetNextImagingControlID(this);
 
-      DocumentsData.SaveImagingControlID(this);
+      LandRecordsData.SaveImagingControlID(this);
     }
 
 
@@ -328,7 +328,7 @@ namespace Empiria.Land.Registration {
     public RecordingAct GetRecordingAct(string recordingActUID) {
       RecordingAct recordingAct = this.RecordingActs.Find(x => x.UID == recordingActUID);
 
-      Assertion.Require(recordingAct, "recordingAct");
+      Assertion.Require(recordingAct, nameof(recordingAct));
 
       return recordingAct;
     }
@@ -401,7 +401,7 @@ namespace Empiria.Land.Registration {
         return LRSTransaction.Empty;
       }
       if (_transaction == null) {
-        _transaction = DocumentsData.GetLandRecordTransaction(this);
+        _transaction = LandRecordsData.GetLandRecordTransaction(this);
       }
       return _transaction;
     }
@@ -411,7 +411,7 @@ namespace Empiria.Land.Registration {
     }
 
     public void RefreshRecordingActs() {
-      _recordingActs = new Lazy<List<RecordingAct>>(() => RecordingActsData.GetDocumentRecordingActs(this));
+      _recordingActs = new Lazy<List<RecordingAct>>(() => LandRecordsData.GetLandRecordRecordingActs(this));
     }
 
     protected override void OnBeforeSave() {
@@ -429,11 +429,12 @@ namespace Empiria.Land.Registration {
         this.PostingTime = DateTime.Now;
         this.PostedBy = ExecutionServer.CurrentContact;
       }
-      RecordingBooksData.WriteRecordingDocument(this);
+
+      LandRecordsData.WriteLandRecord(this);
     }
 
     public void RemoveRecordingAct(RecordingAct recordingAct) {
-      Assertion.Require(recordingAct, "recordingAct");
+      Assertion.Require(recordingAct, nameof(recordingAct));
 
       Assertion.Require(this.IsHistoricRecord || !this.IsClosed,
                        "Recording acts can't be removed from closed documents.");
@@ -459,6 +460,6 @@ namespace Empiria.Land.Registration {
 
     #endregion Public methods
 
-  } // class RecordingDocument
+  } // class LandRecord
 
 } // namespace Empiria.Land.Registration

@@ -223,13 +223,13 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public void AssertCanBeAddedTo(RecordingDocument landRecord, RecordingActType newRecordingActType) {
+    public void AssertCanBeAddedTo(LandRecord landRecord, RecordingActType newRecordingActType) {
       this.AssertIsLastInPrelationOrder(landRecord, newRecordingActType);
       this.AssertChainedRecordingAct(landRecord, newRecordingActType);
     }
 
 
-    private void AssertChainedRecordingAct(RecordingDocument landRecord, RecordingActType newRecordingActType) {
+    private void AssertChainedRecordingAct(LandRecord landRecord, RecordingActType newRecordingActType) {
       if (landRecord.Instrument.IssueDate < DateTime.Parse("2014-01-01") ||
           landRecord.PresentationTime < DateTime.Parse("2016-01-01")) {
         return;
@@ -294,7 +294,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public void AssertIsLastInPrelationOrder(RecordingDocument landRecord, RecordingActType newRecordingActType) {
+    public void AssertIsLastInPrelationOrder(LandRecord landRecord, RecordingActType newRecordingActType) {
       // Cancelation acts don't follow prelation rules
       if (newRecordingActType.IsCancelationActType) {
         return;
@@ -368,6 +368,7 @@ namespace Empiria.Land.Registration {
 
     internal void TryDelete() {
       var tract = this.Tract.GetRecordingActs();
+
       if (tract.Count == 0) {
         this.Status = RecordableObjectStatus.Deleted;
         this.Save();

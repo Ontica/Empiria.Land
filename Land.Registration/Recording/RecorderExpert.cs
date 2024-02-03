@@ -316,7 +316,7 @@ namespace Empiria.Land.Registration {
 
       BookEntry bookEntry = Task.TargetActInfo.BookEntry;
 
-      RecordingDocument landRecord = bookEntry.LandRecord;
+      LandRecord landRecord = bookEntry.LandRecord;
 
       return landRecord.AppendRecordingAct(Task.TargetActInfo.RecordingActType,
                                            resource, bookEntry: bookEntry);
@@ -506,7 +506,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    private bool OperationalCondition(RecordingDocument landRecord) {
+    private bool OperationalCondition(LandRecord landRecord) {
       // Fixed rule, based on law
       if (landRecord.Instrument.IssueDate < DateTime.Parse("2014-01-01")) {
         return true;

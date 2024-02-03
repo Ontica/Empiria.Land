@@ -97,7 +97,7 @@ namespace Empiria.Land.Certificates {
 
 
     [DataField("OnRecordingId")]
-    public RecordingDocument OnRecording {
+    public LandRecord OnRecording {
       get;
       private set;
     }

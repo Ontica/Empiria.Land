@@ -25,7 +25,7 @@ namespace Empiria.Land.Registration.Adapters {
   /// <summary>Methods to map legal instruments to LandRecordDto objects. </summary>
   static internal partial class LandRecordMapper {
 
-    static internal LandRecordDto Map(RecordingDocument landRecord) {
+    static internal LandRecordDto Map(LandRecord landRecord) {
       var dto = new LandRecordDto();
 
       LRSTransaction transaction = landRecord.GetTransaction();
@@ -56,7 +56,7 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    static internal MediaData MapStampMedia(RecordingDocument landRecord) {
+    static internal MediaData MapStampMedia(LandRecord landRecord) {
       var mediaBuilder = new LandMediaBuilder();
 
       var bookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
@@ -71,7 +71,7 @@ namespace Empiria.Land.Registration.Adapters {
     }
 
 
-    static internal LandRecordDescriptorDto MapToShort(RecordingDocument landRecord) {
+    static internal LandRecordDescriptorDto MapToShort(LandRecord landRecord) {
       var dto = new LandRecordDescriptorDto() {
         UID = landRecord.GUID,
         ControlID = landRecord.UID,
