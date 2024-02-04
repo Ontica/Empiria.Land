@@ -9,9 +9,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.DataTypes;
-using Empiria.Land.Registration.Transactions;
 using Empiria.Ontology;
+
+using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Registration {
 
@@ -196,6 +198,7 @@ namespace Empiria.Land.Registration {
       var json = base.ExtensionData;
 
       var list = json.GetList<DomainActPartyRole>("RegistrationRule/Roles", false);
+
       list.Sort((x, y) => x.Name.CompareTo(y.Name));
 
       return list.ToFixedList();

@@ -291,7 +291,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     protected override void OnSave() {
-      WorkflowData.WriteLRSWorkflowTask(this);
+      WorkflowData.WriteWorkflowTask(this);
     }
 
     #endregion Public methods

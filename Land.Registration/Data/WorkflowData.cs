@@ -37,7 +37,7 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal void WriteLRSWorkflowTask(LRSWorkflowTask o) {
+    static internal void WriteWorkflowTask(LRSWorkflowTask o) {
       var op = DataOperation.Parse("writeLRSWorkflowTask", o.Id, o.Transaction.Id,
                                o.EventId, (char) o.Mode, o.AssignedBy.Id, o.Responsible.Id,
                                o.NextContact.Id, (char) o.CurrentStatus, (char) o.NextStatus,

@@ -23,27 +23,27 @@ namespace Empiria.Land.Registration {
 
 
     internal LimitationAct(RecordingActType recordingActType,
-                           LandRecord landRecord, RealEstate property,
+                           LandRecord landRecord, RealEstate realEstate,
                            decimal percentage = decimal.One) : base(recordingActType, landRecord) {
       Assertion.Require(recordingActType.AppliesTo == RecordingRuleApplication.RealEstate,
-                       $"{recordingActType.DisplayName} doesn't apply to properties (real estate).");
+                       $"{recordingActType.DisplayName} doesn't apply to real estates.");
 
-      Assertion.Require(property, nameof(property));
+      Assertion.Require(realEstate, nameof(realEstate));
 
-      this.SetRealEstate(property, percentage);
+      this.SetRealEstate(realEstate, percentage);
     }
 
 
     internal LimitationAct(RecordingActType recordingActType,
-                           LandRecord landRecord, RealEstate property,
+                           LandRecord landRecord, RealEstate realEstate,
                            BookEntry bookEntry,
                            decimal percentage = decimal.One) : base(recordingActType, landRecord, bookEntry) {
       Assertion.Require(recordingActType.AppliesTo == RecordingRuleApplication.RealEstate,
-                       $"{recordingActType.DisplayName} doesn't apply to properties (real estate).");
+                       $"{recordingActType.DisplayName} doesn't apply to real estates.");
 
-      Assertion.Require(property, nameof(property));
+      Assertion.Require(realEstate, nameof(realEstate));
 
-      this.SetRealEstate(property, percentage);
+      this.SetRealEstate(realEstate, percentage);
     }
 
 
@@ -54,18 +54,18 @@ namespace Empiria.Land.Registration {
     #endregion Constructors and parsers
 
 
-    private void SetRealEstate(RealEstate property, decimal percentage) {
-      var tract = property.Tract.GetRecordingActs();
+    private void SetRealEstate(RealEstate realEstate, decimal percentage) {
+      var tract = realEstate.Tract.GetRecordingActs();
 
       if (tract.Count != 0) {     // This is not the first act of the real estate
-        base.SetResource(property, ResourceRole.Informative);
+        base.SetResource(realEstate, ResourceRole.Informative);
         return;
       }
 
-      if (property.IsPartition) {
-        base.SetResource(property, ResourceRole.PartitionOf, property.IsPartitionOf, percentage: percentage);
+      if (realEstate.IsPartition) {
+        base.SetResource(realEstate, ResourceRole.PartitionOf, realEstate.IsPartitionOf, percentage: percentage);
       } else {
-        base.SetResource(property, ResourceRole.Created, percentage: percentage);
+        base.SetResource(realEstate, ResourceRole.Created, percentage: percentage);
       }
     }
 

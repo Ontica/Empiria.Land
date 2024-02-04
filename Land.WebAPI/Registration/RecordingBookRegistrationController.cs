@@ -164,11 +164,11 @@ namespace Empiria.Land.Registration.WebApi {
 
     [HttpDelete]
     [Route("v5/land/registration/{landRecordUID:guid}/book-entries/{bookEntryUID:guid}")]
-    public SingleObjectModel RemoveInstrumentBookEntry([FromUri] string landRecordUID,
-                                                       [FromUri] string bookEntryUID) {
+    public SingleObjectModel RemoveBookEntryFromLandRecord([FromUri] string landRecordUID,
+                                                           [FromUri] string bookEntryUID) {
 
       using (var usecases = RecordingBookRegistrationUseCases.UseCaseInteractor()) {
-        LandRecordDto landRecord = usecases.RemoveBookEntryFromInstrument(landRecordUID, bookEntryUID);
+        LandRecordDto landRecord = usecases.RemoveBookEntryFromLandRecord(landRecordUID, bookEntryUID);
 
         return new SingleObjectModel(this.Request, landRecord);
       }

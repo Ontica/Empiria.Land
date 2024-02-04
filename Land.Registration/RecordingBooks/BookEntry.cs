@@ -30,7 +30,7 @@ namespace Empiria.Land.Registration {
 
     private BookEntry() {
       // Required by Empiria Framework.
-      recordingActList = GetNewRecordingActListLazyInstance();
+      recordingActList = GetRecordingActsList();
     }
 
     internal BookEntry(RecordingBook recordingBook,
@@ -46,15 +46,17 @@ namespace Empiria.Land.Registration {
       this.LandRecord = landRecord;
       this.Number = recordingNumber;
 
-      recordingActList = GetNewRecordingActListLazyInstance();
+      recordingActList = GetRecordingActsList();
     }
 
     internal BookEntry(BookEntryDto dto) : this(dto.RecordingBook, dto.LandRecord, dto.Number) {
       LoadData(dto);
+
+      recordingActList = GetRecordingActsList();
     }
 
     protected override void OnLoadObjectData(DataRow row) {
-      recordingActList = GetNewRecordingActListLazyInstance();
+      recordingActList = GetRecordingActsList();
       this.ExtendedData = BookEntryExtData.Parse((string) row["RecordingExtData"]);
     }
 
@@ -215,17 +217,6 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
-    public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Resource resource,
-                                           RecordingAct amendmentOf = null) {
-      Assertion.Require(recordingActType, "recordingActType");
-      Assertion.Require(resource, "resource");
-
-      Assertion.Require(!resource.IsEmptyInstance, "Resource can't be an empty instance.");
-
-      amendmentOf = amendmentOf ?? RecordingAct.Empty;
-
-      return this.LandRecord.AppendRecordingAct(recordingActType, resource, amendmentOf, this);
-    }
 
     public void AssertCanBeClosed() {
 
@@ -243,15 +234,6 @@ namespace Empiria.Land.Registration {
       this.Save();
     }
 
-    public RecordingAct GetRecordingAct(int recordingActId) {
-      RecordingAct recordingAct = RecordingAct.Parse(recordingActId);
-      if (this.RecordingActs.Contains(recordingAct)) {
-        return recordingAct;
-      } else {
-        throw new LandRegistrationException(LandRegistrationException.Msg.RecordingActNotBelongsToRecording,
-                                            recordingActId, this.Id);
-      }
-    }
 
     protected override void OnSave() {
       if (this.IsNew) {
@@ -266,7 +248,7 @@ namespace Empiria.Land.Registration {
     }
 
     public void Refresh() {
-      this.recordingActList = GetNewRecordingActListLazyInstance();
+      this.recordingActList = GetRecordingActsList();
     }
 
 
@@ -280,7 +262,7 @@ namespace Empiria.Land.Registration {
 
     #region Private methods
 
-    private Lazy<FixedList<RecordingAct>> GetNewRecordingActListLazyInstance() {
+    private Lazy<FixedList<RecordingAct>> GetRecordingActsList() {
       return new Lazy<FixedList<RecordingAct>>(() => RecordingActsData.GetBookEntryRecordedActs(this));
     }
 

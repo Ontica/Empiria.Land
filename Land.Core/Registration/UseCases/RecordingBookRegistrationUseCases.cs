@@ -75,7 +75,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       var recordingBook = RecordingBook.Parse(recordingBookUID);
 
-      FixedList<BookEntry> bookEntries = recordingBook.GetBookEntries();
+      FixedList<BookEntry> bookEntries = recordingBook.BookEntries;
 
       return RecordingBookMapper.MapBookEntriesListShortDto(bookEntries);
     }
@@ -224,19 +224,19 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
-    public LandRecordDto RemoveBookEntryFromInstrument(string landRecordUID,
+    public LandRecordDto RemoveBookEntryFromLandRecord(string landRecordUID,
                                                        string bookEntryUID) {
       Assertion.Require(landRecordUID, nameof(landRecordUID));
       Assertion.Require(bookEntryUID, nameof(bookEntryUID));
 
       var landRecord = LandRecord.ParseGuid(landRecordUID);
 
-      var instrumentBookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
+      var landRecordBookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
 
-      var bookEntry = instrumentBookEntries.Find(x => x.UID == bookEntryUID);
+      var bookEntry = landRecordBookEntries.Find(x => x.UID == bookEntryUID);
 
       Assertion.Require(bookEntry,
-            $"Book recording entry '{bookEntryUID}' does not belong to instrument recording '{landRecordUID}'.");
+            $"Book recording entry '{bookEntryUID}' does not belong to land record '{landRecordUID}'.");
 
       bookEntry.Delete();
 

@@ -155,7 +155,7 @@ namespace Empiria.Land.Registration {
     public FixedList<BookEntry> BookEntries {
       get {
         if (bookEntries == null) {
-          bookEntries = GetBookEntries();
+          bookEntries = RecordingBooksData.GetRecordingBookEntries(this);
         }
         return bookEntries;
       }
@@ -246,9 +246,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public FixedList<BookEntry> GetBookEntries() {
-      return RecordingBooksData.GetRecordingBookEntries(this);
-    }
 
     public void Refresh() {
       this.bookEntries = null;
