@@ -61,23 +61,21 @@ namespace Empiria.Land.Registration {
 
     static internal RecordingAct Create(RecordingActType recordingActType,
                                         LandRecord landRecord, Resource resource,
-                                        RecordingAct amendmentOf, int index,
+                                        int index,
                                         BookEntry bookEntry) {
       Assertion.Require(recordingActType, nameof(recordingActType));
       Assertion.Require(landRecord, nameof(landRecord));
       Assertion.Require(resource, nameof(resource));
-      Assertion.Require(amendmentOf, nameof(amendmentOf));
       Assertion.Require(bookEntry, nameof(bookEntry));
 
       Assertion.Require(!landRecord.IsEmptyInstance, "land record can't be the empty instance.");
       Assertion.Require(!landRecord.IsNew, "land record can't be a new instance.");
-      Assertion.Require(!amendmentOf.IsNew, "amendmentOf can't be a new instance.");
 
       RecordingAct recordingAct = recordingActType.CreateInstance();
       recordingAct.BookEntry = bookEntry;
       recordingAct.Index = index;
       recordingAct.LandRecord = landRecord;
-      recordingAct.AmendmentOf = amendmentOf;
+      recordingAct.AmendmentOf = RecordingAct.Empty;
 
       if (resource.IsNew) {
         resource.Save();

@@ -53,6 +53,23 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
+    public void GenerateImagingControlID() {
+      Assertion.Require(!LandRecord.IsEmptyInstance, "Document can't be the empty instance.");
+      Assertion.Require(LandRecord.IsClosed, "Document is not closed.");
+
+      Assertion.Require(LandRecord.ImagingControlID.Length == 0,
+                        "Document has already assigned an imaging control number.");
+
+      Assertion.Require(LandRecord.RecordingActs.Count > 0, "Document should have recording acts.");
+      Assertion.Require(LandRecord.RecordingActs.CountAll((x) => !x.BookEntry.IsEmptyInstance) == 0,
+                        "Document can't have any recording acts that are related to physical book entries.");
+
+
+      LandRecord.ImagingControlID = LandRecordsData.GetNextImagingControlID(LandRecord);
+
+      LandRecordsData.SaveImagingControlID(LandRecord);
+    }
+
     public bool Signed() {
       return DigitalSignatureData.IsSigned(this.LandRecord);
     }

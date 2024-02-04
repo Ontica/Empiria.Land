@@ -44,9 +44,11 @@ namespace Empiria.Land.Registration {
       Instrument = instrument;
     }
 
-    // TODO: Remove this
-    static public LandRecord Parse(int id) {
-      return BaseObject.ParseId<LandRecord>(id);
+    public LandRecord(Instrument instrument, LRSTransaction transaction) : this(instrument) {
+      Assertion.Require(transaction, nameof(transaction));
+      Assertion.Require(!transaction.IsEmptyInstance, "transaction can't be the empty instance.");
+
+      this.PresentationTime = transaction.PresentationTime;
     }
 
     static public LandRecord ParseGuid(string guid) {
@@ -61,16 +63,6 @@ namespace Empiria.Land.Registration {
 
     static public LandRecord TryParse(string landRecordUID, bool reload = false) {
       return BaseObject.TryParse<LandRecord>($"DocumentUID = '{landRecordUID}'", reload);
-    }
-
-
-    static public LandRecord TryParse(int id, bool reload = false) {
-      return BaseObject.TryParse<LandRecord>($"DocumentId = {id}", reload);
-    }
-
-
-    static public LandRecord TryParseForInstrument(int instrumentId) {
-      return BaseObject.TryParse<LandRecord>($"InstrumentId = {instrumentId}", true);
     }
 
 
@@ -126,7 +118,7 @@ namespace Empiria.Land.Registration {
     [DataField("PresentationTime", Default = "ExecutionServer.DateMinValue")]
     public DateTime PresentationTime {
       get;
-      internal set;
+      private set;
     }
 
     [DataField("AuthorizationTime", Default = "ExecutionServer.DateMinValue")]
@@ -138,7 +130,7 @@ namespace Empiria.Land.Registration {
     [DataField("ImagingControlID")]
     public string ImagingControlID {
       get;
-      private set;
+      internal set;
     } = string.Empty;
 
 
@@ -222,30 +214,26 @@ namespace Empiria.Land.Registration {
       return _recordingActs.Value.Count - 1;
     }
 
+
     public RecordingAct AppendRecordingAct(RecordingActType recordingActType, Resource resource,
-                                           RecordingAct amendmentOf = null,
-                                           BookEntry bookEntry = null) {
+                                           BookEntry bookEntry) {
+
+      Assertion.Require(recordingActType, nameof(recordingActType));
       Assertion.Require(resource, nameof(resource));
-
-      Assertion.Require(!resource.IsEmptyInstance, "Resource can't be an empty instance.");
-
-      amendmentOf = amendmentOf ?? RecordingAct.Empty;
-      bookEntry = bookEntry ?? BookEntry.Empty;
+      Assertion.Require(bookEntry, nameof(bookEntry));
 
       Assertion.Require(!this.IsEmptyInstance, "Document can't be the empty instance.");
+      Assertion.Require(!resource.IsEmptyInstance, "Resource can't be an empty instance.");
+      Assertion.Require(!bookEntry.IsEmptyInstance, "BookEntry can't be an empty instance.");
 
       Assertion.Require(this.IsHistoricRecord || !this.IsClosed,
                        "Recording acts can't be added to closed documents");
-
-      Assertion.Require(recordingActType, nameof(recordingActType));
-      Assertion.Require(amendmentOf, nameof(amendmentOf));
-
 
       if (this.IsNew) {
         this.Save();
       }
 
-      var recordingAct = RecordingAct.Create(recordingActType, this, resource, amendmentOf,
+      var recordingAct = RecordingAct.Create(recordingActType, this, resource,
                                              this.RecordingActs.Count, bookEntry);
       _recordingActs.Value.Add(recordingAct);
 
@@ -253,34 +241,8 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public void GenerateImagingControlID() {
-      Assertion.Require(!this.IsEmptyInstance, "Document can't be the empty instance.");
-      Assertion.Require(this.IsClosed, "Document is not closed.");
-
-      Assertion.Require(this.ImagingControlID.Length == 0,
-                        "Document has already assigned an imaging control number.");
-
-      Assertion.Require(this.RecordingActs.Count > 0, "Document should have recording acts.");
-      Assertion.Require(this.RecordingActs.CountAll((x) => !x.BookEntry.IsEmptyInstance) == 0,
-                        "Document can't have any recording acts that are related to physical book entries.");
-
-
-      this.ImagingControlID = LandRecordsData.GetNextImagingControlID(this);
-
-      LandRecordsData.SaveImagingControlID(this);
-    }
-
-
-    internal void SetAuthorizationTime(DateTime authorizationTime) {
-      Assertion.Require(this.IsNew || this.IsHistoricRecord,
-         "AutorizationTime can be set only over new or historic documents.");
-
-      this.AuthorizationTime = authorizationTime;
-    }
-
-
     public void SetDates(DateTime presentationTime, DateTime authorizationTime) {
-      Assertion.Require(this.IsHistoricRecord,
+      Assertion.Require(this.IsNew || this.IsHistoricRecord,
         "Autorization and Presentation dates can be set only over new or historic documents.");
       Assertion.Require(!this.IsClosed,
         "Autorization and Presentation dates can be set only over opened documents.");
@@ -293,17 +255,12 @@ namespace Empiria.Land.Registration {
     }
 
 
-    private void SetAuthorizationTime() {
-      if (!this.IsHistoricRecord) {
-        this.AuthorizationTime = DateTime.Now;
-      }
-    }
-
-
     public void Close() {
       this.Security.AssertCanBeClosed();
 
-      this.SetAuthorizationTime();
+      if (!this.IsHistoricRecord) {
+        this.AuthorizationTime = DateTime.Now;
+      }
 
       this.Status = RecordableObjectStatus.Closed;
 
@@ -440,6 +397,7 @@ namespace Empiria.Land.Registration {
       recordingAct.Delete();
       _recordingActs.Value.Remove(recordingAct);
     }
+
 
     public BookEntry TryGetBookEntry() {
       if (!this.IsHistoricRecord) {

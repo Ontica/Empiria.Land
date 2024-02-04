@@ -428,14 +428,8 @@ namespace Empiria.Land.Registration.Transactions {
       Assertion.Require(!this.IsEmptyInstance && !this.IsNew,
                        "Land record can't be attached to a new or empty transaction.");
       Assertion.Require(!landRecord.IsEmptyInstance, "Attached land records can't be the empty instance.");
-      Assertion.Require(this.LandRecord.IsEmptyInstance ||
-                        landRecord.Equals(this.LandRecord),
+      Assertion.Require(this.LandRecord.IsEmptyInstance,
                         "Transaction's land record should be empty in order to be changed.");
-
-      /// ToDo: Should be a DB transactional op
-      landRecord.PresentationTime = this.PresentationTime;
-
-      landRecord.Save();
 
       this.LandRecord = landRecord;
 

@@ -272,8 +272,7 @@ namespace Empiria.Land.Registration {
         this.LandRecord = dto.LandRecord;
       }
 
-      this.LandRecord.PresentationTime = dto.PresentationTime;
-      this.LandRecord.SetAuthorizationTime(dto.AuthorizationDate);
+      this.LandRecord.SetDates(dto.PresentationTime, dto.AuthorizationDate);
 
       this.StartImageIndex = dto.StartImageIndex;
       this.EndImageIndex = dto.EndImageIndex;

@@ -496,7 +496,7 @@ namespace Empiria.Land.Registration {
       LandRecord landRecord = bookEntry.LandRecord;
 
       return landRecord.AppendRecordingAct(Task.TargetActInfo.RecordingActType,
-                                           resource, bookEntry: bookEntry);
+                                           resource, bookEntry);
     }
 
 
