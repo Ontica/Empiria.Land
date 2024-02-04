@@ -17,14 +17,19 @@ namespace Empiria.Land.Registration {
   /// <summary>Used to control the user interface. Describes how the recording act
   /// applies to resources.</summary>
   public enum RecordingTaskType {
+
     actAppliesToOtherRecordingAct,
-    actNotApplyToProperty,
-    actAppliesToDocument,
-    createProperty,
-    createPropertyOnAntecedent,
-    createPartitionAndPropertyOnAntecedent,
-    createPartition,
-    selectProperty,
+
+    applyOverExistingRecordableSubject,
+
+    createNewRecordableSubject,
+
+    createRecordableSubjectOnBookEntry,
+
+    createRealEstateOnBookEntryAndANewPartition,
+
+    createRealEstatePartition
+
   }
 
 
@@ -32,7 +37,7 @@ namespace Empiria.Land.Registration {
 
     public RecordingTaskType RecordingTaskType {
       get; set;
-    } = RecordingTaskType.actNotApplyToProperty;
+    }
 
 
     public string LandRecordUID {
@@ -97,16 +102,16 @@ namespace Empiria.Land.Registration {
       this.RecordingActType = RecordingActType.Parse(fields.RecordingActTypeUID);
 
       if (!String.IsNullOrWhiteSpace(fields.RecordableSubjectUID)) {
-        this.PrecedentProperty = Resource.ParseGuid(fields.RecordableSubjectUID);
+        this.RecordableSubject = Resource.ParseGuid(fields.RecordableSubjectUID);
       }
 
       if (!String.IsNullOrWhiteSpace(fields.PrecedentBookEntryUID)) {
         this.PrecedentBookEntry = BookEntry.Parse(fields.PrecedentBookEntryUID);
       }
 
-      if (this.RecordingTaskType == RecordingTaskType.createPartition ||
-          this.RecordingTaskType == RecordingTaskType.createPartitionAndPropertyOnAntecedent) {
-        this.PartitionInfo = new RealEstatePartitionDTO(fields.PartitionType, fields.PartitionNo, String.Empty);
+      if (this.RecordingTaskType == RecordingTaskType.createRealEstatePartition ||
+          this.RecordingTaskType == RecordingTaskType.createRealEstateOnBookEntryAndANewPartition) {
+        this.RealEstatePartitionInfo = new RealEstatePartitionDTO(fields.PartitionType, fields.PartitionNo, String.Empty);
       }
 
       if (!String.IsNullOrWhiteSpace(fields.TargetRecordingActUID)) {
@@ -164,13 +169,13 @@ namespace Empiria.Land.Registration {
     } = string.Empty;
 
 
-    public Resource PrecedentProperty {
+    public Resource RecordableSubject {
       get;
       internal set;
     } = Resource.Empty;
 
 
-    public RealEstatePartitionDTO PartitionInfo {
+    public RealEstatePartitionDTO RealEstatePartitionInfo {
       get;
       private set;
     } = RealEstatePartitionDTO.Empty;

@@ -75,7 +75,7 @@ namespace Empiria.Land.Registration {
 
       RecordingTaskFields recordingTaskfields = MapToRecordingTaskFields(command);
 
-      RecordingTask task = new RecordingTask(recordingTaskfields);
+      var task = new RecordingTask(recordingTaskfields);
 
       RecorderExpert.Execute(task);
     }
@@ -92,7 +92,7 @@ namespace Empiria.Land.Registration {
 
       recordingTaskfields.RecordingBookEntryUID = bookEntry.UID;
 
-      RecordingTask task = new RecordingTask(recordingTaskfields);
+      var task = new RecordingTask(recordingTaskfields);
 
       RecorderExpert.Execute(task);
     }
@@ -136,10 +136,9 @@ namespace Empiria.Land.Registration {
       switch (commandType) {
         case RegistrationCommandType.CreateAssociation:
         case RegistrationCommandType.CreateNoProperty:
-          return RecordingTaskType.actNotApplyToProperty;
-
         case RegistrationCommandType.CreateRealEstate:
-          return RecordingTaskType.createProperty;
+
+          return RecordingTaskType.createNewRecordableSubject;
 
         case RegistrationCommandType.SelectAssociation:
         case RegistrationCommandType.SelectNoProperty:
@@ -147,19 +146,23 @@ namespace Empiria.Land.Registration {
         case RegistrationCommandType.AssociationTractIndex:
         case RegistrationCommandType.NoPropertyTractIndex:
         case RegistrationCommandType.RealEstateTractIndex:
-          return RecordingTaskType.selectProperty;
+
+          return RecordingTaskType.applyOverExistingRecordableSubject;
 
         case RegistrationCommandType.SelectAssociationAntecedent:
         case RegistrationCommandType.SelectNoPropertyAntecedent:
         case RegistrationCommandType.SelectRealEstateAntecedent:
-          return RecordingTaskType.createPropertyOnAntecedent;
+
+          return RecordingTaskType.createRecordableSubjectOnBookEntry;
 
         case RegistrationCommandType.CreateRealEstatePartition:
         case RegistrationCommandType.RealEstateTractIndexPartition:
-          return RecordingTaskType.createPartition;
+
+          return RecordingTaskType.createRealEstatePartition;
 
         case RegistrationCommandType.CreateRealEstatePartitionForAntecedent:
-          return RecordingTaskType.createPartitionAndPropertyOnAntecedent;
+
+          return RecordingTaskType.createRealEstateOnBookEntryAndANewPartition;
 
         case RegistrationCommandType.SelectAssociationAct:
         case RegistrationCommandType.SelectNoPropertyAct:

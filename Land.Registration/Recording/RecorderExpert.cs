@@ -20,18 +20,18 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    public RecorderExpert(RecordingTask task) {
+    private RecorderExpert(RecordingTask task) {
       this.Task = task;
     }
 
-    static public RecordingAct[] Execute(RecordingTask task) {
+    static public void Execute(RecordingTask task) {
       Assertion.Require(task, nameof(task));
 
       var expert = new RecorderExpert(task);
 
       expert.AssertValidTask();
 
-      return expert.ProcessTask();
+      expert.ProcessTask();
     }
 
     #endregion Constructors and parsers
@@ -40,33 +40,33 @@ namespace Empiria.Land.Registration {
 
     private bool AppliesOverNewPartition {
       get {
-        return (this.Task.RecordingTaskType == RecordingTaskType.createPartition ||
-                this.Task.RecordingTaskType == RecordingTaskType.createPartitionAndPropertyOnAntecedent);
+        return (Task.RecordingTaskType == RecordingTaskType.createRealEstatePartition ||
+                Task.RecordingTaskType == RecordingTaskType.createRealEstateOnBookEntryAndANewPartition);
       }
     }
 
 
-    private bool CreateNewResource {
+    private bool ApplyOverExistingRecordableSubject {
       get {
-        return (Task.RecordingTaskType == RecordingTaskType.createProperty &&
-                Task.PrecedentProperty.IsEmptyInstance);
+        return (Task.RecordingTaskType == RecordingTaskType.applyOverExistingRecordableSubject &&
+                !Task.RecordableSubject.IsEmptyInstance);
       }
     }
 
 
-    private bool CreateResourceOnBookEntry {
+    private bool CreateNewRecordableSubject {
       get {
-        return ((Task.RecordingTaskType == RecordingTaskType.createPropertyOnAntecedent ||
-                 Task.RecordingTaskType == RecordingTaskType.createPartitionAndPropertyOnAntecedent) &&
+        return (Task.RecordingTaskType == RecordingTaskType.createNewRecordableSubject &&
+                Task.RecordableSubject.IsEmptyInstance);
+      }
+    }
+
+
+    private bool CreateRecordableSubjectOnBookEntry {
+      get {
+        return ((Task.RecordingTaskType == RecordingTaskType.createRecordableSubjectOnBookEntry ||
+                 Task.RecordingTaskType == RecordingTaskType.createRealEstateOnBookEntryAndANewPartition) &&
                 !Task.PrecedentBookEntry.IsEmptyInstance);
-      }
-    }
-
-
-    private bool SelectResource {
-      get {
-        return (Task.RecordingTaskType == RecordingTaskType.selectProperty &&
-                !Task.PrecedentProperty.IsEmptyInstance);
       }
     }
 
@@ -82,11 +82,11 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public void AssertValidTask() {
-      if (!Task.PrecedentProperty.IsEmptyInstance) {
+      if (!Task.RecordableSubject.IsEmptyInstance) {
 
-        this.AssertIsApplicableResource(Task.PrecedentProperty);
+        this.AssertIsApplicableResource(Task.RecordableSubject);
 
-        Task.PrecedentProperty.AssertIsStillAlive(Task.LandRecord.PresentationTime);
+        Task.RecordableSubject.AssertIsStillAlive(Task.LandRecord.PresentationTime);
 
         if (this.AppliesOverNewPartition && Task.RecordingActType.RecordingRule.HasChainedRule) {
           if (!OperationalCondition(Task.LandRecord)) {
@@ -96,10 +96,10 @@ namespace Empiria.Land.Registration {
             Assertion.RequireFail(msg);
           }
         }
-        Task.PrecedentProperty.AssertCanBeAddedTo(Task.LandRecord, Task.RecordingActType);
+        Task.RecordableSubject.AssertCanBeAddedTo(Task.LandRecord, Task.RecordingActType);
       }
 
-      if ((this.CreateResourceOnBookEntry) &&
+      if ((this.CreateRecordableSubjectOnBookEntry) &&
            Task.RecordingActType.RecordingRule.HasChainedRule) {
         if (OperationalCondition(Task.LandRecord)) {
           return;
@@ -114,24 +114,25 @@ namespace Empiria.Land.Registration {
       }
 
 
-      if (CreateResourceOnBookEntry) {
-        var resources = Task.PrecedentBookEntry.RecordingActs.Select(x => x.Resource)
-                                                             .Distinct()
-                                                             .ToFixedList();
+      if (!CreateRecordableSubjectOnBookEntry) {
+        return;
+      }
 
-        if (resources.Count == 1) {
-          Assertion.RequireFail("En esta inscripción ya está registrado un predio, " +
-                                $"al cual se le asignó el folio real {resources[0].UID}.\n\n" +
-                                "Para agregar múltiples predios a una inscripción debe utilizarse la " +
-                                "herramienta de captura histórica.");
+      var resources = Task.PrecedentBookEntry.RecordingActs.Select(x => x.Resource)
+                                                           .Distinct()
+                                                           .ToFixedList();
 
-        } else if (resources.Count > 1) {
-          Assertion.RequireFail($"La inscripción tiene registrados {resources.Count} predios con folio real, " +
-                                "y no es posible agregarle otros por este medio.\n\n" +
-                                "Para agregar múltiples predios a una inscripción debe utilizarse la " +
-                                "herramienta de captura histórica.");
-        }
+      if (resources.Count == 1) {
+        Assertion.RequireFail("En esta inscripción ya está registrado un predio, " +
+                              $"al cual se le asignó el folio real {resources[0].UID}.\n\n" +
+                              "Para agregar múltiples predios a una inscripción debe utilizarse la " +
+                              "herramienta de captura histórica.");
 
+      } else if (resources.Count > 1) {
+        Assertion.RequireFail($"La inscripción tiene registrados {resources.Count} predios con folio real, " +
+                              "y no es posible agregarle otros por este medio.\n\n" +
+                              "Para agregar múltiples predios a una inscripción debe utilizarse la " +
+                              "herramienta de captura histórica.");
       }
     }
 
@@ -141,7 +142,7 @@ namespace Empiria.Land.Registration {
     #region Recording methods
 
     private void AssertIsApplicableResource(Resource resourceToApply) {
-      Assertion.Require(resourceToApply, "resourceToApply");
+      Assertion.Require(resourceToApply, nameof(resourceToApply));
 
       switch (Task.RecordingActType.RecordingRule.AppliesTo) {
         case RecordingRuleApplication.Association:
@@ -157,23 +158,23 @@ namespace Empiria.Land.Registration {
     }
 
 
-    private RecordingAct[] ProcessTask() {
-      var recordingActType = this.Task.RecordingActType;
+    private void ProcessTask() {
+      var recordingActType = Task.RecordingActType;
 
       if (recordingActType.IsDomainActType) {
-        return this.CreateDomainAct();          // CV, Donación, Título de propiedad, Constitución SC,
+        this.CreateDomainAct();          // CV, Donación, Título de propiedad, Constitución SC,
 
       } else if (recordingActType.IsLimitationActType) {
-        return this.CreateLimitationAct();     // Hipoteca, Embargo, Inmovilización, Aviso preventivo
+        CreateLimitationAct();     // Hipoteca, Embargo, Inmovilización, Aviso preventivo
 
       } else if (recordingActType.IsInformationActType) {
-        return this.CreateInformationAct();     // Testamento, Cap matrim, Anotación marginal
+        this.CreateInformationAct();     // Testamento, Cap matrim, Anotación marginal
 
       } else if (recordingActType.IsCancelationActType) {
-        return this.CreateCancelationAct();
+        this.CreateCancelationAct();
 
       } else if (recordingActType.IsModificationActType) {
-        return this.CreateModificationAct();
+        this.CreateModificationAct();
 
       } else {
         throw new NotImplementedException("RecordingExpert.DoRecording: Recording act '" +
@@ -182,70 +183,71 @@ namespace Empiria.Land.Registration {
     }
 
 
-    private DomainAct[] CreateDomainAct() {
+    private void CreateDomainAct() {
       // Cast because domain acts supposed to be applicable only to real estates
-      RealEstate[] realEstates = (RealEstate[]) this.GetResources();
+      RealEstate[] realEstates = (RealEstate[]) this.GetRecordableSubjects();
 
       var domainActs = new DomainAct[realEstates.Length];
       for (int i = 0; i < realEstates.Length; i++) {
-        domainActs[i] = new DomainAct(this.Task.RecordingActType,
-                                      this.Task.LandRecord, realEstates[i],
-                                      this.Task.BookEntry,
-                                      this.Task.RecordingActPercentage);
+        domainActs[i] = new DomainAct(Task.RecordingActType,
+                                      Task.LandRecord, realEstates[i],
+                                      Task.BookEntry,
+                                      Task.RecordingActPercentage);
         domainActs[i].Save();
       }
-      return domainActs;
     }
 
 
-    private InformationAct[] CreateInformationAct() {
-      Resource[] resources = this.GetResources();
+    private void CreateInformationAct() {
+      Resource[] resources = this.GetRecordableSubjects();
 
       var informationActs = new InformationAct[resources.Length];
       for (int i = 0; i < resources.Length; i++) {
-        informationActs[i] = new InformationAct(this.Task.RecordingActType,
-                                                this.Task.LandRecord, resources[i],
-                                                this.Task.BookEntry);
+        informationActs[i] = new InformationAct(Task.RecordingActType,
+                                                Task.LandRecord, resources[i],
+                                                Task.BookEntry);
         informationActs[i].Save();
       }
-      return informationActs;
     }
 
 
-    private LimitationAct[] CreateLimitationAct() {
+    private void CreateLimitationAct() {
       // Cast because limitation acts supposed to be applicable only to real estates
-      RealEstate[] realEstates = (RealEstate[]) this.GetResources();
+      RealEstate[] realEstates = (RealEstate[]) this.GetRecordableSubjects();
 
       var recordingActs = new LimitationAct[realEstates.Length];
       for (int i = 0; i < realEstates.Length; i++) {
-        recordingActs[i] = new LimitationAct(this.Task.RecordingActType,
-                                             this.Task.LandRecord, realEstates[i],
-                                             this.Task.BookEntry,
-                                             this.Task.RecordingActPercentage);
+        recordingActs[i] = new LimitationAct(Task.RecordingActType,
+                                             Task.LandRecord, realEstates[i],
+                                             Task.BookEntry,
+                                             Task.RecordingActPercentage);
         recordingActs[i].Save();
       }
-      return recordingActs;
     }
 
 
-    private CancelationAct[] CreateCancelationAct() {
-      switch (this.Task.RecordingActType.AppliesTo) {
+    private void CreateCancelationAct() {
+      switch (Task.RecordingActType.AppliesTo) {
 
         case RecordingRuleApplication.AssociationAct:
         case RecordingRuleApplication.NoPropertyAct:
         case RecordingRuleApplication.RealEstateAct:
-          return CreateRecordingActCancelationAct();
+          CreateRecordingActCancelationAct();
+          return;
 
         case RecordingRuleApplication.Association:
         case RecordingRuleApplication.NoProperty:
         case RecordingRuleApplication.RealEstate:
-          return this.CreateResourceCancelationAct();
+          CreateResourceCancelationAct();
+          return;
 
         case RecordingRuleApplication.Party:
-          return this.CreatePartyCancelationAct();
+          this.CreatePartyCancelationAct();
+          return;
 
         case RecordingRuleApplication.Structure:
-          return this.CreateStructureCancelationAct();
+          CreateStructureCancelationAct();
+          return;
 
         default:
           throw Assertion.EnsureNoReachThisCode();
@@ -253,23 +255,27 @@ namespace Empiria.Land.Registration {
     }
 
 
-    private ModificationAct[] CreateModificationAct() {
+    private void CreateModificationAct() {
       switch (this.Task.RecordingActType.AppliesTo) {
         case RecordingRuleApplication.AssociationAct:
         case RecordingRuleApplication.NoPropertyAct:
         case RecordingRuleApplication.RealEstateAct:
-          return CreateRecordingActModificationAct();
+          CreateRecordingActModificationAct();
+          return;
 
         case RecordingRuleApplication.Association:
         case RecordingRuleApplication.NoProperty:
         case RecordingRuleApplication.RealEstate:
-          return this.CreateResourceModificationAct();
+          CreateResourceModificationAct();
+          return;
 
         case RecordingRuleApplication.Party:
-          return this.CreatePartyModificationAct();
+          CreatePartyModificationAct();
+          return;
 
         case RecordingRuleApplication.Structure:
-          return this.CreateStructureModificationAct();
+          CreateStructureModificationAct();
+          return;
 
         default:
           throw Assertion.EnsureNoReachThisCode();
@@ -281,31 +287,202 @@ namespace Empiria.Land.Registration {
     #region Cancelation methods
 
 
-    private CancelationAct[] CreatePartyCancelationAct() {
+    private void CreatePartyCancelationAct() {
       throw new NotImplementedException();
     }
 
 
-    private CancelationAct[] CreateRecordingActCancelationAct() {
+    private void CreateRecordingActCancelationAct() {
       var resource = this.GetOneResource();
 
       RecordingAct targetAct = this.GetTargetRecordingAct(resource);
 
-      return new[] { new CancelationAct(this.Task.RecordingActType,
-                                        this.Task.LandRecord, resource, targetAct) };
+      var newAct = new CancelationAct(Task.RecordingActType,
+                                      Task.LandRecord, resource, targetAct);
+      newAct.Save();
     }
 
 
-    private CancelationAct[] CreateResourceCancelationAct() {
+    private void CreateResourceCancelationAct() {
       var resource = this.GetOneResource();
 
-      return new[] { new CancelationAct(this.Task.RecordingActType,
-                                        this.Task.LandRecord, resource) };
+      var newAct = new CancelationAct(Task.RecordingActType,
+                                      Task.LandRecord, resource);
+      newAct.Save();
     }
 
 
-    private CancelationAct[] CreateStructureCancelationAct() {
+    private void CreateStructureCancelationAct() {
       throw new NotImplementedException();
+    }
+
+    #endregion Cancelation methods
+
+    #region Modification methods
+
+    private void CreatePartyModificationAct() {
+      throw new NotImplementedException();
+    }
+
+
+    private void CreateRecordingActModificationAct() {
+      var resource = this.GetOneResource();
+
+      RecordingAct targetAct = this.GetTargetRecordingAct(resource);
+
+      var act = new ModificationAct(Task.RecordingActType,
+                                    Task.LandRecord, resource, targetAct);
+
+      if (!Task.BookEntry.IsEmptyInstance) {
+        act.SetBookEntry(Task.BookEntry);
+      }
+    }
+
+
+    private void CreateResourceModificationAct() {
+      var resource = this.GetOneResource();
+
+      var act = new ModificationAct(Task.RecordingActType,
+                                    Task.LandRecord, resource);
+
+      if (!Task.BookEntry.IsEmptyInstance) {
+        act.SetBookEntry(Task.BookEntry);
+      }
+    }
+
+
+    private void CreateStructureModificationAct() {
+      throw new NotImplementedException();
+    }
+
+
+    #endregion Modification methods
+
+    #region Get resources methods
+
+    private Resource GetOneResource() {
+      var resources = this.GetRecordableSubjects();
+
+      Assertion.Require(resources.Length == 1,
+                       "Operation failed, too many resources returned by GetOneResource().");
+
+      return resources[0];
+    }
+
+
+    private Resource[] GetRecordableSubjects() {
+      RecordingRuleApplication appliesTo = Task.RecordingActType.RecordingRule.AppliesTo;
+
+      switch (appliesTo) {
+        case RecordingRuleApplication.Association:
+        case RecordingRuleApplication.AssociationAct:
+          return this.GetAssociations();
+
+        case RecordingRuleApplication.RealEstate:
+        case RecordingRuleApplication.RealEstateAct:
+          return this.GetRealEstates();
+
+        case RecordingRuleApplication.NoProperty:
+        case RecordingRuleApplication.NoPropertyAct:
+          return this.GetNoPropertyResources();
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"{appliesTo} application for {Task.RecordingActType.DisplayName}.");
+      }
+    }
+
+
+    // Don't call directly. Please use it only in GetResources()
+    private Association[] GetAssociations() {
+      if (this.CreateNewRecordableSubject) {
+        return new Association[] { new Association() };
+
+      } else if (this.CreateRecordableSubjectOnBookEntry) {
+        var association = new Association();
+
+        this.AttachResourceToBookEntry(association);
+
+        return new Association[] { association };
+
+       } else if (this.ApplyOverExistingRecordableSubject) {
+
+        return new Association[] { (Association) Task.RecordableSubject };
+
+      } else {
+
+        return new Association[] { new Association() };
+
+      }
+    }
+
+
+    // Don't call directly. Please use it only in GetResources()
+    private NoPropertyResource[] GetNoPropertyResources() {
+      if (this.CreateNewRecordableSubject) {
+        return new NoPropertyResource[] { new NoPropertyResource() };
+
+      } else if (this.CreateRecordableSubjectOnBookEntry) {
+        var noPropertyResource = new NoPropertyResource();
+
+        this.AttachResourceToBookEntry(noPropertyResource);
+
+        return new NoPropertyResource[] { noPropertyResource };
+
+      } else if (this.ApplyOverExistingRecordableSubject) {
+
+        return new NoPropertyResource[] { (NoPropertyResource) Task.RecordableSubject };
+
+      } else {
+        return new NoPropertyResource[] { new NoPropertyResource() };
+      }
+    }
+
+
+    // Call it only in GetResources()
+    private RealEstate[] GetRealEstates() {
+      if (this.CreateNewRecordableSubject) {
+        var data = new RealEstateExtData() { CadastralKey = Task.CadastralKey };
+
+        return new RealEstate[] { new RealEstate(data) };
+      }
+
+      RealEstate realEstate;
+
+      if (this.CreateRecordableSubjectOnBookEntry) {
+        var data = new RealEstateExtData();
+
+        realEstate = new RealEstate(data);
+
+        this.AttachResourceToBookEntry(realEstate);
+
+      } else if (this.ApplyOverExistingRecordableSubject) {
+        realEstate = (RealEstate) Task.RecordableSubject;
+
+      } else {
+        realEstate = (RealEstate) Task.RecordableSubject;
+      }
+
+      if (this.AppliesOverNewPartition) {
+        return realEstate.Subdivide(Task.RealEstatePartitionInfo);
+      } else {
+        return new RealEstate[] { realEstate };
+      }
+    }
+
+
+    #endregion Get resources methods
+
+    #region Helpers
+
+    private void AttachResourceToBookEntry(Resource resource) {
+      Assertion.Require(this.CreateRecordableSubjectOnBookEntry,
+                       "Wrong RecordingTask values to execute this method.");
+
+      var document = Task.PrecedentBookEntry.LandRecord;
+
+      var precedentAct = new InformationAct(RecordingActType.Empty, document,
+                                            resource, Task.PrecedentBookEntry);
+      precedentAct.Save();
     }
 
 
@@ -324,185 +501,11 @@ namespace Empiria.Land.Registration {
 
 
     private RecordingAct GetTargetRecordingAct(Resource resource) {
-      if (this.Task.TargetActInfo.RecordingActId != -1) {
-        return RecordingAct.Parse(this.Task.TargetActInfo.RecordingActId);
+      if (Task.TargetActInfo.RecordingActId != -1) {
+        return RecordingAct.Parse(Task.TargetActInfo.RecordingActId);
       } else {
         return this.CreateTargetRecordingAct(resource);
       }
-    }
-
-
-    #endregion Cancelation methods
-
-    #region Modification methods
-
-    private ModificationAct[] CreatePartyModificationAct() {
-      throw new NotImplementedException();
-    }
-
-
-    private ModificationAct[] CreateRecordingActModificationAct() {
-      var resource = this.GetOneResource();
-
-      RecordingAct targetAct = this.GetTargetRecordingAct(resource);
-
-      var act = new[] { new ModificationAct(this.Task.RecordingActType,
-                                            this.Task.LandRecord, resource, targetAct) };
-
-      if (!this.Task.BookEntry.IsEmptyInstance) {
-        act[0].SetBookEntry(this.Task.BookEntry);
-      }
-
-      return act;
-    }
-
-
-    private ModificationAct[] CreateResourceModificationAct() {
-      var resource = this.GetOneResource();
-
-      var act = new[] { new ModificationAct(this.Task.RecordingActType,
-                                            this.Task.LandRecord, resource) };
-
-      if (!this.Task.BookEntry.IsEmptyInstance) {
-        act[0].SetBookEntry(this.Task.BookEntry);
-      }
-
-      return act;
-    }
-
-
-    private ModificationAct[] CreateStructureModificationAct() {
-      throw new NotImplementedException();
-    }
-
-
-    #endregion Modification methods
-
-    #region Get resources methods
-
-    private Resource GetOneResource() {
-      var resources = this.GetResources();
-
-      Assertion.Require(resources.Length == 1,
-                       "Operation failed, too many resources returned by GetOneResource().");
-
-      return resources[0];
-    }
-
-
-    private Resource[] GetResources() {
-      RecordingRuleApplication appliesTo = this.Task.RecordingActType.RecordingRule.AppliesTo;
-
-      switch (appliesTo) {
-        case RecordingRuleApplication.Association:
-        case RecordingRuleApplication.AssociationAct:
-          return this.GetAssociations();
-
-        case RecordingRuleApplication.RealEstate:
-        case RecordingRuleApplication.RealEstateAct:
-          return this.GetRealEstates();
-
-        case RecordingRuleApplication.NoProperty:
-        case RecordingRuleApplication.NoPropertyAct:
-          return this.GetNoPropertyResources();
-
-        default:
-          throw Assertion.EnsureNoReachThisCode($"{appliesTo} application for {this.Task.RecordingActType.DisplayName}.");
-      }
-    }
-
-
-    // Don't call directly. Please use it only in GetResources()
-    private Association[] GetAssociations() {
-      if (this.CreateNewResource) {
-        return new Association[] { new Association() };
-
-      } else if (this.CreateResourceOnBookEntry) {
-        var association = new Association();
-
-        this.AttachResourceToBookEntry(association);
-
-        return new Association[] { association };
-
-       } else if (this.SelectResource) {
-
-        return new Association[] { (Association) this.Task.PrecedentProperty };
-
-      } else {
-
-        return new Association[] { new Association() };
-
-      }
-    }
-
-
-    // Don't call directly. Please use it only in GetResources()
-    private NoPropertyResource[] GetNoPropertyResources() {
-      if (this.CreateNewResource) {
-        return new NoPropertyResource[] { new NoPropertyResource() };
-
-      } else if (this.CreateResourceOnBookEntry) {
-        var noPropertyResource = new NoPropertyResource();
-
-        this.AttachResourceToBookEntry(noPropertyResource);
-
-        return new NoPropertyResource[] { noPropertyResource };
-
-      } else if (this.SelectResource) {
-
-        return new NoPropertyResource[] { (NoPropertyResource) this.Task.PrecedentProperty };
-
-      } else {
-        return new NoPropertyResource[] { new NoPropertyResource() };
-      }
-    }
-
-
-    // Call it only in GetResources()
-    private RealEstate[] GetRealEstates() {
-      if (this.CreateNewResource) {
-        var data = new RealEstateExtData() { CadastralKey = Task.CadastralKey };
-
-        return new RealEstate[] { new RealEstate(data) };
-      }
-
-      RealEstate realEstate;
-
-      if (this.CreateResourceOnBookEntry) {
-        var data = new RealEstateExtData();
-
-        realEstate = new RealEstate(data);
-
-        this.AttachResourceToBookEntry(realEstate);
-
-      } else if (this.SelectResource) {
-        realEstate = (RealEstate) this.Task.PrecedentProperty;
-
-      } else {
-        realEstate = (RealEstate) this.Task.PrecedentProperty;
-      }
-
-      if (this.AppliesOverNewPartition) {
-        return realEstate.Subdivide(Task.PartitionInfo);
-      } else {
-        return new RealEstate[] { realEstate };
-      }
-    }
-
-
-    #endregion Get resources methods
-
-    #region Book entry recording methods
-
-    private void AttachResourceToBookEntry(Resource resource) {
-      Assertion.Require(this.CreateResourceOnBookEntry,
-                       "Wrong RecordingTask values to execute this method.");
-
-      var document = Task.PrecedentBookEntry.LandRecord;
-
-      var precedentAct = new InformationAct(RecordingActType.Empty, document,
-                                            resource, Task.PrecedentBookEntry);
-      precedentAct.Save();
     }
 
 
@@ -524,8 +527,7 @@ namespace Empiria.Land.Registration {
       return false;
     }
 
-
-    #endregion Book entry recording methods
+    #endregion Helpers
 
   }  // class RecorderExpert
 
