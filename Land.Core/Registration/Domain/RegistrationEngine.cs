@@ -61,10 +61,6 @@ namespace Empiria.Land.Registration {
 
       BookEntry bookEntry = book.AddBookEntry(landRecord, bookEntryNumber);
 
-      bookEntry.Save();
-
-      book.Refresh();
-
       return bookEntry;
     }
 

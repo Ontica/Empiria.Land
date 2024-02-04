@@ -178,6 +178,8 @@ namespace Empiria.Land.Registration {
 
       bookEntry.Save();
 
+      this.Refresh();
+
       return bookEntry;
     }
 
@@ -188,17 +190,23 @@ namespace Empiria.Land.Registration {
 
       Assertion.Require(!landRecord.IsEmptyInstance, "landRecord can't be the empty instance.");
 
-      return new BookEntry(this, landRecord, RecordingBook.FormatBookEntryNumber(bookEntryNumber));
+      var bookEntry = new BookEntry(this, landRecord, RecordingBook.FormatBookEntryNumber(bookEntryNumber));
+
+      bookEntry.Save();
+
+      this.Refresh();
+
+      return bookEntry;
     }
 
 
-    public BookEntry CreateNextBookEntry(LandRecord landRecord) {
+    public BookEntry AddNextBookEntry(LandRecord landRecord) {
       Assertion.Require(landRecord, nameof(landRecord));
       Assertion.Require(landRecord.Instrument.SheetsCount > 0, "Instrument field SheetsCount must be greater than zero.");
 
       int bookEntryNumber = RecordingBooksData.GetNextBookEntryNumberWithNoReuse(this);
 
-      return new BookEntry(this, landRecord, RecordingBook.FormatBookEntryNumber(bookEntryNumber));
+      return AddBookEntry(landRecord, RecordingBook.FormatBookEntryNumber(bookEntryNumber));
     }
 
 

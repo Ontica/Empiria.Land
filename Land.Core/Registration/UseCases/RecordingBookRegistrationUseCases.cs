@@ -122,8 +122,6 @@ namespace Empiria.Land.Registration.UseCases {
 
       recordingBook.AddBookEntry(bookEntryDto);
 
-      recordingBook.Refresh();
-
       return RecordingBookMapper.Map(recordingBook);
     }
 
@@ -141,9 +139,7 @@ namespace Empiria.Land.Registration.UseCases {
       var book = RecordingBook.GetAssignedBookForRecording(office, section,
                                                            landRecord.Instrument.SheetsCount);
 
-      var nextBookEntry = book.CreateNextBookEntry(landRecord);
-
-      nextBookEntry.Save();
+      _ = book.AddNextBookEntry(landRecord);
 
       return LandRecordMapper.Map(landRecord);
     }
