@@ -47,21 +47,15 @@ namespace Empiria.Land.Registration {
 
 
     protected RecordingAct(RecordingActType recordingActType, LandRecord landRecord,
-                           BookEntry bookEntry) : base(recordingActType) {
-      Assertion.Require(recordingActType, nameof(recordingActType));
-      Assertion.Require(landRecord, nameof(landRecord));
+                           BookEntry bookEntry) : this(recordingActType, landRecord) {
       Assertion.Require(bookEntry, nameof(bookEntry));
 
-      Assertion.Require(!landRecord.IsEmptyInstance, "land record can't be the empty instance.");
-
-      this.LandRecord = landRecord;
       this.BookEntry = bookEntry;
     }
 
 
     static internal RecordingAct Create(RecordingActType recordingActType,
                                         LandRecord landRecord, Resource resource,
-                                        int index,
                                         BookEntry bookEntry) {
       Assertion.Require(recordingActType, nameof(recordingActType));
       Assertion.Require(landRecord, nameof(landRecord));
@@ -73,7 +67,6 @@ namespace Empiria.Land.Registration {
 
       RecordingAct recordingAct = recordingActType.CreateInstance();
       recordingAct.BookEntry = bookEntry;
-      recordingAct.Index = index;
       recordingAct.LandRecord = landRecord;
       recordingAct.AmendmentOf = RecordingAct.Empty;
 
@@ -87,12 +80,8 @@ namespace Empiria.Land.Registration {
       if (bookEntry.IsNew) {
         bookEntry.Save();
       }
-      recordingAct.Save();
 
-      if (!recordingAct.AmendmentOf.IsEmptyInstance) {
-        recordingAct.AmendmentOf.AmendedBy = recordingAct;
-        recordingAct.AmendmentOf.Save();
-      }
+      recordingAct.Save();
 
       return recordingAct;
     }
@@ -606,6 +595,10 @@ namespace Empiria.Land.Registration {
         this.RegisteredBy = ExecutionServer.CurrentContact;
       }
       RecordingActsData.WriteRecordingAct(this);
+
+      if (this.HasBookEntry) {
+        this.BookEntry.Refresh();
+      }
     }
 
 
@@ -632,7 +625,7 @@ namespace Empiria.Land.Registration {
       this.RelatedResource = relatedResource ?? Resource.Empty;
       this.Percentage = percentage;
 
-      this.Index = this.LandRecord.AppendRecordingAct(this);
+      _ = this.LandRecord.AppendRecordingAct(this);
     }
 
 

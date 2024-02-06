@@ -51,6 +51,10 @@ namespace Empiria.Land.Registration {
       this.PresentationTime = transaction.PresentationTime;
     }
 
+    static internal LandRecord Parse(int id) {
+      return BaseObject.ParseId<LandRecord>(id);
+    }
+
     static public LandRecord ParseGuid(string guid) {
       var landRecord = BaseObject.TryParse<LandRecord>($"DocumentGUID = '{guid}'");
 
@@ -202,7 +206,7 @@ namespace Empiria.Land.Registration {
     /// <summary>Adds a recording act to the document's recording acts collection.</summary>
     /// <param name="recordingAct">The item to be added at the end of the RecordingActs collection.</param>
     /// <returns> The recording act's index inside the RecordingActs collection.</returns>
-    internal int AppendRecordingAct(RecordingAct recordingAct) {
+    internal RecordingAct AppendRecordingAct(RecordingAct recordingAct) {
       Assertion.Require(recordingAct, nameof(recordingAct));
 
       Assertion.Require(this.IsHistoricRecord || !this.IsClosed,
@@ -210,8 +214,9 @@ namespace Empiria.Land.Registration {
 
       _recordingActs.Value.Add(recordingAct);
 
-      /// returns the collection's index of the recording act
-      return _recordingActs.Value.Count - 1;
+      recordingAct.Index = _recordingActs.Value.Count - 1;
+
+      return recordingAct;
     }
 
 
@@ -233,9 +238,11 @@ namespace Empiria.Land.Registration {
         this.Save();
       }
 
-      var recordingAct = RecordingAct.Create(recordingActType, this, resource,
-                                             this.RecordingActs.Count, bookEntry);
+      var recordingAct = RecordingAct.Create(recordingActType, this, resource, bookEntry);
+
       _recordingActs.Value.Add(recordingAct);
+
+      recordingAct.Index = _recordingActs.Value.Count - 1;
 
       return recordingAct;
     }
