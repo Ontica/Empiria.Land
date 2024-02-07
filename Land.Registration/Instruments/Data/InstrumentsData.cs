@@ -20,7 +20,7 @@ namespace Empiria.Land.Instruments.Data {
       var op = DataOperation.Parse("writeLRSInstrument",
             o.Id, o.UID, o.InstrumentType.Id, o.Kind, o.ControlID, o.Issuer.Id,
             o.IssueDate, o.Summary, o.AsText, o.ExtData.ToString(), o.Keywords,
-            o.SheetsCount, (char) o.Status, o.PostedById, o.PostingTime, String.Empty);
+            o.SheetsCount, (char) o.Status, o.PostedBy.Id, o.PostingTime, String.Empty);
 
       DataWriter.Execute(op);
     }

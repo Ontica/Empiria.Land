@@ -15,6 +15,7 @@ using Empiria.StateEnums;
 
 using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Instruments.Data;
+using Empiria.Contacts;
 
 namespace Empiria.Land.Instruments {
 
@@ -160,7 +161,7 @@ namespace Empiria.Land.Instruments {
 
 
     [DataField("PostedById")]
-    internal int PostedById {
+    internal Contact PostedBy {
       get; private set;
     }
 
@@ -227,6 +228,9 @@ namespace Empiria.Land.Instruments {
 
 
     protected override void OnSave() {
+      PostedBy = ExecutionServer.CurrentContact;
+      PostingTime = DateTime.Now;
+
       InstrumentsData.WriteInstrument(this);
     }
 
