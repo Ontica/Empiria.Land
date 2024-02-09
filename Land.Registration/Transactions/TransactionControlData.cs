@@ -22,6 +22,8 @@ namespace Empiria.Land.Transactions {
     private readonly LRSTransaction _transaction;
 
     internal TransactionControlData(LRSTransaction transaction) {
+      Assertion.Require(transaction, nameof(transaction));
+
       _transaction = transaction;
     }
 
@@ -86,6 +88,21 @@ namespace Empiria.Land.Transactions {
 
     public bool CanEditInstrument {
       get {
+        if (!IsReadyForRecording) {
+          return false;
+        }
+
+        if (_transaction.HasInstrument && _transaction.LandRecord.IsClosed) {
+          return false;
+        }
+
+        return true;
+      }
+    }
+
+
+    public bool IsReadyForRecording {
+      get {
         if (!ShowInstrumentRecordingTab) {
           return false;
         }
@@ -101,22 +118,6 @@ namespace Empiria.Land.Transactions {
         if (!IsUserInRole("LandRegistrar")) {
           return false;
         }
-
-        return true;
-      }
-    }
-
-    public bool CanEditRecordingActs {
-      get {
-        if (!CanEditInstrument) {
-          return false;
-        }
-
-        if (!_transaction.HasInstrument) {
-          return false;
-        }
-
-        // ToDo: if instrument is open and has recording go
 
         return true;
       }
@@ -264,6 +265,17 @@ namespace Empiria.Land.Transactions {
       }
     }
 
+
+    public bool IsAssignedToUser {
+      get {
+        if (_transaction.IsEmptyInstance) {
+          return false;
+        }
+
+        return (_transaction.Workflow.GetCurrentTask().Responsible.Id == ExecutionServer.CurrentUserId);
+      }
+    }
+
     #endregion User's action flags
 
     #region Flags used to control the user interface
@@ -336,15 +348,6 @@ namespace Empiria.Land.Transactions {
     #endregion Flags used to control the user interface
 
     #region Helper methods
-
-    private bool IsAssignedToUser {
-      get {
-        if (_transaction.IsEmptyInstance) {
-          return false;
-        }
-        return (_transaction.Workflow.GetCurrentTask().Responsible.Id == ExecutionServer.CurrentUserId);
-      }
-    }
 
     private bool IsSubmitted {
       get {
