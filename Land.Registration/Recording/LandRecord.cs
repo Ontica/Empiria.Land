@@ -48,7 +48,8 @@ namespace Empiria.Land.Registration {
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(!transaction.IsEmptyInstance, "transaction can't be the empty instance.");
 
-      this.PresentationTime = transaction.PresentationTime;
+      _transaction = transaction;
+      this.PresentationTime = _transaction.PresentationTime;
     }
 
     static internal LandRecord Parse(int id) {
@@ -362,10 +363,11 @@ namespace Empiria.Land.Registration {
       if (_transaction == null) {
         _transaction = LandRecordsData.GetLandRecordTransaction(this);
       }
+
       return _transaction;
     }
 
-    protected override void OnLoadObjectData(DataRow row) {
+    protected override void OnLoad() {
       RefreshRecordingActs();
     }
 
@@ -373,18 +375,14 @@ namespace Empiria.Land.Registration {
       _recordingActs = new Lazy<List<RecordingAct>>(() => LandRecordsData.GetLandRecordRecordingActs(this));
     }
 
-    protected override void OnBeforeSave() {
+    protected override void OnSave() {
       if (this.IsNew) {
         this.GUID = Guid.NewGuid().ToString().ToLower();
 
         IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
 
-        _documentUID  = provider.GenerateRecordID();
-      }
-    }
+        _documentUID = provider.GenerateRecordID();
 
-    protected override void OnSave() {
-      if (this.IsNew) {
         this.PostingTime = DateTime.Now;
         this.PostedBy = ExecutionServer.CurrentContact;
       }
