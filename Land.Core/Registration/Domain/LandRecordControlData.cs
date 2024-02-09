@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Instruments;
 using Empiria.Land.Media;
 using Empiria.Land.Registration.Transactions;
 
@@ -26,6 +25,8 @@ namespace Empiria.Land.Registration {
     private readonly FixedList<BookEntry> _bookEntries;
 
     private readonly bool _isHistoricRegistration;
+    private readonly bool _isTransactionOnBooksRegistration;
+
     private readonly bool _isNewRegistration;
 
     internal LandRecordControlData(LandRecord landRecord) {
@@ -38,7 +39,9 @@ namespace Empiria.Land.Registration {
 
       _isHistoricRegistration = _transaction.IsEmptyInstance;
 
-      _isNewRegistration = _landRecord.IsEmptyInstance || _landRecord.IsNew;
+      _isTransactionOnBooksRegistration = !_transaction.IsEmptyInstance && _bookEntries.Count > 0;
+
+      _isNewRegistration = _landRecord.Instrument.IsEmptyInstance || _landRecord.IsEmptyInstance || _landRecord.IsNew;
     }
 
 
@@ -51,27 +54,53 @@ namespace Empiria.Land.Registration {
 
     public bool CanEdit {
       get {
-        if (_isHistoricRegistration) {
+        if (_isNewRegistration) {
+          return false;
+        }
+        if (_isHistoricRegistration && !_landRecord.IsClosed) {
           return true;
         }
-        return _transaction.ControlData.CanEditInstrument;
+        if (_isTransactionOnBooksRegistration && !UseRecordingBookRegistation &&
+            !_landRecord.IsClosed) {
+          return true;
+        }
+        return _transaction.ControlData.IsReadyForRecording;
       }
     }
 
 
     public bool CanOpen {
       get {
-        return this.CanEdit && _landRecord.IsClosed &&
-               !_isNewRegistration && !UseRecordingBookRegistation;
+        if (_isNewRegistration) {
+          return false;
+        }
+        if (_isHistoricRegistration && _landRecord.IsClosed) {
+          return true;
+        }
+        if (_isTransactionOnBooksRegistration && !UseRecordingBookRegistation &&
+            _landRecord.IsClosed) {
+          return true;
+        }
+        return _transaction.ControlData.IsReadyForRecording && _landRecord.IsClosed &&
+               !UseRecordingBookRegistation;
       }
     }
 
 
     public bool CanClose {
       get {
-        return this.CanEdit && !_landRecord.IsClosed &&
-               !_isNewRegistration && !UseRecordingBookRegistation &&
-               _landRecord.HasRecordingActs;
+        if (_isNewRegistration) {
+          return false;
+        }
+        if (_isHistoricRegistration && !_landRecord.IsClosed && _landRecord.HasRecordingActs) {
+          return true;
+        }
+        if (_isTransactionOnBooksRegistration && !UseRecordingBookRegistation &&
+            !_landRecord.IsClosed && _landRecord.HasRecordingActs) {
+          return true;
+        }
+        return _transaction.ControlData.IsReadyForRecording && !_landRecord.IsClosed &&
+               !UseRecordingBookRegistation && _landRecord.HasRecordingActs;
       }
     }
 
@@ -85,23 +114,32 @@ namespace Empiria.Land.Registration {
 
     public bool CanEditRecordingActs {
       get {
-        if (_isHistoricRegistration) {
-          return true;
-        }
-        if (CanOpen) {
+        if (_isNewRegistration) {
           return false;
         }
-        return (this.ShowRecordingActs && _transaction.ControlData.CanEditRecordingActs);
+        if (_isHistoricRegistration && !_landRecord.IsClosed) {
+          return true;
+        }
+        if (_isTransactionOnBooksRegistration && !UseRecordingBookRegistation && !_landRecord.IsClosed) {
+          return true;
+        }
+        return CanEdit && ShowRecordingActs;
       }
     }
 
 
     public bool CanCreateRecordingBookEntries {
       get {
+        if (_isNewRegistration) {
+          return false;
+        }
+        if (!UseRecordingBookRegistation) {
+          return false;
+        }
         if (!CanEdit) {
           return false;
         }
-        return (_bookEntries.Count > 0 || UseRecordingBookRegistation);
+        return _isTransactionOnBooksRegistration;
       }
     }
 
@@ -129,19 +167,17 @@ namespace Empiria.Land.Registration {
 
     public bool ShowRecordingBookEntries {
       get {
-        return (_bookEntries.Count > 0 || UseRecordingBookRegistation);
+        return _isTransactionOnBooksRegistration;
       }
     }
 
 
     public bool ShowRecordingActs {
       get {
-        return (!UseRecordingBookRegistation &&
-                !_isHistoricRegistration &&
-                !_transaction.IsEmptyInstance &&
-                !_transaction.LandRecord.IsEmptyInstance &&
-                _bookEntries.Count == 0
-                );
+        if (_isTransactionOnBooksRegistration) {
+          return false;
+        }
+        return !_isNewRegistration;
       }
     }
 
