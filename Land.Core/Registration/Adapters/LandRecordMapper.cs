@@ -14,7 +14,6 @@ using Empiria.DataTypes;
 using Empiria.Land.Media;
 using Empiria.Land.Media.Adapters;
 
-using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
 
 using Empiria.Land.Registration.Transactions;
@@ -26,9 +25,12 @@ namespace Empiria.Land.Registration.Adapters {
   static internal partial class LandRecordMapper {
 
     static internal LandRecordDto Map(LandRecord landRecord) {
-      var dto = new LandRecordDto();
+      return Map(landRecord.GetTransaction(), landRecord);
+    }
 
-      LRSTransaction transaction = landRecord.GetTransaction();
+
+    internal static LandRecordDto Map(LRSTransaction transaction, LandRecord landRecord) {
+      var dto = new LandRecordDto();
 
       var bookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
 
@@ -50,7 +52,7 @@ namespace Empiria.Land.Registration.Adapters {
 
       var actions = new LandRecordControlData(landRecord);
 
-      dto.Actions = GetControlDataDto(actions);
+      dto.Actions = GetControlDataDto(transaction, actions);
 
       return dto;
     }
@@ -97,10 +99,12 @@ namespace Empiria.Land.Registration.Adapters {
 
     #region Private methods
 
-    static private LandRecordControlDataDto GetControlDataDto(LandRecordControlData controlData) {
+    static private LandRecordControlDataDto GetControlDataDto(LRSTransaction transaction,
+                                                              LandRecordControlData controlData) {
       var dto = new LandRecordControlDataDto();
 
-      dto.Can.EditInstrument = controlData.CanEdit;
+      dto.Can.EditInstrument = transaction.IsEmptyInstance ? controlData.CanEdit :
+                                                             transaction.ControlData.CanEditInstrument;
       dto.Can.OpenInstrument = controlData.CanOpen;
       dto.Can.CloseInstrument = controlData.CanClose;
       dto.Can.DeleteInstrument = controlData.CanDelete;

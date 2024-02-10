@@ -44,7 +44,7 @@ namespace Empiria.Land.Registration.UseCases {
 
       LandRecord landRecord = transaction.LandRecord;
 
-      return LandRecordMapper.Map(landRecord);
+      return LandRecordMapper.Map(transaction, landRecord);
     }
 
 
