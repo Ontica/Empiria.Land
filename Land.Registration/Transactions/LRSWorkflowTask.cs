@@ -220,21 +220,20 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     private void ExecuteSpecialCase(LRSWorkflowTask nextTrack) {
-      if (nextTrack.IsNew) {
-        if (nextTrack.CurrentStatus == TransactionStatus.ToDeliver ||
-            nextTrack.CurrentStatus == TransactionStatus.ToReturn) {
-          nextTrack.NextStatus = (nextTrack.CurrentStatus == TransactionStatus.ToDeliver) ?
-                    TransactionStatus.Delivered : TransactionStatus.Returned;
-          nextTrack.EndProcessTime = nextTrack.CheckInTime;
-          nextTrack.Status = WorkflowTaskStatus.OnDelivery;
-        }
+      if (!nextTrack.IsNew) {
+        return;
+      }
+      if (nextTrack.CurrentStatus == TransactionStatus.ToDeliver ||
+          nextTrack.CurrentStatus == TransactionStatus.ToReturn) {
+        nextTrack.NextStatus = (nextTrack.CurrentStatus == TransactionStatus.ToDeliver) ?
+                  TransactionStatus.Delivered : TransactionStatus.Returned;
+        nextTrack.EndProcessTime = nextTrack.CheckInTime;
+        nextTrack.Status = WorkflowTaskStatus.OnDelivery;
       }
     }
 
     internal LRSWorkflowTask CreateNext(string notes) {
-      var responsible = ExecutionServer.CurrentContact;
-
-      return this.CreateNext(notes, responsible, DateTime.Now);
+      return this.CreateNext(notes, ExecutionServer.CurrentContact, DateTime.Now);
     }
 
     internal LRSWorkflowTask CreateNext(string notes, Contact responsible, DateTime date) {

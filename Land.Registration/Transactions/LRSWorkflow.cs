@@ -30,6 +30,8 @@ namespace Empiria.Land.Registration.Transactions {
     #region Constructors and parsers
 
     internal LRSWorkflow(LRSTransaction transaction) {
+      Assertion.Require(transaction, nameof(transaction));
+
       _transaction = transaction;
       this.CurrentStatus = TransactionStatus.Payment;
       this.taskList = new Lazy<LRSWorkflowTaskList>(() => new LRSWorkflowTaskList());
@@ -44,15 +46,11 @@ namespace Empiria.Land.Registration.Transactions {
       return workflow;
     }
 
-    static internal LRSWorkflow Parse(LRSTransaction transaction,
-                                      TransactionStatus onLoadStatus = TransactionStatus.Undefined) {
+    static internal LRSWorkflow Parse(LRSTransaction transaction) {
       var workflow = new LRSWorkflow(transaction);
 
-      if (onLoadStatus != TransactionStatus.Undefined) {
-        workflow.CurrentStatus = onLoadStatus;
-      } else {
-        workflow.CurrentStatus = workflow.GetCurrentTask().CurrentStatus;
-      }
+      workflow.CurrentStatus = workflow.GetCurrentTask().CurrentStatus;
+
       workflow.taskList = new Lazy<LRSWorkflowTaskList>(() => LRSWorkflowTaskList.Parse(transaction));
 
       return workflow;
@@ -66,17 +64,6 @@ namespace Empiria.Land.Registration.Transactions {
       get;
       private set;
     } = TransactionStatus.Payment;
-
-
-    public TransactionStatus NextStatus {
-      get {
-        if (this._transaction.IsNew) {
-          return TransactionStatus.Undefined;
-        } else {
-          return this.GetCurrentTask().NextStatus;
-        }
-      }
-    }
 
 
     public LRSWorkflowTaskList Tasks {
@@ -141,6 +128,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (_currentTask == null) {
         _currentTask = WorkflowData.GetWorkflowLastTask(_transaction);
       }
+
       return _currentTask;
     }
 
@@ -237,6 +225,7 @@ namespace Empiria.Land.Registration.Transactions {
       currentTask.AssignedBy = LRSWorkflowRules.InterestedContact;
       currentTask.Save();
       _transaction.Save();
+
       this.ResetTasksList();
 
       LandMessenger.Notify(_transaction, TransactionEventType.TransactionReentered);
@@ -249,6 +238,7 @@ namespace Empiria.Land.Registration.Transactions {
       currentTask.SetPending();
 
       _transaction.Save();
+
       ResetTasksList();
     }
 
@@ -281,9 +271,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     public void Take(string notes) {
-      var responsible = ExecutionServer.CurrentContact;
-
-      this.Take(notes, responsible, DateTime.Now);
+      this.Take(notes, ExecutionServer.CurrentContact, DateTime.Now);
     }
 
 
@@ -316,27 +304,13 @@ namespace Empiria.Land.Registration.Transactions {
 
       _transaction.Save();
 
+      ResetTasksList();
+
       if (this.CurrentStatus == TransactionStatus.ToDeliver) {
         LandMessenger.Notify(_transaction, TransactionEventType.TransactionReadyToDelivery);
       } else if (this.CurrentStatus == TransactionStatus.ToReturn) {
         LandMessenger.Notify(_transaction, TransactionEventType.TransactionReturned);
       }
-    }
-
-
-    public void Undelete() {
-      LRSWorkflowTask currentTask = this.GetCurrentTask();
-
-      if (currentTask.Status == WorkflowTaskStatus.OnDelivery) {
-        this.CurrentStatus = currentTask.CurrentStatus;
-      } else if (currentTask.Status == WorkflowTaskStatus.Pending) {
-        this.CurrentStatus = currentTask.CurrentStatus;
-      } else if (currentTask.Status == WorkflowTaskStatus.Closed) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.NextStatusCantBeEndPoint,
-                                            currentTask.Id);
-      }
-
-      _transaction.Save();
     }
 
     #endregion Public methods
@@ -365,6 +339,7 @@ namespace Empiria.Land.Registration.Transactions {
       currentTask.Close(date);
 
       _transaction.LastDeliveryTime = currentTask.EndProcessTime;
+
       this.CurrentStatus = closeStatus;
 
       _transaction.Save();
