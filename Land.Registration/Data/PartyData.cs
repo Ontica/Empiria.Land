@@ -27,7 +27,7 @@ namespace Empiria.Land.Data {
                    "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
                    "AND RecActPartyStatus <> 'X'";
 
-      return DataReader.GetFixedList<RecordingActParty>(DataOperation.Parse(sql), true);
+      return DataReader.GetFixedList<RecordingActParty>(DataOperation.Parse(sql));
     }
 
 
@@ -52,7 +52,7 @@ namespace Empiria.Land.Data {
                    "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
                    "AND PartyOfId <> -1 AND RecActPartyStatus <> 'X'";
 
-      return DataReader.GetFixedList<RecordingActParty>(DataOperation.Parse(sql), true);
+      return DataReader.GetFixedList<RecordingActParty>(DataOperation.Parse(sql));
     }
 
 

@@ -33,7 +33,7 @@ namespace Empiria.Land.Data {
 
       var operation = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<RecordingActParty>(operation, true);
+      return DataReader.GetFixedList<RecordingActParty>(operation);
     }
 
 
@@ -48,7 +48,7 @@ namespace Empiria.Land.Data {
 
       var operation = DataOperation.Parse(sql);
 
-      return DataReader.GetList<RecordingAct>(operation, true);
+      return DataReader.GetList<RecordingAct>(operation);
     }
 
     static internal LRSTransaction GetLandRecordTransaction(LandRecord landRecord) {
@@ -61,7 +61,7 @@ namespace Empiria.Land.Data {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetObject(op, LRSTransaction.Empty);
+      return DataReader.GetObject<LRSTransaction>(op, LRSTransaction.Empty);
     }
 
 

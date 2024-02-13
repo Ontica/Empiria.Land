@@ -29,7 +29,7 @@ namespace Empiria.Land.Data {
 
       var op = DataOperation.Parse("qryLRSCertificatesByTransaction", transaction.Id);
 
-      return DataReader.GetFixedList<FormerCertificate>(op, true);
+      return DataReader.GetFixedList<FormerCertificate>(op);
     }
 
 
@@ -40,7 +40,7 @@ namespace Empiria.Land.Data {
 
       var op = DataOperation.Parse("qryLRSResourceEmittedCertificates", resource.Id);
 
-      return DataReader.GetFixedList<FormerCertificate>(op, true);
+      return DataReader.GetFixedList<FormerCertificate>(op);
     }
 
 
