@@ -72,7 +72,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    /// <summary>TODO: Remove reload flag when it is possible.</summary>
+    // TODO: Remove reload flag when it is possible.
     static public LRSTransaction TryParse(string transactionUID, bool reload = false) {
       return BaseObject.TryParse<LRSTransaction>($"TransactionUID = '{transactionUID}'", reload);
     }
@@ -515,15 +515,6 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    protected override void OnBeforeSave() {
-      if (base.IsNew) {
-        IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
-
-        _transactionUID = provider.GenerateTransactionID();
-      }
-    }
-
-
     protected override void OnLoadObjectData(System.Data.DataRow row) {
       _services = new Lazy<LRSTransactionServicesList>(() => LRSTransactionServicesList.Parse(this));
 
@@ -538,6 +529,10 @@ namespace Empiria.Land.Registration.Transactions {
 
     protected override void OnSave() {
       if (base.IsNew) {
+        IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
+
+        _transactionUID = provider.GenerateTransactionID();
+
         this.GUID = Guid.NewGuid().ToString();
       }
 
