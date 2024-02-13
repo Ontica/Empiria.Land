@@ -90,7 +90,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static public LRSTransaction TryParseForInstrument(int instrumentId) {
-      return BaseObject.TryParse<LRSTransaction>($"InstrumentId = {instrumentId}", true);
+      return BaseObject.TryParse<LRSTransaction>($"InstrumentId = {instrumentId}");
     }
 
 
@@ -219,7 +219,9 @@ namespace Empiria.Land.Registration.Transactions {
     LazyInstance<LandRecord> _landRecord = LazyInstance<LandRecord>.Empty;
 
     public LandRecord LandRecord {
-      get { return _landRecord.Value; }
+      get {
+        return _landRecord.Value;
+      }
       private set {
         _landRecord = LazyInstance<LandRecord>.Parse(value);
       }
