@@ -72,20 +72,21 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
+    /// <summary>TODO: Remove reload flag when it is possible.</summary>
     static public LRSTransaction TryParse(string transactionUID, bool reload = false) {
       return BaseObject.TryParse<LRSTransaction>($"TransactionUID = '{transactionUID}'", reload);
     }
 
 
-    public static LRSTransaction TryParseWithAnyKey(string transactionKey, bool reload = false) {
+    public static LRSTransaction TryParseWithAnyKey(string transactionKey) {
       if (EmpiriaString.IsInteger(transactionKey)) {
-        return BaseObject.TryParse<LRSTransaction>($"InternalControlNo = '{transactionKey}'", reload);
+        return BaseObject.TryParse<LRSTransaction>($"InternalControlNo = '{transactionKey}'");
       }
 
       if (MatchesWithTransactionOldKey(transactionKey)) {
         transactionKey = LRSTransaction.GetTransactionUIDFromOldKey(transactionKey);
       }
-      return BaseObject.TryParse<LRSTransaction>($"TransactionUID = '{transactionKey}'", reload);
+      return BaseObject.TryParse<LRSTransaction>($"TransactionUID = '{transactionKey}'");
     }
 
 

@@ -34,7 +34,7 @@ namespace Empiria.Land.Certification {
     }
 
     static public FormerCertificate Parse(int id) {
-      return BaseObject.ParseId<FormerCertificate>(id, true);
+      return BaseObject.ParseId<FormerCertificate>(id);
     }
 
 
