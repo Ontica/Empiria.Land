@@ -23,7 +23,7 @@ namespace Empiria.Land.WebApi {
 
     internal void ValidateTransaction(string transactionUID, string hash) {
 
-      var transaction = LRSTransaction.TryParse(transactionUID, true);
+      var transaction = LRSTransaction.TryParse(transactionUID);
 
       if (transaction == null && hash.Length == 0) {
         throw new ResourceNotFoundException("Land.Transaction.NotFound",
@@ -54,7 +54,7 @@ namespace Empiria.Land.WebApi {
 
     internal void ValidateCertificate(string certificateUID, string hash) {
 
-      var certificate = FormerCertificate.TryParse(certificateUID, true);
+      var certificate = FormerCertificate.TryParse(certificateUID);
 
       if (certificate == null && hash.Length == 0) {
         throw new ResourceNotFoundException("Land.Certificate.NotFound",
@@ -97,7 +97,7 @@ namespace Empiria.Land.WebApi {
 
     internal void ValidateLandRecord(string landRecordUID, string hash) {
 
-      var landRecord = LandRecord.TryParse(landRecordUID, true);
+      var landRecord = LandRecord.TryParse(landRecordUID);
 
       if (landRecord == null && hash.Length == 0) {
         throw new ResourceNotFoundException("Land.LandRecord.NotFound",
@@ -130,7 +130,7 @@ namespace Empiria.Land.WebApi {
 
 
     internal void ValidateResource(string resourceUID, string hash) {
-      var resource = Resource.TryParseWithUID(resourceUID, true);
+      var resource = Resource.TryParseWithUID(resourceUID);
 
       if (resource == null && hash.Length == 0) {
         throw new ResourceNotFoundException("Land.Resource.NotFound",
@@ -160,7 +160,7 @@ namespace Empiria.Land.WebApi {
 
     internal void ValidateTransactionForElectronicDelivery(string transactionUID, string messageUID) {
 
-      var transaction = LRSTransaction.TryParse(transactionUID, true);
+      var transaction = LRSTransaction.TryParse(transactionUID);
 
       if (!(LRSWorkflowRules.IsReadyForElectronicDelivery(transaction, messageUID))) {
         throw new ResourceNotFoundException("Land.Transaction.NotReadyForElectronicalDelivery",

@@ -34,7 +34,7 @@ namespace Empiria.Land.WebApi {
     internal List<PropertyBagItem> BuildCertificate(string certificateUID, string hash) {
       var propertyBag = new List<PropertyBagItem>(16);
 
-      var certificate = FormerCertificate.TryParse(certificateUID, true);
+      var certificate = FormerCertificate.TryParse(certificateUID);
 
       propertyBag.Add(new PropertyBagItem("Información del certificado", String.Empty, "section"));
       propertyBag.Add(new PropertyBagItem("Número de certificado", certificate.UID, "enhanced-text"));
@@ -84,7 +84,7 @@ namespace Empiria.Land.WebApi {
 
     internal List<PropertyBagItem> BuildResourceStatus(string resourceUID) {
 
-      var resource = Resource.TryParseWithUID(resourceUID, true);
+      var resource = Resource.TryParseWithUID(resourceUID);
 
       if (resource is RealEstate) {
         return BuildRealEstateStatusResponse((RealEstate) resource);
@@ -101,7 +101,7 @@ namespace Empiria.Land.WebApi {
     internal List<PropertyBagItem> BuildLandRecord(string landRecordUID, string hash) {
       var propertyBag = new List<PropertyBagItem>(16);
 
-      var landRecord = LandRecord.TryParse(landRecordUID, true);
+      var landRecord = LandRecord.TryParse(landRecordUID);
 
       propertyBag.Add(new PropertyBagItem("Información del documento", String.Empty, "section"));
       propertyBag.Add(new PropertyBagItem("Sello registral número", landRecord.UID, "bold-text"));
@@ -160,7 +160,7 @@ namespace Empiria.Land.WebApi {
     internal List<PropertyBagItem> BuildTransaction(string transactionUID, string messageUID) {
       var propertyBag = new List<PropertyBagItem>(16);
 
-      var transaction = LRSTransaction.TryParse(transactionUID, true);
+      var transaction = LRSTransaction.TryParse(transactionUID);
 
       BuildTransactionMainInfoSection(transaction, propertyBag);
 

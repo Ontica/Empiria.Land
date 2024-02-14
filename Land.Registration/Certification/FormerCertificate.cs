@@ -48,8 +48,8 @@ namespace Empiria.Land.Certification {
     }
 
 
-    static public FormerCertificate TryParse(string certificateUID, bool reload = false) {
-      return BaseObject.TryParse<FormerCertificate>($"CertificateUID = '{certificateUID}'", reload);
+    static public FormerCertificate TryParse(string certificateUID) {
+      return BaseObject.TryParse<FormerCertificate>($"CertificateUID = '{certificateUID}'");
     }
 
 

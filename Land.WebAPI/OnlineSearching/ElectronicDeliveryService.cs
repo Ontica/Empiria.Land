@@ -17,7 +17,7 @@ namespace Empiria.Land.WebApi {
   internal class ElectronicDeliveryService {
 
     internal void DeliverTransaction(string transactionUID, string messageUID) {
-      var transaction = LRSTransaction.TryParse(transactionUID, true);
+      var transaction = LRSTransaction.TryParse(transactionUID);
 
       transaction.Workflow.DeliverElectronicallyToRequester(messageUID);
     }

@@ -74,7 +74,7 @@ namespace Empiria.Land.Providers {
     public void EventProcessed(string transactionUID, string eventName) {
       Assertion.Require(transactionUID, nameof(transactionUID));
 
-      var transaction = LRSTransaction.TryParse(transactionUID, true);
+      var transaction = LRSTransaction.TryParse(transactionUID);
 
       Assertion.Require(transaction, nameof(transaction));
 
@@ -87,7 +87,7 @@ namespace Empiria.Land.Providers {
     public FixedList<EFilingDocument> GetOutputDocuments(string transactionUID) {
       Assertion.Require(transactionUID, nameof(transactionUID));
 
-      var transaction = LRSTransaction.TryParse(transactionUID, true);
+      var transaction = LRSTransaction.TryParse(transactionUID);
 
       Assertion.Require(transaction, nameof(transaction));
 
@@ -118,7 +118,7 @@ namespace Empiria.Land.Providers {
     public IFilingTransaction GetTransaction(string transactionUID) {
       Assertion.Require(transactionUID, nameof(transactionUID));
 
-      var transaction = LRSTransaction.TryParse(transactionUID, true);
+      var transaction = LRSTransaction.TryParse(transactionUID);
 
       return ConvertToDTOInterface(transaction);
     }
@@ -127,7 +127,7 @@ namespace Empiria.Land.Providers {
     public IPayable GetTransactionAsPayable(string transactionUID) {
       Assertion.Require(transactionUID, nameof(transactionUID));
 
-      var transaction = LRSTransaction.TryParse(transactionUID, true);
+      var transaction = LRSTransaction.TryParse(transactionUID);
 
       Assertion.Require(transaction, nameof(transaction));
 
@@ -138,7 +138,7 @@ namespace Empiria.Land.Providers {
     public IFilingTransaction SetPayment(string transactionUID, string receiptNo) {
       Assertion.Require(transactionUID, nameof(transactionUID));
 
-      var transaction = LRSTransaction.TryParse(transactionUID, true);
+      var transaction = LRSTransaction.TryParse(transactionUID);
 
       Assertion.Require(transaction, nameof(transaction));
 
@@ -162,7 +162,7 @@ namespace Empiria.Land.Providers {
     public IFilingTransaction SubmitTransaction(string transactionUID) {
       Assertion.Require(transactionUID, nameof(transactionUID));
 
-      var transaction = LRSTransaction.TryParse(transactionUID, true);
+      var transaction = LRSTransaction.TryParse(transactionUID);
 
       Assertion.Require(transaction, nameof(transaction));
 
@@ -175,7 +175,7 @@ namespace Empiria.Land.Providers {
     public FormerPaymentOrderDTO TryGetPaymentOrderData(string transactionUID) {
       Assertion.Require(transactionUID, nameof(transactionUID));
 
-      var transaction = LRSTransaction.TryParse(transactionUID, true);
+      var transaction = LRSTransaction.TryParse(transactionUID);
 
       Assertion.Require(transaction, nameof(transaction));
 
@@ -194,7 +194,7 @@ namespace Empiria.Land.Providers {
 
       Assertion.Require(filingRequest.HasTransaction, "filingRequest.HasTransaction must be true.");
 
-      var transaction = LRSTransaction.TryParse(filingRequest.Transaction.UID, true);
+      var transaction = LRSTransaction.TryParse(filingRequest.Transaction.UID);
 
       Assertion.Require(transaction, nameof(transaction));
 
