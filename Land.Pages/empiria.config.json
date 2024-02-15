@@ -1,7 +1,7 @@
 ﻿{
   "appName": "Empiria Land Pages",
   "version": "5.0",
-  "date": "2021-02-14",
+  "date": "2024-02-14",
   "settings": [
     {
       "type": "",
@@ -26,6 +26,11 @@
     {
       "type": "Data",
       "key": "IsObjectIdGeneratorServer",
+      "value": false
+    },
+    {
+      "type": "",
+      "key": "UseBaseObjectCache",
       "value": false
     },
     {
