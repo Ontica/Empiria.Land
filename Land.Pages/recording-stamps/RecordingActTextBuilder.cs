@@ -60,23 +60,21 @@ namespace Empiria.Land.Pages {
     static private string GetPartyText(RecordingActParty party, int level) {
       const string t = "{TAB}{PARTY-ROLE}: {PARTY-NAME} {OWNERSHIP}<br/>";
 
-      var p = Reloaders.Reload(party);
-
-      var html = t.Replace("{PARTY-ROLE}", p.PartyRole.Name);
+      var html = t.Replace("{PARTY-ROLE}", party.PartyRole.Name);
 
       html = html.Replace("{TAB}", EmpiriaString.Duplicate(" &#160; &#160; &#160; ", level));
 
-      html = html.Replace("{PARTY-NAME}", Reloaders.Reload(p.Party).FullName);
+      html = html.Replace("{PARTY-NAME}", party.Party.FullName);
 
-      if (p.OwnershipPart.Unit.IsEmptyInstance) {
+      if (party.OwnershipPart.Unit.IsEmptyInstance) {
         html = html.Replace("{OWNERSHIP}", string.Empty);
 
-      } else if (p.OwnershipPart.Unit == Unit.FullUnit ||
-                 p.OwnershipPart.Unit == Unit.UndividedUnit) {
-        html = html.Replace("{OWNERSHIP}", $"({p.OwnershipPart.Unit.Name})");
+      } else if (party.OwnershipPart.Unit == Unit.FullUnit ||
+                 party.OwnershipPart.Unit == Unit.UndividedUnit) {
+        html = html.Replace("{OWNERSHIP}", $"({party.OwnershipPart.Unit.Name})");
 
       } else {
-        html = html.Replace("{OWNERSHIP}", $"({ToPartAmountText(p.OwnershipPart)})");
+        html = html.Replace("{OWNERSHIP}", $"({ToPartAmountText(party.OwnershipPart)})");
 
       }
 
@@ -107,8 +105,6 @@ namespace Empiria.Land.Pages {
 
       RecordingAct amendedAct = _recordingAct.AmendmentOf;
 
-      amendedAct = Reloaders.Reload(amendedAct);
-
       if (amendedAct.IsEmptyInstance) {
         x = x.Replace(" {AMENDMENT.ACT.RECORDING},", " ");
       } else {
@@ -136,7 +132,7 @@ namespace Empiria.Land.Pages {
 
       }
 
-      Resource resource = Reloaders.Reload(_recordingAct.Resource);
+      Resource resource = _recordingAct.Resource;
 
       if (resource is RealEstate) {
         x = x.Replace("{RESOURCE.DATA}", "sobre el bien inmueble con folio real " +
@@ -207,7 +203,7 @@ namespace Empiria.Land.Pages {
       Assertion.Require(_recordingAct.Resource is RealEstate,
                        $"Type mismatch parsing real estate with id {_recordingAct.Resource.Id}");
 
-      RealEstate property = (RealEstate) Reloaders.Reload(_recordingAct.Resource);
+      RealEstate property = (RealEstate) _recordingAct.Resource;
 
       if (!property.IsPartitionOf.IsEmptyInstance &&
            property.IsInTheRankOfTheFirstDomainAct(_recordingAct)) {
@@ -380,9 +376,7 @@ namespace Empiria.Land.Pages {
     static private string GetRealEstateTextWithAntecedentAndCadastralKey(RecordingAct recordingAct) {
       var domainAntecedent = recordingAct.Resource.Tract.GetRecordingAntecedent(recordingAct);
 
-      domainAntecedent = Reloaders.Reload(domainAntecedent);
-
-      var property = (RealEstate) Reloaders.Reload(recordingAct.Resource);
+      var property = (RealEstate) recordingAct.Resource;
 
       string x = GetRealEstateTextWithCadastralKey(property);
 

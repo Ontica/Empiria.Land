@@ -57,8 +57,8 @@ namespace Empiria.Land.Pages {
       string x = template.Replace("{DATE}", CommonMethods.GetDateAsText(presentationTime));
 
       if (_transaction.HasInstrument) {
-        var instrument = Instrument.Parse(_landRecord.Instrument.Id, true);
-        x = x.Replace("{INSTRUMENT_AS_TEXT}", instrument.AsText);
+
+        x = x.Replace("{INSTRUMENT_AS_TEXT}", _landRecord.Instrument.AsText);
 
       } else {
         x = x.Replace("{INSTRUMENT_AS_TEXT}", "**INSTRUMENTO NO DETERMINADO**");

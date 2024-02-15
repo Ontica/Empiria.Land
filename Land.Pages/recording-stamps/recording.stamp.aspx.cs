@@ -51,7 +51,7 @@ namespace Empiria.Land.Pages {
 
       _isMainLandRecord = bool.Parse(Request.QueryString["main"] ?? "false");
 
-      landRecord = LandRecord.TryParse(landRecordUID, true);
+      landRecord = LandRecord.TryParse(landRecordUID);
 
       transaction = landRecord.GetTransaction();
 
@@ -59,7 +59,7 @@ namespace Empiria.Land.Pages {
 
       _selectedRecordingAct = RecordingAct.Parse(selectedRecordingActId);
 
-      this.instrument = Instrument.Parse(landRecord.Instrument.Id, true);
+      this.instrument = landRecord.Instrument;
 
       builder = new RecordingStampBuilder(landRecord);
     }

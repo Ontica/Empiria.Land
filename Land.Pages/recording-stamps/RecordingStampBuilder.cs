@@ -61,7 +61,7 @@ namespace Empiria.Land.Pages {
 
         // If not amendment act, then process it by resource type application
 
-        var resource = Reloaders.Reload(recordingAct.Resource);
+        var resource = recordingAct.Resource;
 
         if (resource is RealEstate) {
           temp = builder.GetRealEstateActText(index);

@@ -35,7 +35,7 @@ namespace Empiria.Land.Pages {
     #region Private methods
 
     private void Initialize() {
-      transaction = LRSTransaction.TryParse(Request.QueryString["uid"], true);
+      transaction = LRSTransaction.TryParse(Request.QueryString["uid"]);
     }
 
     protected string DistrictName {
