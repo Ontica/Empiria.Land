@@ -27,7 +27,7 @@ namespace Empiria.Land.WebApi.Extranet {
       try {
         base.RequireResource(propertyUID, "propertyUID");
 
-        var realEstate = RealEstate.TryParseWithUID(propertyUID, true);
+        var realEstate = RealEstate.TryParseWithUID(propertyUID);
 
         if (realEstate == null) {
           throw new ResourceNotFoundException("Property.UID",
