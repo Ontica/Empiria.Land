@@ -31,12 +31,6 @@ namespace Empiria.Land.Registration {
       return BaseObject.ParseId<Resource>(id);
     }
 
-
-    static public Resource Parse(int id, bool reload) {
-      return BaseObject.ParseId<Resource>(id, reload);
-    }
-
-
     static public Resource ParseGuid(string guid) {
       var resource = BaseObject.TryParse<Resource>($"PropertyGUID = '{guid}'");
 
@@ -52,18 +46,8 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public Resource TryParseWithUID(string propertyUID, bool reload = false) {
-      Resource resource = ResourceData.TryGetResourceWithUID(propertyUID);
-
-      if (resource == null) {
-        return null;
-      }
-
-      if (reload) {
-        return BaseObject.ParseId<Resource>(resource.Id, true);
-      } else {
-        return resource;
-      }
+    static public Resource TryParseWithUID(string propertyUID) {
+      return ResourceData.TryGetResourceWithUID(propertyUID);
     }
 
 

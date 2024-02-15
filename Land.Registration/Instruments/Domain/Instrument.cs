@@ -39,8 +39,6 @@ namespace Empiria.Land.Instruments {
 
     static public Instrument Parse(int id) => BaseObject.ParseId<Instrument>(id);
 
-    static public Instrument Parse(int id, bool reload) => BaseObject.ParseId<Instrument>(id, reload);
-
     static public Instrument Parse(string uid) => BaseObject.ParseKey<Instrument>(uid);
 
     static public Instrument Empty => BaseObject.ParseEmpty<Instrument>();

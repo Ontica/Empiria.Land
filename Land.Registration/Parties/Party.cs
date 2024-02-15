@@ -37,30 +37,13 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public Party Parse(int id) {
-      return BaseObject.ParseId<Party>(id);
-    }
+    static public Party Parse(int id) => BaseObject.ParseId<Party>(id);
 
-    static public Party Parse(int id, bool reload) {
-      return BaseObject.ParseId<Party>(id, reload);
-    }
+    static public Party Parse(string uid) => BaseObject.ParseKey<Party>(uid);
 
+    static public Party Empty => BaseObject.ParseEmpty<HumanParty>();
 
-    static public Party Parse(string uid) {
-      return BaseObject.ParseKey<Party>(uid);
-    }
-
-
-    static public Party Empty {
-      get {
-        return BaseObject.ParseEmpty<HumanParty>();
-      }
-    }
-
-
-    static public FixedList<Party> GetList(SearchPartiesCommand command) {
-      return PartyData.GetParties(command);
-    }
+    static public FixedList<Party> GetList(SearchPartiesCommand command) => PartyData.GetParties(command);
 
 
     #endregion Constructors and parsers

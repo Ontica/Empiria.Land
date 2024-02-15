@@ -73,8 +73,8 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     // TODO: Remove reload flag when it is possible.
-    static public LRSTransaction TryParse(string transactionUID, bool reload = false) {
-      return BaseObject.TryParse<LRSTransaction>($"TransactionUID = '{transactionUID}'", reload);
+    static public LRSTransaction TryParse(string transactionUID) {
+      return BaseObject.TryParse<LRSTransaction>($"TransactionUID = '{transactionUID}'");
     }
 
 

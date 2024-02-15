@@ -41,26 +41,11 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public RecordingActParty Parse(int id) {
-      return BaseObject.ParseId<RecordingActParty>(id);
-    }
+    static public RecordingActParty Parse(int id) => BaseObject.ParseId<RecordingActParty>(id);
 
+    static public RecordingActParty Parse(string uid) => BaseObject.ParseKey<RecordingActParty>(uid);
 
-    static public RecordingActParty Parse(int id, bool reload) {
-      return BaseObject.ParseId<RecordingActParty>(id, reload);
-    }
-
-
-    static public RecordingActParty Parse(string uid) {
-      return BaseObject.ParseKey<RecordingActParty>(uid);
-    }
-
-
-    static public RecordingActParty Empty {
-      get {
-        return BaseObject.ParseEmpty<RecordingActParty>();
-      }
-    }
+    static public RecordingActParty Empty => BaseObject.ParseEmpty<RecordingActParty>();
 
 
     static internal RecordingActParty Create(RecordingAct recordingAct, Party party,

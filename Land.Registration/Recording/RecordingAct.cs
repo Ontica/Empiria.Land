@@ -87,19 +87,9 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public RecordingAct Parse(int id) {
-      return BaseObject.ParseId<RecordingAct>(id);
-    }
+    static public RecordingAct Parse(int id) => BaseObject.ParseId<RecordingAct>(id);
 
-
-    static public RecordingAct Parse(int id, bool reload) {
-      return BaseObject.ParseId<RecordingAct>(id, reload);
-    }
-
-
-    static public RecordingAct Parse(string uid) {
-      return BaseObject.ParseKey<RecordingAct>(uid);
-    }
+    static public RecordingAct Parse(string uid) => BaseObject.ParseKey<RecordingAct>(uid);
 
     static private readonly RecordingAct _empty = BaseObject.ParseEmpty<RecordingAct>();
     static public RecordingAct Empty {

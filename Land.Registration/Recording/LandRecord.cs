@@ -66,8 +66,8 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public LandRecord TryParse(string landRecordUID, bool reload = false) {
-      return BaseObject.TryParse<LandRecord>($"DocumentUID = '{landRecordUID}'", reload);
+    static public LandRecord TryParse(string landRecordUID) {
+      return BaseObject.TryParse<LandRecord>($"DocumentUID = '{landRecordUID}'");
     }
 
 
