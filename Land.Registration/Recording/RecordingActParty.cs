@@ -174,13 +174,13 @@ namespace Empiria.Land.Registration {
       if (this.OwnershipPart.Unit.IsEmptyInstance) {
         return String.Empty;
       }
-      if (this.OwnershipPart.Unit == Unit.UndividedUnit) {
+      if (this.OwnershipPart.Unit.Equals(Unit.UndividedUnit)) {
         return "Proindiviso";
-      } else if (this.OwnershipPart.Unit == Unit.FullUnit) {
+      } else if (this.OwnershipPart.Unit.Equals(Unit.FullUnit)) {
         return "Totalidad";
-      } else if (this.OwnershipPart.Unit == Unit.Percentage) {
+      } else if (this.OwnershipPart.Unit.Equals(Unit.Percentage)) {
         return (this.OwnershipPart.Amount / 100).ToString("P2");
-      } else if (this.OwnershipPart.Unit == Unit.SquareMeters) {
+      } else if (this.OwnershipPart.Unit.Equals(Unit.SquareMeters)) {
         return (this.OwnershipPart.Amount).ToString("N2") + " m2";
       } else if (this.OwnershipPart.Unit.Id == 624) {
         return (this.OwnershipPart.Amount).ToString("N2") + " ha";

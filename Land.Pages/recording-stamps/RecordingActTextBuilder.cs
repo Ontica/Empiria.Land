@@ -69,8 +69,8 @@ namespace Empiria.Land.Pages {
       if (party.OwnershipPart.Unit.IsEmptyInstance) {
         html = html.Replace("{OWNERSHIP}", string.Empty);
 
-      } else if (party.OwnershipPart.Unit == Unit.FullUnit ||
-                 party.OwnershipPart.Unit == Unit.UndividedUnit) {
+      } else if (party.OwnershipPart.Unit.Equals(Unit.FullUnit) ||
+                 party.OwnershipPart.Unit.Equals(Unit.UndividedUnit)) {
         html = html.Replace("{OWNERSHIP}", $"({party.OwnershipPart.Unit.Name})");
 
       } else {

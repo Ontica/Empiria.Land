@@ -279,7 +279,7 @@ namespace Empiria.Land.Registration {
       Assertion.Require(parties.Count != 0, "El acto jurídico " + _recordingAct.IndexedName +
                                            " requiere cuando menos una persona o propietario.");
       foreach (var role in roles) {
-        var found = parties.Contains((x) => x.PartyRole == role);
+        var found = parties.Contains((x) => x.PartyRole.Equals(role));
         if (found) {
           return;
         }
