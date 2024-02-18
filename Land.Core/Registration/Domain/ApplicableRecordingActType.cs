@@ -47,14 +47,13 @@ namespace Empiria.Land.Registration {
 
     #region Methods
 
+    public override bool Equals(object obj) => Equals(obj as ApplicableRecordingActType);
+
     public bool Equals(ApplicableRecordingActType applicableActType) {
-      return applicableActType.GetHashCode() == this.GetHashCode();
-    }
-
-
-    public override bool Equals(object obj) {
-      return obj is ApplicableRecordingActType applicableActType &&
-             this.Equals(applicableActType);
+      if (applicableActType == null) {
+        return false;
+      }
+      return this.GetHashCode() == applicableActType.GetHashCode();
     }
 
 
