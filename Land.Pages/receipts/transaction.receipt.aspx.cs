@@ -68,7 +68,11 @@ namespace Empiria.Land.Pages {
       if (DISPLAY_VEDA_ELECTORAL_UI) {
         return "../themes/default/customer/horizontal.logo.veda.png";
       }
-      return "../themes/default/customer/horizontal.logo.png";
+      if (transaction.PresentationTime.Year == 2024) {
+        return "../themes/default/customer/horizontal.logo.2024.png";
+      } else {
+        return "../themes/default/customer/horizontal.logo.png";
+      }
     }
 
     protected string GetHeader() {

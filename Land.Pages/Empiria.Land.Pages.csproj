@@ -113,6 +113,8 @@
     <Content Include="themes\default\css\official.document.css" />
     <Content Include="themes\default\css\report.css" />
     <Content Include="themes\default\css\to.printer.css" />
+    <Content Include="themes\default\customer\government.seal.2024.png" />
+    <Content Include="themes\default\customer\horizontal.logo.2024.png" />
     <Content Include="themes\default\customer\horizontal.logo.png" />
     <Content Include="themes\default\customer\horizontal.logo.veda.png" />
     <Content Include="themes\default\textures\pixel.gif" />

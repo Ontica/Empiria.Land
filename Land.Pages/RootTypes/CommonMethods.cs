@@ -10,15 +10,6 @@ namespace Empiria.Land.Pages {
 
     static public string CustomerOfficeName => "Dirección de Catastro y Registro Público";
 
-    static public string DocumentLogo {
-      get {
-        if (DISPLAY_VEDA_ELECTORAL_UI) {
-          return "../themes/default/customer/horizontal.logo.veda.png";
-        }
-        return "../themes/default/customer/horizontal.logo.png";
-      }
-    }
-
     static public string GovernmentName => "GOBIERNO DEL ESTADO DE ZACATECAS";
 
     static public string GovernmentWebPage => "https://registropublico.zacatecas.gob.mx";

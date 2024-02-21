@@ -12,7 +12,7 @@
       <tr>
         <td style="vertical-align:top">
           <br />
-          <img style="margin-left:-22pt" class="logo" src="<%=Empiria.Land.Pages.CommonMethods.DocumentLogo%>" alt="" title="" width="240" />
+          <img style="margin-left:-22pt" class="logo" src="<%=base.GetDocumentLogo()%>" alt="" title="" width="280" />
         </td>
         <td style="vertical-align:top;text-align:center;width:95%">
 	        <h3><%=Empiria.Land.Pages.CommonMethods.CustomerOfficeName%></h3>

@@ -16,7 +16,7 @@
 		      <table style="width:100%" cellspacing="0" cellpadding="2">
 			      <tr>
 				      <td style="vertical-align:middle">
-                <img src="<%=GetDocumentLogo()%>" alt="" title="" style="width:120px;padding-top:6px" />
+                <img src="<%=GetDocumentLogo()%>" alt="" title="" style="width:240px;padding-top:6px" />
 				      </td>
               <td style="vertical-align:top;width:80%;white-space:nowrap">
 			          <table width="100%" cellpadding="0" cellspacing="0">
@@ -124,7 +124,7 @@
 		      <table style="width:100%" cellspacing="0" cellpadding="2">
 			      <tr>
 				      <td style="vertical-align:middle">
-                <img src="<%=GetDocumentLogo()%>" alt="" title="" style="width:120px;padding-top:6px" />
+                <img src="<%=GetDocumentLogo()%>" alt="" title="" style="width:240px;padding-top:6px" />
 				      </td>
               <td style="vertical-align:top;width:80%;white-space:nowrap">
 			          <table width="100%" cellpadding="0" cellspacing="0">
