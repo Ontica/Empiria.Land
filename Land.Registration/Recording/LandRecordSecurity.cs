@@ -54,15 +54,15 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public void GenerateImagingControlID() {
-      Assertion.Require(!LandRecord.IsEmptyInstance, "Document can't be the empty instance.");
+      Assertion.Require(!LandRecord.IsEmptyInstance, "Land record can't be the empty instance.");
       Assertion.Require(LandRecord.IsClosed, "Document is not closed.");
 
       Assertion.Require(LandRecord.ImagingControlID.Length == 0,
-                        "Document has already assigned an imaging control number.");
+                        "Land record has already assigned an imaging control number.");
 
-      Assertion.Require(LandRecord.RecordingActs.Count > 0, "Document should have recording acts.");
+      Assertion.Require(LandRecord.RecordingActs.Count > 0, "Land record should have recording acts.");
       Assertion.Require(LandRecord.RecordingActs.CountAll((x) => !x.BookEntry.IsEmptyInstance) == 0,
-                        "Document can't have any recording acts that are related to physical book entries.");
+                        "Land record can't have any recording acts that are related to physical book entries.");
 
 
       LandRecord.ImagingControlID = LandRecordsData.GetNextImagingControlID(LandRecord);
@@ -117,12 +117,12 @@ namespace Empiria.Land.Registration {
 
     public void AssertCanBeClosed() {
       if (!this.IsReadyToClose()) {
-        Assertion.RequireFail("El usuario no tiene permisos para cerrar el documento o éste no tiene un estado válido.");
+        Assertion.RequireFail("El usuario no tiene permisos para cerrar la inscripción o ésta no tiene un estado válido.");
       }
 
       //this.AssertGraceDaysForEdition();
 
-      Assertion.Require(this.LandRecord.RecordingActs.Count > 0, "El documento no tiene actos jurídicos.");
+      Assertion.Require(this.LandRecord.RecordingActs.Count > 0, "La inscripción no tiene actos jurídicos.");
 
       foreach (var recordingAct in this.LandRecord.RecordingActs) {
         recordingAct.Validator.AssertCanBeClosed();
@@ -132,7 +132,7 @@ namespace Empiria.Land.Registration {
 
     public void AssertCanBeOpened() {
       if (!this.IsReadyToOpen()) {
-        Assertion.RequireFail("El usuario no tiene permisos para abrir este documento.");
+        Assertion.RequireFail("El usuario no tiene permisos para abrir esta inscripción.");
       }
 
       //this.AssertGraceDaysForEdition();
@@ -156,7 +156,7 @@ namespace Empiria.Land.Registration {
       }
       if (lastDate.AddDays(graceDaysForEdition) < DateTime.Today) {
         Assertion.RequireFail("Por motivos de seguridad y calidad en el registro de la información, " +
-                             "no es posible modificar documentos de trámites de más de 45 días.\n\n" +
+                             "no es posible modificar inscripciones de documentos en trámites de más de 45 días.\n\n" +
                              "En su lugar se puede optar por registrar un nuevo trámite, " +
                              "o quizás se pueda hacer un reingreso si no han transcurrido los " +
                              "90 días de gracia.");
@@ -226,13 +226,10 @@ namespace Empiria.Land.Registration {
       var doc = this.LandRecord;
       if (version == 1) {
         return new object[] {
-          1, "Id", doc.Id, "DocumentTypeId", doc.Instrument.InstrumentType.Id,
-          "UID", doc.UID, "InstrumentId", doc.Instrument.Id,
-          "IssuePlaceId", doc.Instrument.Issuer.RelatedPlace.Id,
-          "IssueOfficeId", doc.Instrument.Issuer.RelatedEntity.Id,
-          "IssuedById", doc.Instrument.Issuer.RelatedContact.Id,
-          "IssueDate", doc.Instrument.IssueDate,
-          "Summary", doc.Instrument.Summary, "SheetsCount", doc.Instrument.SheetsCount,
+          1, "Id", doc.Id, "UID", doc.UID, "InstrumentId", doc.Instrument.Id,
+          "PresentationTime", doc.PresentationTime,
+          "AuthorizationTime", doc.AuthorizationTime,
+          "AuthorizedBy", doc.AuthorizedBy.Id,
           "PostedBy", doc.PostedBy.Id, "PostingTime", doc.PostingTime,
           "Status", (char) doc.Status,
         };

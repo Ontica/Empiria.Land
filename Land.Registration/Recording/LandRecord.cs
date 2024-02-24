@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 
 using Empiria.Contacts;
@@ -57,7 +56,7 @@ namespace Empiria.Land.Registration {
     }
 
     static public LandRecord ParseGuid(string guid) {
-      var landRecord = BaseObject.TryParse<LandRecord>($"DocumentGUID = '{guid}'");
+      var landRecord = BaseObject.TryParse<LandRecord>($"LandRecordGuid = '{guid}'");
 
       Assertion.Require(landRecord,
                         $"There is not registered a land record with guid '{guid}'.");
@@ -67,7 +66,7 @@ namespace Empiria.Land.Registration {
 
 
     static public LandRecord TryParse(string landRecordUID) {
-      return BaseObject.TryParse<LandRecord>($"DocumentUID = '{landRecordUID}'");
+      return BaseObject.TryParse<LandRecord>($"LandRecordUID = '{landRecordUID}'");
     }
 
 
@@ -80,7 +79,7 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField("DocumentGuid")]
+    [DataField("LandRecordGuid")]
     public string GUID {
       get;
       private set;
@@ -94,7 +93,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    [DataField("DocumentUID", IsOptional = false)]
+    [DataField("LandRecordUID", IsOptional = false)]
     private string _documentUID = String.Empty;
 
     public override string UID {
@@ -139,6 +138,28 @@ namespace Empiria.Land.Registration {
     } = string.Empty;
 
 
+    public bool HasTransaction {
+      get {
+        return !GetTransaction().Equals(LRSTransaction.Empty);
+      }
+    }
+
+    public RecorderOffice RecorderOffice {
+      get {
+        if (HasTransaction) {
+          return GetTransaction().RecorderOffice;
+        } else {
+          return RecorderOffice.Empty;
+        }
+      }
+    }
+
+    [DataField("AuthorizedById")]
+    public Person AuthorizedBy {
+      get;
+      private set;
+    }
+
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(UID, Instrument.Keywords, ImagingControlID);
@@ -158,7 +179,7 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-    [DataField("DocumentStatus", Default = RecordableObjectStatus.Incomplete)]
+    [DataField("LandRecordStatus", Default = RecordableObjectStatus.Incomplete)]
     public RecordableObjectStatus Status {
       get;
       private set;
@@ -268,6 +289,7 @@ namespace Empiria.Land.Registration {
 
       if (!this.IsHistoricRecord) {
         this.AuthorizationTime = DateTime.Now;
+        this.AuthorizedBy = ExecutionServer.CurrentContact as Person;
       }
 
       this.Status = RecordableObjectStatus.Closed;
@@ -278,6 +300,11 @@ namespace Empiria.Land.Registration {
 
     public void Open() {
       this.Security.AssertCanBeOpened();
+
+      if (!this.IsHistoricRecord) {
+        this.AuthorizationTime = ExecutionServer.DateMinValue;
+        this.AuthorizedBy = Person.Empty;
+      }
 
       this.Status = RecordableObjectStatus.Incomplete;
 
@@ -323,36 +350,6 @@ namespace Empiria.Land.Registration {
         return Resource.Empty;
       }
     }
-
-    public bool HasTransaction {
-      get {
-        return !GetTransaction().Equals(LRSTransaction.Empty);
-      }
-    }
-
-    public RecorderOffice RecorderOffice {
-      get {
-        if (HasTransaction) {
-          return GetTransaction().RecorderOffice;
-        } else {
-          return RecorderOffice.Empty;
-        }
-      }
-    }
-
-
-    public Person AuthorizedBy {
-      get {
-        if (AuthorizationTime == ExecutionServer.DateMinValue) {
-          return Person.Parse(-1);
-        } else if (this.AuthorizationTime >= new DateTime(2022, 4, 1)) {
-          return Person.Parse(401);  // Roberto López Arellano
-        } else {
-          return Person.Parse(4);   // Tere Alvarado
-        }
-      }
-    }
-
 
     private LRSTransaction _transaction = null;
 

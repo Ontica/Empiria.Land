@@ -29,7 +29,7 @@ namespace Empiria.Land.ESign.Data {
                 " MAX(tra.PresentationTime) AS PresentationTime " +
 
                 " FROM LRSTransactions tra " +
-                " INNER JOIN LRSDocuments doc on tra.DocumentId = doc.DocumentId " +
+                " INNER JOIN LRSLandRecords doc on tra.DocumentId = doc.LandRecordId " +
                 " INNER JOIN LRSInstruments ins on doc.InstrumentId = ins.InstrumentId " +
                 " INNER JOIN SimpleObjects docType on tra.DocumentTypeId = docType.ObjectId " +
                 " INNER JOIN SimpleObjects transType on tra.TransactionTypeId = transType.ObjectId " +

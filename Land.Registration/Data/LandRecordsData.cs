@@ -69,7 +69,7 @@ namespace Empiria.Land.Data {
       string prefix = landRecord.AuthorizationTime.ToString("yyyy-MM");
 
       var sql = "SELECT MAX(ImagingControlID) " +
-                $"FROM LRSDocuments " +
+                $"FROM LRSLandRecords " +
                 $"WHERE ImagingControlID LIKE '{prefix}-%'";
 
       var imagingControlID = DataReader.GetScalar<String>(DataOperation.Parse(sql), String.Empty);
@@ -85,7 +85,7 @@ namespace Empiria.Land.Data {
 
 
     static internal void SaveImagingControlID(LandRecord landRecord) {
-      var op = DataOperation.Parse("setLRSDocumentImagingControlID",
+      var op = DataOperation.Parse("setLRSLandRecordImagingControlID",
                                    landRecord.Id, landRecord.ImagingControlID);
 
       DataWriter.Execute(op);
@@ -93,12 +93,10 @@ namespace Empiria.Land.Data {
 
 
     static internal void WriteLandRecord(LandRecord o) {
-      var op = DataOperation.Parse("writeLRSDocument", o.Id, o.GUID, o.Instrument.Id, 2410, -1, o.UID,
-                                   o.ImagingControlID, o.Instrument.Summary, string.Empty, string.Empty,
-                                   o.Keywords, o.PresentationTime, o.AuthorizationTime,
-                                   o.Instrument.Issuer.RelatedPlace.Id, o.Instrument.Issuer.RelatedEntity.Id,
-                                   o.Instrument.Issuer.RelatedContact.Id, o.Instrument.IssueDate,
-                                   o.Instrument.SheetsCount, (char) o.Status, o.PostedBy.Id, o.PostingTime,
+      var op = DataOperation.Parse("writeLRSLandRecord", o.Id, o.GUID, o.UID, o.Instrument.Id,
+                                   o.ImagingControlID, o.Keywords, o.PresentationTime, o.AuthorizationTime,
+                                   o.AuthorizedBy.Id, o.AuthorizedBy.Id, o.AuthorizationTime, string.Empty,
+                                   o.PostedBy.Id, o.PostingTime, (char) o.Status,
                                    o.Security.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(op);
