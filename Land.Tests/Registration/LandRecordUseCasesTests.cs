@@ -13,6 +13,7 @@ using Xunit;
 
 using Empiria.Land.Registration.UseCases;
 using Empiria.Land.Registration.Adapters;
+using Empiria.Land.Registration;
 
 namespace Empiria.Land.Tests.Registration {
 
@@ -42,6 +43,16 @@ namespace Empiria.Land.Tests.Registration {
       Assert.NotNull(landRecord);
     }
 
+    [Fact]
+    public void Should_Get_Land_Record_PrimaryParties() {
+      LandRecord landRecord = LandRecord.ParseGuid(TestingConstants.LAND_RECORD_UID);
+
+      foreach (var act in landRecord.RecordingActs) {
+        foreach (var party in act.Parties.PrimaryParties) {
+          Assert.True(party.OwnershipPart.Unit == DataTypes.Unit.FullUnit);
+        }
+      }
+    }
 
     #endregion Facts
 

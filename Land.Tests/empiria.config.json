@@ -36,6 +36,11 @@
     },
     {
       "type": "Land.Tests",
+      "key": "Testing.LandRecordUID",
+      "value": "{{TESTING-LAND-RECORD-UID}}"
+    },
+    {
+      "type": "Land.Tests",
       "key": "Testing.HistoricLandRecordUID",
       "value": "{{TESTING-HISTORIC-LAND-RECORD-UID}}"
     },

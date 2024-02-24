@@ -27,6 +27,8 @@ namespace Empiria.Land.Tests {
 
     static public string EFILING_UID => ConfigurationData.Get<string>("Testing.FilingUID");
 
+    static public string LAND_RECORD_UID => ConfigurationData.Get<string>("Testing.LandRecordUID");
+
     static public string HISTORIC_LAND_RECORD_UID => ConfigurationData.Get<string>("Testing.HistoricLandRecordUID");
 
     static public string INSTRUMENT_UID => ConfigurationData.Get<string>("Testing.InstrumentUID");
