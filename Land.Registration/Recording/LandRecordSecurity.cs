@@ -9,8 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Contacts;
-using Empiria.Json;
 using Empiria.Security;
 
 using Empiria.Land.Data;
@@ -21,8 +19,6 @@ namespace Empiria.Land.Registration {
 
   /// <summary>Contains security methods used to protect the integrity of recording documents.</summary>
   public class LandRecordSecurity: IProtected {
-
-    private readonly bool USE_E_SIGN = ConfigurationData.Get<bool>("UseESignature", false);
 
     #region Constructors and parsers
 
@@ -40,13 +36,6 @@ namespace Empiria.Land.Registration {
 
     internal LandRecord LandRecord {
       get;
-    }
-
-
-    public bool UseESign {
-      get {
-        return USE_E_SIGN;
-      }
     }
 
 
@@ -69,15 +58,6 @@ namespace Empiria.Land.Registration {
       LandRecord.ImagingControlID = LandRecordsData.GetNextImagingControlID(LandRecord);
 
       LandRecordsData.SaveImagingControlID(LandRecord);
-    }
-
-    public bool Signed() {
-      return this.LandRecord.SecurityData.IsSigned;
-    }
-
-
-    public bool Unsigned() {
-      return !this.Signed();
     }
 
 
@@ -110,7 +90,7 @@ namespace Empiria.Land.Registration {
       if (!this.LandRecord.IsClosed) {
         return false;
       }
-      if (Signed()) {
+      if (this.LandRecord.SecurityData.IsSigned) {
         return false;
       }
       return LRSWorkflowRules.UserCanEditLandRecord(this.LandRecord);
@@ -165,68 +145,19 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public string GetDigitalSeal() {
-      var transaction = this.LandRecord.Transaction;
-
-      string s = "||" + transaction.UID + "|" + this.LandRecord.UID;
-      for (int i = 0; i < this.LandRecord.RecordingActs.Count; i++) {
-        s += "|" + this.LandRecord.RecordingActs[i].Id.ToString();
-      }
-      s += "||";
-
-      return Cryptographer.SignTextWithSystemCredentials(s);
-    }
-
-
-    public string GetDigitalSignature() {
-      if (!UseESign) {
-        return "Documento firmado de forma autógrafa.";
-      }
-      if (this.Unsigned()) {
-        return "NO TIENE FIRMA ELECTRÓNICA";
-      } else {
-        return DigitalSignatureData.GetDigitalSignature(this.LandRecord)
-                                   .Substring(0, 64);
-      }
-    }
-
-    internal string GetDigitalSignatureToken() {
-      if (USE_E_SIGN) {
-        return Guid.NewGuid().ToString();
-      }
-      return string.Empty;
-    }
-
-    public Person GetSignedBy() {
-      return this.LandRecord.SecurityData.SignedBy;
-    }
-
-
-    public string QRCodeSecurityHash() {
-      if (this.LandRecord.IsNew) {
-        return String.Empty;
-      }
-
-      return Cryptographer.CreateHashCode(this.LandRecord.Id.ToString("00000000") +
-                                          this.LandRecord.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
-                                          this.LandRecord.UID)
-                           .Substring(0, 8)
-                           .ToUpperInvariant();
-    }
-
-
     public void Sign() {
       Assertion.Require(this.LandRecord.Status == RecordableObjectStatus.Closed,
-                        "No se pude firmar una inscripción si no está cerrada.");
+                        "No se pude firmar una inscripción que no está cerrada.");
 
       this.LandRecord.SecurityData.SetSignData(this.LandRecord);
 
       LandRecordsData.SaveSecurityData(this.LandRecord);
     }
 
+
     public void Unsign() {
       Assertion.Require(this.LandRecord.SecurityData.IsSigned,
-                        "No se pude desfirmar una inscipción si no está firmada.");
+                        "No se pude desfirmar una inscripción que no está firmada.");
 
       this.LandRecord.SecurityData.RemoveSignData();
 
@@ -257,17 +188,6 @@ namespace Empiria.Land.Registration {
         };
       }
       throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
-    }
-
-    internal string GetSignatureType() {
-      if (Unsigned()) {
-        return "Sin firma";
-      }
-      if (USE_E_SIGN) {
-        return "Electrónica";
-      }
-
-      return "Manual";
     }
 
 
