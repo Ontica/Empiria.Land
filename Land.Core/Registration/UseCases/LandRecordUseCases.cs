@@ -75,6 +75,15 @@ namespace Empiria.Land.Registration.UseCases {
       return LandRecordMapper.Map(landRecord);
     }
 
+
+    public void RefreshLandRecordsSecurityData() {
+      var records = BaseObject.GetList<LandRecord>("SignedById <> -1 AND SecurityExtData = ''");
+
+      foreach (var record in records) {
+        record.Security.RefreshSecurityData();
+      }
+    }
+
     #endregion Use cases
 
   }  // class LandRecordUseCases

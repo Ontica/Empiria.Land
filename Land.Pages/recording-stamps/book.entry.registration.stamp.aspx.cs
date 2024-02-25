@@ -203,43 +203,17 @@ namespace Empiria.Land.Pages {
 
 
 		protected string GetRecordingSignerPosition() {
-			return $"C. Oficial Registrador del Distrito Judicial de {baseBookEntry.LandRecord.RecorderOffice.ShortName}";
+      return baseBookEntry.LandRecord.SecurityData.SignedByJobTitle;
 		}
 
 
 		protected string GetRecordingSignerName() {
-			if (baseBookEntry.RecordingTime >= new DateTime(2022, 4, 1)) {
-				return "Lic. Roberto López Arellano";
-			} else {
-				return "Lic. Teresa de Jesús Alvarado Ortiz";
-			}
-		}
+      return baseBookEntry.LandRecord.SecurityData.SignedBy.FullName;
+    }
 
 
 		protected string GetDigitalSeal() {
-			string s = "||" + transaction.UID + "|" + transaction.LandRecord.UID;
-			if (this.ShowAllRecordings) {
-				for (int i = 0; i < bookEntries.Count; i++) {
-					s += "|" + bookEntries[i].Id.ToString();
-				}
-			} else {
-				s += "|" + this.baseBookEntry.Id.ToString();
-			}
-			s += "||";
-			return Empiria.Security.Cryptographer.SignTextWithSystemCredentials(s);
-		}
-
-
-		protected string GetDigitalSignature() {
-			string s = "||" + transaction.UID + "|" + transaction.LandRecord.UID;
-			if (this.ShowAllRecordings) {
-				for (int i = 0; i < bookEntries.Count; i++) {
-					s += "|" + bookEntries[i].Id.ToString();
-				}
-			} else {
-				s += "|" + this.baseBookEntry.Id.ToString();
-			}
-			return Empiria.Security.Cryptographer.SignTextWithSystemCredentials(s + "eSign");
+      return baseBookEntry.LandRecord.SecurityData.DigitalSeal;
 		}
 
 

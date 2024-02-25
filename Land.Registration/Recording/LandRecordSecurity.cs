@@ -145,6 +145,14 @@ namespace Empiria.Land.Registration {
     }
 
 
+    // Remove after installation
+    public void RefreshSecurityData() {
+      this.LandRecord.SecurityData.RefreshSignData(this.LandRecord);
+
+      LandRecordsData.SaveSecurityData(this.LandRecord);
+    }
+
+
     public void Sign() {
       Assertion.Require(this.LandRecord.Status == RecordableObjectStatus.Closed,
                         "No se pude firmar una inscripción que no está cerrada.");
