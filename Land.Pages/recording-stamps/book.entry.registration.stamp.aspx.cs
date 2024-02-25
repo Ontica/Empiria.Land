@@ -63,7 +63,7 @@ namespace Empiria.Land.Pages {
 					Request.QueryString["transactionId"] == "-1") {
 				var bookEntry = BookEntry.Parse(int.Parse(Request.QueryString["id"]));
 
-				return bookEntry.LandRecord.GetTransaction();
+				return bookEntry.LandRecord.Transaction;
 			}
 
 			return LRSTransaction.Parse(int.Parse(Request.QueryString["transactionId"]));

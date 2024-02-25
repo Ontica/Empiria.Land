@@ -25,7 +25,7 @@ namespace Empiria.Land.Registration.Adapters {
   static internal partial class LandRecordMapper {
 
     static internal LandRecordDto Map(LandRecord landRecord) {
-      return Map(landRecord.GetTransaction(), landRecord);
+      return Map(landRecord.Transaction, landRecord);
     }
 
 
@@ -65,7 +65,7 @@ namespace Empiria.Land.Registration.Adapters {
 
       if (bookEntries.Count > 0) {
         return mediaBuilder.GetMediaDto(LandMediaContent.BookEntryRegistrationStamp,
-                                        "-1", landRecord.GetTransaction().Id.ToString());
+                                        "-1", landRecord.Transaction.Id.ToString());
       } else {
         return mediaBuilder.GetMediaDto(LandMediaContent.RegistrationStamp,
                                         landRecord.UID);

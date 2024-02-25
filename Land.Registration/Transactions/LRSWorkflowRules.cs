@@ -265,7 +265,7 @@ namespace Empiria.Land.Registration.Transactions {
       if (landRecord.IsHistoricRecord) {
         return true;
       }
-      var transaction = landRecord.GetTransaction();
+      var transaction = landRecord.Transaction;
 
       Assertion.Require(!transaction.IsEmptyInstance,
                         "Transaction can't be the empty instance, because the document is not historic.");

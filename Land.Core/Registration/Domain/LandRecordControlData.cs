@@ -33,7 +33,7 @@ namespace Empiria.Land.Registration {
       Assertion.Require(landRecord, nameof(landRecord));
 
       _landRecord = landRecord;
-      _transaction = landRecord.GetTransaction();
+      _transaction = landRecord.Transaction;
 
       _bookEntries = BookEntry.GetBookEntriesForLandRecord(_landRecord);
 

@@ -357,9 +357,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public LRSTransaction GetTransaction() {
-      return this.Transaction;
-    }
 
     protected override void OnLoad() {
       RefreshRecordingActs();

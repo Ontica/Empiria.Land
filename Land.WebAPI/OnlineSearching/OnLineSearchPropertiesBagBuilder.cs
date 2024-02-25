@@ -151,7 +151,7 @@ namespace Empiria.Land.WebApi {
         propertyBag.Add(new PropertyBagItem("Puesto", landRecord.Security.GetSignedBy().JobTitle));
       }
 
-      propertyBag.AddRange(TransactionSectionItems(landRecord.GetTransaction()));
+      propertyBag.AddRange(TransactionSectionItems(landRecord.Transaction));
 
       return propertyBag;
     }

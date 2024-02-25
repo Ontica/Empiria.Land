@@ -24,9 +24,8 @@ namespace Empiria.Land.Pages {
       Assertion.Require(landRecord, nameof(landRecord));
 
       _landRecord = landRecord;
-      _transaction = landRecord.GetTransaction();
+      _transaction = landRecord.Transaction;
     }
-
 
 
     internal string PrelationText() {

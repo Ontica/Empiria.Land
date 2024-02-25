@@ -231,7 +231,7 @@ namespace Empiria.Land.Registration {
       var certificates = _recordingAct.Resource.Tract.GetEmittedCerificates();
 
       bool wrongPrelation = certificates.Contains((x) => x.IsClosed && x.IssueTime > _recordingAct.LandRecord.AuthorizationTime &&
-                                                         !x.Transaction.Equals(_recordingAct.LandRecord.GetTransaction()));
+                                                         !x.Transaction.Equals(_recordingAct.LandRecord.Transaction));
 
       if (wrongPrelation) {
         Assertion.RequireFail("El acto jurídico " + _recordingAct.IndexedName +

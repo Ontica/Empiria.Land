@@ -85,7 +85,7 @@ namespace Empiria.Land.Registration {
 
     static private LRSTransaction LoadTransaction(LandRecord landRecord) {
       if (landRecord.HasTransaction) {
-        return landRecord.GetTransaction();
+        return landRecord.Transaction;
       }
 
       return LRSTransaction.Empty;

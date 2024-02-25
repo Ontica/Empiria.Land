@@ -32,7 +32,7 @@ namespace Empiria.Land.Registration.Adapters {
         RecordedBy = landRecord.GetRecordingOfficials()[0].ShortName,
         AuthorizedBy = landRecord.AuthorizedBy.ShortName,
         PresentationTime = landRecord.PresentationTime,
-        TransactionUID = recordingAct.LandRecord.GetTransaction().UID,
+        TransactionUID = recordingAct.LandRecord.Transaction.UID,
         Status = landRecord.Status.ToString(),
         Media = LandRecordMapper.MapStampMedia(landRecord)
       };

@@ -53,7 +53,7 @@ namespace Empiria.Land.Pages {
 
       landRecord = LandRecord.TryParse(landRecordUID);
 
-      transaction = landRecord.GetTransaction();
+      transaction = landRecord.Transaction;
 
       landRecord.RefreshRecordingActs();
 

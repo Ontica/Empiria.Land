@@ -51,19 +51,6 @@ namespace Empiria.Land.Data {
       return DataReader.GetList<RecordingAct>(operation);
     }
 
-    static internal LRSTransaction GetLandRecordTransaction(LandRecord landRecord) {
-      if (landRecord.IsEmptyInstance) {
-        return LRSTransaction.Empty;
-      }
-
-      var sql = $"SELECT * FROM LRSTransactions " +
-                $"WHERE DocumentId = {landRecord.Id}";
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetObject<LRSTransaction>(op, LRSTransaction.Empty);
-    }
-
 
     static internal string GetNextImagingControlID(LandRecord landRecord) {
       string prefix = landRecord.AuthorizationTime.ToString("yyyy-MM");

@@ -143,7 +143,7 @@ namespace Empiria.Land.Registration {
     }
 
     private void AssertGraceDaysForEdition() {
-      var transaction = this.LandRecord.GetTransaction();
+      var transaction = this.LandRecord.Transaction;
 
       if (transaction.IsEmptyInstance) {
         return;
@@ -165,7 +165,7 @@ namespace Empiria.Land.Registration {
 
 
     public string GetDigitalSeal() {
-      var transaction = this.LandRecord.GetTransaction();
+      var transaction = this.LandRecord.Transaction;
 
       string s = "||" + transaction.UID + "|" + this.LandRecord.UID;
       for (int i = 0; i < this.LandRecord.RecordingActs.Count; i++) {
