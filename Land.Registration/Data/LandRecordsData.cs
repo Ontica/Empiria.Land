@@ -79,6 +79,16 @@ namespace Empiria.Land.Data {
     }
 
 
+    static internal void SaveSecurityData(LandRecord o) {
+      var op = DataOperation.Parse("setLRSLandRecordSecurityData", o.Id, o.GUID,
+                                   o.SecurityData.SignedBy.Id, o.SecurityData.SignedTime,
+                                   o.SecurityData.ExtData.ToString(),
+                                   o.Security.Integrity.GetUpdatedHashCode());
+
+      DataWriter.Execute(op);
+    }
+
+
     static internal void WriteLandRecord(LandRecord o) {
       var op = DataOperation.Parse("writeLRSLandRecord", o.Id, o.GUID, o.UID, o.Instrument.Id,
                                    o.Transaction.Id, o.PresentationTime, o.AuthorizationTime,

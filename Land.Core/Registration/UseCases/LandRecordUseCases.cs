@@ -57,6 +57,8 @@ namespace Empiria.Land.Registration.UseCases {
 
       landRecord.Close();
 
+      landRecord.Security.Sign();   // ToDo: Remove this line when e-sign workflow is implemented
+
       return LandRecordMapper.Map(landRecord);
     }
 
@@ -65,6 +67,8 @@ namespace Empiria.Land.Registration.UseCases {
       Assertion.Require(landRecordUID, nameof(landRecordUID));
 
       LandRecord landRecord = LandRecord.ParseGuid(landRecordUID);
+
+      landRecord.Security.Unsign();  // ToDo: Remove this line when e-sign workflow is implemented
 
       landRecord.Open();
 

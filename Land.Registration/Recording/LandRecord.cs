@@ -219,13 +219,17 @@ namespace Empiria.Land.Registration {
       }
     }
 
-
     public LandRecordSecurity Security {
       get {
         return new LandRecordSecurity(this);
       }
     }
 
+    [DataObject]
+    public LandRecordSecurityData SecurityData {
+      get;
+      private set;
+    }
 
     #endregion Public properties
 

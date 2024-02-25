@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Contacts;
+using Empiria.Json;
 using Empiria.Security;
 
 using Empiria.Land.Data;
@@ -71,7 +72,7 @@ namespace Empiria.Land.Registration {
     }
 
     public bool Signed() {
-      return DigitalSignatureData.IsSigned(this.LandRecord);
+      return this.LandRecord.SecurityData.IsSigned;
     }
 
 
@@ -109,7 +110,7 @@ namespace Empiria.Land.Registration {
       if (!this.LandRecord.IsClosed) {
         return false;
       }
-      if (this.LandRecord.Security.Signed()) {
+      if (Signed()) {
         return false;
       }
       return LRSWorkflowRules.UserCanEditLandRecord(this.LandRecord);
@@ -189,13 +190,15 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    internal string GetDigitalSignatureToken() {
+      if (USE_E_SIGN) {
+        return Guid.NewGuid().ToString();
+      }
+      return string.Empty;
+    }
 
     public Person GetSignedBy() {
-      if (UseESign) {
-        return DigitalSignatureData.GetDigitalSignatureSignedBy(this.LandRecord);
-      } else {
-        return this.LandRecord.RecorderOffice.GetSigner();
-      }
+      return this.LandRecord.SecurityData.SignedBy;
     }
 
 
@@ -211,6 +214,24 @@ namespace Empiria.Land.Registration {
                            .ToUpperInvariant();
     }
 
+
+    public void Sign() {
+      Assertion.Require(this.LandRecord.Status == RecordableObjectStatus.Closed,
+                        "No se pude firmar una inscripción si no está cerrada.");
+
+      this.LandRecord.SecurityData.SetSignData(this.LandRecord);
+
+      LandRecordsData.SaveSecurityData(this.LandRecord);
+    }
+
+    public void Unsign() {
+      Assertion.Require(this.LandRecord.SecurityData.IsSigned,
+                        "No se pude desfirmar una inscipción si no está firmada.");
+
+      this.LandRecord.SecurityData.RemoveSignData();
+
+      LandRecordsData.SaveSecurityData(this.LandRecord);
+    }
 
     #endregion Public methods
 
@@ -230,12 +251,25 @@ namespace Empiria.Land.Registration {
           "PresentationTime", doc.PresentationTime,
           "AuthorizationTime", doc.AuthorizationTime,
           "AuthorizedBy", doc.AuthorizedBy.Id,
+          "SecurityData", doc.SecurityData.ExtData.ToString(),
           "PostedBy", doc.PostedBy.Id, "PostingTime", doc.PostingTime,
           "Status", (char) doc.Status,
         };
       }
       throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
     }
+
+    internal string GetSignatureType() {
+      if (Unsigned()) {
+        return "Sin firma";
+      }
+      if (USE_E_SIGN) {
+        return "Electrónica";
+      }
+
+      return "Manual";
+    }
+
 
     private IntegrityValidator _validator = null;
     public IntegrityValidator Integrity {
