@@ -131,7 +131,7 @@ namespace Empiria.Land.WebApi {
         propertyBag.Add(new PropertyBagItem("Descripción", uniqueResource.AsText));
       }
 
-      var unsigned = landRecord.Security.UseESign && landRecord.Security.Unsigned();
+      var unsigned = landRecord.SecurityData.UsesESign && landRecord.SecurityData.IsUnsigned;
 
       propertyBag.Add(new PropertyBagItem("Verificación de elementos de seguridad", String.Empty,
                                           unsigned ? "section-error" : "section"));
@@ -139,16 +139,16 @@ namespace Empiria.Land.WebApi {
       if (hash.Length != 0 && landRecord.AuthorizationTime < hashCodeValidationStartDate) {
         propertyBag.Add(new PropertyBagItem("Código de verificación", hash, "bold-text"));
       } else {
-        propertyBag.Add(new PropertyBagItem("Código de verificación", landRecord.Security.QRCodeSecurityHash(), "bold-text"));
+        propertyBag.Add(new PropertyBagItem("Código de verificación", landRecord.SecurityData.SecurityHash, "bold-text"));
       }
-      propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(landRecord.Security.GetDigitalSeal()), "mono-space-text"));
+      propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(landRecord.SecurityData.DigitalSeal), "mono-space-text"));
       if (unsigned) {
         propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada",
                         "MUY IMPORTANTE: El documento NO ES VÁLIDO. NO HA SIDO FIRMADO ELECTRÓNICAMENTE.", "warning-status-text"));
       } else {
-        propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada", landRecord.Security.GetDigitalSignature()));
-        propertyBag.Add(new PropertyBagItem("Firmado por", landRecord.Security.GetSignedBy().FullName, "bold-text"));
-        propertyBag.Add(new PropertyBagItem("Puesto", landRecord.Security.GetSignedBy().JobTitle));
+        propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada", landRecord.SecurityData.DigitalSignature));
+        propertyBag.Add(new PropertyBagItem("Firmado por", landRecord.SecurityData.SignedBy.FullName, "bold-text"));
+        propertyBag.Add(new PropertyBagItem("Puesto", landRecord.SecurityData.SignedBy.JobPosition));
       }
 
       propertyBag.AddRange(TransactionSectionItems(landRecord.Transaction));

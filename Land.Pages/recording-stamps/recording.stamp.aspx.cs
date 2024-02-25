@@ -77,7 +77,7 @@ namespace Empiria.Land.Pages {
         return CommonMethods.AsWarning("El documento está ABIERTO por lo que no tiene sello digital.");
 
       } else {
-        return landRecord.Security.GetDigitalSeal().Substring(0, 64);
+        return landRecord.SecurityData.DigitalSeal.Substring(0, 64);
 
       }
     }
@@ -90,14 +90,14 @@ namespace Empiria.Land.Pages {
       if (!landRecord.IsClosed) {
         return CommonMethods.AsWarning("El documento está incompleto. No tiene validez.");
       }
-      if (!landRecord.Security.UseESign) {
+      if (!landRecord.SecurityData.UsesESign) {
         return "Documento firmado de forma autógrafa. Requiere también sello oficial.";
 
-      } else if (landRecord.Security.UseESign && landRecord.Security.Unsigned()) {
+      } else if (landRecord.SecurityData.UsesESign && landRecord.SecurityData.IsUnsigned) {
         return CommonMethods.AsWarning("Este documento NO HA SIDO FIRMADO digitalmente. No tiene valor oficial.");
 
-      } else if (landRecord.Security.UseESign && landRecord.Security.Signed()) {
-        return landRecord.Security.GetDigitalSignature();
+      } else if (landRecord.SecurityData.UsesESign && landRecord.SecurityData.IsSigned) {
+        return landRecord.SecurityData.DigitalSignature;
 
       } else {
         throw Assertion.EnsureNoReachThisCode();
@@ -109,7 +109,7 @@ namespace Empiria.Land.Pages {
       if (!landRecord.IsClosed) {
         return false;
       }
-      if (landRecord.Security.UseESign && landRecord.Security.Unsigned()) {
+      if (landRecord.SecurityData.UsesESign && landRecord.SecurityData.IsUnsigned) {
         return false;
       }
       //if (transaction.Workflow.IsFinished) {
@@ -236,7 +236,7 @@ namespace Empiria.Land.Pages {
       if (!CanBePrinted()) {
         return CommonMethods.AsWarning("ESTE DOCUMENTO NO ES VÁLIDO EN EL ESTADO ACTUAL.");
       } else {
-        return landRecord.Security.GetSignedBy().FullName;
+        return landRecord.SecurityData.SignedBy.FullName;
       }
     }
 
@@ -245,7 +245,7 @@ namespace Empiria.Land.Pages {
       if (landRecord.IsHistoricRecord) {
         return String.Empty;
       }
-      return landRecord.Security.GetSignedBy().JobTitle;
+      return landRecord.SecurityData.SignedByJobTitle;
     }
 
 

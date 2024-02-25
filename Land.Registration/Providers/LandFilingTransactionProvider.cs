@@ -99,7 +99,7 @@ namespace Empiria.Land.Providers {
 
       var document = transaction.LandRecord;
 
-      if (!document.IsEmptyInstance && document.Security.Signed()) {
+      if (!document.IsEmptyInstance && document.SecurityData.IsSigned) {
         list.Add(MapToEFilingDocumentDTO(document));
       }
 

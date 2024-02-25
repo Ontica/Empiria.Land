@@ -114,7 +114,7 @@ namespace Empiria.Land.WebApi {
                                             landRecordUID);
 
       } else if (landRecord != null && hash.Length != 0 &&
-                 landRecord.AuthorizationTime >= hashCodeValidationStartDate && hash != landRecord.Security.QRCodeSecurityHash()) {
+                 landRecord.AuthorizationTime >= hashCodeValidationStartDate && hash != landRecord.SecurityData.SecurityHash) {
         throw new ResourceNotFoundException("Land.LandRecord.InvalidQRCode",
                                             "El código QR que está impreso en su documento y que acaba de escanear hace " +
                                             "referencia al sello registral con número '{0}' que sí tenemos registrado " +

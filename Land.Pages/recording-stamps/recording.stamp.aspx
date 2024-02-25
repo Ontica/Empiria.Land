@@ -21,7 +21,7 @@
           <h2 style="padding-top:0">SELLO REGISTRAL DE PARTIDA HISTÓRICA</h2>
           <% } else if (!landRecord.IsClosed) { %>
           <h2 class="warning" style="padding-top:0">EL SELLO REGISTRAL NO HA SIDO CERRADO</h2>
-          <% } else if (landRecord.Security.UseESign && landRecord.Security.Unsigned()) { %>
+          <% } else if (landRecord.SecurityData.UsesESign && landRecord.SecurityData.IsUnsigned) { %>
           <h2 class="warning" style="padding-top:0">EL SELLO REGISTRAL NO HA SIDO FIRMADO DIGITALMENTE</h2>
           <% } else if (!base.CanBePrinted()) { %>
           <h2 class="warning" style="padding-top:0">
@@ -86,7 +86,7 @@
             <br />&#160;
           </td>
         </tr>
-        <% } else if (landRecord.Security.UseESign && landRecord.Security.Signed()) { %>
+        <% } else if (landRecord.SecurityData.UsesESign && landRecord.SecurityData.IsSigned) { %>
          <tr>
           <td colspan="3" style="text-align:center;font-size:11pt" >
             <span style="font-size:8.5pt">
@@ -103,7 +103,7 @@
           </td>
           <td style="text-wrap:none">&#160;&#160;&#160;&#160;&#160;</td>
         </tr>
-        <% } else if (landRecord.Security.UseESign && landRecord.Security.Unsigned()) { %>
+        <% } else if (landRecord.SecurityData.UsesESign && landRecord.SecurityData.IsUnsigned) { %>
          <tr>
           <td colspan="3" style="text-align:center;font-size:11pt" >
             <span style="font-size:8.5pt">
@@ -135,7 +135,7 @@
           <td style="vertical-align:top;padding-right:12pt;width:100px">
             <% if (this.CanBePrinted()) { %>
             <img style="margin-left:-12pt;margin-top:-12pt" alt="" title=""
-                 src="../user.controls/qrcode.aspx?size=120&#38;data=<%=SEARCH_SERVICES_SERVER_BASE_ADDRESS%>/?type=document%26uid=<%=landRecord.UID%>%26hash=<%=landRecord.Security.QRCodeSecurityHash()%>" />
+                 src="../user.controls/qrcode.aspx?size=120&#38;data=<%=SEARCH_SERVICES_SERVER_BASE_ADDRESS%>/?type=document%26uid=<%=landRecord.UID%>%26hash=<%=landRecord.SecurityData.SecurityHash%>" />
             <% } %>
             <div style="margin-top:-12pt;font-size:7pt;white-space:nowrap">
               Valide este documento<br />
@@ -146,7 +146,7 @@
             <b>Código de verificación:</b>
             <br />
               <% if (this.CanBePrinted()) { %>
-              &#160;&#160;<%=base.landRecord.Security.QRCodeSecurityHash()%>
+              &#160;&#160;<%=base.landRecord.SecurityData.SecurityHash%>
 
               <% } else { %>
               <span class="warning">** SIN VALIDEZ **</span>
