@@ -47,8 +47,8 @@ namespace Empiria.Land.Registration {
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(!transaction.IsEmptyInstance, "transaction can't be the empty instance.");
 
-      _transaction = transaction;
-      this.PresentationTime = _transaction.PresentationTime;
+      this.Transaction = transaction;
+      this.PresentationTime = this.Transaction.PresentationTime;
     }
 
     static internal LandRecord Parse(int id) {
@@ -108,7 +108,7 @@ namespace Empiria.Land.Registration {
         if (this.IsEmptyInstance) {
           return false;
         }
-        if (this.GetTransaction().IsEmptyInstance) {
+        if (this.Transaction.IsEmptyInstance) {
           return true;
         }
         if (this.IsRegisteredInRecordingBook) {
@@ -138,16 +138,22 @@ namespace Empiria.Land.Registration {
     } = string.Empty;
 
 
+    [DataField("TransactionId")]
+    public LRSTransaction Transaction {
+      get;
+      private set;
+    }
+
     public bool HasTransaction {
       get {
-        return !GetTransaction().Equals(LRSTransaction.Empty);
+        return !Transaction.IsEmptyInstance;
       }
     }
 
     public RecorderOffice RecorderOffice {
       get {
         if (HasTransaction) {
-          return GetTransaction().RecorderOffice;
+          return Transaction.RecorderOffice;
         } else {
           return RecorderOffice.Empty;
         }
@@ -351,17 +357,8 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    private LRSTransaction _transaction = null;
-
     public LRSTransaction GetTransaction() {
-      if (this.IsEmptyInstance) {
-        return LRSTransaction.Empty;
-      }
-      if (_transaction == null) {
-        _transaction = LandRecordsData.GetLandRecordTransaction(this);
-      }
-
-      return _transaction;
+      return this.Transaction;
     }
 
     protected override void OnLoad() {

@@ -94,10 +94,9 @@ namespace Empiria.Land.Data {
 
     static internal void WriteLandRecord(LandRecord o) {
       var op = DataOperation.Parse("writeLRSLandRecord", o.Id, o.GUID, o.UID, o.Instrument.Id,
-                                   o.ImagingControlID, o.Keywords, o.PresentationTime, o.AuthorizationTime,
-                                   o.AuthorizedBy.Id, o.AuthorizedBy.Id, o.AuthorizationTime, string.Empty,
-                                   o.PostedBy.Id, o.PostingTime, (char) o.Status,
-                                   o.Security.Integrity.GetUpdatedHashCode());
+                                   o.Transaction.Id, o.PresentationTime, o.AuthorizationTime,
+                                   o.AuthorizedBy.Id, o.Keywords, o.PostedBy.Id, o.PostingTime,
+                                   (char) o.Status, o.Security.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(op);
     }
