@@ -51,6 +51,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     public string DigitalSeal {
       get {
         return this.ExtData.Get("digitalSeal", string.Empty);
@@ -69,6 +70,7 @@ namespace Empiria.Land.Registration {
         this.ExtData.SetIfValue("digitalSealVersion", value);
       }
     }
+
 
     public string DigitalSignature {
       get {
@@ -90,17 +92,19 @@ namespace Empiria.Land.Registration {
     }
 
 
-    [DataField("SecurityExtData")]
+    [DataField("SecurityExtData", IsEncrypted = true)]
     internal JsonObject ExtData {
       get;
       private set;
     }
+
 
     [DataField("SignedById")]
     public Person SignedBy {
       get;
       private set;
     }
+
 
     public string SignedByJobTitle {
       get {
@@ -111,11 +115,13 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
     [DataField("SignedTime", Default = "ExecutionServer.DateMinValue")]
     public DateTime SignedTime {
       get;
       private set;
     }
+
 
     public SignatureType SignatureType {
       get {
@@ -152,6 +158,7 @@ namespace Empiria.Land.Registration {
 
       this.SecurityHash = string.Empty;
       this.DigitalSeal = string.Empty;
+      this.DigitalSealVersion = string.Empty;
       this.DigitalSignature = string.Empty;
       this.DigitalSignatureToken = string.Empty;
       this.SignatureType = SignatureType.Unsigned;
@@ -241,10 +248,6 @@ namespace Empiria.Land.Registration {
     }
 
     static public string GenerateSecurityHash(LandRecord landRecord) {
-      if (landRecord.IsNew) {
-        return String.Empty;
-      }
-
       return Cryptographer.CreateHashCode(landRecord.Id.ToString("00000000") +
                                           landRecord.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
                                           landRecord.UID)

@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using Empiria.Data;
 
 using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Data {
 
@@ -82,7 +81,8 @@ namespace Empiria.Land.Data {
     static internal void SaveSecurityData(LandRecord o) {
       var op = DataOperation.Parse("setLRSLandRecordSecurityData", o.Id, o.GUID,
                                    o.SecurityData.SignedBy.Id, o.SecurityData.SignedTime,
-                                   o.SecurityData.ExtData.ToString(),
+                                   Security.Cryptographer.Encrypt(Security.EncryptionMode.Standard,
+                                                                  o.SecurityData.ExtData.ToString()),
                                    o.Security.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(op);
