@@ -38,6 +38,7 @@ namespace Empiria.Land.ESign.UseCases {
       Assertion.Require(recorderOfficeId, nameof(recorderOfficeId));
 
       var build = new ESignEngine();
+
       FixedList<SignedDocumentEntry> requestedData = build.GetSignedDocuments(recorderOfficeId, responsibleUID);
 
       return ESignEngineMapper.Map(requestedData);

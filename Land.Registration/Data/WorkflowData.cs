@@ -23,7 +23,6 @@ namespace Empiria.Land.Data {
     #region Public methods
 
     static public LRSWorkflowTask GetWorkflowLastTask(LRSTransaction transaction) {
-
       var op = DataOperation.Parse("getLRSWorkflowLastTask", transaction.Id);
 
       return DataReader.GetObject<LRSWorkflowTask>(op);

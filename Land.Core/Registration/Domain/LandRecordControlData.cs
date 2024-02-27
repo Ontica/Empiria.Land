@@ -16,8 +16,8 @@ namespace Empiria.Land.Registration {
 
   internal class LandRecordControlData {
 
-    static internal readonly bool UseRecordingBookRegistation =
-                                        ConfigurationData.Get("UseRecordingBookRegistation", false);
+    static internal readonly bool UseRecordingBookRegistration = false;
+                                        // ConfigurationData.Get("UseRecordingBookRegistation", false);
 
     private readonly LandRecord _landRecord;
     private readonly LRSTransaction _transaction;
@@ -60,7 +60,7 @@ namespace Empiria.Land.Registration {
         if (_isHistoricRegistration && !_landRecord.IsClosed) {
           return true;
         }
-        if (_isTransactionOnBooksRegistration && !UseRecordingBookRegistation &&
+        if (_isTransactionOnBooksRegistration && !UseRecordingBookRegistration &&
             !_landRecord.IsClosed) {
           return true;
         }
@@ -77,12 +77,12 @@ namespace Empiria.Land.Registration {
         if (_isHistoricRegistration && _landRecord.IsClosed) {
           return true;
         }
-        if (_isTransactionOnBooksRegistration && !UseRecordingBookRegistation &&
+        if (_isTransactionOnBooksRegistration && !UseRecordingBookRegistration &&
             _landRecord.IsClosed) {
           return true;
         }
         return _transaction.ControlData.IsReadyForRecording && _landRecord.IsClosed &&
-               !UseRecordingBookRegistation;
+               !UseRecordingBookRegistration;
       }
     }
 
@@ -95,12 +95,12 @@ namespace Empiria.Land.Registration {
         if (_isHistoricRegistration && !_landRecord.IsClosed && _landRecord.HasRecordingActs) {
           return true;
         }
-        if (_isTransactionOnBooksRegistration && !UseRecordingBookRegistation &&
+        if (_isTransactionOnBooksRegistration && !UseRecordingBookRegistration &&
             !_landRecord.IsClosed && _landRecord.HasRecordingActs) {
           return true;
         }
         return _transaction.ControlData.IsReadyForRecording && !_landRecord.IsClosed &&
-               !UseRecordingBookRegistation && _landRecord.HasRecordingActs;
+               !UseRecordingBookRegistration && _landRecord.HasRecordingActs;
       }
     }
 
@@ -120,7 +120,7 @@ namespace Empiria.Land.Registration {
         if (_isHistoricRegistration && !_landRecord.IsClosed) {
           return true;
         }
-        if (_isTransactionOnBooksRegistration && !UseRecordingBookRegistation && !_landRecord.IsClosed) {
+        if (_isTransactionOnBooksRegistration && !UseRecordingBookRegistration && !_landRecord.IsClosed) {
           return true;
         }
         return CanEdit && ShowRecordingActs;
@@ -133,7 +133,7 @@ namespace Empiria.Land.Registration {
         if (_isNewRegistration) {
           return false;
         }
-        if (!UseRecordingBookRegistation) {
+        if (!UseRecordingBookRegistration) {
           return false;
         }
         if (!CanEdit) {

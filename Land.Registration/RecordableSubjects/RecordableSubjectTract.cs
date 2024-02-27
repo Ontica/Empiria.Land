@@ -229,7 +229,7 @@ namespace Empiria.Land.Registration {
 
       // Get the index of the last closed recording act previous to beforeThisLandRecord
       RecordingAct lastActToSearch =
-              tract.FindLast( (x) => x.LandRecord.PresentationTime < beforeThisLandRecord.PresentationTime);
+              tract.FindLast((x) => x.LandRecord.PresentationTime < beforeThisLandRecord.PresentationTime);
 
       int endIndex = lastActToSearch != null ? tract.IndexOf(lastActToSearch) : tract.Count - 1;
 

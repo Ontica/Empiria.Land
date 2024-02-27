@@ -114,6 +114,10 @@ namespace Empiria.Land.Data {
 
 
     static internal FixedList<BookEntry> GetBookEntriesForLandRecord(LandRecord landRecord) {
+      if (landRecord.IsEmptyInstance) {
+        return new FixedList<BookEntry>();
+      }
+
       string sql = $"SELECT * FROM LRSPhysicalRecordings " +
                    $"WHERE MainDocumentId = {landRecord.Id} AND RecordingStatus <> 'X' " +
                    $"ORDER BY PhysicalRecordingId";

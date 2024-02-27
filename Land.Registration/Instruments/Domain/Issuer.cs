@@ -173,7 +173,6 @@ namespace Empiria.Land.Instruments {
       IssuersData.WriteIssuer(this);
     }
 
-
     #endregion Methods
 
   }  // class Issuer
