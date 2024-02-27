@@ -66,12 +66,13 @@ namespace Empiria.Land.Pages {
 
       html = html.Replace("{PARTY-NAME}", party.Party.FullName);
 
-      if (party.OwnershipPart.Unit.IsEmptyInstance) {
+      Unit unit = party.OwnershipPart.Unit;
+
+      if (unit.IsEmptyInstance) {
         html = html.Replace("{OWNERSHIP}", string.Empty);
 
-      } else if (party.OwnershipPart.Unit.Equals(Unit.FullUnit) ||
-                 party.OwnershipPart.Unit.Equals(Unit.UndividedUnit)) {
-        html = html.Replace("{OWNERSHIP}", $"({party.OwnershipPart.Unit.Name})");
+      } else if (unit.IsIndivisible) {
+        html = html.Replace("{OWNERSHIP}", $"({unit.Name})");
 
       } else {
         html = html.Replace("{OWNERSHIP}", $"({ToPartAmountText(party.OwnershipPart)})");

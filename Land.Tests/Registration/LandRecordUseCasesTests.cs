@@ -49,7 +49,7 @@ namespace Empiria.Land.Tests.Registration {
 
       foreach (var act in landRecord.RecordingActs) {
         foreach (var party in act.Parties.PrimaryParties) {
-          Assert.True(party.OwnershipPart.Unit == DataTypes.Unit.FullUnit);
+          Assert.True(party.OwnershipPart.Unit.IsIndivisible);
         }
       }
     }
