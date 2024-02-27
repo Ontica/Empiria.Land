@@ -186,11 +186,16 @@ namespace Empiria.Land.Registration {
       var doc = this.LandRecord;
       if (version == 1) {
         return new object[] {
-          1, "Id", doc.Id, "UID", doc.UID, "InstrumentId", doc.Instrument.Id,
+          1, "Id", doc.Id, "UID", doc.UID,
+          "InstrumentId", doc.Instrument.Id,
+          "TransactionId", doc.Transaction.Id,
           "PresentationTime", doc.PresentationTime,
           "AuthorizationTime", doc.AuthorizationTime,
-          "AuthorizedBy", doc.AuthorizedBy.Id,
+          "AuthorizedById", doc.AuthorizedBy.Id,
+          "SignedById", doc.SecurityData.SignedBy.Id,
+          "SignedTime", doc.SecurityData.SignedTime,
           "SecurityData", doc.SecurityData.ExtData.ToString(),
+          "ImagingControlID", doc.ImagingControlID,
           "PostedBy", doc.PostedBy.Id, "PostingTime", doc.PostingTime,
           "Status", (char) doc.Status,
         };

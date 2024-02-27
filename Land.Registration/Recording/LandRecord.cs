@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 using Empiria.Contacts;
@@ -362,7 +363,12 @@ namespace Empiria.Land.Registration {
     }
 
 
-    protected override void OnLoad() {
+    protected override void OnLoadObjectData(DataRow row) {
+      //Assertion.Require(
+      //  this.Security.Integrity.GetUpdatedHashCode() == (string) row["LandRecordDIF"],
+      //        $"PROBLEMA GRAVE DE SEGURIDAD: La inscripción {this.UID} " +
+      //        $"fue indebidamente modificada directamente en la base de datos.");
+
       RefreshRecordingActs();
     }
 
