@@ -141,7 +141,7 @@ namespace Empiria.Land.Pages {
       if (DISPLAY_VEDA_ELECTORAL_UI) {
         return "../themes/default/customer/government.seal.veda.png";
       }
-      if (transaction.PresentationTime.Year == 2024) {
+      if (landRecord.AuthorizationTime.Year == 2024) {
         return "../themes/default/customer/government.seal.2024.png";
       } else {
         return "../themes/default/customer/government.seal.png";
