@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>CS3001</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,6 +45,7 @@
     <Compile Include="Adapters\ESignDTO.cs" />
     <Compile Include="Adapters\ESignEngineMapper.cs" />
     <Compile Include="Adapters\ESignQuery.cs" />
+    <Compile Include="Adapters\ESignRequestsQuery.cs" />
     <Compile Include="Adapters\SignDocumentDto.cs" />
     <Compile Include="Adapters\SignDocumentRequestDto.cs" />
     <Compile Include="Data\ESignEngineData.cs" />
@@ -51,6 +53,7 @@
     <Compile Include="Domain\SignedDocumentEntry.cs" />
     <Compile Include="Domain\SignRequestEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UseCases\TransactionESignRequestsUseCases.cs" />
     <Compile Include="UseCases\ESignEngineUseCases.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +72,10 @@
     <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj">
       <Project>{8752d185-e9d2-4ef2-8ee7-f98271be552a}</Project>
       <Name>Empiria.Land.Registration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Land.Transactions\Empiria.Land.Transactions.csproj">
+      <Project>{316e3f20-d4be-4c0c-bb24-96f9e522dc6d}</Project>
+      <Name>Empiria.Land.Transactions</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
