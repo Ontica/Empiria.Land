@@ -218,18 +218,20 @@ namespace Empiria.Land.Registration {
       if (version == 1) {
         return new object[] {
           1, "Id", doc.Id, "UID", doc.UID,
-          "InstrumentId", doc.Instrument.Id,
-          "TransactionId", doc.Transaction.Id,
+          "Instrument", doc.Instrument.Id,
+          "Transaction", doc.Transaction.Id,
+          "RecorderOffice", doc.RecorderOffice.Id,
           "PresentationTime", doc.PresentationTime,
           "AuthorizationTime", doc.AuthorizationTime,
-          "AuthorizedById", doc.AuthorizedBy.Id,
-          "SignedById", doc.SecurityData.SignedBy.Id,
+          "AuthorizedBy", doc.AuthorizedBy.Id,
+          "SignedBy", doc.SecurityData.SignedBy.Id,
           "SignedTime", doc.SecurityData.SignedTime,
           "SignStatus", (char) doc.SecurityData.SignStatus,
           "SignType", (char) doc.SecurityData.SignType,
           "SecurityData", doc.SecurityData.ExtData.ToString(),
           "ImagingControlID", doc.ImagingControlID,
-          "PostedBy", doc.PostedBy.Id, "PostingTime", doc.PostingTime,
+          "PostedBy", doc.PostedBy.Id,
+          "PostingTime", doc.PostingTime,
           "Status", (char) doc.Status,
         };
       }

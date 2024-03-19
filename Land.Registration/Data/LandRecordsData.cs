@@ -79,6 +79,8 @@ namespace Empiria.Land.Data {
 
 
     static internal void SaveSecurityData(LandRecord o) {
+      // EmpiriaLog.Trace(o.SecurityData.ExtData.ToString());
+
       var op = DataOperation.Parse("setLRSLandRecordSecurityData", o.Id, o.GUID,
                                    (char) o.SecurityData.SignStatus, (char) o.SecurityData.SignType,
                                    o.SecurityData.SignedBy.Id, o.SecurityData.SignedTime,
@@ -92,8 +94,9 @@ namespace Empiria.Land.Data {
 
     static internal void WriteLandRecord(LandRecord o) {
       var op = DataOperation.Parse("writeLRSLandRecord", o.Id, o.GUID, o.UID, o.Instrument.Id,
-                                   o.Transaction.Id, o.PresentationTime, o.AuthorizationTime,
-                                   o.AuthorizedBy.Id, o.Keywords, o.PostedBy.Id, o.PostingTime,
+                                   o.Transaction.Id, o.RecorderOffice.Id,
+                                   o.PresentationTime, o.AuthorizationTime, o.AuthorizedBy.Id,
+                                   o.Keywords, o.PostedBy.Id, o.PostingTime,
                                    (char) o.Status, o.Security.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(op);

@@ -37,14 +37,18 @@ namespace Empiria.Land.Registration {
       // Required by Empiria Framework.
     }
 
-    public LandRecord(Instrument instrument) {
+    public LandRecord(Instrument instrument, RecorderOffice recorderOffice) {
       Assertion.Require(instrument, nameof(instrument));
       Assertion.Require(!instrument.IsEmptyInstance, "instrument can't be the empty instance.");
 
+      Assertion.Require(recorderOffice, nameof(recorderOffice));
+      Assertion.Require(!recorderOffice.IsEmptyInstance, "recorderOffice can't be the empty instance.");
+
       Instrument = instrument;
+      RecorderOffice = recorderOffice;
     }
 
-    public LandRecord(Instrument instrument, LRSTransaction transaction) : this(instrument) {
+    public LandRecord(Instrument instrument, LRSTransaction transaction) : this(instrument, transaction.RecorderOffice) {
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(!transaction.IsEmptyInstance, "transaction can't be the empty instance.");
 
@@ -151,14 +155,10 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    [DataField("RecorderOfficeId")]
     public RecorderOffice RecorderOffice {
-      get {
-        if (HasTransaction) {
-          return Transaction.RecorderOffice;
-        } else {
-          return RecorderOffice.Empty;
-        }
-      }
+      get;
+      private set;
     }
 
     [DataField("AuthorizedById")]
@@ -367,7 +367,6 @@ namespace Empiria.Land.Registration {
         return Resource.Empty;
       }
     }
-
 
     protected override void OnLoadObjectData(DataRow row) {
       //Assertion.Require(
