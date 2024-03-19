@@ -232,6 +232,12 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
+    [DataField("LandRecordDIF")]
+    private string IntegrityField {
+      get;
+      set;
+    }
+
     #endregion Public properties
 
     #region Public methods
@@ -415,6 +421,12 @@ namespace Empiria.Land.Registration {
                         "bookEntry can't be the empty instance.");
 
       return bookEntry;
+    }
+
+    public void EnsureIntegrity() {
+      Assertion.Require(this.Security.Integrity.GetUpdatedHashCode() == IntegrityField,
+                        $"PROBLEMA GRAVE DE SEGURIDAD: La inscripción {this.UID} " +
+                        $"fue indebidamente modificada directamente en la base de datos.");
     }
 
     #endregion Public methods

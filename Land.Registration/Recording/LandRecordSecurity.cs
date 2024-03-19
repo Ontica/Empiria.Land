@@ -225,6 +225,8 @@ namespace Empiria.Land.Registration {
           "AuthorizedById", doc.AuthorizedBy.Id,
           "SignedById", doc.SecurityData.SignedBy.Id,
           "SignedTime", doc.SecurityData.SignedTime,
+          "SignStatus", (char) doc.SecurityData.SignStatus,
+          "SignType", (char) doc.SecurityData.SignType,
           "SecurityData", doc.SecurityData.ExtData.ToString(),
           "ImagingControlID", doc.ImagingControlID,
           "PostedBy", doc.PostedBy.Id, "PostingTime", doc.PostingTime,

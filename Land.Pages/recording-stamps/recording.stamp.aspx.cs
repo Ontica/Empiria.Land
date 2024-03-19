@@ -53,6 +53,8 @@ namespace Empiria.Land.Pages {
 
       landRecord = LandRecord.TryParse(landRecordUID);
 
+      landRecord.EnsureIntegrity();
+
       transaction = landRecord.Transaction;
 
       landRecord.RefreshRecordingActs();
