@@ -80,6 +80,7 @@ namespace Empiria.Land.Data {
 
     static internal void SaveSecurityData(LandRecord o) {
       var op = DataOperation.Parse("setLRSLandRecordSecurityData", o.Id, o.GUID,
+                                   (char) o.SecurityData.SignStatus, (char) o.SecurityData.SignType,
                                    o.SecurityData.SignedBy.Id, o.SecurityData.SignedTime,
                                    Security.Cryptographer.Encrypt(Security.EncryptionMode.Standard,
                                                                   o.SecurityData.ExtData.ToString()),
