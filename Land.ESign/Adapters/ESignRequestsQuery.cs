@@ -12,8 +12,6 @@ using System;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
-using Empiria.OnePoint.ESign;
-
 namespace Empiria.Land.ESign.Adapters {
 
   /// <summary>Query payload used for electronic signs requests.</summary>
@@ -28,7 +26,7 @@ namespace Empiria.Land.ESign.Adapters {
     internal SignStatus Status {
       get;
       set;
-    } = SignStatus.Empty;
+    } = SignStatus.Unsigned;
 
 
     public string Keywords {
@@ -125,11 +123,7 @@ namespace Empiria.Land.ESign.Adapters {
 
 
     static private string BuildESignStatusFilter(SignStatus status) {
-      if (status != SignStatus.Empty) {
-        return $"(SignStatus = '{(char) status}')";
-      }
-
-      return string.Empty;
+      return $"(SignStatus = '{(char) status}')";
     }
 
 
