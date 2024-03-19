@@ -87,7 +87,7 @@ namespace Empiria.Land.Registration.UseCases {
 
     //ToDo: Remove this method after installation
     public void RefreshLandRecordsSecurityData() {
-      var records = BaseObject.GetList<LandRecord>("SecurityExtData <> ''");
+      var records = BaseObject.GetList<LandRecord>("LandRecordDIF = ''");
 
       foreach (var record in records) {
         record.Security.RefreshSecurityData();

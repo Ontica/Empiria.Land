@@ -103,23 +103,17 @@ namespace Empiria.Land.Registration {
     }
 
 
+    [DataField("SignStatus", Default = SignStatus.Unsigned)]
     public SignStatus SignStatus {
-      get {
-        return this.ExtData.Get("signStatus", SignStatus.Unsigned);
-      }
-      private set {
-        this.ExtData.SetIfValue("signStatus", value);
-      }
+      get;
+      private set;
     }
 
 
+    [DataField("SignType", Default = SignType.Undeterminated)]
     public SignType SignType {
-      get {
-        return this.ExtData.Get("signType", SignType.Undeterminated);
-      }
-      private set {
-        this.ExtData.SetIfValue("signType", value);
-      }
+      get;
+      private set;
     }
 
 
@@ -167,13 +161,13 @@ namespace Empiria.Land.Registration {
     #region Methods
 
     internal void PrepareForElectronicSign(LandRecord landRecord) {
-      this.SignedBy = landRecord.RecorderOffice.GetSigner();
-      this.SignedByJobTitle = SignedBy.JobTitle;
-      this.SignedTime = ExecutionServer.DateMinValue;
-
       this.SecurityHash = GenerateSecurityHash(landRecord);
       this.DigitalSeal = GenerateDigitalSeal(landRecord);
       this.DigitalSealVersion = GenerateDigitalSealVersion(landRecord);
+
+      this.SignedBy = landRecord.RecorderOffice.GetSigner();
+      this.SignedByJobTitle = SignedBy.JobTitle;
+      this.SignedTime = ExecutionServer.DateMinValue;
 
       this.SignStatus = SignStatus.Unsigned;
       this.SignType = SignType.Electronic;
@@ -181,23 +175,24 @@ namespace Empiria.Land.Registration {
 
 
     internal void RemoveSignData() {
+      this.ExtData = new JsonObject();
+
       this.SignedBy = Person.Empty;
       this.SignedTime = ExecutionServer.DateMinValue;
-      this.ExtData = new JsonObject();
       this.SignStatus = SignStatus.Unsigned;
       this.SignType = SignType.Undeterminated;
     }
 
 
     internal void SetManualSignData(LandRecord landRecord) {
-      this.SignedBy = landRecord.RecorderOffice.GetSigner();
-      this.SignedByJobTitle = SignedBy.JobTitle;
-      this.SignedTime = DateTime.Now;
-
       this.SecurityHash = GenerateSecurityHash(landRecord);
       this.DigitalSeal = GenerateDigitalSeal(landRecord);
       this.DigitalSealVersion = GenerateDigitalSealVersion(landRecord);
       this.DigitalSignature = "Documento firmado de forma autógrafa.";
+
+      this.SignedBy = landRecord.RecorderOffice.GetSigner();
+      this.SignedByJobTitle = SignedBy.JobTitle;
+      this.SignedTime = DateTime.Now;
 
       this.SignType = SignType.Manual;
       this.SignStatus = SignStatus.Signed;
@@ -206,17 +201,20 @@ namespace Empiria.Land.Registration {
 
     // ToDo: Remove after installation
     internal void RefreshSignData(LandRecord landRecord) {
-      //this.SignedBy = landRecord.RecorderOffice.GetSigner();
-      // this.SignedByJobTitle = this.SignedBy.JobTitle;
-      //this.SignedTime = DateTime.Now;
+      if (this.SignStatus == SignStatus.Unsigned) {
+        this.ExtData = new JsonObject();
+        return;
+      }
+
+      var jobTitle = SignedByJobTitle;
+
+      this.ExtData = new JsonObject();
 
       this.SecurityHash = GenerateSecurityHash(landRecord);
       this.DigitalSeal = GenerateDigitalSeal(landRecord);
       this.DigitalSealVersion = GenerateDigitalSealVersion(landRecord);
       this.DigitalSignature = "Documento firmado de forma autógrafa.";
-
-      this.SignType = SignType.Manual;
-      this.SignStatus = SignStatus.Signed;
+      this.SignedByJobTitle = jobTitle;
     }
 
     #endregion Methods
