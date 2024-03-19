@@ -57,7 +57,11 @@ namespace Empiria.Land.Registration.UseCases {
 
       landRecord.Close();
 
-      landRecord.Security.Sign();   // ToDo: Remove this line when e-sign workflow is implemented
+      if (!LandRecordSecurityData.ESIGN_ENABLED) {
+        landRecord.Security.ManualSign();
+      } else {
+        landRecord.Security.PrepareForElectronicSign();
+      }
 
       return LandRecordMapper.Map(landRecord);
     }
@@ -68,7 +72,12 @@ namespace Empiria.Land.Registration.UseCases {
 
       LandRecord landRecord = LandRecord.ParseGuid(landRecordUID);
 
-      landRecord.Security.Unsign();  // ToDo: Remove this line when e-sign workflow is implemented
+      Assertion.Require(landRecord.SecurityData.IsUnsigned ||
+                        landRecord.SecurityData.SignType != SignType.Electronic,
+                        "Esta inscripción fue firmada electrónicamente. " +
+                        "Para poder abrirla, se necesita solicitar que se revoque la firma electrónica.");
+
+      landRecord.Security.RemoveSign();
 
       landRecord.Open();
 
@@ -76,8 +85,9 @@ namespace Empiria.Land.Registration.UseCases {
     }
 
 
+    //ToDo: Remove this method after installation
     public void RefreshLandRecordsSecurityData() {
-      var records = BaseObject.GetList<LandRecord>("SignedById <> -1 AND SecurityExtData = ''");
+      var records = BaseObject.GetList<LandRecord>("SecurityExtData <> ''");
 
       foreach (var record in records) {
         record.Security.RefreshSecurityData();

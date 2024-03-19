@@ -13,24 +13,37 @@ using Empiria.Contacts;
 using Empiria.Json;
 using Empiria.Security;
 
-using Empiria.Land.Data;
-
 namespace Empiria.Land.Registration {
 
-  public enum SignatureType {
+  public enum SignStatus {
 
-    Unsigned = 0,
+    Unsigned = 'U',
 
-    Manual = 1,
+    Signed = 'S',
 
-    Electronic = 2,
+    Refused = 'R',
+
+    Revoked = 'K',
+  }
+
+
+  public enum SignType {
+
+    Undeterminated = 'U',
+
+    Manual = 'M',
+
+    Electronic = 'E',
+
+    Historic = 'H',
 
   }
+
 
   /// <summary>Holds security data for land instrument records.</summary>
   public class LandRecordSecurityData {
 
-    static readonly bool USE_ESIGN = ConfigurationData.Get<bool>("UseESignature", false);
+    public static readonly bool ESIGN_ENABLED = ConfigurationData.Get<bool>("ElectronicSignatureEnabled", false);
 
     #region Constructors and parsers
 
@@ -40,7 +53,9 @@ namespace Empiria.Land.Registration {
 
     public bool IsSigned {
       get {
-        return !this.SignedBy.IsEmptyInstance;
+        return !this.SignedBy.IsEmptyInstance &&
+               this.SignStatus == SignStatus.Signed &&
+               DigitalSignature.Length != 0;
       }
     }
 
@@ -81,21 +96,30 @@ namespace Empiria.Land.Registration {
       }
     }
 
-
-    public string DigitalSignatureToken {
-      get {
-        return this.ExtData.Get("digitalSignatureToken", string.Empty);
-      }
-      private set {
-        this.ExtData.SetIfValue("digitalSignatureToken", value);
-      }
-    }
-
-
     [DataField("SecurityExtData", IsEncrypted = true)]
     internal JsonObject ExtData {
       get;
       private set;
+    }
+
+
+    public SignStatus SignStatus {
+      get {
+        return this.ExtData.Get("signStatus", SignStatus.Unsigned);
+      }
+      private set {
+        this.ExtData.SetIfValue("signStatus", value);
+      }
+    }
+
+
+    public SignType SignType {
+      get {
+        return this.ExtData.Get("signType", SignType.Undeterminated);
+      }
+      private set {
+        this.ExtData.SetIfValue("signType", value);
+      }
     }
 
 
@@ -123,15 +147,6 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public SignatureType SignatureType {
-      get {
-        return this.ExtData.Get("signatureType", SignatureType.Unsigned);
-      }
-      private set {
-        this.ExtData.SetIf("signatureType", value, value != SignatureType.Unsigned);
-      }
-    }
-
     public string SecurityHash {
       get {
         return this.ExtData.Get("securityHash", string.Empty);
@@ -143,7 +158,7 @@ namespace Empiria.Land.Registration {
 
     public bool UsesESign {
       get {
-        return SignatureType == SignatureType.Electronic;
+        return SignType == SignType.Electronic;
       }
     }
 
@@ -151,64 +166,64 @@ namespace Empiria.Land.Registration {
 
     #region Methods
 
-    internal void RemoveSignData() {
-      this.SignedBy = Person.Empty;
-      this.SignedByJobTitle = string.Empty;
+    internal void PrepareForElectronicSign(LandRecord landRecord) {
+      this.SignedBy = landRecord.RecorderOffice.GetSigner();
+      this.SignedByJobTitle = SignedBy.JobTitle;
       this.SignedTime = ExecutionServer.DateMinValue;
 
-      this.SecurityHash = string.Empty;
-      this.DigitalSeal = string.Empty;
-      this.DigitalSealVersion = string.Empty;
-      this.DigitalSignature = string.Empty;
-      this.DigitalSignatureToken = string.Empty;
-      this.SignatureType = SignatureType.Unsigned;
+      this.SecurityHash = GenerateSecurityHash(landRecord);
+      this.DigitalSeal = GenerateDigitalSeal(landRecord);
+      this.DigitalSealVersion = GenerateDigitalSealVersion(landRecord);
+
+      this.SignStatus = SignStatus.Unsigned;
+      this.SignType = SignType.Electronic;
     }
 
 
-    internal void SetSignData(LandRecord landRecord) {
+    internal void RemoveSignData() {
+      this.SignedBy = Person.Empty;
+      this.SignedTime = ExecutionServer.DateMinValue;
+      this.ExtData = new JsonObject();
+      this.SignStatus = SignStatus.Unsigned;
+      this.SignType = SignType.Undeterminated;
+    }
+
+
+    internal void SetManualSignData(LandRecord landRecord) {
       this.SignedBy = landRecord.RecorderOffice.GetSigner();
       this.SignedByJobTitle = SignedBy.JobTitle;
       this.SignedTime = DateTime.Now;
 
       this.SecurityHash = GenerateSecurityHash(landRecord);
       this.DigitalSeal = GenerateDigitalSeal(landRecord);
-      this.DigitalSignature = GenerateDigitalSignature(landRecord);
-      this.DigitalSignatureToken = GenerateDigitalSignatureToken();
-      this.SignatureType = GenerateSignatureType();
       this.DigitalSealVersion = GenerateDigitalSealVersion(landRecord);
+      this.DigitalSignature = "Documento firmado de forma autógrafa.";
+
+      this.SignType = SignType.Manual;
+      this.SignStatus = SignStatus.Signed;
     }
 
 
+    // ToDo: Remove after installation
     internal void RefreshSignData(LandRecord landRecord) {
       //this.SignedBy = landRecord.RecorderOffice.GetSigner();
-      this.SignedByJobTitle = this.SignedBy.JobTitle;
+      // this.SignedByJobTitle = this.SignedBy.JobTitle;
       //this.SignedTime = DateTime.Now;
 
       this.SecurityHash = GenerateSecurityHash(landRecord);
       this.DigitalSeal = GenerateDigitalSeal(landRecord);
       this.DigitalSealVersion = GenerateDigitalSealVersion(landRecord);
-      this.DigitalSignature = GenerateDigitalSignature(landRecord);
-      this.DigitalSignatureToken = GenerateDigitalSignatureToken();
-      this.SignatureType = GenerateSignatureType();
+      this.DigitalSignature = "Documento firmado de forma autógrafa.";
+
+      this.SignType = SignType.Manual;
+      this.SignStatus = SignStatus.Signed;
     }
 
     #endregion Methods
 
     #region Helpers
 
-    static public string GenerateDigitalSeal(LandRecord landRecord) {
-
-      var bookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
-
-      if (bookEntries.Count == 0) {
-        return GenerateCurrentDigitalSeal(landRecord);
-      } else {
-        return GenerateFormerDigitalSeal(landRecord, bookEntries);
-      }
-    }
-
-
-    static public string GenerateCurrentDigitalSeal(LandRecord landRecord) {
+    static private string GenerateCurrentDigitalSeal(LandRecord landRecord) {
       var transaction = landRecord.Transaction;
 
       string s = "||" + transaction.UID + "|" + landRecord.UID;
@@ -222,7 +237,19 @@ namespace Empiria.Land.Registration {
     }
 
 
-    static public string GenerateFormerDigitalSeal(LandRecord landRecord,
+    static private string GenerateDigitalSeal(LandRecord landRecord) {
+
+      var bookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
+
+      if (bookEntries.Count == 0) {
+        return GenerateCurrentDigitalSeal(landRecord);
+      } else {
+        return GenerateFormerDigitalSeal(landRecord, bookEntries);
+      }
+    }
+
+
+    static private string GenerateFormerDigitalSeal(LandRecord landRecord,
                                                    FixedList<BookEntry> bookEntries) {
       var transaction = landRecord.Transaction;
 
@@ -237,17 +264,21 @@ namespace Empiria.Land.Registration {
       return Cryptographer.SignTextWithSystemCredentials(s);
     }
 
-    static string GenerateDigitalSealVersion(LandRecord landRecord) {
+
+    static private string GenerateDigitalSealVersion(LandRecord landRecord) {
       var bookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
 
-      if (bookEntries.Count == 0) {
+      if (bookEntries.Count != 0) {
+        return "1.0";
+      } else if (!ESIGN_ENABLED) {
         return "5.0";
       } else {
-        return "1.0";
+        return "6.0";
       }
     }
 
-    static public string GenerateSecurityHash(LandRecord landRecord) {
+
+    static private string GenerateSecurityHash(LandRecord landRecord) {
       return Cryptographer.CreateHashCode(landRecord.Id.ToString("00000000") +
                                           landRecord.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
                                           landRecord.UID)
@@ -255,36 +286,6 @@ namespace Empiria.Land.Registration {
                           .ToUpperInvariant();
     }
 
-
-    private SignatureType GenerateSignatureType() {
-      if (!IsSigned) {
-        return SignatureType.Unsigned;
-      }
-      if (USE_ESIGN) {
-        return SignatureType.Electronic;
-      }
-
-      return SignatureType.Manual;
-    }
-
-
-    static private string GenerateDigitalSignatureToken() {
-      if (USE_ESIGN) {
-        return Guid.NewGuid().ToString();
-      }
-      return string.Empty;
-    }
-
-    private string GenerateDigitalSignature(LandRecord landRecord) {
-      if (!this.IsSigned) {
-        return "ESTE DOCUMENTO NO HA SIDO FIRMADO";
-      }
-      if (!USE_ESIGN) {
-        return "Documento firmado de forma autógrafa.";
-      }
-      return DigitalSignatureData.GetDigitalSignature(landRecord)
-                                 .Substring(0, 64);
-    }
 
     #endregion Helpers
 
