@@ -1,75 +1,68 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0FDDFA1B-C666-47B9-9222-CD6A7142A47E}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Empiria.Land.ESign</RootNamespace>
+    <Company>Ontica</Company>
+    <Product>Empiria Land</Product>
+    <Description>Provides electronic sign services for Empiria Land documents.</Description>
+    <Copyright>(c) 2009-2024. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
+    <Version>5.0.0</Version>
+    <AssemblyVersion>5.0.0</AssemblyVersion>
+    <FileVersion>5.0.0.0</FileVersion>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Land/blob/master/Land.ESign/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Ontica/Empiria.Land/tree/master/Land.ESign</PackageProjectUrl>
+    <PackageIconUrl>http://www.ontica.org/logo.ontica.png</PackageIconUrl>
+    <PackageTags />
+    <RepositoryUrl>https://github.com/Ontica/Empiria.Land</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Authors>Ontica</Authors>
+    <TargetFramework>net48</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NeutralLanguage></NeutralLanguage>
+    <Configurations>Debug;Release;Multisolutions</Configurations>
     <AssemblyName>Empiria.Land.ESign</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <RootNamespace>Empiria.Land.ESign</RootNamespace>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)'=='Multisolutions|AnyCPU' ">
+    <OutputPath>bin\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <NoWarn>CS3001</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <NoWarn />
+    <WarningsAsErrors />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <OutputPath>bin\</OutputPath>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <NoWarn />
+    <WarningsAsErrors />
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+  <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
+    <PackageReference Include="Empiria.Core" Version="7.0.0" />
+    <PackageReference Include="Empiria.Services" Version="1.0.0" />
+    <PackageReference Include="Empiria.Land.Registration" Version="5.0.0" />
+    <PackageReference Include="Empiria.Land.Transactions" Version="5.0.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Adapters\ESignRequestsQuery.cs" />
-    <Compile Include="Data\ESignDataService.cs" />
-    <Compile Include="Domain\ESignerService.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UseCases\ESignRequestsUseCases.cs" />
-    <Compile Include="UseCases\ESignerUseCases.cs" />
+  <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
+    <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />
+    <ProjectReference Include="..\..\extensions\Services\Empiria.Services.csproj" />
+    <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
+    <ProjectReference Include="..\Land.Transactions\Empiria.Land.Transactions.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj">
-      <Project>{adebc2bc-d0bd-4d1e-bb13-4f769eec655b}</Project>
-      <Name>Empiria.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\extensions\Services\Empiria.Services.csproj">
-      <Project>{79b5e4d4-8a7c-41b3-834c-1e2bfdd34001}</Project>
-      <Name>Empiria.Services</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\onepoint\ESign.Core\Empiria.OnePoint.ESign.csproj">
-      <Project>{1a78011d-0f6d-4d0f-9ac7-c2e20365dbaa}</Project>
-      <Name>Empiria.OnePoint.ESign</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj">
-      <Project>{8752d185-e9d2-4ef2-8ee7-f98271be552a}</Project>
-      <Name>Empiria.Land.Registration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Land.Transactions\Empiria.Land.Transactions.csproj">
-      <Project>{316e3f20-d4be-4c0c-bb24-96f9e522dc6d}</Project>
-      <Name>Empiria.Land.Transactions</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
