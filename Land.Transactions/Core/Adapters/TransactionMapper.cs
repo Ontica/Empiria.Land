@@ -21,7 +21,7 @@ using Empiria.Land.Transactions.Payments;
 namespace Empiria.Land.Transactions {
 
   /// <summary>Contains methods to map from LRSTransaction objects to TransactionDTOs.</summary>
-  static internal class TransactionMapper {
+  static public class TransactionMapper {
 
     static internal FixedList<TransactionDto> Map(FixedList<LRSTransaction> list) {
       return list.Select((x) => Map(x))
@@ -57,7 +57,7 @@ namespace Empiria.Land.Transactions {
     }
 
 
-    static internal FixedList<TransactionDescriptor> MapToDescriptor(FixedList<LRSTransaction> list) {
+    static public FixedList<TransactionDescriptor> MapToDescriptor(FixedList<LRSTransaction> list) {
       return list.Select((x) => MapToDescriptor(x))
                  .ToFixedList();
     }
