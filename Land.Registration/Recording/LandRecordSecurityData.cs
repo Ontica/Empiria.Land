@@ -21,9 +21,11 @@ namespace Empiria.Land.Registration {
 
     Signed = 'S',
 
-    Refused = 'R',
+    Refused = 'F',
 
     Revoked = 'K',
+
+    Undefined = 'X',
   }
 
 

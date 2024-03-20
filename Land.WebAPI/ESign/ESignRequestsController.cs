@@ -25,68 +25,15 @@ namespace Empiria.Land.ESign.WebAPI {
     #region Web apis
 
 
-    [HttpGet]
-    [Route("v5/land/electronic-sign/transactions/requests/mine/refused")]
-    public CollectionModel GetMyTransactionsRefusedRequests([FromUri] ESignRequestsQuery query) {
+    [HttpPost]
+    [Route("v5/land/electronic-sign/requests/transactions/mine")]
+    public CollectionModel GetMyESignRequestedTransactions([FromBody] ESignRequestsQuery query) {
 
       using (var usecases = ESignRequestsUseCases.UseCaseInteractor()) {
 
-        FixedList<TransactionDescriptor> eSignRequests = usecases.GetMyTransactionsRefusedRequests(query);
+        FixedList<TransactionDescriptor> transactions = usecases.GetMyESignRequestedTransactions(query);
 
-        return new CollectionModel(this.Request, eSignRequests);
-      }
-    }
-
-
-    [HttpGet]
-    [Route("v5/land/electronic-sign/transactions/requests/mine/revoked")]
-    public CollectionModel GetMyTransactionsRevokedRequests([FromUri] ESignRequestsQuery query) {
-
-      using (var usecases = ESignRequestsUseCases.UseCaseInteractor()) {
-
-        FixedList<TransactionDescriptor> eSignRequests = usecases.GetMyTransactionsRevokedRequests(query);
-
-        return new CollectionModel(this.Request, eSignRequests);
-      }
-    }
-
-
-    [HttpGet]
-    [Route("v5/land/electronic-sign/transactions/requests/mine/signed")]
-    public CollectionModel GetMyTransactionsSignedRequests([FromUri] ESignRequestsQuery query) {
-
-      using (var usecases = ESignRequestsUseCases.UseCaseInteractor()) {
-
-        FixedList<TransactionDescriptor> eSignRequests = usecases.GetMyTransactionsSignedRequests(query);
-
-        return new CollectionModel(this.Request, eSignRequests);
-      }
-    }
-
-
-
-    [HttpGet]
-    [Route("v5/land/electronic-sign/transactions/requests/mine/to-revoke")]
-    public CollectionModel GetMyTransactionsToRevokeRequests([FromUri] ESignRequestsQuery query) {
-
-      using (var usecases = ESignRequestsUseCases.UseCaseInteractor()) {
-
-        FixedList<TransactionDescriptor> eSignRequests = usecases.GetMyTransactionsToRevokeRequests(query);
-
-        return new CollectionModel(this.Request, eSignRequests);
-      }
-    }
-
-
-    [HttpGet]
-    [Route("v5/land/electronic-sign/transactions/requests/mine/to-sign")]
-    public CollectionModel GetMyTransactionsToSignRequests([FromUri] ESignRequestsQuery query) {
-
-      using (var usecases = ESignRequestsUseCases.UseCaseInteractor()) {
-
-        FixedList<TransactionDescriptor> eSignRequests = usecases.GetMyTransactionsToSignRequests(query);
-
-        return new CollectionModel(this.Request, eSignRequests);
+        return new CollectionModel(this.Request, transactions);
       }
     }
 

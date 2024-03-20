@@ -15,6 +15,8 @@ using Empiria.Land.ESign.Adapters;
 
 using Empiria.Land.Transactions;
 
+using Empiria.Land.ESign.Data;
+
 namespace Empiria.Land.ESign.UseCases {
 
   /// <summary>Use cases that returns electronic sign requests</summary>
@@ -34,28 +36,19 @@ namespace Empiria.Land.ESign.UseCases {
 
     #region Use cases
 
-    public FixedList<TransactionDescriptor> GetMyTransactionsRefusedRequests(ESignRequestsQuery query) {
-      throw new NotImplementedException();
-    }
+    public FixedList<TransactionDescriptor> GetMyESignRequestedTransactions(ESignRequestsQuery query) {
+      Assertion.Require(query, nameof(query));
 
+      query.SignedBy = ExecutionServer.CurrentContact;
 
-    public FixedList<TransactionDescriptor> GetMyTransactionsRevokedRequests(ESignRequestsQuery query) {
-      throw new NotImplementedException();
-    }
+      query.EnsureIsValid();
 
+      string filter = query.MapToFilterString();
+      string sort = query.MapToSortString();
 
-    public FixedList<TransactionDescriptor> GetMyTransactionsSignedRequests(ESignRequestsQuery query) {
-      throw new NotImplementedException();
-    }
+      var list = ESignDataService.GetESignRequestedTransactions(filter, sort, query.PageSize);
 
-
-    public FixedList<TransactionDescriptor> GetMyTransactionsToRevokeRequests(ESignRequestsQuery query) {
-      throw new NotImplementedException();
-    }
-
-
-    public FixedList<TransactionDescriptor> GetMyTransactionsToSignRequests(ESignRequestsQuery query) {
-      throw new NotImplementedException();
+      return TransactionMapper.MapToDescriptor(list);
     }
 
     #endregion Use cases

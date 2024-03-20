@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Contacts;
+
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
@@ -23,10 +25,16 @@ namespace Empiria.Land.ESign.Adapters {
     } = RecorderOffice.Empty;
 
 
-    internal SignStatus Status {
+    internal Contact SignedBy {
       get;
       set;
-    } = SignStatus.Unsigned;
+    } = Contact.Empty;
+
+
+    public SignStatus Status {
+      get;
+      set;
+    } = SignStatus.Undefined;
 
 
     public string Keywords {
@@ -44,7 +52,7 @@ namespace Empiria.Land.ESign.Adapters {
     public int PageSize {
       get;
       set;
-    } = 50;
+    } = 250;
 
 
     public int Page {
@@ -62,21 +70,25 @@ namespace Empiria.Land.ESign.Adapters {
     #region Extension methods
 
     static internal void EnsureIsValid(this ESignRequestsQuery query) {
+      Assertion.Require(query.Status != SignStatus.Undefined, $"Undefined status value.");
+
       query.Keywords = query.Keywords ?? String.Empty;
       query.OrderBy = query.OrderBy ?? "TransactionId DESC";
-      query.PageSize = query.PageSize <= 0 ? 50 : query.PageSize;
+      query.PageSize = query.PageSize <= 0 ? 250 : query.PageSize;
       query.Page = query.Page <= 0 ? 1 : query.Page;
-      query.RecorderOffice = GetRecorderOffice(query.RecorderOffice);
     }
 
 
     static internal string MapToFilterString(this ESignRequestsQuery query) {
       string recorderOfficeFilter = BuildRecorderOfficeFilter(query.RecorderOffice);
-      string eSignStatusFilter = BuildESignStatusFilter(query.Status);
+      string signerFilter = BuildSignedByFilter(query.SignedBy);
+      string signStatusFilter = BuildSignStatusFilter(query.Status);
       string transactionKeywordsFilter = BuildTransactionKeywordsFilter(query.Keywords);
 
       var filter = new Filter(recorderOfficeFilter);
-      filter.AppendAnd(eSignStatusFilter);
+
+      filter.AppendAnd(signerFilter);
+      filter.AppendAnd(signStatusFilter);
       filter.AppendAnd(transactionKeywordsFilter);
 
       return filter.ToString();
@@ -87,7 +99,7 @@ namespace Empiria.Land.ESign.Adapters {
       if (!String.IsNullOrWhiteSpace(query.OrderBy)) {
         return query.OrderBy;
       } else {
-        return "TransactionId DESC";
+        return "InternalControlNo DESC";
       }
     }
 
@@ -122,21 +134,17 @@ namespace Empiria.Land.ESign.Adapters {
     }
 
 
-    static private string BuildESignStatusFilter(SignStatus status) {
+    static private string BuildSignStatusFilter(SignStatus status) {
       return $"(SignStatus = '{(char) status}')";
     }
 
 
-    static private RecorderOffice GetRecorderOffice(RecorderOffice recorderOffice) {
-      if (!recorderOffice.IsEmptyInstance) {
-        return recorderOffice;
+    static private string BuildSignedByFilter(Contact signedBy) {
+      if (signedBy.IsEmptyInstance) {
+        return string.Empty;
       }
-      try {
-        return Permissions.GetUserRecorderOffice();
 
-      } catch {
-        return RecorderOffice.Empty;
-      }
+      return $"(SignedById = {signedBy.Id})";
     }
 
     #endregion Helpers
