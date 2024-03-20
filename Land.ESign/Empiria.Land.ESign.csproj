@@ -42,19 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adapters\ESignDTO.cs" />
-    <Compile Include="Adapters\ESignEngineMapper.cs" />
-    <Compile Include="Adapters\ESignQuery.cs" />
     <Compile Include="Adapters\ESignRequestsQuery.cs" />
-    <Compile Include="Adapters\SignDocumentDto.cs" />
-    <Compile Include="Adapters\SignDocumentRequestDto.cs" />
-    <Compile Include="Data\ESignEngineData.cs" />
-    <Compile Include="Domain\ESignEngine.cs" />
-    <Compile Include="Domain\SignedDocumentEntry.cs" />
-    <Compile Include="Domain\SignRequestEntry.cs" />
+    <Compile Include="Data\ESignDataService.cs" />
+    <Compile Include="Domain\ESignerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UseCases\TransactionESignRequestsUseCases.cs" />
-    <Compile Include="UseCases\ESignEngineUseCases.cs" />
+    <Compile Include="UseCases\ESignRequestsUseCases.cs" />
+    <Compile Include="UseCases\ESignerUseCases.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj">

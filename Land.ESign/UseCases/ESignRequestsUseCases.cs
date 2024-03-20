@@ -1,10 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : ESign Services                             Component : Use cases Layer                         *
+*  Module   : Electronic Sign                            Component : Use cases Layer                         *
 *  Assembly : Empiria.Land.ESign.dll                     Pattern   : Use case interactor class               *
-*  Type     : TransactionESignRequestsUseCases           License   : Please read LICENSE.txt file            *
+*  Type     : ESignRequestsUseCases                      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases that returns transactions electronic sign requests.                                  *
+*  Summary  : Use cases that returns electronic sign requests.                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -17,17 +17,17 @@ using Empiria.Land.Transactions;
 
 namespace Empiria.Land.ESign.UseCases {
 
-  /// <summary>Use cases that returns transactions electronic sign requests.</summary>
-  public class TransactionESignRequestsUseCases : UseCase {
+  /// <summary>Use cases that returns electronic sign requests</summary>
+  public class ESignRequestsUseCases : UseCase {
 
     #region Constructors and parsers
 
-    protected TransactionESignRequestsUseCases() {
+    protected ESignRequestsUseCases() {
       // no-op
     }
 
-    static public TransactionESignRequestsUseCases UseCaseInteractor() {
-      return UseCase.CreateInstance<TransactionESignRequestsUseCases>();
+    static public ESignRequestsUseCases UseCaseInteractor() {
+      return UseCase.CreateInstance<ESignRequestsUseCases>();
     }
 
     #endregion Constructors and parsers
@@ -60,6 +60,6 @@ namespace Empiria.Land.ESign.UseCases {
 
     #endregion Use cases
 
-  } // class TransactionESignRequestsUseCases
+  } // class ESignRequestsUseCases
 
 } // namespace Empiria.Land.ESign.UseCases

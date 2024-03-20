@@ -2,34 +2,22 @@
 *                                                                                                            *
 *  Module   : Electronic Sign Services                   Component : Test cases                              *
 *  Assembly : Empiria.Land.Tests.dll                     Pattern   : Use cases tests class                   *
-*  Type     : ESignUseCasesTests                         License   : Please read LICENSE.txt file            *
+*  Type     : ESignSearchUseCasesTests                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Test cases for ESign.                                                                          *
+*  Summary  : Test cases for electronic sign searching.                                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using Xunit;
+
 using Empiria.Land.ESign.Adapters;
 using Empiria.Land.ESign.UseCases;
-using Xunit;
 
 namespace Empiria.Land.Tests.ESign {
 
   /// <summary>Test cases for ESign.</summary>
-  public class ESignUseCasesTests {
+  public class ESignSearchUseCasesTests {
 
 
-    [Fact]
-    public void ShouldGetSignedDocuments() {
+  }  // class ESignSearchUseCasesTests
 
-      using (var useCase = ESignEngineUseCases.UseCaseInteractor()) {
-
-        int recorderOfficeId = 101;
-        string responsibleUID = "9a957ace-417a-4575-bedd-fe9ea90051fe";
-
-        FixedList<SignDocumentDto> documents = useCase.GetSignedDocuments(recorderOfficeId, responsibleUID);
-        Assert.NotNull(documents);
-      }
-
-    }
-
-  }
-}
+}  // namespace Empiria.Land.Tests.ESign

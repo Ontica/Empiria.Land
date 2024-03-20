@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Management                    Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Query payload                           *
+*  Module   : Electronic Sign                            Component : Interface adapters                      *
+*  Assembly : Empiria.Land.ESign.dll                     Pattern   : Query payload                           *
 *  Type     : ESignRequestsQuery                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Query payload used for electronic signs requests.                                               *
