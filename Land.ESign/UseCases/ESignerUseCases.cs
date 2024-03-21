@@ -11,6 +11,8 @@ using System;
 
 using Empiria.Services;
 
+using Empiria.Land.ESign.Adapters;
+
 namespace Empiria.Land.ESign.UseCases {
 
   /// <summary>Use cases that performs electronic sign of documents.</summary>
@@ -27,6 +29,45 @@ namespace Empiria.Land.ESign.UseCases {
     }
 
     #endregion Constructors and parsers
+
+    #region Use cases
+
+    public void RefuseMyTransactionDocuments(ESignCommand command) {
+      Assertion.Require(command, nameof(command));
+
+      command.EnsureIsValid(ESignCommandType.Refuse, true);
+
+      throw new NotImplementedException();
+    }
+
+
+    public void RevokeMyTransactionDocuments(ESignCommand command) {
+      Assertion.Require(command, nameof(command));
+
+      command.EnsureIsValid(ESignCommandType.Revoke, true);
+
+      throw new NotImplementedException();
+    }
+
+
+    public void SignMyTransactionDocuments(ESignCommand command) {
+      Assertion.Require(command, nameof(command));
+
+      command.EnsureIsValid(ESignCommandType.Sign, true);
+
+      throw new NotImplementedException();
+    }
+
+
+    public void UnrefuseMyTransactionDocuments(ESignCommand command) {
+      Assertion.Require(command, nameof(command));
+
+      command.EnsureIsValid(ESignCommandType.Unrefuse, true);
+
+      throw new NotImplementedException();
+    }
+
+    #endregion Use cases
 
   } // class ESignerUseCases
 
