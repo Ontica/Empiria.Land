@@ -68,6 +68,15 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public string Digest {
+      get {
+        return this.ExtData.Get("electronicSign/digest", string.Empty);
+      }
+      private set {
+        this.ExtData.SetIfValue("electronicSign/digest", value);
+      }
+    }
+
 
     public string DigitalSeal {
       get {
@@ -152,6 +161,24 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public string SignDocumentID {
+      get {
+        return this.ExtData.Get("electronicSign/signDocumentID", string.Empty);
+      }
+      private set {
+        this.ExtData.SetIfValue("electronicSign/signDocumentID", value);
+      }
+    }
+
+    public string SignDocumentName {
+      get {
+        return this.ExtData.Get("electronicSign/signDocumentName", string.Empty);
+      }
+      private set {
+        this.ExtData.SetIfValue("electronicSign/signDocumentName", value);
+      }
+    }
+
     public bool UsesESign {
       get {
         return SignType == SignType.Electronic;
@@ -183,6 +210,19 @@ namespace Empiria.Land.Registration {
       this.SignedTime = ExecutionServer.DateMinValue;
       this.SignStatus = SignStatus.Unsigned;
       this.SignType = SignType.Undeterminated;
+    }
+
+
+    internal void SetElectronicSignData(LandESignData signData) {
+
+      this.Digest = signData.Digest;
+      this.SignDocumentID = signData.DocumentID;
+      this.SignDocumentName = signData.DocumentName;
+
+      this.DigitalSignature = signData.Signature;
+
+      this.SignedTime = signData.SignedTime;
+      this.SignStatus = SignStatus.Signed;
     }
 
 
