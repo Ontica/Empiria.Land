@@ -10,6 +10,7 @@
 using System;
 using System.Web.Http;
 
+using Empiria.Security;
 using Empiria.WebApi;
 
 using Empiria.Land.ESign.Adapters;
@@ -23,10 +24,24 @@ namespace Empiria.Land.ESign.WebAPI {
     #region Web apis
 
     [HttpPost]
+    [Route("v5/land/electronic-sign/generate-esign-command-security-token")]
+    public SingleObjectModel GenerateESignCommandSecurityToken([FromBody] UserCredentialsDto credentials) {
+
+      PrepareAuthenticationFields(credentials);
+
+      using (var usecases = ESignerUseCases.UseCaseInteractor()) {
+        string token = usecases.GenerateESignCommandSecurityToken(credentials);
+
+        return new SingleObjectModel(base.Request, token);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v5/land/electronic-sign/execute-task/transactions/mine/refuse")]
     public NoDataModel RefuseMyTransactionDocuments([FromBody] ESignCommand command) {
 
-      base.RequireBody(command);
+      EnsureValidESignCommand(command);
 
       using (var usecases = ESignerUseCases.UseCaseInteractor()) {
 
@@ -41,7 +56,7 @@ namespace Empiria.Land.ESign.WebAPI {
     [Route("v5/land/electronic-sign/execute-task/transactions/mine/revoke")]
     public NoDataModel RevokeMyTransactionDocuments([FromBody] ESignCommand command) {
 
-      base.RequireBody(command);
+      EnsureValidESignCommand(command);
 
       using (var usecases = ESignerUseCases.UseCaseInteractor()) {
 
@@ -56,7 +71,7 @@ namespace Empiria.Land.ESign.WebAPI {
     [Route("v5/land/electronic-sign/execute-task/transactions/mine/sign")]
     public NoDataModel SignMyTransactionDocuments([FromBody] ESignCommand command) {
 
-      base.RequireBody(command);
+      EnsureValidESignCommand(command);
 
       using (var usecases = ESignerUseCases.UseCaseInteractor()) {
 
@@ -71,7 +86,7 @@ namespace Empiria.Land.ESign.WebAPI {
     [Route("v5/land/electronic-sign/execute-task/transactions/mine/unrefuse")]
     public NoDataModel UnrefuseMyTransactionDocuments([FromBody] ESignCommand command) {
 
-      base.RequireBody(command);
+      EnsureValidESignCommand(command);
 
       using (var usecases = ESignerUseCases.UseCaseInteractor()) {
 
@@ -82,6 +97,26 @@ namespace Empiria.Land.ESign.WebAPI {
     }
 
     #endregion Web apis
+
+    #region Helpers
+
+    private void PrepareAuthenticationFields(UserCredentialsDto credentials) {
+      base.RequireBody(credentials);
+
+      credentials.AppKey = base.GetClientApplication().Key;
+      credentials.UserHostAddress = base.GetClientIpAddress();
+    }
+
+
+    private void EnsureValidESignCommand(ESignCommand command) {
+      base.RequireBody(command);
+      Assertion.Require(command.Credentials, "credentials");
+
+      command.Credentials.AppKey = base.GetClientApplication().Key;
+      command.Credentials.UserHostAddress = base.GetClientIpAddress();
+    }
+
+    #endregion Helpers
 
   } // class ESignerController
 

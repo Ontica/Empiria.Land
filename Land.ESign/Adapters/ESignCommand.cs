@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using Empiria.Security;
 
 namespace Empiria.Land.ESign.Adapters {
 
@@ -55,14 +56,21 @@ namespace Empiria.Land.ESign.Adapters {
 
 
   /// <summary>Sign credentials</summary>
-  public class SignCredentialsDto {
+  public class SignCredentialsDto : ISecurityTokenData {
 
-    public string UserName {
+    public string AppKey {
       get; set;
     }
 
+    public string UserID {
+      get; set;
+    }
 
     public string Password {
+      get; set;
+    }
+
+    public string UserHostAddress {
       get; set;
     }
 
@@ -81,8 +89,10 @@ namespace Empiria.Land.ESign.Adapters {
       Assertion.Require(command.CommandType == commandType, $"Invalid command type. Expected '{commandType}'.");
 
       Assertion.Require(command.Credentials, nameof(command.Credentials));
-      Assertion.Require(command.Credentials.UserName, "credentials.userName");
+      Assertion.Require(command.Credentials.UserID, "credentials.userID");
       Assertion.Require(command.Credentials.Password, "credentials.password");
+      Assertion.Require(command.Credentials.AppKey, "credentials.AppKey");
+      Assertion.Require(command.Credentials.UserHostAddress, "credentials.UserHostAddress");
 
       if (forTransactions) {
         Assertion.Require(command.TransactionUIDs, nameof(command.TransactionUIDs));
