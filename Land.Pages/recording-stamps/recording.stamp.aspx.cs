@@ -53,7 +53,7 @@ namespace Empiria.Land.Pages {
 
       landRecord = LandRecord.TryParse(landRecordUID);
 
-      landRecord.EnsureIntegrity();
+      // landRecord.EnsureIntegrity();
 
       transaction = landRecord.Transaction;
 
@@ -84,6 +84,17 @@ namespace Empiria.Land.Pages {
       }
     }
 
+    protected string GetDigest() {
+      if (!landRecord.SecurityData.UsesESign ||
+           landRecord.SecurityData.IsUnsigned ||
+           landRecord.SecurityData.Digest.Length == 0) {
+        return string.Empty;
+      }
+
+      return $"<b>Cadena de digestión (datos estampillados):</b><br />" +
+             $"{landRecord.SecurityData.Digest}" +
+             $"<br />";
+    }
 
     protected string GetDigitalSignature() {
       if (landRecord.IsHistoricRecord) {
@@ -99,7 +110,7 @@ namespace Empiria.Land.Pages {
         return CommonMethods.AsWarning("Este documento NO HA SIDO FIRMADO digitalmente. No tiene valor oficial.");
 
       } else if (landRecord.SecurityData.UsesESign && landRecord.SecurityData.IsSigned) {
-        return landRecord.SecurityData.DigitalSignature;
+        return EmpiriaString.DivideLongString(landRecord.SecurityData.DigitalSignature, 96, "<br />");
 
       } else {
         throw Assertion.EnsureNoReachThisCode();

@@ -90,10 +90,8 @@
          <tr>
           <td colspan="3" style="text-align:center;font-size:11pt" >
             <span style="font-size:8.5pt">
-            Firmado y sellado electrónicamente de conformidad<br />
-            con las leyes y regulaciones vigentes.</span><br />
-            <br />
-            <%=base.GetDigitalSignature()%>
+            Firmado y sellado electrónicamente de conformidad con las leyes y regulaciones vigentes,<br />
+            utilizando los servicios de la Autoridad Certificadora del Gobierno del Estado.</span><br />
             <br />
             <b><%=GetRecordingSignerName()%></b>
             <br />
@@ -146,7 +144,7 @@
             <b>Código de verificación:</b>
             <br />
               <% if (this.CanBePrinted()) { %>
-              &#160;&#160;<%=base.landRecord.SecurityData.SecurityHash%>
+              <%=base.landRecord.SecurityData.SecurityHash%>
 
               <% } else { %>
               <span class="warning">** SIN VALIDEZ **</span>
@@ -156,14 +154,15 @@
             <b>Sello digital:</b>
             <br />
              <% if (this.CanBePrinted()) { %>
-              &#160;&#160; <%=base.GetDigitalSeal()%>
+              <%=base.GetDigitalSeal()%>
              <% } else { %>
              <span class="warning">** ESTE DOCUMENTO NO ES OFICIAL **</span>
              <% } %>
             <br />
+            <%=GetDigest()%>
             <b>Firma electrónica:</b>
             <br />
-               &#160;&#160;<%=GetDigitalSignature()%>
+            <%=GetDigitalSignature()%>
             <br />
             <b>Registró:</b> <%=GetRecordingOfficialsInitials()%> &#160; &#160; <b>Impreso el:</b> <%=DateTime.Now.ToString("dd/MMM/yyyy HH:mm") %>
             <br />
