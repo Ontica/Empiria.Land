@@ -145,6 +145,15 @@ namespace Empiria.Land.Registration {
     }
 
 
+    public void ElectronicSign(LandESignData signData) {
+      Assertion.Require(signData, nameof(signData));
+
+      this.LandRecord.SecurityData.SetElectronicSignData(signData);
+
+      LandRecordsData.SaveSecurityData(this.LandRecord);
+    }
+
+
     // Remove after installation
     public void RefreshSecurityData() {
       this.LandRecord.SecurityData.RefreshSignData(this.LandRecord);
@@ -203,6 +212,7 @@ namespace Empiria.Land.Registration {
       LandRecordsData.SaveSecurityData(this.LandRecord);
     }
 
+
     #endregion Public methods
 
     #region Integrity methods
@@ -237,6 +247,7 @@ namespace Empiria.Land.Registration {
       }
       throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
     }
+
 
     private IntegrityValidator _validator = null;
     public IntegrityValidator Integrity {

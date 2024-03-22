@@ -8,7 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.Security;
+
+using Empiria.Land.Registration.Transactions;
+
 
 namespace Empiria.Land.ESign.Adapters {
 
@@ -50,6 +54,7 @@ namespace Empiria.Land.ESign.Adapters {
     public FixedList<string> TransactionUIDs {
       get; set;
     }
+
 
   }  // class ESignTaskFields
 
@@ -101,6 +106,12 @@ namespace Empiria.Land.ESign.Adapters {
         Assertion.Require(command.DocumentUIDs, nameof(command.DocumentUIDs));
         Assertion.Require(command.DocumentUIDs.Count > 0, "documentUIDs can't be an empty list.");
       }
+    }
+
+
+    static internal FixedList<LRSTransaction> GetTransactions(this ESignCommand command) {
+      return command.TransactionUIDs.Select(uid => LRSTransaction.Parse(uid))
+                                    .ToFixedList();
     }
 
     #endregion Extension methods
