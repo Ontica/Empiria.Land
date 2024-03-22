@@ -42,6 +42,10 @@ namespace Empiria.Land.Transactions {
       get; internal set;
     }
 
+    public DateTime RegistrationTime {
+      get; internal set;
+    }
+
     public string InternalControlNo {
       get; internal set;
     }
@@ -131,6 +135,10 @@ namespace Empiria.Land.Transactions {
     }
 
     public DateTime PresentationTime {
+      get; internal set;
+    }
+
+    public DateTime RegistrationTime {
       get; internal set;
     }
 
