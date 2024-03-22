@@ -8,25 +8,18 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 
 using Empiria.Security;
 using Empiria.Services;
 
-using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
 using Empiria.Land.ESign.Adapters;
-using SeguriSign.Connector;
-using SeguriSign.Connector.Adapters;
-
 
 namespace Empiria.Land.ESign.UseCases {
 
   /// <summary>Use cases that performs electronic sign of documents.</summary>
   public class ESignerUseCases : UseCase {
-
-    private readonly string ESIGN_SERVICE_PROVIDER_URL = ConfigurationData.GetString("ElectronicSignature.ServiceProvider.URL");
 
     #region Constructors and parsers
 
@@ -54,7 +47,7 @@ namespace Empiria.Land.ESign.UseCases {
 
       command.EnsureIsValid(ESignCommandType.Refuse, true);
 
-      ValidateCredentials(command);
+      PrepareCredentials(command);
 
       throw new NotImplementedException();
     }
@@ -65,7 +58,7 @@ namespace Empiria.Land.ESign.UseCases {
 
       command.EnsureIsValid(ESignCommandType.Revoke, true);
 
-      ValidateCredentials(command);
+      PrepareCredentials(command);
 
       throw new NotImplementedException();
     }
@@ -76,34 +69,13 @@ namespace Empiria.Land.ESign.UseCases {
 
       command.EnsureIsValid(ESignCommandType.Sign, true);
 
-      ValidateCredentials(command);
+      PrepareCredentials(command);
 
       FixedList<LRSTransaction> transactions = command.GetTransactions();
 
-      FixedList<LandRecord> landRecords = GetTransactionDocumentsFor(transactions, ESignCommandType.Sign);
+      var signer = new LandDocumentsSigner(command.Credentials);
 
-      var credentials = new SignerCredentialsDto {
-        UserName = command.Credentials.UserID,
-        Password = command.Credentials.Password
-      };
-
-      var service = new ESignService(ESIGN_SERVICE_PROVIDER_URL, credentials);
-
-      foreach (var record in landRecords) {
-
-        ESignDataDto signData = service.Sign($"{record.SecurityData.SecurityHash}{record.SecurityData.DigitalSeal}",
-                                             $"CAT_sello_registral_{record.UID}_{record.SecurityData.SecurityHash}");
-
-        var landSignData = new LandESignData {
-          DocumentID = signData.DocumentID,
-          DocumentName = signData.DocumentName,
-          Digest = signData.Digest,
-          Signature = signData.Signature,
-          SignedTime = signData.LocalSignDate
-        };
-
-        record.Security.ElectronicSign(landSignData);
-      }
+      signer.SignTransactionDocuments(transactions);
 
     }
 
@@ -113,7 +85,7 @@ namespace Empiria.Land.ESign.UseCases {
 
       command.EnsureIsValid(ESignCommandType.Unrefuse, true);
 
-      ValidateCredentials(command);
+      PrepareCredentials(command);
 
       throw new NotImplementedException();
     }
@@ -122,18 +94,7 @@ namespace Empiria.Land.ESign.UseCases {
 
     #region Helpers
 
-    private FixedList<LandRecord> GetTransactionDocumentsFor(FixedList<LRSTransaction> transactions,
-                                                             ESignCommandType commandType) {
-      var list = new List<LandRecord>(transactions.Count);
-
-      foreach (var transaction in transactions) {
-        list.Add(transaction.LandRecord);
-      }
-
-      return list.ToFixedList();
-    }
-
-    private void ValidateCredentials(ESignCommand command) {
+    private void PrepareCredentials(ESignCommand command) {
       var entropy = SecurityTokenGenerator.PopToken(command.Credentials, SecurityTokenType.ElectronicSign);
 
       command.Credentials.Password = Cryptographer.Decrypt(command.Credentials.Password, entropy, true);
