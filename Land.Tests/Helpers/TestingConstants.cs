@@ -53,6 +53,10 @@ namespace Empiria.Land.Tests {
 
     public static string BOOK_ENTRY_FOR_RECORDING_UID = "2012d07d-b443-4e46-84a5-0c341b666dad";
 
+    static public string ESIGN_USERID = ConfigurationData.Get<string>("Testing.ESign.UserID");
+
+    static public string ESIGN_PASSWORD = ConfigurationData.Get<string>("Testing.ESign.Password");
+
   }  // class TestingConstants
 
 }  // namespace Empiria.Land.Tests

@@ -53,6 +53,16 @@
       "type": "Land.Tests",
       "key": "Testing.SignedDocumentUID",
       "value": "{{TESTING-SIGNED-DOCUMENT-UID}}"
+    },
+    {
+      "type": "Land.Tests",
+      "key": "Testing.ESign.UserID",
+      "value": "{{TESTING-ESIGN-USERID}}"
+    },
+    {
+      "type": "Land.Tests",
+      "key": "Testing.ESign.Password",
+      "value": "{{TESTING-ESIGN-PASSWORD}}"
     }
   ]
 }
