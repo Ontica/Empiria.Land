@@ -20,14 +20,14 @@ namespace Empiria.Land.Registration {
   /// <summary>Contains security methods used to protect the integrity of recording documents.</summary>
   public class LandRecordSecurity: IProtected {
 
-    #region Constructors and parsers
+    private readonly LandRecordValidator _landRecordValidator;
 
-    private LandRecordSecurity() {
-      // Used by Empiria Framework
-    }
+    #region Constructors and parsers
 
     internal LandRecordSecurity(LandRecord landRecord) {
       this.LandRecord = landRecord;
+
+      _landRecordValidator = new LandRecordValidator(landRecord);
     }
 
     #endregion Constructors and parsers
@@ -44,16 +44,7 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public void GenerateImagingControlID() {
-      Assertion.Require(!LandRecord.IsEmptyInstance, "Land record can't be the empty instance.");
-      Assertion.Require(LandRecord.IsClosed, "Document is not closed.");
-
-      Assertion.Require(LandRecord.ImagingControlID.Length == 0,
-                        "Land record has already assigned an imaging control number.");
-
-      Assertion.Require(LandRecord.RecordingActs.Count > 0, "Land record should have recording acts.");
-      Assertion.Require(LandRecord.RecordingActs.CountAll((x) => !x.BookEntry.IsEmptyInstance) == 0,
-                        "Land record can't have any recording acts that are related to physical book entries.");
-
+      _landRecordValidator.AssertCanGenerateImagingControlID();
 
       LandRecord.ImagingControlID = LandRecordsData.GetNextImagingControlID(LandRecord);
 
@@ -96,57 +87,21 @@ namespace Empiria.Land.Registration {
       return LRSWorkflowRules.UserCanEditLandRecord(this.LandRecord);
     }
 
+
     public void AssertCanBeClosed() {
-      if (!this.IsReadyToClose()) {
-        Assertion.RequireFail("El usuario no tiene permisos para cerrar la inscripción o ésta no tiene un estado válido.");
-      }
-
-      //this.AssertGraceDaysForEdition();
-
-      Assertion.Require(this.LandRecord.RecordingActs.Count > 0, "La inscripción no tiene actos jurídicos.");
-
-      foreach (var recordingAct in this.LandRecord.RecordingActs) {
-        recordingAct.Validator.AssertCanBeClosed();
-      }
+      _landRecordValidator.AssertCanBeClosed();
     }
 
 
     public void AssertCanBeOpened() {
-      if (!this.IsReadyToOpen()) {
-        Assertion.RequireFail("El usuario no tiene permisos para abrir esta inscripción.");
-      }
-
-      //this.AssertGraceDaysForEdition();
-
-      foreach (var recordingAct in this.LandRecord.RecordingActs) {
-        recordingAct.Validator.AssertCanBeOpened();
-      }
-    }
-
-    private void AssertGraceDaysForEdition() {
-      var transaction = this.LandRecord.Transaction;
-
-      if (transaction.IsEmptyInstance) {
-        return;
-      }
-
-      const int graceDaysForEdition = 45;
-      DateTime lastDate = transaction.PresentationTime;
-      if (transaction.LastReentryTime != ExecutionServer.DateMaxValue) {
-        lastDate = transaction.LastReentryTime;
-      }
-      if (lastDate.AddDays(graceDaysForEdition) < DateTime.Today) {
-        Assertion.RequireFail("Por motivos de seguridad y calidad en el registro de la información, " +
-                             "no es posible modificar inscripciones de documentos en trámites de más de 45 días.\n\n" +
-                             "En su lugar se puede optar por registrar un nuevo trámite, " +
-                             "o quizás se pueda hacer un reingreso si no han transcurrido los " +
-                             "90 días de gracia.");
-      }
+      _landRecordValidator.AssertCanBeOpened();
     }
 
 
     public void ElectronicSign(LandESignData signData) {
       Assertion.Require(signData, nameof(signData));
+
+      _landRecordValidator.AssertCanBeElectronicallySigned();
 
       this.LandRecord.SecurityData.SetElectronicSignData(signData);
 
@@ -163,18 +118,7 @@ namespace Empiria.Land.Registration {
 
 
     public void ManualSign() {
-      Assertion.Require(this.LandRecord.IsClosed,
-                        "No se pude firmar una inscripción que no está cerrada.");
-
-      Assertion.Require(this.LandRecord.SecurityData.IsUnsigned,
-                        "No se pude volver a firmar una inscripción que ya está firmada.");
-
-      Assertion.Require(!this.LandRecord.IsHistoricRecord,
-                        "No se pude firmar una inscripción histórica.");
-
-      Assertion.Require(!LandRecordSecurityData.ESIGN_ENABLED,
-                        "No es posible efectuar firmar manualmente esta inscripción, " +
-                        "debido a que el servicio de firma electrónica está habilitado.");
+      _landRecordValidator.AssertCanManualSign();
 
       this.LandRecord.SecurityData.SetManualSignData(this.LandRecord);
 
@@ -183,9 +127,7 @@ namespace Empiria.Land.Registration {
 
 
     public void RemoveSign() {
-
-      Assertion.Require(this.LandRecord.IsClosed,
-                        "No se pude desfirmar una inscripción que no está cerrada.");
+      _landRecordValidator.AssertCanRemoveSign();
 
       this.LandRecord.SecurityData.RemoveSignData();
 
@@ -194,21 +136,7 @@ namespace Empiria.Land.Registration {
 
 
     public void RevokeSign() {
-      Assertion.Require(this.LandRecord.IsClosed,
-                        "No se pude revokar la firma de una inscripción que no está cerrada.");
-
-      Assertion.Require(this.LandRecord.SecurityData.IsSigned,
-                        "No se pude revocar la firma de una inscripción que no ha sido firmada.");
-
-      Assertion.Require(LandRecordSecurityData.ESIGN_ENABLED,
-                        "No se puede desfirmar la inscripción debido a que el servicio " +
-                        "de firma electrónica no está habilitado.");
-
-      Assertion.Require(this.LandRecord.SecurityData.UsesESign,
-                        "Sólo se puede revocar la firma de una inscripción que ha sido firmada electrónicamente.");
-
-      Assertion.Require(this.LandRecord.SecurityData.SignedBy.Equals(ExecutionServer.CurrentContact),
-                        "Solo se puede revocar la firma de una inscripción que ha sido firmada por la misma persona.");
+      _landRecordValidator.AssertCanRevokeSign();
 
       this.LandRecord.SecurityData.RevokeSignData();
 
@@ -216,19 +144,9 @@ namespace Empiria.Land.Registration {
     }
 
 
+
     public void PrepareForElectronicSign() {
-      Assertion.Require(this.LandRecord.IsClosed,
-                        "No se pude enviar a firma una inscripción que no está cerrada.");
-
-      Assertion.Require(this.LandRecord.SecurityData.IsUnsigned,
-                        "No se pude enviar a firma una inscripción que ya está firmada.");
-
-      Assertion.Require(!this.LandRecord.IsHistoricRecord,
-                        "No se pude enviar a firma una inscripción histórica.");
-
-      Assertion.Require(LandRecordSecurityData.ESIGN_ENABLED,
-                        "No es posible enviar a firma esta inscripción, " +
-                        "debido a que el servicio de firma electrónica no está habilitado.");
+      _landRecordValidator.AssertCanPrepareForElectronicSign();
 
       this.LandRecord.SecurityData.PrepareForElectronicSign(this.LandRecord);
 
