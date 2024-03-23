@@ -213,6 +213,15 @@ namespace Empiria.Land.Registration {
     }
 
 
+    internal void RevokeSignData() {
+      this.ExtData = new JsonObject();
+
+      this.SignedTime = ExecutionServer.DateMinValue;
+      this.SignStatus = SignStatus.Revoked;
+      this.SignType = SignType.Electronic;
+    }
+
+
     internal void SetElectronicSignData(LandESignData signData) {
 
       this.Digest = signData.Digest;

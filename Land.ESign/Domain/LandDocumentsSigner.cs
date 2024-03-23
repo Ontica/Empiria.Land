@@ -47,6 +47,21 @@ namespace Empiria.Land.ESign {
 
     #region Methods
 
+
+    internal void RevokeSignForLandRecord(LandRecord record) {
+      record.Security.RevokeSign();
+    }
+
+
+    internal void RevokeSignForTransactionDocuments(FixedList<LRSTransaction> transactions) {
+      FixedList<LandRecord> landRecords = GetTransactionDocumentsFor(transactions, ESignCommandType.Revoke);
+
+      foreach (var record in landRecords) {
+        RevokeSignForLandRecord(record);
+      }
+    }
+
+
     internal void SignLandRecord(LandRecord record) {
       var contentToSign = $"{record.SecurityData.SecurityHash}{record.SecurityData.DigitalSeal}";
 

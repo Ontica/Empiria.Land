@@ -60,7 +60,11 @@ namespace Empiria.Land.ESign.UseCases {
 
       PrepareCredentials(command);
 
-      throw new NotImplementedException();
+      FixedList<LRSTransaction> transactions = command.GetTransactions();
+
+      var signer = new LandDocumentsSigner(command.Credentials);
+
+      signer.RevokeSignForTransactionDocuments(transactions);
     }
 
 
