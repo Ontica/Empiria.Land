@@ -65,7 +65,7 @@ namespace Empiria.Land.Transactions.Workflow {
         Assertion.RequireFail($"El trámite '{transaction.UID}' todavía no está listo para ser recibido.");
       }
 
-      if (task.Responsible.Id == user.Id && task.CurrentStatus != TransactionStatus.Reentry) {
+      if (task.Responsible.Equals(user) && task.CurrentStatus != TransactionStatus.Reentry) {
         Assertion.RequireFail($"El trámite '{transaction.UID}' todavía no está listo para ser recibido.");
       }
 

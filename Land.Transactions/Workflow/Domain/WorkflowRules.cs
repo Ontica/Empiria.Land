@@ -79,7 +79,7 @@ namespace Empiria.Land.Transactions.Workflow {
           if (nextStatus == TransactionStatus.EndPoint) {
             return false;
           }
-          if (task.Responsible.Id == user.Id && task.CurrentStatus != TransactionStatus.Reentry) {
+          if (task.Responsible.Equals(user) && task.CurrentStatus != TransactionStatus.Reentry) {
             return false;
           }
           return CanReceiveFor(user, nextStatus);
