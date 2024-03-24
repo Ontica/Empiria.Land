@@ -10,6 +10,8 @@
 using System;
 using System.Collections.Generic;
 
+using Empiria.Json;
+
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
@@ -76,7 +78,9 @@ namespace Empiria.Land.ESign {
 
       validator.AssertCanBeElectronicallySigned();
 
-      var contentToSign = $"{record.SecurityData.SecurityHash}{record.SecurityData.DigitalSeal}";
+      record.Security.PrepareForElectronicSign();
+
+      var contentToSign = GetContentToSign(record);
 
       var documentUID = $"CAT_sello_registral_{record.UID}_{record.SecurityData.SecurityHash}";
 
@@ -101,6 +105,20 @@ namespace Empiria.Land.ESign {
     #endregion Methods
 
     #region Helpers
+
+    private string GetContentToSign(LandRecord record) {
+      return new JsonObject {
+        { "Documento", record.UID },
+        { "Tipo de documento", "Sello registral" },
+        { "Identificador de firmado", record.SecurityData.SignGuid },
+        { "Código de verificación", record.SecurityData.SecurityHash },
+        { "Sello digital", record.SecurityData.DigitalSeal },
+        { "Trámite", record.Transaction.UID },
+        { "Fecha de presentación", record.Transaction.PresentationTime },
+        { "Fecha de registro", record.AuthorizationTime }
+      }.ToString(true);
+    }
+
 
     private FixedList<LandRecord> GetTransactionDocumentsFor(FixedList<LRSTransaction> transactions,
                                                              ESignCommandType commandType) {
