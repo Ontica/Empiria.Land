@@ -83,17 +83,18 @@ namespace Empiria.Land.ESign.Adapters {
       string recorderOfficeFilter = BuildRecorderOfficeFilter(query.RecorderOffice);
       string signerFilter = BuildSignedByFilter(query.SignedBy);
       string signStatusFilter = BuildSignStatusFilter(query.Status);
+      string transactionStatusFilter = BuildTransactionStatusFilter(query.Status);
       string transactionKeywordsFilter = BuildTransactionKeywordsFilter(query.Keywords);
 
       var filter = new Filter(recorderOfficeFilter);
 
       filter.AppendAnd(signerFilter);
+      filter.AppendAnd(transactionStatusFilter);
       filter.AppendAnd(signStatusFilter);
       filter.AppendAnd(transactionKeywordsFilter);
 
       return filter.ToString();
     }
-
 
     static internal string MapToSortString(this ESignRequestsQuery query) {
       if (!String.IsNullOrWhiteSpace(query.OrderBy)) {
@@ -106,6 +107,30 @@ namespace Empiria.Land.ESign.Adapters {
     #endregion Extension methods
 
     #region Helpers
+
+
+    static private string BuildRecorderOfficeFilter(RecorderOffice recorderOffice) {
+      if (recorderOffice.IsEmptyInstance) {
+        return string.Empty;
+      }
+
+      return $"(RecorderOfficeId = {recorderOffice.Id})";
+    }
+
+
+    static private string BuildSignStatusFilter(SignStatus signStatus) {
+      return $"(SignStatus = '{(char) signStatus}')";
+    }
+
+
+      static private string BuildSignedByFilter(Contact signedBy) {
+      if (signedBy.IsEmptyInstance) {
+        return string.Empty;
+      }
+
+      return $"(SignedById = {signedBy.Id})";
+    }
+
 
     static private string BuildTransactionKeywordsFilter(string keywords) {
       if (EmpiriaString.IsInteger(keywords)) {
@@ -125,30 +150,15 @@ namespace Empiria.Land.ESign.Adapters {
     }
 
 
-    static private string BuildRecorderOfficeFilter(RecorderOffice recorderOffice) {
-      if (recorderOffice.IsEmptyInstance) {
+    private static string BuildTransactionStatusFilter(SignStatus signStatus) {
+      if (signStatus != SignStatus.Unsigned) {
         return string.Empty;
       }
-
-      return $"(RecorderOfficeId = {recorderOffice.Id})";
-    }
-
-
-    static private string BuildSignStatusFilter(SignStatus status) {
-      return $"(SignStatus = '{(char) status}')";
-    }
-
-
-    static private string BuildSignedByFilter(Contact signedBy) {
-      if (signedBy.IsEmptyInstance) {
-        return string.Empty;
-      }
-
-      return $"(SignedById = {signedBy.Id})";
+      return $"(ResponsibleId = {ExecutionServer.CurrentUserId} AND CurrentTransactionStatus = 'S')";
     }
 
     #endregion Helpers
 
   }  // class ESignRequestsQueryExtensions
 
-}  // namespace Empiria.Land.Transactions
+}  // namespace Empiria.Land.ESign.Adapters
