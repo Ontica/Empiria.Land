@@ -246,6 +246,7 @@ namespace Empiria.Land.Registration {
 
 
     internal void SetManualSignData(LandRecord landRecord) {
+      this.SignGuid = Guid.NewGuid().ToString();
       this.DigitalSealVersion = GenerateDigitalSealVersion(landRecord);
       this.DigitalSeal = GenerateDigitalSeal(landRecord);
       this.SecurityHash = GenerateSecurityHash(landRecord);
@@ -265,33 +266,62 @@ namespace Empiria.Land.Registration {
 
     #region Helpers
 
-    static private string GenerateCurrentDigitalSeal(LandRecord landRecord) {
-      var transaction = landRecord.Transaction;
+    private string GenerateDigitalSeal(LandRecord landRecord) {
+      if (DigitalSealVersion == "5.1") {
+        return GenerateDigitalSealV51(landRecord);
 
-      string s = "||" + transaction.UID + "|" + landRecord.UID;
+      } else if (DigitalSealVersion == "5.0") {
+        return GenerateRecordingActsV1_5_DigitalSeal(landRecord);
 
-      for (int i = 0; i < landRecord.RecordingActs.Count; i++) {
-        s += "|" + landRecord.RecordingActs[i].Id.ToString();
+      } else if (DigitalSealVersion == "1.0") {
+        var bookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
+
+        return GenerateBookEntriesV1_5_DigitalSeal(landRecord, bookEntries);
+
+      } else {
+        throw Assertion.EnsureNoReachThisCode($"Unrecognized digital seal version '{DigitalSealVersion}'.");
       }
-      s += "||";
-
-      return Cryptographer.SignTextWithSystemCredentials(s);
     }
 
 
-    static private string GenerateDigitalSeal(LandRecord landRecord) {
+    static private string GenerateDigitalSealVersion(LandRecord landRecord) {
       var bookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
 
-      if (bookEntries.Count == 0) {
-        return GenerateCurrentDigitalSeal(landRecord);
+      if (bookEntries.Count != 0) {
+        return "1.0";
+      } else if (!ESIGN_ENABLED) {
+        return "5.0";
       } else {
-        return GenerateFormerDigitalSeal(landRecord, bookEntries);
+        return "5.1";
       }
     }
 
 
-    static private string GenerateFormerDigitalSeal(LandRecord landRecord,
-                                                    FixedList<BookEntry> bookEntries) {
+    private string GenerateSecurityHash(LandRecord landRecord) {
+      if (DigitalSealVersion == "5.1") {
+        return Cryptographer.CreateHashCode(landRecord.Id.ToString("00000000") +
+                                            landRecord.PresentationTime.ToString("yyyyMMddTHH:mm:ss") +
+                                            landRecord.AuthorizationTime.ToString("yyyyMMddTHH:mm:ss") +
+                                            SignGuid + DigitalSeal,
+                                            landRecord.UID)
+                            .Substring(0, 10)
+                            .ToUpperInvariant();
+      }
+
+      return Cryptographer.CreateHashCode(landRecord.Id.ToString("00000000") +
+                                          landRecord.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
+                                          landRecord.UID)
+                          .Substring(0, 8)
+                          .ToUpperInvariant();
+    }
+
+
+    #endregion Helpers
+
+    #region Digital seals generators
+
+    static private string GenerateBookEntriesV1_5_DigitalSeal(LandRecord landRecord,
+                                                          FixedList<BookEntry> bookEntries) {
       var transaction = landRecord.Transaction;
 
       string s = "||" + transaction.UID + "|" + transaction.LandRecord.UID;
@@ -305,31 +335,48 @@ namespace Empiria.Land.Registration {
       return Cryptographer.SignTextWithSystemCredentials(s);
     }
 
+    static private string GenerateDigitalSealV51(LandRecord landRecord) {
+      var transaction = landRecord.Transaction;
 
-    static private string GenerateDigitalSealVersion(LandRecord landRecord) {
-      var bookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
+      string s = "||" + transaction.UID + "|" + landRecord.UID + "|" + landRecord.Instrument.UID;
 
-      if (bookEntries.Count != 0) {
-        return "1.0";
-      } else if (!ESIGN_ENABLED) {
-        return "5.0";
-      } else {
-        return "6.0";
+      for (int i = 0; i < landRecord.RecordingActs.Count; i++) {
+        var recordingAct = landRecord.RecordingActs[i];
+
+        s += $"|{recordingAct.RecordingActType.Id},{recordingAct.Id},{recordingAct.Resource.Id}";
+
+        for (int j = 0; j < recordingAct.Parties.PrimaryParties.Count; j++) {
+          var party = recordingAct.Parties.PrimaryParties[j];
+
+          s += $"^{party.Id},{party.PartyRole.Name},{party.Party.Id},{party.Party.FullName}";
+        }
+
+        for (int j = 0; j < recordingAct.Parties.SecondaryParties.Count; j++) {
+          var party = recordingAct.Parties.SecondaryParties[j];
+
+          s += $"#{party.Id},{party.PartyRole.Name},{party.Party.Id},{party.Party.FullName}";
+        }
       }
+      s += "||";
+
+      return Cryptographer.SignTextWithSystemCredentials(s);
+    }
+
+    static private string GenerateRecordingActsV1_5_DigitalSeal(LandRecord landRecord) {
+      var transaction = landRecord.Transaction;
+
+      string s = "||" + transaction.UID + "|" + landRecord.UID;
+
+      for (int i = 0; i < landRecord.RecordingActs.Count; i++) {
+        s += "|" + landRecord.RecordingActs[i].Id.ToString();
+      }
+      s += "||";
+
+      return Cryptographer.SignTextWithSystemCredentials(s);
     }
 
 
-    static private string GenerateSecurityHash(LandRecord landRecord) {
-
-      return Cryptographer.CreateHashCode(landRecord.Id.ToString("00000000") +
-                                          landRecord.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
-                                          landRecord.UID)
-                          .Substring(0, 8)
-                          .ToUpperInvariant();
-    }
-
-
-    #endregion Helpers
+    #endregion Digital seals generators
 
   }  // class LandRecordSecurityData
 
