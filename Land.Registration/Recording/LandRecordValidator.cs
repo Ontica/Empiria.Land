@@ -20,7 +20,7 @@ namespace Empiria.Land.Registration {
 
     public LandRecordValidator(LandRecord landRecord) {
       Assertion.Require(landRecord, nameof(landRecord));
-      Assertion.Require(!landRecord.IsEmptyInstance, "LandRecord can't be he empty instance.");
+      Assertion.Require(!landRecord.IsEmptyInstance, "LandRecord can't be the empty instance.");
 
       _landRecord = landRecord;
     }
@@ -60,8 +60,25 @@ namespace Empiria.Land.Registration {
 
     public void AssertCanBeElectronicallySigned() {
       Assertion.Require(LandRecordSecurityData.ESIGN_ENABLED,
-                       "No es posible firmar electrínicamente esta inscripción debido a que el servicio " +
-                       "de firma electrónica no está habilitado.");
+          "No es posible firmar electrónicamente esta inscripción debido a que el servicio " +
+          "de firma electrónica no está habilitado." + LandRecordDescriptionMessage());
+
+      Assertion.Require(!_landRecord.IsHistoricRecord,
+          "No se puede firmar una inscripción histórica." + LandRecordDescriptionMessage());
+
+      Assertion.Require(_landRecord.IsClosed,
+          "No se puede firmar una inscripción que no ha sido cerrada." + LandRecordDescriptionMessage());
+
+      Assertion.Require(_landRecord.SecurityData.IsUnsigned,
+          "No se puede firmar una inscripción que ya está firmada." + LandRecordDescriptionMessage());
+
+      Assertion.Require(_landRecord.SecurityData.UsesESign,
+          "No se puede firmar una inscripción que no está marcada para firma electrónica." + LandRecordDescriptionMessage());
+
+      Assertion.Require(_landRecord.SecurityData.SignedBy.Equals(ExecutionServer.CurrentContact),
+          "La inscripción está asignada para ser firmada " +
+          $"por una persona distinta ({_landRecord.SecurityData.SignedBy.FullName}) " +
+          $"a la que está intentando firmarla." + LandRecordDescriptionMessage());
     }
 
 
@@ -74,64 +91,69 @@ namespace Empiria.Land.Registration {
       Assertion.Require(_landRecord.RecordingActs.Count > 0, "Land record should have recording acts.");
       Assertion.Require(_landRecord.RecordingActs.CountAll((x) => !x.BookEntry.IsEmptyInstance) == 0,
                         "Land record can't have any recording acts that are related to physical book entries.");
-
     }
 
 
     public void AssertCanManualSign() {
       Assertion.Require(_landRecord.IsClosed,
-                        "No se pude firmar una inscripción que no está cerrada.");
+              "No se puede firmar una inscripción que no está cerrada." + LandRecordDescriptionMessage());
 
       Assertion.Require(_landRecord.SecurityData.IsUnsigned,
-                        "No se pude volver a firmar una inscripción que ya está firmada.");
+              "No se puede volver a firmar una inscripción que ya está firmada." + LandRecordDescriptionMessage());
 
       Assertion.Require(!_landRecord.IsHistoricRecord,
-                        "No se pude firmar una inscripción histórica.");
+              "No se puede firmar una inscripción histórica." + LandRecordDescriptionMessage());
 
       Assertion.Require(!LandRecordSecurityData.ESIGN_ENABLED,
-                        "No es posible efectuar firmar manualmente esta inscripción, " +
-                        "debido a que el servicio de firma electrónica está habilitado.");
+              "No es posible efectuar firmar manualmente esta inscripción, " +
+              "debido a que el servicio de firma electrónica está habilitado." + LandRecordDescriptionMessage());
     }
 
 
     public void AssertCanPrepareForElectronicSign() {
+      Assertion.Require(LandRecordSecurityData.ESIGN_ENABLED,
+                "No es posible preparar esta inscripción para firma electrónica, " +
+                "debido a que el servicio de firma electrónica no está habilitado." + LandRecordDescriptionMessage());
+
       Assertion.Require(_landRecord.IsClosed,
-                        "No se pude enviar a firma una inscripción que no está cerrada.");
+                "No se puede enviar a firma una inscripción que no está cerrada." + LandRecordDescriptionMessage());
 
       Assertion.Require(_landRecord.SecurityData.IsUnsigned,
-                        "No se pude enviar a firma una inscripción que ya está firmada.");
+                "No se puede enviar a firma una inscripción que ya está firmada." + LandRecordDescriptionMessage());
 
       Assertion.Require(!_landRecord.IsHistoricRecord,
-                        "No se pude enviar a firma una inscripción histórica.");
+                "No se puede enviar a firma una inscripción histórica." + LandRecordDescriptionMessage());
 
-      Assertion.Require(LandRecordSecurityData.ESIGN_ENABLED,
-                        "No es posible preparar esta inscripción para firma electrónica, " +
-                        "debido a que el servicio de firma electrónica no está habilitado.");
     }
 
 
     public void AssertCanRemoveSign() {
       Assertion.Require(_landRecord.IsClosed,
-                        "No se pude desfirmar una inscripción que no está cerrada.");
+          "No se puede desfirmar una inscripción que no está cerrada." + LandRecordDescriptionMessage());
     }
 
 
     public void AssertCanRevokeSign() {
-      Assertion.Require(_landRecord.IsClosed,
-                        "No se pude revokar la firma de una inscripción que no está cerrada.");
-
-      Assertion.Require(_landRecord.SecurityData.IsSigned,
-                        "No se pude revocar la firma de una inscripción que no ha sido firmada.");
-
       Assertion.Require(LandRecordSecurityData.ESIGN_ENABLED,
-                        "No se puede desfirmar la inscripción debido a que el servicio " +
-                        "de firma electrónica no está habilitado.");
+                        "No se puede revocar la firma de esta inscripción debido a que el servicio " +
+                        "de firma electrónica no está habilitado." + LandRecordDescriptionMessage());
 
       Assertion.Require(_landRecord.SecurityData.UsesESign,
-                        "Sólo se puede revocar la firma de una inscripción que ha sido firmada electrónicamente.");
+                       "Sólo se puede revocar la firma de una inscripción " +
+                       "marcada para firma electrónica." + LandRecordDescriptionMessage());
+
+      Assertion.Require(_landRecord.IsClosed,
+                        "No se puede revocar la firma de una inscripción " +
+                        "que no está cerrada." + LandRecordDescriptionMessage());
+
+      Assertion.Require(_landRecord.SecurityData.IsSigned,
+                 "No se puede revocar la firma de una inscripción " +
+                 "que no ha sido firmada." + LandRecordDescriptionMessage());
+
 
       Assertion.Require(_landRecord.SecurityData.SignedBy.Equals(ExecutionServer.CurrentContact),
-                        "Solo se puede revocar la firma de una inscripción que ha sido firmada por la misma persona.");
+                 "Únicamente la persona que firmó la inscripción puede " +
+                 "revocar la firma de la misma." + LandRecordDescriptionMessage());
     }
 
 
@@ -160,6 +182,14 @@ namespace Empiria.Land.Registration {
     }
 
     #endregion Methods
+
+    #region Helpers
+
+    private string LandRecordDescriptionMessage() {
+      return $" Trámite {_landRecord.Transaction.UID}. Inscripción: {_landRecord.UID}.";
+    }
+
+    #endregion Helpers
 
   } // class LandRecordValidator
 
