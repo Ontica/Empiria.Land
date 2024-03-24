@@ -69,7 +69,6 @@ namespace Empiria.Land.Data {
       }
     }
 
-
     static internal void SaveImagingControlID(LandRecord landRecord) {
       var op = DataOperation.Parse("setLRSLandRecordImagingControlID",
                                    landRecord.Id, landRecord.ImagingControlID);
@@ -78,9 +77,17 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal void SaveSecurityData(LandRecord o) {
-      // EmpiriaLog.Trace(o.SecurityData.ExtData.ToString());
+    // Remove after installation
+    internal static void RefreshDIFHash(LandRecord landRecord) {
+      var sql = "UPDATE LRSLandRecords " +
+               $"SET LandRecordDIF = '{landRecord.Security.Integrity.GetUpdatedHashCode()}' " +
+               $"WHERE LandRecordId = {landRecord.Id}";
 
+      DataWriter.Execute(DataOperation.Parse(sql));
+    }
+
+
+    static internal void SaveSecurityData(LandRecord o) {
       var op = DataOperation.Parse("setLRSLandRecordSecurityData", o.Id, o.GUID,
                                    (char) o.SecurityData.SignStatus, (char) o.SecurityData.SignType,
                                    o.SecurityData.SignedBy.Id, o.SecurityData.SignedTime,
@@ -90,6 +97,7 @@ namespace Empiria.Land.Data {
 
       DataWriter.Execute(op);
     }
+
 
 
     static internal void WriteLandRecord(LandRecord o) {

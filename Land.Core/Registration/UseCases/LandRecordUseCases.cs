@@ -86,11 +86,11 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     //ToDo: Remove this method after installation
-    public void RefreshLandRecordsSecurityData() {
+    public void RefreshLandRecordsHashes() {
       var records = BaseObject.GetList<LandRecord>("LandRecordDIF = ''");
 
       foreach (var record in records) {
-        record.Security.RefreshSecurityData();
+        record.Security.RefreshDIFHash();
       }
     }
 

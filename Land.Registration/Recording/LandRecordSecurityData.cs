@@ -45,7 +45,7 @@ namespace Empiria.Land.Registration {
   /// <summary>Holds security data for land instrument records.</summary>
   public class LandRecordSecurityData {
 
-    public static readonly bool ESIGN_ENABLED = ConfigurationData.Get<bool>("ElectronicSignatureEnabled", false);
+    public static readonly bool ESIGN_ENABLED = true;  // ConfigurationData.Get<bool>("ElectronicSignatureEnabled", false);
 
     #region Constructors and parsers
 
@@ -218,7 +218,6 @@ namespace Empiria.Land.Registration {
 
       this.SignedTime = ExecutionServer.DateMinValue;
       this.SignStatus = SignStatus.Revoked;
-      this.SignType = SignType.Electronic;
     }
 
 
@@ -250,24 +249,6 @@ namespace Empiria.Land.Registration {
     }
 
 
-    // ToDo: Remove after installation
-    internal void RefreshSignData(LandRecord landRecord) {
-      if (this.SignStatus == SignStatus.Unsigned) {
-        this.ExtData = new JsonObject();
-        return;
-      }
-
-      var jobTitle = SignedByJobTitle;
-
-      this.ExtData = new JsonObject();
-
-      this.SecurityHash = GenerateSecurityHash(landRecord);
-      this.DigitalSeal = GenerateDigitalSeal(landRecord);
-      this.DigitalSealVersion = GenerateDigitalSealVersion(landRecord);
-      this.DigitalSignature = "Documento firmado de forma autógrafa.";
-      this.SignedByJobTitle = jobTitle;
-    }
-
     #endregion Methods
 
     #region Helpers
@@ -287,7 +268,6 @@ namespace Empiria.Land.Registration {
 
 
     static private string GenerateDigitalSeal(LandRecord landRecord) {
-
       var bookEntries = BookEntry.GetBookEntriesForLandRecord(landRecord);
 
       if (bookEntries.Count == 0) {
@@ -299,7 +279,7 @@ namespace Empiria.Land.Registration {
 
 
     static private string GenerateFormerDigitalSeal(LandRecord landRecord,
-                                                   FixedList<BookEntry> bookEntries) {
+                                                    FixedList<BookEntry> bookEntries) {
       var transaction = landRecord.Transaction;
 
       string s = "||" + transaction.UID + "|" + transaction.LandRecord.UID;

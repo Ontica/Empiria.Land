@@ -110,10 +110,8 @@ namespace Empiria.Land.Registration {
 
 
     // Remove after installation
-    public void RefreshSecurityData() {
-      this.LandRecord.SecurityData.RefreshSignData(this.LandRecord);
-
-      LandRecordsData.SaveSecurityData(this.LandRecord);
+    public void RefreshDIFHash() {
+      LandRecordsData.RefreshDIFHash(this.LandRecord);
     }
 
 

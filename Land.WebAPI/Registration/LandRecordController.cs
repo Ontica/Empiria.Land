@@ -65,7 +65,7 @@ namespace Empiria.Land.Registration.WebApi {
 
       using (var usecases = LandRecordUseCases.UseCaseInteractor()) {
 
-        usecases.RefreshLandRecordsSecurityData();
+        usecases.RefreshLandRecordsHashes();
 
         return new NoDataModel(this.Request);
       }
