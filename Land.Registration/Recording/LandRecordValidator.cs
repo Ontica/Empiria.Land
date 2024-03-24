@@ -20,7 +20,7 @@ namespace Empiria.Land.Registration {
 
     public LandRecordValidator(LandRecord landRecord) {
       Assertion.Require(landRecord, nameof(landRecord));
-      Assertion.Require(!landRecord.IsEmptyInstance, "LandRecord can't be the empty instance.");
+      // Assertion.Require(!landRecord.IsEmptyInstance, "LandRecord can't be the empty instance.");
 
       _landRecord = landRecord;
     }
