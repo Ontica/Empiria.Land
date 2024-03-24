@@ -8,15 +8,15 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Collections.Generic;
 
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
-using SeguriSign.Connector.Adapters;
 using SeguriSign.Connector;
+using SeguriSign.Connector.Adapters;
 
 using Empiria.Land.ESign.Adapters;
-using System.Collections.Generic;
 
 namespace Empiria.Land.ESign {
 
@@ -36,6 +36,9 @@ namespace Empiria.Land.ESign {
     internal LandDocumentsSigner(SignCredentialsDto credentials) {
       Assertion.Require(credentials, nameof(credentials));
 
+      Assertion.Require(LandRecordSecurityData.ESIGN_ENABLED,
+                        "El servicio de firma electrónica no está habilitado.");
+
       _signServiceProvider = new ESignService(ESIGN_SERVICE_PROVIDER_URL,
                                               new SignerCredentialsDto {
                                                 UserName = credentials.UserID,
@@ -48,21 +51,31 @@ namespace Empiria.Land.ESign {
     #region Methods
 
 
-    internal void RevokeSignForLandRecord(LandRecord record) {
+    internal void RevokeLandRecordSign(LandRecord record) {
+      var validator = new LandRecordValidator(record);
+
+      validator.AssertCanRevokeSign();
+
       record.Security.RevokeSign();
     }
 
 
-    internal void RevokeSignForTransactionDocuments(FixedList<LRSTransaction> transactions) {
+    internal void RevokeTransactionDocumentsSigns(FixedList<LRSTransaction> transactions) {
+      Assertion.Require(transactions, nameof(transactions));
+
       FixedList<LandRecord> landRecords = GetTransactionDocumentsFor(transactions, ESignCommandType.Revoke);
 
       foreach (var record in landRecords) {
-        RevokeSignForLandRecord(record);
+        RevokeLandRecordSign(record);
       }
     }
 
 
     internal void SignLandRecord(LandRecord record) {
+      var validator = new LandRecordValidator(record);
+
+      validator.AssertCanBeElectronicallySigned();
+
       var contentToSign = $"{record.SecurityData.SecurityHash}{record.SecurityData.DigitalSeal}";
 
       var documentUID = $"CAT_sello_registral_{record.UID}_{record.SecurityData.SecurityHash}";
@@ -76,6 +89,8 @@ namespace Empiria.Land.ESign {
 
 
     internal void SignTransactionDocuments(FixedList<LRSTransaction> transactions) {
+      Assertion.Require(transactions, nameof(transactions));
+
       FixedList<LandRecord> landRecords = GetTransactionDocumentsFor(transactions, ESignCommandType.Sign);
 
       foreach (var record in landRecords) {
@@ -94,16 +109,18 @@ namespace Empiria.Land.ESign {
       foreach (var transaction in transactions) {
         var landRecord = transaction.LandRecord;
 
-        if (landRecord.IsEmptyInstance ||
-           !landRecord.IsClosed ||
-            landRecord.IsHistoricRecord) {
-          continue;
-        }
+        var validator = new LandRecordValidator(landRecord);
 
-        if (commandType == ESignCommandType.Sign && landRecord.SecurityData.IsUnsigned) {
+        if (commandType == ESignCommandType.Sign) {
+
+          validator.AssertCanBeElectronicallySigned();
           list.Add(transaction.LandRecord);
-        } else if (commandType == ESignCommandType.Revoke && landRecord.SecurityData.IsSigned) {
+
+        } else if (commandType == ESignCommandType.Revoke) {
+
+          validator.AssertCanRevokeSign();
           list.Add(transaction.LandRecord);
+
         }
       }
 
