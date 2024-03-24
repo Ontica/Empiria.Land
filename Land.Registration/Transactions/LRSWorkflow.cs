@@ -167,7 +167,7 @@ namespace Empiria.Land.Registration.Transactions {
         notes = "Se trajo a la mesa de control";
       }
 
-      this.SetNextStatus(TransactionStatus.Control, Person.Empty, notes);
+      this.SetNextStatus(TransactionStatus.Control);
 
       this.Take(String.Empty);
     }
@@ -240,6 +240,11 @@ namespace Empiria.Land.Registration.Transactions {
       _transaction.Save();
 
       ResetTasksList();
+    }
+
+
+    public void SetNextStatus(TransactionStatus nextStatus) {
+      SetNextStatus(nextStatus, Person.Empty, string.Empty);
     }
 
 
