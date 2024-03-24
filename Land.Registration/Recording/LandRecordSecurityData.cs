@@ -47,10 +47,6 @@ namespace Empiria.Land.Registration {
 
     public static readonly bool ESIGN_ENABLED = true;  // ConfigurationData.Get<bool>("ElectronicSignatureEnabled", false);
 
-    #region Constructors and parsers
-
-    #endregion Constructors and parsers
-
     #region Properties
 
     public bool IsSigned {
@@ -152,6 +148,16 @@ namespace Empiria.Land.Registration {
     }
 
 
+    public string SignGuid {
+      get {
+        return this.ExtData.Get("electronicSign/signGUID", string.Empty);
+      }
+      private set {
+        this.ExtData.SetIfValue("electronicSign/signGUID", value);
+      }
+    }
+
+
     public string SecurityHash {
       get {
         return this.ExtData.Get("securityHash", string.Empty);
@@ -160,6 +166,7 @@ namespace Empiria.Land.Registration {
         this.ExtData.SetIfValue("securityHash", value);
       }
     }
+
 
     public string SignDocumentID {
       get {
@@ -190,16 +197,10 @@ namespace Empiria.Land.Registration {
     #region Methods
 
     internal void PrepareForElectronicSign(LandRecord landRecord) {
-      this.SecurityHash = GenerateSecurityHash(landRecord);
-      this.DigitalSeal = GenerateDigitalSeal(landRecord);
+      this.SignGuid = Guid.NewGuid().ToString();
       this.DigitalSealVersion = GenerateDigitalSealVersion(landRecord);
-
-      this.SignedBy = landRecord.RecorderOffice.GetSigner();
-      this.SignedByJobTitle = SignedBy.JobTitle;
-      this.SignedTime = ExecutionServer.DateMinValue;
-
-      this.SignStatus = SignStatus.Unsigned;
-      this.SignType = SignType.Electronic;
+      this.DigitalSeal = GenerateDigitalSeal(landRecord);
+      this.SecurityHash = GenerateSecurityHash(landRecord);
     }
 
 
@@ -214,7 +215,8 @@ namespace Empiria.Land.Registration {
 
 
     internal void RevokeSignData() {
-      this.ExtData = new JsonObject();
+      this.SignGuid = string.Empty;
+      this.DigitalSignature = string.Empty;
 
       this.SignedTime = ExecutionServer.DateMinValue;
       this.SignStatus = SignStatus.Revoked;
@@ -222,7 +224,6 @@ namespace Empiria.Land.Registration {
 
 
     internal void SetElectronicSignData(LandESignData signData) {
-
       this.Digest = signData.Digest;
       this.SignDocumentID = signData.DocumentID;
       this.SignDocumentName = signData.DocumentName;
@@ -234,10 +235,21 @@ namespace Empiria.Land.Registration {
     }
 
 
+    internal void SetElectronicSignerData(Person signer) {
+      this.SignedBy = signer;
+      this.SignedByJobTitle = signer.JobTitle;
+      this.SignedTime = ExecutionServer.DateMinValue;
+
+      this.SignStatus = SignStatus.Unsigned;
+      this.SignType = SignType.Electronic;
+    }
+
+
     internal void SetManualSignData(LandRecord landRecord) {
-      this.SecurityHash = GenerateSecurityHash(landRecord);
-      this.DigitalSeal = GenerateDigitalSeal(landRecord);
       this.DigitalSealVersion = GenerateDigitalSealVersion(landRecord);
+      this.DigitalSeal = GenerateDigitalSeal(landRecord);
+      this.SecurityHash = GenerateSecurityHash(landRecord);
+
       this.DigitalSignature = "Documento firmado de forma autógrafa.";
 
       this.SignedBy = landRecord.RecorderOffice.GetSigner();
@@ -308,6 +320,7 @@ namespace Empiria.Land.Registration {
 
 
     static private string GenerateSecurityHash(LandRecord landRecord) {
+
       return Cryptographer.CreateHashCode(landRecord.Id.ToString("00000000") +
                                           landRecord.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
                                           landRecord.UID)

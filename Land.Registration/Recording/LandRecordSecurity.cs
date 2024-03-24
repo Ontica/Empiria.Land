@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Contacts;
 using Empiria.Security;
 
 using Empiria.Land.Data;
@@ -124,6 +125,15 @@ namespace Empiria.Land.Registration {
     }
 
 
+    public void PrepareForElectronicSign() {
+      _landRecordValidator.AssertCanBeElectronicallySigned();
+
+      this.LandRecord.SecurityData.PrepareForElectronicSign(this.LandRecord);
+
+      LandRecordsData.SaveSecurityData(this.LandRecord);
+    }
+
+
     public void RemoveSign() {
       _landRecordValidator.AssertCanRemoveSign();
 
@@ -142,11 +152,10 @@ namespace Empiria.Land.Registration {
     }
 
 
+    public void SetElectronicSignerData(Person person) {
+      _landRecordValidator.AssertCanSetElectronicSigner();
 
-    public void PrepareForElectronicSign() {
-      _landRecordValidator.AssertCanPrepareForElectronicSign();
-
-      this.LandRecord.SecurityData.PrepareForElectronicSign(this.LandRecord);
+      this.LandRecord.SecurityData.SetElectronicSignerData(person);
 
       LandRecordsData.SaveSecurityData(this.LandRecord);
     }

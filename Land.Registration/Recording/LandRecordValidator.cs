@@ -110,7 +110,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public void AssertCanPrepareForElectronicSign() {
+    public void AssertCanSetElectronicSigner() {
       Assertion.Require(LandRecordSecurityData.ESIGN_ENABLED,
                 "No es posible preparar esta inscripción para firma electrónica, " +
                 "debido a que el servicio de firma electrónica no está habilitado." + LandRecordDescriptionMessage());
@@ -174,10 +174,10 @@ namespace Empiria.Land.Registration {
 
       if (lastDate.AddDays(graceDaysForEdition) < DateTime.Today) {
         Assertion.RequireFail("Por motivos de seguridad y calidad en el registro de la información, " +
-                             "no es posible modificar inscripciones de documentos en trámites de más de 45 días.\n\n" +
-                             "En su lugar se puede optar por registrar un nuevo trámite, " +
-                             "o quizás se pueda hacer un reingreso si no han transcurrido los " +
-                             "90 días de gracia.");
+                              "no es posible modificar inscripciones de documentos en trámites de más de 45 días.\n\n" +
+                              "En su lugar se puede optar por registrar un nuevo trámite, " +
+                              "o quizás se pueda hacer un reingreso si no han transcurrido los " +
+                              "90 días de gracia.");
       }
     }
 
