@@ -53,7 +53,7 @@ namespace Empiria.Land.Pages {
 
       landRecord = LandRecord.TryParse(landRecordUID);
 
-      // landRecord.EnsureIntegrity();
+      landRecord.EnsureIntegrity();
 
       transaction = landRecord.Transaction;
 
@@ -84,6 +84,7 @@ namespace Empiria.Land.Pages {
       }
     }
 
+
     protected string GetDigest() {
       if (!landRecord.SecurityData.UsesESign ||
            landRecord.SecurityData.IsUnsigned ||
@@ -95,6 +96,20 @@ namespace Empiria.Land.Pages {
              $"{landRecord.SecurityData.Digest}" +
              $"<br />";
     }
+
+
+    protected string GetSignatureGuid() {
+      if (!landRecord.SecurityData.UsesESign ||
+           landRecord.SecurityData.IsUnsigned ||
+           landRecord.SecurityData.SignGuid.Length == 0) {
+        return string.Empty;
+      }
+
+      return $"<b>Identificador de la firma electrónica:</b><br />" +
+             $"{landRecord.SecurityData.SignGuid}" +
+             $"<br />";
+    }
+
 
     protected string GetDigitalSignature() {
       if (landRecord.IsHistoricRecord) {

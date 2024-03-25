@@ -197,7 +197,7 @@ namespace Empiria.Land.Registration {
     #region Methods
 
     internal void PrepareForElectronicSign(LandRecord landRecord) {
-      this.SignGuid = Guid.NewGuid().ToString();
+      this.SignGuid = Guid.NewGuid().ToString().ToUpperInvariant();
       this.DigitalSealVersion = GenerateDigitalSealVersion(landRecord);
       this.DigitalSeal = GenerateDigitalSeal(landRecord);
       this.SecurityHash = GenerateSecurityHash(landRecord);
@@ -246,7 +246,7 @@ namespace Empiria.Land.Registration {
 
 
     internal void SetManualSignData(LandRecord landRecord) {
-      this.SignGuid = Guid.NewGuid().ToString();
+      this.SignGuid = Guid.NewGuid().ToString().ToUpperInvariant();
       this.DigitalSealVersion = GenerateDigitalSealVersion(landRecord);
       this.DigitalSeal = GenerateDigitalSeal(landRecord);
       this.SecurityHash = GenerateSecurityHash(landRecord);
@@ -299,13 +299,12 @@ namespace Empiria.Land.Registration {
 
     private string GenerateSecurityHash(LandRecord landRecord) {
       if (DigitalSealVersion == "5.1") {
-        return Cryptographer.CreateHashCode(landRecord.Id.ToString("00000000") +
-                                            landRecord.PresentationTime.ToString("yyyyMMddTHH:mm:ss") +
-                                            landRecord.AuthorizationTime.ToString("yyyyMMddTHH:mm:ss") +
-                                            SignGuid + DigitalSeal,
-                                            landRecord.UID)
-                            .Substring(0, 10)
-                            .ToUpperInvariant();
+        var hc = Cryptographer.CreateHashCode(landRecord.Id.ToString("00000000") +
+                                              landRecord.PresentationTime.ToString("yyyyMMddTHH:mm:ss") +
+                                              landRecord.AuthorizationTime.ToString("yyyyMMddTHH:mm:ss") +
+                                              SignGuid + DigitalSeal,
+                                              landRecord.UID);
+       return (hc.Substring(0, 5) + "-" + hc.Substring(5, 5)).ToUpperInvariant();
       }
 
       return Cryptographer.CreateHashCode(landRecord.Id.ToString("00000000") +

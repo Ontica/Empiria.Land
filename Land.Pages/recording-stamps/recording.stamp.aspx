@@ -138,6 +138,8 @@
             <div style="margin-top:-12pt;font-size:7pt;white-space:nowrap">
               Valide este documento<br />
               <b><%=landRecord.UID%></b>
+              <br />
+              <%=landRecord.SecurityData.SignDocumentID%>
             </div>
           </td>
           <td style="vertical-align:top;width:90%;white-space:nowrap">
@@ -159,6 +161,7 @@
              <span class="warning">** ESTE DOCUMENTO NO ES OFICIAL **</span>
              <% } %>
             <br />
+            <%=GetSignatureGuid()%>
             <%=GetDigest()%>
             <b>Firma electrónica:</b>
             <br />
