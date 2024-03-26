@@ -47,9 +47,13 @@ namespace Empiria.Land.Registration {
 
     #region Public methods
 
+    public FixedList<Person> GetAttendantSigners() {
+      return ExtendedData.GetFixedList<Person>("attendantSigners", false);
+    }
+
+
     public FixedList<Municipality> GetMunicipalities() {
-      return base.ExtendedData.GetList<Municipality>("municipalities", false)
-                              .ToFixedList();
+      return base.ExtendedData.GetFixedList<Municipality>("municipalities", false);
     }
 
 
@@ -67,10 +71,15 @@ namespace Empiria.Land.Registration {
       return ExtendedData.Get("recorderOfficePlace", "Lugar no determinado");
     }
 
+
     public FixedList<RecordingBook> GetRecordingBooks(RecordingSection sectionType) {
       return RecordingBooksData.GetRecordingBooksInSection(this, sectionType);
     }
 
+
+    public bool IsAttendantSigner(Person person) {
+      return GetAttendantSigners().Contains(person);
+    }
 
     #endregion Public methods
 
