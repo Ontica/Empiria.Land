@@ -77,7 +77,7 @@ namespace Empiria.Land.Registration.UseCases {
                         "Esta inscripción fue firmada electrónicamente. " +
                         "Para poder abrirla, se necesita solicitar que se revoque la firma electrónica.");
 
-      landRecord.Security.RemoveSign();
+      landRecord.Security.RemoveManualSign();
 
       landRecord.Open();
 

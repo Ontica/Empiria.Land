@@ -134,10 +134,10 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public void RemoveSign() {
-      _landRecordValidator.AssertCanRemoveSign();
+    public void RemoveManualSign() {
+      _landRecordValidator.AssertCanRemoveManualSign();
 
-      this.LandRecord.SecurityData.RemoveSignData();
+      this.LandRecord.SecurityData.RemoveManualSignData();
 
       LandRecordsData.SaveSecurityData(this.LandRecord);
     }

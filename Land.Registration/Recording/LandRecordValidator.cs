@@ -127,9 +127,18 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public void AssertCanRemoveSign() {
+    public void AssertCanRemoveManualSign() {
       Assertion.Require(_landRecord.IsClosed,
           "No se puede desfirmar una inscripción que no está cerrada." + LandRecordDescriptionMessage());
+
+      Assertion.Require(_landRecord.SecurityData.IsSigned,
+          "No se puede desfirmar una inscripción que no " +
+          "ha sido firmada manualmente." + LandRecordDescriptionMessage());
+
+      Assertion.Require(_landRecord.SecurityData.SignType == SignType.Manual,
+          "No se puede llevar a cabo la operación, ya que la inscripción no " +
+          "fue firmada de manera manual." + LandRecordDescriptionMessage());
+
     }
 
 

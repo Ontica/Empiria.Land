@@ -204,7 +204,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    internal void RemoveSignData() {
+    internal void RemoveManualSignData() {
       this.ExtData = new JsonObject();
 
       this.SignedBy = Person.Empty;
