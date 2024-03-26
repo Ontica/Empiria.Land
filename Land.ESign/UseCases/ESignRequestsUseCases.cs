@@ -11,11 +11,11 @@ using System;
 
 using Empiria.Services;
 
-using Empiria.Land.ESign.Adapters;
-
 using Empiria.Land.Transactions;
 
+using Empiria.Land.ESign.Adapters;
 using Empiria.Land.ESign.Data;
+using Empiria.Land.Registration;
 
 namespace Empiria.Land.ESign.UseCases {
 
@@ -39,7 +39,7 @@ namespace Empiria.Land.ESign.UseCases {
     public FixedList<TransactionDescriptor> GetMyESignRequestedTransactions(ESignRequestsQuery query) {
       Assertion.Require(query, nameof(query));
 
-      query.SignedBy = ExecutionServer.CurrentContact;
+      query.RecorderOfficeId = Permissions.GetUserRecorderOffice().Id;
 
       query.EnsureIsValid();
 

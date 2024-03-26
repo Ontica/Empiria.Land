@@ -19,16 +19,9 @@ namespace Empiria.Land.ESign.Adapters {
   /// <summary>Query payload used for electronic signs requests.</summary>
   public class ESignRequestsQuery {
 
-    internal RecorderOffice RecorderOffice {
-      get;
-      set;
-    } = RecorderOffice.Empty;
-
-
-    internal Contact SignedBy {
-      get;
-      set;
-    } = Contact.Empty;
+    public int RecorderOfficeId {
+      get; set;
+    } = -1;
 
 
     public SignStatus Status {
@@ -71,6 +64,7 @@ namespace Empiria.Land.ESign.Adapters {
 
     static internal void EnsureIsValid(this ESignRequestsQuery query) {
       Assertion.Require(query.Status != SignStatus.Undefined, $"Undefined status value.");
+      Assertion.Require(query.RecorderOfficeId > 0, $"Undefined recorder office.");
 
       query.Keywords = query.Keywords ?? String.Empty;
       query.OrderBy = query.OrderBy ?? "TransactionId DESC";
@@ -78,19 +72,20 @@ namespace Empiria.Land.ESign.Adapters {
       query.Page = query.Page <= 0 ? 1 : query.Page;
     }
 
+    private static RecorderOffice GetRecorderOffice(this ESignRequestsQuery query) {
+      return RecorderOffice.Parse(query.RecorderOfficeId);
+    }
 
     static internal string MapToFilterString(this ESignRequestsQuery query) {
-      string recorderOfficeFilter = BuildRecorderOfficeFilter(query.RecorderOffice);
-      string signerFilter = BuildSignedByFilter(query.SignedBy);
-      string signStatusFilter = BuildSignStatusFilter(query.Status);
+      string recorderOfficeFilter = BuildRecorderOfficeFilter(query.GetRecorderOffice());
+      string signStatusAndSignedByFilter = BuildSignStatusAndSignedByFilter(query);
       string transactionStatusFilter = BuildTransactionStatusFilter(query.Status);
       string transactionKeywordsFilter = BuildTransactionKeywordsFilter(query.Keywords);
 
       var filter = new Filter(recorderOfficeFilter);
 
-      filter.AppendAnd(signerFilter);
+      filter.AppendAnd(signStatusAndSignedByFilter);
       filter.AppendAnd(transactionStatusFilter);
-      filter.AppendAnd(signStatusFilter);
       filter.AppendAnd(transactionKeywordsFilter);
 
       return filter.ToString();
@@ -108,27 +103,31 @@ namespace Empiria.Land.ESign.Adapters {
 
     #region Helpers
 
-
     static private string BuildRecorderOfficeFilter(RecorderOffice recorderOffice) {
-      if (recorderOffice.IsEmptyInstance) {
-        return string.Empty;
-      }
-
       return $"(RecorderOfficeId = {recorderOffice.Id})";
     }
 
 
-    static private string BuildSignStatusFilter(SignStatus signStatus) {
-      return $"(SignStatus = '{(char) signStatus}')";
-    }
+    static private string BuildSignStatusAndSignedByFilter(ESignRequestsQuery query) {
+      var recorderOffice = query.GetRecorderOffice();
+      var recorderOfficeSigner = recorderOffice.GetSigner();
 
+      var currentUser = ExecutionServer.CurrentContact as Person;
 
-      static private string BuildSignedByFilter(Contact signedBy) {
-      if (signedBy.IsEmptyInstance) {
-        return string.Empty;
+      if (recorderOfficeSigner.Equals(currentUser)) {
+        return $"(SignedById = {currentUser.Id} AND SignStatus = '{(char) query.Status}')";
       }
 
-      return $"(SignedById = {signedBy.Id})";
+      if (query.Status != SignStatus.Unsigned) {
+        return $"(SignedById = {currentUser.Id} AND SignStatus = '{(char) query.Status}')";
+      }
+
+      if (recorderOffice.IsAttendantSigner(currentUser)) {
+        return $"((SignedById <> {currentUser.Id} AND SignStatus <> '{(char) SignStatus.Unsigned}') OR " +
+               $"(SignedById = {currentUser.Id} AND SignStatus = '{(char) SignStatus.Unsigned}'))";
+      } else {
+        return SearchExpression.NoRecordsFilter;
+      }
     }
 
 
@@ -154,6 +153,7 @@ namespace Empiria.Land.ESign.Adapters {
       if (signStatus != SignStatus.Unsigned) {
         return string.Empty;
       }
+
       return $"(ResponsibleId = {ExecutionServer.CurrentUserId} AND CurrentTransactionStatus = 'S')";
     }
 
