@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Contacts;
+
 namespace Empiria.Land.Registration {
 
   /// <summary>Provides methods to check the integrity of recording documents and their processes.</summary>
@@ -75,10 +77,12 @@ namespace Empiria.Land.Registration {
       Assertion.Require(_landRecord.SecurityData.UsesESign,
           "No se puede firmar una inscripción que no está marcada para firma electrónica." + LandRecordDescriptionMessage());
 
-      Assertion.Require(_landRecord.SecurityData.SignedBy.Equals(ExecutionServer.CurrentContact),
+      Assertion.Require(_landRecord.SecurityData.SignedBy.Equals(ExecutionServer.CurrentContact) ||
+                        _landRecord.RecorderOffice.IsAttendantSigner(ExecutionServer.CurrentContact as Person),
           "La inscripción está asignada para ser firmada " +
           $"por una persona distinta ({_landRecord.SecurityData.SignedBy.FullName}) " +
-          $"a la que está intentando firmarla." + LandRecordDescriptionMessage());
+          $"a la que está intentando firmarla, y dicha persona tampoco se encuentra en " +
+          $"la lista de firmantes auxiliares de la oficialía." + LandRecordDescriptionMessage());
     }
 
 
@@ -156,13 +160,13 @@ namespace Empiria.Land.Registration {
                         "que no está cerrada." + LandRecordDescriptionMessage());
 
       Assertion.Require(_landRecord.SecurityData.IsSigned,
-                 "No se puede revocar la firma de una inscripción " +
-                 "que no ha sido firmada." + LandRecordDescriptionMessage());
+                        "No se puede revocar la firma de una inscripción " +
+                        "que no ha sido firmada." + LandRecordDescriptionMessage());
 
 
       Assertion.Require(_landRecord.SecurityData.SignedBy.Equals(ExecutionServer.CurrentContact),
-                 "Únicamente la persona que firmó la inscripción puede " +
-                 "revocar la firma de la misma." + LandRecordDescriptionMessage());
+                       "Únicamente la misma persona que firmó la inscripción puede " +
+                       "revocar la firma electrónica." + LandRecordDescriptionMessage());
     }
 
 

@@ -201,6 +201,13 @@ namespace Empiria.Land.Registration {
       this.DigitalSealVersion = GenerateDigitalSealVersion(landRecord);
       this.DigitalSeal = GenerateDigitalSeal(landRecord);
       this.SecurityHash = GenerateSecurityHash(landRecord);
+
+      var currentSigner = ExecutionServer.CurrentContact as Person;
+
+      if (this.SignedBy.Distinct(currentSigner)) {
+        this.SignedBy = currentSigner;
+        this.SignedByJobTitle = currentSigner.JobTitle;
+      }
     }
 
 
