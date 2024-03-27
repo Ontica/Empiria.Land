@@ -151,7 +151,7 @@ namespace Empiria.Land.Certification {
         if (this.UseESign) {
           return DigitalSignatureData.GetDigitalSignatureSignedBy(this);
         } else {
-          return RecorderOffice.GetSigner();
+          return RecorderOffice.Signer;
         }
       }
     }

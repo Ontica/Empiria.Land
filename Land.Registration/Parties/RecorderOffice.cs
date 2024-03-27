@@ -39,13 +39,36 @@ namespace Empiria.Land.Registration {
     }
 
     static public FixedList<RecorderOffice> GetList() {
-      return BaseObject.GetList<RecorderOffice>("ContactStatus = 'A'")
+      return BaseObject.GetList<RecorderOffice>("ContactStatus = 'A'", "ContactId")
                        .ToFixedList();
     }
 
     #endregion Constructors and parsers
 
-    #region Public methods
+    #region Properties
+
+    public string PermissionTag {
+      get {
+        return ExtendedData.Get("permissionTag", string.Empty);
+      }
+    }
+
+
+    public string Place {
+      get {
+        return ExtendedData.Get("recorderOfficePlace", "Lugar no determinado");
+      }
+    }
+
+    public Person Signer {
+      get {
+        return ExtendedData.Get("recorderOfficerSigner", Person.Empty);
+      }
+    }
+
+    #endregion Properties
+
+    #region Methods
 
     public FixedList<Person> GetAttendantSigners() {
       return ExtendedData.GetFixedList<Person>("attendantSigners", false);
@@ -62,16 +85,6 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public Person GetSigner() {
-      return ExtendedData.Get("recorderOfficerSigner", Person.Empty);
-    }
-
-
-    public string GetPlace() {
-      return ExtendedData.Get("recorderOfficePlace", "Lugar no determinado");
-    }
-
-
     public FixedList<RecordingBook> GetRecordingBooks(RecordingSection sectionType) {
       return RecordingBooksData.GetRecordingBooksInSection(this, sectionType);
     }
@@ -81,7 +94,7 @@ namespace Empiria.Land.Registration {
       return GetAttendantSigners().Contains(person);
     }
 
-    #endregion Public methods
+    #endregion Methods
 
   } // class RecorderOffice
 

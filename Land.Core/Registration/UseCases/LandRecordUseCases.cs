@@ -60,7 +60,7 @@ namespace Empiria.Land.Registration.UseCases {
       if (!LandRecordSecurityData.ESIGN_ENABLED) {
         landRecord.Security.ManualSign();
       } else {
-        landRecord.Security.SetElectronicSignerData(landRecord.RecorderOffice.GetSigner());
+        landRecord.Security.SetElectronicSignerData(landRecord.RecorderOffice.Signer);
       }
 
       return LandRecordMapper.Map(landRecord);

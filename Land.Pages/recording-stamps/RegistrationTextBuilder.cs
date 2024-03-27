@@ -99,7 +99,7 @@ namespace Empiria.Land.Pages {
 
       x = x.Replace("{TIME}", _landRecord.AuthorizationTime.ToString(@"HH:mm"));
 
-      x = x.Replace("{CITY}", _landRecord.RecorderOffice.GetPlace());
+      x = x.Replace("{CITY}", _landRecord.RecorderOffice.Place);
 
       return x;
     }

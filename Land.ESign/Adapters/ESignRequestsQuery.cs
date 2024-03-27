@@ -110,7 +110,7 @@ namespace Empiria.Land.ESign.Adapters {
 
     static private string BuildSignStatusAndSignedByFilter(ESignRequestsQuery query) {
       var recorderOffice = query.GetRecorderOffice();
-      var recorderOfficeSigner = recorderOffice.GetSigner();
+      var recorderOfficeSigner = recorderOffice.Signer;
 
       var currentUser = ExecutionServer.CurrentContact as Person;
 

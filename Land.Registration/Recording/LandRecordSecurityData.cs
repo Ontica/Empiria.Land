@@ -260,7 +260,7 @@ namespace Empiria.Land.Registration {
 
       this.DigitalSignature = "Documento firmado de forma autógrafa.";
 
-      this.SignedBy = landRecord.RecorderOffice.GetSigner();
+      this.SignedBy = landRecord.RecorderOffice.Signer;
       this.SignedByJobTitle = SignedBy.JobTitle;
       this.SignedTime = DateTime.Now;
 
