@@ -7,13 +7,13 @@
 *  Summary  : Web API used to retrive transaction workflow data and invoke commands on it.                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
 using System.Web.Http;
 
 using Empiria.WebApi;
 
 using Empiria.Land.Registration.Adapters;
 using Empiria.Land.Registration.UseCases;
-using System;
 
 namespace Empiria.Land.Registration.WebApi {
 
@@ -196,13 +196,12 @@ namespace Empiria.Land.Registration.WebApi {
 
     private RecorderOffice GetRecorderOffice() {
       try {
-        return Permissions.GetUserRecorderOffice();
+        return Permissions.GetUserDefaultRecorderOffice();
 
       } catch {
         return RecorderOffice.Empty;
       }
     }
-
 
   }  // class RecordingBookRegistrationController
 

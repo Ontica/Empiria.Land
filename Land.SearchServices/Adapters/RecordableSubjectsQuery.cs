@@ -131,7 +131,7 @@ namespace Empiria.Land.SearchServices {
         return recorderOffice;
       }
 
-      return Permissions.GetUserRecorderOffice();
+      return Permissions.GetUserDefaultRecorderOffice();
     }
 
     #endregion Helpers

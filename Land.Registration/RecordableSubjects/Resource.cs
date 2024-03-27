@@ -388,7 +388,7 @@ namespace Empiria.Land.Registration {
       if (!this.RecorderOffice.IsEmptyInstance) {
         return;
       }
-      this.RecorderOffice = Permissions.GetUserRecorderOffice();
+      this.RecorderOffice = Permissions.GetUserDefaultRecorderOffice();
     }
 
     #endregion Private methods

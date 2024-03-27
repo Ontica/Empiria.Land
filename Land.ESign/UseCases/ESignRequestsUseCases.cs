@@ -39,7 +39,7 @@ namespace Empiria.Land.ESign.UseCases {
     public FixedList<TransactionDescriptor> GetMyESignRequestedTransactions(ESignRequestsQuery query) {
       Assertion.Require(query, nameof(query));
 
-      query.RecorderOfficeId = Permissions.GetUserRecorderOffice().Id;
+      query.RecorderOfficeId = Permissions.GetUserDefaultRecorderOffice().Id;
 
       query.EnsureIsValid();
 
