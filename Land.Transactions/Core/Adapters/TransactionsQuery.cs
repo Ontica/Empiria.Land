@@ -17,10 +17,10 @@ namespace Empiria.Land.Transactions {
   /// <summary>Query payload used for transactions searching.</summary>
   public class TransactionsQuery {
 
-    public RecorderOffice RecorderOffice {
+    public int RecorderOfficeId {
       get;
       set;
-    } = RecorderOffice.Empty;
+    } = -1;
 
 
     public TransactionStage Stage {
@@ -69,14 +69,13 @@ namespace Empiria.Land.Transactions {
 
     static internal void EnsureIsValid(this TransactionsQuery query) {
       query.Keywords = query.Keywords ?? String.Empty;
-      query.OrderBy = query.OrderBy ?? "TransactionId DESC";
+      query.OrderBy = query.OrderBy ?? "InternalControlNo DESC";
       query.PageSize = query.PageSize <= 0 ? 50 : query.PageSize;
       query.Page = query.Page <= 0 ? 1 : query.Page;
-      query.RecorderOffice = GetRecorderOffice(query.RecorderOffice);
     }
 
     static internal string MapToFilterString(this TransactionsQuery query) {
-      string recorderOfficeFilter = BuildRecorderOfficeFilter(query.RecorderOffice);
+      string recorderOfficeFilter = BuildRecorderOfficeFilter(query.RecorderOfficeId);
       string stageStatusFilter = BuildStageStatusFilter(query.Stage, query.Status);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
 
@@ -118,12 +117,20 @@ namespace Empiria.Land.Transactions {
     }
 
 
-    static private string BuildRecorderOfficeFilter(RecorderOffice recorderOffice) {
-      if (recorderOffice.IsEmptyInstance) {
-        return string.Empty;
-      }
+    static private string BuildRecorderOfficeFilter(int recorderOfficeId) {
+      var recorderOffice = RecorderOffice.Parse(recorderOfficeId);
 
-      return $"(RecorderOfficeId = {recorderOffice.Id})";
+      bool hasPermission = Permissions.HasPermission(recorderOffice);
+
+      if (!recorderOffice.IsEmptyInstance && hasPermission) {
+        return $"(RecorderOfficeId = {recorderOffice.Id})";
+      } else if (!recorderOffice.IsEmptyInstance && !hasPermission) {
+        return SearchExpression.NoRecordsFilter;
+      } else if (recorderOffice.IsEmptyInstance) {
+        return $"(RecorderOfficeId = {Permissions.GetUserDefaultRecorderOffice().Id})";
+      } else {
+        throw Assertion.EnsureNoReachThisCode("Unhandled condition building recorder office filter.");
+      }
     }
 
 
@@ -169,18 +176,6 @@ namespace Empiria.Land.Transactions {
 
         default:
           throw Assertion.EnsureNoReachThisCode();
-      }
-    }
-
-    static private RecorderOffice GetRecorderOffice(RecorderOffice recorderOffice) {
-      if (!recorderOffice.IsEmptyInstance) {
-        return recorderOffice;
-      }
-      try {
-        return Permissions.GetUserRecorderOffice();
-
-      } catch {
-        return RecorderOffice.Empty;
       }
     }
 
