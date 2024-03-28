@@ -47,7 +47,7 @@ namespace Empiria.Land.WebApi {
       if (!certificate.Property.IsEmptyInstance) {
         propertyBag.Add(new PropertyBagItem("Certificado expedido sobre el predio", String.Empty, "section"));
         propertyBag.Add(new PropertyBagItem("Folio real", certificate.Property.UID + "<br/>" +
-                                            GetResourceLink(certificate.Property.UID), "enhanced-text"));
+                                            GetResourceLink(certificate.Property), "enhanced-text"));
 
         propertyBag.Add(new PropertyBagItem("Clave catastral",
                                              certificate.Property.CadastralKey.Length != 0 ?
@@ -117,8 +117,6 @@ namespace Empiria.Land.WebApi {
 
       BuildLandRecordRecordingActs(landRecord, propertyBag);
 
-      BuildLandRecordUniqueResource(landRecord, propertyBag);
-
       BuildLandRecordSecurityData(landRecord, hash, propertyBag);
 
       propertyBag.AddRange(TransactionSectionItems(landRecord.Transaction));
@@ -172,12 +170,59 @@ namespace Empiria.Land.WebApi {
 
 
     private void BuildLandRecordRecordingActs(LandRecord landRecord, List<PropertyBagItem> propertyBag) {
-      if (landRecord.RecordingActs.Count > 0) {
-        propertyBag.Add(new PropertyBagItem("Actos jurídicos registrados", String.Empty, "section"));
-        foreach (var recordingAct in landRecord.RecordingActs) {
-          propertyBag.Add(new PropertyBagItem(recordingAct.Kind.Length != 0 ? recordingAct.Kind : recordingAct.DisplayName,
-                                              "Folio real: " + recordingAct.Resource.UID));
+      if (landRecord.RecordingActs.Count == 0) {
+        propertyBag.Add(new PropertyBagItem("Actos jurídicos registrados", String.Empty, "section-error"));
+        propertyBag.Add(new PropertyBagItem("Nota importante",
+                                            "Este documento NO TIENE actos jurídicos registrados.<br/>" +
+                                            "Debe acudir a la oficina del Registro Público de la Propiedad, " +
+                                            "ya que es MUY posible que la inscripción de su propiedad" +
+                                            "haya sido alterada indebidamente.", "warning-status-text"));
+        return;
+      }
+
+      propertyBag.Add(new PropertyBagItem("Actos jurídicos registrados", String.Empty, "section"));
+
+      var lastProcessedResource = Resource.Empty;
+
+      foreach (var recordingAct in landRecord.RecordingActs) {
+        string text = string.Empty;
+
+        var showResourceInfo = lastProcessedResource.Distinct(recordingAct.Resource);
+
+        if (recordingAct.Resource is RealEstate) {
+          text = showResourceInfo ? $"Predio: <span class='enhanced-text'>{recordingAct.Resource.UID}</span><br/>" :
+                                     $"<i>Mismo predio del acto anterior</i><br/>";
+        } else if (recordingAct.Resource is Association) {
+          text = showResourceInfo ? $"Sociedad: <span class='enhanced-text'>{recordingAct.Resource.UID}</span><br/>" :
+                                     $"<i>Misma sociedad del acto anterior</i><br/>";
+        } else if (recordingAct.Resource is Association) {
+          text = showResourceInfo ? $"Documento inscrito: <span class='enhanced-text'>{recordingAct.Resource.UID}</span><br/>" :
+                                     $"<i>Mismo documento del acto anterior</i><br/>";
         }
+
+        if (showResourceInfo && recordingAct.Resource is RealEstate realEstate) {
+          if (realEstate.CadastralKey.Length != 0) {
+            text += $"Clave catastral: <span class='bold-text'>{realEstate.CadastralKey}</span><br/>";
+          } else {
+            text += $"<span class='warning-status-text'>Clave catastral no registrada</span><br/>";
+          }
+        }
+
+        if (recordingAct.OperationAmount != 0) {
+          text += $"Monto de la operación: {recordingAct.OperationAmount.ToString("C2")}<br/>";
+        }
+
+        if (showResourceInfo) {
+          text += GetResourceLink(recordingAct.Resource);
+        }
+
+        var title = "<span class='bold-text'>" +
+                        (recordingAct.Kind.Length != 0 ? recordingAct.Kind: recordingAct.DisplayName) +
+                    "</span>";
+
+        propertyBag.Add(new PropertyBagItem(title, text));
+
+        lastProcessedResource = recordingAct.Resource;
       }
     }
 
@@ -216,30 +261,12 @@ namespace Empiria.Land.WebApi {
 
       } else {
 
-        propertyBag.Add(new PropertyBagItem("Firma", securityData.DigitalSignature, "bold-text mono-space-text"));
+        propertyBag.Add(new PropertyBagItem("Firma", securityData.DigitalSignature, "bold-text"));
       }
 
       propertyBag.Add(new PropertyBagItem("Firmado por", securityData.SignedBy.FullName, "bold-text"));
       propertyBag.Add(new PropertyBagItem("Puesto", securityData.SignedByJobTitle));
       propertyBag.Add(new PropertyBagItem("Fecha y hora de firmado", securityData.SignedTime.ToString("dd/MMMM/yyyy HH:mm:ss")));
-    }
-
-
-    private void BuildLandRecordUniqueResource(LandRecord landRecord, List<PropertyBagItem> propertyBag) {
-      var uniqueResource = landRecord.GetUniqueInvolvedResource();
-
-      if (uniqueResource.Equals(Resource.Empty) || !(uniqueResource is RealEstate realEstate)) {
-        return;
-      }
-
-      propertyBag.Add(new PropertyBagItem("Documento registral expedido sobre el folio electrónico", String.Empty, "section"));
-      propertyBag.Add(new PropertyBagItem("Folio real", uniqueResource.UID + "<br/>" +
-                                          GetResourceLink(uniqueResource.UID), "enhanced-text"));
-
-      propertyBag.Add(new PropertyBagItem("Clave catastral",
-                                           realEstate.CadastralKey.Length != 0 ? realEstate.CadastralKey :
-                                                                                 "Clave catastral no proporcionada.", "bold-text"));
-      propertyBag.Add(new PropertyBagItem("Descripción", uniqueResource.AsText));
     }
 
 
@@ -354,9 +381,19 @@ namespace Empiria.Land.WebApi {
     }
 
 
-    private string GetResourceLink(string resourceUID) {
-      return $"<a href='{SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?type=resource&uid={resourceUID}'>" +
-             $"Consultar este folio electrónico</a>";
+    private string GetResourceLink(Resource resource) {
+      if (resource is RealEstate) {
+        return $"<a href='{SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?type=realestate&uid={resource.UID}'>" +
+                $"Consultar este predio</a>";
+      } else if (resource is Association) {
+        return $"<a href='{SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?type=association&uid={resource.UID}'>" +
+                $"Consultar esta asociación</a>";
+      } else if (resource is NoPropertyResource) {
+        return $"<a href='{SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?type=noproperty&uid={resource.UID}'>" +
+                $"Consultar este documento</a>";
+      } else {
+        throw Assertion.EnsureNoReachThisCode();
+      }
     }
 
 
