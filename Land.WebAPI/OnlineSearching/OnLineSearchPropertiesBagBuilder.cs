@@ -99,57 +99,27 @@ namespace Empiria.Land.WebApi {
 
 
     internal List<PropertyBagItem> BuildLandRecord(string landRecordUID, string hash) {
-      var propertyBag = new List<PropertyBagItem>(16);
+      var propertyBag = new List<PropertyBagItem>(32);
 
       var landRecord = LandRecord.TryParse(landRecordUID);
 
       propertyBag.Add(new PropertyBagItem("Información del documento", String.Empty, "section"));
       propertyBag.Add(new PropertyBagItem("Sello registral número", landRecord.UID, "bold-text"));
       propertyBag.Add(new PropertyBagItem("Tipo de documento", landRecord.Instrument.InstrumentType.DisplayName, "bold-text"));
-      propertyBag.Add(new PropertyBagItem("Emitido por", landRecord.Instrument.Issuer.RelatedContact.ShortName));
+      propertyBag.Add(new PropertyBagItem("Datos del documento", landRecord.Instrument.AsText));
       propertyBag.Add(new PropertyBagItem("Fecha de presentación", GetDateTime(landRecord.PresentationTime), "date-time"));
       propertyBag.Add(new PropertyBagItem("Fecha de registro", GetDateTime(landRecord.AuthorizationTime), "date"));
-      propertyBag.Add(new PropertyBagItem("Registrado por", landRecord.GetRecordingOfficials()[0].ShortName));
-      propertyBag.Add(new PropertyBagItem("Resumen", landRecord.Instrument.Summary, "small-text"));
+      propertyBag.Add(new PropertyBagItem("Registrado por", landRecord.AuthorizedBy.FullName));
 
-      if (landRecord.RecordingActs.Count > 0) {
-        propertyBag.Add(new PropertyBagItem("Actos jurídicos registrados", String.Empty, "section"));
-        foreach (var recordingAct in landRecord.RecordingActs) {
-          propertyBag.Add(new PropertyBagItem(recordingAct.DisplayName, "Folio real: " + recordingAct.Resource.UID));
-        }
+      if (landRecord.Instrument.Summary.Length != 0) {
+        propertyBag.Add(new PropertyBagItem("Resumen", landRecord.Instrument.Summary, "small-text"));
       }
 
-      var uniqueResource = landRecord.GetUniqueInvolvedResource();
-      if (!uniqueResource.Equals(Resource.Empty) && uniqueResource is RealEstate) {
-        propertyBag.Add(new PropertyBagItem("Documento registral expedido sobre el folio electrónico", String.Empty, "section"));
-        propertyBag.Add(new PropertyBagItem("Folio real", uniqueResource.UID + "<br/>" +
-                                            GetResourceLink(uniqueResource.UID), "enhanced-text"));
+      BuildLandRecordRecordingActs(landRecord, propertyBag);
 
-        propertyBag.Add(new PropertyBagItem("Clave catastral",
-                                             ((RealEstate) uniqueResource).CadastralKey.Length != 0 ?
-                                             ((RealEstate) uniqueResource).CadastralKey : "Clave catastral no proporcionada.", "bold-text"));
-        propertyBag.Add(new PropertyBagItem("Descripción", uniqueResource.AsText));
-      }
+      BuildLandRecordUniqueResource(landRecord, propertyBag);
 
-      var unsigned = landRecord.SecurityData.UsesESign && landRecord.SecurityData.IsUnsigned;
-
-      propertyBag.Add(new PropertyBagItem("Verificación de elementos de seguridad", String.Empty,
-                                          unsigned ? "section-error" : "section"));
-
-      if (hash.Length != 0 && landRecord.AuthorizationTime < hashCodeValidationStartDate) {
-        propertyBag.Add(new PropertyBagItem("Código de verificación", hash, "bold-text"));
-      } else {
-        propertyBag.Add(new PropertyBagItem("Código de verificación", landRecord.SecurityData.SecurityHash, "bold-text"));
-      }
-      propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(landRecord.SecurityData.DigitalSeal), "mono-space-text"));
-      if (unsigned) {
-        propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada",
-                        "MUY IMPORTANTE: El documento NO ES VÁLIDO. NO HA SIDO FIRMADO ELECTRÓNICAMENTE.", "warning-status-text"));
-      } else {
-        propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada", landRecord.SecurityData.DigitalSignature));
-        propertyBag.Add(new PropertyBagItem("Firmado por", landRecord.SecurityData.SignedBy.FullName, "bold-text"));
-        propertyBag.Add(new PropertyBagItem("Puesto", landRecord.SecurityData.SignedBy.JobPosition));
-      }
+      BuildLandRecordSecurityData(landRecord, hash, propertyBag);
 
       propertyBag.AddRange(TransactionSectionItems(landRecord.Transaction));
 
@@ -158,7 +128,7 @@ namespace Empiria.Land.WebApi {
 
 
     internal List<PropertyBagItem> BuildTransaction(string transactionUID, string messageUID) {
-      var propertyBag = new List<PropertyBagItem>(16);
+      var propertyBag = new List<PropertyBagItem>(32);
 
       var transaction = LRSTransaction.TryParse(transactionUID);
 
@@ -198,6 +168,78 @@ namespace Empiria.Land.WebApi {
       BookEntrySection(association, propertyBag);
 
       return propertyBag;
+    }
+
+
+    private void BuildLandRecordRecordingActs(LandRecord landRecord, List<PropertyBagItem> propertyBag) {
+      if (landRecord.RecordingActs.Count > 0) {
+        propertyBag.Add(new PropertyBagItem("Actos jurídicos registrados", String.Empty, "section"));
+        foreach (var recordingAct in landRecord.RecordingActs) {
+          propertyBag.Add(new PropertyBagItem(recordingAct.Kind.Length != 0 ? recordingAct.Kind : recordingAct.DisplayName,
+                                              "Folio real: " + recordingAct.Resource.UID));
+        }
+      }
+    }
+
+
+    private void BuildLandRecordSecurityData(LandRecord landRecord, string hash, List<PropertyBagItem> propertyBag) {
+      var securityData = landRecord.SecurityData;
+
+      propertyBag.Add(new PropertyBagItem("Verificación de elementos de seguridad", String.Empty,
+                                          securityData.IsSigned ? "section": "section-error"));
+
+      if (securityData.IsUnsigned && securityData.UsesESign) {
+        propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada",
+               "MUY IMPORTANTE: El documento NO ES VÁLIDO. NO HA SIDO FIRMADO ELECTRÓNICAMENTE.", "warning-status-text"));
+        return;
+      } else if (securityData.IsUnsigned && !securityData.UsesESign) {
+        propertyBag.Add(new PropertyBagItem("Firma",
+               "MUY IMPORTANTE: El documento NO ES VÁLIDO YA QUE NO HA SIDO FIRMADO.", "warning-status-text"));
+        return;
+      }
+
+      if (hash.Length != 0 && landRecord.AuthorizationTime < hashCodeValidationStartDate) {
+        propertyBag.Add(new PropertyBagItem("Código de verificación", hash, "bold-text"));
+      } else {
+        propertyBag.Add(new PropertyBagItem("Código de verificación", securityData.SecurityHash, "bold-text"));
+      }
+
+      propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(securityData.DigitalSeal), "bold-text mono-space-text"));
+
+
+      if (securityData.UsesESign) {
+
+        propertyBag.Add(new PropertyBagItem("Identificador de la firma electrónica", securityData.SignGuid, "bold-text mono-space-text"));
+        propertyBag.Add(new PropertyBagItem("Cadena de digestión (datos estampillados)",
+                                            EmpiriaString.DivideLongString(securityData.Digest, 34, "&#8203;"), "bold-text mono-space-text"));
+        propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada", securityData.DigitalSignature, "bold-text mono-space-text"));
+
+      } else {
+
+        propertyBag.Add(new PropertyBagItem("Firma", securityData.DigitalSignature, "bold-text mono-space-text"));
+      }
+
+      propertyBag.Add(new PropertyBagItem("Firmado por", securityData.SignedBy.FullName, "bold-text"));
+      propertyBag.Add(new PropertyBagItem("Puesto", securityData.SignedByJobTitle));
+      propertyBag.Add(new PropertyBagItem("Fecha y hora de firmado", securityData.SignedTime.ToString("dd/MMMM/yyyy HH:mm:ss")));
+    }
+
+
+    private void BuildLandRecordUniqueResource(LandRecord landRecord, List<PropertyBagItem> propertyBag) {
+      var uniqueResource = landRecord.GetUniqueInvolvedResource();
+
+      if (uniqueResource.Equals(Resource.Empty) || !(uniqueResource is RealEstate realEstate)) {
+        return;
+      }
+
+      propertyBag.Add(new PropertyBagItem("Documento registral expedido sobre el folio electrónico", String.Empty, "section"));
+      propertyBag.Add(new PropertyBagItem("Folio real", uniqueResource.UID + "<br/>" +
+                                          GetResourceLink(uniqueResource.UID), "enhanced-text"));
+
+      propertyBag.Add(new PropertyBagItem("Clave catastral",
+                                           realEstate.CadastralKey.Length != 0 ? realEstate.CadastralKey :
+                                                                                 "Clave catastral no proporcionada.", "bold-text"));
+      propertyBag.Add(new PropertyBagItem("Descripción", uniqueResource.AsText));
     }
 
 
@@ -551,14 +593,14 @@ namespace Empiria.Land.WebApi {
                                             transaction.Workflow.CurrentStatus.GetStatusName(), "warning-status-text"));
         propertyBag.Add(new PropertyBagItem("Fecha de entrega",
                                             "Desafortunadamente el trámite no procedió.<br />" +
-                                            "Requiere pasar a recoger su oficio de devolución.", "warning-status-text"));
+                                            "Se requiere pasar a la oficina donde acudió, a recoger su oficio de devolución.", "warning-status-text"));
 
 
       } else {
         propertyBag.Add(new PropertyBagItem("Estado del trámite",
                                             transaction.Workflow.CurrentStatus.GetStatusName(), "in-process-status-text"));
 
-        propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada", "Por COVID-19, desafortunadamente no podemos determinarla."));
+        propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada", "Desafortunadamente no podemos determinarla."));
 
         //if (transaction.EstimatedDueTime < DateTime.Today) {
         //  propertyBag.Add(new PropertyBagItem("Fecha de entrega estimada",
