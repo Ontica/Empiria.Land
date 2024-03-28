@@ -228,6 +228,20 @@ namespace Empiria.Land.Pages {
       return temp;
     }
 
+    protected string GetUniqueInvolvedResourceQRCodeUrl() {
+      string type = String.Empty;
+
+      if (UniqueInvolvedResource is RealEstate) {
+        type = "realestate";
+      } else if (UniqueInvolvedResource is Association) {
+        type = "association";
+      } else if (UniqueInvolvedResource is NoPropertyResource) {
+        type = "noproperty";
+      }
+
+      return $"../user.controls/qrcode.aspx?size=120&#38;data={SEARCH_SERVICES_SERVER_BASE_ADDRESS}/?" +
+             $"type={type}%26uid={UniqueInvolvedResource.UID}%26hash={UniqueInvolvedResource.QRCodeSecurityHash()}";
+    }
 
     protected string GetCurrentUserInitials() {
       if (ExecutionServer.IsAuthenticated) {
