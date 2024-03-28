@@ -53,7 +53,7 @@ namespace Empiria.Land.Pages {
 
       landRecord = LandRecord.TryParse(landRecordUID);
 
-      landRecord.EnsureIntegrity();
+      // landRecord.EnsureIntegrity();
 
       transaction = landRecord.Transaction;
 
@@ -114,18 +114,21 @@ namespace Empiria.Land.Pages {
     protected string GetDigitalSignature() {
       if (landRecord.IsHistoricRecord) {
         return CommonMethods.AsWarning("Los documentos históricos no tienen firma digital.");
-      }
-      if (!landRecord.IsClosed) {
-        return CommonMethods.AsWarning("El documento está incompleto. No tiene validez.");
-      }
-      if (!landRecord.SecurityData.UsesESign) {
-        return "Documento firmado de forma autógrafa. Requiere también sello oficial.";
 
-      } else if (landRecord.SecurityData.UsesESign && landRecord.SecurityData.IsUnsigned) {
-        return CommonMethods.AsWarning("Este documento NO HA SIDO FIRMADO digitalmente. No tiene valor oficial.");
+      } else if (!landRecord.IsClosed) {
+        return CommonMethods.AsWarning("El documento no ha sido cerrado. No tiene validez.");
 
-      } else if (landRecord.SecurityData.UsesESign && landRecord.SecurityData.IsSigned) {
+      } else if (landRecord.SecurityData.IsUnsigned && landRecord.SecurityData.UsesESign) {
+        return CommonMethods.AsWarning("Este documento NO HA SIDO FIRMADO digitalmente. No tiene validez oficial.");
+
+      } else if (landRecord.SecurityData.IsUnsigned && !landRecord.SecurityData.UsesESign) {
+        return CommonMethods.AsWarning("Este documento no ha sido firmado manualmente. No tiene validez oficial.");
+
+      } else if (landRecord.SecurityData.IsSigned && landRecord.SecurityData.UsesESign) {
         return EmpiriaString.DivideLongString(landRecord.SecurityData.DigitalSignature, 96, "<br />");
+
+      } else if (landRecord.SecurityData.IsSigned && !landRecord.SecurityData.UsesESign) {
+        return "Documento firmado de forma autógrafa. Requiere también sello oficial.";
 
       } else {
         throw Assertion.EnsureNoReachThisCode();
