@@ -203,14 +203,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     public void Reentry() {
-      if (!LRSWorkflowRules.IsReadyForReentry(_transaction)) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
-                                            _transaction.UID);
-      }
-
-      // LRSWorkflowRules.AssertGraceDaysForReentry(_transaction);
-      // LRSWorkflowRules.AssertRecordingActsPrelation(_transaction);
-      // LRSWorkflowRules.AssertDigitalizedDocument(_transaction);
+      LRSWorkflowRules.AssertIsReadyForReentry(_transaction);
 
       this.CurrentStatus = TransactionStatus.Reentry;
       _transaction.ClosingTime = ExecutionServer.DateMaxValue;

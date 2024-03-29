@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Contacts;
+using Empiria.Data;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -41,54 +42,15 @@ namespace Empiria.Land.Registration.Transactions {
         return;
       }
 
-      if (ExecutionServer.CurrentUserId == 2) {
-        return;
-      }
-
-      int graceDaysForImaging = 90;
+      int graceDaysForDigitalization = ConfigurationData.Get<int>("GraceDaysForDigitalization", int.MaxValue);
 
       DateTime lastDate = transaction.LandRecord.AuthorizationTime;
 
-      if (lastDate.AddDays(graceDaysForImaging) <= DateTime.Now) {
+      if (lastDate.AddDays(graceDaysForDigitalization) <= DateTime.Now) {
         Assertion.RequireFail("No es posible reingresar este trámite debido a que el documento " +
                               "que se registró aún no ha sido digitalizado y ya " +
-                              $"transcurrieron más de {graceDaysForImaging} días desde que éste se cerró.\n\n" +
+                              $"transcurrieron más de {graceDaysForDigitalization} días desde que éste se cerró.\n\n" +
                               "Favor de preguntar en la mesa de armado acerca de este documento.");
-      }
-    }
-
-
-    static internal void AssertGraceDaysForReentry(LRSTransaction transaction) {
-      // int graceDaysForReentry = ConfigurationData.GetInteger("GraceDaysForReentry");
-
-      if (ExecutionServer.CurrentUserId == 2) {
-        return;
-      }
-
-      int graceDaysForReentry = 10;
-
-      DateTime lastDate = transaction.PresentationTime;
-
-      //if (transaction.LastReentryTime != ExecutionServer.DateMaxValue) {
-      //  lastDate = transaction.LastReentryTime;
-      //}
-      if (!transaction.LandRecord.IsEmptyInstance) {
-        lastDate = transaction.LandRecord.AuthorizationTime;
-      }
-
-      if (lastDate.AddDays(graceDaysForReentry) <= DateTime.Now) {
-        Assertion.RequireFail("Por motivos de seguridad y calidad en el registro de la información, " +
-                             $"no es posible reingresar trámites después de {graceDaysForReentry} días contados " +
-                              "a partir de su fecha de presentación original, de su fecha de registro, o bien, " +
-                              "de la fecha del último reingreso.\n\n" +
-                              "En su lugar se debe optar por registrar un nuevo trámite.");
-      }
-    }
-
-
-    static internal void AssertRecordingActsPrelation(LandRecord landRecord) {
-      foreach (var recordingAct in landRecord.RecordingActs) {
-        recordingAct.Validator.AssertIsLastInPrelationOrder();
       }
     }
 
@@ -187,6 +149,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static public bool IsReadyForElectronicDelivery(LRSTransaction transaction, string messageUID) {
+
       if (String.IsNullOrWhiteSpace(messageUID)) {
         return false;
       }
@@ -231,23 +194,23 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    static public bool IsReadyForReentry(LRSTransaction transaction) {
+    static internal void AssertIsReadyForReentry(LRSTransaction transaction) {
       var user = ExecutionServer.CurrentPrincipal;
 
-      return ((transaction.Workflow.CurrentStatus == TransactionStatus.Returned ||
-              (transaction.Workflow.CurrentStatus == TransactionStatus.Delivered ||
-               transaction.Workflow.CurrentStatus == TransactionStatus.Archived)) &&
-               user.IsInRole("Supervisor"));
-    }
-
-
-    static private bool IsRecorderOfficerCase(LRSTransaction transaction) {
-      if (transaction.TransactionType.Id == 706 && transaction.RecorderOffice.Id == 147) {
-        return true;
+      if (!user.IsInRole("Supervisor")) {
+        throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
+                                            transaction.UID);
       }
-      return false;
-    }
 
+      if (!HasValidStatusForReentry(transaction)) {
+        throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
+                                            transaction.UID);
+      }
+
+      AssertGraceDaysForReentry(transaction);
+      AssertDigitalizedDocument(transaction);
+      AssertRecordingActsPrelation(transaction.LandRecord);
+    }
 
     static public bool IsRecordingDocumentCase(LRSTransaction transaction) {
       if (EmpiriaMath.IsMemberOf(transaction.TransactionType.Id, new[] { 700, 704 , 705})) {
@@ -309,6 +272,49 @@ namespace Empiria.Land.Registration.Transactions {
 
     #endregion Methods
 
+    #region Helpers
+
+    static private void AssertGraceDaysForReentry(LRSTransaction transaction) {
+      int graceDaysForReentry = ConfigurationData.Get<int>("GraceDaysForReentry", 365);
+
+      DateTime lastDate = transaction.Workflow.GetCurrentTask().CheckOutTime;
+
+      if (lastDate.AddDays(graceDaysForReentry) < DateTime.Today) {
+        Assertion.RequireFail("Por motivos de seguridad y calidad en el registro de la información, " +
+                             $"no es posible reingresar trámites después de {graceDaysForReentry} días contados " +
+                              "a partir de su fecha de presentación original, de su fecha de registro, o bien, " +
+                              "de la fecha del último reingreso.\n\n" +
+                              "En su lugar se debe optar por registrar un nuevo trámite.");
+      }
+    }
+
+
+    static private void AssertRecordingActsPrelation(LandRecord landRecord) {
+      if (landRecord.IsEmptyInstance) {
+        return;
+      }
+      foreach (var recordingAct in landRecord.RecordingActs) {
+        recordingAct.Validator.AssertIsLastInPrelationOrder();
+      }
+    }
+
+
+    static private bool HasValidStatusForReentry(LRSTransaction transaction) {
+      return (transaction.Workflow.CurrentStatus == TransactionStatus.Returned ||
+              transaction.Workflow.CurrentStatus == TransactionStatus.Delivered ||
+              transaction.Workflow.CurrentStatus == TransactionStatus.Archived);
+    }
+
+
+    static private bool IsRecorderOfficerCase(LRSTransaction transaction) {
+      if (transaction.TransactionType.Id == 706 && transaction.RecorderOffice.Id == 147) {
+        return true;
+      }
+      return false;
+    }
+
+
+    #endregion Helpers
   }  // class LRSWorkflowRules
 
 }  // namespace Empiria.Land.Registration.Transactions
