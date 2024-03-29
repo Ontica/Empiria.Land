@@ -39,8 +39,8 @@ namespace Empiria.Land.Registration {
         _recordingAct.RecordingActType.AssertIsApplicableResource(_recordingAct.Resource);
       } else {
         Assertion.Require(rule.AppliesTo == RecordingRuleApplication.NoProperty,
-                         "El acto jurídico " + _recordingAct.IndexedName +
-                         " sólo puede aplicarse al folio real de un predio o asociación.");
+                         $"El acto jurídico {_recordingAct.IndexedName} " +
+                         "sólo puede aplicarse a un predio o asociación.");
       }
 
       if (!_recordingAct.BookEntry.IsEmptyInstance) {
@@ -149,13 +149,6 @@ namespace Empiria.Land.Registration {
 
     public void AssertIsLastInPrelationOrder() {
 
-      // ToDo: Review this rule (seems like an operation issue)
-
-      // Cancelation acts don't follow prelation rules
-      // if (this.RecordingActType.IsCancelationActType) {
-      //  return;
-      // }
-
       var fullTract = _recordingAct.Resource.Tract.GetFullRecordingActs();
 
       fullTract = fullTract.FindAll((x) => !x.RecordingActType.RecordingRule.SkipPrelation);
@@ -163,14 +156,14 @@ namespace Empiria.Land.Registration {
       bool wrongPrelation = fullTract.Contains((x) => x.LandRecord.PresentationTime > _recordingAct.LandRecord.PresentationTime &&
                                                       x.LandRecord.IsClosed);
 
-      //if (wrongPrelation) {
-      //  Assertion.AssertFail("El acto jurídico " + this.IndexedName +
-      //                       " hace referencia a un folio real que tiene registrado " +
-      //                       "cuando menos otro acto jurídico con una prelación posterior " +
-      //                       "a la de este documento.\n\n" +
-      //                       "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
-      //                       "Favor de revisar la historia del predio involucrado.");
-      //}
+      if (wrongPrelation) {
+        Assertion.RequireFail($"El acto jurídico {_recordingAct.IndexedName} " +
+                             $"hace referencia al folio electrónico {_recordingAct.Resource.UID}, el cual " +
+                             $"tiene registrado cuando menos otro acto jurídico con una prelación posterior " +
+                             $"a la de este documento ({_recordingAct.LandRecord.UID}.\n\n" +
+                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
+                             "Favor de revisar la historia del predio involucrado.");
+      }
 
     }
 
@@ -233,14 +226,16 @@ namespace Empiria.Land.Registration {
       bool wrongPrelation = certificates.Contains((x) => x.IsClosed && x.IssueTime > _recordingAct.LandRecord.AuthorizationTime &&
                                                          !x.Transaction.Equals(_recordingAct.LandRecord.Transaction));
 
-      if (wrongPrelation) {
-        Assertion.RequireFail("El acto jurídico " + _recordingAct.IndexedName +
-                             " hace referencia a un folio real al cual se le " +
-                             "emitió un certificado con fecha posterior " +
-                             "a la fecha de autorización de este documento.\n\n" +
-                             "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
-                             "Favor de revisar la historia del predio involucrado.");
+      if (!wrongPrelation) {
+        return;
       }
+
+      Assertion.RequireFail($"El acto jurídico {_recordingAct.IndexedName} " +
+                            "hace referencia a un folio electrónico al cual se le " +
+                            "emitió un certificado con fecha posterior " +
+                            "a la fecha de autorización de este documento.\n\n" +
+                            "Por lo anterior, esta operación no puede ser ejecutada.\n\n" +
+                            "Favor de revisar la historia del predio involucrado.");
     }
 
 
@@ -250,16 +245,16 @@ namespace Empiria.Land.Registration {
       var trappedAct = tract.Find((x) => x.LandRecord.PresentationTime < _recordingAct.LandRecord.PresentationTime &&
                                   !x.LandRecord.IsClosed && !x.LandRecord.IsHistoricRecord);
 
-      //if (trappedAct != null) {
-      //  Assertion.AssertFail("Este documento no puede ser cerrado, ya que el acto jurídico\n" +
-      //                       "{0} hace referencia al folio real '{1}' que tiene registrado " +
-      //                       "movimientos en otro documento que está abierto y que tiene una prelación " +
-      //                       "anterior al de este.\n\n" +
-      //                       "Primero debe cerrarse dicho documento para evitar que sus actos " +
-      //                       "queden atrapados en el orden de prelación y luego no pueda cerrarse.\n\n" +
-      //                       "El documento en cuestión es el: {2}\n",
-      //                       this.IndexedName, this.Resource.UID, trappedAct.Document.UID);
-      //}
+      if (trappedAct == null) {
+        return;
+      }
+
+      Assertion.RequireFail("Este documento no puede ser cerrado, ya que el acto jurídico\n " +
+                            $"{_recordingAct.IndexedName} hace referencia al folio electrónico '{_recordingAct.Resource.UID}', " +
+                            $"el cual tiene registrados uno o más actos jurídicos en otro documento ({trappedAct.LandRecord.UID}) " +
+                            $"mismo que está abierto y tiene una prelación anterior al de este.\n\n" +
+                            $"Primero debe cerrarse el documento {trappedAct.LandRecord.UID} para evitar que " +
+                            $"sus actos queden atrapados en el orden de prelación y luego no pueda cerrarse.");
     }
 
 
