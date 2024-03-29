@@ -371,8 +371,9 @@ namespace Empiria.Land.Registration {
     protected override void OnLoadObjectData(DataRow row) {
       //Assertion.Require(
       //  this.Security.Integrity.GetUpdatedHashCode() == (string) row["LandRecordDIF"],
-      //        $"PROBLEMA GRAVE DE SEGURIDAD: La inscripción {this.UID} " +
-      //        $"fue indebidamente modificada directamente en la base de datos.");
+      //        $"PROBLEMA GRAVE 2 DE SEGURIDAD: La inscripción {this.UID} " +
+      //        $"fue indebidamente modificada directamente en la base de datos." +
+      //        $"1) {this.Security.Integrity.GetUpdatedHashCode()} 2) {(string) row["LandRecordDIF"]}");
 
       RefreshRecordingActs();
     }
@@ -389,9 +390,13 @@ namespace Empiria.Land.Registration {
 
         _documentUID = provider.GenerateRecordID();
 
-        this.PostingTime = DateTime.Now;
+        this.PostingTime = EmpiriaDateTime.NowWithoutSeconds;
+
         this.PostedBy = ExecutionServer.CurrentContact;
       }
+
+
+      IntegrityField = this.Security.Integrity.GetUpdatedHashCode();
 
       LandRecordsData.WriteLandRecord(this);
     }
@@ -425,7 +430,8 @@ namespace Empiria.Land.Registration {
     public void EnsureIntegrity() {
       Assertion.Require(this.Security.Integrity.GetUpdatedHashCode() == IntegrityField,
                         $"PROBLEMA GRAVE DE SEGURIDAD: La inscripción {this.UID} " +
-                        $"fue indebidamente modificada directamente en la base de datos.");
+                        $"fue indebidamente modificada directamente en la base de datos." +
+                        $"1) {this.Security.Integrity.GetUpdatedHashCode()} 2) {IntegrityField}");
     }
 
     #endregion Public methods
