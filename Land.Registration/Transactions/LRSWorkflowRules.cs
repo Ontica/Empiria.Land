@@ -10,7 +10,6 @@
 using System;
 
 using Empiria.Contacts;
-using Empiria.Data;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -29,38 +28,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Methods
 
-    static internal void AssertDigitalizedDocument(LRSTransaction transaction) {
-      if (!IsDigitalizable(transaction)) {
-        return;
-      }
-
-      if (transaction.LandRecord.IsEmptyInstance) {
-        return;
-      }
-
-      if (transaction.LandRecord.ImagingControlID.Length != 0) {
-        return;
-      }
-
-      int graceDaysForDigitalization = ConfigurationData.Get<int>("GraceDaysForDigitalization", int.MaxValue);
-
-      DateTime lastDate = transaction.LandRecord.AuthorizationTime;
-
-      if (lastDate.AddDays(graceDaysForDigitalization) <= DateTime.Now) {
-        Assertion.RequireFail("No es posible reingresar este trámite debido a que el documento " +
-                              "que se registró aún no ha sido digitalizado y ya " +
-                              $"transcurrieron más de {graceDaysForDigitalization} días desde que éste se cerró.\n\n" +
-                              "Favor de preguntar en la mesa de armado acerca de este documento.");
-      }
-    }
-
-
-    static internal bool CanBeDeleted(LRSTransaction transaction) {
-      return (transaction.Workflow.CurrentStatus == TransactionStatus.Payment);
-    }
-
-
-    static internal void CanBeReceived(LRSTransaction transaction) {
+    static internal void AssertCanBeReceived(LRSTransaction transaction) {
       if (transaction.Workflow.CurrentStatus != TransactionStatus.Payment) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
                                             transaction.UID);
@@ -69,6 +37,65 @@ namespace Empiria.Land.Registration.Transactions {
           && !IsEmptyServicesTransaction(transaction)) {
         throw new NotImplementedException("Este trámite todavía no tiene registrada una boleta de pago.");
       }
+    }
+
+
+    static internal void AssertIsReadyForReentry(LRSTransaction transaction) {
+      var user = ExecutionServer.CurrentPrincipal;
+
+      if (!user.IsInRole("Supervisor")) {
+        throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
+                                            transaction.UID);
+      }
+
+      if (!HasValidStatusForReentry(transaction)) {
+        throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
+                                            transaction.UID);
+      }
+
+      AssertGraceDaysForReentry(transaction);
+      AssertHasDigitalizedDocument(transaction);
+      AssertRecordingActsPrelation(transaction.LandRecord);
+    }
+
+
+    static public void AssertValidStatusChange(LRSTransaction transaction, TransactionStatus nextStatus) {
+      if (nextStatus == TransactionStatus.Received && transaction.PaymentData.Payments.Count == 0) {
+        Assertion.RequireFail("Este trámite todavía no tiene registrada una boleta de pago. " +
+                             $"Trámite: {transaction.UID} ({transaction.InternalControlNumber}");
+      }
+
+      if (!IsRecordingDocumentCase(transaction)) {
+        return;
+      }
+
+      if (transaction.TransactionType.Id == 704) {
+        return;
+      }
+
+      if (nextStatus == TransactionStatus.Revision || nextStatus == TransactionStatus.OnSign ||
+          nextStatus == TransactionStatus.Archived || nextStatus == TransactionStatus.ToDeliver) {
+        if (transaction.LandRecord.IsEmptyInstance || !transaction.LandRecord.IsClosed) {
+          Assertion.RequireFail("Necesito se ingrese la infomación del documento a inscribir y " +
+                                $"que se éste se encuentre cerrado. " +
+                                $"Trámite: {transaction.UID} ({transaction.InternalControlNumber}).");
+        }
+      }
+
+      if (nextStatus == TransactionStatus.ToReturn && !transaction.LandRecord.IsEmptyInstance &&
+          (transaction.LandRecord.IsClosed ||
+           transaction.LandRecord.SecurityData.IsSigned ||
+           transaction.LandRecord.RecordingActs.Count > 0)) {
+        Assertion.RequireFail("No se puede devolver al interesado un trámite que tiene un documento " +
+                              "cerrado, o que ya ha sido firmado, o cuyo sello registral tiene uno o " +
+                              "más actos jurídicos registrados. " +
+                             $"Trámite: {transaction.UID} ({transaction.InternalControlNumber}).");
+      }
+    }
+
+
+    static internal bool CanBeDeleted(LRSTransaction transaction) {
+      return (transaction.Workflow.CurrentStatus == TransactionStatus.Payment);
     }
 
 
@@ -194,24 +221,6 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    static internal void AssertIsReadyForReentry(LRSTransaction transaction) {
-      var user = ExecutionServer.CurrentPrincipal;
-
-      if (!user.IsInRole("Supervisor")) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
-                                            transaction.UID);
-      }
-
-      if (!HasValidStatusForReentry(transaction)) {
-        throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
-                                            transaction.UID);
-      }
-
-      AssertGraceDaysForReentry(transaction);
-      AssertDigitalizedDocument(transaction);
-      AssertRecordingActsPrelation(transaction.LandRecord);
-    }
-
     static public bool IsRecordingDocumentCase(LRSTransaction transaction) {
       if (EmpiriaMath.IsMemberOf(transaction.TransactionType.Id, new[] { 700, 704 , 705})) {
         return true;
@@ -246,30 +255,6 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-
-    static public string ValidateStatusChange(LRSTransaction transaction, TransactionStatus nextStatus) {
-      if (nextStatus == TransactionStatus.Received && transaction.PaymentData.Payments.Count == 0) {
-        return "Este trámite todavía no tiene registrada una boleta de pago.";
-      }
-
-      if (!IsRecordingDocumentCase(transaction)) {
-        return String.Empty;
-      }
-
-      if (transaction.TransactionType.Id == 704) {
-        return String.Empty;
-      }
-
-      if (nextStatus == TransactionStatus.Revision || nextStatus == TransactionStatus.OnSign ||
-          nextStatus == TransactionStatus.Archived || nextStatus == TransactionStatus.ToDeliver) {
-        if (transaction.LandRecord.IsEmptyInstance) {
-          return "Necesito primero se ingrese la información del documento a inscribir.";
-        }
-      }
-
-      return String.Empty;
-    }
-
     #endregion Methods
 
     #region Helpers
@@ -285,6 +270,32 @@ namespace Empiria.Land.Registration.Transactions {
                               "a partir de su fecha de presentación original, de su fecha de registro, o bien, " +
                               "de la fecha del último reingreso.\n\n" +
                               "En su lugar se debe optar por registrar un nuevo trámite.");
+      }
+    }
+
+
+    static private void AssertHasDigitalizedDocument(LRSTransaction transaction) {
+      if (!IsDigitalizable(transaction)) {
+        return;
+      }
+
+      if (transaction.LandRecord.IsEmptyInstance) {
+        return;
+      }
+
+      if (transaction.LandRecord.ImagingControlID.Length != 0) {
+        return;
+      }
+
+      int graceDaysForDigitalization = ConfigurationData.Get<int>("GraceDaysForDigitalization", int.MaxValue);
+
+      DateTime lastDate = transaction.LandRecord.AuthorizationTime;
+
+      if (lastDate.AddDays(graceDaysForDigitalization) <= DateTime.Now) {
+        Assertion.RequireFail("No es posible reingresar este trámite debido a que el documento " +
+                              "que se registró aún no ha sido digitalizado y ya " +
+                              $"transcurrieron más de {graceDaysForDigitalization} días desde que éste se cerró.\n\n" +
+                              "Favor de preguntar en la mesa de armado acerca de este documento.");
       }
     }
 

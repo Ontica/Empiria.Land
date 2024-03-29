@@ -174,7 +174,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     public void Receive(string notes) {
-      LRSWorkflowRules.CanBeReceived(_transaction);
+      LRSWorkflowRules.AssertCanBeReceived(_transaction);
 
 
       _transaction.SetInternalControlNumber();
@@ -278,12 +278,7 @@ namespace Empiria.Land.Registration.Transactions {
                                             currentTask.Id);
       }
 
-      string s = LRSWorkflowRules.ValidateStatusChange(_transaction, currentTask.NextStatus);
-
-      if (!String.IsNullOrWhiteSpace(s)) {
-        Assertion.RequireFail(s);
-        return;
-      }
+      LRSWorkflowRules.AssertValidStatusChange(_transaction, currentTask.NextStatus);
 
       this.CurrentStatus = currentTask.NextStatus;
 
