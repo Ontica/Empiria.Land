@@ -241,23 +241,20 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public void SetNextStatus(TransactionStatus nextStatus, Contact nextContact,
-                              string notes, DateTime? date = null) {
+    public void SetNextStatus(TransactionStatus nextStatus, Contact nextContact, string notes) {
 
       if (nextStatus == TransactionStatus.Returned ||
           nextStatus == TransactionStatus.Delivered ||
           nextStatus == TransactionStatus.Archived) {
-        if (date.HasValue) {
-          this.Close(nextStatus, notes, nextContact, date.Value);
-        } else {
+
           this.Close(nextStatus, notes);
-        }
-        return;
+
+          return;
       }
 
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
-      currentTask.SetNextStatus(nextStatus, nextContact, notes, date);
+      currentTask.SetNextStatus(nextStatus, nextContact, notes);
 
       if (nextStatus == TransactionStatus.OnSign || nextStatus == TransactionStatus.Revision) {
         _transaction.Save();
