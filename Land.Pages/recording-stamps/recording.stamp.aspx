@@ -179,7 +179,7 @@
             <img style="margin-right:-12pt;margin-left:-12pt;margin-top:-12pt" alt="" title=""
                  src="<%=GetUniqueInvolvedResourceQRCodeUrl()%>" />
               <div style="margin-top:-12pt;font-size:7pt;white-space:nowrap">
-              Consultar folio electrónico<br />
+              <%=GetUniqueInvolvedResourceQRCodeText()%><br />
               <b><%=base.UniqueInvolvedResource.UID%></b>
             </div>
             <% } %>

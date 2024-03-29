@@ -243,6 +243,19 @@ namespace Empiria.Land.Pages {
              $"type={type}%26uid={UniqueInvolvedResource.UID}%26hash={UniqueInvolvedResource.QRCodeSecurityHash()}";
     }
 
+    protected string GetUniqueInvolvedResourceQRCodeText() {
+      if (UniqueInvolvedResource is RealEstate) {
+        return "Consultar este predio";
+      } else if (UniqueInvolvedResource is Association) {
+        return "Consultar esta persona moral";
+      } else if (UniqueInvolvedResource is NoPropertyResource) {
+        return "Consultar folio electrónico";
+      } else {
+        throw Assertion.EnsureNoReachThisCode();
+      }
+    }
+
+
     protected string GetCurrentUserInitials() {
       if (ExecutionServer.IsAuthenticated) {
         var user = ExecutionServer.CurrentContact;
