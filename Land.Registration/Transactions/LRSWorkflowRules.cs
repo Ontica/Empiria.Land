@@ -28,6 +28,24 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Methods
 
+    static internal void AssertCanBeClosed(LRSTransaction transaction, TransactionStatus closeStatus) {
+      var currentStatus = transaction.Workflow.CurrentStatus;
+
+      Assertion.Require(currentStatus == TransactionStatus.ToDeliver || currentStatus == TransactionStatus.ToReturn,
+                        $"El trámite {transaction.UID} no puede ser cerrado, " +
+                        $"debido a que su estado actual es {currentStatus.GetStatusName()}.");
+
+      if (closeStatus == TransactionStatus.ToDeliver) {
+        AssertCanBeDelivered(transaction);
+      } else if (closeStatus == TransactionStatus.ToReturn) {
+        AssertCanBeReturned(transaction);
+      } else {
+        Assertion.RequireFail($"Invalid close status {closeStatus.GetStatusName()}.");
+      }
+
+    }
+
+
     static internal void AssertCanBeReceived(LRSTransaction transaction) {
       if (transaction.Workflow.CurrentStatus != TransactionStatus.Payment) {
         throw new LandRegistrationException(LandRegistrationException.Msg.CantReEntryTransaction,
@@ -65,7 +83,8 @@ namespace Empiria.Land.Registration.Transactions {
                              $"Trámite: {transaction.UID} ({transaction.InternalControlNumber}");
       }
 
-      if (!IsRecordingDocumentCase(transaction)) {
+      // ToDo: Remove IsCertificateIssueCase condition when certificates have been implemented
+      if (!IsRecordingDocumentCase(transaction) || IsCertificateIssueCase(transaction)) {
         return;
       }
 
@@ -76,8 +95,8 @@ namespace Empiria.Land.Registration.Transactions {
       if (nextStatus == TransactionStatus.Revision || nextStatus == TransactionStatus.OnSign ||
           nextStatus == TransactionStatus.Archived || nextStatus == TransactionStatus.ToDeliver) {
         if (transaction.LandRecord.IsEmptyInstance || !transaction.LandRecord.IsClosed) {
-          Assertion.RequireFail("Necesito se ingrese la infomación del documento a inscribir y " +
-                                $"que se éste se encuentre cerrado. " +
+          Assertion.RequireFail("Necesito se ingrese la información del documento a inscribir y " +
+                                $"que éste se encuentre cerrado. " +
                                 $"Trámite: {transaction.UID} ({transaction.InternalControlNumber}).");
         }
       }
@@ -96,6 +115,32 @@ namespace Empiria.Land.Registration.Transactions {
 
     static internal bool CanBeDeleted(LRSTransaction transaction) {
       return (transaction.Workflow.CurrentStatus == TransactionStatus.Payment);
+    }
+
+
+    static internal bool CanEditLandRecord(LandRecord landRecord) {
+      if (!(ExecutionServer.CurrentPrincipal.IsInRole("LandRegistrar"))) {
+        return false;
+      }
+      if (landRecord.IsHistoricRecord) {
+        return true;
+      }
+      var transaction = landRecord.Transaction;
+
+      Assertion.Require(!transaction.IsEmptyInstance,
+                        "Transaction can't be the empty instance, because the document is not historic.");
+
+      if (transaction.Workflow.GetCurrentTask().Responsible.Id != ExecutionServer.CurrentUserId) {
+        return false;
+      }
+
+      if (transaction.Workflow.CurrentStatus == TransactionStatus.Recording ||
+          transaction.Workflow.CurrentStatus == TransactionStatus.Elaboration ||
+          transaction.Workflow.CurrentStatus == TransactionStatus.Juridic) {
+        return true;
+      }
+
+      return false;
     }
 
 
@@ -230,34 +275,42 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    static internal bool UserCanEditLandRecord(LandRecord landRecord) {
-      if (!(ExecutionServer.CurrentPrincipal.IsInRole("LandRegistrar"))) {
-        return false;
-      }
-      if (landRecord.IsHistoricRecord) {
-        return true;
-      }
-      var transaction = landRecord.Transaction;
-
-      Assertion.Require(!transaction.IsEmptyInstance,
-                        "Transaction can't be the empty instance, because the document is not historic.");
-
-      if (!(transaction.Workflow.CurrentStatus == TransactionStatus.Recording ||
-            transaction.Workflow.CurrentStatus == TransactionStatus.Elaboration ||
-            transaction.Workflow.CurrentStatus == TransactionStatus.Juridic)) {
-        return false;
-      }
-
-      if (transaction.Workflow.GetCurrentTask().Responsible.Id == ExecutionServer.CurrentUserId) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
     #endregion Methods
 
     #region Helpers
+
+    static private void AssertCanBeReturned(LRSTransaction transaction) {
+
+      Assertion.Require(transaction.LandRecord.IsEmptyInstance ||
+                        (!transaction.LandRecord.IsClosed && transaction.LandRecord.RecordingActs.Count == 0),
+                        "No se puede devolver al interesado un trámite que tiene un documento " +
+                        "cerrado, o que ya ha sido firmado, o cuyo sello registral tiene uno o " +
+                        "más actos jurídicos registrados. " +
+                        $"Trámite: {transaction.UID} ({transaction.InternalControlNumber}).");
+
+      Assertion.Require(!transaction.HasCertificates,
+                  "No se puede devolver al interesado un trámite que tiene uno o más certificados. " +
+                  $"Trámite: {transaction.UID} ({transaction.InternalControlNumber}).");
+    }
+
+
+
+    static private void AssertCanBeDelivered(LRSTransaction transaction) {
+      // ToDo: Remove these two ifs and check for one or more certificates when them have been implemented
+      if (IsCertificateIssueCase(transaction)) {
+        return;
+      }
+      if (!IsRecordingDocumentCase(transaction)) {
+        return;
+      }
+
+      Assertion.Require(!transaction.LandRecord.IsEmptyInstance &&
+                         transaction.LandRecord.IsClosed &&
+                         transaction.LandRecord.SecurityData.IsSigned,
+          "No se puede entregar al interesado un trámite que no tiene un documento cerrado y firmado. " +
+          $"Trámite: {transaction.UID} ({transaction.InternalControlNumber}).");
+    }
+
 
     static private void AssertGraceDaysForReentry(LRSTransaction transaction) {
       int graceDaysForReentry = ConfigurationData.Get<int>("GraceDaysForReentry", 365);

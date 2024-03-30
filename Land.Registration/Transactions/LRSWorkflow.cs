@@ -317,6 +317,8 @@ namespace Empiria.Land.Registration.Transactions {
     private void Close(TransactionStatus closeStatus, string notes,
                        Contact responsible, DateTime date) {
 
+      LRSWorkflowRules.AssertCanBeClosed(_transaction, closeStatus);
+
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
       currentTask.NextStatus = closeStatus;

@@ -60,7 +60,7 @@ namespace Empiria.Land.Registration {
       if (this.LandRecord.Status != RecordableObjectStatus.Incomplete) {
         return false;
       }
-      return LRSWorkflowRules.UserCanEditLandRecord(this.LandRecord);
+      return LRSWorkflowRules.CanEditLandRecord(this.LandRecord);
     }
 
 
@@ -71,7 +71,7 @@ namespace Empiria.Land.Registration {
       if (this.LandRecord.Status != RecordableObjectStatus.Incomplete) {
         return false;
       }
-      return LRSWorkflowRules.UserCanEditLandRecord(this.LandRecord);
+      return LRSWorkflowRules.CanEditLandRecord(this.LandRecord);
     }
 
 
@@ -85,7 +85,7 @@ namespace Empiria.Land.Registration {
       if (this.LandRecord.SecurityData.IsSigned) {
         return false;
       }
-      return LRSWorkflowRules.UserCanEditLandRecord(this.LandRecord);
+      return LRSWorkflowRules.CanEditLandRecord(this.LandRecord);
     }
 
 
