@@ -71,9 +71,13 @@ namespace Empiria.Land.Registration.Transactions {
                                             transaction.UID);
       }
 
+      Assertion.Require(!transaction.LandRecord.IsRegisteredInRecordingBook,
+            "No es posible reingresar este trámite debido a que fue inscrito en libros físicos, " +
+            "y el sistema ya no permite hacer registros en libros.");
+
+      AssertRecordingActsPrelation(transaction.LandRecord);
       AssertGraceDaysForReentry(transaction);
       AssertHasDigitalizedDocument(transaction);
-      AssertRecordingActsPrelation(transaction.LandRecord);
     }
 
 
