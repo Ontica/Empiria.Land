@@ -313,6 +313,7 @@ namespace Empiria.Land.Transactions.Workflow {
       var currentTask = transaction.Workflow.GetCurrentTask();
 
       var currentStatus = currentTask.CurrentStatus;
+      var nextStatus = currentTask.NextStatus;
 
       if (AnyOf(currentStatus, TransactionStatus.Payment, TransactionStatus.Deleted)) {
         return new FixedList<WorkflowCommandType>();
@@ -327,8 +328,14 @@ namespace Empiria.Land.Transactions.Workflow {
       }
 
       if (AnyOf(currentStatus, TransactionStatus.ToDeliver, TransactionStatus.ToReturn)) {
-        return BuildCommandTypeList(WorkflowCommandType.Finish,
-                                    WorkflowCommandType.SetNextStatus);
+        if (nextStatus == TransactionStatus.EndPoint) {
+          return BuildCommandTypeList(WorkflowCommandType.Finish,
+                                      WorkflowCommandType.SetNextStatus);
+        } else {
+          return BuildCommandTypeList(WorkflowCommandType.Take,
+                                      WorkflowCommandType.ReturnToMe,
+                                      WorkflowCommandType.SetNextStatus);
+        }
       }
 
       if (currentStatus == TransactionStatus.Control) {
@@ -345,8 +352,8 @@ namespace Empiria.Land.Transactions.Workflow {
 
       if (currentStatus == TransactionStatus.OnSign) {
         return BuildCommandTypeList(WorkflowCommandType.Take,
-                                WorkflowCommandType.Sign,
-                                WorkflowCommandType.SetNextStatus);
+                                    WorkflowCommandType.Sign,
+                                    WorkflowCommandType.SetNextStatus);
       }
 
       if (currentStatus == TransactionStatus.Revision) {
@@ -365,8 +372,6 @@ namespace Empiria.Land.Transactions.Workflow {
                                     WorkflowCommandType.SetNextStatus,
                                     WorkflowCommandType.AssignTo);
       }
-
-      var nextStatus = currentTask.NextStatus;
 
       if (AnyOf(currentStatus, TransactionStatus.Recording, TransactionStatus.Elaboration) &&
           nextStatus == TransactionStatus.EndPoint) {
