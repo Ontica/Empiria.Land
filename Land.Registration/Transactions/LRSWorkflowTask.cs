@@ -127,19 +127,19 @@ namespace Empiria.Land.Registration.Transactions {
     [DataField("CheckInTime", Default = "DateTime.Now")]
     public DateTime CheckInTime {
       get;
-      set;
+      private set;
     }
 
     [DataField("EndProcessTime")]
     public DateTime EndProcessTime {
       get;
-      set;
+      internal set;
     }
 
     [DataField("CheckOutTime")]
     public DateTime CheckOutTime {
       get;
-      set;
+      private set;
     }
 
     public TimeSpan ElapsedTime {
@@ -204,8 +204,8 @@ namespace Empiria.Land.Registration.Transactions {
 
     #region Public method
 
-    internal void Close(DateTime? date = null) {
-      DateTime closingDate = date.HasValue? date.Value: DateTime.Now;
+    internal void Close() {
+      DateTime closingDate = EmpiriaDateTime.NowWithoutSeconds;
 
       if (this.EndProcessTime == ExecutionServer.DateMaxValue) {
         this.EndProcessTime = closingDate;
@@ -233,7 +233,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     internal LRSWorkflowTask CreateNext(string notes) {
-      return this.CreateNext(notes, ExecutionServer.CurrentContact, DateTime.Now);
+      return this.CreateNext(notes, ExecutionServer.CurrentContact, EmpiriaDateTime.NowWithoutSeconds);
     }
 
     internal LRSWorkflowTask CreateNext(string notes, Contact responsible, DateTime date) {
@@ -270,10 +270,10 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     internal void SetNextStatus(TransactionStatus nextStatus, Contact nextContact,
-                                string notes, DateTime? date = null) {
+                                string notes) {
       this.NextStatus = nextStatus;
       this.NextContact = nextContact;
-      this.EndProcessTime = date.HasValue ? date.Value : DateTime.Now;
+      this.EndProcessTime = EmpiriaDateTime.NowWithoutSeconds;
       this.Notes = notes;
       this.Status = WorkflowTaskStatus.OnDelivery;
       this.Save();

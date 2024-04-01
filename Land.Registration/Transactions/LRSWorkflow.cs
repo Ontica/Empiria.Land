@@ -96,12 +96,12 @@ namespace Empiria.Land.Registration.Transactions {
       if (this.CurrentStatus == TransactionStatus.ToDeliver) {
         this.Close(TransactionStatus.Delivered,
                    "Entregado a través del sistema de notarías.",
-                   LRSWorkflowRules.InterestedContact, DateTime.Now);
+                   LRSWorkflowRules.InterestedContact);
 
       } else if (this.CurrentStatus == TransactionStatus.ToReturn) {
         this.Close(TransactionStatus.Returned,
                    "Devuelto a través del sistema de notarías.",
-                   LRSWorkflowRules.InterestedContact, DateTime.Now);
+                   LRSWorkflowRules.InterestedContact);
 
       } else {
         throw Assertion.EnsureNoReachThisCode();
@@ -119,7 +119,7 @@ namespace Empiria.Land.Registration.Transactions {
 
       this.Close(TransactionStatus.Delivered,
                  "Entregado al interesado a través del portal de consultas.",
-                 LRSWorkflowRules.InterestedContact, DateTime.Now);
+                 LRSWorkflowRules.InterestedContact);
     }
 
 
@@ -178,7 +178,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
       _transaction.SetInternalControlNumber();
-      _transaction.PresentationTime = DateTime.Now;
+      _transaction.PresentationTime = EmpiriaDateTime.NowWithCentiseconds;
       _transaction.ClosingTime = ExecutionServer.DateMaxValue;
 
       this.CurrentStatus = TransactionStatus.Received;
@@ -310,25 +310,25 @@ namespace Empiria.Land.Registration.Transactions {
     private void Close(TransactionStatus closeStatus, string notes) {
       var responsible = ExecutionServer.CurrentContact;
 
-      this.Close(closeStatus, notes, responsible, DateTime.Now);
+      this.Close(closeStatus, notes, responsible);
     }
 
 
     private void Close(TransactionStatus closeStatus, string notes,
-                       Contact responsible, DateTime date) {
+                       Contact responsible) {
 
       LRSWorkflowRules.AssertCanBeClosed(_transaction, closeStatus);
 
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
       currentTask.NextStatus = closeStatus;
-      currentTask = currentTask.CreateNext(notes, responsible, date);
+      currentTask = currentTask.CreateNext(notes, responsible, EmpiriaDateTime.NowWithoutSeconds);
 
       ResetTasksList();
 
       currentTask.Notes = notes;
 
-      currentTask.Close(date);
+      currentTask.Close();
 
       _transaction.LastDeliveryTime = currentTask.EndProcessTime;
 
