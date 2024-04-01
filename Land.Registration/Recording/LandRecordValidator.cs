@@ -11,6 +11,7 @@ using System;
 
 using Empiria.Contacts;
 
+
 namespace Empiria.Land.Registration {
 
   /// <summary>Provides methods to check the integrity of recording documents and their processes.</summary>
@@ -22,7 +23,6 @@ namespace Empiria.Land.Registration {
 
     public LandRecordValidator(LandRecord landRecord) {
       Assertion.Require(landRecord, nameof(landRecord));
-      // Assertion.Require(!landRecord.IsEmptyInstance, "LandRecord can't be the empty instance.");
 
       _landRecord = landRecord;
     }
@@ -33,13 +33,12 @@ namespace Empiria.Land.Registration {
 
 
     public void AssertCanBeClosed() {
-      if (!_landRecord.Security.IsReadyToClose()) {
-        Assertion.RequireFail("El usuario no tiene permisos para cerrar la inscripción o ésta no tiene un estado válido.");
-      }
+        Assertion.Require(_landRecord.Security.IsReadyToClose(),
+                  "La persona usuaria no tiene permisos para cerrar la inscripción " +
+                  "o ésta no tiene un estado válido.");
 
-      //this.AssertGraceDaysForEdition();
-
-      Assertion.Require(_landRecord.RecordingActs.Count > 0, "La inscripción no tiene actos jurídicos.");
+      Assertion.Require(_landRecord.RecordingActs.Count > 0,
+                  "La inscripción no tiene actos jurídicos.");
 
       foreach (var recordingAct in _landRecord.RecordingActs) {
         recordingAct.Validator.AssertCanBeClosed();
@@ -48,11 +47,14 @@ namespace Empiria.Land.Registration {
 
 
     public void AssertCanBeOpened() {
-      if (!_landRecord.Security.IsReadyToOpen()) {
-        Assertion.RequireFail("El usuario no tiene permisos para abrir esta inscripción.");
-      }
+      Assertion.Require(!_landRecord.IsEmptyInstance,
+                        "Land record empty intance can't be opened.");
 
-      //this.AssertGraceDaysForEdition();
+      Assertion.Require(_landRecord.IsClosed,
+                        "This land record is already opened.");
+
+      Assertion.Require(LRSWorkflowRules.CanEditLandRecord(_landRecord),
+                  "La persona usuaria no tiene permisos para abrir esta inscripción.");
 
       foreach (var recordingAct in _landRecord.RecordingActs) {
         recordingAct.Validator.AssertCanBeOpened();
@@ -131,7 +133,15 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public void AssertCanRemoveManualSign() {
+    internal void AssertCanRemoveElectronicSign() {
+      Assertion.Require(_landRecord.SecurityData.IsUnsigned ||
+                        _landRecord.SecurityData.SignType != SignType.Electronic,
+          "Esta inscripción fue firmada electrónicamente. " +
+          "Para poder abrirla se necesita solicitar que se revoque la firma electrónica.");
+    }
+
+
+    internal void AssertCanRemoveManualSign() {
       Assertion.Require(_landRecord.IsClosed,
           "No se puede desfirmar una inscripción que no está cerrada." + LandRecordDescriptionMessage());
 
@@ -201,6 +211,7 @@ namespace Empiria.Land.Registration {
     private string LandRecordDescriptionMessage() {
       return $" Trámite {_landRecord.Transaction.UID}. Inscripción: {_landRecord.UID}.";
     }
+
 
     #endregion Helpers
 

@@ -75,20 +75,6 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public bool IsReadyToOpen() {
-      if (this.LandRecord.IsEmptyInstance) {
-        return false;
-      }
-      if (!this.LandRecord.IsClosed) {
-        return false;
-      }
-      if (this.LandRecord.SecurityData.IsSigned) {
-        return false;
-      }
-      return LRSWorkflowRules.CanEditLandRecord(this.LandRecord);
-    }
-
-
     public void AssertCanBeClosed() {
       _landRecordValidator.AssertCanBeClosed();
     }
@@ -134,10 +120,14 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public void RemoveManualSign() {
-      _landRecordValidator.AssertCanRemoveManualSign();
+    public void RemoveSign() {
+      if (this.LandRecord.SecurityData.SignType == SignType.Manual) {
+        _landRecordValidator.AssertCanRemoveManualSign();
+      } else {
+        _landRecordValidator.AssertCanRemoveElectronicSign();
+      }
 
-      this.LandRecord.SecurityData.RemoveManualSignData();
+      this.LandRecord.SecurityData.RemoveSignData();
 
       LandRecordsData.SaveSecurityData(this.LandRecord);
     }

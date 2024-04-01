@@ -204,14 +204,12 @@ namespace Empiria.Land.Registration {
 
       var currentSigner = ExecutionServer.CurrentContact as Person;
 
-      if (this.SignedBy.Distinct(currentSigner)) {
-        this.SignedBy = currentSigner;
-        this.SignedByJobTitle = currentSigner.JobTitle;
-      }
+      this.SignedBy = currentSigner;
+      this.SignedByJobTitle = currentSigner.JobTitle;
     }
 
 
-    internal void RemoveManualSignData() {
+    internal void RemoveSignData() {
       this.ExtData = new JsonObject();
 
       this.SignedBy = Person.Empty;

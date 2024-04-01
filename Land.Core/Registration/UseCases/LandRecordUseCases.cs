@@ -72,14 +72,9 @@ namespace Empiria.Land.Registration.UseCases {
 
       LandRecord landRecord = LandRecord.ParseGuid(landRecordUID);
 
-      Assertion.Require(landRecord.SecurityData.IsUnsigned ||
-                        landRecord.SecurityData.SignType != SignType.Electronic,
-                        "Esta inscripción fue firmada electrónicamente. " +
-                        "Para poder abrirla, se necesita solicitar que se revoque la firma electrónica.");
+      landRecord.Security.AssertCanBeOpened();
 
-      if (landRecord.SecurityData.SignType != SignType.Electronic) {
-        landRecord.Security.RemoveManualSign();
-      }
+      landRecord.Security.RemoveSign();
 
       landRecord.Open();
 
