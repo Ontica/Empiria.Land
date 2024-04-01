@@ -305,7 +305,7 @@ namespace Empiria.Land.Registration {
       this.Security.AssertCanBeClosed();
 
       if (!this.IsHistoricRecord) {
-        this.AuthorizationTime = DateTime.Now;
+        this.AuthorizationTime = EmpiriaDateTime.NowWithCentiseconds;
         this.AuthorizedBy = ExecutionServer.CurrentContact as Person;
       }
 
