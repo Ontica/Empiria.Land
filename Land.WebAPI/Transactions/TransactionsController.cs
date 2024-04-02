@@ -71,9 +71,9 @@ namespace Empiria.Land.Transactions.WebApi {
     }
 
 
-    [HttpGet]
-    [Route("v5/land/transactions")]
-    public CollectionModel SearchTransactions([FromUri] TransactionsQuery query) {
+    [HttpPost]
+    [Route("v5/land/transactions/search")]
+    public CollectionModel SearchTransactions([FromBody] TransactionsQuery query) {
 
       Assertion.Require(query, nameof(query));
 
