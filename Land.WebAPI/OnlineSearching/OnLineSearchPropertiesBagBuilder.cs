@@ -211,7 +211,7 @@ namespace Empiria.Land.WebApi {
 
         if (recordingAct.OperationAmount != 0) {
           text += $"<label class='small-text'>Monto de la operación:</label> " +
-                  $"{recordingAct.OperationAmount.ToString("C2")}<br/>";
+                  $"{recordingAct.OperationCurrency.Format(recordingAct.OperationAmount)}<br/>";
         }
 
         var title = "<span class='bold-text'>" +
@@ -543,7 +543,7 @@ namespace Empiria.Land.WebApi {
                                 "</span><br/>";
             if (documentActs[i].OperationAmount != 0) {
               documentActsText += $"<label class='small-text left-indented'>Monto de la operación:</label> " +
-                                  $"{documentActs[i].OperationAmount.ToString("C2")}<br/>";
+                                  $"{documentActs[i].OperationCurrency.Format(documentActs[i].OperationAmount)}<br/>";
             }
           }
 

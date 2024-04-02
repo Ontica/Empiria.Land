@@ -116,7 +116,7 @@ namespace Empiria.Land.Pages {
           amendedActName += $" por {amendedAct.OperationAmount.ToString("C2")} {amendedAct.OperationCurrency.Name}, ";
         }
 
-        var legend = amendedAct.RecordingActType.FemaleGenre ? "la cual está inscrito" : "el cual está inscrito";
+        var legend = amendedAct.RecordingActType.FemaleGenre ? "la cual está inscrita" : "el cual está inscrito";
 
         if (amendedAct.BookEntry.IsEmptyInstance) {
           x = x.Replace("{AMENDMENT.ACT.RECORDING}",
@@ -471,7 +471,7 @@ namespace Empiria.Land.Pages {
       }
 
       if (_recordingAct.OperationAmount != 0m) {
-        temp += $" por {_recordingAct.OperationAmount.ToString("C2")} {_recordingAct.OperationCurrency.Name}, ";
+        temp += $" por {_recordingAct.OperationCurrency.Format(_recordingAct.OperationAmount)}, ";
       }
 
       return temp;
