@@ -19,9 +19,9 @@ namespace Empiria.Land.ESign.Adapters {
   /// <summary>Query payload used for electronic signs requests.</summary>
   public class ESignRequestsQuery {
 
-    public int RecorderOfficeId {
+    public string RecorderOfficeUID {
       get; set;
-    } = -1;
+    } = string.Empty;
 
 
     public SignStatus Status {
@@ -64,7 +64,6 @@ namespace Empiria.Land.ESign.Adapters {
 
     static internal void EnsureIsValid(this ESignRequestsQuery query) {
       Assertion.Require(query.Status != SignStatus.Undefined, $"Undefined status value.");
-      Assertion.Require(query.RecorderOfficeId > 0, $"Undefined recorder office.");
 
       query.Keywords = query.Keywords ?? String.Empty;
       query.OrderBy = query.OrderBy ?? "TransactionId DESC";
@@ -73,7 +72,11 @@ namespace Empiria.Land.ESign.Adapters {
     }
 
     private static RecorderOffice GetRecorderOffice(this ESignRequestsQuery query) {
-      return RecorderOffice.Parse(query.RecorderOfficeId);
+      if (!string.IsNullOrWhiteSpace(query.RecorderOfficeUID)) {
+        return RecorderOffice.Parse(query.RecorderOfficeUID);
+      } else {
+        return Permissions.GetUserDefaultRecorderOffice();
+      }
     }
 
     static internal string MapToFilterString(this ESignRequestsQuery query) {

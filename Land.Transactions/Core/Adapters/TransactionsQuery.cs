@@ -17,10 +17,10 @@ namespace Empiria.Land.Transactions {
   /// <summary>Query payload used for transactions searching.</summary>
   public class TransactionsQuery {
 
-    public int RecorderOfficeId {
+    public string RecorderOfficeUID {
       get;
       set;
-    } = -1;
+    } = string.Empty;
 
 
     public TransactionStage Stage {
@@ -75,7 +75,7 @@ namespace Empiria.Land.Transactions {
     }
 
     static internal string MapToFilterString(this TransactionsQuery query) {
-      string recorderOfficeFilter = BuildRecorderOfficeFilter(query.RecorderOfficeId);
+      string recorderOfficeFilter = BuildRecorderOfficeFilter(query.RecorderOfficeUID);
       string stageStatusFilter = BuildStageStatusFilter(query.Stage, query.Status);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
 
@@ -117,8 +117,14 @@ namespace Empiria.Land.Transactions {
     }
 
 
-    static private string BuildRecorderOfficeFilter(int recorderOfficeId) {
-      var recorderOffice = RecorderOffice.Parse(recorderOfficeId);
+    static private string BuildRecorderOfficeFilter(string recorderOfficeUID) {
+      RecorderOffice recorderOffice;
+
+      if (!string.IsNullOrWhiteSpace(recorderOfficeUID)) {
+        recorderOffice = RecorderOffice.Parse(recorderOfficeUID);
+      } else {
+        recorderOffice = RecorderOffice.Empty;
+      }
 
       bool hasPermission = Permissions.HasPermission(recorderOffice);
 
