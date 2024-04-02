@@ -221,7 +221,7 @@ namespace Empiria.Land.Pages {
 
       foreach (Contact official in recordingOfficials) {
         if (temp.Length != 0) {
-          temp += " ";
+          temp += ", ";
         }
         temp += official.Initials;
       }

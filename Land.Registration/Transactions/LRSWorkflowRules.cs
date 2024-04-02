@@ -139,6 +139,7 @@ namespace Empiria.Land.Registration.Transactions {
       }
 
       if (transaction.Workflow.CurrentStatus == TransactionStatus.Recording ||
+          transaction.Workflow.CurrentStatus == TransactionStatus.Revision ||
           transaction.Workflow.CurrentStatus == TransactionStatus.Elaboration ||
           transaction.Workflow.CurrentStatus == TransactionStatus.Juridic) {
         return true;

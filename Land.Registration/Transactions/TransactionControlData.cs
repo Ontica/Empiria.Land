@@ -73,7 +73,8 @@ namespace Empiria.Land.Transactions {
         }
 
         if (!IsTransactionInStatus(TransactionStatus.Elaboration,
-                                   TransactionStatus.Recording)) {
+                                   TransactionStatus.Recording,
+                                   TransactionStatus.Revision)) {
           return false;
         }
 
@@ -111,7 +112,7 @@ namespace Empiria.Land.Transactions {
           return false;
         }
 
-        if (!IsTransactionInStatus(TransactionStatus.Recording)) {
+        if (!IsTransactionInStatus(TransactionStatus.Recording, TransactionStatus.Revision)) {
           return false;
         }
 

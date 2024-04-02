@@ -342,11 +342,17 @@ namespace Empiria.Land.Registration {
       var recordingOfficials = new List<Contact>();
 
       var recordingActs = this.RecordingActs;
+
       for (int i = 0; i < recordingActs.Count; i++) {
         if (!recordingOfficials.Contains(recordingActs[i].RegisteredBy)) {
           recordingOfficials.Add(recordingActs[i].RegisteredBy);
         }
       }
+
+      if (this.IsClosed && !recordingOfficials.Contains(AuthorizedBy)) {
+        recordingOfficials.Add(AuthorizedBy);
+      }
+
       return recordingOfficials;
     }
 
