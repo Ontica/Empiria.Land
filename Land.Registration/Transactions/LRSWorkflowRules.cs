@@ -78,7 +78,6 @@ namespace Empiria.Land.Registration.Transactions {
 
       AssertRecordingActsPrelation(transaction.LandRecord);
       AssertGraceDaysForReentry(transaction);
-      AssertHasDigitalizedDocument(transaction);
     }
 
 
@@ -329,32 +328,6 @@ namespace Empiria.Land.Registration.Transactions {
                               "a partir de su fecha de presentación original, de su fecha de registro, o bien, " +
                               "de la fecha del último reingreso.\n\n" +
                               "En su lugar se debe optar por registrar un nuevo trámite.");
-      }
-    }
-
-
-    static private void AssertHasDigitalizedDocument(LRSTransaction transaction) {
-      if (!IsDigitalizable(transaction)) {
-        return;
-      }
-
-      if (transaction.LandRecord.IsEmptyInstance) {
-        return;
-      }
-
-      if (transaction.LandRecord.ImagingControlID.Length != 0) {
-        return;
-      }
-
-      int graceDaysForDigitalization = ConfigurationData.Get<int>("GraceDaysForDigitalization", 365);
-
-      DateTime lastDate = transaction.LandRecord.AuthorizationTime;
-
-      if (lastDate.AddDays(graceDaysForDigitalization) <= DateTime.Now) {
-        Assertion.RequireFail("No es posible reingresar este trámite debido a que el documento " +
-                              "que se registró aún no ha sido digitalizado y ya " +
-                              $"transcurrieron más de {graceDaysForDigitalization} días desde que éste se cerró.\n\n" +
-                              "Favor de preguntar en la mesa de armado acerca de este documento.");
       }
     }
 

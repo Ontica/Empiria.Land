@@ -11,6 +11,8 @@ using System;
 
 using Empiria.Contacts;
 
+using Empiria.Land.Media;
+
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Transactions.Workflow {
@@ -61,8 +63,15 @@ namespace Empiria.Land.Transactions.Workflow {
                                 $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
         }
       }
-    }
 
+      if ((nextStatus == TransactionStatus.ToDeliver || nextStatus == TransactionStatus.Delivered) &&
+          !transaction.LandRecord.IsEmptyInstance) {
+        Assertion.Require(LandMediaReadServices.TransactionFiles(transaction).Count > 0,
+                          $"El trámite {transaction.UID} tiene registrada una inscripción pero " +
+                          "no se ha digitalizado el documento correspondiente. " +
+                          $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
+      }
+    }
 
     internal void AssertCanTake(LRSTransaction transaction, Contact user) {
       var task = transaction.Workflow.GetCurrentTask();
