@@ -22,9 +22,9 @@ namespace Empiria.Land.SearchServices {
     } = RecordableSubjectType.None;
 
 
-    public RecorderOffice RecorderOffice {
+    public string RecorderOfficeUID {
       get; set;
-    } = RecorderOffice.Empty;
+    } = string.Empty;
 
 
     public string Keywords {
@@ -61,12 +61,11 @@ namespace Empiria.Land.SearchServices {
       query.OrderBy = query.OrderBy ?? "PropertyUID";
       query.PageSize = query.PageSize <= 0 ? 50 : query.PageSize;
       query.Page = query.Page <= 0 ? 1 : query.Page;
-      query.RecorderOffice = GetRecorderOffice(query.RecorderOffice);
     }
 
 
     static internal string MapToFilterString(this RecordableSubjectsQuery query) {
-      string recorderOfficeFilter = BuildRecorderOfficeFilter(query.RecorderOffice);
+      string recorderOfficeFilter = BuildRecorderOfficeFilter(query.RecorderOfficeUID);
       string typeFilter = BuildRecordableSubjectTypeFilter(query.Type);
 
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
@@ -94,9 +93,13 @@ namespace Empiria.Land.SearchServices {
     }
 
 
-    static private string BuildRecorderOfficeFilter(RecorderOffice recorderOffice) {
-      if (recorderOffice.IsEmptyInstance) {
-        return string.Empty;
+    static private string BuildRecorderOfficeFilter(string recorderOfficeUID) {
+      RecorderOffice recorderOffice;
+
+      if (!string.IsNullOrWhiteSpace(recorderOfficeUID)) {
+        recorderOffice = RecorderOffice.Parse(recorderOfficeUID);
+      } else {
+        recorderOffice = Permissions.GetUserDefaultRecorderOffice();
       }
 
       return $"(RecorderOfficeId = {recorderOffice.Id} OR PropertyId = -2)";
@@ -123,15 +126,6 @@ namespace Empiria.Land.SearchServices {
 
         return SearchExpression.ParseAndLikeKeywords("PropertyKeywords", keywords);
       }
-    }
-
-
-    static private RecorderOffice GetRecorderOffice(RecorderOffice recorderOffice) {
-      if (!recorderOffice.IsEmptyInstance) {
-        return recorderOffice;
-      }
-
-      return Permissions.GetUserDefaultRecorderOffice();
     }
 
     #endregion Helpers
