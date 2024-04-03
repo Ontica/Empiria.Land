@@ -36,7 +36,7 @@ namespace Empiria.Land.Transactions.UseCases {
     #region Use cases
 
     public TransactionDto CloneTransaction(string baseTransactionUID) {
-      Assertion.Require(baseTransactionUID, "baseTransactionUID");
+      Assertion.Require(baseTransactionUID, nameof(baseTransactionUID));
 
       var transaction = LRSTransaction.Parse(baseTransactionUID);
 
@@ -49,7 +49,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public TransactionDto CreateTransaction(TransactionFields fields) {
-      Assertion.Require(fields, "fields");
+      Assertion.Require(fields, nameof(fields));
 
       var transaction = new LRSTransaction(fields);
 
@@ -67,7 +67,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public void DeleteTransaction(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
@@ -79,7 +79,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public bool ExistsTransactionID(string transactionID) {
-      Assertion.Require(transactionID, "transactionID");
+      Assertion.Require(transactionID, nameof(transactionID));
 
       var transaction = LRSTransaction.TryParse(transactionID);
 
@@ -88,7 +88,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public TransactionDto GetTransaction(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
@@ -96,13 +96,14 @@ namespace Empiria.Land.Transactions.UseCases {
     }
 
 
-    public TransactionDescriptor SearchTransaction(string searchUID) {
-      Assertion.Require(searchUID, "searchUID");
+    public TransactionDescriptor SearchTransaction(string transactionUIDOrNumber) {
+      Assertion.Require(transactionUIDOrNumber, nameof(transactionUIDOrNumber));
 
-      var transaction = LRSTransaction.TryParseWithAnyKey(searchUID);
+      var transaction = LRSTransaction.TryParseWithAnyKey(transactionUIDOrNumber);
 
       if (transaction == null) {
-        throw new ResourceNotFoundException("Transaction.NotFound", $"No encontré un trámite con clave '{searchUID}'.");
+        throw new ResourceNotFoundException("Transaction.NotFound",
+                                            $"No encontré un trámite con clave '{transactionUIDOrNumber}'.");
       }
 
       return TransactionMapper.MapToDescriptor(transaction);
@@ -124,7 +125,7 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public async Task<TransactionDto> SubmitTransaction(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
@@ -135,8 +136,8 @@ namespace Empiria.Land.Transactions.UseCases {
 
 
     public TransactionDto UpdateTransaction(string transactionUID, TransactionFields fields) {
-      Assertion.Require(transactionUID, "transactionUID");
-      Assertion.Require(fields, "fields");
+      Assertion.Require(transactionUID, nameof(transactionUID));
+      Assertion.Require(fields, nameof(fields));
 
       var transaction = LRSTransaction.Parse(transactionUID);
 

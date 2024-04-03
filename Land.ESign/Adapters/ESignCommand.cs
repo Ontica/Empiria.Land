@@ -13,7 +13,6 @@ using Empiria.Security;
 
 using Empiria.Land.Registration.Transactions;
 
-
 namespace Empiria.Land.ESign.Adapters {
 
   /// <summary>Describes a sign task or command type.</summary>

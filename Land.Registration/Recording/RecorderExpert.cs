@@ -442,7 +442,6 @@ namespace Empiria.Land.Registration {
     private RealEstate[] GetRealEstates() {
       if (this.CreateNewRecordableSubject) {
         var data = new RealEstateExtData() { CadastralKey = Task.CadastralKey };
-
         return new RealEstate[] { new RealEstate(data) };
       }
 

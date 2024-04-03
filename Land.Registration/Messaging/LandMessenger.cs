@@ -36,9 +36,7 @@ namespace Empiria.Land.Messaging {
 
     #endregion Fields
 
-
     #region Notification and subscription methods
-
 
     /// <summary>Notifies messenger about a workflow status change of a land transaction.</summary>
     static internal void Notify(LRSTransaction transaction,

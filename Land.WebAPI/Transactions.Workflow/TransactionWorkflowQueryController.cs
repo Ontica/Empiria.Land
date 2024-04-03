@@ -38,6 +38,7 @@ namespace Empiria.Land.Transactions.Workflow.WebApi {
     [Route("v5/land/workflow/applicable-commands")]
     [Route("v5/land/workflow/applicable-command-types")]
     public CollectionModel GetApplicableCommandTypesForMultipleTransactuions([FromBody] string[] transactions) {
+
       base.RequireBody(transactions);
 
       using (var workflow = TransactionWorkflowQueryUseCases.UseCaseInteractor()) {

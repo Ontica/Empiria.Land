@@ -52,7 +52,6 @@ namespace Empiria.Land.ESign {
 
     #region Methods
 
-
     internal void RevokeLandRecordSign(LandRecord record) {
       var validator = new LandRecordValidator(record);
 

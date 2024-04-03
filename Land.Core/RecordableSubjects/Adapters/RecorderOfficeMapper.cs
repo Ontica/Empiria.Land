@@ -39,14 +39,16 @@ namespace Empiria.Land.RecordableSubjects.Adapters {
     private static FixedList<NamedEntityDto> MapMunicipalities(RecorderOffice recorderOffice) {
       var municipalities = recorderOffice.GetMunicipalities();
 
-      return new FixedList<NamedEntityDto>(municipalities.Select(x => new NamedEntityDto(x.UID, x.Name)));
+      return municipalities.Select(x => new NamedEntityDto(x.UID, x.Name))
+                           .ToFixedList();
     }
 
 
     private static FixedList<NamedEntityDto> MapRecordingSections(RecorderOffice recorderOffice) {
       var recordingSections = recorderOffice.GetRecordingSections();
 
-      return new FixedList<NamedEntityDto>(recordingSections.Select(x => new NamedEntityDto(x.UID, x.Name)));
+      return recordingSections.Select(x => new NamedEntityDto(x.UID, x.Name))
+                              .ToFixedList();
     }
 
     #endregion Helper methods

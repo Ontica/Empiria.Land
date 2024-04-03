@@ -110,9 +110,6 @@ namespace Empiria.Land.Pages {
 		protected string GetPrelationText() {
 			const string t = "Presentado para su examen y registro en	{CITY}, el <b>{DATE} a las {TIME} horas</b>, bajo el número de trámite <b>{NUMBER}</b> - Conste";
 
-
-      // DateTime presentationTime = transaction.LastReentryTime == ExecutionServer.DateMaxValue ? transaction.PresentationTime : transaction.LastReentryTime;
-
       DateTime presentationTime = transaction.PresentationTime;
 
       string x = t.Replace("{DATE}", presentationTime.ToString(@"dd \de MMMM \de yyyy"));
