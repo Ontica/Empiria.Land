@@ -57,20 +57,6 @@ namespace Empiria.Land.Registration.WebApi {
       }
     }
 
-
-    [HttpGet]
-    [AllowAnonymous]
-    [Route("v5/land/registration/refresh-security-data")]
-    public NoDataModel RefreshLandRecordsSecurityData() {
-
-      using (var usecases = LandRecordUseCases.UseCaseInteractor()) {
-
-        usecases.RefreshLandRecordsHashes();
-
-        return new NoDataModel(this.Request);
-      }
-    }
-
     #endregion Web Apis
 
   }  // class LandRecordController

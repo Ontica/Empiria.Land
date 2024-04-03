@@ -81,16 +81,6 @@ namespace Empiria.Land.Registration.UseCases {
       return LandRecordMapper.Map(landRecord);
     }
 
-
-    //ToDo: Remove this method after installation
-    public void RefreshLandRecordsHashes() {
-      var records = BaseObject.GetList<LandRecord>("LandRecordDIF = ''");
-
-      foreach (var record in records) {
-        record.Security.RefreshDIFHash();
-      }
-    }
-
     #endregion Use cases
 
   }  // class LandRecordUseCases

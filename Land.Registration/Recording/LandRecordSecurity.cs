@@ -96,12 +96,6 @@ namespace Empiria.Land.Registration {
     }
 
 
-    // Remove after installation
-    public void RefreshDIFHash() {
-      LandRecordsData.RefreshDIFHash(this.LandRecord);
-    }
-
-
     public void ManualSign() {
       _landRecordValidator.AssertCanManualSign();
 
