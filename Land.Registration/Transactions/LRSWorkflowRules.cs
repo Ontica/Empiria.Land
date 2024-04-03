@@ -35,14 +35,15 @@ namespace Empiria.Land.Registration.Transactions {
                         $"El trámite {transaction.UID} no puede ser cerrado, " +
                         $"debido a que su estado actual es {currentStatus.GetStatusName()}.");
 
-      if (closeStatus == TransactionStatus.ToDeliver) {
+      if (closeStatus == TransactionStatus.ToDeliver || closeStatus == TransactionStatus.Delivered) {
         AssertCanBeDelivered(transaction);
-      } else if (closeStatus == TransactionStatus.ToReturn) {
+      } else if (closeStatus == TransactionStatus.ToReturn || closeStatus == TransactionStatus.Returned) {
         AssertCanBeReturned(transaction);
+      } else if (closeStatus == TransactionStatus.Archived) {
+        AssertCanBeDelivered(transaction);
       } else {
         Assertion.RequireFail($"Invalid close status {closeStatus.GetStatusName()}.");
       }
-
     }
 
 
@@ -345,7 +346,7 @@ namespace Empiria.Land.Registration.Transactions {
         return;
       }
 
-      int graceDaysForDigitalization = ConfigurationData.Get<int>("GraceDaysForDigitalization", int.MaxValue);
+      int graceDaysForDigitalization = ConfigurationData.Get<int>("GraceDaysForDigitalization", 365);
 
       DateTime lastDate = transaction.LandRecord.AuthorizationTime;
 
