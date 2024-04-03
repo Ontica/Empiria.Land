@@ -27,6 +27,60 @@ namespace Empiria.Land.Transactions.Workflow {
       _rules = rules;
     }
 
+    #region Methods
+
+    internal void AssertCanSetNextStatus(LRSTransaction transaction,
+                                         TransactionStatus nextStatus,
+                                         Contact user) {
+      var task = transaction.Workflow.GetCurrentTask();
+
+      var allNextStatusList = _rules.NextStatusList(transaction);
+
+      Assertion.Require(allNextStatusList.Contains(nextStatus),
+                       $"No es posible mover el trámite '{transaction.UID}' a " +
+                       $"'{nextStatus.GetStatusName()}', " +
+                       $"debido a que se encuentra en '{task.CurrentStatusName}'.");
+
+      if (nextStatus == TransactionStatus.OnSign || nextStatus == TransactionStatus.Revision ||
+          nextStatus == TransactionStatus.Archived || nextStatus == TransactionStatus.ToDeliver) {
+        if (!transaction.LandRecord.IsEmptyInstance && !transaction.LandRecord.IsClosed) {
+          Assertion.RequireFail($"La inscripción del trámite {transaction.UID} no ha sido cerrada. " +
+                                $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
+        }
+      }
+
+      if (nextStatus == TransactionStatus.ToDeliver) {
+        if (!transaction.LandRecord.IsEmptyInstance && transaction.LandRecord.SecurityData.IsUnsigned) {
+          Assertion.RequireFail($"La inscripción del trámite {transaction.UID} no ha sido firmada. " +
+                                $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
+        }
+      }
+      if (nextStatus == TransactionStatus.ToReturn && !transaction.LandRecord.IsEmptyInstance) {
+        if (transaction.LandRecord.IsClosed || transaction.LandRecord.RecordingActs.Count > 0) {
+          Assertion.RequireFail($"El trámite {transaction.UID} tiene registrada una inscripción con uno o más actos jurídicos. " +
+                                $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
+        }
+      }
+    }
+
+
+    internal void AssertCanTake(LRSTransaction transaction, Contact user) {
+      var task = transaction.Workflow.GetCurrentTask();
+
+      if (task.NextStatus == TransactionStatus.EndPoint) {
+        Assertion.RequireFail($"El trámite '{transaction.UID}' todavía no está listo para ser recibido.");
+      }
+
+      if (task.Responsible.Equals(user) && task.CurrentStatus != TransactionStatus.Reentry) {
+        Assertion.RequireFail($"El trámite '{transaction.UID}' todavía no está listo para ser recibido.");
+      }
+
+      if (!_rules.CanReceiveFor(user, task.NextStatus)) {
+        Assertion.RequireFail($"La cuenta de usuario no tiene permisos para recibir el trámite " +
+                              $"'{transaction.UID}' en el estado '{task.NextStatusName}'.");
+      }
+    }
+
 
     internal void AssertExecution(WorkflowCommand command, Contact user) {
       Assertion.Require(command, "command");
@@ -45,11 +99,11 @@ namespace Empiria.Land.Transactions.Workflow {
                                   Contact user) {
       switch (command.Type) {
         case WorkflowCommandType.Take:
-          this.CanTake(transaction, user);
+          this.AssertCanTake(transaction, user);
           break;
 
         case WorkflowCommandType.SetNextStatus:
-          this.CanSetNextStatus(transaction, command.Payload.NextStatus, user);
+          this.AssertCanSetNextStatus(transaction, command.Payload.NextStatus, user);
           break;
 
         default:
@@ -57,37 +111,7 @@ namespace Empiria.Land.Transactions.Workflow {
       }
     }
 
-
-    internal void CanTake(LRSTransaction transaction, Contact user) {
-      var task = transaction.Workflow.GetCurrentTask();
-
-      if (task.NextStatus == TransactionStatus.EndPoint) {
-        Assertion.RequireFail($"El trámite '{transaction.UID}' todavía no está listo para ser recibido.");
-      }
-
-      if (task.Responsible.Equals(user) && task.CurrentStatus != TransactionStatus.Reentry) {
-        Assertion.RequireFail($"El trámite '{transaction.UID}' todavía no está listo para ser recibido.");
-      }
-
-      if (!_rules.CanReceiveFor(user, task.NextStatus)) {
-        Assertion.RequireFail($"La cuenta de usuario no tiene permisos para recibir el trámite " +
-                              $"'{transaction.UID}' en el estado '{task.NextStatusName}'.");
-      }
-    }
-
-
-    internal void CanSetNextStatus(LRSTransaction transaction,
-                                   TransactionStatus nextStatus,
-                                   Contact user) {
-      var task = transaction.Workflow.GetCurrentTask();
-
-      var allNextStatusList = _rules.NextStatusList(transaction);
-
-      Assertion.Require(allNextStatusList.Contains(nextStatus),
-                       $"No es posible mover el trámite '{transaction.UID}' a " +
-                       $"'{nextStatus.GetStatusName()}', " +
-                       $"debido a que se encuentra en '{task.CurrentStatusName}'.");
-    }
+    #endregion Methods
 
   }  // class WorkflowAssertions
 
