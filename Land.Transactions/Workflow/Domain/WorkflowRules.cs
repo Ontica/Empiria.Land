@@ -328,7 +328,9 @@ namespace Empiria.Land.Transactions.Workflow {
       }
 
       if (AnyOf(currentStatus, TransactionStatus.ToDeliver, TransactionStatus.ToReturn)) {
-        if (nextStatus == TransactionStatus.EndPoint) {
+        if (nextStatus == TransactionStatus.EndPoint ||
+            nextStatus == TransactionStatus.Delivered ||
+            nextStatus == TransactionStatus.Returned) {
           return BuildCommandTypeList(WorkflowCommandType.Finish,
                                       WorkflowCommandType.SetNextStatus);
         } else {
@@ -352,13 +354,16 @@ namespace Empiria.Land.Transactions.Workflow {
 
       if (currentStatus == TransactionStatus.OnSign) {
         return BuildCommandTypeList(WorkflowCommandType.Take,
+                                    WorkflowCommandType.ReturnToMe,
                                     WorkflowCommandType.Sign,
                                     WorkflowCommandType.SetNextStatus);
       }
 
       if (currentStatus == TransactionStatus.Revision) {
         return BuildCommandTypeList(WorkflowCommandType.Take,
-                                    WorkflowCommandType.SetNextStatus);
+                                    WorkflowCommandType.ReturnToMe,
+                                    WorkflowCommandType.SetNextStatus,
+                                    WorkflowCommandType.AssignTo);
       }
 
       if (currentStatus == TransactionStatus.Received) {
