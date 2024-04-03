@@ -210,6 +210,9 @@ namespace Empiria.Land.Registration {
     #region Public methods
 
     public override void AssertCanBeClosed() {
+      if (this.IsSpecialCase) {
+        return;
+      }
       Assertion.Require(this.Kind,
           $"Se requiere proporcionar la información del predio con folio electrónico {this.UID}.");
       Assertion.Require(!this.RecorderOffice.IsEmptyInstance,

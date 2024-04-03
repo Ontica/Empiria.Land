@@ -243,7 +243,7 @@ namespace Empiria.Land.Registration {
       var tract = _recordingAct.Resource.Tract.GetRecordingActs();
 
       var trappedAct = tract.Find((x) => x.LandRecord.PresentationTime < _recordingAct.LandRecord.PresentationTime &&
-                                  !x.LandRecord.IsClosed && !x.LandRecord.IsHistoricRecord);
+                                  !x.LandRecord.IsClosed && !x.LandRecord.IsHistoricRecord && x.Resource.Id != -2);
 
       if (trappedAct == null) {
         return;
