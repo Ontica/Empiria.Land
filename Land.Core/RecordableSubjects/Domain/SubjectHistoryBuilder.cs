@@ -104,7 +104,7 @@ namespace Empiria.Land.RecordableSubjects {
       temp = temp.Replace("{PARTIES}", BuildRecordingActParties(recordingAct));
 
       if (recordingAct.OperationAmount != 0) {
-        temp = temp.Replace("{AMOUNT}", $"Monto {recordingAct.OperationAmount.ToString("C2")}");
+        temp = temp.Replace("{AMOUNT}", $"Monto {recordingAct.OperationCurrency.Format(recordingAct.OperationAmount)}");
 
       } else if (recordingAct.RecordingActType.RecordingRule.EditOperationAmount &&
                  recordingAct.OperationAmount == 0) {
