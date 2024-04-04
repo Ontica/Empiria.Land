@@ -230,10 +230,6 @@
       <Project>{42b7d25b-356f-4e93-9f17-a2f9422c368d}</Project>
       <Name>Empiria.WebApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\land\Land.Registration\Empiria.Land.Registration.csproj">
-      <Project>{ea85313c-bbbb-4f31-b6b9-05bb79addff1}</Project>
-      <Name>Empiria.Land.Registration</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\onepoint\Core\Empiria.OnePoint.Core.csproj">
       <Project>{8a3ede10-60fc-4a8f-8aaf-03de1fb0b61b}</Project>
       <Name>Empiria.OnePoint.Core</Name>

@@ -58,7 +58,6 @@
     <PackageReference Include="Empiria.WebApi" Version="2.0.0" />
     <PackageReference Include="Empiria.WebApi.Client" Version="2.0.0" />
     <PackageReference Include="Empiria.Land.Core" Version="5.0.0" />
-    <PackageReference Include="Empiria.Land.Registration" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Providers" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Analytics" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Certificates" Version="5.0.0" />
@@ -71,7 +70,6 @@
     <ProjectReference Include="..\..\extensions\WebApi\Empiria.WebApi.csproj" />
     <ProjectReference Include="..\..\extensions\WebApi.Client\Empiria.WebApi.Client.csproj" />
     <ProjectReference Include="..\Land.Core\Empiria.Land.Core.csproj" />
-    <ProjectReference Include="..\Land.Registration\Empiria.Land.Registration.csproj" />
     <ProjectReference Include="..\Land.Providers\Empiria.Land.Providers.csproj" />
     <ProjectReference Include="..\Land.Analytics\Empiria.Land.Analytics.csproj" />
     <ProjectReference Include="..\Land.Certificates\Empiria.Land.Certificates.csproj" />

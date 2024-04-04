@@ -53,6 +53,10 @@
     <NoWarn />
     <WarningsAsErrors />
   </PropertyGroup>
+  <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
+    <PackageReference Include="Empiria.Services" Version="2.0.0" />
+    <PackageReference Include="Empiria.Land.Core" Version="5.0.0" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\extensions\Services\Empiria.Services.csproj" />
     <ProjectReference Include="..\Land.Core\Empiria.Land.Core.csproj" />
