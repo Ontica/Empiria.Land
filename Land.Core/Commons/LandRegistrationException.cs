@@ -61,7 +61,7 @@ namespace Empiria.Land.Registration {
     }
 
     static private string resourceBaseName =
-                    "Empiria.Land.Core.RootTypes.Commons.LandRegistrationExceptionMsg";
+                    "Empiria.Land.Core.Commons.LandRegistrationExceptionMsg";
 
     #region Constructors and parsers
 

@@ -74,7 +74,7 @@
     <ProjectReference Include="..\Land.Integration\Empiria.Land.Integration.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="RootTypes\Commons\LandRegistrationExceptionMsg.resx">
+    <EmbeddedResource Update="Commons\LandRegistrationExceptionMsg.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
