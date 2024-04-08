@@ -358,6 +358,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     #endregion Helpers
+
   }  // class LRSWorkflowRules
 
 }  // namespace Empiria.Land.Registration.Transactions
