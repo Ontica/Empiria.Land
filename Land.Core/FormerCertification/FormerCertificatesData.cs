@@ -14,6 +14,7 @@ using Empiria.Data;
 using Empiria.Land.Registration;
 using Empiria.Land.Certification;
 using Empiria.Land.Registration.Transactions;
+using Empiria.Contacts;
 
 namespace Empiria.Land.Data {
 
@@ -58,6 +59,53 @@ namespace Empiria.Land.Data {
 
 
     #endregion Methods
+
+
+    #region Former Digital Signature Methods
+
+    static internal bool IsSigned(IIdentifiable document) {
+      var sql = $"SELECT * " +
+                $"FROM vwLRSDocumentSign " +
+                $"WHERE DocumentNo = '{document.UID}' " +
+                $"AND SignStatus = 'S' AND DigitalSign <> ''";
+
+      return DataReader.Count(DataOperation.Parse(sql)) == 1;
+    }
+
+
+    static internal string GetDigitalSignature(IIdentifiable document) {
+      var sql = $"SELECT DigitalSign " +
+                $"FROM vwLRSDocumentSign " +
+                $"WHERE DocumentNo = '{document.UID}' " +
+                $"AND SignStatus = 'S' AND DigitalSign <> ''";
+
+      return DataReader.GetScalar<string>(DataOperation.Parse(sql),
+                                          "NO TIENE FIRMA ELECTRÓNICA.");
+    }
+
+
+    static internal Person GetDigitalSignatureSignedBy(IIdentifiable document) {
+      var sql = $"SELECT RequestedToId " +
+                $"FROM vwLRSDocumentSign " +
+                $"WHERE DocumentNo = '{document.UID}' " +
+                $"AND SignStatus = 'S' AND DigitalSign <> ''";
+
+      var signedById = DataReader.GetScalar<int>(DataOperation.Parse(sql), -1);
+
+      return Person.Parse(signedById);
+    }
+
+
+    static internal DateTime GetLastSignTimeForAllTransactionDocuments(LRSTransaction transaction) {
+      var sql = $"SELECT MAX(SignTime) " +
+                $"FROM vwLRSDocumentSign " +
+                $"WHERE TransactionNo = '{transaction.UID}' " +
+                $"AND SignStatus = 'S' AND DigitalSign <> ''";
+
+      return DataReader.GetScalar<DateTime>(DataOperation.Parse(sql));
+    }
+
+    #endregion Former Digital Signature Methods
 
   } // class FormerCertificatesData
 
