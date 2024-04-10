@@ -23,7 +23,7 @@ namespace Empiria.Land.Certificates {
 
   /// <summary>Partitioned type that represents a Land certificate.</summary>
   [PartitionedType(typeof(CertificateType))]
-  internal class Certificate : BaseObject, IProtected {
+  internal class Certificate : BaseObject, IResourceTractItem, IProtected {
 
     #region Constructors and parsers
 
@@ -68,7 +68,7 @@ namespace Empiria.Land.Certificates {
       }
     }
 
-    [DataField("CertificateNumber", IsOptional = false)]
+    [DataField("CertificateUID", IsOptional = false)]
     public string CertificateID {
       get;
       private set;
@@ -179,6 +179,15 @@ namespace Empiria.Land.Certificates {
     public CertificateStatus Status {
       get;
       private set;
+    }
+
+
+    public string TractPrelationStamp {
+      get {
+        return this.Transaction.PresentationTime.ToString("yyyyMMddTHH:mm@") +
+               this.IssueTime.ToString("yyyyMMddTHH:mm@") +
+               this.Id.ToString("000000000000");
+      }
     }
 
     #endregion Properties

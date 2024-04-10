@@ -30,7 +30,7 @@ namespace Empiria.Land.Certificates.Data {
 
     static internal Certificate TryGetCertificateWithID(string certificateID) {
       var sql = "SELECT * FROM LRSCertificates " +
-               $"WHERE CertificateNumber = '{certificateID}'";
+               $"WHERE CertificateUID = '{certificateID}'";
 
       var operation = DataOperation.Parse(sql);
 
@@ -43,7 +43,7 @@ namespace Empiria.Land.Certificates.Data {
       var op = DataOperation.Parse("writeLRSCertificate",
                   o.Id, o.UID, o.CertificateType.Id, o.CertificateID,
                   o.Transaction.Id, o.RecorderOffice.Id,
-                  o.OnRecordableSubject.Id, o.OnRecording.Id, o.OnOwnerName,
+                  o.OnRecordableSubject.Id, /* o.OnRecording.Id */ o.OnOwnerName,
                   o.Notes, o.ExtensionData.ToString(), o.AsText, o.Keywords,
                   o.IssueTime, o.IssuedBy.Id, (char) o.IssueMode,
                   o.PostedBy.Id, o.PostingTime, (char) o.Status,
