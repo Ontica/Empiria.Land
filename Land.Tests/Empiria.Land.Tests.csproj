@@ -75,7 +75,6 @@
     <PackageReference Include="Empiria.Land.Core" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Providers" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Analytics" Version="5.0.0" />
-    <PackageReference Include="Empiria.Land.Transactions" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.ESign" Version="5.0.0" />
     <PackageReference Include="SIT.Finanzas.Connector" Version="1.0.0" />
   </ItemGroup>
@@ -86,7 +85,6 @@
     <ProjectReference Include="..\Land.Core\Empiria.Land.Core.csproj" />
     <ProjectReference Include="..\Land.Providers\Empiria.Land.Providers.csproj" />
     <ProjectReference Include="..\Land.Analytics\Empiria.Land.Analytics.csproj" />
-    <ProjectReference Include="..\Land.Transactions\Empiria.Land.Transactions.csproj" />
     <ProjectReference Include="..\Land.ESign\Empiria.Land.ESign.csproj" />
     <ProjectReference Include="..\..\land.zacatecas\Integration\SIT.Finanzas\SIT.Finanzas.Connector.csproj" />
   </ItemGroup>

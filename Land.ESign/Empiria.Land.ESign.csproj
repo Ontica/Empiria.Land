@@ -56,13 +56,13 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Core" Version="7.0.0" />
     <PackageReference Include="Empiria.Services" Version="1.0.0" />
-    <PackageReference Include="Empiria.Land.Transactions" Version="5.0.0" />
+    <PackageReference Include="Empiria.Land.Core" Version="5.0.0" />
     <PackageReference Include="SeguriSign.Connector" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />
     <ProjectReference Include="..\..\extensions\Services\Empiria.Services.csproj" />
-    <ProjectReference Include="..\Land.Transactions\Empiria.Land.Transactions.csproj" />
+    <ProjectReference Include="..\Land.Core\Empiria.Land.Core.csproj" />
     <ProjectReference Include="..\..\land.zacatecas\Integration\SeguriSign.Connector\SeguriSign.Connector.csproj" />
   </ItemGroup>
 </Project>
