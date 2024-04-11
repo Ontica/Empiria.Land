@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificate Requests                       Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data Transfer Object                    *
+*  Module   : Land Certificates                          Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : CertificateRequestTypeDto                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : DTO with a certificate request type and its command definitions used for                       *
@@ -12,7 +12,7 @@ using System;
 
 using Empiria.Land.RecordableSubjects.Adapters;
 
-namespace Empiria.Land.Transactions.CertificateRequests {
+namespace Empiria.Land.Certificates.Adapters {
 
   /// <summary>DTO with a certificate request type and its command definitions used for
   /// request land certificates within a transaction context.</summary>
@@ -80,4 +80,4 @@ namespace Empiria.Land.Transactions.CertificateRequests {
 
   }  // class CertificateRequestCommandTypeRulesDto
 
-} // namespace Empiria.Land.Transactions.CertificateRequests
+} // namespace Empiria.Land.Certificates.Adapters

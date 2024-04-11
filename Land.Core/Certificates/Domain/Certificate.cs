@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificates Issuing                       Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Certificates.dll              Pattern   : Partitioned type                        *
+*  Module   : Land Certificates                          Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Partitioned type                        *
 *  Type     : Certificate                                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Partitioned type that represents a Land certificate.                                           *

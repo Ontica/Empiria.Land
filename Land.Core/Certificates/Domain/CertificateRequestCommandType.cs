@@ -1,20 +1,22 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificate Requests                       Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Extended enumeration                    *
+*  Module   : Land Certificates                          Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Extended enumeration                    *
 *  Type     : CertificateRequestCommandType              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Enumerates the commands used for request land certificates within a transction context.        *
+*  Summary  : Enumerates the commands used for request land certificates within a transaction context.       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Land.RecordableSubjects.Adapters;
 
-namespace Empiria.Land.Transactions.CertificateRequests {
+using Empiria.Land.Certificates.Adapters;
+
+namespace Empiria.Land.Certificates {
 
   /// <summary>Enumerates the commands used for request land certificates
-  /// within a transction context.</summary>
+  /// within a transaction context.</summary>
   public enum CertificateRequestCommandType {
 
     Undefined = 0,
@@ -94,4 +96,4 @@ namespace Empiria.Land.Transactions.CertificateRequests {
 
   }  // class CertificateRequestCommandTypeExtensions
 
-} // namespace Empiria.Land.Transactions.CertificateRequests
+} // namespace Empiria.Land.Certificates

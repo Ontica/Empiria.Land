@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificates Issuing                       Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Certificates.dll              Pattern   : Enumeration                             *
+*  Module   : Land Certificates                          Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Enumeration                             *
 *  Type     : CertificateIssueMode                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Enumerates the issuing mode of a certificate.                                                  *
@@ -20,4 +20,4 @@ namespace Empiria.Land.Certificates {
 
   }  // CertificateIssueMode
 
-} // namespace Empiria.Land.Certification
+} // namespace Empiria.Land.Certificates

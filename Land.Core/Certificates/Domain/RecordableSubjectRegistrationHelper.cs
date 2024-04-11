@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificate Requests                       Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Service provider                        *
+*  Module   : Land Certificates                          Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Service provider                        *
 *  Type     : RecordableSubjectRegistrationHelper        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Performs antecedent recordable subjects registration if needed by a CertificateRequestCommand. *
@@ -13,7 +13,9 @@ using Empiria.Land.Registration;
 
 using Empiria.Land.RecordableSubjects.Adapters;
 
-namespace Empiria.Land.Transactions.CertificateRequests {
+using Empiria.Land.Certificates.Adapters;
+
+namespace Empiria.Land.Certificates {
 
   /// <summary>Performs antecedent recordable subjects registration
   /// if it is needed by a CertificateRequestCommand.</summary>
@@ -95,4 +97,4 @@ namespace Empiria.Land.Transactions.CertificateRequests {
 
   }  // class RecordableSubjectRegistrationHelper
 
-}  // namespace Empiria.Land.Transactions.CertificateRequests
+}  // namespace Empiria.Land.Certificates

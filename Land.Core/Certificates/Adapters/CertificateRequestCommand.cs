@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificate Requests                       Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Command payload                         *
+*  Module   : Land Certificates                          Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Command payload                         *
 *  Type     : CertificateRequestCommand                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Command payload used for request land certificates within a transaction context.               *
@@ -9,10 +9,9 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Certificates;
 using Empiria.Land.Registration;
 
-namespace Empiria.Land.Transactions.CertificateRequests {
+namespace Empiria.Land.Certificates.Adapters {
 
   /// <summary>Command payload used for request land certificates within a transaction context.</summary>
   public class CertificateRequestCommand {
@@ -99,4 +98,4 @@ namespace Empiria.Land.Transactions.CertificateRequests {
 
   }
 
-}  // namespace Empiria.Land.Transactions.CertificateRequests
+}  // namespace Empiria.Land.Certificates.Adapters

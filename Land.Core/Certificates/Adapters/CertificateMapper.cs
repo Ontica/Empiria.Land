@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificates Issuing                       Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Certificates.dll              Pattern   : Mapper                                  *
+*  Module   : Land Certificates                          Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper                                  *
 *  Type     : CertificateMapper                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Maps land certificate instances to thier DTOs.                                                 *
@@ -15,7 +15,7 @@ using Empiria.Land.Registration;
 
 using Empiria.Land.RecordableSubjects.Adapters;
 
-namespace Empiria.Land.Certificates {
+namespace Empiria.Land.Certificates.Adapters {
 
   static internal class CertificateMapper {
 
@@ -63,4 +63,4 @@ namespace Empiria.Land.Certificates {
 
   }  // class CertificateMapper
 
-}  // namespace Empiria.Land.Certificates
+}  // namespace Empiria.Land.Certificates.Adapters

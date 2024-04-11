@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificate Requests Management              Component : Web Api                               *
+*  Module   : Land Certificates                            Component : Web Api                               *
 *  Assembly : Empiria.Land.WebApi.dll                      Pattern   : Controller                            *
 *  Type     : TransactionCertificateRequestsController     License   : Please read LICENSE.txt file          *
 *                                                                                                            *
@@ -12,9 +12,10 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.Land.Transactions.CertificateRequests.UseCases;
+using Empiria.Land.Certificates.Adapters;
+using Empiria.Land.Certificates.UseCases;
 
-namespace Empiria.Land.Transactions.CertificateRequests.WebApi {
+namespace Empiria.Land.Certificates.WebApi {
 
   /// <summary>Web API used to request land certificates within a transaction context.</summary>
   public class TransactionCertificateRequestsController : WebApiController {

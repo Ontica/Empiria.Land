@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificate Requests                       Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Builder                                 *
+*  Module   : Land Certificates                          Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Builder                                 *
 *  Type     : ApplicableCertificateTypesBuilder          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Builds lists of certificate types for a given context.                                         *
@@ -12,9 +12,9 @@ using System.Collections.Generic;
 
 using Empiria.Land.Registration.Transactions;
 
-using Empiria.Land.Certificates;
+using Empiria.Land.Certificates.Adapters;
 
-namespace Empiria.Land.Transactions.CertificateRequests {
+namespace Empiria.Land.Certificates {
 
   /// <summary>Builds lists of certificate types for a given context.</summary>
   internal class ApplicableCertificateTypesBuilder {
@@ -104,4 +104,4 @@ namespace Empiria.Land.Transactions.CertificateRequests {
 
   }  // class ApplicableCertificateTypesBuilder
 
-}  // namespace Empiria.Land.Transactions.CertificateRequests
+}  // namespace Empiria.Land.Certificates

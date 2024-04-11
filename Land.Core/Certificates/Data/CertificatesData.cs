@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificates Issuing                       Component : Data Access Layer                       *
-*  Assembly : Empiria.Land.Certificates.dll              Pattern   : Data Services                           *
+*  Module   : Land Certificates                          Component : Data Access Layer                       *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Services                           *
 *  Type     : CertificatesData                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Data read and write services for land certificates.                                            *

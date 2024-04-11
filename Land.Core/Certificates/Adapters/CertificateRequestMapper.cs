@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificate Requests Management            Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Mapper                                  *
+*  Module   : Land Certificates                          Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper                                  *
 *  Type     : CertificateRequestMapper                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Mapping methods for CertificateRequest instances.                                              *
@@ -11,9 +11,7 @@ using System;
 
 using Empiria.Land.Registration.Transactions;
 
-using Empiria.Land.Certificates;
-
-namespace Empiria.Land.Transactions.CertificateRequests {
+namespace Empiria.Land.Certificates.Adapters {
 
   /// <summary>Contains mapping methods for CertificateRequest instances.</summary>
   static internal class CertificateRequestMapper {
@@ -49,4 +47,4 @@ namespace Empiria.Land.Transactions.CertificateRequests {
 
   }  // class CertificateRequestMapper
 
-}  // namespace Empiria.Land.Transactions.CertificateRequests
+}  // namespace Empiria.Land.Certificates.Adapters

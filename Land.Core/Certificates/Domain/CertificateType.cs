@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificates Issuing                       Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Certificates.dll              Pattern   : Powertype                               *
+*  Module   : Land Certificates                          Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Powertype                               *
 *  Type     : CertificateType                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Powertype that defines a Land certificate type.                                                *
