@@ -9,7 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Certification;
+using Empiria.Land.Certificates;
+
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
@@ -54,44 +55,44 @@ namespace Empiria.Land.WebApi {
 
     internal void ValidateCertificate(string certificateUID, string hash) {
 
-      var certificate = FormerCertificate.TryParse(certificateUID);
+      //var certificate = Certificate.TryParse(certificateUID);
 
-      if (certificate == null && hash.Length == 0) {
-        throw new ResourceNotFoundException("Land.Certificate.NotFound",
-                                            "No tenemos registrado ningún certificado con número '{0}'.\n" +
-                                            "Favor de revisar la información proporcionada.",
-                                            certificateUID);
+      //if (certificate == null && hash.Length == 0) {
+      //  throw new ResourceNotFoundException("Land.Certificate.NotFound",
+      //                                      "No tenemos registrado ningún certificado con número '{0}'.\n" +
+      //                                      "Favor de revisar la información proporcionada.",
+      //                                      certificateUID);
 
-      } else if (certificate == null && hash.Length != 0) {
-        throw new ResourceNotFoundException("Land.Certificate.InvalidQRCode",
-                                            "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                            "referencia a un certificado con número '{0}' que NO está registrado en nuestros archivos.\n\n" +
-                                            "MUY IMPORTANTE: Es muy probable que su documento sea falso.\n\n" +
-                                            "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                            certificateUID);
+      //} else if (certificate == null && hash.Length != 0) {
+      //  throw new ResourceNotFoundException("Land.Certificate.InvalidQRCode",
+      //                                      "El código QR que está impreso en su documento y que acaba de escanear hace " +
+      //                                      "referencia a un certificado con número '{0}' que NO está registrado en nuestros archivos.\n\n" +
+      //                                      "MUY IMPORTANTE: Es muy probable que su documento sea falso.\n\n" +
+      //                                      "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
+      //                                      certificateUID);
 
-      } else if (certificate != null && certificate.Status == FormerCertificateStatus.Deleted) {
-        throw new ResourceNotFoundException("Land.Certificate.Deleted",
-                                            $"El certificado {certificate.UID} que está consultando fue ELIMINADO posteriormente a " +
-                                            "su impresión, por lo que no tiene ninguna validez oficial.\n\n" +
-                                            "Es posible que se lo hayan entregado por equivocación o que haya sido víctima de un fraude.\n\n" +
-                                            "MUY IMPORTANTE: Para obtener más información comuníquese de inmediato a la " +
-                                            "oficina del Registro Público.",
-                                            certificateUID);
+      //} else if (certificate != null && certificate.Status == CertificateStatus.Deleted) {
+      //  throw new ResourceNotFoundException("Land.Certificate.Deleted",
+      //                                      $"El certificado {certificate.UID} que está consultando fue ELIMINADO posteriormente a " +
+      //                                      "su impresión, por lo que no tiene ninguna validez oficial.\n\n" +
+      //                                      "Es posible que se lo hayan entregado por equivocación o que haya sido víctima de un fraude.\n\n" +
+      //                                      "MUY IMPORTANTE: Para obtener más información comuníquese de inmediato a la " +
+      //                                      "oficina del Registro Público.",
+      //                                      certificateUID);
 
-      } else if (certificate != null && hash.Length != 0 &&
-                 certificate.IssueTime >= certificateHashCodeValidationStartDate && hash != certificate.QRCodeSecurityHash()) {
-        throw new ResourceNotFoundException("Land.Certificate.InvalidQRCode",
-                                            "El código QR que está impreso en su documento y que acaba de escanear hace " +
-                                            "referencia al certificado con número '{0}' que está registrado en nuestros archivos " +
-                                            "pero el código de validación del QR no es correcto.\n\n" +
-                                            "MUY IMPORTANTE: Es posible que su certificado sea falso o que haya sido modificado " +
-                                            "posteriormente a la impresión que tiene en la mano.\n\nEsto último significa que su " +
-                                            "certificado impreso no es válido y que debe solicitar una reposición del mismo.\n\n" +
-                                            "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
-                                            certificateUID);
+      //} else if (certificate != null && hash.Length != 0 &&
+      //           certificate.IssueTime >= certificateHashCodeValidationStartDate && hash != certificate.QRCodeSecurityHash()) {
+      //  throw new ResourceNotFoundException("Land.Certificate.InvalidQRCode",
+      //                                      "El código QR que está impreso en su documento y que acaba de escanear hace " +
+      //                                      "referencia al certificado con número '{0}' que está registrado en nuestros archivos " +
+      //                                      "pero el código de validación del QR no es correcto.\n\n" +
+      //                                      "MUY IMPORTANTE: Es posible que su certificado sea falso o que haya sido modificado " +
+      //                                      "posteriormente a la impresión que tiene en la mano.\n\nEsto último significa que su " +
+      //                                      "certificado impreso no es válido y que debe solicitar una reposición del mismo.\n\n" +
+      //                                      "Para obtener más información comuníquese inmediatamente a la oficina del Registro Público.",
+      //                                      certificateUID);
 
-      }
+      //}
     }
 
 
