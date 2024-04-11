@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Certificate Requests                       Component : Use cases Layer                         *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Use case interactor                     *
+*  Module   : Land Certificates                          Component : Use cases Layer                         *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Use case interactor                     *
 *  Type     : CertificateRequestsUseCases                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Use cases used to request land certificates within a transaction context.                      *
@@ -14,11 +14,10 @@ using Empiria.Services;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
-using Empiria.Land.Certificates;
+using Empiria.Land.Certificates.Data;
+using Empiria.Land.Certificates.Adapters;
 
-using Empiria.Land.Transactions.CertificateRequests.Providers;
-
-namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
+namespace Empiria.Land.Certificates.UseCases {
 
   /// <summary>Use cases used to request land certificates within a transaction context.</summary>
   public class CertificateRequestsUseCases : UseCase {
@@ -31,43 +30,7 @@ namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
 
     #endregion Constructors and parsers
 
-    #region Use cases
-
-    public CertificateRequestDto CloseRequestedCertificate(string transactionID,
-                                                           Guid certificateGuid) {
-      Assertion.Require(transactionID, nameof(transactionID));
-
-      var transaction = LRSTransaction.Parse(transactionID);
-
-      CertificatesProvider.EnsureTransactionHasCertificate(transaction, certificateGuid);
-
-      // ToDo: control transaction / certificate edition
-
-      CertificateDto certificate = CertificatesProvider.CloseCertificate(certificateGuid);
-
-      return CertificateRequestMapper.Map(transaction, certificate);
-    }
-
-
-    public void DeleteCertificateRequest(string transactionID, Guid certificateGuid) {
-      Assertion.Require(transactionID, nameof(transactionID));
-
-      var transaction = LRSTransaction.Parse(transactionID);
-
-      // ToDo: control transaction / certificate edition
-
-      CertificatesProvider.EnsureTransactionHasCertificate(transaction, certificateGuid);
-
-      CertificatesProvider.DeleteCertificate(certificateGuid);
-    }
-
-
-    public CertificateRequestDto EditRequestedCertificate(string transactionID,
-                                                          Guid certificateGuid,
-                                                          object fields) {
-      throw new NotImplementedException();
-    }
-
+    #region Query use cases
 
     public FixedList<CertificateRequestTypeDto> GetCertificateRequestTypes(string transactionID) {
       Assertion.Require(transactionID, nameof(transactionID));
@@ -87,9 +50,50 @@ namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
 
       var transaction = LRSTransaction.Parse(transactionID);
 
-      FixedList<CertificateDto> certificates = CertificatesProvider.GetTransactionCertificates(transaction);
+      FixedList<Certificate> certificates = CertificatesData.GetTransactionCertificates(transaction);
 
-      return CertificateRequestMapper.Map(transaction, certificates);
+      FixedList<CertificateDto> mappedCertificates = CertificateMapper.Map(certificates);
+
+      return CertificateRequestMapper.Map(transaction, mappedCertificates);
+    }
+
+    #endregion Query use cases
+
+    #region Command use cases
+
+    public CertificateRequestDto CloseRequestedCertificate(string transactionID,
+                                                           Guid certificateGuid) {
+      Assertion.Require(transactionID, nameof(transactionID));
+
+      var transaction = LRSTransaction.Parse(transactionID);
+
+      EnsureTransactionHasCertificate(transaction, certificateGuid);
+
+      // ToDo: control transaction / certificate edition
+
+      CertificateDto certificate = CertificateIssuingService.CloseCertificate(certificateGuid);
+
+      return CertificateRequestMapper.Map(transaction, certificate);
+    }
+
+
+    public void DeleteCertificateRequest(string transactionID, Guid certificateGuid) {
+      Assertion.Require(transactionID, nameof(transactionID));
+
+      var transaction = LRSTransaction.Parse(transactionID);
+
+      // ToDo: control transaction / certificate edition
+
+      EnsureTransactionHasCertificate(transaction, certificateGuid);
+
+      CertificateIssuingService.DeleteCertificate(certificateGuid);
+    }
+
+
+    public CertificateRequestDto EditRequestedCertificate(string transactionID,
+                                                          Guid certificateGuid,
+                                                          object fields) {
+      throw new NotImplementedException();
     }
 
 
@@ -101,9 +105,9 @@ namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
 
       // ToDo: control transaction / certificate edition
 
-      CertificatesProvider.EnsureTransactionHasCertificate(transaction, certificateGuid);
+      EnsureTransactionHasCertificate(transaction, certificateGuid);
 
-      CertificateDto certificate = CertificatesProvider.OpenCertificate(certificateGuid);
+      CertificateDto certificate = CertificateIssuingService.OpenCertificate(certificateGuid);
 
       return CertificateRequestMapper.Map(transaction, certificate);
     }
@@ -118,20 +122,34 @@ namespace Empiria.Land.Transactions.CertificateRequests.UseCases {
 
       var transaction = LRSTransaction.Parse(transactionID);
 
+      // ToDo: control transaction / certificate edition
+
       CertificateType certificateType = command.GetCertificateType();
 
       Resource recordableSubject = command.GetRecordableSubject();
 
-      CertificateDto certificate = CertificatesProvider.CreateCertificate(certificateType,
-                                                                          transaction,
-                                                                          recordableSubject);
+      CertificateDto certificate = CertificateIssuingService.CreateCertificate(certificateType,
+                                                                               transaction,
+                                                                               recordableSubject);
 
       return CertificateRequestMapper.Map(transaction, certificate);
     }
 
 
-    #endregion Use cases
+    #endregion Command use cases
+
+    #region Helpers
+
+    static internal void EnsureTransactionHasCertificate(LRSTransaction transaction,
+                                                         Guid certificateGuid) {
+      Assertion.Require(transaction, nameof(transaction));
+
+      // Assertion.Require(certificate.Transaction.Equals(transaction),
+      //                  "The certificate was not requested on the given transaction.");
+    }
+
+    #endregion Helpers
 
   }  // class CertificateRequestsUseCases
 
-}  // namespace Empiria.Land.Transactions.CertificateRequests.UseCases
+}  // namespace Empiria.Land.Certificates.UseCases

@@ -73,7 +73,7 @@ namespace Empiria.Land.Providers {
 
 
     static private bool ExistsCertificateID(string generatedID) {
-      using (var usecases = CertificateIssuingUseCases.UseCaseInteractor()) {
+      using (var usecases = CertificatesUseCases.UseCaseInteractor()) {
 
         return usecases.ExistsCertificateID(generatedID);
       }
