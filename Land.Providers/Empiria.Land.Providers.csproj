@@ -55,10 +55,10 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Core" Version="7.0.0" />
-    <PackageReference Include="Empiria.Land.Certificates" Version="5.0.0" />
+    <PackageReference Include="Empiria.Land.Core" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />
-    <ProjectReference Include="..\Land.Certificates\Empiria.Land.Certificates.csproj" />
+    <ProjectReference Include="..\Land.Core\Empiria.Land.Core.csproj" />
   </ItemGroup>
 </Project>

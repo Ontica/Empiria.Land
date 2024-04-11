@@ -60,7 +60,6 @@
     <PackageReference Include="Empiria.Land.Core" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Providers" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Analytics" Version="5.0.0" />
-    <PackageReference Include="Empiria.Land.Certificates" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.ESign" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.SearchServices" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Digitalization" Version="5.0.0" />
@@ -71,7 +70,6 @@
     <ProjectReference Include="..\Land.Core\Empiria.Land.Core.csproj" />
     <ProjectReference Include="..\Land.Providers\Empiria.Land.Providers.csproj" />
     <ProjectReference Include="..\Land.Analytics\Empiria.Land.Analytics.csproj" />
-    <ProjectReference Include="..\Land.Certificates\Empiria.Land.Certificates.csproj" />
     <ProjectReference Include="..\Land.ESign\Empiria.Land.ESign.csproj" />
     <ProjectReference Include="..\Land.SearchServices\Empiria.Land.SearchServices.csproj" />
     <ProjectReference Include="..\Land.Digitalization\Empiria.Land.Digitalization.csproj" />
