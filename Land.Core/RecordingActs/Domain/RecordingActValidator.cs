@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+using Empiria.Land.Certificates.Adapters;
+
 namespace Empiria.Land.Registration {
 
   /// <summary>Provides validation services for recording acts.</summary>
@@ -221,10 +223,10 @@ namespace Empiria.Land.Registration {
     #region Helpers
 
     private void AssertDoesntHasEmittedCertificates() {
-      var certificates = _recordingAct.Resource.Tract.GetEmittedCerificates();
+      FixedList<CertificateDto> certificates = _recordingAct.Resource.Tract.GetIssuedCertificates();
 
       bool wrongPrelation = certificates.Contains((x) => x.IsClosed && x.IssueTime > _recordingAct.LandRecord.AuthorizationTime &&
-                                                         !x.Transaction.Equals(_recordingAct.LandRecord.Transaction));
+                                                         x.TransactionUID != _recordingAct.LandRecord.Transaction.UID);
 
       if (!wrongPrelation) {
         return;

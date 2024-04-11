@@ -11,11 +11,23 @@ using System;
 
 using Empiria.Data;
 
+using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Certificates.Data {
 
   static internal class CertificatesData {
+
+    static internal FixedList<Certificate> GetRecordableSubjectIssuedCertificates(Resource recordableSubject) {
+      var sql = "SELECT * FROM LRSCertificates " +
+               $"WHERE PropertyId = {recordableSubject.Id} AND CertificateStatus = 'C' " +
+                "ORDER BY CertificateId";
+
+      var operation = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<Certificate>(operation);
+    }
+
 
     static internal FixedList<Certificate> GetTransactionCertificates(LRSTransaction transaction) {
       var sql = "SELECT * FROM LRSCertificates " +

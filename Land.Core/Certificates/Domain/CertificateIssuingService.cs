@@ -13,6 +13,7 @@ using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
 using Empiria.Land.Certificates.Adapters;
+using Empiria.Land.Certificates.Data;
 
 namespace Empiria.Land.Certificates {
 
@@ -58,6 +59,28 @@ namespace Empiria.Land.Certificates {
     }
 
 
+    static internal FixedList<CertificateDto> GetRecordableSubjectIssuedCertificates(Resource recordableSubject) {
+      if (recordableSubject.IsEmptyInstance) {
+        return new FixedList<CertificateDto>();
+      }
+
+      var certificates = CertificatesData.GetRecordableSubjectIssuedCertificates(recordableSubject);
+
+      return CertificateMapper.Map(certificates);
+    }
+
+
+    static internal FixedList<CertificateDto> GetTransactionCertificates(LRSTransaction transaction) {
+      if (transaction.IsEmptyInstance) {
+        return new FixedList<CertificateDto>();
+      }
+
+      var certificates = CertificatesData.GetTransactionCertificates(transaction);
+
+      return CertificateMapper.Map(certificates);
+    }
+
+
     static internal CertificateDto OpenCertificate(Guid certificateGuid) {
       var certificate = Certificate.Parse(certificateGuid.ToString());
 
@@ -67,7 +90,6 @@ namespace Empiria.Land.Certificates {
 
       return CertificateMapper.Map(certificate);
     }
-
 
     #endregion Services
 

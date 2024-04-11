@@ -15,9 +15,9 @@ using Empiria.Security;
 using Empiria.Land.Data;
 using Empiria.Land.Providers;
 
-using Empiria.Land.Certification;
-
+using Empiria.Land.Certificates;
 using Empiria.Land.Transactions;
+using Empiria.Land.Certificates.Adapters;
 
 namespace Empiria.Land.Registration.Transactions {
 
@@ -480,8 +480,8 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public FixedList<FormerCertificate> GetIssuedCertificates() {
-      return FormerCertificatesData.GetTransactionIssuedCertificates(this);
+    public FixedList<CertificateDto> GetIssuedCertificates() {
+      return CertificateIssuingService.GetTransactionCertificates(this);
     }
 
 

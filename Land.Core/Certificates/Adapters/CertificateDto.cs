@@ -11,12 +11,14 @@ using System;
 
 using Empiria.DataTypes;
 
+using Empiria.Land.Registration;
+
 using Empiria.Land.RecordableSubjects.Adapters;
 
 namespace Empiria.Land.Certificates.Adapters {
 
   /// <summary>DTO with land certificate data.</summary>
-  public class CertificateDto {
+  public class CertificateDto : IResourceTractItem {
 
     public string UID {
       get; internal set;
@@ -34,6 +36,39 @@ namespace Empiria.Land.Certificates.Adapters {
 
 
     public RecordableSubjectDto RecordableSubject {
+      get; internal set;
+    }
+
+
+    public string TransactionUID {
+      get; internal set;
+    }
+
+    public string ExternalTransactionNo {
+      get; internal set;
+    }
+
+    public DateTime IssueTime {
+      get; internal set;
+    }
+
+    public bool IsClosed {
+      get; internal set;
+    }
+
+    public string TractPrelationStamp {
+      get; internal set;
+    }
+
+    public string AsText {
+      get; internal set;
+    }
+
+    public string IssuedBy {
+      get; internal set;
+    }
+
+    public bool OverRecordableSubject {
       get; internal set;
     }
 
@@ -56,7 +91,6 @@ namespace Empiria.Land.Certificates.Adapters {
     public CertificateActions Actions {
       get; internal set;
     }
-
 
   }  // class CertificateDto
 

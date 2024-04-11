@@ -15,9 +15,10 @@ using Empiria.Messaging.EMailDelivery;
 using Empiria.OnePoint.EFiling;
 using Empiria.OnePoint.EPayments;
 
-using Empiria.Land.Certification;
+using Empiria.Land.Certificates;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Certificates.Adapters;
 
 namespace Empiria.Land.Providers {
 
@@ -106,9 +107,7 @@ namespace Empiria.Land.Providers {
       var certificates = transaction.GetIssuedCertificates();
 
       foreach (var certificate in certificates) {
-        if (certificate.Signed()) {
           list.Add(MapToEFilingDocumentDTO(certificate));
-        }
       }
 
       return list.ToFixedList();
@@ -229,15 +228,15 @@ namespace Empiria.Land.Providers {
     }
 
 
-    static private EFilingDocument MapToEFilingDocumentDTO(FormerCertificate certificate) {
+    static private EFilingDocument MapToEFilingDocumentDTO(CertificateDto certificate) {
       return new EFilingDocument() {
         UID = certificate.UID,
-        Type = certificate.CertificateType.Name,
-        TypeName = $"Certificado de {certificate.CertificateType.DisplayName}",
-        Name = $"Certificado {certificate.UID} del trámite {certificate.Transaction.UID}",
+        Type = certificate.Type,
+        TypeName = $"Certificado de {certificate.Type}",
+        Name = $"Certificado {certificate.UID} del trámite {certificate.TransactionUID}",
         ContentType = "text/html",
         Uri = $"{PRINT_SERVICES_SERVER_BASE_ADDRESS}/certificate.aspx?uid={certificate.UID}&" +
-              $"externalUID={certificate.Transaction.ExternalTransactionNo}"
+              $"externalUID={certificate.ExternalTransactionNo}"
       };
     }
 

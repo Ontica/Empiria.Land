@@ -10,8 +10,10 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.Land.Certification;
 using Empiria.Land.Data;
+
+using Empiria.Land.Certificates;
+using Empiria.Land.Certificates.Adapters;
 
 namespace Empiria.Land.Registration {
 
@@ -71,8 +73,8 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public FixedList<FormerCertificate> GetEmittedCerificates() {
-      return FormerCertificatesData.ResourceEmittedCertificates(_recordableSubject);
+    internal FixedList<CertificateDto> GetIssuedCertificates() {
+      return CertificateIssuingService.GetRecordableSubjectIssuedCertificates(_recordableSubject);
     }
 
 
@@ -85,7 +87,7 @@ namespace Empiria.Land.Registration {
       var list = new List<IResourceTractItem>();
 
       var recordingActs = this.GetFullRecordingActs();
-      var certificates = this.GetEmittedCerificates();
+      var certificates = this.GetIssuedCertificates();
 
       list.AddRange(recordingActs);
       list.AddRange(certificates);

@@ -89,21 +89,21 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    [DataField("OnPropertyId")]
+    [DataField("PropertyId")]
     public Resource OnRecordableSubject {
       get;
       private set;
     }
 
 
-    [DataField("OnRecordingId")]
+    //[DataField("OnRecordingId")]
     public LandRecord OnRecording {
       get;
       private set;
     }
 
 
-    [DataField("OnOwnerName")]
+    [DataField("OwnerName")]
     public string OnOwnerName {
       get;
       private set;
@@ -238,6 +238,11 @@ namespace Empiria.Land.Certificates {
         }
         return _validator;
       }
+    }
+
+    public bool IsClosed {
+      get;
+      internal set;
     }
 
     #endregion IProtected implementation
