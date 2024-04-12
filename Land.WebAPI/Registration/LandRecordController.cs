@@ -57,6 +57,19 @@ namespace Empiria.Land.Registration.WebApi {
       }
     }
 
+
+    [HttpPost, AllowAnonymous]
+    [Route("v5/land/registration/manual_close/{recordID}")]
+    public SingleObjectModel ManualCloseLandRecord([FromUri] string recordID,
+                                                   [FromBody] ManualCloseRecordFields fields) {
+
+      using (var usecases = LandRecordUseCases.UseCaseInteractor()) {
+        LandRecordDto landRecordDto = usecases.ManualCloseLandRecord(recordID, fields);
+
+        return new SingleObjectModel(this.Request, landRecordDto);
+      }
+    }
+
     #endregion Web Apis
 
   }  // class LandRecordController

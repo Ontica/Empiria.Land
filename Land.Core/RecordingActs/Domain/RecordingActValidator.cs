@@ -67,6 +67,38 @@ namespace Empiria.Land.Registration {
     }
 
 
+    // ToDo: Remove this method when all opened land records are manually closed
+    public void AssertCanBeManuallyClosed() {
+      var rule = _recordingAct.RecordingActType.RecordingRule;
+
+      if (!_recordingAct.Resource.IsEmptyInstance) {
+        _recordingAct.RecordingActType.AssertIsApplicableResource(_recordingAct.Resource);
+      } else {
+        Assertion.Require(rule.AppliesTo == RecordingRuleApplication.NoProperty,
+                         $"El acto jurídico {_recordingAct.IndexedName} " +
+                         "sólo puede aplicarse a un predio o asociación.");
+      }
+
+      if (!_recordingAct.BookEntry.IsEmptyInstance) {
+        _recordingAct.BookEntry.AssertCanBeClosed();
+      }
+
+      _recordingAct.Resource.AssertIsStillAlive(_recordingAct.LandRecord.PresentationTime);
+
+      this.AssertNoTrappedActs();
+
+      this.AssertChainedRecordingAct();
+
+      if (!_recordingAct.RecordingActType.RecordingRule.AllowUncompletedResource) {
+        _recordingAct.Resource.AssertCanBeClosed();
+      }
+
+      // TODO: Validate recording act fields are completed
+
+      this.AssertParties();
+    }
+
+
     internal void AssertCanBeDeleted() {
       if (_recordingAct.BookEntry.Status == RecordableObjectStatus.Closed) {
         throw new LandRegistrationException(

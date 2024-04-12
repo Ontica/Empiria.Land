@@ -12,6 +12,8 @@ using System;
 using Empiria.Services;
 
 using Empiria.Land.Registration.Adapters;
+using Empiria.Contacts;
+using Empiria.Security;
 
 namespace Empiria.Land.Registration.UseCases {
 
@@ -83,6 +85,117 @@ namespace Empiria.Land.Registration.UseCases {
 
     #endregion Use cases
 
+    #region Temp use cases
+
+    // ToDo: Remove this use case when all opened land records are manually closed
+    public LandRecordDto ManualCloseLandRecord(string landRecordID, ManualCloseRecordFields fields) {
+      Assertion.Require(landRecordID, nameof(landRecordID));
+      Assertion.Require(fields, nameof(fields));
+
+      LandRecord landRecord = LandRecord.TryParse(landRecordID);
+
+      Assertion.Require(landRecord, $"Invalid landRecord {landRecordID}.");
+
+      Assertion.Require(!landRecord.IsClosed,
+                        $"LandRecord {landRecordID} was already closed.");
+
+      Assertion.Require(!landRecord.IsHistoricRecord, $"Land record {landRecordID} is historic, can't be closed'.");
+      Assertion.Require(landRecord.SecurityData.SignType != SignType.Electronic,
+                        $"LandRecord {landRecordID} sign type is marked as electronic sign, can't be closed");
+
+      Assertion.Require(landRecord.Transaction.Workflow.CurrentStatus == Transactions.TransactionStatus.Returned ||
+                        landRecord.Transaction.Workflow.CurrentStatus == Transactions.TransactionStatus.Delivered ||
+                        landRecord.Transaction.Workflow.CurrentStatus == Transactions.TransactionStatus.Archived,
+                        $"Invalid LandRecord {landRecordID} current status {landRecord.Transaction.Workflow.CurrentStatus}");
+
+      Assertion.Require(landRecord.RecordingActs.Count > 0,
+                       $"LandRecord {landRecordID} without recording acts, can't be closed.");
+
+      foreach (var recordingAct in landRecord.RecordingActs) {
+        recordingAct.Validator.AssertCanBeManuallyClosed();
+      }
+
+
+      Assertion.Require(GenerateSecurityHash() == fields.SecurityHash,
+                       $"Invalid security hash {fields.SecurityHash}. Review authorization date and time.");
+
+      Assertion.Require(fields.DigitalSeal.Length > 10 &&
+                        GenerateDigitalSeal().StartsWith(fields.DigitalSeal),
+                       $"Invalid digital seal {fields.DigitalSeal}. May be, its recording acts were altered after delivery.");
+
+      landRecord.ManuallyClose(fields);
+
+      landRecord.SecurityData.SetManualSignData(landRecord, fields);
+
+      landRecord.Save();
+
+      Data.LandRecordsData.SaveSecurityData(landRecord);
+
+      return LandRecordMapper.Map(landRecord);
+
+
+      string GenerateDigitalSeal() {
+        var transaction = landRecord.Transaction;
+
+        string s = "||" + transaction.UID + "|" + landRecord.UID;
+
+        for (int i = 0; i < landRecord.RecordingActs.Count; i++) {
+          s += "|" + landRecord.RecordingActs[i].Id.ToString();
+        }
+        s += "||";
+
+        return Cryptographer.SignTextWithSystemCredentials(s);
+      }
+
+      string GenerateSecurityHash() {
+
+        return Cryptographer.CreateHashCode(landRecord.Id.ToString("00000000") +
+                                            fields.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
+                                            landRecord.UID)
+                            .Substring(0, 8)
+                            .ToUpperInvariant();
+      }
+    }
+
+    #endregion Temp use cases
+
   }  // class LandRecordUseCases
+
+  // ToDo: Remove this class when all opened land records are manually closed
+  public class ManualCloseRecordFields {
+
+    public DateTime AuthorizationTime {
+      get; set;
+    }
+
+    public int AuthorizedById {
+      get; set;
+    }
+
+    public string SecurityHash {
+      get; set;
+    }
+
+    public int SignedById {
+      get; set;
+    }
+
+    public string DigitalSeal {
+      get; set;
+    }
+
+    internal Person AuthorizedBy {
+      get {
+        return Person.Parse(AuthorizedById);
+      }
+    }
+
+    public Person SignedBy {
+      get {
+        return Person.Parse(SignedById);
+      }
+    }
+
+  }  // temp class ManualCloseRecordFields
 
 }  // namespace Empiria.Land.Registration.UseCases

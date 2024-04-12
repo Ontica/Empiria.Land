@@ -19,6 +19,7 @@ using Empiria.Land.Providers;
 
 using Empiria.Land.Registration.Transactions;
 using Empiria.Land.Instruments;
+using Empiria.Land.Registration.UseCases;
 
 namespace Empiria.Land.Registration {
 
@@ -315,6 +316,15 @@ namespace Empiria.Land.Registration {
     }
 
 
+    // ToDo: Remove this method when all opened land records are manually closed
+    public void ManuallyClose(ManualCloseRecordFields fields) {
+      this.AuthorizationTime = fields.AuthorizationTime;
+      this.AuthorizedBy = fields.AuthorizedBy;
+
+      this.Status = RecordableObjectStatus.Closed;
+    }
+
+
     public void Open() {
       this.Security.AssertCanBeOpened();
 
@@ -374,15 +384,16 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    protected override void OnLoadObjectData(DataRow row) {
-      //Assertion.Require(
-      //  this.Security.Integrity.GetUpdatedHashCode() == (string) row["LandRecordDIF"],
-      //        $"PROBLEMA GRAVE 2 DE SEGURIDAD: La inscripción {this.UID} " +
-      //        $"fue indebidamente modificada directamente en la base de datos." +
-      //        $"1) {this.Security.Integrity.GetUpdatedHashCode()} 2) {(string) row["LandRecordDIF"]}");
+
+    protected override void OnLoad() {
+      Assertion.Require(this.Security.Integrity.GetUpdatedHashCode() == this.IntegrityField,
+                  $"PROBLEMA GRAVE DE SEGURIDAD: La inscripción {this.UID} " +
+                  $"fue indebidamente modificada directamente en la base de datos." +
+                  $"1) {this.Security.Integrity.GetUpdatedHashCode()} 2) {this.IntegrityField}");
 
       RefreshRecordingActs();
     }
+
 
     public void RefreshRecordingActs() {
       _recordingActs = new Lazy<List<RecordingAct>>(() => LandRecordsData.GetLandRecordRecordingActs(this));

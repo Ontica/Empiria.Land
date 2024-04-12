@@ -11,6 +11,7 @@ using System;
 
 using Empiria.Contacts;
 using Empiria.Json;
+using Empiria.Land.Registration.UseCases;
 using Empiria.Security;
 
 namespace Empiria.Land.Registration {
@@ -325,7 +326,7 @@ namespace Empiria.Land.Registration {
     #region Digital seals generators
 
     static private string GenerateBookEntriesV1_5_DigitalSeal(LandRecord landRecord,
-                                                          FixedList<BookEntry> bookEntries) {
+                                                              FixedList<BookEntry> bookEntries) {
       var transaction = landRecord.Transaction;
 
       string s = "||" + transaction.UID + "|" + transaction.LandRecord.UID;
@@ -379,6 +380,22 @@ namespace Empiria.Land.Registration {
       return Cryptographer.SignTextWithSystemCredentials(s);
     }
 
+    // ToDo: Remove this method when all opened land records are manually closed
+    internal void SetManualSignData(LandRecord landRecord, ManualCloseRecordFields fields) {
+      this.SignGuid = Guid.NewGuid().ToString().ToUpperInvariant();
+      this.DigitalSealVersion = "5.0";
+      this.DigitalSeal = GenerateDigitalSeal(landRecord);
+      this.SecurityHash = GenerateSecurityHash(landRecord);
+
+      this.DigitalSignature = "Documento firmado de forma autógrafa.";
+
+      this.SignedBy = fields.SignedBy;
+      this.SignedByJobTitle = fields.SignedBy.JobTitle;
+      this.SignedTime = fields.AuthorizationTime;
+
+      this.SignType = SignType.Manual;
+      this.SignStatus = SignStatus.Signed;
+    }
 
     #endregion Digital seals generators
 
