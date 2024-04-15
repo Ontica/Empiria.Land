@@ -1,18 +1,18 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Input Data Holder                       *
-*  Type     : PaymentFields                              License   : Please read LICENSE.txt file            *
+*  Module   : Transaction Payments                       Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Tranfer Object                     *
+*  Type     : PaymentDto                                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Data structure that serves to update payment data for a transaction.                           *
+*  Summary  : Input/output DTO that serves to update and return payment data for a transaction.              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land.Transactions.Payments {
+namespace Empiria.Land.Transactions.Payments.Adapters {
 
-  /// <summary>Data structure that serves to update payment data for a transaction.</summary>
-  public class PaymentFields {
+  /// <summary>Input/output DTO that serves to update and return payment data for a transaction.</summary>
+  public class PaymentDto {
 
     public string ReceiptNo {
       get; set;
@@ -25,17 +25,17 @@ namespace Empiria.Land.Transactions.Payments {
 
 
     public string Status {
-      get; set;   // ToDo: internal set when PaymentFields will moved to Core
+      get; set;
     }
 
 
-    public void AssertValid() {
+    internal void AssertValid() {
       Assertion.Require(this.ReceiptNo, "ReceiptNo");
       Assertion.Require(this.Total >= 0, "Total must be a non-negative amount.");
 
       this.Status = this.Status ?? "Pendiente";
     }
 
-  }  // public class PaymentFields
+  }  // public class PaymentDto
 
-}  // namespace Empiria.Land.Transactions.Payments
+}  // namespace Empiria.Land.Transactions.Payments.Adapters

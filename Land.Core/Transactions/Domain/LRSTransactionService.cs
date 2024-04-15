@@ -15,6 +15,8 @@ using Empiria.Security;
 
 using Empiria.Land.Data;
 
+using Empiria.Land.Transactions.Payments;
+
 namespace Empiria.Land.Registration.Transactions {
 
   /// <summary>Represents a service provided in the context of a land registration transaction.</summary>

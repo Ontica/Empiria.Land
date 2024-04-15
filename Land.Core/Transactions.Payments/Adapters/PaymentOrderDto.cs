@@ -1,19 +1,19 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Transaction Payments                       Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data Transfer Object                    *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : PaymentOrderDto                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO for a payment order.                                                                *
+*  Summary  : Output DTO for a transaction payment order.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.DataTypes;
 
-namespace Empiria.Land.Transactions.Payments {
+namespace Empiria.Land.Transactions.Payments.Adapters {
 
-  /// <summary>Output DTO for a payment order.</summary>
+  /// <summary>Output DTO for a transaction payment order.</summary>
   public class PaymentOrderDto {
 
     public string UID {
@@ -42,4 +42,4 @@ namespace Empiria.Land.Transactions.Payments {
 
   }  // class PaymentOrderDto
 
-}  // namespace Empiria.Land.Transactions.Payments
+}  // namespace Empiria.Land.Transactions.Payments.Adapters

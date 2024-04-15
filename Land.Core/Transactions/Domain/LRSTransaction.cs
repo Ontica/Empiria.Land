@@ -19,6 +19,8 @@ using Empiria.Land.Certificates;
 using Empiria.Land.Transactions;
 using Empiria.Land.Certificates.Adapters;
 
+using Empiria.Land.Transactions.Payments;
+
 namespace Empiria.Land.Registration.Transactions {
 
   /// <summary>Represents a transaction or procedure in the context of a land registration office.</summary>

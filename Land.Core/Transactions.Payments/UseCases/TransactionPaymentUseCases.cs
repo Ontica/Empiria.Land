@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Land.Transactions.dll              Pattern   : Use case interactor class               *
 *  Type     : TransactionPaymentUseCases                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases for transaction payment.                                                             *
+*  Summary  : Use cases for transaction payments.                                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -15,10 +15,11 @@ using Empiria.Services;
 using Empiria.Land.Registration.Transactions;
 
 using Empiria.Land.Transactions.Payments.Providers;
+using Empiria.Land.Transactions.Payments.Adapters;
 
 namespace Empiria.Land.Transactions.Payments.UseCases {
 
-  /// <summary>Use cases for transaction payment.</summary>
+  /// <summary>Use cases for transaction payments.</summary>
   public class TransactionPaymentUseCases : UseCase {
 
     #region Constructors and parsers
@@ -81,7 +82,7 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
 
 
     public TransactionDto SetPayment(string transactionUID,
-                                     PaymentFields paymentFields) {
+                                     PaymentDto paymentFields) {
       Assertion.Require(paymentFields, nameof(paymentFields));
 
       paymentFields.AssertValid();

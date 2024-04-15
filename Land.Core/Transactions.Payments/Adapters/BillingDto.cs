@@ -1,14 +1,14 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Management                    Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data Transfer Object                    *
+*  Module   : Transaction Payments                       Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : BillingDto                                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO that represents data about a transaction billing request.                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Transactions {
+namespace Empiria.Land.Transactions.Payments.Adapters {
 
   /// <summary>Output DTO that represents data about a transaction billing request.</summary>
   public class BillingDto {
@@ -23,4 +23,4 @@ namespace Empiria.Land.Transactions {
 
   }  // class BillingDto
 
-} // namespace Empiria.Land.Transactions
+} // namespace Empiria.Land.Transactions.Payments.Adapters

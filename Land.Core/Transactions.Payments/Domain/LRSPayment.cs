@@ -1,10 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Filing                                     Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data holder                             *
-*  Type     : LRSPayment                                 License   : Please read LICENSE.txt file            *
+*  Module   : Transaction Payments                        Component : Domain Layer                           *
+*  Assembly : Empiria.Land.Core.dll                       Pattern   : Data holder                            *
+*  Type     : LRSPayment                                  License   : Please read LICENSE.txt file           *
 *                                                                                                            *
-*  Summary  : Builds Record objects for Land entities.                                                       *
+*  Summary  : Represents a payment for a recorder office transaction.                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -14,9 +14,11 @@ using Empiria.Json;
 using Empiria.Security;
 using Empiria.StateEnums;
 
-using Empiria.Land.Data;
+using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Registration.Transactions {
+using Empiria.Land.Transactions.Payments.Data;
+
+namespace Empiria.Land.Transactions.Payments {
 
   /// <summary>Represents a payment for a recorder office transaction.</summary>
   public class LRSPayment : BaseObject, IProtected {
@@ -59,7 +61,7 @@ namespace Empiria.Land.Registration.Transactions {
 
     #endregion Constructors and parsers
 
-    #region Public properties
+    #region Properties
 
     [DataField("TransactionId")]
     LazyInstance<LRSTransaction> _transaction = LazyInstance<LRSTransaction>.Empty;
@@ -164,9 +166,9 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    #endregion Public properties
+    #endregion Properties
 
-    #region Public methods
+    #region Methods
 
     internal void Delete() {
       this.Status = OpenCloseStatus.Deleted;
@@ -174,21 +176,23 @@ namespace Empiria.Land.Registration.Transactions {
       this.Save();
     }
 
+
     public void SetReceipt(string receiptNo, decimal receiptTotal) {
       this.ReceiptNo = receiptNo;
       this.ReceiptTotal = receiptTotal;
     }
+
 
     protected override void OnSave() {
       if (base.IsNew) {
         this.PostedBy = ExecutionServer.CurrentContact;
         this.PostingTime = DateTime.Now;
       }
-      TransactionData.WritePayment(this);
+      TransactionPaymentsDataService.WritePayment(this);
     }
 
-    #endregion Public methods
+    #endregion Methods
 
   } // class LRSPayment
 
-} // namespace Empiria.Land.Registration.Transactions
+} // namespace Empiria.Land.Transactions.Payments

@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Domain Layer                            *
+*  Module   : Transaction Payments                       Component : Domain Layer                            *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Json-based information holder           *
 *  Type     : PaymentOrder                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
+
 using Empiria.DataTypes;
 using Empiria.Json;
 

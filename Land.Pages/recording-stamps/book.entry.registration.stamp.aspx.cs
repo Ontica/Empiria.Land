@@ -14,6 +14,8 @@ using System.Web.UI;
 using Empiria.Land.Registration;
 using Empiria.Land.Registration.Transactions;
 
+using Empiria.Land.Transactions.Payments;
+
 namespace Empiria.Land.Pages {
 
   /// <summary>Book entry stamp for instrument recording in physical books.</summary>

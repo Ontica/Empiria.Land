@@ -22,6 +22,7 @@ namespace Empiria.Land.Registration.WebApi {
 
     #region Web Apis
 
+    // ToDo: Remove this API
     [HttpGet]
     [Route("v5/land/recording-sections")]
     public CollectionModel GetRecordingSectionsList() {
@@ -194,6 +195,7 @@ namespace Empiria.Land.Registration.WebApi {
     #endregion Web Apis
 
 
+    // ToDo: Remove this method
     private RecorderOffice GetRecorderOffice() {
       try {
         return Permissions.GetUserDefaultRecorderOffice();

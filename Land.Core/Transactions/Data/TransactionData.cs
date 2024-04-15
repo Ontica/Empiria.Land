@@ -1,10 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Filing                                       Component : Data Services Layer                   *
-*  Assembly : Empiria.Land.Transactions.dll                Pattern   : Data Services                         *
-*  Type     : TransactionData                              License   : Please read LICENSE.txt file          *
+*  Module   : Transaction Management                       Component : Data Services Layer                   *
+*  Assembly : Empiria.Land.Core.dll                        Pattern   : Data Services                         *
+*  Type     : TransactionsDataService                      License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Provides database read and write methods for recording office filings.                         *
+*  Summary  : Provides database read and write methods for recording office transactions.                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -16,7 +16,7 @@ using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Data {
 
-  /// <summary>Provides database read and write methods for recording office filings.</summary>
+  /// <summary>Provides database read and write methods for recording office transactions.</summary>
   static internal class TransactionData {
 
     #region Public methods
@@ -66,33 +66,12 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal FixedList<LRSPayment> GetTransactionPayments(LRSTransaction transaction) {
-      if (transaction.IsEmptyInstance) {
-        return new FixedList<LRSPayment>();
-      }
-
-      var operation = DataOperation.Parse("qryLRSTransactionPayments", transaction.Id);
-
-      return DataReader.GetFixedList<LRSPayment>(operation);
-    }
-
-
     static internal void SetTransactionInstrument(LRSTransaction transaction, IIdentifiable instrument) {
       var sql = $"UPDATE LRSTransactions " +
                 $"SET InstrumentId = {instrument.Id} " +
                 $"WHERE TransactionId = {transaction.Id}";
 
       var op = DataOperation.Parse(sql);
-
-      DataWriter.Execute(op);
-    }
-
-
-    static internal void WritePayment(LRSPayment o) {
-      var op = DataOperation.Parse("writeLRSPayment", o.Id, o.Transaction.Id,
-                                   o.PaymentOffice.Id, o.ReceiptNo, o.ReceiptTotal, o.ReceiptIssuedTime,
-                                   o.ExtensionData.ToString(), o.PostingTime,
-                                   o.PostedBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(op);
     }
@@ -130,6 +109,6 @@ namespace Empiria.Land.Data {
 
     #endregion Public methods
 
-  } // class TransactionData
+  } // class TransactionsDataService
 
 } // namespace Empiria.Land.Data

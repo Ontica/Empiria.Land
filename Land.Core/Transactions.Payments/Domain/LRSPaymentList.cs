@@ -1,21 +1,22 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSPaymentList                                 Pattern  : Empiria List Class                  *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Transaction Payments                       Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data holder                             *
+*  Type     : LRSPaymentList                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : List of LRSPayment instances. Can hold one or heterogeneous transaction payments.             *
+*  Summary  : List of LRSPayment instances.                                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
 
-using Empiria.Land.Data;
+using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Registration.Transactions {
+using Empiria.Land.Transactions.Payments.Data;
 
-  /// <summary>List of LRSPayment instances. Can hold one or heterogeneous transaction payments.</summary>
+namespace Empiria.Land.Transactions.Payments {
+
+  /// <summary>List of LRSPayment instances.</summary>
   public class LRSPaymentList : FixedList<LRSPayment> {
 
     #region Fields
@@ -36,14 +37,14 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static internal LRSPaymentList Parse(LRSTransaction transaction) {
-      FixedList<LRSPayment> list = TransactionData.GetTransactionPayments(transaction);
+      FixedList<LRSPayment> list = TransactionPaymentsDataService.GetTransactionPayments(transaction);
 
       return new LRSPaymentList(list);
     }
 
     #endregion Constructors and parsers
 
-    #region Public properties
+    #region Properties
 
     public override LRSPayment this[int index] {
       get {
@@ -69,9 +70,9 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    #endregion Public properties
+    #endregion Properties
 
-    #region Public methods
+    #region Methods
 
     protected internal new void Add(LRSPayment item) {
       base.Add(item);
@@ -79,11 +80,13 @@ namespace Empiria.Land.Registration.Transactions {
       this.CalculateTotalsAndReceiptNumbers();
     }
 
+
     public override void CopyTo(LRSPayment[] array, int index) {
       for (int i = index, j = Count; i < j; i++) {
         array.SetValue(base[i], i);
       }
     }
+
 
     protected internal new bool Remove(LRSPayment item) {
       bool result = base.Remove(item);
@@ -93,9 +96,9 @@ namespace Empiria.Land.Registration.Transactions {
       return result;
     }
 
-    #endregion Public methods
+    #endregion Methods
 
-    #region Private methods
+    #region Helpers
 
     private void CalculateTotalsAndReceiptNumbers() {
       total = 0;
@@ -112,8 +115,8 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
-    #endregion Private methods;
+    #endregion Helpers
 
   } // class LRSPaymentList
 
-} // namespace Empiria.Land.Registration.Transactions
+} // namespace Empiria.Land.Transactions.Payments

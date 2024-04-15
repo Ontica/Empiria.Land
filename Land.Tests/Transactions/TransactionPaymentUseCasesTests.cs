@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Test cases                              *
+*  Module   : Transaction Payments                       Component : Test cases                              *
 *  Assembly : Empiria.Land.Tests.dll                     Pattern   : Use cases tests class                   *
 *  Type     : TransactionPaymentUseCasesTests            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -17,10 +17,10 @@ using Empiria.Tests;
 
 using Empiria.Land.Transactions;
 
-using Empiria.Land.Transactions.Payments;
+using Empiria.Land.Transactions.Payments.Adapters;
 using Empiria.Land.Transactions.Payments.UseCases;
 
-namespace Empiria.Land.Tests.Transactions {
+namespace Empiria.Land.Tests.Transactions.Payments {
 
   /// <summary>Use case test cases for add and remove services to a transaction.</summary>
   public class TransactionPaymentUseCasesTests {
@@ -76,10 +76,10 @@ namespace Empiria.Land.Tests.Transactions {
     public void Should_Set_And_Cancel_A_Transaction_Payment() {
       TransactionDto transaction = TransactionRandomizer.TryGetAReadyForPaymentTransaction();
 
-      PaymentFields payment =
+      PaymentDto paymentFields =
             TransactionRandomizer.GetRandomPaymentFields(transaction.PaymentOrder.Total);
 
-      TransactionDto withPayment = _usecases.SetPayment(transaction.UID, payment);
+      TransactionDto withPayment = _usecases.SetPayment(transaction.UID, paymentFields);
 
       Assert.Equal(transaction.UID, withPayment.UID);
       Assert.False(withPayment.Actions.Can.GeneratePaymentOrder);
@@ -104,4 +104,4 @@ namespace Empiria.Land.Tests.Transactions {
 
   }  // class TransactionPaymentUseCasesTests
 
-}  // namespace Empiria.Land.Tests.Transactions
+}  // namespace Empiria.Land.Tests.Transactions.Payments

@@ -14,12 +14,11 @@ using Xunit;
 
 using Empiria.Tests;
 
-using Empiria.Land.Transactions;
-using Empiria.Land.Transactions.UseCases;
-
-using Empiria.Land.Transactions.Payments;
+using Empiria.Land.Transactions.Payments.Adapters;
 using Empiria.Land.Transactions.Payments.UseCases;
 
+using Empiria.Land.Transactions;
+using Empiria.Land.Transactions.UseCases;
 
 namespace Empiria.Land.Tests.Transactions {
 
@@ -212,7 +211,7 @@ namespace Empiria.Land.Tests.Transactions {
 
     #region Helper methods
 
-    internal async Task<TransactionDto> AddServicesIfApplicable(TransactionDto transaction) {
+    private async Task<TransactionDto> AddServicesIfApplicable(TransactionDto transaction) {
       if (!transaction.Actions.Can.EditServices) {
         return await Task.FromResult(transaction);
       }
@@ -228,7 +227,8 @@ namespace Empiria.Land.Tests.Transactions {
       return transaction;
     }
 
-    internal async Task<TransactionDto> GeneratePaymentOrderAndPaymentIfApplicable(TransactionDto transaction) {
+
+    private async Task<TransactionDto> GeneratePaymentOrderAndPaymentIfApplicable(TransactionDto transaction) {
       if (!transaction.Actions.Can.GeneratePaymentOrder) {
         return transaction;
       }
@@ -239,7 +239,7 @@ namespace Empiria.Land.Tests.Transactions {
         transaction = await paymentUseCases.GeneratePaymentOrder(transaction.UID);
         Assert.True(transaction.Actions.Can.EditPayment);
 
-        PaymentFields paymentFields =
+        PaymentDto paymentFields =
               TransactionRandomizer.GetRandomPaymentFields(transaction.PaymentOrder.Total);
 
 

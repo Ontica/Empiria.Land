@@ -1,8 +1,8 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction services                         Component : Domain Layer                          *
-*  Assembly : Empiria.Land.Registration.dll                Pattern   : Information Holder                    *
-*  Type     : LRSTransactionPaymentData                    License   : Please read LICENSE.txt file          *
+*  Module   : Transaction Payments                       Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Information Holder                      *
+*  Type     : LRSTransactionPaymentData                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Holds transaction's payment order and payments data.                                           *
 *                                                                                                            *
@@ -11,10 +11,12 @@ using System;
 
 using Empiria.OnePoint.EPayments;
 
-using Empiria.Land.Transactions.Payments;
-using Empiria.Land.Integration.PaymentServices;
+using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Registration.Transactions {
+using Empiria.Land.Integration.PaymentServices;
+using Empiria.Land.Transactions.Payments.Adapters;
+
+namespace Empiria.Land.Transactions.Payments {
 
   /// <summary>Holds transaction's payment order and payments data.</summary>
   public class LRSTransactionPaymentData : IPayable {
@@ -130,7 +132,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
 
-    public void SetPayment(PaymentFields paymentFields) {
+    public void SetPayment(PaymentDto paymentFields) {
       this.SetPayment(paymentFields.ReceiptNo, paymentFields.Total);
 
       this.PaymentOrder.Status = paymentFields.Status;
@@ -199,4 +201,4 @@ namespace Empiria.Land.Registration.Transactions {
 
   } // class LRSTransactionPaymentData
 
-} // namespace Empiria.Land.Registration.Transactions
+} // namespace Empiria.Land.Transactions.Payments

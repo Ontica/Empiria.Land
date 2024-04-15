@@ -11,7 +11,7 @@ using System;
 
 using Empiria.DataTypes;
 
-using Empiria.Land.Transactions.Payments;
+using Empiria.Land.Transactions.Payments.Adapters;
 
 namespace Empiria.Land.Transactions {
 
@@ -74,7 +74,7 @@ namespace Empiria.Land.Transactions {
       get; internal set;
     }
 
-    public PaymentFields Payment {
+    public PaymentDto Payment {
       get; internal set;
     }
 

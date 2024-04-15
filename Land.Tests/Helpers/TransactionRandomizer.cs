@@ -8,9 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.Land.Registration.Transactions;
+
 using Empiria.Land.Transactions;
-using Empiria.Land.Transactions.Payments;
+
+using Empiria.Land.Transactions.Payments.Adapters;
 
 using Empiria.Land.Transactions.UseCases;
 
@@ -111,8 +114,8 @@ namespace Empiria.Land.Tests {
     }
 
 
-    internal static PaymentFields GetRandomPaymentFields(decimal total = -1) {
-      return new PaymentFields {
+    internal static PaymentDto GetRandomPaymentFields(decimal total = -1) {
+      return new PaymentDto {
         ReceiptNo = EmpiriaString.BuildRandomString(8, 20),
         Total = total != -1 ? total : EmpiriaMath.GetRandom(1, 20) * 200
       };

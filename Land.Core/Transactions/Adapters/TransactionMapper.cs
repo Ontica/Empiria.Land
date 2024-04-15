@@ -16,7 +16,7 @@ using Empiria.Land.Media.Adapters;
 
 using Empiria.Land.Registration.Transactions;
 
-using Empiria.Land.Transactions.Payments;
+using Empiria.Land.Transactions.Payments.Adapters;
 
 namespace Empiria.Land.Transactions {
 
@@ -45,9 +45,9 @@ namespace Empiria.Land.Transactions {
         InstrumentDescriptor = transaction.DocumentDescriptor,
         RequestedServices = GetRequestedServicesDtoArray(transaction),
         ControlVoucher = GetControlVoucherDto(transaction),
-        PaymentOrder = GetPaymentOrderDto(transaction),
-        Payment = GetPaymentDto(transaction),
-        Billing = GetBillingDto(transaction),
+        PaymentOrder = TransactionPaymentsMapper.GetPaymentOrderDto(transaction),
+        Payment = TransactionPaymentsMapper.GetPaymentDto(transaction),
+        Billing = TransactionPaymentsMapper.GetBillingDto(transaction),
         SubmissionReceipt = GetSubmissionReceiptDto(transaction),
         StatusName = currentTask.CurrentStatusName,
         AssignedTo = currentTask.Responsible.MapToNamedEntity(),
@@ -87,13 +87,6 @@ namespace Empiria.Land.Transactions {
     }
 
     #region Helpers
-
-    static private BillingDto GetBillingDto(LRSTransaction transaction) {
-      return new BillingDto {
-        BillTo = transaction.ExtensionData.BillTo,
-        RFC = transaction.ExtensionData.RFC,
-      };
-    }
 
     static private TransactionControlDataDto GetControlDataDto(LRSTransaction transaction) {
       TransactionControlData controlData = transaction.ControlData;
@@ -135,37 +128,6 @@ namespace Empiria.Land.Transactions {
     }
 
 
-    static private PaymentFields GetPaymentDto(LRSTransaction transaction) {
-      if (!transaction.PaymentData.HasPayment) {
-        return null;
-      }
-      var payment = transaction.PaymentData.Payments[0];
-
-      return new PaymentFields {
-        ReceiptNo = payment.ReceiptNo,
-        Total = payment.ReceiptTotal,
-        Status = transaction.PaymentData.PaymentOrder.Status
-      };
-    }
-
-    static private PaymentOrderDto GetPaymentOrderDto(LRSTransaction transaction) {
-      if (!transaction.PaymentData.HasPaymentOrder) {
-        return null;
-      }
-
-      var po = transaction.PaymentData.PaymentOrder;
-
-      return new PaymentOrderDto {
-        UID = po.UID,
-        DueDate = po.DueDate,
-        IssueTime = po.IssueTime,
-        Total = po.Total,
-        Status = po.Status,
-        Media = po.Media
-      };
-    }
-
-
     static private RequestedServiceDto[] GetRequestedServicesDtoArray(LRSTransaction transaction) {
       var servicesList = transaction.Services;
 
@@ -196,7 +158,7 @@ namespace Empiria.Land.Transactions {
     }
 
 
-    private static MediaData GetSubmissionReceiptDto(LRSTransaction transaction) {
+    static private MediaData GetSubmissionReceiptDto(LRSTransaction transaction) {
       if (!transaction.ControlData.CanPrintSubmissionReceipt) {
         return null;
       }
@@ -205,6 +167,7 @@ namespace Empiria.Land.Transactions {
 
       return mediaBuilder.GetMediaDto(LandMediaContent.TransactionSubmissionReceipt, transaction.UID);
     }
+
 
     static private RequestedByDto GetRequestedByDto(LRSTransaction transaction) {
       return new RequestedByDto {

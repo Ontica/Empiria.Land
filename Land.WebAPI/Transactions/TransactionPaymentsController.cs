@@ -13,6 +13,7 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
+using Empiria.Land.Transactions.Payments.Adapters;
 using Empiria.Land.Transactions.Payments.UseCases;
 
 namespace Empiria.Land.Transactions.Payments.WebApi {
@@ -61,7 +62,7 @@ namespace Empiria.Land.Transactions.Payments.WebApi {
     [HttpPost]
     [Route("v5/land/transactions/{transactionUID:length(19)}/set-payment")]
     public SingleObjectModel SetPayment([FromUri] string transactionUID,
-                                        [FromBody] PaymentFields fields) {
+                                        [FromBody] PaymentDto fields) {
 
       using (var usecases = TransactionPaymentUseCases.UseCaseInteractor()) {
         TransactionDto transactionDto = usecases.SetPayment(transactionUID, fields);
