@@ -11,8 +11,6 @@ using System;
 
 using Empiria.OnePoint.EPayments;
 
-using Empiria.Land.Registration.Transactions;
-
 using Empiria.Land.Integration.PaymentServices;
 using Empiria.Land.Transactions.Payments.Adapters;
 

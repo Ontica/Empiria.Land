@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using Empiria.Json;
 
 using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions;
 
 using SeguriSign.Connector;
 using SeguriSign.Connector.Adapters;

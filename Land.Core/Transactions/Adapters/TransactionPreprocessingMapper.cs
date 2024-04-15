@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Transactions Preprocessing                 Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Mapper class                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
 *  Type     : TransactionPreprocessingMapper             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Contains methods to map TransactionPreprocessingData instances to their DTOs.                  *

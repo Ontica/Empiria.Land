@@ -11,10 +11,10 @@ using System;
 
 using System.Web.UI;
 
-using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
-
+using Empiria.Land.Transactions;
 using Empiria.Land.Transactions.Payments;
+
+using Empiria.Land.Registration;
 
 namespace Empiria.Land.Pages {
 

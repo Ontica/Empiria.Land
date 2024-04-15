@@ -9,7 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Web;
-using Empiria.Land.Registration.Transactions;
+
+using Empiria.Land.Transactions;
 
 namespace Empiria.Land.Pages {
 

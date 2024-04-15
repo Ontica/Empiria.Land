@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 using Empiria.Reflection;
 
-using Empiria.Land.Registration.Transactions;
-
 using Empiria.Land.Integration.PaymentServices;
 
 using Empiria.Land.Media;
 using Empiria.Land.Media.Adapters;
+
+using Empiria.Land.Transactions.Adapters;
 
 namespace Empiria.Land.Transactions.Payments.Providers {
 

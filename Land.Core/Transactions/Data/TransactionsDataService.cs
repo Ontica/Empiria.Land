@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                       Component : Data Services Layer                   *
+*  Module   : Transactions Management                      Component : Data Services Layer                   *
 *  Assembly : Empiria.Land.Core.dll                        Pattern   : Data Services                         *
 *  Type     : TransactionsDataService                      License   : Please read LICENSE.txt file          *
 *                                                                                                            *
@@ -12,12 +12,11 @@ using System;
 using Empiria.Data;
 
 using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Data {
+namespace Empiria.Land.Transactions.Data {
 
   /// <summary>Provides database read and write methods for recording office transactions.</summary>
-  static internal class TransactionData {
+  static internal class TransactionsDataService {
 
     #region Public methods
 
@@ -106,9 +105,8 @@ namespace Empiria.Land.Data {
       DataWriter.Execute(op);
     }
 
-
     #endregion Public methods
 
   } // class TransactionsDataService
 
-} // namespace Empiria.Land.Data
+} // namespace Empiria.Land.Transactions.Data

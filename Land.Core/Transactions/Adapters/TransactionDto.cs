@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Transactions Management                    Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data Transfer Object                    *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : TransactionDto                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO that holds full data related to a transaction.                                      *
@@ -13,7 +13,7 @@ using Empiria.DataTypes;
 
 using Empiria.Land.Transactions.Payments.Adapters;
 
-namespace Empiria.Land.Transactions {
+namespace Empiria.Land.Transactions.Adapters {
 
   /// <summary>Output DTO that holds full data related to a transaction.</summary>
   public class TransactionDto {
@@ -270,4 +270,4 @@ namespace Empiria.Land.Transactions {
 
   }  // class TransationShowControlData
 
-}  // namespace Empiria.Land.Transactions
+}  // namespace Empiria.Land.Transactions.Adapters

@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction services                         Component : Domain Layer                          *
-*  Assembly : Empiria.Land.Registration.dll                Pattern   : Information Holder                    *
+*  Module   : Transactions Management                      Component : Domain Layer                          *
+*  Assembly : Empiria.Land.Core.dll                        Pattern   : Information Holder                    *
 *  Type     : LRSTransactionService                        License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Represents a service provided in the context of a land registration transaction.               *
@@ -13,11 +13,12 @@ using System.Data;
 using Empiria.DataTypes;
 using Empiria.Security;
 
-using Empiria.Land.Data;
-
+using Empiria.Land.Registration;
 using Empiria.Land.Transactions.Payments;
+using Empiria.Land.Transactions.Data;
 
-namespace Empiria.Land.Registration.Transactions {
+
+namespace Empiria.Land.Transactions {
 
   /// <summary>Represents a service provided in the context of a land registration transaction.</summary>
   public class LRSTransactionService : BaseObject, IProtected {
@@ -191,11 +192,11 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     protected override void OnSave() {
-      TransactionData.WriteTransactionService(this);
+      TransactionsDataService.WriteTransactionService(this);
     }
 
     #endregion Public methods
 
   } // class LRSTransactionService
 
-} // namespace Empiria.Land.Registration.Transactions
+} // namespace Empiria.Land.Transactions

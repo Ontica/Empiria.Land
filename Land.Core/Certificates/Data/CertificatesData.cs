@@ -12,7 +12,7 @@ using System;
 using Empiria.Data;
 
 using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions;
 
 namespace Empiria.Land.Certificates.Data {
 

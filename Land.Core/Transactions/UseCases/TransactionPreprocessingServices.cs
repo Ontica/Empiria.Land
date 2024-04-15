@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Transactions Preprocessing                 Component : Services Layer                          *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Services provider                       *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Services provider                       *
 *  Type     : TransactionPreprocessingServices           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Use cases for transaction searching and retrieving.                                            *
@@ -10,8 +10,6 @@
 using System;
 
 using Empiria.Services;
-
-using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Transactions.Preprocessing.Services {
 
@@ -48,4 +46,4 @@ namespace Empiria.Land.Transactions.Preprocessing.Services {
 
   }  // class TransactionPreprocessingServices
 
-}  // namespace Empiria.Land.Transactions.Preprocessing.UseCases
+}  // namespace Empiria.Land.Transactions.Preprocessing.Services

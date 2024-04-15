@@ -10,8 +10,6 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.Land.Registration.Transactions;
-
 using Empiria.Land.Transactions.Payments.Data;
 
 namespace Empiria.Land.Transactions.Payments {

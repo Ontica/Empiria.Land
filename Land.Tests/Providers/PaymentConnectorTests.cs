@@ -16,7 +16,7 @@ using Empiria.Tests;
 
 using Empiria.OnePoint.EPayments;
 
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions;
 
 namespace Empiria.Land.Tests.Providers {
 

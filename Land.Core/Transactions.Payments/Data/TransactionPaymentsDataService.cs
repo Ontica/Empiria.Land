@@ -11,8 +11,6 @@ using System;
 
 using Empiria.Data;
 
-using Empiria.Land.Registration.Transactions;
-
 namespace Empiria.Land.Transactions.Payments.Data {
 
   /// <summary>Provides database read and write methods for recording office filings.</summary>

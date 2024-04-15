@@ -1,11 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Registration.Transactions         Assembly : Empiria.Land.Registration           *
-*  Type      : LRSTransactionExtData                          Pattern  : IExtensibleData class               *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Transactions Management                      Component : Domain Layer                          *
+*  Assembly : Empiria.Land.Core.dll                        Pattern   : Information Holder                    *
+*  Type     : LRSTransactionExtData                        License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Contains extensible data for a land registration system transaction.                          *
+*  Summary  : Contains extensible data for a land registration system transaction.                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -16,10 +15,10 @@ using Empiria.Messaging.EMailDelivery;
 
 using Empiria.OnePoint.EPayments;
 
-using Empiria.Land.Transactions;
+using Empiria.Land.Registration;
 using Empiria.Land.Transactions.Payments;
 
-namespace Empiria.Land.Registration.Transactions {
+namespace Empiria.Land.Transactions {
 
   /// <summary>Contains extensible data for a land registration system transaction.</summary>
   public class LRSTransactionExtData {
@@ -193,4 +192,4 @@ namespace Empiria.Land.Registration.Transactions {
 
   }  // class LRSTransactionExtData
 
-} // namespace Empiria.Land.Registration.Transactions
+} // namespace Empiria.Land.Transactions

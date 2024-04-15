@@ -15,9 +15,9 @@ using Xunit;
 
 using Empiria.Tests;
 
-using Empiria.Land.Transactions;
-
+using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Transactions.UseCases;
+
 
 namespace Empiria.Land.Tests.Transactions {
 

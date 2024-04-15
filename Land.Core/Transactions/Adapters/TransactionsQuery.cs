@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Transactions Management                    Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Query payload                           *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Query payload                           *
 *  Type     : TransactionsQuery                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Query payload used for transactions searching.                                                 *
@@ -10,9 +10,8 @@
 using System;
 
 using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
 
-namespace Empiria.Land.Transactions {
+namespace Empiria.Land.Transactions.Adapters {
 
   /// <summary>Query payload used for transactions searching.</summary>
   public class TransactionsQuery {
@@ -189,4 +188,4 @@ namespace Empiria.Land.Transactions {
 
   }  // class TransactionsQueryExtensions
 
-}  // namespace Empiria.Land.Transactions
+}  // namespace Empiria.Land.Transactions.Adapters

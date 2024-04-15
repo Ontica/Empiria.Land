@@ -15,7 +15,7 @@ using Xunit;
 
 using Empiria.Tests;
 
-using Empiria.Land.Transactions;
+using Empiria.Land.Transactions.Adapters;
 
 using Empiria.Land.Transactions.Payments.Adapters;
 using Empiria.Land.Transactions.Payments.UseCases;

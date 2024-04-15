@@ -11,8 +11,7 @@
 using System;
 using System.Web;
 
-using Empiria.Land.Registration.Transactions;
-
+using Empiria.Land.Transactions;
 using Empiria.Land.Transactions.Payments;
 
 namespace Empiria.Land.Pages {

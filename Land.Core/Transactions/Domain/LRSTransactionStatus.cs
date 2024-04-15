@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Workflow                      Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Enumeration                             *
+*  Module   : Transaction Workflow                       Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Enumeration                             *
 *  Type     : TransactionStatus                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Enumerates the possible statuses of a transaction with respect of the office workflow.         *
@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land.Registration.Transactions {
+namespace Empiria.Land.Transactions {
 
   /// <summary>Enumerates the possible statuses of a transaction with respect of the office workflow.</summary>
   public enum TransactionStatus {
@@ -107,4 +107,4 @@ namespace Empiria.Land.Registration.Transactions {
 
   }  // class TransactionStatusExtensionMethods
 
-} // namespace Empiria.Land.Registration.Transactions
+} // namespace Empiria.Land.Transactions

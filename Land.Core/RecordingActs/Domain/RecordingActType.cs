@@ -13,7 +13,7 @@ using System;
 using Empiria.DataTypes;
 using Empiria.Ontology;
 
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions;
 
 namespace Empiria.Land.Registration {
 

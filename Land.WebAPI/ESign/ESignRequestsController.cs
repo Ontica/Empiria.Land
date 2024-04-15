@@ -12,7 +12,7 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.Land.Transactions;
+using Empiria.Land.Transactions.Adapters;
 
 using Empiria.Land.ESign.Adapters;
 using Empiria.Land.ESign.UseCases;

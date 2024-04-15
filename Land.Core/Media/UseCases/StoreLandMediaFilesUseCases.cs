@@ -13,8 +13,9 @@ using System.Threading.Tasks;
 using Empiria.Services;
 using Empiria.Storage;
 
+using Empiria.Land.Transactions;
+
 using Empiria.Land.Media.Adapters;
-using Empiria.Land.Registration.Transactions;
 
 namespace Empiria.Land.Media.UseCases {
 

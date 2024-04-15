@@ -11,7 +11,7 @@ using System;
 
 using Empiria.Security;
 
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions;
 
 namespace Empiria.Land.ESign.Adapters {
 

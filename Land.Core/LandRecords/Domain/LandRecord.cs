@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 
 using Empiria.Contacts;
@@ -17,8 +16,9 @@ using Empiria.Contacts;
 using Empiria.Land.Data;
 using Empiria.Land.Providers;
 
-using Empiria.Land.Registration.Transactions;
 using Empiria.Land.Instruments;
+using Empiria.Land.Transactions;
+
 using Empiria.Land.Registration.UseCases;
 
 namespace Empiria.Land.Registration {

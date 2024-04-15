@@ -1,16 +1,15 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSTransactionType                             Pattern  : Storage Item                        *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Transactions Management                    Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Information Holder                      *
+*  Type     : LRSTransactionType                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Describes a recorder office transaction type.                                                 *
+*  Summary  : Describes a recorder office transaction type.                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land.Registration.Transactions {
+namespace Empiria.Land.Transactions {
 
   /// <summary>Describes a recorder office transaction type.</summary>
   public class LRSTransactionType : GeneralObject {
@@ -53,4 +52,4 @@ namespace Empiria.Land.Registration.Transactions {
 
   } // class LRSTransactionType
 
-} // namespace Empiria.Land.Registration.Transactions
+} // namespace Empiria.Land.Transactions

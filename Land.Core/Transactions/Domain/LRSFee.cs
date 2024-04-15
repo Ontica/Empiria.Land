@@ -1,18 +1,17 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSFee                                         Pattern  : Standard Class                      *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Transactions Management                    Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Information Holder                      *
+*  Type     : LRSFee                                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Fee payed in order to obtain a service in a Recorder Office.                                  *
+*  Summary  : Fee payed in order to obtain a service in a Recorder Office.                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System.Data;
 
 using Empiria.DataTypes;
 
-namespace Empiria.Land.Registration.Transactions {
+namespace Empiria.Land.Transactions {
 
   /// <summary>Fee payed in order to obtain a service in a Recorder Office.</summary>
   public class LRSFee {
@@ -94,4 +93,4 @@ namespace Empiria.Land.Registration.Transactions {
 
   } // class LRSFee
 
-} // namespace Empiria.Land.Registration.Transactions
+} // namespace Empiria.Land.Transactions

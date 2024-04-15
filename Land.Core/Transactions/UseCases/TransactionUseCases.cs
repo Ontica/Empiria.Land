@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Transactions Management                    Component : Use cases Layer                         *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Use case interactor class               *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Use case interactor class               *
 *  Type     : TransactionUseCases                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Use cases for transaction searching and retrieving.                                            *
@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 using Empiria.Services;
 
-using Empiria.Land.Registration.Transactions;
-
 using Empiria.Land.Messaging;
+
+using Empiria.Land.Transactions.Adapters;
 
 namespace Empiria.Land.Transactions.UseCases {
 

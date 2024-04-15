@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction services                         Component : Domain Layer                          *
-*  Assembly : Empiria.Land.Registration.dll                Pattern   : Information Holder                    *
+*  Module   : Transactions Management                      Component : Domain Layer                          *
+*  Assembly : Empiria.Land.Core.dll                        Pattern   : Information Holder                    *
 *  Type     : LRSTransaction                               License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Represents a transaction or procedure in the context of a land registration office.            *
@@ -12,16 +12,19 @@ using System;
 using Empiria.Contacts;
 using Empiria.Security;
 
-using Empiria.Land.Data;
 using Empiria.Land.Providers;
 
 using Empiria.Land.Certificates;
-using Empiria.Land.Transactions;
+
 using Empiria.Land.Certificates.Adapters;
 
-using Empiria.Land.Transactions.Payments;
+using Empiria.Land.Registration;
 
-namespace Empiria.Land.Registration.Transactions {
+using Empiria.Land.Transactions.Payments;
+using Empiria.Land.Transactions.Workflow;
+using Empiria.Land.Transactions.Data;
+
+namespace Empiria.Land.Transactions {
 
   /// <summary>Represents a transaction or procedure in the context of a land registration office.</summary>
   public class LRSTransaction : BaseObject, IProtected {
@@ -98,7 +101,7 @@ namespace Empiria.Land.Registration.Transactions {
 
 
     static public FixedList<LRSTransaction> GetList(string filter, string orderBy, int pageSize) {
-      return TransactionData.GetTransactionsList(filter, orderBy, pageSize);
+      return TransactionsDataService.GetTransactionsList(filter, orderBy, pageSize);
     }
 
 
@@ -545,7 +548,7 @@ namespace Empiria.Land.Registration.Transactions {
                                                   this.DocumentType.Name, this.TransactionType.Name,
                                                   this.RecorderOffice.ShortName);
 
-      TransactionData.WriteTransaction(this);
+      TransactionsDataService.WriteTransaction(this);
 
       if (base.IsNew) {
 
@@ -579,7 +582,7 @@ namespace Empiria.Land.Registration.Transactions {
     public void SetInstrument(IIdentifiable instrument) {
       this.InstrumentId = instrument.Id;
 
-      TransactionData.SetTransactionInstrument(this, instrument);
+      TransactionsDataService.SetTransactionInstrument(this, instrument);
     }
 
 
@@ -599,7 +602,7 @@ namespace Empiria.Land.Registration.Transactions {
     #region Helpers
 
     private string BuildControlNumber() {
-      int current = TransactionData.GetLastControlNumber(this.RecorderOffice);
+      int current = TransactionsDataService.GetLastControlNumber(this.RecorderOffice);
 
       current++;
 
@@ -660,4 +663,4 @@ namespace Empiria.Land.Registration.Transactions {
 
   } // class LRSTransaction
 
-} // namespace Empiria.Land.Registration.Transactions
+} // namespace Empiria.Land.Transactions

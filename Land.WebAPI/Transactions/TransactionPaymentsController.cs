@@ -13,7 +13,9 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
+using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Transactions.Payments.Adapters;
+
 using Empiria.Land.Transactions.Payments.UseCases;
 
 namespace Empiria.Land.Transactions.Payments.WebApi {

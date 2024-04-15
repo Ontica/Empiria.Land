@@ -10,8 +10,7 @@
 using Empiria.OnePoint.EFiling;
 
 using Empiria.Land.Providers;
-
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions;
 
 namespace Empiria.Land.Registration.Forms {
 

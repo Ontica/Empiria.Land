@@ -1,16 +1,16 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Input Data Holder                       *
+*  Module   : Transactions Management                    Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Input Data Transfer Object              *
 *  Type     : TransactionFields                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Input data structure used to create or update transactions.                                    *
+*  Summary  : Input DTO used to create or update transactions.                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria.Land.Transactions {
 
-  /// <summary>Input data structure used to create or update transactions.</summary>
+  /// <summary>Input DTO used to create or update transactions.</summary>
   public class TransactionFields {
 
     public string TypeUID {
@@ -60,4 +60,4 @@ namespace Empiria.Land.Transactions {
 
   }  // class TransactionFields
 
-}  // namespace Empiria.Land.Transactions
+}  // namespace Empiria.Land.Transactions.Adapters

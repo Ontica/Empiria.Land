@@ -12,7 +12,7 @@ using System;
 using Empiria.Security;
 using Empiria.Services;
 
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions;
 
 using Empiria.Land.ESign.Adapters;
 

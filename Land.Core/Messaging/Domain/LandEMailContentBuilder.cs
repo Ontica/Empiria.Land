@@ -12,9 +12,8 @@ using System;
 using Empiria.Messaging;
 using Empiria.Messaging.EMailDelivery;
 
-using Empiria.Land.Registration.Transactions;
 using Empiria.Land.Registration;
-
+using Empiria.Land.Transactions;
 
 namespace Empiria.Land.Messaging {
 
@@ -28,7 +27,7 @@ namespace Empiria.Land.Messaging {
 
     #endregion Constructors and parsers
 
-    #region Public methods
+    #region Methods
 
     internal EmailContent BuildForRegisteredForResourceChanges(Resource resource) {
       var body = GetTemplate(NotificationType.SubscribedForResourceChanges);
@@ -102,10 +101,9 @@ namespace Empiria.Land.Messaging {
     }
 
 
-    #endregion Public methods
+    #endregion Methods
 
-
-    #region Private methods
+    #region Helpers
 
     static private string GetTemplate(NotificationType notificationType) {
       string templatesPath = ConfigurationData.GetString("Templates.Path");
@@ -143,7 +141,7 @@ namespace Empiria.Land.Messaging {
       return body;
     }
 
-    #endregion Private methods
+    #endregion Helpers
 
   }  // class LandEMailContentBuilder
 

@@ -14,8 +14,6 @@ using Empiria.Json;
 using Empiria.Security;
 using Empiria.StateEnums;
 
-using Empiria.Land.Registration.Transactions;
-
 using Empiria.Land.Transactions.Payments.Data;
 
 namespace Empiria.Land.Transactions.Payments {

@@ -20,8 +20,7 @@ using Empiria.Messaging.EMailDelivery;
 using Empiria.Land.Providers;
 
 using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
-
+using Empiria.Land.Transactions;
 
 namespace Empiria.Land.Messaging {
 

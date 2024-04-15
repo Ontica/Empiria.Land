@@ -11,11 +11,10 @@ using System;
 
 using Empiria.Services;
 
-using Empiria.Land.Transactions;
+using Empiria.Land.Transactions.Adapters;
 
 using Empiria.Land.ESign.Adapters;
 using Empiria.Land.ESign.Data;
-using Empiria.Land.Registration;
 
 namespace Empiria.Land.ESign.UseCases {
 

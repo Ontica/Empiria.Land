@@ -1,12 +1,11 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSExternalTransaction                         Pattern  : External Interfacer                 *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Transactions Management                    Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Information Holder                      *
+*  Type     : LRSExternalTransaction                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Acts as an abstract class that holds data for an external transaction request, that may be    *
-*              integrated into an Empiria Land transaction.                                                  *
+*  Summary  : Holds data for an external transaction request, that could be integrated into a                *
+*             land transaction.                                                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -14,12 +13,14 @@ using System;
 using Empiria.Contacts;
 using Empiria.Json;
 
-using Empiria.Land.Data;
+using Empiria.Land.Registration;
+using Empiria.Land.Transactions.Data;
+using Empiria.Land.Transactions.Workflow;
 
-namespace Empiria.Land.Registration.Transactions {
+namespace Empiria.Land.Transactions {
 
-  /// <summary>Acts as an abstract class that holds data for an external transaction request, that may be
-  ///  integrated into an Empiria Land transaction.</summary>
+  /// <summary>Holds data for an external transaction request,
+  /// that could be integrated into a land transaction.</summary>
   public class LRSExternalTransaction {
 
     static private readonly decimal BASE_SALARY_VALUE = ConfigurationData.Get<decimal>("BaseSalaryValue");
@@ -142,7 +143,7 @@ namespace Empiria.Land.Registration.Transactions {
       Assertion.Require(this.ExternalTransactionTime < DateTime.Now,
         $"La fecha y hora del trámite externo no puede ser mayor a la fecha y hora actual: {this.ExternalTransactionTime}");
 
-      Assertion.Require(!TransactionData.ExistsExternalTransactionNo(this.ExternalTransactionNo),
+      Assertion.Require(!TransactionsDataService.ExistsExternalTransactionNo(this.ExternalTransactionNo),
                        $"Ya tengo registrado otro trámite externo con el mismo número: '{this.ExternalTransactionNo}'");
 
     }
@@ -188,4 +189,4 @@ namespace Empiria.Land.Registration.Transactions {
 
   }  // class LRSExternalTransaction
 
-}  // namespace Empiria.Land.Registration.Transactions
+}  // namespace Empiria.Land.Transactions

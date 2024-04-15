@@ -15,7 +15,7 @@ using Empiria.Ontology;
 using Empiria.Security;
 
 using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions;
 
 using Empiria.Land.Certificates.Data;
 

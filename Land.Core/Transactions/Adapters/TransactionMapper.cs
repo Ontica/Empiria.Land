@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Transactions Management                    Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Mapper class                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
 *  Type     : TransactionMapper                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Contains methods to map from LRSTransaction objects to TransactionDTOs.                        *
@@ -14,11 +14,9 @@ using Empiria.DataTypes;
 using Empiria.Land.Media;
 using Empiria.Land.Media.Adapters;
 
-using Empiria.Land.Registration.Transactions;
-
 using Empiria.Land.Transactions.Payments.Adapters;
 
-namespace Empiria.Land.Transactions {
+namespace Empiria.Land.Transactions.Adapters {
 
   /// <summary>Contains methods to map from LRSTransaction objects to TransactionDTOs.</summary>
   static public class TransactionMapper {
@@ -180,4 +178,4 @@ namespace Empiria.Land.Transactions {
 
   }  // class TransactionMapper
 
-}  // namespace Empiria.Land.Transactions
+}  // namespace Empiria.Land.Transactions.Adapters

@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Transactions Preprocessing                 Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data Transfer Object                    *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : TransactionPreprocessingDto                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO with transaction preprocessing status, allowed actions and related entities.        *

@@ -12,7 +12,7 @@ using System;
 using Empiria.Contacts;
 
 using Empiria.Land.Instruments;
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions;
 
 namespace Empiria.Land.Registration {
 

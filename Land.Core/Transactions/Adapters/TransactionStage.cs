@@ -1,14 +1,14 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Transactions Management                    Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Enumeration                             *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Enumeration                             *
 *  Type     : TransactionStage                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Enumerates the different workflow stages for a transaction.                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Transactions {
+namespace Empiria.Land.Transactions.Adapters {
 
   /// <summary>Enumerates the different workflow stages for a transaction.</summary>
   public enum TransactionStage {
@@ -31,4 +31,4 @@ namespace Empiria.Land.Transactions {
 
   }  // enum TransactionStage
 
-}  // namespace Empiria.Land.Transactions
+}  // namespace Empiria.Land.Transactions.Adapters

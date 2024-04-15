@@ -11,9 +11,9 @@ using System;
 
 using Empiria.Storage;
 
-using Empiria.Land.Media.Adapters;
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions;
 
+using Empiria.Land.Media.Adapters;
 
 namespace Empiria.Land.Media {
 

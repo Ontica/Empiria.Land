@@ -1,19 +1,19 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSLawArticle                                  Pattern  : Storage Item                        *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Transactions Management                    Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Information Holder                      *
+*  Type     : LRSLawArticle                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Describes a recorder office document type.                                                    *
+*  Summary  : Law article applicable to pay a service reequested to a Recorder Office.                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.DataTypes;
 
-namespace Empiria.Land.Registration.Transactions {
+namespace Empiria.Land.Transactions {
 
-  /// <summary>Describes a recorder office transaction type.</summary>
+  /// <summary>Law article applicable to pay a service reequested to a Recorder Office.</summary>
   public class LRSLawArticle : GeneralObject {
 
     #region Constructors and parsers
@@ -44,6 +44,8 @@ namespace Empiria.Land.Registration.Transactions {
 
     #endregion Constructors and parsers
 
+    #region Properties
+
     public bool Autocalculated {
       get {
         return base.ExtendedDataField.Get("Autocalculated", false);
@@ -68,6 +70,8 @@ namespace Empiria.Land.Registration.Transactions {
       }
     }
 
+    #endregion Properties
+
   } // class LRSLawArticle
 
-} // namespace Empiria.Land.Registration.Transactions
+} // namespace Empiria.Land.Transactions

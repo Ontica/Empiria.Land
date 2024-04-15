@@ -10,7 +10,7 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions;
 
 using Empiria.Land.Certificates.Adapters;
 

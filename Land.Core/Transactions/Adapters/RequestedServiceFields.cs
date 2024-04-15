@@ -1,16 +1,16 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Core.dll                      Pattern   : Input Data Holder                       *
+*  Module   : Transactions Management                    Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Input Data Tansfer Object               *
 *  Type     : RequestedServiceFields                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Data structure that serves to update transaction requested services.                           *
+*  Summary  : Input DTO that serves to update transaction requested services.                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Transactions {
+namespace Empiria.Land.Transactions.Adapters {
 
-  /// <summary>Data structure that serves to update transaction requested services.</summary>
+  /// <summary>Input DTO that serves to update transaction requested services.</summary>
   public class RequestedServiceFields {
 
     public string ServiceUID {
@@ -48,9 +48,9 @@ namespace Empiria.Land.Transactions {
 
 
     public void AssertValid() {
-      Assertion.Require(ServiceUID, "ServiceUID");
-      Assertion.Require(FeeConceptUID, "FeeConceptUID");
-      Assertion.Require(UnitUID, "UnitUID");
+      Assertion.Require(ServiceUID, nameof(ServiceUID));
+      Assertion.Require(FeeConceptUID, nameof(FeeConceptUID));
+      Assertion.Require(UnitUID, nameof(UnitUID));
 
       Assertion.Require(Quantity > 0, "Quantity must be a positive number.");
       Assertion.Require(Subtotal >= 0, "Subtotal must be a non-negative number.");

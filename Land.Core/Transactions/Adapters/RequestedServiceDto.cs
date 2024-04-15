@@ -1,14 +1,14 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Transactions Management                    Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data Transfer Object                    *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : RequestedServiceDto                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO that represents data about a transaction requested service.                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Transactions {
+namespace Empiria.Land.Transactions.Adapters {
 
   /// <summary>Output DTO that represents data about a transaction requested service.</summary>
   public class RequestedServiceDto {
@@ -59,4 +59,4 @@ namespace Empiria.Land.Transactions {
 
   }  // class RequestedServiceDto
 
-} // namespace Empiria.Land.Transactions
+} // namespace Empiria.Land.Transactions.Adapters

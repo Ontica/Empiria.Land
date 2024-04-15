@@ -1,10 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction services                         Component : Domain Layer                          *
-*  Assembly : Empiria.Land.Registration.dll                Pattern   : Information Holder                    *
+*  Module   : Transactions Management                      Component : Domain Layer                          *
+*  Assembly : Empiria.Land.Core.dll                        Pattern   : Information Holder                    *
 *  Type     : LRSTransactionServicesList                   License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : List of services to be provided in a transaction context.                                      *
+*  Summary  : List with the services to be provided in a land transaction.                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,12 +13,14 @@ using System.Linq;
 
 using Empiria.DataTypes;
 
-using Empiria.Land.Data;
-using Empiria.Land.Transactions;
+using Empiria.Land.Registration;
 
-namespace Empiria.Land.Registration.Transactions {
+using Empiria.Land.Transactions.Adapters;
+using Empiria.Land.Transactions.Data;
 
-  /// <summary>List of services to be provided in a transaction context.</summary>
+namespace Empiria.Land.Transactions {
+
+  /// <summary>List with the services to be provided in a land transaction.</summary>
   public class LRSTransactionServicesList : FixedList<LRSTransactionService> {
 
     #region Fields
@@ -47,7 +49,7 @@ namespace Empiria.Land.Registration.Transactions {
     }
 
     static internal LRSTransactionServicesList Parse(LRSTransaction transaction) {
-      var services = TransactionData.GetTransactionServicesList(transaction);
+      var services = TransactionsDataService.GetTransactionServicesList(transaction);
 
       return new LRSTransactionServicesList(transaction, services);
     }
@@ -194,4 +196,4 @@ namespace Empiria.Land.Registration.Transactions {
 
   } // class LRSTransactionServicesList
 
-} // namespace Empiria.Land.Registration.Transactions
+} // namespace Empiria.Land.Transactions

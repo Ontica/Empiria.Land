@@ -1,18 +1,19 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : DocumentType                                   Pattern  : Storage Item                        *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Transactions Management                    Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Information Holder                      *
+*  Type     : DocumentType                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Describes a recorder office document type.                                                    *
+*  Summary  : Describes a Recorder Office document type.                                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land.Registration.Transactions {
+using Empiria.Land.Registration;
 
-  /// <summary>Describes a recorder office document type.</summary>
+namespace Empiria.Land.Transactions {
+
+  /// <summary>Describes a Recorder Office document type.</summary>
   public class LRSDocumentType : GeneralObject {
 
     #region Constructors and parsers
@@ -62,4 +63,4 @@ namespace Empiria.Land.Registration.Transactions {
 
   } // class LRSDocumentType
 
-} // namespace Empiria.Land.Registration.Transactions
+} // namespace Empiria.Land.Transactions

@@ -11,10 +11,10 @@ using System;
 using System.Collections.Generic;
 
 using Empiria.Contacts;
-using Empiria.Land.Instruments;
 
+using Empiria.Land.Instruments;
 using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions;
 
 namespace Empiria.Land.Pages {
 

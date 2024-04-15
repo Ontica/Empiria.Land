@@ -10,11 +10,11 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.Land.Certificates;
 using Empiria.Land.Certificates.Adapters;
-using Empiria.Land.Certificates.UseCases;
+
 using Empiria.Land.Registration;
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions;
+using Empiria.Land.Transactions.Workflow;
 
 namespace Empiria.Land.WebApi {
 

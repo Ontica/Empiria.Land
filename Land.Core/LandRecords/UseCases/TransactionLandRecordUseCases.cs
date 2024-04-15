@@ -14,9 +14,9 @@ using Empiria.Services;
 using Empiria.Land.Instruments;
 using Empiria.Land.Instruments.Adapters;
 
-using Empiria.Land.Registration.Adapters;
+using Empiria.Land.Transactions;
 
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Registration.Adapters;
 
 namespace Empiria.Land.Registration.UseCases {
 
