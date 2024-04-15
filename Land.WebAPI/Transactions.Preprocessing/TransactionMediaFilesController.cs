@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Preprocessing                   Component : Web Api                               *
+*  Module   : Transaction Preprocessing                    Component : Web Api                               *
 *  Assembly : Empiria.Land.WebApi.dll                      Pattern   : Controller                            *
 *  Type     : TransactionMediaFilesController              License   : Please read LICENSE.txt file          *
 *                                                                                                            *
@@ -16,7 +16,8 @@ using Empiria.WebApi;
 
 using Empiria.Land.Media.UseCases;
 
-using Empiria.Land.Transactions.Preprocessing.Services;
+using Empiria.Land.Transactions.Preprocessing.Adapters;
+using Empiria.Land.Transactions.Preprocessing.UseCases;
 
 namespace Empiria.Land.Transactions.Preprocessing.WebApi {
 
@@ -24,7 +25,6 @@ namespace Empiria.Land.Transactions.Preprocessing.WebApi {
   public class TransactionMediaFilesController : WebApiController {
 
     #region Web Apis
-
 
     [HttpPost]
     [Route("v5/land/transactions/{transactionUID:length(19)}/media-files")]
@@ -61,16 +61,15 @@ namespace Empiria.Land.Transactions.Preprocessing.WebApi {
 
     #endregion Web Apis
 
-    #region Helper methods
-
+    #region Helpers
 
     private TransactionPreprocessingDto GetTransactionPreprocessingDto(string transactionUID) {
-      using (var usecases = TransactionPreprocessingServices.ServiceInteractor()) {
+      using (var usecases = TransactionPreprocessingUseCases.UseCaseInteractor()) {
         return usecases.GetPreprocessingData(transactionUID);
       }
     }
 
-    #endregion Helper methods
+    #endregion Helpers
 
   }  // class TransactionMediaFilesController
 

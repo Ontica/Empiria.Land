@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Preprocessing                 Component : Interface adapters                      *
+*  Module   : Transaction Preprocessing                  Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
 *  Type     : TransactionPreprocessingMapper             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -13,12 +13,12 @@ using Empiria.Land.Instruments.Adapters;
 
 using Empiria.Land.Media.Adapters;
 
-namespace Empiria.Land.Transactions.Preprocessing {
+namespace Empiria.Land.Transactions.Preprocessing.Adapters {
 
   /// <summary>Contains methods to map TransactionPreprocessingData instances to their DTOs.</summary>
   static internal class TransactionPreprocessingMapper {
 
-    static internal TransactionPreprocessingDto Map(TransactionPreprocessingData data) {
+    static internal TransactionPreprocessingDto Map(TransactionPreprocessingControlData data) {
       var dto = new TransactionPreprocessingDto();
 
       dto.Actions.Can.EditInstrument = data.CanEditInstrument;
@@ -42,4 +42,4 @@ namespace Empiria.Land.Transactions.Preprocessing {
 
   }  // class TransactionPreprocessingMapper
 
-}  // namespace Empiria.Land.Transactions.Preprocessing
+}  // namespace Empiria.Land.Transactions.Preprocessing.Adapters

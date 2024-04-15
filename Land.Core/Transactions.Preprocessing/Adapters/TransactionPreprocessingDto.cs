@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Preprocessing                 Component : Interface adapters                      *
+*  Module   : Transaction Preprocessing                  Component : Interface adapters                      *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : TransactionPreprocessingDto                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -12,7 +12,7 @@ using System;
 using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.Media.Adapters;
 
-namespace Empiria.Land.Transactions.Preprocessing {
+namespace Empiria.Land.Transactions.Preprocessing.Adapters {
 
   /// <summary>Ouput DTO with transaction preprocessing status, allowed actions and related entities.</summary>
   public class TransactionPreprocessingDto {
@@ -106,4 +106,4 @@ namespace Empiria.Land.Transactions.Preprocessing {
 
   }  //class TransactionPreprocessingShowFlags
 
-}  // namespace Empiria.Land.Transactions.Preprocessing
+}  // namespace Empiria.Land.Transactions.Preprocessing.Adapters

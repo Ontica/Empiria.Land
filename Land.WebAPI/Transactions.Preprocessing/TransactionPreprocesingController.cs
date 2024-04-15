@@ -12,7 +12,8 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.Land.Transactions.Preprocessing.Services;
+using Empiria.Land.Transactions.Preprocessing.Adapters;
+using Empiria.Land.Transactions.Preprocessing.UseCases;
 
 namespace Empiria.Land.Transactions.Preprocessing.WebApi {
 
@@ -25,8 +26,8 @@ namespace Empiria.Land.Transactions.Preprocessing.WebApi {
     [Route("v5/land/transactions/{transactionUID:length(19)}/preprocessing-data")]
     public SingleObjectModel GetPreprocessingData([FromUri] string transactionUID) {
 
-      using (var services = TransactionPreprocessingServices.ServiceInteractor()) {
-        TransactionPreprocessingDto preprocessingDto = services.GetPreprocessingData(transactionUID);
+      using (var usecases = TransactionPreprocessingUseCases.UseCaseInteractor()) {
+        TransactionPreprocessingDto preprocessingDto = usecases.GetPreprocessingData(transactionUID);
 
         return new SingleObjectModel(this.Request, preprocessingDto);
       }

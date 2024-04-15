@@ -1,29 +1,31 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Preprocessing                 Component : Services Layer                          *
+*  Module   : Transaction Preprocessing                  Component : Services Layer                          *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Services provider                       *
-*  Type     : TransactionPreprocessingServices           License   : Please read LICENSE.txt file            *
+*  Type     : TransactionPreprocessingUseCases           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases for transaction searching and retrieving.                                            *
+*  Summary  : Use cases for transaction preprocessing.                                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Services;
 
-namespace Empiria.Land.Transactions.Preprocessing.Services {
+using Empiria.Land.Transactions.Preprocessing.Adapters;
 
-  /// <summary>Use cases for transaction searching and retrieving.</summary>
-  public partial class TransactionPreprocessingServices : Service {
+namespace Empiria.Land.Transactions.Preprocessing.UseCases {
+
+  /// <summary>Use cases for transaction preprocessing.</summary>
+  public partial class TransactionPreprocessingUseCases : UseCase {
 
     #region Constructors and parsers
 
-    protected TransactionPreprocessingServices() {
+    protected TransactionPreprocessingUseCases() {
       // no-op
     }
 
-    static public TransactionPreprocessingServices ServiceInteractor() {
-      return Service.CreateInstance<TransactionPreprocessingServices>();
+    static public TransactionPreprocessingUseCases UseCaseInteractor() {
+      return UseCase.CreateInstance<TransactionPreprocessingUseCases>();
     }
 
     #endregion Constructors and parsers
@@ -32,11 +34,11 @@ namespace Empiria.Land.Transactions.Preprocessing.Services {
 
 
     public TransactionPreprocessingDto GetPreprocessingData(string transactionUID) {
-      Assertion.Require(transactionUID, "transactionUID");
+      Assertion.Require(transactionUID, nameof(transactionUID));
 
       var transaction = LRSTransaction.Parse(transactionUID);
 
-      var preprocessingControlData = new TransactionPreprocessingData(transaction);
+      var preprocessingControlData = new TransactionPreprocessingControlData(transaction);
 
       return TransactionPreprocessingMapper.Map(preprocessingControlData);
     }
@@ -44,6 +46,6 @@ namespace Empiria.Land.Transactions.Preprocessing.Services {
 
     #endregion Use cases
 
-  }  // class TransactionPreprocessingServices
+  }  // class TransactionPreprocessingUseCases
 
-}  // namespace Empiria.Land.Transactions.Preprocessing.Services
+}  // namespace Empiria.Land.Transactions.Preprocessing.UseCases
