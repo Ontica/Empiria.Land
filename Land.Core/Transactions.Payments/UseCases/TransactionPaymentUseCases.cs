@@ -14,7 +14,6 @@ using Empiria.Services;
 
 using Empiria.Land.Transactions.Adapters;
 
-using Empiria.Land.Transactions.Payments.Providers;
 using Empiria.Land.Transactions.Payments.Adapters;
 
 namespace Empiria.Land.Transactions.Payments.UseCases {

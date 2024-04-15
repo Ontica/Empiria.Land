@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
 *  Module   : Transaction Payments                       Component : Integration Layer                       *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : External Service Connector              *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : External Service Connector              *
 *  Type     : PaymentServicesConnector                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Connector used to gain access to transaction payment order services.                           *
@@ -19,7 +19,7 @@ using Empiria.Land.Media.Adapters;
 
 using Empiria.Land.Transactions.Adapters;
 
-namespace Empiria.Land.Transactions.Payments.Providers {
+namespace Empiria.Land.Transactions.Payments {
 
   /// <summary>Connector used to gain access to transaction payment order services.</summary>
   internal class PaymentServicesConnector {
@@ -192,4 +192,4 @@ namespace Empiria.Land.Transactions.Payments.Providers {
 
   }  // class PaymentServicesConnector
 
-}  // namespace Empiria.Land.Transactions.Payments.Providers
+}  // namespace Empiria.Land.Transactions.Payments

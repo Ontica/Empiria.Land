@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 using Empiria.Services;
 
-using Empiria.Land.Transactions.Payments.Providers;
+using Empiria.Land.Transactions.Payments;
 
 using Empiria.Land.Transactions.Adapters;
 
