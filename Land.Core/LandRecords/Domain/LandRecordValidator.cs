@@ -11,7 +11,7 @@ using System;
 
 using Empiria.Contacts;
 
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions.Workflow;
 
 namespace Empiria.Land.Registration {
 

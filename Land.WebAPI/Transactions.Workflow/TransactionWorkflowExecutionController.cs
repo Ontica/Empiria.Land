@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Workflow                        Component : Web Api                               *
+*  Module   : Transaction Workflow                         Component : Web Api                               *
 *  Assembly : Empiria.Land.WebApi.dll                      Pattern   : Command controller                    *
 *  Type     : TransactionWorkflowExecutionController       License   : Please read LICENSE.txt file          *
 *                                                                                                            *
@@ -12,6 +12,9 @@ using System.Web.Http;
 using Empiria.WebApi;
 
 using Empiria.Land.Transactions.UseCases;
+using Empiria.Land.Transactions.Adapters;
+
+using Empiria.Land.Transactions.Workflow.Adapters;
 using Empiria.Land.Transactions.Workflow.UseCases;
 
 namespace Empiria.Land.Transactions.Workflow.WebApi {

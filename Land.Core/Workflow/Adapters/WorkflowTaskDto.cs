@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Workflow                      Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data Transfer Object                    *
+*  Module   : Transaction Workflow                       Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : WorkflowTaskDto                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO that represents a workflow task.                                                    *
@@ -9,9 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Registration.Transactions;
-
-namespace Empiria.Land.Transactions.Workflow {
+namespace Empiria.Land.Transactions.Workflow.Adapters {
 
   /// <summary>Output DTO that represents a workflow task.</summary>
   public class WorkflowTaskDto {
@@ -66,4 +64,4 @@ namespace Empiria.Land.Transactions.Workflow {
 
   }  // class WorkflowTaskDto
 
-}  // namespace Empiria.Land.Transactions.Workflow
+}  // namespace Empiria.Land.Transactions.Workflow.Adapters

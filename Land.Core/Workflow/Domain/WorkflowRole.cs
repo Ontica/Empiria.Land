@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Workflow                      Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Enumeration type                        *
+*  Module   : Transaction Workflow                       Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Enumeration type                        *
 *  Type     : WorkflowRole                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : User roles used for Empiria Land micro workflow execution.                                     *

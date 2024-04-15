@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Workflow                      Component : Domain Layer                            *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Aggregator class                        *
+*  Module   : Transaction Workflow                       Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Service  provider                       *
 *  Type     : WorkflowRules                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides specific rules for Empiria Land micro workflow engine.                                *
@@ -14,7 +14,7 @@ using Empiria.Contacts;
 
 using Empiria.Security;
 
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions.Workflow.Adapters;
 
 namespace Empiria.Land.Transactions.Workflow {
 

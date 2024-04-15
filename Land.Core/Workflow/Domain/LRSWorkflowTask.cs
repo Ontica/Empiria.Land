@@ -1,20 +1,19 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSWorkflowTask                                Pattern  : Association Class                   *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Transaction Workflow                       Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Information Holder                      *
+*  Type     : LRSWorkflowTask                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Workflow item or task inside a LRSTransaction processing time window.                         *
+*  Summary  : Represents a land registration workflow task.                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Contacts;
 
-using Empiria.Land.Data;
+using Empiria.Land.Transactions.Workflow.Data;
 
-namespace Empiria.Land.Registration.Transactions {
+namespace Empiria.Land.Transactions.Workflow {
 
   /// <summary>Enumerates the different workflow statuses that a workflow task can have.</summary>
   public enum WorkflowTaskStatus {
@@ -31,7 +30,7 @@ namespace Empiria.Land.Registration.Transactions {
     Manual = 'M',
   }
 
-  /// <summary>Workflow item or task inside a LRSTransaction processing time window.</summary>
+  /// <summary>Represents a land registration workflow task.</summary>
   public class LRSWorkflowTask : BaseObject {
 
     #region Constructors and parsers
@@ -297,4 +296,4 @@ namespace Empiria.Land.Registration.Transactions {
 
   } // class LRSWorkflowTask
 
-} // namespace Empiria.Land.Registration.Transactions
+} // namespace Empiria.Land.Transactions.Workflow

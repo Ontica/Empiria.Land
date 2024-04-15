@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Workflow                      Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Mapper class                            *
+*  Module   : Transaction Workflow                       Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Mapper class                            *
 *  Type     : WorkflowTaskMapper                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Mapping methods from WorkflowTask instances to WorkflowTaskDto models.                         *
@@ -9,9 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Registration.Transactions;
-
-namespace Empiria.Land.Transactions.Workflow {
+namespace Empiria.Land.Transactions.Workflow.Adapters {
 
   /// <summary>Mapping methods from WorkflowTask instances to WorkflowTaskDto models.</summary>
   static internal class WorkflowTaskMapper {
@@ -19,6 +17,7 @@ namespace Empiria.Land.Transactions.Workflow {
     static internal FixedList<WorkflowTaskDto> Map(LRSWorkflowTaskList list) {
       return new FixedList<WorkflowTaskDto>(list.Select((x) => Map(x)));
     }
+
 
     static internal WorkflowTaskDto Map(LRSWorkflowTask task) {
       return new WorkflowTaskDto {
@@ -39,4 +38,4 @@ namespace Empiria.Land.Transactions.Workflow {
 
   }  // class WorkflowTaskMapper
 
-}  // namespace Empiria.Land.Transactions.Workflow
+}  // namespace Empiria.Land.Transactions.Workflow.Adapters

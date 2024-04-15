@@ -1,16 +1,16 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Workflow                      Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Enumeration                             *
+*  Module   : Transaction Workflow                       Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Enumeration                             *
 *  Type     : WorkflowCommandType                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Strings enumeration that defines a transaction workflow command type.                          *
+*  Summary  : Enumeration that defines a transaction workflow command type.                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Transactions.Workflow {
+namespace Empiria.Land.Transactions.Workflow.Adapters {
 
-  /// <summary>Strings enumeration that defines a transaction workflow command type.</summary>
+  /// <summary>Enumeration that defines a transaction workflow command type.</summary>
   public enum WorkflowCommandType {
 
     Undefined,
@@ -37,4 +37,4 @@ namespace Empiria.Land.Transactions.Workflow {
 
   }  // enum WorkflowCommandType
 
-}  // namespace Empiria.Land.Transactions.Workflow
+}  // namespace Empiria.Land.Transactions.Workflow.Adapters

@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transaction Management                     Component : Domain Layer                            *
+*  Module   : Transactions Management                    Component : Domain Layer                            *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Control data class                      *
 *  Type     : TransactionControlData                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions.Workflow;
 
 namespace Empiria.Land.Transactions {
 

@@ -1,21 +1,23 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSWorkflow                                    Pattern  : Micro-workflow                      *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Transaction Workflow                       Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Micro-workflow                          *
+*  Type     : LRSWorkflow                                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Micro-workflow for the Land Registration System.                                              *
+*  Summary  : Micro-workflow for the Land Registration System.                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Contacts;
 
-using Empiria.Land.Data;
 using Empiria.Land.Messaging;
 
-namespace Empiria.Land.Registration.Transactions {
+using Empiria.Land.Registration;
+
+using Empiria.Land.Transactions.Workflow.Data;
+
+namespace Empiria.Land.Transactions.Workflow {
 
   /// <summary>Micro-workflow for the Land Registration System.</summary>
   public class LRSWorkflow {
@@ -351,4 +353,4 @@ namespace Empiria.Land.Registration.Transactions {
 
   }  // class LRSWorkflow
 
-}  // namespace Empiria.Land.Registration.Transactions
+}  // namespace Empiria.Land.Transactions.Workflow

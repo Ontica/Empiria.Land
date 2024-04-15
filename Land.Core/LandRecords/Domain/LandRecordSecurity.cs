@@ -14,7 +14,7 @@ using Empiria.Security;
 
 using Empiria.Land.Data;
 
-using Empiria.Land.Registration.Transactions;
+using Empiria.Land.Transactions.Workflow;
 
 namespace Empiria.Land.Registration {
 

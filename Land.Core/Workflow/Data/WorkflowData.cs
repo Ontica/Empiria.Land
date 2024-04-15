@@ -1,11 +1,10 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                 System   : Land Registration System              *
-*  Namespace : Empiria.Land.Data                            Assembly : Empiria.Land.Registration             *
-*  Type      : WorkflowData                                 Pattern  : Data Services                         *
-*  Version   : 3.0                                          License  : Please read license.txt file          *
+*  Module   : Transaction Workflow                       Component : Data Services Layer                     *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data service                            *
+*  Type     : WorkflowTaskMapper                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Provides database read and write methods for Empiria Land micro-workflow services.            *
+*  Summary  : Provides database read and write methods for Empiria Land micro-workflow services.             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,9 +12,7 @@ using System.Collections.Generic;
 
 using Empiria.Data;
 
-using Empiria.Land.Registration.Transactions;
-
-namespace Empiria.Land.Data {
+namespace Empiria.Land.Transactions.Workflow.Data {
 
   /// <summary>Provides database read and write methods for Empiria Land micro-workflow services.</summary>
   static public class WorkflowData {
@@ -50,4 +47,4 @@ namespace Empiria.Land.Data {
 
   } // class WorkflowData
 
-} // namespace Empiria.Land.Data
+} // namespace Empiria.Land.Transactions.Workflow.Data

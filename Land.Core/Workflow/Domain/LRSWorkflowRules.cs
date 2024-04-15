@@ -1,8 +1,8 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Filing                                       Component : Filing Workflow                       *
-*  Assembly : Empiria.Land.Registration.dll                Pattern   : Micro-workflow                        *
-*  Type     : LRSWorkflowRules                             License   : Please read LICENSE.txt file          *
+*  Module   : Transaction Workflow                       Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Service provider                        *
+*  Type     : LRSWorkflowRules                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Micro-workflow rules set for the Land Registration System.                                     *
 *                                                                                                            *
@@ -11,7 +11,9 @@ using System;
 
 using Empiria.Contacts;
 
-namespace Empiria.Land.Registration.Transactions {
+using Empiria.Land.Registration;
+
+namespace Empiria.Land.Transactions.Workflow {
 
   /// <summary>Micro-workflow rules set for the Land Registration System.</summary>
   static public class LRSWorkflowRules {
@@ -361,4 +363,4 @@ namespace Empiria.Land.Registration.Transactions {
 
   }  // class LRSWorkflowRules
 
-}  // namespace Empiria.Land.Registration.Transactions
+}  // namespace Empiria.Land.Transactions.Workflow

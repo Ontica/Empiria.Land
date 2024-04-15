@@ -1,14 +1,14 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Transactions Workflow                      Component : Interface adapters                      *
-*  Assembly : Empiria.Land.Transactions.dll              Pattern   : Data Transfer Object                    *
+*  Module   : Transaction Workflow                       Component : Interface adapters                      *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Transfer Object                    *
 *  Type     : ApplicableCommandDto                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO that with applicable commands for a given set of transactions.                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Land.Transactions.Workflow {
+namespace Empiria.Land.Transactions.Workflow.Adapters {
 
   /// <summary>Output DTO that with applicable command for a given set of transactions.</summary>
   public class ApplicableCommandDto {
@@ -57,4 +57,4 @@ namespace Empiria.Land.Transactions.Workflow {
   }  // class NextStateDto
 
 
-}  //namespace Empiria.Land.Transactions.Workflow
+}  //namespace Empiria.Land.Transactions.Workflow.Adapters

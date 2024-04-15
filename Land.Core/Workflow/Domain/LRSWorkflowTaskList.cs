@@ -1,21 +1,20 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Land                                   System   : Land Registration System            *
-*  Namespace : Empiria.Land.Transactions                      Assembly : Empiria.Land.Registration           *
-*  Type      : LRSWorkflowTaskList                            Pattern  : Empiria List Class                  *
-*  Version   : 3.0                                            License  : Please read license.txt file        *
+*  Module   : Transaction Workflow                       Component : Domain Layer                            *
+*  Assembly : Empiria.Land.Core.dll                      Pattern   : Information Holder                      *
+*  Type     : LRSWorkflowTaskList                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : List of workflow items. Can be used to hold work items from one or many transactions.         *
+*  Summary  : List of workflow tasks in the context of a Recorder Office transaction.                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
 
-using Empiria.Land.Data;
+using Empiria.Land.Transactions.Workflow.Data;
 
-namespace Empiria.Land.Registration.Transactions {
+namespace Empiria.Land.Transactions.Workflow {
 
-  /// <summary>List of workflow items. Can be used to hold work items from one or many transactions.</summary>
+  /// <summary>List of workflow tasks in the context of a Recorder Office transaction.</summary>
   public class LRSWorkflowTaskList : FixedList<LRSWorkflowTask> {
 
     #region Constructors and parsers
@@ -88,4 +87,4 @@ namespace Empiria.Land.Registration.Transactions {
 
   } // class LRSWorkflowTaskList
 
-} // namespace Empiria.Land.Registration.Transactions
+} // namespace Empiria.Land.Transactions.Workflow
