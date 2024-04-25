@@ -113,6 +113,7 @@ namespace Empiria.Land.ESign.Adapters {
 
     static private string BuildSignStatusAndSignedByFilter(ESignRequestsQuery query) {
       var recorderOffice = query.GetRecorderOffice();
+
       var recorderOfficeSigner = recorderOffice.Signer;
 
       var currentUser = ExecutionServer.CurrentContact as Person;
@@ -126,11 +127,10 @@ namespace Empiria.Land.ESign.Adapters {
       }
 
       if (recorderOffice.IsAttendantSigner(currentUser)) {
-        return $"((SignedById <> {currentUser.Id} AND SignStatus <> '{(char) SignStatus.Unsigned}') OR " +
-               $"(SignedById = {currentUser.Id} AND SignStatus = '{(char) SignStatus.Unsigned}'))";
-      } else {
-        return SearchExpression.NoRecordsFilter;
+        return $"(SignedById <> {currentUser.Id} AND SignStatus = '{(char) SignStatus.Unsigned}')";
       }
+
+      return SearchExpression.NoRecordsFilter;
     }
 
 
