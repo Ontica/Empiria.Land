@@ -44,8 +44,14 @@ namespace Empiria.Land.Registration.Adapters {
       Assertion.Require(RecordingNo, "fields.RecordingNo");
       if (PresentationTime != ExecutionServer.DateMinValue &&
           AuthorizationDate != ExecutionServer.DateMinValue) {
-        Assertion.Require(PresentationTime <= AuthorizationDate,
-                        "La fecha de presentación debe ser anterior o igual a la fecha de registro.");
+          Assertion.Require(PresentationTime <= AuthorizationDate,
+                            "La fecha de presentación debe ser anterior o igual a la fecha de registro.");
+      }
+      if (AuthorizationDate != ExecutionServer.DateMinValue) {
+        Assertion.Require(AuthorizationDate <= DateTime.Today,
+                        "La fecha de autorización no puede ser posterior al día de hoy");
+        Assertion.Require(AuthorizationDate <= new DateTime(2024, 04, 30),
+                        "La fecha de autorización no puede ser posterior al 30 de abril de 2024.");
       }
     }
 
