@@ -32,6 +32,9 @@ namespace Empiria.Land.Data {
 
 
     internal static void UpdateRecordingActResourceSnapshot(RecordingAct recordingAct) {
+      Assertion.Require(recordingAct.ResourceShapshotData.ToString().Length < 8000,
+                       "Favor de no ingresar en el sistema datos demasiados largos.");
+
       var op = DataOperation.Parse("doLRSUpdateRecordingActResourceExtData",
                                    recordingAct.Id, recordingAct.ResourceShapshotData.ToString());
 
