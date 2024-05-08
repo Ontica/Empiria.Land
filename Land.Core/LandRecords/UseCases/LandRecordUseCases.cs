@@ -115,13 +115,7 @@ namespace Empiria.Land.Registration.UseCases {
         recordingAct.Validator.AssertCanBeManuallyClosed();
       }
 
-
-      Assertion.Require(GenerateSecurityHash() == fields.SecurityHash,
-                       $"Invalid security hash {fields.SecurityHash}. Review authorization date and time.");
-
-      Assertion.Require(fields.DigitalSeal.Length > 10 &&
-                        GenerateDigitalSeal().StartsWith(fields.DigitalSeal),
-                       $"Invalid digital seal {fields.DigitalSeal}. May be, its recording acts were altered after delivery.");
+      fields.DigitalSeal = GenerateDigitalSeal();
 
       landRecord.ManuallyClose(fields);
 
@@ -147,14 +141,6 @@ namespace Empiria.Land.Registration.UseCases {
         return Cryptographer.SignTextWithSystemCredentials(s);
       }
 
-      string GenerateSecurityHash() {
-
-        return Cryptographer.CreateHashCode(landRecord.Id.ToString("00000000") +
-                                            fields.AuthorizationTime.ToString("yyyyMMddTHH:mm"),
-                                            landRecord.UID)
-                            .Substring(0, 8)
-                            .ToUpperInvariant();
-      }
     }
 
     #endregion Temp use cases
