@@ -113,7 +113,7 @@ namespace Empiria.Land.Pages {
         var amendedActName = amendedAct.Kind.Length != 0 ? amendedAct.Kind : amendedAct.RecordingActType.DisplayName;
 
         if (amendedAct.OperationAmount != 0) {
-          if (amendedAct.OperationAmount != _recordingAct.OperationAmount) {
+          if (amendedAct.OperationAmount != _recordingAct.OperationAmount && _recordingAct.OperationAmount != 0) {
             amendedActName += $" por {amendedAct.OperationCurrency.Format(amendedAct.OperationAmount)} " +
                               $"(ahora {_recordingAct.OperationCurrency.Format(_recordingAct.OperationAmount)}), ";
           } else {
