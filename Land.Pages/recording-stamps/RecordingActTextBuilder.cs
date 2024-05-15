@@ -113,7 +113,12 @@ namespace Empiria.Land.Pages {
         var amendedActName = amendedAct.Kind.Length != 0 ? amendedAct.Kind : amendedAct.RecordingActType.DisplayName;
 
         if (amendedAct.OperationAmount != 0) {
-          amendedActName += $" por {amendedAct.OperationCurrency.Format(amendedAct.OperationAmount)}, ";
+          if (amendedAct.OperationAmount != _recordingAct.OperationAmount) {
+            amendedActName += $" por {amendedAct.OperationCurrency.Format(amendedAct.OperationAmount)} " +
+                              $"(ahora {_recordingAct.OperationCurrency.Format(_recordingAct.OperationAmount)}), ";
+          } else {
+            amendedActName += $" por {amendedAct.OperationCurrency.Format(amendedAct.OperationAmount)}, ";
+          }
         }
 
         var legend = amendedAct.RecordingActType.FemaleGenre ? "la cual está inscrita" : "el cual está inscrito";
@@ -130,7 +135,10 @@ namespace Empiria.Land.Pages {
                         legend + " en la " + amendedAct.BookEntry.AsText + " el día " +
                         CommonMethods.GetDateAsText(amendedAct.BookEntry.LandRecord.AuthorizationTime));
         }
+      }
 
+      if (amendedAct.IsParent) {
+        return x.Replace(", {RESOURCE.DATA}", string.Empty);
       }
 
       Resource resource = _recordingAct.Resource;
