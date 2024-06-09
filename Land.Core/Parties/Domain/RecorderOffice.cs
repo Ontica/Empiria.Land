@@ -66,6 +66,12 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public int WorkflowModelId {
+      get {
+        return ExtendedData.Get("workflowModelId", -1);
+      }
+    }
+
     #endregion Properties
 
     #region Methods

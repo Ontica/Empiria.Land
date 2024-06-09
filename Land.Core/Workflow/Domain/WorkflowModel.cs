@@ -11,13 +11,16 @@ using System;
 
 namespace Empiria.Land.Transactions.Workflow {
 
-  internal class WorkflowModel {
+  internal class WorkflowModel : GeneralObject {
 
+    static public WorkflowModel Parse(int id) {
+      return BaseObject.ParseId<WorkflowModel>(id);
+    }
 
-    public static WorkflowModel Empty => new WorkflowModel();
-
-    internal FixedList<WorkflowTransition> TransitionsFrom(string node) {
-      throw new NotImplementedException();
+    public FixedList<WorkflowModelRule> Rules {
+      get {
+        return base.ExtendedDataField.GetFixedList<WorkflowModelRule>("rules");
+      }
     }
 
   }  // class WorkflowModel
