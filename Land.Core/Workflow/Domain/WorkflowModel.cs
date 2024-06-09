@@ -17,6 +17,14 @@ namespace Empiria.Land.Transactions.Workflow {
       return BaseObject.ParseId<WorkflowModel>(id);
     }
 
+
+    public bool AllowAutoTake {
+      get {
+        return base.ExtendedDataField.Get("allowAutoTake", false);
+      }
+    }
+
+
     public FixedList<WorkflowModelRule> Rules {
       get {
         return base.ExtendedDataField.GetFixedList<WorkflowModelRule>("rules");

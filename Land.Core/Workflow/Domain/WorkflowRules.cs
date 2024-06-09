@@ -78,9 +78,15 @@ namespace Empiria.Land.Transactions.Workflow {
           if (nextStatus == TransactionStatus.EndPoint) {
             return false;
           }
+
+          if (WorkflowModel.Parse(transaction.RecorderOffice.WorkflowModelId).AllowAutoTake) {
+            return CanReceiveFor(user, nextStatus);
+          }
+
           if (task.Responsible.Equals(user) && task.CurrentStatus != TransactionStatus.Reentry) {
             return false;
           }
+
           return CanReceiveFor(user, nextStatus);
 
         case WorkflowCommandType.Reentry:
