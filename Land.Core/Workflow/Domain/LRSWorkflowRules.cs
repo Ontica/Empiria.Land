@@ -151,29 +151,6 @@ namespace Empiria.Land.Transactions.Workflow {
     }
 
 
-    static internal TransactionStatus GetNextStatusAfterReceive(LRSTransaction transaction) {
-      if (ExecutionServer.LicenseName == "Zacatecas") {
-        return TransactionStatus.Control;
-      }
-
-      if (LRSWorkflowRules.IsRecorderOfficerCase(transaction)) {
-        return TransactionStatus.Revision;
-
-      } else if (LRSWorkflowRules.IsJuridicCase(transaction)) {
-        return TransactionStatus.Juridic;
-
-      } else if (LRSWorkflowRules.IsRecordingDocumentCase(transaction)) {
-        return TransactionStatus.Recording;
-
-      } else if (LRSWorkflowRules.IsCertificateIssueCase(transaction)) {
-        return TransactionStatus.Elaboration;
-
-      } else {
-        return TransactionStatus.Control;
-      }
-    }
-
-
     static public bool IsArchivable(LRSTransaction transaction) {
       if (transaction.DocumentType.Id == 761) {
         return true;

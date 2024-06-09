@@ -157,7 +157,6 @@ namespace Empiria.Land.Transactions.Workflow {
           list.Add(TransactionStatus.Control);
           break;
 
-        case TransactionStatus.Process:
         case TransactionStatus.Control:
           // Certificado || Cancelación || Copia simple
           if (LRSWorkflowRules.IsForElaborationOnly(transaction)) {

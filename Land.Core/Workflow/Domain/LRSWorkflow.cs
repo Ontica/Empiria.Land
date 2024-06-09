@@ -178,6 +178,7 @@ namespace Empiria.Land.Transactions.Workflow {
     public void Receive(string notes) {
       LRSWorkflowRules.AssertCanBeReceived(_transaction);
 
+      var rules = new WorkflowRules();
 
       _transaction.SetInternalControlNumber();
       _transaction.PresentationTime = EmpiriaDateTime.NowWithCentiseconds;
@@ -190,7 +191,7 @@ namespace Empiria.Land.Transactions.Workflow {
       currentTask.NextContact = LRSWorkflowRules.InterestedContact;
 
       currentTask = currentTask.CreateNext(notes);
-      currentTask.NextStatus = LRSWorkflowRules.GetNextStatusAfterReceive(_transaction);
+      currentTask.NextStatus = rules.NextStatusList(_transaction)[0];
       currentTask.Status = WorkflowTaskStatus.OnDelivery;
       currentTask.EndProcessTime = currentTask.CheckInTime;
       currentTask.AssignedBy = LRSWorkflowRules.InterestedContact;
@@ -207,6 +208,8 @@ namespace Empiria.Land.Transactions.Workflow {
     public void Reentry() {
       LRSWorkflowRules.AssertIsReadyForReentry(_transaction);
 
+      var rules = new WorkflowRules();
+
       this.CurrentStatus = TransactionStatus.Reentry;
       _transaction.ClosingTime = ExecutionServer.DateMaxValue;
       _transaction.LastReentryTime = DateTime.Now;
@@ -214,7 +217,7 @@ namespace Empiria.Land.Transactions.Workflow {
       currentTask.NextStatus = TransactionStatus.Reentry;
 
       currentTask = currentTask.CreateNext("Trámite reingresado");
-      currentTask.NextStatus = TransactionStatus.Control;
+      currentTask.NextStatus = rules.NextStatusList(_transaction)[0];
       currentTask.Status = WorkflowTaskStatus.OnDelivery;
       currentTask.EndProcessTime = currentTask.CheckInTime;
       currentTask.AssignedBy = LRSWorkflowRules.InterestedContact;

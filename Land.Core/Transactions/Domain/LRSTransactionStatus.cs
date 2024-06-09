@@ -34,8 +34,6 @@ namespace Empiria.Land.Transactions {
 
     Juridic = 'J',
 
-    Process = 'P',
-
     OnSign = 'S',
 
     Digitalization = 'A',
@@ -70,8 +68,6 @@ namespace Empiria.Land.Transactions {
           return "Trámite recibido";
         case TransactionStatus.Reentry:
           return "Trámite reingresado";
-        case TransactionStatus.Process:
-          return "En mesas de trabajo";
         case TransactionStatus.Control:
           return "En mesa de control";
         case TransactionStatus.Qualification:
