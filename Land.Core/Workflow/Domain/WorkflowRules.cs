@@ -21,7 +21,6 @@ namespace Empiria.Land.Transactions.Workflow {
   /// <summary>Provides specific rules for Empiria Land micro workflow engine.</summary>
   public class WorkflowRules {
 
-
     public bool CanReceiveFor(Contact user, TransactionStatus nextStatus) {
       return nextStatus != TransactionStatus.EndPoint;
     }
@@ -143,146 +142,58 @@ namespace Empiria.Land.Transactions.Workflow {
       Assertion.Require(transaction.TransactionType, "type");
       Assertion.Require(transaction.DocumentType, "docType");
 
-      List<TransactionStatus> list = new List<TransactionStatus>();
+      var model = WorkflowModel.Parse(transaction.RecorderOffice.WorkflowModelId);
 
-      switch (currentStatus) {
+      List <TransactionStatus> list = new List<TransactionStatus>();
 
-        case TransactionStatus.Payment:
-          list.Add(TransactionStatus.Received);
-          list.Add(TransactionStatus.Deleted);
-          break;
+      var rules = model.Rules.FindAll(x => x.From == currentStatus);
 
-        case TransactionStatus.Received:
-        case TransactionStatus.Reentry:
-          list.Add(TransactionStatus.Control);
-          break;
-
-        case TransactionStatus.Control:
-          // Certificado || Cancelación || Copia simple
-          if (LRSWorkflowRules.IsForElaborationOnly(transaction)) {
-            list.Add(TransactionStatus.Elaboration);
-          } else {
-            list.Add(TransactionStatus.Qualification);
-            list.Add(TransactionStatus.Recording);
-            list.Add(TransactionStatus.Elaboration);
+      foreach (var rule in rules) {
+        if (rule.If == string.Empty && rule.IfNot == string.Empty) {
+          foreach (TransactionStatus to in rule.To) {
+            list.Add(to);
           }
-
-          list.Add(TransactionStatus.Revision);
-          list.Add(TransactionStatus.OnSign);
-
-          list.Add(TransactionStatus.ToReturn);
-
-          if (LRSWorkflowRules.IsCertificateIssueCase(transaction)) {
-            list.Add(TransactionStatus.ToDeliver);
+          continue;
+        }
+        if (rule.If == "IsCertificateIssueCase" && LRSWorkflowRules.IsCertificateIssueCase(transaction)) {
+          foreach (TransactionStatus to in rule.To) {
+            list.Add(to);
           }
-          break;
-
-        case TransactionStatus.Juridic:
-          break;
-
-        case TransactionStatus.Qualification:       // Only used in Zacatecas
-
-          list.Add(TransactionStatus.Recording);
-          list.Add(TransactionStatus.Elaboration);
-          list.Add(TransactionStatus.Revision);
-          list.Add(TransactionStatus.Qualification);
-          list.Add(TransactionStatus.ToReturn);
-          list.Add(TransactionStatus.Control);
-
-          break;
-
-        case TransactionStatus.Recording:
-          list.Add(TransactionStatus.Revision);
-          list.Add(TransactionStatus.Recording);
-          list.Add(TransactionStatus.Control);
-
-          list.Add(TransactionStatus.ToReturn);
-
-          if (LRSWorkflowRules.IsArchivable(transaction)) {
-            list.Add(TransactionStatus.Archived);
+          continue;
+        }
+        if (rule.If == "IsForElaborationOnly" && LRSWorkflowRules.IsForElaborationOnly(transaction)) {
+          foreach (TransactionStatus to in rule.To) {
+            list.Add(to);
           }
-          if (transaction.DocumentType.Id == 728) {
-            list.Add(TransactionStatus.OnSign);
+          continue;
+        }
+        if (rule.If == "IsArchivable" && LRSWorkflowRules.IsArchivable(transaction)) {
+          foreach (TransactionStatus to in rule.To) {
+            list.Add(to);
           }
-
-          break;
-
-        case TransactionStatus.Elaboration:
-          list.Add(TransactionStatus.Elaboration);
-          list.Add(TransactionStatus.Revision);
-          list.Add(TransactionStatus.OnSign);
-          list.Add(TransactionStatus.Control);
-          list.Add(TransactionStatus.ToReturn);
-
-          break;
-
-        case TransactionStatus.Revision:
-
-          list.Add(TransactionStatus.OnSign);
-
-          if (LRSWorkflowRules.IsForElaborationOnly(transaction)) {
-            list.Add(TransactionStatus.Elaboration);
-          } else {
-            list.Add(TransactionStatus.Qualification);
-            list.Add(TransactionStatus.Recording);
-            list.Add(TransactionStatus.Elaboration);
+          continue;
+        }
+        if (rule.IfNot == "IsCertificateIssueCase" && !LRSWorkflowRules.IsCertificateIssueCase(transaction)) {
+          foreach (TransactionStatus to in rule.To) {
+            list.Add(to);
           }
-
-          if (LRSWorkflowRules.IsArchivable(transaction)) {
-            list.Add(TransactionStatus.Archived);
+          continue;
+        }
+        if (rule.IfNot == "IsForElaborationOnly" && !LRSWorkflowRules.IsForElaborationOnly(transaction)) {
+          foreach (TransactionStatus to in rule.To) {
+            list.Add(to);
           }
-
-          list.Add(TransactionStatus.Revision);
-          list.Add(TransactionStatus.Control);
-          list.Add(TransactionStatus.ToReturn);
-
-          break;
-
-        case TransactionStatus.OnSign:
-          list.Add(TransactionStatus.ToDeliver);
-          list.Add(TransactionStatus.Revision);
-
-          if (LRSWorkflowRules.IsForElaborationOnly(transaction)) {
-            list.Add(TransactionStatus.Elaboration);
-          } else {
-            list.Add(TransactionStatus.Qualification);
-            list.Add(TransactionStatus.Recording);
-            list.Add(TransactionStatus.Elaboration);
+          continue;
+        }
+        if (rule.IfNot == "IsArchivable" && !LRSWorkflowRules.IsArchivable(transaction)) {
+          foreach (TransactionStatus to in rule.To) {
+            list.Add(to);
           }
+          continue;
+        }
 
-          list.Add(TransactionStatus.Control);
-          list.Add(TransactionStatus.ToReturn);
+      } // foreach rule
 
-          break;
-
-        case TransactionStatus.Digitalization:
-          list.Add(TransactionStatus.Delivered);
-
-          if (LRSWorkflowRules.IsDigitalizable(transaction)) {
-            list.Add(TransactionStatus.Digitalization);
-          }
-
-          list.Add(TransactionStatus.Control);
-
-          break;
-
-        case TransactionStatus.ToDeliver:
-          list.Add(TransactionStatus.Control);
-          AddRecordingOrElaborationStatus(list, transaction);
-          list.Add(TransactionStatus.Juridic);
-          list.Add(TransactionStatus.OnSign);
-
-          break;
-
-        case TransactionStatus.Archived:
-          list.Add(TransactionStatus.Control);
-          break;
-
-        case TransactionStatus.ToReturn:
-          list.Add(TransactionStatus.Returned);
-          list.Add(TransactionStatus.Control);
-          break;
-      }
       return list;
     }
 
@@ -392,22 +303,7 @@ namespace Empiria.Land.Transactions.Workflow {
     }
 
 
-    #region Helper methods
-
-    private void AddRecordingOrElaborationStatus(List<TransactionStatus> list,
-                                                 LRSTransaction transaction) {
-      if (LRSWorkflowRules.IsRecordingDocumentCase(transaction)) {
-        list.Add(TransactionStatus.Recording);
-
-      } else if (LRSWorkflowRules.IsCertificateIssueCase(transaction)) {
-        list.Add(TransactionStatus.Elaboration);
-
-      } else {
-        list.Add(TransactionStatus.Elaboration);
-        list.Add(TransactionStatus.Recording);
-      }
-    }
-
+    #region Helpers
 
     private bool AnyOf<T>(T value, params T[] matchTo) {
       foreach (var item in matchTo) {
@@ -423,7 +319,7 @@ namespace Empiria.Land.Transactions.Workflow {
       return new FixedList<WorkflowCommandType>(list);
     }
 
-    #endregion Helper methods
+    #endregion Helpers
 
   }  // class WorkflowRules
 
