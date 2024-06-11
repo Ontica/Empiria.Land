@@ -191,7 +191,7 @@ namespace Empiria.Land.Transactions.Workflow {
       currentTask.NextContact = LRSWorkflowRules.InterestedContact;
 
       currentTask = currentTask.CreateNext(notes);
-      currentTask.NextStatus = rules.NextStatusList(_transaction)[0];
+      currentTask.NextStatus = rules.NextStatusAfterReceived(_transaction);
       currentTask.Status = WorkflowTaskStatus.OnDelivery;
       currentTask.EndProcessTime = currentTask.CheckInTime;
       currentTask.AssignedBy = LRSWorkflowRules.InterestedContact;
@@ -217,7 +217,7 @@ namespace Empiria.Land.Transactions.Workflow {
       currentTask.NextStatus = TransactionStatus.Reentry;
 
       currentTask = currentTask.CreateNext("Trámite reingresado");
-      currentTask.NextStatus = rules.NextStatusList(_transaction)[0];
+      currentTask.NextStatus = rules.NextStatusAfterReentry(_transaction);
       currentTask.Status = WorkflowTaskStatus.OnDelivery;
       currentTask.EndProcessTime = currentTask.CheckInTime;
       currentTask.AssignedBy = LRSWorkflowRules.InterestedContact;

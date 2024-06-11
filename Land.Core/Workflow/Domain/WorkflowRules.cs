@@ -120,6 +120,32 @@ namespace Empiria.Land.Transactions.Workflow {
     }
 
 
+    public TransactionStatus NextStatusAfterReceived(LRSTransaction transaction) {
+      if (transaction.RecorderOffice.Id == 101 || transaction.RecorderOffice.Id == 102) {
+        return TransactionStatus.Control;
+      }
+      if (LRSWorkflowRules.IsCertificateIssueCase(transaction)) {
+        return TransactionStatus.Elaboration;
+      } else {
+        return TransactionStatus.Recording;
+      }
+    }
+
+
+    public TransactionStatus NextStatusAfterReentry(LRSTransaction transaction) {
+      if (transaction.RecorderOffice.Id == 101 || transaction.RecorderOffice.Id == 102) {
+        return TransactionStatus.Control;
+      }
+      if (transaction.LandRecord.SecurityData.IsSigned) {
+        return TransactionStatus.OnSign;
+      }
+      if (LRSWorkflowRules.IsCertificateIssueCase(transaction)) {
+        return TransactionStatus.Elaboration;
+      } else {
+        return TransactionStatus.Recording;
+      }
+    }
+
     public FixedList<TransactionStatus> NextStatusList() {
       return new List<TransactionStatus> {
         TransactionStatus.Control,
@@ -324,6 +350,7 @@ namespace Empiria.Land.Transactions.Workflow {
     static private FixedList<WorkflowCommandType> BuildCommandTypeList(params WorkflowCommandType[] list) {
       return new FixedList<WorkflowCommandType>(list);
     }
+
 
     #endregion Helpers
 
