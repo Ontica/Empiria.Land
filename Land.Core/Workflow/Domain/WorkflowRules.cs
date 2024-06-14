@@ -21,6 +21,12 @@ namespace Empiria.Land.Transactions.Workflow {
   /// <summary>Provides specific rules for Empiria Land micro workflow engine.</summary>
   public class WorkflowRules {
 
+    public bool AllowAutoTake(LRSTransaction transaction) {
+      var model = WorkflowModel.Parse(transaction.RecorderOffice.WorkflowModelId);
+
+      return model.AllowAutoTake;
+    }
+
     public bool CanReceiveFor(Contact user, TransactionStatus nextStatus) {
       return nextStatus != TransactionStatus.EndPoint;
     }
@@ -79,7 +85,7 @@ namespace Empiria.Land.Transactions.Workflow {
             return false;
           }
 
-          if (WorkflowModel.Parse(transaction.RecorderOffice.WorkflowModelId).AllowAutoTake) {
+          if (AllowAutoTake(transaction)) {
             return CanReceiveFor(user, nextStatus);
           }
 

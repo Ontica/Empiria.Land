@@ -80,13 +80,14 @@ namespace Empiria.Land.Transactions.Workflow {
         Assertion.RequireFail($"El trámite '{transaction.UID}' todavía no está listo para ser recibido.");
       }
 
-      if (task.Responsible.Equals(user) && task.CurrentStatus != TransactionStatus.Reentry) {
+      if (!_rules.AllowAutoTake(transaction) &&
+          task.Responsible.Equals(user) && task.CurrentStatus != TransactionStatus.Reentry) {
         Assertion.RequireFail($"El trámite '{transaction.UID}' todavía no está listo para ser recibido.");
       }
 
       if (!_rules.CanReceiveFor(user, task.NextStatus)) {
-        Assertion.RequireFail($"La cuenta de usuario no tiene permisos para recibir el trámite " +
-                              $"'{transaction.UID}' en el estado '{task.NextStatusName}'.");
+        Assertion.RequireFail($"La cuenta de acceso al sistema no tiene asignados permisos para " +
+                              $"recibir el trámite '{transaction.UID}' en el estado '{task.NextStatusName}'.");
       }
     }
 
