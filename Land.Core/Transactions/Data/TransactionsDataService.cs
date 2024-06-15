@@ -41,7 +41,7 @@ namespace Empiria.Land.Transactions.Data {
       if (max != null && max.Length != 0) {
         return int.Parse(max);
       } else {
-        return 1;
+        return 0;
       }
     }
 
