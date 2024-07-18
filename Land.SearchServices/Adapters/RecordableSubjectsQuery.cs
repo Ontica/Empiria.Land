@@ -65,6 +65,12 @@ namespace Empiria.Land.SearchServices {
 
 
     static internal string MapToFilterString(this RecordableSubjectsQuery query) {
+      if (query.RecorderOfficeUID.Length == 0 && query.Keywords.Length == 19) {
+        Resource resource = Resource.TryParseWithUID(query.Keywords);
+        if (resource != null) {
+          query.RecorderOfficeUID = resource.RecorderOffice.UID;
+        }
+      }
       string recorderOfficeFilter = BuildRecorderOfficeFilter(query.RecorderOfficeUID);
       string typeFilter = BuildRecordableSubjectTypeFilter(query.Type);
 
