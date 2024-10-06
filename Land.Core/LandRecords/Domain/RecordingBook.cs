@@ -10,8 +10,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.DataTypes.Time;
 using Empiria.Json;
+using Empiria.Time;
 
 using Empiria.Land.Data;
 
@@ -268,8 +268,8 @@ namespace Empiria.Land.Registration {
     #region Workflow data and methods
 
 
-    private TimeFrame _timePeriod = TimeFrame.Default;
-    public TimeFrame BookEntriesControlTimePeriod {
+    private TimePeriod _timePeriod = TimePeriod.Default;
+    public TimePeriod BookEntriesControlTimePeriod {
       get { return _timePeriod; }
       set {
         _timePeriod = value;

@@ -8,11 +8,12 @@
 *  Summary   : Represents a real estate or land property.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Data;
 
-using Empiria.DataTypes;
 using Empiria.Geography;
+using Empiria.Measurement;
 
 using Empiria.Land.Data;
 using Empiria.Land.Providers;

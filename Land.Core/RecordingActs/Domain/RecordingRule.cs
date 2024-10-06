@@ -11,7 +11,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.DataTypes;
+using Empiria.Financial;
 using Empiria.Json;
 
 namespace Empiria.Land.Registration {

@@ -13,7 +13,7 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
-using Empiria.DataTypes;
+using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Security;
 using Empiria.Ontology;

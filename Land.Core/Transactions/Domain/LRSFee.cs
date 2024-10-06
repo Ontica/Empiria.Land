@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System.Data;
 
-using Empiria.DataTypes;
+using Empiria.Financial;
 
 namespace Empiria.Land.Transactions {
 

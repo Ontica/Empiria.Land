@@ -10,7 +10,8 @@
 using System;
 using System.Data;
 
-using Empiria.DataTypes;
+using Empiria.Financial;
+using Empiria.Measurement;
 using Empiria.Security;
 
 using Empiria.Land.Registration;

@@ -11,9 +11,8 @@
 using System;
 
 using Empiria.Contacts;
-using Empiria.DataTypes.Time;
 using Empiria.Geography;
-using Empiria.Ontology;
+using Empiria.Time;
 
 namespace Empiria.Land.Registration {
 
@@ -69,7 +68,7 @@ namespace Empiria.Land.Registration {
       //return list;
     }
 
-    public FixedList<Person> GetJudges(TimeFrame period) {
+    public FixedList<Person> GetJudges(TimePeriod period) {
       throw new NotImplementedException("GetJudges(TimeFrame)");
 
       //FixedList<Person> list = base.GetLinks<Person>("JudicialOffice_Judges", period);

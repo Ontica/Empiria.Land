@@ -206,6 +206,10 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\central\Central\Empiria.Central.csproj">
+      <Project>{c380a678-2611-4f8e-b696-4aebf78416e5}</Project>
+      <Name>Empiria.Central</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\core\Core.Services\Empiria.Core.Services.csproj">
       <Project>{66471d61-9159-46ed-9f4c-b6fded374005}</Project>
       <Name>Empiria.Core.Services</Name>

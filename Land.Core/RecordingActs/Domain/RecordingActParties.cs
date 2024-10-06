@@ -7,9 +7,8 @@
 *  Summary  : Holds recording act's parties.                                                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
-using Empiria.DataTypes;
+using Empiria.Measurement;
 
 using Empiria.Land.Data;
 using Empiria.Land.Registration.Adapters;
@@ -109,7 +108,9 @@ namespace Empiria.Land.Registration {
 
     public FixedList<RecordingActParty> GetSecondaryPartiesOf(Party primaryParty) {
       return List.FindAll(x => x.RoleType == RecordingActPartyType.Secondary &&
-                               x.PartyOf.Equals(primaryParty)).ToFixedList();
+                               x.PartyOf.Equals(primaryParty))
+                  .Sort((x, y) => x.Id.CompareTo(y.Id))
+                  .ToFixedList();
     }
 
 

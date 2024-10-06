@@ -7,7 +7,8 @@
 *  Summary  : Contains methods used to map to ProvidedServiceDto objects.                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
+using Empiria.Measurement;
 
 using Empiria.Land.Registration;
 
@@ -48,7 +49,7 @@ namespace Empiria.Land.Transactions.Adapters {
     static private ProvidedServiceDto GetProvidedServiceDto(RecordingActType service) {
       FixedList<LRSLawArticle> lawArticles = service.GetFinancialLawArticles();
 
-      Empiria.DataTypes.Unit unit = Empiria.DataTypes.Unit.Empty;
+      Unit unit = Unit.Empty;
 
       if (lawArticles.Count != 0) {
         unit = lawArticles[0].Unit;

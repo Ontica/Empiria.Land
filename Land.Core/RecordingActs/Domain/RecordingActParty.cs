@@ -12,7 +12,7 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
-using Empiria.DataTypes;
+using Empiria.Measurement;
 
 using Empiria.Land.Data;
 using Empiria.Land.Registration.Adapters;
