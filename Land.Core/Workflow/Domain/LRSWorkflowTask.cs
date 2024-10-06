@@ -204,7 +204,7 @@ namespace Empiria.Land.Transactions.Workflow {
     #region Public method
 
     internal void Close() {
-      DateTime closingDate = EmpiriaDateTime.NowWithoutSeconds;
+      DateTime closingDate = ExecutionServer.NowWithoutSeconds;
 
       if (this.EndProcessTime == ExecutionServer.DateMaxValue) {
         this.EndProcessTime = closingDate;
@@ -232,7 +232,7 @@ namespace Empiria.Land.Transactions.Workflow {
     }
 
     internal LRSWorkflowTask CreateNext(string notes) {
-      return this.CreateNext(notes, ExecutionServer.CurrentContact, EmpiriaDateTime.NowWithoutSeconds);
+      return this.CreateNext(notes, ExecutionServer.CurrentContact, ExecutionServer.NowWithoutSeconds);
     }
 
     internal LRSWorkflowTask CreateNext(string notes, Contact responsible, DateTime date) {
@@ -272,7 +272,7 @@ namespace Empiria.Land.Transactions.Workflow {
                                 string notes) {
       this.NextStatus = nextStatus;
       this.NextContact = nextContact;
-      this.EndProcessTime = EmpiriaDateTime.NowWithoutSeconds;
+      this.EndProcessTime = ExecutionServer.NowWithoutSeconds;
       this.Notes = notes;
       this.Status = WorkflowTaskStatus.OnDelivery;
       this.Save();

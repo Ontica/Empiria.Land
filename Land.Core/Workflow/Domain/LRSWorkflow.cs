@@ -181,7 +181,7 @@ namespace Empiria.Land.Transactions.Workflow {
       var rules = new WorkflowRules();
 
       _transaction.SetInternalControlNumber();
-      _transaction.PresentationTime = EmpiriaDateTime.NowWithCentiseconds;
+      _transaction.PresentationTime = ExecutionServer.NowWithCentiseconds;
       _transaction.ClosingTime = ExecutionServer.DateMaxValue;
 
       this.CurrentStatus = TransactionStatus.Received;
@@ -327,7 +327,7 @@ namespace Empiria.Land.Transactions.Workflow {
       LRSWorkflowTask currentTask = this.GetCurrentTask();
 
       currentTask.NextStatus = closeStatus;
-      currentTask = currentTask.CreateNext(notes, responsible, EmpiriaDateTime.NowWithoutSeconds);
+      currentTask = currentTask.CreateNext(notes, responsible, ExecutionServer.NowWithoutSeconds);
 
       ResetTasksList();
 
