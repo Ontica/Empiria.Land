@@ -7,9 +7,8 @@
 *  Summary  : Methods to map legal instruments to LandRecordDto objects.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
-using Empiria.DataTypes;
+using Empiria.Storage;
 
 using Empiria.Land.Media;
 using Empiria.Land.Media.Adapters;
@@ -18,7 +17,6 @@ using Empiria.Land.Transactions;
 
 using Empiria.Land.Instruments.Adapters;
 using Empiria.Land.RecordableSubjects.Adapters;
-
 
 namespace Empiria.Land.Registration.Adapters {
 

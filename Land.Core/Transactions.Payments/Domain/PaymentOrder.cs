@@ -10,8 +10,8 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.DataTypes;
 using Empiria.Json;
+using Empiria.Storage;
 
 using Empiria.Land.Integration.PaymentServices;
 

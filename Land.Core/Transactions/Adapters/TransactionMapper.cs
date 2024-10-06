@@ -7,9 +7,8 @@
 *  Summary  : Contains methods to map from LRSTransaction objects to TransactionDTOs.                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
-using Empiria.DataTypes;
+using Empiria.Storage;
 
 using Empiria.Land.Media;
 using Empiria.Land.Media.Adapters;

@@ -7,9 +7,8 @@
 *  Summary  : Output DTO with data representing a legal instrument registration.                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
-using Empiria.DataTypes;
+using Empiria.Storage;
 
 using Empiria.Land.Instruments.Adapters;
 

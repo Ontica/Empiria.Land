@@ -11,7 +11,7 @@ using System;
 
 using Newtonsoft.Json;
 
-using Empiria.DataTypes;
+using Empiria.Storage;
 
 namespace Empiria.Land.Registration.Adapters {
 
