@@ -210,10 +210,6 @@
       <Project>{c380a678-2611-4f8e-b696-4aebf78416e5}</Project>
       <Name>Empiria.Central</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\core\Core.Services\Empiria.Core.Services.csproj">
-      <Project>{66471d61-9159-46ed-9f4c-b6fded374005}</Project>
-      <Name>Empiria.Core.Services</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj">
       <Project>{dacbf2c5-1f67-48e3-837c-8ca45b105e44}</Project>
       <Name>Empiria.Core</Name>
@@ -241,10 +237,6 @@
     <ProjectReference Include="..\..\onepoint\EPayments.Core\Empiria.OnePoint.EPayments.csproj">
       <Project>{b6801aed-52c9-4fb7-90b7-2bc2ab3b8ba0}</Project>
       <Name>Empiria.OnePoint.EPayments</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\onepoint\Security\Empiria.OnePoint.Security.csproj">
-      <Project>{e1e801c8-8dd2-4c73-b012-618d96e62745}</Project>
-      <Name>Empiria.OnePoint.Security</Name>
     </ProjectReference>
     <ProjectReference Include="..\Land.Core\Empiria.Land.Core.csproj">
       <Project>{0d12aa4b-83bf-4ac8-9d22-1d85ce8975d2}</Project>

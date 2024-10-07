@@ -71,7 +71,6 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Tests" Version="1.0.0" />
     <PackageReference Include="Empiria.OnePoint.EPayments" Version="2.0.0" />
-    <PackageReference Include="Empiria.OnePoint.Security" Version="4.0.0" />
     <PackageReference Include="Empiria.Land.Core" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Providers" Version="5.0.0" />
     <PackageReference Include="Empiria.Land.Analytics" Version="5.0.0" />
@@ -81,7 +80,6 @@
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\extensions\Tests\Empiria.Tests.csproj" />
     <ProjectReference Include="..\..\onepoint\EPayments.Core\Empiria.OnePoint.EPayments.csproj" />
-    <ProjectReference Include="..\..\onepoint\Security\Empiria.OnePoint.Security.csproj" />
     <ProjectReference Include="..\Land.Core\Empiria.Land.Core.csproj" />
     <ProjectReference Include="..\Land.Providers\Empiria.Land.Providers.csproj" />
     <ProjectReference Include="..\Land.Analytics\Empiria.Land.Analytics.csproj" />
