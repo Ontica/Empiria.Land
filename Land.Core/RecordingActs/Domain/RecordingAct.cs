@@ -311,7 +311,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    [DataField("RegistrationTime", Default = "DateTime.Now")]
+    [DataField("RegistrationTime")]
     public DateTime RegistrationTime {
       get;
       private set;

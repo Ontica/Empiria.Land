@@ -116,7 +116,7 @@ namespace Empiria.Land.Transactions.Payments {
       private set;
     }
 
-    [DataField("PostingTime", Default = "DateTime.Now")]
+    [DataField("PostingTime")]
     public DateTime PostingTime {
       get;
       private set;

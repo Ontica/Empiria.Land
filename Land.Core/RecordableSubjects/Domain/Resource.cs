@@ -142,7 +142,7 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    [DataField("PostingTime", Default = "DateTime.Now")]
+    [DataField("PostingTime")]
     public DateTime PostingTime {
       get;
       private set;

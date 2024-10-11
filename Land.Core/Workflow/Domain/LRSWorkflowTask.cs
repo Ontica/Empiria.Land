@@ -123,11 +123,11 @@ namespace Empiria.Land.Transactions.Workflow {
       get { return this.NextStatus.GetStatusName(); }
     }
 
-    [DataField("CheckInTime", Default = "DateTime.Now")]
+    [DataField("CheckInTime")]
     public DateTime CheckInTime {
       get;
       private set;
-    }
+    } = DateTime.Now;
 
     [DataField("EndProcessTime")]
     public DateTime EndProcessTime {
