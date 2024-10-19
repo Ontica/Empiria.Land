@@ -289,6 +289,9 @@ namespace Empiria.Land.Transactions.Workflow {
     }
 
     protected override void OnSave() {
+      if (this.IsNew && CheckInTime == ExecutionServer.DateMaxValue) {
+        CheckInTime = DateTime.Now;
+      }
       WorkflowData.WriteWorkflowTask(this);
     }
 
