@@ -77,7 +77,6 @@ namespace Empiria.Land.Transactions {
     }
 
 
-    // TODO: Remove reload flag when it is possible.
     static public LRSTransaction TryParse(string transactionUID) {
       return BaseObject.TryParse<LRSTransaction>($"TransactionUID = '{transactionUID}'");
     }
@@ -261,10 +260,15 @@ namespace Empiria.Land.Transactions {
     }
 
 
-    [DataField("TransactionKeywords")]
     public string Keywords {
-      get;
-      private set;
+      get {
+        return EmpiriaString.BuildKeywords(this.InternalControlNumber, this.UID,
+                                           this.LandRecord.UID,
+                                           this.PaymentData.Payments.Count == 1 ? this.PaymentData.Payments[0].ReceiptNo : string.Empty,
+                                           this.DocumentDescriptor, this.RequestedBy, this.Agency.FullName,
+                                           this.DocumentType.Name, this.TransactionType.Name,
+                                           this.RecorderOffice.ShortName);
+      }
     }
 
 
@@ -539,14 +543,6 @@ namespace Empiria.Land.Transactions {
 
         this.GUID = Guid.NewGuid().ToString();
       }
-
-      this.Keywords = EmpiriaString.BuildKeywords(this.InternalControlNumber, this.UID,
-                                                  this.LandRecord.UID,
-                                                  this.PaymentData.Payments.Count == 1 ? this.PaymentData.Payments[0].ReceiptNo : string.Empty,
-                                                  this.DocumentDescriptor, this.RequestedBy,
-                                                  this.Agency.FullName,
-                                                  this.DocumentType.Name, this.TransactionType.Name,
-                                                  this.RecorderOffice.ShortName);
 
       TransactionsDataService.WriteTransaction(this);
 
