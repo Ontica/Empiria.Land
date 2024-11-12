@@ -55,9 +55,10 @@ namespace Empiria.Land.Certificates.Data {
       var op = DataOperation.Parse("writeLRSCertificate",
                   o.Id, o.UID, o.CertificateType.Id, o.CertificateID,
                   o.Transaction.Id, o.RecorderOffice.Id,
-                  o.OnRecordableSubject.Id, /* o.OnRecording.Id */ o.OnOwnerName,
-                  o.Notes, o.ExtensionData.ToString(), o.AsText, o.Keywords,
-                  o.IssueTime, o.IssuedBy.Id, (char) o.IssueMode,
+                  o.OnRecordableSubject.Id, o.OnLandRecord.Id, o.OnOwnerName,
+                  o.Notes, o.ExtensionData.ToString(), o.AsText,
+                  'U', 'M', -1, DateTime.Now, string.Empty,
+                  o.Keywords, o.IssueTime, o.IssuedBy.Id, (char) o.IssueMode,
                   o.PostedBy.Id, o.PostingTime, (char) o.Status,
                   o.Integrity.GetUpdatedHashCode());
 

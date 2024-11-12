@@ -89,15 +89,15 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    [DataField("PropertyId")]
+    [DataField("OnRecordableSubjectId")]
     public Resource OnRecordableSubject {
       get;
       private set;
     }
 
 
-    //[DataField("OnRecordingId")]
-    public LandRecord OnRecording {
+    [DataField("OnLandRecordId")]
+    public LandRecord OnLandRecord {
       get;
       private set;
     }
@@ -134,8 +134,8 @@ namespace Empiria.Land.Certificates {
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.UID, this.OnRecordableSubject.UID,
-                                           this.OnRecording.Keywords, this.Transaction.UID,
-                                           this.Transaction.RequestedBy);
+                                           this.OnLandRecord.Keywords, this.OnOwnerName,
+                                           this.Transaction.Keywords);
       }
     }
 
@@ -221,8 +221,8 @@ namespace Empiria.Land.Certificates {
           version, "Id", this.Id, "CertificateTypeId", this.CertificateType.Id,
           "CertificateID", this.CertificateID, "TransactionId", this.Transaction.Id,
           "RecorderOffice", this.RecorderOffice.Id,
-          "OnRecordableSubject", this.OnRecordableSubject.Id,
-          "OnRecording", this.OnRecording.Id, "OnOwnerName", this.OnOwnerName,
+          "OnRecordableSubjectId", this.OnRecordableSubject.Id,
+          "OnLandRecordId", this.OnLandRecord.Id, "OnOwnerName", this.OnOwnerName,
           "ExtensionData", this.ExtensionData.ToString(), "AsText", this.AsText,
           "IssueTime", this.IssueTime, "IssuedById", this.IssuedBy.Id,
           "IssueMode", (char) this.IssueMode, "PostedBy", this.PostedBy.Id,
