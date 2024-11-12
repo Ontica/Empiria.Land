@@ -16,33 +16,6 @@ using Empiria.Security;
 
 namespace Empiria.Land.Registration {
 
-  public enum SignStatus {
-
-    Unsigned = 'U',
-
-    Signed = 'S',
-
-    Refused = 'F',
-
-    Revoked = 'K',
-
-    Undefined = 'X',
-  }
-
-
-  public enum SignType {
-
-    Undeterminated = 'U',
-
-    Manual = 'M',
-
-    Electronic = 'E',
-
-    Historic = 'H',
-
-  }
-
-
   /// <summary>Holds security data for land instrument records.</summary>
   public class LandRecordSecurityData {
 

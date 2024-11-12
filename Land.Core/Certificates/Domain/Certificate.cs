@@ -103,7 +103,7 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    [DataField("OwnerName")]
+    [DataField("OnOwnerName")]
     public string OnOwnerName {
       get;
       private set;
@@ -181,6 +181,11 @@ namespace Empiria.Land.Certificates {
       private set;
     }
 
+    [DataObject]
+    public CertificateSecurityData SecurityData {
+      get;
+      private set;
+    }
 
     public string TractPrelationStamp {
       get {

@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Land Recording services                      Component : Recording documents                   *
-*  Assembly : Empiria.Land.Registration.dll                Pattern   : Information Holder                    *
+*  Module   : Commons                                      Component : Electronic sign                       *
+*  Assembly : Empiria.Land.Core.dll                        Pattern   : Information Holder                    *
 *  Type     : LandESignData                                License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Holds electronic sign data for Empiria Land documents.                                         *
@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Land.Registration {
+namespace Empiria.Land {
 
   /// <summary>Holds electronic sign data for Empiria Land documents.</summary>
   public class LandESignData {
@@ -36,4 +36,4 @@ namespace Empiria.Land.Registration {
 
   }  // class LandESignData
 
-}  // namespace Empiria.Land.Registration
+}  // namespace Empiria.Land

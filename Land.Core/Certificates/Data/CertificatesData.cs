@@ -7,7 +7,6 @@
 *  Summary  : Data read and write services for land certificates.                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Data;
 
@@ -57,14 +56,14 @@ namespace Empiria.Land.Certificates.Data {
                   o.Transaction.Id, o.RecorderOffice.Id,
                   o.OnRecordableSubject.Id, o.OnLandRecord.Id, o.OnOwnerName,
                   o.Notes, o.ExtensionData.ToString(), o.AsText,
-                  'U', 'M', -1, DateTime.Now, string.Empty,
+                  (char) o.SecurityData.SignStatus, (char) o.SecurityData.SignType,
+                  o.SecurityData.SignedBy.Id, o.SecurityData.SignedTime, o.SecurityData.ExtData.ToString(),
                   o.Keywords, o.IssueTime, o.IssuedBy.Id, (char) o.IssueMode,
                   o.PostedBy.Id, o.PostingTime, (char) o.Status,
                   o.Integrity.GetUpdatedHashCode());
 
       DataWriter.Execute(op);
     }
-
 
   }  // class CertificatesData
 
