@@ -185,7 +185,7 @@ namespace Empiria.Land.Registration {
 
       var fullTract = _recordingAct.Resource.Tract.GetFullRecordingActs();
 
-      fullTract = fullTract.FindAll((x) => !x.RecordingActType.RecordingRule.SkipPrelation);
+      fullTract = fullTract.FindAll((x) => !x.RecordingActType.RecordingRule.SkipPrelation && x.Resource.Id != -2);
 
       bool wrongPrelation = fullTract.Contains((x) => x.LandRecord.PresentationTime > _recordingAct.LandRecord.PresentationTime &&
                                                       x.LandRecord.IsClosed);
