@@ -54,6 +54,16 @@ namespace Empiria.Land.Certificates.Adapters {
     } = string.Empty;
 
 
+    public string PersonName {
+      get; set;
+    } = string.Empty;
+
+
+    public string RealEstateDescription {
+      get; set;
+    } = string.Empty;
+
+
     public string RecordingBookUID {
       get; set;
     } = string.Empty;
@@ -86,7 +96,7 @@ namespace Empiria.Land.Certificates.Adapters {
   static internal class CertificateRequestCommandExtensions {
 
     static internal CertificateType GetCertificateType(this CertificateRequestCommand command) {
-      return (CertificateType) CertificateType.Parse(command.Payload.CertificateTypeUID);
+      return CertificateType.Parse(command.Payload.CertificateTypeUID);
     }
 
 

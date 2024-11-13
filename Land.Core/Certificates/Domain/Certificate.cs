@@ -58,6 +58,40 @@ namespace Empiria.Land.Certificates {
       return certificate;
     }
 
+
+    static internal Certificate CreateOnRealEstateDescription(CertificateType certificateType,
+                                                              LRSTransaction transaction,
+                                                              string realEstateDescription) {
+      Assertion.Require(certificateType, nameof(certificateType));
+      Assertion.Require(transaction, nameof(transaction));
+      Assertion.Require(realEstateDescription, nameof(realEstateDescription));
+
+      var certificate = new Certificate(certificateType) {
+        CertificateID = certificateType.CreateCertificateID(),
+        Transaction = transaction,
+        OnRealEstateDescription = realEstateDescription
+      };
+
+      return certificate;
+    }
+
+
+    static internal Certificate CreateOnPersonName(CertificateType certificateType,
+                                                   LRSTransaction transaction,
+                                                   string onPersonName) {
+      Assertion.Require(certificateType, nameof(certificateType));
+      Assertion.Require(transaction, nameof(transaction));
+      Assertion.Require(onPersonName, nameof(onPersonName));
+
+      var certificate = new Certificate(certificateType) {
+        CertificateID = certificateType.CreateCertificateID(),
+        Transaction = transaction,
+        OnPersonName = onPersonName
+      };
+
+      return certificate;
+    }
+
     #endregion Constructors and parsers
 
     #region Properties
@@ -103,10 +137,23 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    [DataField("OnOwnerName")]
-    public string OnOwnerName {
-      get;
-      private set;
+    public string OnPersonName {
+      get {
+        return ExtensionData.Get("onPersonName", string.Empty);
+      }
+      private set {
+        ExtensionData.SetIfValue("onPersonName", EmpiriaString.Clean(value));
+      }
+    }
+
+
+    public string OnRealEstateDescription {
+      get {
+        return ExtensionData.Get("onRealEstateDescription", string.Empty);
+      }
+      private set {
+        ExtensionData.SetIfValue("onRealEstateDescription", EmpiriaString.Clean(value));
+      }
     }
 
 
@@ -134,7 +181,7 @@ namespace Empiria.Land.Certificates {
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.UID, this.OnRecordableSubject.UID,
-                                           this.OnLandRecord.Keywords, this.OnOwnerName,
+                                           this.OnLandRecord.Keywords, this.OnPersonName,
                                            this.Transaction.Keywords);
       }
     }
@@ -227,7 +274,8 @@ namespace Empiria.Land.Certificates {
           "CertificateID", this.CertificateID, "TransactionId", this.Transaction.Id,
           "RecorderOffice", this.RecorderOffice.Id,
           "OnRecordableSubjectId", this.OnRecordableSubject.Id,
-          "OnLandRecordId", this.OnLandRecord.Id, "OnOwnerName", this.OnOwnerName,
+          "OnLandRecordId", this.OnLandRecord.Id, "OnPersonName", this.OnPersonName,
+          "OnRealEstateDesscripton", this.OnRealEstateDescription,
           "ExtensionData", this.ExtensionData.ToString(), "AsText", this.AsText,
           "IssueTime", this.IssueTime, "IssuedById", this.IssuedBy.Id,
           "IssueMode", (char) this.IssueMode, "PostedBy", this.PostedBy.Id,
@@ -274,6 +322,10 @@ namespace Empiria.Land.Certificates {
 
 
     protected override void OnSave() {
+      if (IsNew) {
+        this.PostedBy = ExecutionServer.CurrentContact;
+        this.PostingTime = DateTime.Now;
+      }
       CertificatesData.WriteCertificate(this);
     }
 

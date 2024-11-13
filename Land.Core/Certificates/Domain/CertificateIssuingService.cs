@@ -51,6 +51,39 @@ namespace Empiria.Land.Certificates {
     }
 
 
+    static internal CertificateDto CreateOnPersonName(CertificateType certificateType,
+                                                     LRSTransaction transaction,
+                                                     string personName) {
+
+      Assertion.Require(certificateType, nameof(certificateType));
+      Assertion.Require(transaction, nameof(transaction));
+      Assertion.Require(personName, nameof(personName));
+
+      var certificate = Certificate.CreateOnPersonName(certificateType, transaction, personName);
+
+      certificate.Save();
+
+      return CertificateMapper.Map(certificate);
+    }
+
+
+    static internal CertificateDto CreateOnRealEstateDescription(CertificateType certificateType,
+                                                                 LRSTransaction transaction,
+                                                                 string realEstateDescription) {
+
+      Assertion.Require(certificateType, nameof(certificateType));
+      Assertion.Require(transaction, nameof(transaction));
+      Assertion.Require(realEstateDescription, nameof(realEstateDescription));
+
+      var certificate = Certificate.CreateOnRealEstateDescription(certificateType, transaction,
+                                                                  realEstateDescription);
+
+      certificate.Save();
+
+      return CertificateMapper.Map(certificate);
+    }
+
+
     static internal void DeleteCertificate(Guid certificateGuid) {
       var certificate = Certificate.Parse(certificateGuid.ToString());
 

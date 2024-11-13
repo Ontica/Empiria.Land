@@ -61,7 +61,7 @@ namespace Empiria.Land.Certificates {
     private FixedList<CertificateRequestCommandTypeDto> BuildIssuingCommands(CertificateType certificateType) {
       var commands = new List<CertificateRequestCommandTypeDto>();
 
-      if (EmpiriaMath.IsMemberOf(certificateType.Id, new[] { 2423, 2425, 2427, 2428, 2432 })) {
+      if (EmpiriaMath.IsMemberOf(certificateType.Id, new[] { 2423, 2425, 2427, 2428, 2432, 2433 })) {
         commands.Add(new CertificateRequestCommandTypeDto {
           UID = CertificateRequestCommandType.OverRegisteredRealEstate.ToString(),
           Name = CertificateRequestCommandType.OverRegisteredRealEstate.Name(),

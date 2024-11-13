@@ -126,11 +126,21 @@ namespace Empiria.Land.Certificates.UseCases {
 
       CertificateType certificateType = command.GetCertificateType();
 
-      Resource recordableSubject = command.GetRecordableSubject();
+      CertificateDto certificate;
 
-      CertificateDto certificate = CertificateIssuingService.CreateCertificate(certificateType,
-                                                                               transaction,
-                                                                               recordableSubject);
+      if (command.Type == CertificateRequestCommandType.OverPersonName) {
+
+        certificate = CertificateIssuingService.CreateOnPersonName(certificateType,
+                                                                  transaction,
+                                                                  command.Payload.PersonName);
+
+      } else {
+        Resource recordableSubject = command.GetRecordableSubject();
+
+        certificate = CertificateIssuingService.CreateCertificate(certificateType,
+                                                                  transaction,
+                                                                  recordableSubject);
+      }
 
       return CertificateRequestMapper.Map(transaction, certificate);
     }

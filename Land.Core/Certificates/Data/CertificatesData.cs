@@ -54,7 +54,7 @@ namespace Empiria.Land.Certificates.Data {
       var op = DataOperation.Parse("writeLRSCertificate",
                   o.Id, o.UID, o.CertificateType.Id, o.CertificateID,
                   o.Transaction.Id, o.RecorderOffice.Id,
-                  o.OnRecordableSubject.Id, o.OnLandRecord.Id, o.OnOwnerName,
+                  o.OnRecordableSubject.Id, o.OnLandRecord.Id,
                   o.Notes, o.ExtensionData.ToString(), o.AsText,
                   (char) o.SecurityData.SignStatus, (char) o.SecurityData.SignType,
                   o.SecurityData.SignedBy.Id, o.SecurityData.SignedTime, o.SecurityData.ExtData.ToString(),

@@ -263,7 +263,7 @@ namespace Empiria.Land.Certificates {
       string s = $"||{certificate.Transaction.UID}|{certificate.UID}|{certificate.CertificateID}|";
 
       s += $"{certificate.CertificateType.Id}|{certificate.IssuedBy.Id}|{certificate.IssueMode}|" +
-           $"{certificate.OnLandRecord.Id}|{certificate.OnOwnerName}|{certificate.OnRecordableSubject.UID}|";
+           $"{certificate.OnLandRecord.Id}|{certificate.OnPersonName}|{certificate.OnRecordableSubject.UID}|";
 
       s += $"{certificate.AsText}";
 
