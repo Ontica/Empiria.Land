@@ -138,14 +138,7 @@ namespace Empiria.Land.Pages {
 
 
     protected string GetCertificateText() {
-      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
-                       "<b>NO SE ENCONTRÓ REGISTRADO</b> NINGÚN BIEN INMUEBLE A NOMBRE DE:" +
-                       "<div style='text-align:center;font-size:12pt'><strong>{{ON.PERSON.NAME}}</strong></div>";
-
-      string x = t.Replace("{{ON.PERSON.NAME}}", certificate.OnPersonName);
-
-      return x.ToUpperInvariant();
+      return certificate.AsText;
     }
 
     protected string GetCertificateType() {

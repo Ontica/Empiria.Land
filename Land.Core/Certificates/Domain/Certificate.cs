@@ -343,6 +343,7 @@ namespace Empiria.Land.Certificates {
         this.PostedBy = ExecutionServer.CurrentContact;
         this.PostingTime = DateTime.Now;
       }
+      this.AsText = GenerateCertificateText();
       CertificatesData.WriteCertificate(this);
     }
 
@@ -365,6 +366,66 @@ namespace Empiria.Land.Certificates {
       Assertion.RequireFail($"The status of the certificate with ID '{this.CertificateID}' " +
                             $"cannot be changed to {newStatus}.");
     }
+
+
+    private string GenerateCertificateText() {
+      switch (this.CertificateType.Name) {
+        case "ObjectType.LandCertificate.Propiedad":
+          return GeneratePropertyCertificateText();
+        case "ObjectType.LandCertificate.NoPropiedad":
+          return GenerateNoPropertyCertificateText();
+        case "ObjectType.LandCertificate.LibertadGravamen":
+          return GenerateLibertadGravamenCertificateText();
+        case "ObjectType.LandCertificate.Gravamen":
+          return GenerateGravamenCertificateText();
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unhandled certificate type {this.CertificateType.Name}.");
+      }
+    }
+
+    private string GenerateGravamenCertificateText() {
+      return "";
+    }
+
+    private string GenerateLibertadGravamenCertificateText() {
+      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
+                       "SOBRE EL BIEN INMUEBLE CON <strong>FOLIO REAL ELECTRÓNICO</strong>: " +
+                       "<div style='text-align:center;font-size:12pt'><strong>{{ON.RESOURCE.CODE}}</strong></div>" +
+                       "{{ON.RESOURCE.TEXT}}{{ON.RESOURCE.METES.AND.BOUNDS}}</br></br>" +
+                       "PARA DETERMINAR SI TIENE O NO GRAVÁMENES, RESULTÓ QUE <b>NO REPORTA GRAVÁMENES</b>, " +
+                       "ES DECIR, SE ENCUENTRA <b>LIBRE DE GRAVAMEN</b>.<br/>";
+
+      string x = t.Replace("{{ON.RESOURCE.CODE}}", this.OnRecordableSubject.UID);
+
+      x = x.Replace("{{ON.RESOURCE.TEXT}}", this.OnRecordableSubject.AsText);
+      if (this.OnRecordableSubject is RealEstate realEstate) {
+        x = x.Replace("{{ON.RESOURCE.METES.AND.BOUNDS}}",
+                      $"<br/><br/><b>CON LAS SIGUIENTES MEDIDAS Y COLINDANCIAS</b>:<br/>" +
+                      $"{realEstate.MetesAndBounds}");
+      } else {
+        x = x.Replace("{{ON.RESOURCE.METES.AND.BOUNDS}}", string.Empty);
+      }
+
+
+      return x.ToUpperInvariant();
+    }
+
+    private string GeneratePropertyCertificateText() {
+      return "";
+    }
+
+    private string GenerateNoPropertyCertificateText() {
+      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
+                       "<b>NO SE ENCONTRÓ REGISTRADO</b> NINGÚN BIEN INMUEBLE A NOMBRE DE:" +
+                       "<div style='text-align:center;font-size:12pt'><strong>{{ON.PERSON.NAME}}</strong></div>";
+
+      string x = t.Replace("{{ON.PERSON.NAME}}", this.OnPersonName);
+
+      return x.ToUpperInvariant();
+    }
+
 
     #endregion Helpers
 
