@@ -103,6 +103,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="certificates\certificate.aspx" />
     <Content Include="empiria.config.json" />
     <Content Include="receipts\control.voucher.aspx" />
     <Content Include="receipts\payment.order.aspx" />
@@ -139,6 +140,13 @@
     <Content Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="certificates\certificate.aspx.cs">
+      <DependentUpon>certificate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="certificates\certificate.aspx.designer.cs">
+      <DependentUpon>certificate.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.cs" />
     <Compile Include="receipts\control.voucher.aspx.cs">
       <DependentUpon>control.voucher.aspx</DependentUpon>
@@ -233,10 +241,6 @@
     <ProjectReference Include="..\..\onepoint\Core\Empiria.OnePoint.Core.csproj">
       <Project>{8a3ede10-60fc-4a8f-8aaf-03de1fb0b61b}</Project>
       <Name>Empiria.OnePoint.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\onepoint\EPayments.Core\Empiria.OnePoint.EPayments.csproj">
-      <Project>{b6801aed-52c9-4fb7-90b7-2bc2ab3b8ba0}</Project>
-      <Name>Empiria.OnePoint.EPayments</Name>
     </ProjectReference>
     <ProjectReference Include="..\Land.Core\Empiria.Land.Core.csproj">
       <Project>{0d12aa4b-83bf-4ac8-9d22-1d85ce8975d2}</Project>
