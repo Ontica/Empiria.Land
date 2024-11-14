@@ -27,7 +27,7 @@ namespace Empiria.Land.Certificates {
 
       var certificate = Certificate.Parse(certificateGuid.ToString());
 
-      certificate.SetStatus(CertificateStatus.Closed);
+      certificate.Close();
 
       certificate.Save();
 
@@ -87,7 +87,7 @@ namespace Empiria.Land.Certificates {
     static internal void DeleteCertificate(Guid certificateGuid) {
       var certificate = Certificate.Parse(certificateGuid.ToString());
 
-      certificate.SetStatus(CertificateStatus.Deleted);
+      certificate.Delete();
 
       certificate.Save();
     }
@@ -118,7 +118,7 @@ namespace Empiria.Land.Certificates {
     static internal CertificateDto OpenCertificate(Guid certificateGuid) {
       var certificate = Certificate.Parse(certificateGuid.ToString());
 
-      certificate.SetStatus(CertificateStatus.Pending);
+      certificate.Open();
 
       certificate.Save();
 

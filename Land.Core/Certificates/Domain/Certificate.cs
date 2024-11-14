@@ -23,7 +23,7 @@ namespace Empiria.Land.Certificates {
 
   /// <summary>Partitioned type that represents a Land certificate.</summary>
   [PartitionedType(typeof(CertificateType))]
-  internal class Certificate : BaseObject, IResourceTractItem, IProtected {
+  public class Certificate : BaseObject, IResourceTractItem, IProtected {
 
     #region Constructors and parsers
 
@@ -37,7 +37,7 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    static internal Certificate Parse(string uid) {
+    static public Certificate Parse(string uid) {
       return BaseObject.ParseKey<Certificate>(uid);
     }
 
@@ -294,8 +294,9 @@ namespace Empiria.Land.Certificates {
     }
 
     public bool IsClosed {
-      get;
-      internal set;
+      get {
+        return this.Status == CertificateStatus.Closed;
+      }
     }
 
     #endregion IProtected implementation
@@ -321,8 +322,24 @@ namespace Empiria.Land.Certificates {
     }
 
 
+    internal void Close() {
+      EnsureCanChangeStatusTo(CertificateStatus.Closed);
+
+      this.IssueTime = DateTime.Now;
+      this.Status = CertificateStatus.Closed;
+    }
+
+
+    internal void Delete() {
+      EnsureCanChangeStatusTo(CertificateStatus.Deleted);
+
+      this.Status = CertificateStatus.Deleted;
+    }
+
+
     protected override void OnSave() {
       if (IsNew) {
+        this.RecorderOffice = Transaction.RecorderOffice;
         this.PostedBy = ExecutionServer.CurrentContact;
         this.PostingTime = DateTime.Now;
       }
@@ -330,10 +347,11 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    internal void SetStatus(CertificateStatus newStatus) {
-      EnsureCanChangeStatusTo(newStatus);
+    internal void Open() {
+      EnsureCanChangeStatusTo(CertificateStatus.Pending);
 
-      this.Status = newStatus;
+      this.IssueTime = ExecutionServer.DateMaxValue;
+      this.Status = CertificateStatus.Pending;
     }
 
     #endregion Methods
