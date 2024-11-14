@@ -33,10 +33,6 @@ namespace Empiria.Land.Pages {
     protected LandRecord landRecord = null;
     protected LRSTransaction transaction = null;
 
-    private RecordingAct _selectedRecordingAct;
-
-    private bool _isMainLandRecord;
-
     private Instrument instrument;
 
     #endregion Fields
@@ -48,22 +44,13 @@ namespace Empiria.Land.Pages {
 
       certificate = Certificate.Parse(certificateUID);
 
-
       string landRecordUID = Request.QueryString["landRecordUID"];
-
-      int selectedRecordingActId = int.Parse(Request.QueryString["selectedRecordingActId"] ?? "-1");
-
-      _isMainLandRecord = bool.Parse(Request.QueryString["main"] ?? "false");
 
       landRecord = LandRecord.TryParse(landRecordUID);
 
-      // landRecord.EnsureIntegrity();
-
-      transaction = landRecord.Transaction;
+      transaction = certificate.Transaction;
 
       landRecord.RefreshRecordingActs();
-
-      _selectedRecordingAct = RecordingAct.Parse(selectedRecordingActId);
 
       this.instrument = landRecord.Instrument;
 
@@ -76,15 +63,11 @@ namespace Empiria.Land.Pages {
 
 
     protected string GetDigitalSeal() {
-      if (landRecord.IsHistoricRecord) {
-        return CommonMethods.AsWarning("Los documentos históricos no tienen sello digital.");
-
-      } else if (!landRecord.IsClosed) {
-        return CommonMethods.AsWarning("El documento está ABIERTO por lo que no tiene sello digital.");
+      if (!certificate.IsClosed) {
+        return CommonMethods.AsWarning("El certificado está ABIERTO por lo que no tiene sello digital.");
 
       } else {
         return landRecord.SecurityData.DigitalSeal.Substring(0, 64);
-
       }
     }
 
@@ -116,23 +99,14 @@ namespace Empiria.Land.Pages {
 
 
     protected string GetDigitalSignature() {
-      if (landRecord.IsHistoricRecord) {
-        return CommonMethods.AsWarning("Los documentos históricos no tienen firma digital.");
+      if (!certificate.IsClosed) {
+        return CommonMethods.AsWarning("El certificado no ha sido cerrado. No tiene validez.");
 
-      } else if (!landRecord.IsClosed) {
-        return CommonMethods.AsWarning("El documento no ha sido cerrado. No tiene validez.");
-
-      } else if (landRecord.SecurityData.IsUnsigned && landRecord.SecurityData.UsesESign) {
+      } else if (landRecord.SecurityData.IsUnsigned) {
         return CommonMethods.AsWarning("Este documento NO HA SIDO FIRMADO digitalmente. No tiene validez oficial.");
 
-      } else if (landRecord.SecurityData.IsUnsigned && !landRecord.SecurityData.UsesESign) {
-        return CommonMethods.AsWarning("Este documento no ha sido firmado manualmente. No tiene validez oficial.");
-
-      } else if (landRecord.SecurityData.IsSigned && landRecord.SecurityData.UsesESign) {
+      } else if (landRecord.SecurityData.IsSigned) {
         return EmpiriaString.DivideLongString(landRecord.SecurityData.DigitalSignature, 96, "<br />");
-
-      } else if (landRecord.SecurityData.IsSigned && !landRecord.SecurityData.UsesESign) {
-        return "Documento firmado de forma autógrafa. Requiere también sello oficial.";
 
       } else {
         throw Assertion.EnsureNoReachThisCode();
@@ -141,7 +115,7 @@ namespace Empiria.Land.Pages {
 
 
     protected bool CanBePrinted() {
-      if (!landRecord.IsClosed) {
+      if (!certificate.IsClosed) {
         return false;
       }
       if (landRecord.SecurityData.IsUnsigned) {
@@ -151,24 +125,11 @@ namespace Empiria.Land.Pages {
     }
 
 
-    protected string GetDocumentDescriptionText() {
-      if (instrument.Summary.Length > 30) {
-        return "DESCRIPCIÓN:<br />" + instrument.Summary + "<br /><br />";
-
-      } else if (landRecord.IsHistoricRecord) {
-        return "* PARTIDA HISTÓRICA SIN DESCRIPCIÓN *";
-
-      } else {
-        return string.Empty;
-      }
-    }
-
-
     protected string GetDocumentLogo() {
       if (DISPLAY_VEDA_ELECTORAL_UI) {
         return "../themes/default/customer/government.seal.veda.png";
       }
-      if (landRecord.AuthorizationTime.Year == 2024) {
+      if (certificate.IssueTime.Year == 2024) {
         return "../themes/default/customer/government.seal.2024.png";
       } else {
         return "../themes/default/customer/government.seal.png";
@@ -176,33 +137,9 @@ namespace Empiria.Land.Pages {
     }
 
 
-    protected string GetPaymentText() {
-      return builder.PaymentText();
-    }
-
-
-    protected bool DocumentHasNotes {
-      get {
-        return instrument.Summary.Length != 0;
-      }
-    }
-
-
-    protected string GetDocumentNotes() {
-      var notes = instrument.Summary.Replace("<br>", "<br/>");
-
-      return notes;
-    }
-
-
-    protected string GetInstrumentText() {
-      return instrument.AsText;
-    }
-
-
     protected string GetCertificateText() {
-      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALIA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>15 AÑOS</b> A LA FECHA, " +
+      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
                        "<b>NO SE ENCONTRÓ REGISTRADO</b> NINGÚN BIEN INMUEBLE A NOMBRE DE:" +
                        "<div style='text-align:center;font-size:12pt'><strong>{{ON.PERSON.NAME}}</strong></div>";
 
@@ -213,10 +150,6 @@ namespace Empiria.Land.Pages {
 
     protected string GetCertificateType() {
       return $"CERTIFICADO DE {certificate.CertificateType.DisplayName}".ToUpperInvariant();
-    }
-
-    protected string GetRecordingActsText() {
-      return builder.RecordingActsText(_selectedRecordingAct, _isMainLandRecord);
     }
 
 
@@ -281,11 +214,8 @@ namespace Empiria.Land.Pages {
     }
 
     protected string GetCertificateSignerName() {
-      if (landRecord.IsHistoricRecord) {
-        return String.Empty;
-      }
       if (!CanBePrinted()) {
-        return CommonMethods.AsWarning("ESTE DOCUMENTO NO ES VÁLIDO EN EL ESTADO ACTUAL.");
+        return CommonMethods.AsWarning("ESTE CERTIFICADO NO ES VÁLIDO EN EL ESTADO ACTUAL.");
       } else {
         return landRecord.SecurityData.SignedBy.FullName;
       }
@@ -293,9 +223,6 @@ namespace Empiria.Land.Pages {
 
 
     protected string GetCertificateSignerJobTitle() {
-      if (landRecord.IsHistoricRecord) {
-        return String.Empty;
-      }
       return landRecord.SecurityData.SignedByJobTitle;
     }
 
