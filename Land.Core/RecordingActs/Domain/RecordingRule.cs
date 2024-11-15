@@ -99,7 +99,7 @@ namespace Empiria.Land.Registration {
         this.ChainedRecordingActType = json.Get<RecordingActType>("ChainedAct", RecordingActType.Empty);
 
         this.IsAnnotation = json.Get<bool>("IsAnnotation", false);
-        this.IsHardLimitation = json.Get<bool>("IsHardLimitation", false);
+        this.IsSoftLimitation = json.Get<bool>("IsSoftLimitation", false);
         this.SkipPrelation = json.Get<bool>("SkipPrelation", false);
 
       } catch (Exception e) {
@@ -135,7 +135,7 @@ namespace Empiria.Land.Registration {
       json.Add("AllowNoParties", this.AllowNoParties);
       json.Add("AllowUncompletedResource", this.AllowUncompletedResource);
       json.Add("IsAnnotation", this.IsAnnotation);
-      json.Add("IsHardLimitation", this.IsHardLimitation);
+      json.Add("IsSoftLimitation", this.IsSoftLimitation);
       json.Add("SkipPrelation", this.SkipPrelation);
 
       return json;
@@ -304,9 +304,15 @@ namespace Empiria.Land.Registration {
 
 
     public bool IsHardLimitation {
+      get {
+        return recordingActType.IsLimitationActType && !IsSoftLimitation;
+      }
+    }
+
+    public bool IsSoftLimitation {
       get;
       private set;
-    } = false;
+    }
 
 
     public bool SkipPrelation {
