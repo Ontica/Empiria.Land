@@ -43,7 +43,18 @@ namespace Empiria.Land.Certificates {
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(recordableSubject, nameof(recordableSubject));
 
-      var certificate = Certificate.Create(certificateType, transaction, recordableSubject);
+      if (recordableSubject is RealEstate realEstate &&
+         (certificateType.Equals(CertificateType.Gravamen) ||
+          certificateType.Equals(CertificateType.LibertadGravamen))) {
+
+        if (realEstate.HasHardLimitationActs) {
+          certificateType = CertificateType.Gravamen;
+        } else {
+          certificateType = CertificateType.LibertadGravamen;
+        }
+      }
+
+      Certificate certificate = Certificate.Create(certificateType, transaction, recordableSubject);
 
       certificate.Save();
 
