@@ -134,6 +134,11 @@ namespace Empiria.Land.Certificates.UseCases {
                                                                   transaction,
                                                                   command.Payload.PersonName);
 
+      } else if (command.Type == CertificateRequestCommandType.OverUnrecordedRealEstate) {
+
+        certificate = CertificateIssuingService.CreateOnRealEstateDescription(certificateType,
+                                                                              transaction,
+                                                                              command.Payload.RealEstateDescription);
       } else {
         Resource recordableSubject = command.GetRecordableSubject();
 
