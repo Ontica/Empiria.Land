@@ -38,19 +38,17 @@ namespace Empiria.Land.Certificates {
 
     static internal CertificateType Empty => Parse("ObjectType.LandCertificate");
 
-    static internal CertificateType Propiedad => Parse("ObjectType.LandCertificate.Propiedad");
-
-    static internal CertificateType NoPropiedad => Parse("ObjectType.LandCertificate.NoPropiedad");
-
-    static internal CertificateType LibertadGravamen => Parse("ObjectType.LandCertificate.LibertadGravamen");
-
     static internal CertificateType Gravamen => Parse("ObjectType.LandCertificate.Gravamen");
 
     static internal CertificateType Inscripcion => Parse("ObjectType.LandCertificate.Inscripción");
 
-    static internal CertificateType NoInscripcion => Parse("ObjectType.LandCertificate.NoInscripción");
+    static internal CertificateType LibertadGravamen => Parse("ObjectType.LandCertificate.LibertadGravamen");
 
     static internal CertificateType LimitacionAnotacion => Parse("ObjectType.LandCertificate.LimitacionAnotacion");
+
+    static internal CertificateType NoInscripcion => Parse("ObjectType.LandCertificate.NoInscripción");
+
+    static internal CertificateType NoPropiedad => Parse("ObjectType.LandCertificate.NoPropiedad");
 
     #endregion Constructors and parsers
 
