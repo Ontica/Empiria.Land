@@ -26,15 +26,9 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    static internal new CertificateType Parse(int typeId) {
-      return ObjectTypeInfo.Parse<CertificateType>(typeId);
-    }
+    static internal new CertificateType Parse(int typeId) => Parse<CertificateType>(typeId);
 
-
-    static internal new CertificateType Parse(string typeName) {
-      return ObjectTypeInfo.Parse<CertificateType>(typeName);
-    }
-
+    static internal new CertificateType Parse(string typeName) => Parse<CertificateType>(typeName);
 
     static public FixedList<CertificateType> GetList() {
       GeneralList list = GeneralList.Parse("CertificateTypes.Default.List");
@@ -42,9 +36,21 @@ namespace Empiria.Land.Certificates {
       return list.GetItems<CertificateType>();
     }
 
+    static internal CertificateType Empty => Parse("ObjectType.LandCertificate");
 
-    static internal CertificateType Empty => CertificateType.Parse("ObjectType.LandCertificate");
+    static internal CertificateType Propiedad => Parse("ObjectType.LandCertificate.Propiedad");
 
+    static internal CertificateType NoPropiedad => Parse("ObjectType.LandCertificate.NoPropiedad");
+
+    static internal CertificateType LibertadGravamen => Parse("ObjectType.LandCertificate.LibertadGravamen");
+
+    static internal CertificateType Gravamen => Parse("ObjectType.LandCertificate.Gravamen");
+
+    static internal CertificateType Inscripcion => Parse("ObjectType.LandCertificate.Inscripción");
+
+    static internal CertificateType NoInscripcion => Parse("ObjectType.LandCertificate.NoInscripción");
+
+    static internal CertificateType LimitacionAnotacion => Parse("ObjectType.LandCertificate.LimitacionAnotacion");
 
     #endregion Constructors and parsers
 
