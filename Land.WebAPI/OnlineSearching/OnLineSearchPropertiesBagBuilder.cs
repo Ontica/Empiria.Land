@@ -480,7 +480,7 @@ namespace Empiria.Land.WebApi {
 
       var items = new List<PropertyBagItem>(tract.Count);
 
-      items.Add(new PropertyBagItem("Últimos actos jurídicos y certificados expedidos", String.Empty, "section"));
+      items.Add(new PropertyBagItem("Actos jurídicos y certificados expedidos", String.Empty, "section"));
 
       var lastProcessedDocument = LandRecord.Empty;
 
@@ -528,6 +528,7 @@ namespace Empiria.Land.WebApi {
           if (!certificate.IsClosed) {
             continue;
           }
+
           items.Add(new PropertyBagItem(certificate.IssueTime.ToString("dd/MMM/yyyy"),
                                         $"Certificado de {certificate.Type} <br/>" +
                                         $"{GetCertificateUIDAsLink(certificate.UID)}"));

@@ -1,7 +1,7 @@
 ﻿Empiria Land Tests License
 ==========================
 
-Copyright (c) 2009-2024. La Vía Óntica SC, Ontica LLC y autores.
+Copyright (c) 2009-2025. La Vía Óntica SC, Ontica LLC y autores.
                          Todos los derechos reservados.
 -----------------------------------------------------------------------
 

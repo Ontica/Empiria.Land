@@ -27,7 +27,6 @@ namespace Empiria.Land.Registration.UseCases {
 
     #endregion Constructors and parsers
 
-
     #region Query Use cases
 
     public SubjectHistoryDto GetTractIndex(string landRecordUID, string recordingActUID) {
@@ -61,7 +60,7 @@ namespace Empiria.Land.Registration.UseCases {
     #region Command Use cases
 
     public LandRecordDto CreateRecordingAct(string landRecordUID,
-                                                     RegistrationCommand command) {
+                                            RegistrationCommand command) {
       Assertion.Require(landRecordUID, nameof(landRecordUID));
       Assertion.Require(command, nameof(command));
 
@@ -76,7 +75,7 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public LandRecordDto RemoveRecordingAct(string landRecordUID,
-                                                     string recordingActUID) {
+                                            string recordingActUID) {
       Assertion.Require(landRecordUID, nameof(landRecordUID));
       Assertion.Require(recordingActUID, nameof(recordingActUID));
 
@@ -91,8 +90,8 @@ namespace Empiria.Land.Registration.UseCases {
 
 
     public LandRecordDto UpdateRecordableSubject(string landRecordUID,
-                                                          string recordingActUID,
-                                                          RecordableSubjectFields fields) {
+                                                 string recordingActUID,
+                                                 RecordableSubjectFields fields) {
       Assertion.Require(landRecordUID, nameof(landRecordUID));
       Assertion.Require(recordingActUID, nameof(recordingActUID));
       Assertion.Require(fields, nameof(fields));
