@@ -174,6 +174,10 @@ namespace Empiria.Land.Pages {
       }
       if (landRecord.AuthorizationTime.Year == 2024) {
         return "../themes/default/customer/government.seal.2024.png";
+      } else if (landRecord.AuthorizationTime.Year == 2025) {
+        return "../themes/default/customer/government.seal.2025.png";
+      } else if (landRecord.AuthorizationTime.Year == 2026) {
+        return "../themes/default/customer/government.seal.2026.png";
       } else {
         return "../themes/default/customer/government.seal.png";
       }
