@@ -7,7 +7,7 @@
 *  Summary  : Query web api used to retrieve electronic sign requests.                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
 using System.Web.Http;
 
 using Empiria.WebApi;
@@ -23,6 +23,18 @@ namespace Empiria.Land.ESign.WebAPI {
   public class ESignRequestsController : WebApiController {
 
     #region Web apis
+
+    [HttpPost]
+    [Route("v5/land/electronic-sign/requests/documents/mine")]
+    public CollectionModel GetMyESignRequestedDocuments([FromBody] ESignRequestsQuery query) {
+
+      using (var usecases = ESignRequestsUseCases.UseCaseInteractor()) {
+
+        FixedList<SignableDocumentDescriptor> documents = usecases.GetMyESignRequestedDocuments(query);
+
+        return new CollectionModel(this.Request, documents);
+      }
+    }
 
 
     [HttpPost]

@@ -7,10 +7,10 @@
 *  Summary  : Use cases that returns electronic sign requests.                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Services;
 
+using Empiria.Land.Transactions;
 using Empiria.Land.Transactions.Adapters;
 
 using Empiria.Land.ESign.Adapters;
@@ -35,6 +35,21 @@ namespace Empiria.Land.ESign.UseCases {
 
     #region Use cases
 
+    public FixedList<SignableDocumentDescriptor> GetMyESignRequestedDocuments(ESignRequestsQuery query) {
+      Assertion.Require(query, nameof(query));
+
+      query.EnsureIsValid();
+
+      string filter = query.MapToFilterString();
+      string sort = query.MapToSortString();
+
+      FixedList<SignableDocument> list = ESignDataService.GetESignRequestedDocuments(filter, sort,
+                                                                                     query.PageSize);
+
+      return SignableDocumentMapper.MapToDescriptor(list);
+    }
+
+
     public FixedList<TransactionDescriptor> GetMyESignRequestedTransactions(ESignRequestsQuery query) {
       Assertion.Require(query, nameof(query));
 
@@ -43,7 +58,8 @@ namespace Empiria.Land.ESign.UseCases {
       string filter = query.MapToFilterString();
       string sort = query.MapToSortString();
 
-      var list = ESignDataService.GetESignRequestedTransactions(filter, sort, query.PageSize);
+      FixedList<LRSTransaction> list = ESignDataService.GetESignRequestedTransactions(filter, sort,
+                                                                                      query.PageSize);
 
       return TransactionMapper.MapToDescriptor(list);
     }
