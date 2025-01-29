@@ -142,7 +142,7 @@ namespace Empiria.Land.Certificates {
         return ExtensionData.Get("onPersonName", string.Empty);
       }
       private set {
-        ExtensionData.SetIfValue("onPersonName", EmpiriaString.Clean(value));
+        ExtensionData.SetIfValue("onPersonName", value);
       }
     }
 
@@ -152,7 +152,7 @@ namespace Empiria.Land.Certificates {
         return ExtensionData.Get("onRealEstateDescription", string.Empty);
       }
       private set {
-        ExtensionData.SetIfValue("onRealEstateDescription", EmpiriaString.Clean(value));
+        ExtensionData.SetIfValue("onRealEstateDescription", value);
       }
     }
 
