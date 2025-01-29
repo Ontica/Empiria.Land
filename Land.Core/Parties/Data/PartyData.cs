@@ -25,7 +25,8 @@ namespace Empiria.Land.Data {
     static internal FixedList<RecordingActParty> GetRecordingPartyList(RecordingAct recordingAct) {
       string sql = "SELECT * FROM LRSRecordingActParties " +
                    "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
-                   "AND RecActPartyStatus <> 'X'";
+                   "AND RecActPartyStatus <> 'X' " +
+                   "ORDER BY RecordingActPartyId";
 
       return DataReader.GetFixedList<RecordingActParty>(DataOperation.Parse(sql));
     }
@@ -50,16 +51,10 @@ namespace Empiria.Land.Data {
     static public FixedList<RecordingActParty> GetSecondaryPartiesList(RecordingAct recordingAct) {
       string sql = "SELECT * FROM LRSRecordingActParties " +
                    "WHERE RecordingActId = " + recordingAct.Id.ToString() + " " +
-                   "AND PartyOfId <> -1 AND RecActPartyStatus <> 'X'";
+                   "AND PartyOfId <> -1 AND RecActPartyStatus <> 'X' " +
+                   "ORDER BY RecordingActPartyId";
 
       return DataReader.GetFixedList<RecordingActParty>(DataOperation.Parse(sql));
-    }
-
-
-    static public RecordingActParty GetSecondaryParty(RecordingAct recordingAct, Party party) {
-      FixedList<RecordingActParty> secondaries = GetSecondaryPartiesList(recordingAct);
-
-      return secondaries.Find((x) => x.Party.Equals(party));
     }
 
 
