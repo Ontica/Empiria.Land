@@ -36,7 +36,7 @@ namespace Empiria.Land.ESign.Data {
 
     static internal FixedList<LRSTransaction> GetESignRequestedTransactions(string filter, string orderBy,
                                                                             int pageSize) {
-      string sql = $"SELECT TOP {pageSize} LRSTransactions.* " +
+      string sql = $"SELECT DISTINCT TOP {pageSize} LRSTransactions.* " +
                     "FROM LRSTransactions INNER JOIN vwLRSESignableDocuments " +
                     "ON LRSTransactions.TransactionId = vwLRSESignableDocuments.TransactionId " +
                     "INNER JOIN vwLRSLastTransactionTrack " +
