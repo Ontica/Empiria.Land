@@ -110,7 +110,7 @@
     <Content Include="receipts\transaction.receipt.aspx" />
     <Content Include="recording-stamps\book.entry.registration.stamp.aspx" />
     <Content Include="recording-stamps\recording.stamp.aspx" />
-    <Content Include="themes\default\css\certificates.css" />
+    <Content Include="themes\default\css\certificate.css" />
     <Content Include="themes\default\css\official.document.css" />
     <Content Include="themes\default\css\report.css" />
     <Content Include="themes\default\css\to.printer.css" />

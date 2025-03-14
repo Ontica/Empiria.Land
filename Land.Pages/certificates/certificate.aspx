@@ -5,7 +5,7 @@
   <title>&#160;</title>
   <meta http-equiv="Expires" content="-1" />
   <meta http-equiv="Pragma" content="no-cache" />
-  <link href="../themes/default/css/official.document.css" type="text/css" rel="stylesheet" />
+  <link href="../themes/default/css/certificate.css" type="text/css" rel="stylesheet" />
   </head>
   <body>
     <table>
