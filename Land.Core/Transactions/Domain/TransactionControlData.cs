@@ -38,11 +38,13 @@ namespace Empiria.Land.Transactions {
       }
     }
 
+
     public bool CanDelete {
       get {
         return CanEdit;
       }
     }
+
 
     public bool CanEdit {
       get {
@@ -61,6 +63,7 @@ namespace Empiria.Land.Transactions {
         return true;
       }
     }
+
 
     public bool CanEditCertificates {
       get {
@@ -86,6 +89,7 @@ namespace Empiria.Land.Transactions {
         return true;
       }
     }
+
 
     public bool CanEditInstrument {
       get {
@@ -204,6 +208,7 @@ namespace Empiria.Land.Transactions {
       }
     }
 
+
     public bool CanPrintSubmissionReceipt {
       get {
         if (!IsSubmitted) {
@@ -212,6 +217,7 @@ namespace Empiria.Land.Transactions {
         return true;
       }
     }
+
 
     public bool CanPrintControlVoucher {
       get {
@@ -291,9 +297,14 @@ namespace Empiria.Land.Transactions {
           return true;
         }
 
+        if (_transaction.Services.Contains(x => x.ServiceType.Name.Contains("Certificate"))) {
+          return true;
+        }
+
         return LRSWorkflowRules.IsCertificateIssueCase(_transaction);
       }
     }
+
 
     public bool ShowInstrumentRecordingTab {
       get {
@@ -308,6 +319,7 @@ namespace Empiria.Land.Transactions {
         return LRSWorkflowRules.IsRecordingDocumentCase(_transaction);
       }
     }
+
 
     public bool ShowPaymentReceiptEditor {
       get {
@@ -329,6 +341,7 @@ namespace Empiria.Land.Transactions {
         return !LRSWorkflowRules.IsEmptyServicesTransaction(_transaction);
       }
     }
+
 
     public bool ShowPreprocessingTab {
       get {
@@ -356,6 +369,7 @@ namespace Empiria.Land.Transactions {
       }
     }
 
+
     private bool IsTransactionInStatus(params TransactionStatus[] statusList) {
       foreach (var status in statusList) {
         if (_transaction.Workflow.CurrentStatus == status) {
@@ -364,6 +378,7 @@ namespace Empiria.Land.Transactions {
       }
       return false;
     }
+
 
     private bool IsUserInRole(params string[] rolesList) {
       foreach (var role in rolesList) {
