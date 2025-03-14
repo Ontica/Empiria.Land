@@ -83,7 +83,7 @@ namespace Empiria.Land.Registration {
 
     #endregion Constructors and parsers
 
-    #region Public properties
+    #region Properties
 
     public string CadastralKey {
       get {
@@ -103,7 +103,6 @@ namespace Empiria.Land.Registration {
       get;
       private set;
     } = RealEstateExtData.Empty;
-
 
 
     public string MetesAndBounds {
@@ -206,9 +205,21 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    #endregion Public properties
+    public bool HasHardLimitationActs {
+      get {
+        return GetHardLimitationActs().Count != 0;
+      }
+    }
 
-    #region Public methods
+    public bool HasSoftLimitationActs {
+      get {
+        return GetSoftLimitationActs().Count != 0;
+      }
+    }
+
+    #endregion Properties
+
+    #region Methods
 
     public override void AssertCanBeClosed() {
       if (this.IsSpecialCase) {
@@ -227,19 +238,35 @@ namespace Empiria.Land.Registration {
                       ":\nSe requiere proporcionar la superficie del predio.");
     }
 
+    public FixedList<RecordingAct> GetHardLimitationActs() {
+      var tract = base.Tract.GetRecordingActs();
 
-    public bool HasHardLimitationActs {
-      get {
-        var tract = base.Tract.GetRecordingActs();
-
-        var lastAct = tract.FindLast((x) => (x.Validator.WasAliveOn(DateTime.Now) &&
-                                             x.RecordingActType.RecordingRule.IsHardLimitation &&
-                                             x.LandRecord.IsClosed
-                                             ));
-        return lastAct != null;
-      }
+      tract = tract.FindAll((x) => (x.Validator.WasAliveOn(DateTime.Now) &&
+                                    x.RecordingActType.RecordingRule.IsHardLimitation &&
+                                    x.LandRecord.IsClosed
+                            ));
+      return tract;
     }
 
+
+    public FixedList<RecordingAct> GetSoftLimitationActs() {
+      var tract = base.Tract.GetRecordingActs();
+
+      tract = tract.FindAll((x) => (x.Validator.WasAliveOn(DateTime.Now) &&
+                                    x.RecordingActType.RecordingRule.IsSoftLimitation &&
+                                    x.LandRecord.IsClosed
+                            ));
+      return tract;
+    }
+
+    public RecordingAct TryGetLastDomainAct() {
+      var tract = base.Tract.GetRecordingActs();
+
+      var lastDomainAct = tract.FindLast((x) => x.Validator.WasAliveOn(DateTime.Now) &&
+                                          x.RecordingActType.IsDomainActType &&
+                                          (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
+      return lastDomainAct;
+    }
 
     public bool IsFirstDomainAct(RecordingAct recordingAct) {
       var list = base.Tract.GetRecordingActs();
@@ -293,59 +320,6 @@ namespace Empiria.Land.Registration {
         MetesAndBounds = this.MetesAndBounds,
         Status = ((char) this.Status).ToString()
       };
-    }
-
-
-    public FixedList<RecordingAct> GetHardLimitationActs() {
-      var tract = base.Tract.GetRecordingActs();
-
-      tract = tract.FindAll((x) => (x.Validator.WasAliveOn(DateTime.Now) &&
-                                    x.RecordingActType.RecordingRule.IsHardLimitation &&
-                                    x.LandRecord.IsClosed
-                            ));
-      return tract;
-    }
-
-
-    public RecordingAct LastDomainAct {
-      get {
-        var tract = base.Tract.GetRecordingActs();
-
-        var lastDomainAct = tract.FindLast((x) => x.Validator.WasAliveOn(DateTime.Now) &&
-                                            x.RecordingActType.IsDomainActType &&
-                                            (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
-        return lastDomainAct;
-      }
-    }
-
-
-    public string CurrentOwners {
-      get {
-        var parties = this.CurrentOwnersList;
-
-        string temp = String.Empty;
-
-        foreach (var party in parties) {
-          if (temp.Length != 0) {
-            temp += ", ";
-          }
-          temp += party.Party.FullName;
-        }
-        return temp;
-      }
-    }
-
-
-    public FixedList<RecordingActParty> CurrentOwnersList {
-      get {
-        var parties = this.LastDomainAct.Parties.PrimaryParties;
-
-        if (parties != null) {
-          return parties;
-        } else {
-          return new FixedList<RecordingActParty>();
-        }
-      }
     }
 
 
@@ -404,9 +378,9 @@ namespace Empiria.Land.Registration {
     }
 
 
-    #endregion Public methods
+    #endregion Methods
 
-    #region Private methods
+    #region Helpers
 
     private RealEstate CreatePartition(RealEstatePartitionDTO partitionInfo) {
       var lot = new RealEstate();
@@ -421,8 +395,7 @@ namespace Empiria.Land.Registration {
       return lot;
     }
 
-
-    #endregion Private methods
+    #endregion Helpers
 
   } // class RealEstate
 
