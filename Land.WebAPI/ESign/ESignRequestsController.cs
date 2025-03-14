@@ -17,7 +17,7 @@ using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.ESign.Adapters;
 using Empiria.Land.ESign.UseCases;
 
-namespace Empiria.Land.ESign.WebAPI {
+namespace Empiria.Land.ESign.WebApi {
 
   /// <summary>Query web api used to retrieve electronic sign requests.</summary>
   public class ESignRequestsController : WebApiController {
@@ -53,4 +53,4 @@ namespace Empiria.Land.ESign.WebAPI {
 
   } // class ESignRequestsController
 
-} // namespace Empiria.Land.ESign.WebAPI
+} // namespace Empiria.Land.ESign.WebApi
