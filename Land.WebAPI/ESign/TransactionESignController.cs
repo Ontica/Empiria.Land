@@ -2,12 +2,12 @@
 *                                                                                                            *
 *  Module   : Electronic Sign                              Component : Web Api                               *
 *  Assembly : Empiria.Land.WebApi.dll                      Pattern   : Command Controller                    *
-*  Type     : ESignerController                            License   : Please read LICENSE.txt file          *
+*  Type     : TransactionESignController                   License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Command web api used to sign documents.                                                        *
+*  Summary  : Command web api used to sign or unsign all documents included in one or more transactions.     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
 using System.Web.Http;
 
 using Empiria.Security;
@@ -18,8 +18,8 @@ using Empiria.Land.ESign.UseCases;
 
 namespace Empiria.Land.ESign.WebAPI {
 
-  /// <summary>Command web api used to sign documents.</summary>
-  public class ESignerController : WebApiController {
+  /// <summary>Command web api used to sign or unsign all documents included in one or more transactions.</summary>
+  public class TransactionESignController : WebApiController {
 
     #region Web apis
 
@@ -118,6 +118,6 @@ namespace Empiria.Land.ESign.WebAPI {
 
     #endregion Helpers
 
-  } // class ESignerController
+  } // class TransactionESignController
 
 } // namespace Empiria.Land.ESign.WebAPI
