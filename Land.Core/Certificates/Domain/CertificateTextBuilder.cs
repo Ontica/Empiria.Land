@@ -283,12 +283,18 @@ namespace Empiria.Land.Certificates {
                  "SOBRE EL BIEN INMUEBLE CON <strong>FOLIO REAL ELECTRÓNICO</strong>: " +
                  "<div style='text-align:center;font-size:12pt'><strong>{{ON.RESOURCE.CODE}}</strong></div><br/>" +
                  "{{CURRENT.OWNERSHIP}}" +
+                 "{{RECORDING.BOOK.ANTECEDENT}}" +
                  "{{ON.RESOURCE.TEXT}}" +
                  "{{ON.RESOURCE.METES.AND.BOUNDS}}<br/><br/>";
 
-      string x = t.Replace("{{ON.RESOURCE.CODE}}", _certificate.OnRecordableSubject.UID);
+      string x = t.Replace("{{ON.RESOURCE.CODE}}",
+                           _certificate.OnRecordableSubject.UID);
 
-      x = x.Replace("{{ON.RESOURCE.TEXT}}", _certificate.OnRecordableSubject.AsText);
+      x = x.Replace("{{ON.RESOURCE.TEXT}}",
+                    _certificate.OnRecordableSubject.AsText);
+
+      x = x.Replace("{{RECORDING.BOOK.ANTECEDENT}}",
+                    GenerateRecordingBookAntecedent(_certificate.OnRecordableSubject));
 
       if (_certificate.OnRecordableSubject is RealEstate realEstate) {
 
@@ -303,7 +309,20 @@ namespace Empiria.Land.Certificates {
         x = x.Replace("{{ON.RESOURCE.METES.AND.BOUNDS}}", string.Empty);
       }
 
+
+
       return x.ToUpperInvariant();
+    }
+
+    private string GenerateRecordingBookAntecedent(Resource subject) {
+      RecordingAct recordingAct = subject.Tract.TryGetLastRecordingBookAntecedentAct();
+
+      if (recordingAct == null) {
+        return string.Empty;
+      }
+
+      return $"<b>ANTECEDENTE REGISTRAL <u>EN LIBROS FÍSICOS</u>: " +
+             $"{recordingAct.BookEntry.AsText}</b><br/>";
     }
 
     #endregion Helpers

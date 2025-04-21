@@ -7,6 +7,7 @@
 *  Summary  : Gets information about a recordable subject's historic recording acts tract.                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Collections.Generic;
 
@@ -246,6 +247,13 @@ namespace Empiria.Land.Registration {
       }
 
       return lastChainedAct;
+    }
+
+
+    internal RecordingAct TryGetLastRecordingBookAntecedentAct() {
+      return this.GetFullRecordingActs()
+                 .FindLast(x => !x.BookEntry.IsEmptyInstance &&
+                                x.RecordingActType.IsDomainActType);
     }
 
     #endregion Methods
