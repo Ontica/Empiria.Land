@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 using Empiria.Measurement;
 
 using Empiria.Land.Registration;
@@ -79,7 +81,7 @@ namespace Empiria.Land.Certificates {
         actsText += $"<strong>{i + 1}) {actName}</strong> " +
                     $"REGISTRADO EL DÍA {acts[i].RegistrationTime.ToString("dd \\de MMMM \\de yyyy")}," +
                     $"{GetRecordingActAmountsText(acts[i])}" +
-                    $"BAJO EL SELLO REGISTRAL {acts[i].LandRecord.UID}.<br/>" +
+                    $"BAJO EL SELLO REGISTRAL <strong>{acts[i].LandRecord.UID}</strong>.<br/>" +
                     $"{GetPartiesText(acts[i])}<br/>";
       }
 
@@ -211,7 +213,7 @@ namespace Empiria.Land.Certificates {
       FixedList<RecordingActParty> owners = ownershipAct.Parties.PrimaryParties;
 
       var temp =$"ÚLTIMO ACTO DE DOMINIO REGISTRADO EL DÍA {ownershipAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy")}. " +
-                $"SELLO REGISTRAL {ownershipAct.LandRecord.UID}.<br/>";
+                $"SELLO REGISTRAL <b>{ownershipAct.LandRecord.UID}</b>.<br/>";
 
       foreach (RecordingActParty owner in owners) {
         temp += GetPartyText(owner, 0);
@@ -233,14 +235,16 @@ namespace Empiria.Land.Certificates {
 
       var lastAct = realEstate.GetSoftLimitationActs().Reverse()[0];
 
+      // TimeSpan.Today.AddDays(lastAct.LandRecord.PresentationTime.ToLocalTime RecordingActType.ValidityDays * -1);
+
       var actName = (lastAct.Kind.Length == 0) ? lastAct.DisplayName : lastAct.Kind;
 
       return $"ANOTACIONES PREVENTIVAS:<br/>" +
              $"<strong>{actName}</strong> " +
              $"REGISTRADO EL DÍA {lastAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy")}, " +
              $"{GetRecordingActAmountsText(lastAct)} " +
-             $"BAJO EL SELLO REGISTRAL {lastAct.LandRecord.UID}.<br/>" +
-             $"{GetPartiesText(lastAct)}<br/>";
+             $"BAJO EL SELLO REGISTRAL <b>{lastAct.LandRecord.UID}</b>.<br/>" +
+             $"{lastAct.Summary}<br/>";
     }
 
 
