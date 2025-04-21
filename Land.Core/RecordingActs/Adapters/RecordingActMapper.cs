@@ -7,31 +7,30 @@
 *  Summary  : Contains methods used to map recording acts.                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
 using System.Collections.Generic;
 
 using Empiria.Land.RecordableSubjects.Adapters;
 
 namespace Empiria.Land.Registration.Adapters {
 
-
-/// <summary>Contains methods used to map recording acts.</summary>
-static internal class RecordingActMapper {
+  /// <summary>Contains methods used to map recording acts.</summary>
+  static internal class RecordingActMapper {
 
     static internal RecordingActDto Map(RecordingAct recordingAct) {
-        var dto = new RecordingActDto {
-          UID = recordingAct.UID,
-          Type = recordingAct.RecordingActType.Name,
-          Name = recordingAct.DisplayName,
-          Kind = recordingAct.Kind,
-          Description = recordingAct.Summary,
-          OperationAmount = recordingAct.OperationAmount,
-          CurrencyUID = recordingAct.OperationCurrency.UID,
-          RecordableSubject = new NamedEntityDto(recordingAct.Resource.UID,
-                                                 recordingAct.Resource.Description),
-          Parties = PartyMapper.Map(recordingAct.Parties.List),
-          Status = recordingAct.Status,
-          Actions = MapControlData(recordingAct)
+      var dto = new RecordingActDto {
+        UID = recordingAct.UID,
+        Type = recordingAct.RecordingActType.Name,
+        Name = recordingAct.DisplayName,
+        Kind = recordingAct.Kind,
+        Description = recordingAct.Summary,
+        OperationAmount = recordingAct.OperationAmount,
+        CurrencyUID = recordingAct.OperationCurrency.UID,
+        RecordableSubject = new NamedEntityDto(recordingAct.Resource.UID,
+                                               recordingAct.Resource.Description),
+        Parties = PartyMapper.Map(recordingAct.Parties.List),
+        Status = recordingAct.Status,
+        Actions = MapControlData(recordingAct)
       };
 
       if (recordingAct.IsAmendment) {
@@ -95,7 +94,7 @@ static internal class RecordingActMapper {
 
       if (editableFields.Contains("Kinds")) {
         dto.Kinds = new FixedList<string>(recordingRule.Kinds);
-        dto.Kinds.Sort((x, y)  => x.CompareTo(y));
+        dto.Kinds.Sort((x, y) => x.CompareTo(y));
       }
 
       if (editableFields.Contains("RecordingActType")) {
@@ -122,7 +121,6 @@ static internal class RecordingActMapper {
 
       return dto;
     }
-
 
     #endregion Private methods
 

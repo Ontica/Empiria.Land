@@ -320,7 +320,6 @@ namespace Empiria.Land.Registration {
       private set;
     }
 
-
     #endregion Properties
 
   }  // class RecordingRule
