@@ -34,22 +34,22 @@ namespace Empiria.Land.Certificates {
     internal string Build() {
 
       if (this.CertificateType.Equals(CertificateType.Gravamen)) {
-        return GenerateGravamenCertificateText();
+        return BuildGravamenCertificateText();
 
       } else if (this.CertificateType.Equals(CertificateType.Inscripcion)) {
-        return GenerateInscripcionCertificateText();
+        return BuildInscripcionCertificateText();
 
       } else if (this.CertificateType.Equals(CertificateType.LibertadGravamen)) {
-        return GenerateLibertadGravamenCertificateText();
+        return BuildLibertadGravamenCertificateText();
 
       } else if (this.CertificateType.Equals(CertificateType.LimitacionAnotacion)) {
-        return GenerateLimitacionAnotacionCertificateText();
+        return BuildLimitacionAnotacionCertificateText();
 
       } else if (this.CertificateType.Equals(CertificateType.NoInscripcion)) {
-        return GenerateNoInscripcionCertificateText();
+        return BuildNoInscripcionCertificateText();
 
       } else if (this.CertificateType.Equals(CertificateType.NoPropiedad)) {
-        return GenerateNoPropertyCertificateText();
+        return BuildNoPropertyCertificateText();
 
       } else {
 
@@ -57,51 +57,126 @@ namespace Empiria.Land.Certificates {
       }
     }
 
-    #region Helpers
+    #region Builders
 
-    private string GenerateGravamenCertificateText() {
-      var x = GenerateRealEstateText() +
-              "PARA DETERMINAR SI TIENE O NO GRAVÁMENES, RESULTÓ QUE " +
-              "<b>REPORTA LOS SIGUIENTES GRAVÁMENES</b>:<br/><br/>" +
-              "{{LIMITATION.ACTS}}<br/>" +
-              $"{GeneratePreemptiveActsText()}";
+    private string BuildGravamenCertificateText() {
+      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
+                       "SOBRE EL BIEN INMUEBLE CON EL SIGUIENTE <strong>FOLIO REAL ELECTRÓNICO</strong>, " +
+                       "PARA DETERMINAR SI TIENE O NO GRAVÁMENES, RESULTÓ QUE <b>SÍ SE ENCUENTRA GRAVADO</b>:" +
+                       "{{REAL.ESTATE.TEXT}}" +
+                       "{{CURRENT.OWNERSHIP}}" +
+                       "{{RECORDING.ACTS}}" +
+                       "<br/><br/>";
 
-      var realEstate = (RealEstate) _certificate.OnRecordableSubject;
+      RealEstate realEstate = (RealEstate) _certificate.OnRecordableSubject;
 
-      var acts = realEstate.GetHardLimitationActs();
+      var x = t.Replace("{{REAL.ESTATE.TEXT}}", GenerateRealEstateText(realEstate));
 
-      var actsText = string.Empty;
-
-      for (var i = 0; i < acts.Count; i++) {
-
-        var actName = (acts[i].Kind.Length == 0) ? acts[i].DisplayName : acts[i].Kind;
-
-        actsText += $"<strong>{i + 1}) {actName}</strong> " +
-                    $"REGISTRADO EL DÍA {acts[i].RegistrationTime.ToString("dd \\de MMMM \\de yyyy")}," +
-                    $"{GetRecordingActAmountsText(acts[i])}" +
-                    $"BAJO EL SELLO REGISTRAL <strong>{acts[i].LandRecord.UID}</strong>.<br/>" +
-                    $"{GetPartiesText(acts[i])}<br/>";
-      }
-
-      x = x.Replace("{{LIMITATION.ACTS}}", actsText);
+      x = x.Replace("{{CURRENT.OWNERSHIP}}", GenerateCurrentOwnershipText(realEstate));
+      x = x.Replace("{{RECORDING.ACTS}}", GenerateRecordingActsText(realEstate));
 
       return x.ToUpperInvariant();
     }
 
 
-    static private string GetPartiesText(RecordingAct recordingAct) {
+    private string BuildInscripcionCertificateText() {
+      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
+                       "SE DETERMINA QUE EL BIEN INMUEBLE REFERIDO <strong>SÍ ESTÁ INSCRITO</strong>, " +
+                       "Y QUE TIENE ASIGNADO EL SIGUIENTE <strong>FOLIO REAL ELECTRÓNICO</strong>:" +
+                       "{{REAL.ESTATE.TEXT}}" +
+                       "{{CURRENT.OWNERSHIP}}" +
+                       "{{RECORDING.ACTS}}" +
+                       "<br/><br/>";
+
+      RealEstate realEstate = (RealEstate) _certificate.OnRecordableSubject;
+
+      var x = t.Replace("{{REAL.ESTATE.TEXT}}", GenerateRealEstateText(realEstate));
+
+      x = x.Replace("{{CURRENT.OWNERSHIP}}", GenerateCurrentOwnershipText(realEstate));
+      x = x.Replace("{{RECORDING.ACTS}}", GenerateRecordingActsText(realEstate));
+
+      return x.ToUpperInvariant();
+    }
+
+
+    private string BuildLibertadGravamenCertificateText() {
+      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
+                       "SOBRE EL BIEN INMUEBLE CON EL SIGUIENTE <strong>FOLIO REAL ELECTRÓNICO</strong>, " +
+                       "PARA DETERMINAR SI TIENE O NO GRAVÁMENES, RESULTÓ QUE <b>ESTÁ LIBRE DE GRAVÁMENES</b>:" +
+                       "{{REAL.ESTATE.TEXT}}" +
+                       "{{CURRENT.OWNERSHIP}}" +
+                       "{{RECORDING.ACTS}}" +
+                       "<br/><br/>";
+
+      RealEstate realEstate = (RealEstate) _certificate.OnRecordableSubject;
+
+      var x = t.Replace("{{REAL.ESTATE.TEXT}}", GenerateRealEstateText(realEstate));
+
+      x = x.Replace("{{CURRENT.OWNERSHIP}}", GenerateCurrentOwnershipText(realEstate));
+      x = x.Replace("{{RECORDING.ACTS}}", GenerateRecordingActsText(realEstate));
+
+      return x.ToUpperInvariant();
+    }
+
+    private string BuildLimitacionAnotacionCertificateText() {
+      return "GenerateLimitacionAnotacionCertificateText";
+    }
+
+
+    private string BuildNoInscripcionCertificateText() {
+      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
+                       "<b>NO SE ENCONTRÓ INSCRITO</b> EL BIEN INMUEBLE:" +
+                       "<div style='font-size:12pt'><strong>{{ON.REAL.STATE.DESCRIPTION}}</strong></div>";
+
+      string x = t.Replace("{{ON.REAL.STATE.DESCRIPTION}}", _certificate.OnRealEstateDescription);
+
+      return x.ToUpperInvariant();
+    }
+
+
+    private string BuildNoPropertyCertificateText() {
+      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
+                       "<b>NO SE ENCONTRÓ REGISTRADO</b> NINGÚN BIEN INMUEBLE A NOMBRE DE:" +
+                       "<div style='text-align:center;font-size:12pt'><strong>{{ON.PERSON.NAME}}</strong></div>";
+
+      string x = t.Replace("{{ON.PERSON.NAME}}", _certificate.OnPersonName);
+
+      return x.ToUpperInvariant();
+    }
+
+
+    #endregion Builders
+
+    #region Helpers
+
+    static private string GenerateHardLimitationActText(RecordingAct recordingAct) {
+      var actName = (recordingAct.Kind.Length != 0) ? recordingAct.Kind : recordingAct.DisplayName;
+
+      return $"<strong>{actName}</strong> " +
+            $"REGISTRADO EL DÍA {recordingAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy")}," +
+            $"{GenerateRecordingActAmountsText(recordingAct)}" +
+            $"BAJO EL SELLO REGISTRAL <strong>{recordingAct.LandRecord.UID}</strong>.<br/>" +
+            $"{GeneratePartiesText(recordingAct)}<br/>";
+    }
+
+    static private string GeneratePartiesText(RecordingAct recordingAct) {
       var primaryParties = recordingAct.Parties.PrimaryParties;
 
       var html = string.Empty;
 
       foreach (var primaryParty in primaryParties) {
 
-        html += GetPartyText(primaryParty, 0);
+        html += GeneratePartyText(primaryParty, 0);
 
         var secondaryParties = recordingAct.Parties.GetSecondaryPartiesOf(primaryParty.Party);
 
         foreach (var secondaryParty in secondaryParties) {
-          html += GetPartyText(secondaryParty, 1);
+          html += GeneratePartyText(secondaryParty, 1);
         }
       }
 
@@ -109,7 +184,7 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    static private string GetPartyText(RecordingActParty party, int level) {
+    static private string GeneratePartyText(RecordingActParty party, int level) {
       const string t = "{TAB}{PARTY-ROLE}: {PARTY-NAME} {OWNERSHIP}";
 
       var html = t.Replace("{PARTY-ROLE}", party.PartyRole.Name);
@@ -127,7 +202,7 @@ namespace Empiria.Land.Certificates {
         html = html.Replace("{OWNERSHIP}", $"({unit.Name})");
 
       } else {
-        html = html.Replace("{OWNERSHIP}", $"({ToPartAmountText(party.OwnershipPart)})");
+        html = html.Replace("{OWNERSHIP}", $"({GenerateToPartAmountText(party.OwnershipPart)})");
 
       }
 
@@ -139,7 +214,7 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    static private string ToPartAmountText(Quantity ownershipPart) {
+    static private string GenerateToPartAmountText(Quantity ownershipPart) {
       if (ownershipPart.Unit.UID == "Unit.Fraction") {
         var fractionParts = ownershipPart.Amount.ToString().Split('.');
 
@@ -150,7 +225,7 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    static private string GetRecordingActAmountsText(RecordingAct recordingAct) {
+    static private string GenerateRecordingActAmountsText(RecordingAct recordingAct) {
       var temp = string.Empty;
 
       if (recordingAct.Percentage != decimal.One) {
@@ -164,43 +239,6 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    private string GenerateInscripcionCertificateText() {
-      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                    "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
-                    "SE DETERMINA QUE EL BIEN INMUEBLE REFERIDO <strong>SÍ ESTÁ INSCRITO</strong>, " +
-                    "Y QUE TIENE ASIGNADO EL <strong>FOLIO REAL ELECTRÓNICO</strong>: " +
-                    "<div style='text-align:center;font-size:12pt'><strong>{{ON.RESOURCE.CODE}}</strong></div><br/>" +
-                    "{{CURRENT.OWNERSHIP}}" +
-                    "{{ON.RESOURCE.TEXT}}" +
-                    "{{REAL.ESTATE.METES.AND.BOUNDS}}<br/><br/>";
-
-      string x = t.Replace("{{ON.RESOURCE.CODE}}", _certificate.OnRecordableSubject.UID);
-
-      x = x.Replace("{{ON.RESOURCE.TEXT}}", _certificate.OnRecordableSubject.AsText);
-
-      if (_certificate.OnRecordableSubject is RealEstate realEstate) {
-
-        x = x.Replace("{{CURRENT.OWNERSHIP}}", GenerateCurrentOwnershipText(realEstate));
-        x = x.Replace("{{REAL.ESTATE.METES.AND.BOUNDS}}", GenerateRealEstateMetesAndBounds(realEstate));
-
-      } else {
-        x = x.Replace("{{CURRENT.OWNERSHIP}}", string.Empty);
-        x = x.Replace("{{REAL.ESTATE.METES.AND.BOUNDS}}", string.Empty);
-      }
-
-      return x.ToUpperInvariant();
-    }
-
-
-    private string GenerateLibertadGravamenCertificateText() {
-      return GenerateRealEstateText() +
-             "PARA DETERMINAR SI TIENE O NO GRAVÁMENES, RESULTÓ QUE " +
-             "<strong>NO REPORTA GRAVÁMENES</b>, " +
-             "ES DECIR, SE ENCUENTRA <b>LIBRE DE GRAVAMEN</strong>.<br/><br/>" +
-             $"{GeneratePreemptiveActsText()}";
-    }
-
-
     private string GenerateCurrentOwnershipText(RealEstate realEstate) {
       var ownershipAct = realEstate.TryGetLastDomainAct();
 
@@ -210,7 +248,7 @@ namespace Empiria.Land.Certificates {
       }
 
       var temp = "<strong>ÚLTIMO ACTO DE DOMINIO:</strong><br/>" +
-                 "{{RECORDING.ACT.NAME}}, CON FECHA DE REGISTRO EL DÍA {{RECORDING.ACT.DATE}}, {{RECORDING.TEXT}}.<br/>";
+                 "<u>{{RECORDING.ACT.NAME}}</u>, CON FECHA DE REGISTRO EL DÍA {{RECORDING.ACT.DATE}}, {{RECORDING.TEXT}}.<br/>";
 
       temp = temp.Replace("{{RECORDING.ACT.NAME}}", ownershipAct.Kind.Length != 0 ? ownershipAct.Kind : ownershipAct.DisplayName);
       temp = temp.Replace("{{RECORDING.ACT.DATE}}", ownershipAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy"));
@@ -224,91 +262,34 @@ namespace Empiria.Land.Certificates {
       FixedList<RecordingActParty> owners = ownershipAct.Parties.PrimaryParties;
 
       foreach (RecordingActParty owner in owners) {
-        temp += GetPartyText(owner, 0);
+        temp += GeneratePartyText(owner, 0);
       }
 
       return temp;
     }
 
+    private string GeneratePreemptiveActText(RecordingAct recordingAct) {
 
-    private string GeneratePreemptiveActsText() {
+      var actName = (recordingAct.Kind.Length != 0) ? recordingAct.Kind : recordingAct.DisplayName;
 
-      if (!(_certificate.OnRecordableSubject is RealEstate realEstate)) {
-        return string.Empty;
-      }
-
-      if (!realEstate.HasSoftLimitationActs) {
-        return string.Empty;
-      }
-
-      var lastAct = realEstate.GetSoftLimitationActs().Reverse()[0];
-
-      // TimeSpan.Today.AddDays(lastAct.LandRecord.PresentationTime.ToLocalTime RecordingActType.ValidityDays * -1);
-
-      var actName = (lastAct.Kind.Length == 0) ? lastAct.DisplayName : lastAct.Kind;
-
-      return $"ANOTACIONES PREVENTIVAS:<br/>" +
-             $"<strong>{actName}</strong> " +
-             $"REGISTRADO EL DÍA {lastAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy")}, " +
-             $"{GetRecordingActAmountsText(lastAct)} " +
-             $"BAJO EL SELLO REGISTRAL <b>{lastAct.LandRecord.UID}</b>.<br/>" +
-             $"{lastAct.Summary}<br/>";
+      return $"<strong>{actName}</strong> " +
+             $"REGISTRADO EL DÍA {recordingAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy")}, " +
+             $"{GenerateRecordingActAmountsText(recordingAct)} " +
+             $"BAJO EL SELLO REGISTRAL <b>{recordingAct.LandRecord.UID}</b>.<br/>" +
+             $"{recordingAct.Summary}<br/>";
     }
 
 
-    private string GenerateLimitacionAnotacionCertificateText() {
-      return "GenerateLimitacionAnotacionCertificateText";
-    }
-
-
-    private string GenerateNoInscripcionCertificateText() {
-      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
-                       "<b>NO SE ENCONTRÓ INSCRITO</b> EL BIEN INMUEBLE:" +
-                       "<div style='font-size:12pt'><strong>{{ON.REAL.STATE.DESCRIPTION}}</strong></div>";
-
-      string x = t.Replace("{{ON.REAL.STATE.DESCRIPTION}}", _certificate.OnRealEstateDescription);
-
-      return x.ToUpperInvariant();
-    }
-
-
-    private string GenerateNoPropertyCertificateText() {
-      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
-                       "<b>NO SE ENCONTRÓ REGISTRADO</b> NINGÚN BIEN INMUEBLE A NOMBRE DE:" +
-                       "<div style='text-align:center;font-size:12pt'><strong>{{ON.PERSON.NAME}}</strong></div>";
-
-      string x = t.Replace("{{ON.PERSON.NAME}}", _certificate.OnPersonName);
-
-      return x.ToUpperInvariant();
-    }
-
-
-    private string GenerateRealEstateText() {
-      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                 "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
-                 "SOBRE EL BIEN INMUEBLE CON <strong>FOLIO REAL ELECTRÓNICO</strong>: " +
-                 "<div style='text-align:center;font-size:12pt'><strong>{{ON.RESOURCE.CODE}}</strong></div><br/>" +
-                 "{{ON.RESOURCE.TEXT}}" +
-                 "{{REAL.ESTATE.METES.AND.BOUNDS}}" +
-                 "{{CURRENT.OWNERSHIP}}" +
-                 "{{RECORDING.ACTS}}" +
-                 "<br/><br/>";
-
-      RealEstate realEstate = (RealEstate) _certificate.OnRecordableSubject;
+    private string GenerateRealEstateText(RealEstate realEstate) {
+      const string t = "<div style='text-align:center;font-size:12pt'><strong>{{ON.RESOURCE.CODE}}</strong></div><br/>" +
+                       "{{ON.RESOURCE.TEXT}}" +
+                       "{{REAL.ESTATE.METES.AND.BOUNDS}}";
 
       string x = t.Replace("{{ON.RESOURCE.CODE}}", realEstate.UID);
 
       x = x.Replace("{{ON.RESOURCE.TEXT}}", realEstate.AsText);
 
-      x = x.Replace("{{REAL.ESTATE.METES.AND.BOUNDS}}", GenerateRealEstateMetesAndBounds(realEstate));
-
-      x = x.Replace("{{CURRENT.OWNERSHIP}}", GenerateCurrentOwnershipText(realEstate));
-
-      x = x.Replace("{{RECORDING.ACTS}}", GenerateRecordingActsText(realEstate));
-
-      return x.ToUpperInvariant();
+      return x.Replace("{{REAL.ESTATE.METES.AND.BOUNDS}}", GenerateRealEstateMetesAndBounds(realEstate));
     }
 
 
@@ -351,7 +332,7 @@ namespace Empiria.Land.Certificates {
         if (partiesText.Length != 0) {
           partiesText += "; ";
         }
-        partiesText += GetPartyText(party, -1);
+        partiesText += GeneratePartyText(party, -1);
       }
 
       return temp.Replace("{{PRIMARY.PARTIES}}", partiesText);
@@ -400,23 +381,11 @@ namespace Empiria.Land.Certificates {
       FixedList<RecordingActParty> owners = creationalAct.Parties.PrimaryParties;
 
       foreach (RecordingActParty owner in owners) {
-        temp += " " + GetPartyText(owner, 0);
+        temp += " " + GeneratePartyText(owner, 0);
       }
 
       temp += GenerateRegistrationText(creationalAct);
       return temp;
-    }
-
-
-    private string GenerateRecordingBookAntecedent(Resource subject) {
-      RecordingAct recordingAct = subject.Tract.TryGetLastRecordingBookAntecedentAct();
-
-      if (recordingAct == null) {
-        return string.Empty;
-      }
-
-      return $"<b>ANTECEDENTE REGISTRAL <u>EN LIBROS FÍSICOS</u>: " +
-             $"{recordingAct.BookEntry.AsText}</b><br/>";
     }
 
 
