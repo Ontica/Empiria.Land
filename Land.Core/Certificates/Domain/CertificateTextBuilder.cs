@@ -8,11 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Measurement;
 
 using Empiria.Land.Registration;
+using System;
 
 namespace Empiria.Land.Certificates {
 
@@ -285,7 +284,9 @@ namespace Empiria.Land.Certificates {
                  "{{CURRENT.OWNERSHIP}}" +
                  "{{RECORDING.BOOK.ANTECEDENT}}" +
                  "{{ON.RESOURCE.TEXT}}" +
-                 "{{ON.RESOURCE.METES.AND.BOUNDS}}<br/><br/>";
+                 "{{REAL.ESTATE.METES.AND.BOUNDS}}" +
+                 "{{REAL.ESTATE.PARTITIONS}}" +
+                 "<br/><br/>";
 
       string x = t.Replace("{{ON.RESOURCE.CODE}}",
                            _certificate.OnRecordableSubject.UID);
@@ -301,18 +302,64 @@ namespace Empiria.Land.Certificates {
         x = x.Replace("{{CURRENT.OWNERSHIP}}", GenerateCurrentOwnershipText(realEstate));
 
         var metesAndBounds = realEstate.MetesAndBounds.Length != 0 ? realEstate.MetesAndBounds : "NO CONSTAN";
-        x = x.Replace("{{ON.RESOURCE.METES.AND.BOUNDS}}",
+        x = x.Replace("{{REAL.ESTATE.METES.AND.BOUNDS}}",
                       $"<br/><br/><b>CON LAS SIGUIENTES MEDIDAS Y COLINDANCIAS</b>:<br/>" +
                       $"{metesAndBounds}");
+
+        x = x.Replace("{{REAL.ESTATE.PARTITIONS}}", GenerateRealEstatePartitions(realEstate));
+
       } else {
         x = x.Replace("{{CURRENT.OWNERSHIP}}", string.Empty);
-        x = x.Replace("{{ON.RESOURCE.METES.AND.BOUNDS}}", string.Empty);
+        x = x.Replace("{{REAL.ESTATE.METES.AND.BOUNDS}}", string.Empty);
+        x = x.Replace("{{REAL.ESTATE.PARTITIONS}}", string.Empty);
       }
-
-
 
       return x.ToUpperInvariant();
     }
+
+
+    private string GenerateRealEstatePartitions(RealEstate realEstate) {
+      FixedList<RealEstate> partitions = realEstate.GetPartitions();
+
+      if (partitions.Count == 0) {
+        return string.Empty;
+      }
+
+      var x = "<br/><br/>DE LA PRESENTE PROPIEDAD HAN SIDO INSCRITAS LAS SIGUIENTES PARTICIONES:";
+
+      for (int i = 0; i < partitions.Count; i++) {
+        x += $"<br/>{i + 1}.- {GenerateRealEstatePartitionText(partitions[i])}";
+      }
+
+      return x;
+    }
+
+
+    private string GenerateRealEstatePartitionText(RealEstate partition) {
+      var creationalAct = partition.TryGetPartitionCreationalAct();
+
+      if (creationalAct == null) {
+        return string.Empty;
+      }
+
+      var temp = creationalAct.Kind.Length != 0 ? creationalAct.Kind : creationalAct.DisplayName;
+
+      if (partition.LotSize.Amount != 0) {
+        temp += $". Superficie: {partition.LotSize.ToString()}, ";
+      } else {
+        temp += $". Superficie NO CONSTA; ";
+      }
+
+      FixedList<RecordingActParty> owners = creationalAct.Parties.PrimaryParties;
+
+      foreach (RecordingActParty owner in owners) {
+        temp += " " + GetPartyText(owner, 0);
+      }
+
+      temp += GenerateRegistrationText(creationalAct);
+      return temp;
+    }
+
 
     private string GenerateRecordingBookAntecedent(Resource subject) {
       RecordingAct recordingAct = subject.Tract.TryGetLastRecordingBookAntecedentAct();
@@ -323,6 +370,15 @@ namespace Empiria.Land.Certificates {
 
       return $"<b>ANTECEDENTE REGISTRAL <u>EN LIBROS FÍSICOS</u>: " +
              $"{recordingAct.BookEntry.AsText}</b><br/>";
+    }
+
+
+    private string GenerateRegistrationText(RecordingAct recordingAct) {
+      var temp = recordingAct.LandRecord.IsRegisteredInRecordingBook ?
+              recordingAct.LandRecord.TryGetBookEntry().AsText :
+              "Sello registral " + recordingAct.LandRecord.UID;
+
+      return temp + " de fecha " + recordingAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy") + ".";
     }
 
     #endregion Helpers

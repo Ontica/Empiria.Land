@@ -252,21 +252,28 @@ namespace Empiria.Land.Registration {
     public FixedList<RecordingAct> GetSoftLimitationActs() {
       var tract = base.Tract.GetRecordingActs();
 
-      tract = tract.FindAll((x) => (x.Validator.WasAliveOn(DateTime.Now) &&
-                                    x.RecordingActType.RecordingRule.IsSoftLimitation &&
-                                    x.LandRecord.IsClosed
-                            ));
-      return tract;
+      return tract.FindAll(x => x.Validator.WasAliveOn(DateTime.Now) &&
+                                x.RecordingActType.RecordingRule.IsSoftLimitation &&
+                                x.LandRecord.IsClosed);
     }
+
 
     public RecordingAct TryGetLastDomainAct() {
       var tract = base.Tract.GetRecordingActs();
 
-      var lastDomainAct = tract.FindLast((x) => x.Validator.WasAliveOn(DateTime.Now) &&
-                                          x.RecordingActType.IsDomainActType &&
-                                          (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
+      var lastDomainAct = tract.FindLast(x => x.Validator.WasAliveOn(DateTime.Now) &&
+                                              x.RecordingActType.IsDomainActType &&
+                                              (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
       return lastDomainAct;
     }
+
+
+    public RecordingAct TryGetPartitionCreationalAct() {
+      var tract = base.Tract.GetRecordingActs();
+
+      return tract.Find(x => x.IsAppliedOverNewPartition);
+    }
+
 
     public bool IsFirstDomainAct(RecordingAct recordingAct) {
       var list = base.Tract.GetRecordingActs();
@@ -323,7 +330,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public RealEstate[] GetPartitions() {
+    public FixedList<RealEstate> GetPartitions() {
       return ResourceData.GetRealEstatePartitions(this);
     }
 
