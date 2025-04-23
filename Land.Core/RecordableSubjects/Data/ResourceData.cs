@@ -22,25 +22,26 @@ namespace Empiria.Land.Data {
     #region Internal methods
 
     static internal bool ExistsResourceUID(string uniqueID) {
-      DataOperation operation = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
+      var op = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
 
-      return (DataReader.Count(operation) != 0);
+      return (DataReader.Count(op) != 0);
     }
 
-    static internal RealEstate[] GetRealEstatePartitions(RealEstate property) {
+    static internal FixedList<RealEstate> GetRealEstatePartitions(RealEstate property) {
       if (property.IsNew || property.IsEmptyInstance) {
-        return new RealEstate[0];
+        return new FixedList<RealEstate>();
       }
-      DataOperation operation = DataOperation.Parse("qryLRSRealEstatePartitions", property.Id);
 
-      return DataReader.GetFixedList<RealEstate>(operation).ToArray();
+      var op = DataOperation.Parse("qryLRSRealEstatePartitions", property.Id);
+
+      return DataReader.GetFixedList<RealEstate>(op);
     }
 
 
     static internal Resource TryGetResourceWithUID(string uniqueID) {
-      DataOperation operation = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
+      var op = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
 
-      return DataReader.GetObject<Resource>(operation, null);
+      return DataReader.GetObject<Resource>(op, null);
     }
 
 
@@ -49,41 +50,41 @@ namespace Empiria.Land.Data {
                    $"FROM LRSProperties " +
                    $"WHERE {filter} ORDER BY {orderBy}";
 
-      var operation = DataOperation.Parse(sql);
+      var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<Resource>(operation);
+      return DataReader.GetFixedList<Resource>(op);
     }
 
 
     static internal void WriteAssociation(Association o) {
-      var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.GUID, o.UID,
-                                          o.Name, o.Kind, o.Description, o.RecorderOffice.Id, -1, String.Empty,
-                                          ExecutionServer.DateMinValue, 0, -1,String.Empty,
-                                          o.Keywords, -1, String.Empty, -1,
-                                          o.PostingTime, o.PostedBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
+      var op = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.GUID, o.UID,
+                                   o.Name, o.Kind, o.Description, o.RecorderOffice.Id, -1, String.Empty,
+                                   ExecutionServer.DateMinValue, 0, -1,String.Empty,
+                                   o.Keywords, -1, String.Empty, -1,
+                                   o.PostingTime, o.PostedBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
 
-      DataWriter.Execute(operation);
+      DataWriter.Execute(op);
     }
 
 
     static internal void WriteNoPropertyResource(NoPropertyResource o) {
-      var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.GUID, o.UID,
-                                           o.Name, o.Kind, o.Description, o.RecorderOffice.Id, -1, String.Empty,
-                                           ExecutionServer.DateMinValue, 0, -1, String.Empty,
-                                           o.Keywords, -1, String.Empty, -1,
-                                           o.PostingTime, o.PostedBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
-      DataWriter.Execute(operation);
+      var op = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.GUID, o.UID,
+                                   o.Name, o.Kind, o.Description, o.RecorderOffice.Id, -1, String.Empty,
+                                   ExecutionServer.DateMinValue, 0, -1, String.Empty,
+                                   o.Keywords, -1, String.Empty, -1,
+                                   o.PostingTime, o.PostedBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
+      DataWriter.Execute(op);
     }
 
 
     static internal void WriteRealEstate(RealEstate o) {
-      var operation = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.GUID, o.UID,
-                                          o.Name, o.Kind, o.Description, o.RecorderOffice.Id, o.Municipality.Id, o.CadastralKey,
-                                          o.CadastreLinkingDate, o.LotSize.Amount, o.LotSize.Unit.Id, o.RealEstateExtData.ToString(),
-                                          o.Keywords, o.IsPartitionOf.Id, o.PartitionNo, o.MergedInto.Id,
-                                          o.PostingTime, o.PostedBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
+      var op = DataOperation.Parse("writeLRSProperty", o.Id, o.GetEmpiriaType().Id, o.GUID, o.UID,
+                                   o.Name, o.Kind, o.Description, o.RecorderOffice.Id, o.Municipality.Id, o.CadastralKey,
+                                   o.CadastreLinkingDate, o.LotSize.Amount, o.LotSize.Unit.Id, o.RealEstateExtData.ToString(),
+                                   o.Keywords, o.IsPartitionOf.Id, o.PartitionNo, o.MergedInto.Id,
+                                   o.PostingTime, o.PostedBy.Id, (char) o.Status, o.Integrity.GetUpdatedHashCode());
 
-      DataWriter.Execute(operation);
+      DataWriter.Execute(op);
     }
 
     #endregion Internal methods

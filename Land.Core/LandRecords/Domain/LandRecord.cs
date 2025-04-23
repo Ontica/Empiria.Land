@@ -436,13 +436,10 @@ namespace Empiria.Land.Registration {
       if (!this.IsHistoricRecord) {
         return null;
       }
-      BookEntry bookEntry = this.RecordingActs[0].BookEntry;
 
-      Assertion.Require(!bookEntry.IsEmptyInstance,
-                        "bookEntry can't be the empty instance.");
-
-      return bookEntry;
+      return this.RecordingActs[0].BookEntry;
     }
+
 
     public void EnsureIntegrity() {
       Assertion.Require(this.Security.Integrity.GetUpdatedHashCode() == IntegrityField,
