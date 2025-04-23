@@ -238,6 +238,27 @@ namespace Empiria.Land.Registration {
                       ":\nSe requiere proporcionar la superficie del predio.");
     }
 
+
+    public FixedList<RecordingAct> GetAliveRecordingActs(bool includeLastDomainAct = false) {
+      RecordingAct lastDomainAct = TryGetLastDomainAct();
+
+      if (lastDomainAct == null) {
+        return new FixedList<RecordingAct>();
+      }
+
+      FixedList<RecordingAct> acts = this.Tract.GetFullRecordingActs()
+                                               .FindAll(x => x.Id >= lastDomainAct.Id &&
+                                                             x.Validator.WasAliveOn(DateTime.Now) &&
+                                                             (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
+
+      if (!includeLastDomainAct) {
+        acts.Remove(lastDomainAct);
+      }
+
+      return acts;
+    }
+
+
     public FixedList<RecordingAct> GetHardLimitationActs() {
       var tract = base.Tract.GetRecordingActs();
 
