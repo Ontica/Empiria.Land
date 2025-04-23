@@ -11,7 +11,6 @@
 using Empiria.Measurement;
 
 using Empiria.Land.Registration;
-using System;
 
 namespace Empiria.Land.Certificates {
 
@@ -111,7 +110,7 @@ namespace Empiria.Land.Certificates {
 
 
     static private string GetPartyText(RecordingActParty party, int level) {
-      const string t = "{TAB}{PARTY-ROLE}: {PARTY-NAME} {OWNERSHIP}<br/>";
+      const string t = "{TAB}{PARTY-ROLE}: {PARTY-NAME} {OWNERSHIP}";
 
       var html = t.Replace("{PARTY-ROLE}", party.PartyRole.Name);
 
@@ -132,7 +131,11 @@ namespace Empiria.Land.Certificates {
 
       }
 
-      return html;
+      if (level == -1) {
+        return html;
+      } else {
+        return html + "<br/>";
+      }
     }
 
 
@@ -169,7 +172,7 @@ namespace Empiria.Land.Certificates {
                     "<div style='text-align:center;font-size:12pt'><strong>{{ON.RESOURCE.CODE}}</strong></div><br/>" +
                     "{{CURRENT.OWNERSHIP}}" +
                     "{{ON.RESOURCE.TEXT}}" +
-                    "{{ON.RESOURCE.METES.AND.BOUNDS}}<br/><br/>";
+                    "{{REAL.ESTATE.METES.AND.BOUNDS}}<br/><br/>";
 
       string x = t.Replace("{{ON.RESOURCE.CODE}}", _certificate.OnRecordableSubject.UID);
 
@@ -178,14 +181,11 @@ namespace Empiria.Land.Certificates {
       if (_certificate.OnRecordableSubject is RealEstate realEstate) {
 
         x = x.Replace("{{CURRENT.OWNERSHIP}}", GenerateCurrentOwnershipText(realEstate));
+        x = x.Replace("{{REAL.ESTATE.METES.AND.BOUNDS}}", GenerateRealEstateMetesAndBounds(realEstate));
 
-        var metesAndBounds = realEstate.MetesAndBounds.Length != 0 ? realEstate.MetesAndBounds : "NO CONSTAN";
-        x = x.Replace("{{ON.RESOURCE.METES.AND.BOUNDS}}",
-                      $"<br/><br/><b>CON LAS SIGUIENTES MEDIDAS Y COLINDANCIAS</b>:<br/>" +
-                      $"{metesAndBounds}");
       } else {
         x = x.Replace("{{CURRENT.OWNERSHIP}}", string.Empty);
-        x = x.Replace("{{ON.RESOURCE.METES.AND.BOUNDS}}", string.Empty);
+        x = x.Replace("{{REAL.ESTATE.METES.AND.BOUNDS}}", string.Empty);
       }
 
       return x.ToUpperInvariant();
@@ -195,8 +195,8 @@ namespace Empiria.Land.Certificates {
     private string GenerateLibertadGravamenCertificateText() {
       return GenerateRealEstateText() +
              "PARA DETERMINAR SI TIENE O NO GRAVÁMENES, RESULTÓ QUE " +
-             "<b>NO REPORTA GRAVÁMENES</b>, " +
-             "ES DECIR, SE ENCUENTRA <b>LIBRE DE GRAVAMEN</b>.<br/><br/>" +
+             "<strong>NO REPORTA GRAVÁMENES</b>, " +
+             "ES DECIR, SE ENCUENTRA <b>LIBRE DE GRAVAMEN</strong>.<br/><br/>" +
              $"{GeneratePreemptiveActsText()}";
     }
 
@@ -205,20 +205,29 @@ namespace Empiria.Land.Certificates {
       var ownershipAct = realEstate.TryGetLastDomainAct();
 
       if (ownershipAct == null) {
-        return "<b>El predio no tiene registrado ningún acto de dominio. " +
-               "Por lo tanto, no se pueden determinar sus propietarios o posesionarios.<br/>";
+        return "<strong>El predio no tiene registrado ningún acto de dominio. " +
+               "Por lo tanto no se pueden determinar sus propietarios o posesionarios.</strong><br/>";
+      }
+
+      var temp = "<strong>ÚLTIMO ACTO DE DOMINIO:</strong><br/>" +
+                 "{{RECORDING.ACT.NAME}}, CON FECHA DE REGISTRO EL DÍA {{RECORDING.ACT.DATE}}, {{RECORDING.TEXT}}.<br/>";
+
+      temp = temp.Replace("{{RECORDING.ACT.NAME}}", ownershipAct.Kind.Length != 0 ? ownershipAct.Kind : ownershipAct.DisplayName);
+      temp = temp.Replace("{{RECORDING.ACT.DATE}}", ownershipAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy"));
+
+      if (ownershipAct.HasBookEntry) {
+        temp = temp.Replace("{{RECORDING.TEXT}}", $"INSCRITO EN {ownershipAct.BookEntry.AsText}");
+      } else {
+        temp = temp.Replace("{{RECORDING.TEXT}}", $"SELLO REGISTRAL {ownershipAct.LandRecord.UID}");
       }
 
       FixedList<RecordingActParty> owners = ownershipAct.Parties.PrimaryParties;
-
-      var temp =$"ÚLTIMO ACTO DE DOMINIO REGISTRADO EL DÍA {ownershipAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy")}. " +
-                $"SELLO REGISTRAL <b>{ownershipAct.LandRecord.UID}</b>.<br/>";
 
       foreach (RecordingActParty owner in owners) {
         temp += GetPartyText(owner, 0);
       }
 
-      return $"<b>{temp}</b><br/>";
+      return temp;
     }
 
 
@@ -281,40 +290,78 @@ namespace Empiria.Land.Certificates {
                  "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
                  "SOBRE EL BIEN INMUEBLE CON <strong>FOLIO REAL ELECTRÓNICO</strong>: " +
                  "<div style='text-align:center;font-size:12pt'><strong>{{ON.RESOURCE.CODE}}</strong></div><br/>" +
-                 "{{CURRENT.OWNERSHIP}}" +
-                 "{{RECORDING.BOOK.ANTECEDENT}}" +
                  "{{ON.RESOURCE.TEXT}}" +
                  "{{REAL.ESTATE.METES.AND.BOUNDS}}" +
-                 "{{REAL.ESTATE.PARTITIONS}}" +
+                 "{{CURRENT.OWNERSHIP}}" +
+                 "{{RECORDING.ACTS}}" +
                  "<br/><br/>";
 
-      string x = t.Replace("{{ON.RESOURCE.CODE}}",
-                           _certificate.OnRecordableSubject.UID);
+      RealEstate realEstate = (RealEstate) _certificate.OnRecordableSubject;
 
-      x = x.Replace("{{ON.RESOURCE.TEXT}}",
-                    _certificate.OnRecordableSubject.AsText);
+      string x = t.Replace("{{ON.RESOURCE.CODE}}", realEstate.UID);
 
-      x = x.Replace("{{RECORDING.BOOK.ANTECEDENT}}",
-                    GenerateRecordingBookAntecedent(_certificate.OnRecordableSubject));
+      x = x.Replace("{{ON.RESOURCE.TEXT}}", realEstate.AsText);
 
-      if (_certificate.OnRecordableSubject is RealEstate realEstate) {
+      x = x.Replace("{{REAL.ESTATE.METES.AND.BOUNDS}}", GenerateRealEstateMetesAndBounds(realEstate));
 
-        x = x.Replace("{{CURRENT.OWNERSHIP}}", GenerateCurrentOwnershipText(realEstate));
+      x = x.Replace("{{CURRENT.OWNERSHIP}}", GenerateCurrentOwnershipText(realEstate));
 
-        var metesAndBounds = realEstate.MetesAndBounds.Length != 0 ? realEstate.MetesAndBounds : "NO CONSTAN";
-        x = x.Replace("{{REAL.ESTATE.METES.AND.BOUNDS}}",
-                      $"<br/><br/><b>CON LAS SIGUIENTES MEDIDAS Y COLINDANCIAS</b>:<br/>" +
-                      $"{metesAndBounds}");
-
-        x = x.Replace("{{REAL.ESTATE.PARTITIONS}}", GenerateRealEstatePartitions(realEstate));
-
-      } else {
-        x = x.Replace("{{CURRENT.OWNERSHIP}}", string.Empty);
-        x = x.Replace("{{REAL.ESTATE.METES.AND.BOUNDS}}", string.Empty);
-        x = x.Replace("{{REAL.ESTATE.PARTITIONS}}", string.Empty);
-      }
+      x = x.Replace("{{RECORDING.ACTS}}", GenerateRecordingActsText(realEstate));
 
       return x.ToUpperInvariant();
+    }
+
+
+    private string GenerateRecordingActsText(RealEstate realEstate) {
+
+      FixedList<RecordingAct> recordingActs = realEstate.GetAliveRecordingActs();
+
+      var x = "<br/><strong>ANOTACIONES VIGENTES:</strong><br/>";
+
+      if (recordingActs.Count == 0) {
+        return x + "NO PRESENTA.";
+      }
+
+      for (int i = 0; i < recordingActs.Count; i++) {
+        x += $"{i + 1}.- {GenerateRecordingActText(recordingActs[i])}<br/>";
+      }
+
+      return x;
+    }
+
+
+    private string GenerateRecordingActText(RecordingAct recordingAct) {
+      const string t = "<u>{{RECORDING.ACT}}</u>. {{RECORDING.SEAL}}, de fecha {{RECORDING.DATE}}. {{PRIMARY.PARTIES}}";
+
+      var temp = t.Replace("{{RECORDING.ACT}}", recordingAct.Kind.Length != 0 ? recordingAct.Kind : recordingAct.DisplayName);
+
+      if (recordingAct.HasBookEntry) {
+        temp = temp.Replace("{{RECORDING.SEAL}}", recordingAct.BookEntry.AsText);
+      } else {
+        temp = temp.Replace("{{RECORDING.SEAL}}", "Sello registral " + recordingAct.LandRecord.UID);
+      }
+
+      temp = temp.Replace("{{RECORDING.DATE}}", recordingAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy"));
+
+      FixedList<RecordingActParty> primaryParties = recordingAct.Parties.PrimaryParties;
+
+      var partiesText = string.Empty;
+
+      foreach (RecordingActParty party in primaryParties) {
+        if (partiesText.Length != 0) {
+          partiesText += "; ";
+        }
+        partiesText += GetPartyText(party, -1);
+      }
+
+      return temp.Replace("{{PRIMARY.PARTIES}}", partiesText);
+    }
+
+
+    private string GenerateRealEstateMetesAndBounds(RealEstate realEstate) {
+      var metesAndBounds = realEstate.MetesAndBounds.Length != 0 ? realEstate.MetesAndBounds : "NO CONSTAN";
+
+      return $"<br/><br/><b>CON LAS SIGUIENTES MEDIDAS Y COLINDANCIAS</b>:<br/>{metesAndBounds}<br/><br/>";
     }
 
 
@@ -325,7 +372,7 @@ namespace Empiria.Land.Certificates {
         return string.Empty;
       }
 
-      var x = "<br/><br/>DE LA PRESENTE PROPIEDAD HAN SIDO INSCRITAS LAS SIGUIENTES PARTICIONES:";
+      var x = "<br/><br/>LA PRESENTE PROPIEDAD HAN SIDO INSCRITAS LAS SIGUIENTES PARTICIONES:";
 
       for (int i = 0; i < partitions.Count; i++) {
         x += $"<br/>{i + 1}.- {GenerateRealEstatePartitionText(partitions[i])}";
