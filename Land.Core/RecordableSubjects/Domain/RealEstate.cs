@@ -243,12 +243,14 @@ namespace Empiria.Land.Registration {
       RecordingAct lastDomainAct = TryGetLastDomainAct();
 
       if (lastDomainAct == null) {
-        return new FixedList<RecordingAct>();
+        return this.Tract.GetRecordingActs()
+                         .FindAll(x => x.Validator.WasAliveOn(DateTime.Now) &&
+                                      (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
       }
 
-      FixedList<RecordingAct> acts = this.Tract.GetFullRecordingActs()
-                                               .FindAll(x => x.Id >= lastDomainAct.Id &&
-                                                             x.Validator.WasAliveOn(DateTime.Now) &&
+      FixedList<RecordingAct> acts = this.Tract.GetRecordingActs()
+                                               .Sublist(this.Tract.GetRecordingActs().IndexOf(lastDomainAct))
+                                               .FindAll(x => x.Validator.WasAliveOn(DateTime.Now) &&
                                                              (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
 
       if (!includeLastDomainAct) {

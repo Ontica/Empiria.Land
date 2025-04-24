@@ -154,16 +154,6 @@ namespace Empiria.Land.Certificates {
 
     #region Helpers
 
-    static private string GenerateHardLimitationActText(RecordingAct recordingAct) {
-      var actName = (recordingAct.Kind.Length != 0) ? recordingAct.Kind : recordingAct.DisplayName;
-
-      return $"<strong>{actName}</strong> " +
-            $"REGISTRADO EL DÍA {recordingAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy")}," +
-            $"{GenerateRecordingActAmountsText(recordingAct)}" +
-            $"BAJO EL SELLO REGISTRAL <strong>{recordingAct.LandRecord.UID}</strong>.<br/>" +
-            $"{GeneratePartiesText(recordingAct)}<br/>";
-    }
-
     static private string GeneratePartiesText(RecordingAct recordingAct) {
       var primaryParties = recordingAct.Parties.PrimaryParties;
 
@@ -268,18 +258,6 @@ namespace Empiria.Land.Certificates {
       return temp;
     }
 
-    private string GeneratePreemptiveActText(RecordingAct recordingAct) {
-
-      var actName = (recordingAct.Kind.Length != 0) ? recordingAct.Kind : recordingAct.DisplayName;
-
-      return $"<strong>{actName}</strong> " +
-             $"REGISTRADO EL DÍA {recordingAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy")}, " +
-             $"{GenerateRecordingActAmountsText(recordingAct)} " +
-             $"BAJO EL SELLO REGISTRAL <b>{recordingAct.LandRecord.UID}</b>.<br/>" +
-             $"{recordingAct.Summary}<br/>";
-    }
-
-
     private string GenerateRealEstateText(RealEstate realEstate) {
       const string t = "<div style='text-align:center;font-size:12pt'><strong>{{ON.RESOURCE.CODE}}</strong></div><br/>" +
                        "{{ON.RESOURCE.TEXT}}" +
@@ -304,10 +282,33 @@ namespace Empiria.Land.Certificates {
       }
 
       for (int i = 0; i < recordingActs.Count; i++) {
-        x += $"{i + 1}.- {GenerateRecordingActText(recordingActs[i])}<br/>";
-      }
+        RecordingAct recordingAct = recordingActs[i];
+
+        if (recordingAct.IsHardLimitation) {
+          x += $"{i + 1}.- {GenerateHardLimitationActText(recordingAct)}<br/>";
+
+        } else if (recordingAct.IsPreemptiveAct) {
+          x += $"{i + 1}.- {GeneratePreemptiveActText(recordingAct)}<br/>";
+
+        } else {
+          x += $"{i + 1}.- {GenerateRecordingActText(recordingAct)}<br/>";
+        }
+
+      }  // for
 
       return x;
+    }
+
+
+    private string GeneratePreemptiveActText(RecordingAct recordingAct) {
+
+      var actName = (recordingAct.Kind.Length != 0) ? recordingAct.Kind : recordingAct.DisplayName;
+
+      return $"<strong>{actName}</strong> " +
+             $"REGISTRADO EL DÍA {recordingAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy")}, " +
+             $"{GenerateRecordingActAmountsText(recordingAct)} " +
+             $"BAJO EL SELLO REGISTRAL <b>{recordingAct.LandRecord.UID}</b>.<br/>" +
+             $"{recordingAct.Summary}";
     }
 
 
@@ -336,6 +337,17 @@ namespace Empiria.Land.Certificates {
       }
 
       return temp.Replace("{{PRIMARY.PARTIES}}", partiesText);
+    }
+
+
+    static private string GenerateHardLimitationActText(RecordingAct recordingAct) {
+      var actName = (recordingAct.Kind.Length != 0) ? recordingAct.Kind : recordingAct.DisplayName;
+
+      return $"<strong>{actName}</strong> " +
+            $"REGISTRADO EL DÍA {recordingAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy")}," +
+            $"{GenerateRecordingActAmountsText(recordingAct)}" +
+            $"BAJO EL SELLO REGISTRAL <strong>{recordingAct.LandRecord.UID}</strong>.<br/>" +
+            $"{GeneratePartiesText(recordingAct)}";
     }
 
 

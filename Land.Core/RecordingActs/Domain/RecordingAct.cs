@@ -425,6 +425,21 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
+    public bool IsHardLimitation {
+      get {
+        return RecordingActType.RecordingRule.IsHardLimitation;
+      }
+    }
+
+
+    public bool IsPreemptiveAct {
+      get {
+        return RecordingActType.RecordingRule.IsSoftLimitation;
+      }
+    }
+
+
     #endregion Public properties
 
     #region Methods
