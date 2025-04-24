@@ -8,7 +8,7 @@
 *  Summary   : Provides database read methods for resource recording tracts.                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
 using System.Collections.Generic;
 
 using Empiria.Data;
@@ -29,9 +29,9 @@ namespace Empiria.Land.Data {
         return new FixedList<RecordingAct>();
       }
 
-      var operation = DataOperation.Parse("qryLRSResourceRecordingActs", resource.Id);
+      var op = DataOperation.Parse("qryLRSResourceRecordingActs", resource.Id);
 
-      return DataReader.GetFixedList<RecordingAct>(operation);
+      return DataReader.GetFixedList<RecordingAct>(op);
     }
 
 
@@ -42,9 +42,9 @@ namespace Empiria.Land.Data {
         return new FixedList<RecordingAct>();
       }
 
-      var operation = DataOperation.Parse("qryLRSResourceFullTractIndex", resource.Id);
+      var op = DataOperation.Parse("qryLRSResourceFullTractIndex", resource.Id);
 
-      return DataReader.GetFixedList<RecordingAct>(operation);
+      return DataReader.GetFixedList<RecordingAct>(op);
     }
 
 
@@ -54,9 +54,9 @@ namespace Empiria.Land.Data {
         return new FixedList<RecordingAct>();
       }
 
-      var operation = DataOperation.Parse("qryLRSResourceRecordingActs", resource.Id);
+      var op = DataOperation.Parse("qryLRSResourceRecordingActs", resource.Id);
 
-      FixedList<RecordingAct> recordingActs = DataReader.GetFixedList<RecordingAct>(operation);
+      FixedList<RecordingAct> recordingActs = DataReader.GetFixedList<RecordingAct>(op);
 
       List<RecordingAct> list = new List<RecordingAct>();
 

@@ -249,13 +249,6 @@ namespace Empiria.Land.Registration {
       return lastChainedAct;
     }
 
-
-    internal RecordingAct TryGetLastRecordingBookAntecedentAct() {
-      return this.GetFullRecordingActs()
-                 .FindLast(x => !x.BookEntry.IsEmptyInstance &&
-                                x.RecordingActType.IsDomainActType);
-    }
-
     #endregion Methods
 
   }  // class RecordableSubjectTract
