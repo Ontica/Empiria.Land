@@ -261,6 +261,17 @@ namespace Empiria.Land.Registration {
     }
 
 
+    internal FixedList<RecordingAct> GetAliveRecordingActsWithPartitionActs(bool includeLastDomainAct = false) {
+
+      FixedList<RecordingAct> aliveActs = GetAliveRecordingActs(includeLastDomainAct);
+      FixedList<RecordingAct> partitionActs = GetPartitionsCreationalActs();
+
+      FixedList<RecordingAct> mergedList = FixedList<RecordingAct>.Merge(aliveActs, partitionActs);
+
+      return mergedList.Sort((x, y) => x.LandRecord.AuthorizationTime.CompareTo(y.LandRecord.AuthorizationTime));
+    }
+
+
     public FixedList<RecordingAct> GetHardLimitationActs() {
       var tract = base.Tract.GetRecordingActs();
 
@@ -281,20 +292,12 @@ namespace Empiria.Land.Registration {
     }
 
 
-    public RecordingAct TryGetLastDomainAct() {
-      var tract = base.Tract.GetRecordingActs();
+    public FixedList<RecordingAct> GetPartitionsCreationalActs() {
 
-      var lastDomainAct = tract.FindLast(x => x.Validator.WasAliveOn(DateTime.Now) &&
-                                              x.RecordingActType.IsDomainActType &&
-                                              (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
-      return lastDomainAct;
-    }
+      FixedList<RealEstate> partitions = GetPartitions();
 
-
-    public RecordingAct TryGetPartitionCreationalAct() {
-      var tract = base.Tract.GetRecordingActs();
-
-      return tract.Find(x => x.IsAppliedOverNewPartition);
+      return partitions.Select(x => x.Tract.FirstRecordingAct)
+                       .ToFixedList();
     }
 
 
@@ -334,6 +337,7 @@ namespace Empiria.Land.Registration {
 
       return provider.GenerateRealEstateID();
     }
+
 
     public override ResourceShapshotData GetSnapshotData() {
       return new RealEstateShapshotData {
@@ -407,6 +411,14 @@ namespace Empiria.Land.Registration {
       return partitions;
     }
 
+
+    public RecordingAct TryGetLastDomainAct() {
+      var tract = base.Tract.GetRecordingActs();
+
+      return tract.FindLast(x => x.Validator.WasAliveOn(DateTime.Now) &&
+                                 x.RecordingActType.IsDomainActType &&
+                                 (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
+    }
 
     #endregion Methods
 

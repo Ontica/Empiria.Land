@@ -44,6 +44,18 @@ namespace Empiria.Land.Registration {
 
     #region Properties
 
+    public RecordingAct FirstRecordingAct {
+      get {
+        FixedList<RecordingAct> recordingActs = this.GetRecordingActs();
+        if (recordingActs.Count != 0) {
+          return recordingActs[0];
+        } else {
+          return RecordingAct.Empty;
+        }
+      }
+    }
+
+
     public RecordingAct LastRecordingAct {
       get {
         FixedList<RecordingAct> recordingActs = this.GetRecordingActs();
