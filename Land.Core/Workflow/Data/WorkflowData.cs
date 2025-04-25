@@ -2,11 +2,12 @@
 *                                                                                                            *
 *  Module   : Transaction Workflow                       Component : Data Services Layer                     *
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data service                            *
-*  Type     : WorkflowTaskMapper                         License   : Please read LICENSE.txt file            *
+*  Type     : WorkflowData                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides database read and write methods for Empiria Land micro-workflow services.             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Collections.Generic;
 
@@ -15,25 +16,36 @@ using Empiria.Data;
 namespace Empiria.Land.Transactions.Workflow.Data {
 
   /// <summary>Provides database read and write methods for Empiria Land micro-workflow services.</summary>
-  static public class WorkflowData {
+  static internal class WorkflowData {
 
-    #region Public methods
+    #region Methods
 
-    static public LRSWorkflowTask GetWorkflowLastTask(LRSTransaction transaction) {
-      var op = DataOperation.Parse("getLRSWorkflowLastTask", transaction.Id);
+    static internal LRSWorkflowTask GetWorkflowLastTask(LRSTransaction transaction) {
+
+      var sql = "SELECT * FROM LRSTransactionTrack " +
+               $"WHERE TransactionId = {transaction.Id} AND " +
+                "NextTrackId = -1 AND TrackStatus <> 'X'";
+
+      var op = DataOperation.Parse(sql);
 
       return DataReader.GetObject<LRSWorkflowTask>(op);
     }
 
 
-    static public List<LRSWorkflowTask> GetWorkflowTrack(LRSTransaction transaction) {
-      var op = DataOperation.Parse("qryLRSWorkflowTrack", transaction.Id);
+    static internal List<LRSWorkflowTask> GetWorkflowTrack(LRSTransaction transaction) {
+
+      var sql = "SELECT * FROM LRSTransactionTrack " +
+               $"WHERE TransactionId = {transaction.Id} AND TrackStatus <> 'X' " +
+                "ORDER BY TrackId";
+
+      var op = DataOperation.Parse(sql);
 
       return DataReader.GetList<LRSWorkflowTask>(op);
     }
 
 
     static internal void WriteWorkflowTask(LRSWorkflowTask o) {
+
       var op = DataOperation.Parse("writeLRSWorkflowTask", o.Id, o.Transaction.Id,
                                o.EventId, (char) o.Mode, o.AssignedBy.Id, o.Responsible.Id,
                                o.NextContact.Id, (char) o.CurrentStatus, (char) o.NextStatus,
@@ -43,7 +55,7 @@ namespace Empiria.Land.Transactions.Workflow.Data {
       DataWriter.Execute(op);
     }
 
-    #endregion Public methods
+    #endregion Methods
 
   } // class WorkflowData
 

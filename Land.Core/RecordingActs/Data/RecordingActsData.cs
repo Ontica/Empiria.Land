@@ -8,7 +8,6 @@
 *  Summary   : Provides database read and write methods for recording acts.                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Data;
 
@@ -17,21 +16,28 @@ using Empiria.Land.Registration;
 namespace Empiria.Land.Data {
 
   /// <summary>Provides database read and write methods for recording acts.</summary>
-  static public class RecordingActsData {
+  static internal class RecordingActsData {
 
-    #region Public methods
+    #region Methods
 
     static public FixedList<RecordingAct> GetBookEntryRecordedActs(BookEntry bookEntry) {
+
       if (bookEntry.IsEmptyInstance) {
         return new FixedList<RecordingAct>();
       }
-      var operation = DataOperation.Parse("qryLRSPhysicalRecordingRecordedActs", bookEntry.Id);
 
-      return DataReader.GetFixedList<RecordingAct>(operation);
+      var sql = "SELECT * FROM LRSRecordingActs " +
+               $"WHERE PhysicalRecordingId = {bookEntry.Id} AND RecordingActStatus <> 'X' " +
+               $"ORDER BY RecordingActId";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<RecordingAct>(op);
     }
 
 
-    internal static void UpdateRecordingActResourceSnapshot(RecordingAct recordingAct) {
+    static internal void UpdateRecordingActResourceSnapshot(RecordingAct recordingAct) {
+
       Assertion.Require(recordingAct.ResourceShapshotData.ToString().Length < 8000,
                        "Favor de no ingresar en el sistema datos demasiados largos.");
 
@@ -43,6 +49,7 @@ namespace Empiria.Land.Data {
 
 
     static internal void WriteRecordingAct(RecordingAct o) {
+
       Assertion.Require(o.Id != 0, "RecordingAct.Id can't be zero");
       Assertion.Require(!o.Resource.IsEmptyInstance && !o.Resource.IsNew,
                        "Resource can't be new or the empty instance.");
@@ -62,17 +69,8 @@ namespace Empiria.Land.Data {
     }
 
 
-    static internal void WriteRecordingActParty(RecordingActParty o) {
-      var op = DataOperation.Parse("writeLRSRecordingActParty", o.Id, o.UID,
-                      o.RecordingAct.Id, o.Party.Id, o.PartyRole.Id, o.PartyOf.Id,
-                      o.OwnershipPart.Amount, o.OwnershipPart.Unit.Id, o.IsOwnershipStillActive,
-                      o.Notes, o.AsText, o.ExtendedData, o.PostedBy.Id,
-                      (char) o.Status, o.IntegrityHashCode);
+    static internal void UpdateRecordingActType(RecordingAct recordingAct) {
 
-      DataWriter.Execute(op);
-    }
-
-    internal static void UpdateRecordingActType(RecordingAct recordingAct) {
       Assertion.Require(recordingAct.IsEditable,
                         $"Recording act '{recordingAct.UID}' cannot be edited.");
 
@@ -83,7 +81,19 @@ namespace Empiria.Land.Data {
       DataWriter.Execute(DataOperation.Parse(sql));
     }
 
-    #endregion Public methods
+
+    static internal void WriteRecordingActParty(RecordingActParty o) {
+
+      var op = DataOperation.Parse("writeLRSRecordingActParty", o.Id, o.UID,
+                      o.RecordingAct.Id, o.Party.Id, o.PartyRole.Id, o.PartyOf.Id,
+                      o.OwnershipPart.Amount, o.OwnershipPart.Unit.Id, o.IsOwnershipStillActive,
+                      o.Notes, o.AsText, o.ExtendedData, o.PostedBy.Id,
+                      (char) o.Status, o.IntegrityHashCode);
+
+      DataWriter.Execute(op);
+    }
+
+    #endregion Methods
 
   } // class RecordingActsData
 

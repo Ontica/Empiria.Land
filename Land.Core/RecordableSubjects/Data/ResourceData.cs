@@ -8,6 +8,7 @@
 *  Summary   : Provides database methods for recordable resources: real estate and associations.             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 
 using Empiria.Data;
@@ -17,35 +18,43 @@ using Empiria.Land.Registration;
 namespace Empiria.Land.Data {
 
   /// <summary>Provides database methods for recordable resources: real estate and associations.</summary>
-  static public class ResourceData {
+  static internal class ResourceData {
 
-    #region Internal methods
+    #region Methods
 
     static internal bool ExistsResourceUID(string uniqueID) {
-      var op = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
-
-      return (DataReader.Count(op) != 0);
+      return TryGetResourceWithUID(uniqueID) != null;
     }
+
 
     static internal FixedList<RealEstate> GetRealEstatePartitions(RealEstate property) {
       if (property.IsNew || property.IsEmptyInstance) {
         return new FixedList<RealEstate>();
       }
 
-      var op = DataOperation.Parse("qryLRSRealEstatePartitions", property.Id);
+      var sql = "SELECT * FROM LRSProperties " +
+               $"WHERE PartitionOfId = {property.Id} AND PropertyStatus <> 'X' " +
+               $"ORDER BY PartitionNo";
+
+      var op = DataOperation.Parse(sql);
 
       return DataReader.GetFixedList<RealEstate>(op);
     }
 
 
     static internal Resource TryGetResourceWithUID(string uniqueID) {
-      var op = DataOperation.Parse("getLRSPropertyWithUID", uniqueID);
+
+      var sql = "SELECT * FROM LRSProperties " +
+               $"WHERE PropertyUID = '{uniqueID}'";
+
+      var op = DataOperation.Parse(sql);
 
       return DataReader.GetObject<Resource>(op, null);
     }
 
 
     static internal FixedList<Resource> SearchResources(string filter, string orderBy, int pageSize) {
+
       string sql = $"SELECT TOP {pageSize} LRSProperties.* " +
                    $"FROM LRSProperties " +
                    $"WHERE {filter} ORDER BY {orderBy}";
@@ -87,7 +96,7 @@ namespace Empiria.Land.Data {
       DataWriter.Execute(op);
     }
 
-    #endregion Internal methods
+    #endregion Methods
 
   } // class ResourceData
 

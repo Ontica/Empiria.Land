@@ -4,28 +4,32 @@
 *  Assembly : Empiria.Land.Core.dll                      Pattern   : Data Services                           *
 *  Type     : TransactionPaymentsDataService             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Provides database read and write methods for recording office filings.                         *
+*  Summary  : Provides database read and write methods for land transaction payments.                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Data;
 
 namespace Empiria.Land.Transactions.Payments.Data {
 
-  /// <summary>Provides database read and write methods for recording office filings.</summary>
+  /// <summary>Provides database read and write methods for land transaction payments.</summary>
   static internal class TransactionPaymentsDataService {
 
-    #region Public methods
+    #region Methods
 
     static internal FixedList<LRSPayment> GetTransactionPayments(LRSTransaction transaction) {
+
       if (transaction.IsEmptyInstance) {
         return new FixedList<LRSPayment>();
       }
 
-      var operation = DataOperation.Parse("qryLRSTransactionPayments", transaction.Id);
+      var sql = "SELECT * FROM LRSPayments " +
+               $"WHERE TransactionId = {transaction.Id} AND PaymentStatus <> 'X' " +
+               $"ORDER BY ReceiptIssuedTime";
 
-      return DataReader.GetFixedList<LRSPayment>(operation);
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<LRSPayment>(op);
     }
 
 
@@ -38,7 +42,7 @@ namespace Empiria.Land.Transactions.Payments.Data {
       DataWriter.Execute(op);
     }
 
-    #endregion Public methods
+    #endregion Methods
 
   } // class TransactionPaymentsDataService
 

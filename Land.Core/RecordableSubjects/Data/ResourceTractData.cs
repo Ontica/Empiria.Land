@@ -18,13 +18,13 @@ using Empiria.Land.Registration;
 namespace Empiria.Land.Data {
 
   /// <summary>Provides database read methods for resource recording tracts.</summary>
-  static public class ResourceTractData {
+  static internal class ResourceTractData {
 
-    #region Public methods
+    #region Methods
 
     /// <summary>Gets those recording acts where the given resource appears as
     ///  the main resource (ResourceId field).</summary>
-    static public FixedList<RecordingAct> GetResourceRecordingActList(Resource resource) {
+    static internal FixedList<RecordingAct> GetResourceRecordingActList(Resource resource) {
       if (resource.IsEmptyInstance) {
         return new FixedList<RecordingAct>();
       }
@@ -37,7 +37,7 @@ namespace Empiria.Land.Data {
 
     /// <summary>Gets those recording acts where the given resource appears as
     ///  the main resource or as the related resource.</summary>
-    internal static FixedList<RecordingAct> GetResourceFullTractIndex(Resource resource) {
+    static internal FixedList<RecordingAct> GetResourceFullTractIndex(Resource resource) {
       if (resource.IsEmptyInstance) {
         return new FixedList<RecordingAct>();
       }
@@ -48,7 +48,7 @@ namespace Empiria.Land.Data {
     }
 
 
-    static public FixedList<RecordingAct> GetResourceRecordingActListUntil(Resource resource, RecordingAct breakAct,
+    static internal FixedList<RecordingAct> GetResourceRecordingActListUntil(Resource resource, RecordingAct breakAct,
                                                                            bool includeBreakAct) {
       if (resource.IsEmptyInstance) {
         return new FixedList<RecordingAct>();
@@ -74,7 +74,7 @@ namespace Empiria.Land.Data {
       return list.ToFixedList();
     }
 
-    #endregion Public methods
+    #endregion Methods
 
   } // class ResourceTractData
 

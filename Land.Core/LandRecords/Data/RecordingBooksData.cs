@@ -8,6 +8,7 @@
 *  Summary   : Provides database read and write methods for recording books.                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Data;
 
@@ -18,25 +19,30 @@ using Empiria.Land.Registration;
 namespace Empiria.Land.Data {
 
   /// <summary>Provides database read and write methods for recording books.</summary>
-  static public class RecordingBooksData {
+  static internal class RecordingBooksData {
 
-    #region Public methods
+    #region Methods
 
 
     static internal DataTable GetBookEntriesNumbers(RecordingBook book) {
       string sql = "SELECT RecordingNo FROM LRSPhysicalRecordings" +
-                   $" WHERE PhysicalBookId = {book.Id}" +
-                   " AND RecordingStatus <> 'X' ORDER BY RecordingNo";
+                   $"WHERE PhysicalBookId = {book.Id} AND RecordingStatus <> 'X' " +
+                   $"ORDER BY RecordingNo";
 
-      return DataReader.GetDataTable(DataOperation.Parse(sql));
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetDataTable(op);
     }
 
 
     static internal int GetLastBookEntryNumber(RecordingBook book) {
-      string sql = "SELECT MAX(RecordingNo) FROM LRSPhysicalRecordings" +
-                   " WHERE PhysicalBookId = " + book.Id.ToString() +
-                   " AND RecordingStatus <> 'X'";
-      return int.Parse(DataReader.GetScalar<string>(DataOperation.Parse(sql), "0"));
+      string sql = "SELECT MAX(RecordingNo) FROM LRSPhysicalRecordings " +
+                  $"WHERE PhysicalBookId = {book.Id} " +
+                   "AND RecordingStatus <> 'X'";
+
+      var op = DataOperation.Parse(sql);
+
+      return int.Parse(DataReader.GetScalar(op, "0"));
     }
 
 
@@ -85,10 +91,13 @@ namespace Empiria.Land.Data {
 
 
     static internal int GetBookTotalSheets(RecordingBook book) {
-      string sql = "SELECT SheetsCount FROM vwLRSPhysicalBooksStats " +
-                   $"WHERE PhysicalBookId = {book.Id}";
 
-      return DataReader.GetScalar<int>(DataOperation.Parse(sql));
+      string sql = "SELECT SheetsCount FROM vwLRSPhysicalBooksStats " +
+                  $"WHERE PhysicalBookId = {book.Id}";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetScalar<int>(op);
     }
 
 
@@ -103,13 +112,15 @@ namespace Empiria.Land.Data {
     }
 
 
-    static public FixedList<RecorderOffice> GetRecorderOffices(RecordingSection sectionType) {
+    static internal FixedList<RecorderOffice> GetRecorderOffices(RecordingSection sectionType) {
       string sql = "SELECT DISTINCT Contacts.* FROM LRSPhysicalBooks INNER JOIN Contacts" +
                    " ON LRSPhysicalBooks.RecorderOfficeId = Contacts.ContactId" +
                    " WHERE LRSPhysicalBooks.RecordingSectionId = " + sectionType.Id +
                    " ORDER BY Contacts.NickName";
 
-      return DataReader.GetFixedList<RecorderOffice>(DataOperation.Parse(sql));
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<RecorderOffice>(op);
     }
 
 
@@ -122,13 +133,15 @@ namespace Empiria.Land.Data {
                    $"WHERE MainDocumentId = {landRecord.Id} AND RecordingStatus <> 'X' " +
                    $"ORDER BY PhysicalRecordingId";
 
-      return DataReader.GetFixedList<BookEntry>(DataOperation.Parse(sql));
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<BookEntry>(op);
     }
 
 
-    static public FixedList<RecordingBook> GetRecordingBooksInSection(RecorderOffice recorderOffice,
-                                                                      RecordingSection sectionType,
-                                                                      string keywords = "") {
+    static internal FixedList<RecordingBook> GetRecordingBooksInSection(RecorderOffice recorderOffice,
+                                                                        RecordingSection sectionType,
+                                                                        string keywords = "") {
       string filter = "RecorderOfficeId = " + recorderOffice.Id.ToString() + " AND " +
                       "RecordingSectionId = " + sectionType.Id.ToString();
 
@@ -140,14 +153,21 @@ namespace Empiria.Land.Data {
                    $"WHERE {filter} " +
                    $"ORDER BY BookNo, BookAsText";
 
-      return DataReader.GetFixedList<RecordingBook>(DataOperation.Parse(sql));
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<RecordingBook>(op);
     }
 
 
-    static public FixedList<BookEntry> GetRecordingBookEntries(RecordingBook recordingBook) {
-      var operation = DataOperation.Parse("qryLRSPhysicalBookRecordings", recordingBook.Id);
+    static internal FixedList<BookEntry> GetRecordingBookEntries(RecordingBook recordingBook) {
 
-      return DataReader.GetFixedList<BookEntry>(operation);
+      var sql = "SELECT * FROM LRSPhysicalRecordings " +
+               $"WHERE PhysicalBookId = {recordingBook.Id} AND RecordingStatus <> 'X' " +
+               $"ORDER BY RecordingNo, PhysicalRecordingId";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<BookEntry>(op);
     }
 
 
@@ -173,7 +193,7 @@ namespace Empiria.Land.Data {
       DataWriter.Execute(op);
     }
 
-    #endregion Public methods
+    #endregion Methods
 
   } // class RecordingBooksData
 

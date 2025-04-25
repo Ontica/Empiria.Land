@@ -4,10 +4,9 @@
 *  Assembly : Empiria.Land.Core.dll                        Pattern   : Data Services                         *
 *  Type     : TransactionsDataService                      License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Provides database read and write methods for recording office transactions.                    *
+*  Summary  : Provides database read and write methods for land transactions.                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Data;
 
@@ -15,28 +14,30 @@ using Empiria.Land.Registration;
 
 namespace Empiria.Land.Transactions.Data {
 
-  /// <summary>Provides database read and write methods for recording office transactions.</summary>
+  /// <summary>Provides database read and write methods for land transactions.</summary>
   static internal class TransactionsDataService {
 
-    #region Public methods
+    #region Methods
 
     static internal bool ExistsExternalTransactionNo(string externalTransactionNo) {
-      var sql = "SELECT * " +
-                "FROM LRSTransactions " +
+
+      var sql = "SELECT * FROM LRSTransactions " +
                $"WHERE ExternalTransactionNo = '{externalTransactionNo}'";
 
-      var operation = DataOperation.Parse(sql);
+      var op = DataOperation.Parse(sql);
 
-      return (DataReader.Count(operation) > 0);
+      return DataReader.Count(op) > 0;
     }
 
 
     static internal int GetLastControlNumber(RecorderOffice recorderOffice) {
-      string sql = "SELECT MAX(InternalControlNo) " +
-                   "FROM LRSTransactions " +
+
+      string sql = "SELECT MAX(InternalControlNo) FROM LRSTransactions " +
                    $"WHERE RecorderOfficeId = {recorderOffice.Id}";
 
-      string max = DataReader.GetScalar(DataOperation.Parse(sql), String.Empty);
+      var op = DataOperation.Parse(sql);
+
+      string max = DataReader.GetScalar(op, string.Empty);
 
       if (max != null && max.Length != 0) {
         return int.Parse(max);
@@ -47,25 +48,32 @@ namespace Empiria.Land.Transactions.Data {
 
 
     static internal FixedList<LRSTransaction> GetTransactionsList(string filter, string orderBy, int pageSize) {
+
       string sql = $"SELECT TOP {pageSize} LRSTransactions.* " +
                     "FROM LRSTransactions INNER JOIN vwLRSLastTransactionTrack " +
                     "ON LRSTransactions.TransactionId = vwLRSLastTransactionTrack.TransactionId " +
                    $"WHERE {filter} ORDER BY {orderBy}";
 
-      var operation = DataOperation.Parse(sql);
+      var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<LRSTransaction>(operation);
+      return DataReader.GetFixedList<LRSTransaction>(op);
     }
 
 
     static internal FixedList<LRSTransactionService> GetTransactionServicesList(LRSTransaction transaction) {
-      var operation = DataOperation.Parse("qryLRSTransactionItems", transaction.Id);
 
-      return DataReader.GetFixedList<LRSTransactionService>(operation);
+      var sql = "SELECT * FROM LRSTransactionItems " +
+               $"WHERE TransactionId = {transaction.Id} AND TransactionItemStatus <> 'X' " +
+                "ORDER BY TransactionItemId";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<LRSTransactionService>(op);
     }
 
 
     static internal void SetTransactionInstrument(LRSTransaction transaction, IIdentifiable instrument) {
+
       var sql = $"UPDATE LRSTransactions " +
                 $"SET InstrumentId = {instrument.Id} " +
                 $"WHERE TransactionId = {transaction.Id}";
@@ -77,6 +85,7 @@ namespace Empiria.Land.Transactions.Data {
 
 
     static internal void WriteTransaction(LRSTransaction o) {
+
       var op = DataOperation.Parse("writeLRSTransaction", o.Id, o.TransactionType.Id, o.GUID, o.UID,
                   o.DocumentType.Id, o.DocumentDescriptor, o.LandRecord.Id, o.BaseResource.Id,
                   o.RecorderOffice.Id, o.RequestedBy, o.Agency.Id,
@@ -90,8 +99,9 @@ namespace Empiria.Land.Transactions.Data {
 
 
     static internal void WriteTransactionService(LRSTransactionService o) {
-      Assertion.Require(o.Fee, "o.Fee");
-      Assertion.Require(o.Payment, "o.Payment");
+
+      Assertion.Require(o.Fee, nameof(o.Fee));
+      Assertion.Require(o.Payment, nameof(o.Payment));
 
       var op = DataOperation.Parse("writeLRSTransactionItem", o.Id, o.UID, o.Transaction.Id,
                                     o.ServiceType.Id, o.TreasuryCode.Id,
