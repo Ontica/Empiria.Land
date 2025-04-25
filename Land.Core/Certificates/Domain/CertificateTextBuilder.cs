@@ -121,6 +121,7 @@ namespace Empiria.Land.Certificates {
       return x.ToUpperInvariant();
     }
 
+
     private string BuildLimitacionAnotacionCertificateText() {
       return "GenerateLimitacionAnotacionCertificateText";
     }
@@ -166,7 +167,7 @@ namespace Empiria.Land.Certificates {
         var secondaryParties = recordingAct.Parties.GetSecondaryPartiesOf(primaryParty.Party);
 
         foreach (var secondaryParty in secondaryParties) {
-          html += GeneratePartyText(secondaryParty, 1);
+          html += GeneratePartyText(secondaryParty, -1);
         }
       }
 
@@ -273,7 +274,7 @@ namespace Empiria.Land.Certificates {
 
     private string GenerateRecordingActsText(RealEstate realEstate) {
 
-      FixedList<RecordingAct> recordingActs = realEstate.GetAliveRecordingActs();
+      FixedList<RecordingAct> recordingActs = realEstate.GetAliveRecordingActsWithPartitionActs();
 
       var x = "<br/><strong>ANOTACIONES VIGENTES:</strong><br/>";
 
@@ -289,6 +290,9 @@ namespace Empiria.Land.Certificates {
 
         } else if (recordingAct.IsPreemptiveAct) {
           x += $"{i + 1}.- {GeneratePreemptiveActText(recordingAct)}<br/>";
+
+        } else if (recordingAct.IsAppliedOverNewPartition) {
+          x += $"{i + 1}.- {GeneratePartitionActText(recordingAct)}<br/>";
 
         } else {
           x += $"{i + 1}.- {GenerateRecordingActText(recordingAct)}<br/>";
@@ -351,6 +355,32 @@ namespace Empiria.Land.Certificates {
     }
 
 
+    private string GeneratePartitionActText(RecordingAct recordingAct) {
+
+      var temp = recordingAct.Kind.Length != 0 ? recordingAct.Kind : recordingAct.DisplayName;
+
+      temp = $"<strong>{temp}</strong>.";
+
+      var partition = (RealEstate) recordingAct.Resource;
+
+      if (partition.LotSize.Amount != 0) {
+        temp += $"Superficie: {partition.LotSize.ToString()}. ";
+      } else {
+        temp += $"Superficie NO CONSTA. ";
+      }
+
+      FixedList<RecordingActParty> owners = recordingAct.Parties.PrimaryParties;
+
+      foreach (RecordingActParty owner in owners) {
+        temp += GeneratePartyText(owner, -1) + ", ";
+      }
+
+      temp += GenerateRegistrationText(recordingAct);
+
+      return temp;
+    }
+
+
     private string GenerateRealEstateMetesAndBounds(RealEstate realEstate) {
       var metesAndBounds = realEstate.MetesAndBounds.Length != 0 ? realEstate.MetesAndBounds : "NO CONSTAN";
 
@@ -358,53 +388,10 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    private string GenerateRealEstatePartitions(RealEstate realEstate) {
-      FixedList<RealEstate> partitions = realEstate.GetPartitions();
-
-      if (partitions.Count == 0) {
-        return string.Empty;
-      }
-
-      var x = "<br/><br/>LA PRESENTE PROPIEDAD HAN SIDO INSCRITAS LAS SIGUIENTES PARTICIONES:";
-
-      for (int i = 0; i < partitions.Count; i++) {
-        x += $"<br/>{i + 1}.- {GenerateRealEstatePartitionText(partitions[i])}";
-      }
-
-      return x;
-    }
-
-
-    private string GenerateRealEstatePartitionText(RealEstate partition) {
-      var creationalAct = partition.TryGetPartitionCreationalAct();
-
-      if (creationalAct == null) {
-        return string.Empty;
-      }
-
-      var temp = creationalAct.Kind.Length != 0 ? creationalAct.Kind : creationalAct.DisplayName;
-
-      if (partition.LotSize.Amount != 0) {
-        temp += $". Superficie: {partition.LotSize.ToString()}, ";
-      } else {
-        temp += $". Superficie NO CONSTA; ";
-      }
-
-      FixedList<RecordingActParty> owners = creationalAct.Parties.PrimaryParties;
-
-      foreach (RecordingActParty owner in owners) {
-        temp += " " + GeneratePartyText(owner, 0);
-      }
-
-      temp += GenerateRegistrationText(creationalAct);
-      return temp;
-    }
-
-
     private string GenerateRegistrationText(RecordingAct recordingAct) {
       var temp = recordingAct.LandRecord.IsRegisteredInRecordingBook ?
               recordingAct.LandRecord.TryGetBookEntry().AsText :
-              "Sello registral " + recordingAct.LandRecord.UID;
+              $"Sello registral <strong>{recordingAct.LandRecord.UID}</strong>";
 
       return temp + " de fecha " + recordingAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy") + ".";
     }
