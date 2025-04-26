@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 using Empiria.Measurement;
 
 using Empiria.Land.Registration;
@@ -154,6 +156,11 @@ namespace Empiria.Land.Certificates {
 
     #region Helpers
 
+    static private string FormatDate(DateTime date) {
+      return date.ToString("dd \\de MMMM \\de yyyy");
+    }
+
+
     static private string GeneratePartiesText(RecordingAct recordingAct) {
       var primaryParties = recordingAct.Parties.PrimaryParties;
 
@@ -166,7 +173,7 @@ namespace Empiria.Land.Certificates {
         var secondaryParties = recordingAct.Parties.GetSecondaryPartiesOf(primaryParty.Party);
 
         foreach (var secondaryParty in secondaryParties) {
-          html += GeneratePartyText(secondaryParty, -1);
+          html += GeneratePartyText(secondaryParty, 1);
         }
       }
 
@@ -238,10 +245,10 @@ namespace Empiria.Land.Certificates {
       }
 
       var temp = "<strong>ÚLTIMO ACTO DE DOMINIO:</strong><br/>" +
-                 "<u>{{RECORDING.ACT.NAME}}</u>, CON FECHA DE REGISTRO EL DÍA {{RECORDING.ACT.DATE}}, {{RECORDING.TEXT}}.<br/>";
+                 "<strong>{{RECORDING.ACT.NAME}}</strong>, CON FECHA DE REGISTRO EL DÍA {{RECORDING.ACT.DATE}}, {{RECORDING.TEXT}}.<br/>";
 
-      temp = temp.Replace("{{RECORDING.ACT.NAME}}", ownershipAct.Kind.Length != 0 ? ownershipAct.Kind : ownershipAct.DisplayName);
-      temp = temp.Replace("{{RECORDING.ACT.DATE}}", ownershipAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy"));
+      temp = temp.Replace("{{RECORDING.ACT.NAME}}", ownershipAct.KindOrDisplayName);
+      temp = temp.Replace("{{RECORDING.ACT.DATE}}", FormatDate(ownershipAct.RegistrationTime));
 
       if (ownershipAct.HasBookEntry) {
         temp = temp.Replace("{{RECORDING.TEXT}}", $"INSCRITO EN {ownershipAct.BookEntry.AsText}");
@@ -310,25 +317,10 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    private FixedList<RecordingAct> GetRecordingActs(RealEstate realEstate) {
-      if (_certificate.CertificateType != CertificateType.Inscripcion) {
-        return realEstate.GetAliveRecordingActsWithPartitionActs();
-      }
-
-      FixedList<RecordingAct> recordingActs = realEstate.GetAliveRecordingActsWithPartitionActs();
-
-      recordingActs = FixedList<RecordingAct>.Merge(recordingActs, realEstate.GetDomainActs());
-
-      return recordingActs.Sort((x,y) => x.CompareToString.CompareTo(y.CompareToString));
-    }
-
-
     private string GeneratePreemptiveActText(RecordingAct recordingAct) {
 
-      var actName = (recordingAct.Kind.Length != 0) ? recordingAct.Kind : recordingAct.DisplayName;
-
-      return $"<strong>{actName}</strong> " +
-             $"REGISTRADO EL DÍA {recordingAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy")}, " +
+      return $"<strong>{recordingAct.KindOrDisplayName}</strong> " +
+             $"REGISTRADO EL DÍA {FormatDate(recordingAct.RegistrationTime)}, " +
              $"{GenerateRecordingActAmountsText(recordingAct)} " +
              $"BAJO EL SELLO REGISTRAL <b>{recordingAct.LandRecord.UID}</b>.<br/>" +
              $"{recordingAct.Summary}";
@@ -336,17 +328,17 @@ namespace Empiria.Land.Certificates {
 
 
     private string GenerateRecordingActText(RecordingAct recordingAct) {
-      const string t = "<u>{{RECORDING.ACT}}</u>. {{RECORDING.SEAL}}, de fecha {{RECORDING.DATE}}. {{PRIMARY.PARTIES}}";
+      const string t = "<strong>{{RECORDING.ACT}}</strong>. {{RECORDING.SEAL}}, de fecha {{RECORDING.DATE}}. {{PRIMARY.PARTIES}}";
 
-      var temp = t.Replace("{{RECORDING.ACT}}", recordingAct.Kind.Length != 0 ? recordingAct.Kind : recordingAct.DisplayName);
+      var temp = t.Replace("{{RECORDING.ACT}}", recordingAct.KindOrDisplayName);
 
       if (recordingAct.HasBookEntry) {
         temp = temp.Replace("{{RECORDING.SEAL}}", recordingAct.BookEntry.AsText);
       } else {
-        temp = temp.Replace("{{RECORDING.SEAL}}", "Sello registral " + recordingAct.LandRecord.UID);
+        temp = temp.Replace("{{RECORDING.SEAL}}", $"Sello registral <strong>{recordingAct.LandRecord.UID}</strong>");
       }
 
-      temp = temp.Replace("{{RECORDING.DATE}}", recordingAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy"));
+      temp = temp.Replace("{{RECORDING.DATE}}", FormatDate(recordingAct.RegistrationTime));
 
       FixedList<RecordingActParty> primaryParties = recordingAct.Parties.PrimaryParties;
 
@@ -364,10 +356,9 @@ namespace Empiria.Land.Certificates {
 
 
     static private string GenerateHardLimitationActText(RecordingAct recordingAct) {
-      var actName = (recordingAct.Kind.Length != 0) ? recordingAct.Kind : recordingAct.DisplayName;
 
-      return $"<strong>{actName}</strong> " +
-            $"REGISTRADO EL DÍA {recordingAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy")}," +
+      return $"<strong>{recordingAct.KindOrDisplayName}</strong> " +
+            $"REGISTRADO EL DÍA {FormatDate(recordingAct.RegistrationTime)}," +
             $"{GenerateRecordingActAmountsText(recordingAct)}" +
             $"BAJO EL SELLO REGISTRAL <strong>{recordingAct.LandRecord.UID}</strong>.<br/>" +
             $"{GeneratePartiesText(recordingAct)}";
@@ -376,9 +367,7 @@ namespace Empiria.Land.Certificates {
 
     private string GeneratePartitionActText(RecordingAct recordingAct) {
 
-      var temp = recordingAct.Kind.Length != 0 ? recordingAct.Kind : recordingAct.DisplayName;
-
-      temp = $"<strong>{temp}</strong>.";
+      var temp = $"<strong>{recordingAct.KindOrDisplayName}</strong>.";
 
       var partition = (RealEstate) recordingAct.Resource;
 
@@ -403,16 +392,34 @@ namespace Empiria.Land.Certificates {
     private string GenerateRealEstateMetesAndBounds(RealEstate realEstate) {
       var metesAndBounds = realEstate.MetesAndBounds.Length != 0 ? realEstate.MetesAndBounds : "NO CONSTAN";
 
-      return $"<br/><br/><b>CON LAS SIGUIENTES MEDIDAS Y COLINDANCIAS</b>:<br/>{metesAndBounds}<br/><br/>";
+      return $"<br/><br/><strong>CON LAS SIGUIENTES MEDIDAS Y COLINDANCIAS</strong>:<br/>{metesAndBounds}<br/><br/>";
     }
 
 
     private string GenerateRegistrationText(RecordingAct recordingAct) {
-      var temp = recordingAct.LandRecord.IsRegisteredInRecordingBook ?
-              recordingAct.LandRecord.TryGetBookEntry().AsText :
-              $"Sello registral <strong>{recordingAct.LandRecord.UID}</strong>";
 
-      return temp + " de fecha " + recordingAct.RegistrationTime.ToString("dd \\de MMMM \\de yyyy") + ".";
+      string temp;
+
+      if (recordingAct.LandRecord.IsRegisteredInRecordingBook) {
+        temp = recordingAct.LandRecord.TryGetBookEntry().AsText;
+      } else {
+        temp = $"Sello registral <strong>{recordingAct.LandRecord.UID}</strong>";
+      }
+
+      return $"{temp} de fecha {FormatDate(recordingAct.RegistrationTime)}.";
+    }
+
+
+    private FixedList<RecordingAct> GetRecordingActs(RealEstate realEstate) {
+      if (_certificate.CertificateType != CertificateType.Inscripcion) {
+        return realEstate.GetAliveRecordingActsWithPartitionActs();
+      }
+
+      FixedList<RecordingAct> recordingActs = realEstate.GetAliveRecordingActsWithPartitionActs();
+
+      recordingActs = FixedList<RecordingAct>.Merge(recordingActs, realEstate.GetDomainActs());
+
+      return recordingActs.Sort((x, y) => x.CompareToString.CompareTo(y.CompareToString));
     }
 
     #endregion Helpers
