@@ -440,6 +440,16 @@ namespace Empiria.Land.Registration {
     }
 
 
+    internal string CompareToString {
+      get {
+        if (this.LandRecord.IsClosed || this.HasBookEntry) {
+          return this.LandRecord.AuthorizationTime.ToString("yyyy.mm.dd") + this.Index.ToString("00000");
+        } else {
+          return this.LandRecord.PresentationTime.ToString("yyyy.mm.dd") + this.Index.ToString("00000");
+        }
+      }
+    }
+
     #endregion Public properties
 
     #region Methods

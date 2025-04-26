@@ -17,6 +17,8 @@ using Empiria.Measurement;
 
 using Empiria.Land.Data;
 using Empiria.Land.Providers;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace Empiria.Land.Registration {
 
@@ -268,7 +270,7 @@ namespace Empiria.Land.Registration {
 
       FixedList<RecordingAct> mergedList = FixedList<RecordingAct>.Merge(aliveActs, partitionActs);
 
-      return mergedList.Sort((x, y) => x.LandRecord.AuthorizationTime.CompareTo(y.LandRecord.AuthorizationTime));
+      return mergedList.Sort((x, y) => x.CompareToString.CompareTo(y.CompareToString));
     }
 
 
@@ -336,6 +338,12 @@ namespace Empiria.Land.Registration {
       IUniqueIDGeneratorProvider provider = ExternalProviders.GetUniqueIDGeneratorProvider();
 
       return provider.GenerateRealEstateID();
+    }
+
+
+    internal FixedList<RecordingAct> GetDomainActs() {
+      return base.Tract.GetRecordingActs().FindAll(x => x.RecordingActType.IsDomainActType &&
+                                                       (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
     }
 
 
