@@ -86,7 +86,6 @@ namespace Empiria.Land.Certificates {
                        "SE DETERMINA QUE EL BIEN INMUEBLE REFERIDO <strong>SÍ ESTÁ INSCRITO</strong>, " +
                        "Y QUE TIENE ASIGNADO EL SIGUIENTE <strong>FOLIO REAL ELECTRÓNICO</strong>:" +
                        "{{REAL.ESTATE.TEXT}}" +
-                       "{{CURRENT.OWNERSHIP}}" +
                        "{{RECORDING.ACTS}}" +
                        "<br/><br/>";
 
@@ -274,9 +273,16 @@ namespace Empiria.Land.Certificates {
 
     private string GenerateRecordingActsText(RealEstate realEstate) {
 
-      FixedList<RecordingAct> recordingActs = realEstate.GetAliveRecordingActsWithPartitionActs();
+      FixedList<RecordingAct> recordingActs = GetRecordingActs(realEstate);
 
-      var x = "<br/><strong>ANOTACIONES VIGENTES:</strong><br/>";
+      string x;
+
+      if (_certificate.CertificateType == CertificateType.Inscripcion) {
+        x = "<br/><strong>CONTIENE LAS SIGUIENTES ANOTACIONES:</strong><br/>";
+      } else {
+
+        x = "<br/><strong>ANOTACIONES VIGENTES:</strong><br/>";
+      }
 
       if (recordingActs.Count == 0) {
         return x + "NO PRESENTA.";
@@ -301,6 +307,19 @@ namespace Empiria.Land.Certificates {
       }  // for
 
       return x;
+    }
+
+
+    private FixedList<RecordingAct> GetRecordingActs(RealEstate realEstate) {
+      if (_certificate.CertificateType != CertificateType.Inscripcion) {
+        return realEstate.GetAliveRecordingActsWithPartitionActs();
+      }
+
+      FixedList<RecordingAct> recordingActs = realEstate.GetAliveRecordingActsWithPartitionActs();
+
+      recordingActs = FixedList<RecordingAct>.Merge(recordingActs, realEstate.GetDomainActs());
+
+      return recordingActs.Sort((x,y) => x.CompareToString.CompareTo(y.CompareToString));
     }
 
 
