@@ -181,13 +181,6 @@ namespace Empiria.Land.Registration {
       }
     }
 
-    public RecordableSubjectTract Tract {
-      get {
-        return RecordableSubjectTract.Parse(this);
-      }
-    }
-
-
     public bool IsCompleted {
       get {
         return (this.Status == RecordableObjectStatus.Registered ||
@@ -196,6 +189,25 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
+    public bool IsStillAlive {
+      get {
+        if (this.Status == RecordableObjectStatus.Deleted) {
+          return false;
+        }
+
+        var tract = this.Tract.GetRecordingActs();
+
+        return !tract.Contains(x => x.RecordingActType.RecordingRule.IsEndingAct);
+      }
+    }
+
+
+    public RecordableSubjectTract Tract {
+      get {
+        return RecordableSubjectTract.Parse(this);
+      }
+    }
 
     #endregion Public properties
 
@@ -305,8 +317,8 @@ namespace Empiria.Land.Registration {
                        $"El folio real '{this.UID}' está marcado como eliminado.");
 
       var tract = this.Tract.GetRecordingActs();
-      if (0 != tract.CountAll((x) => x.RecordingActType.RecordingRule.IsEndingAct &&
-                                     x.LandRecord.PresentationTime < presentationTime)) {
+      if (tract.CountAll((x) => x.RecordingActType.RecordingRule.IsEndingAct &&
+                                x.LandRecord.PresentationTime < presentationTime) != 0) {
         Assertion.RequireFail($"El folio real '{this.UID}' ya fue cancelado, fusionado o dividido en su totalidad. " +
                              "Ya no es posible agregarlo en este documento.");
       }

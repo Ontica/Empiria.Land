@@ -71,36 +71,35 @@ namespace Empiria.Land.Registration {
       try {
         var json = recordingActType.ExtensionData.Slice("RegistrationRule", false);
 
-        this.AppliesTo = json.Get<RecordingRuleApplication>("AppliesTo", RecordingRuleApplication.Undefined);
-        this.AutoCancel = json.Get<Int32>("AutoCancel", 0);
+        this.AppliesTo = json.Get("AppliesTo", RecordingRuleApplication.Undefined);
+        this.AutoCancel = json.Get("AutoCancel", 0);
 
-        this.ResourceRecordingStatus = json.Get<ResourceRecordingStatus>("ResourceStatus",
-                                                                         ResourceRecordingStatus.Undefined);
-        this.RecordingSection = json.Get<RecordingSection>("RecordingSectionId", RecordingSection.Empty);
-        this.SpecialCase = json.Get<string>("SpecialCase", String.Empty);
+        this.ResourceRecordingStatus = json.Get("ResourceStatus", ResourceRecordingStatus.Undefined);
+        this.RecordingSection = json.Get("RecordingSectionId", RecordingSection.Empty);
+        this.SpecialCase = json.Get("SpecialCase", String.Empty);
         this.RecordingActTypes = json.GetList<RecordingActType>("RecordingActTypes", false).ToArray();
         this.ReplaceableBy = json.GetList<RecordingActType>("ReplaceableBy", false).ToFixedList();
-        this.AllowPartitions = json.Get<bool>("AllowPartitions", false);
-        this.IsEndingAct = json.Get<bool>("IsEndingAct", false);
-        this.IsActive = json.Get<bool>("IsActive", json.HasItems);
-        this.AskForResourceName = json.Get<bool>("AskForResourceName", false);
-        this.ResourceTypeName = json.Get<string>("ResourceTypeName", String.Empty);
-        this.DynamicActNamePattern = json.Get<string>("DynamicActNamePattern", String.Empty);
+        this.AllowPartitions = json.Get("AllowPartitions", false);
+        this.IsEndingAct = json.Get("IsEndingAct", false);
+        this.IsActive = json.Get("IsActive", json.HasItems);
+        this.AskForResourceName = json.Get("AskForResourceName", false);
+        this.ResourceTypeName = json.Get("ResourceTypeName", String.Empty);
+        this.DynamicActNamePattern = json.Get("DynamicActNamePattern", String.Empty);
 
-        this.EditResource = json.Get<bool>("EditRealEstate", false);
-        this.EditAppraisalAmount = json.Get<bool>("EditAppraisalAmount", false);
-        this.EditOperationAmount = json.Get<bool>("EditOperationAmount", false);
+        this.EditResource = json.Get("EditRealEstate", false);
+        this.EditAppraisalAmount = json.Get("EditAppraisalAmount", false);
+        this.EditOperationAmount = json.Get("EditOperationAmount", false);
 
         this.Kinds = json.GetList<string>("Kinds", false).ToArray();
         this.Fields = json.GetList<string>("Fields", false).ToArray();
 
-        this.AllowNoParties = json.Get<bool>("AllowNoParties", false);
-        this.AllowUncompletedResource = json.Get<bool>("AllowUncompletedResource", false);
-        this.ChainedRecordingActType = json.Get<RecordingActType>("ChainedAct", RecordingActType.Empty);
+        this.AllowNoParties = json.Get("AllowNoParties", false);
+        this.AllowUncompletedResource = json.Get("AllowUncompletedResource", false);
+        this.ChainedRecordingActType = json.Get("ChainedAct", RecordingActType.Empty);
 
-        this.IsAnnotation = json.Get<bool>("IsAnnotation", false);
-        this.IsSoftLimitation = json.Get<bool>("IsSoftLimitation", false);
-        this.SkipPrelation = json.Get<bool>("SkipPrelation", false);
+        this.IsAnnotation = json.Get("IsAnnotation", false);
+        this.IsSoftLimitation = json.Get("IsSoftLimitation", false);
+        this.SkipPrelation = json.Get("SkipPrelation", false);
 
       } catch (Exception e) {
         throw new LandRegistrationException(LandRegistrationException.Msg.MistakeInRecordingRuleConfig, e,
