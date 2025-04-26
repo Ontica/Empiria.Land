@@ -35,24 +35,13 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    static internal CertificateDto CreateCertificate(CertificateType certificateType,
-                                                     LRSTransaction transaction,
-                                                     Resource recordableSubject) {
+    static internal CertificateDto CreateOnResourceCertificate(CertificateType certificateType,
+                                                               LRSTransaction transaction,
+                                                               Resource recordableSubject) {
 
       Assertion.Require(certificateType, nameof(certificateType));
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(recordableSubject, nameof(recordableSubject));
-
-      if (recordableSubject is RealEstate realEstate &&
-         (certificateType.Equals(CertificateType.Gravamen) ||
-          certificateType.Equals(CertificateType.LibertadGravamen))) {
-
-        if (realEstate.HasHardLimitationActs) {
-          certificateType = CertificateType.Gravamen;
-        } else {
-          certificateType = CertificateType.LibertadGravamen;
-        }
-      }
 
       Certificate certificate = Certificate.Create(certificateType, transaction, recordableSubject);
 

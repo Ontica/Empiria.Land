@@ -142,9 +142,9 @@ namespace Empiria.Land.Certificates.UseCases {
       } else {
         Resource recordableSubject = command.GetRecordableSubject();
 
-        certificate = CertificateIssuingService.CreateCertificate(certificateType,
-                                                                  transaction,
-                                                                  recordableSubject);
+        certificate = CertificateIssuingService.CreateOnResourceCertificate(certificateType,
+                                                                            transaction,
+                                                                            recordableSubject);
       }
 
       return CertificateRequestMapper.Map(transaction, certificate);

@@ -49,13 +49,13 @@ namespace Empiria.Land.Certificates {
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(onRecordableSubject, nameof(onRecordableSubject));
 
-      var certificate = new Certificate(certificateType) {
+      certificateType = DetermineCertificateType(certificateType, onRecordableSubject);
+
+      return new Certificate(certificateType) {
         CertificateID = certificateType.CreateCertificateID(),
         Transaction = transaction,
         OnRecordableSubject = onRecordableSubject
       };
-
-      return certificate;
     }
 
 
@@ -101,6 +101,7 @@ namespace Empiria.Land.Certificates {
         return (CertificateType) base.GetEmpiriaType();
       }
     }
+
 
     [DataField("CertificateUID", IsOptional = false)]
     public string CertificateID {
@@ -343,7 +344,11 @@ namespace Empiria.Land.Certificates {
         this.PostedBy = ExecutionServer.CurrentContact;
         this.PostingTime = DateTime.Now;
       }
+
+      UpdateCertificateTypeIfNeeded();
+
       this.AsText = GenerateCertificateText();
+
       CertificatesData.WriteCertificate(this);
     }
 
@@ -358,6 +363,27 @@ namespace Empiria.Land.Certificates {
     #endregion Methods
 
     #region Helpers
+
+    static private CertificateType DetermineCertificateType(CertificateType requestedType,
+                                                            Resource recordableSubject) {
+      if (recordableSubject is RealEstate realEstate &&
+          (requestedType.Equals(CertificateType.Gravamen) ||
+           requestedType.Equals(CertificateType.LibertadGravamen))) {
+
+        if (!realEstate.IsStillAlive) {
+          return CertificateType.Inscripcion;
+
+        } else if (realEstate.HasHardLimitationActs) {
+          return CertificateType.Gravamen;
+
+        } else {
+          return CertificateType.LibertadGravamen;
+        }
+      }
+
+      return requestedType;
+    }
+
 
     private void EnsureCanChangeStatusTo(CertificateStatus newStatus) {
       if (CanChangeStatusTo(newStatus)) {
@@ -374,6 +400,21 @@ namespace Empiria.Land.Certificates {
       return builder.Build();
     }
 
+
+    private void UpdateCertificateTypeIfNeeded() {
+      if (this.OnRecordableSubject.IsEmptyInstance) {
+        return;
+      }
+
+      CertificateType updatedCertificateType = DetermineCertificateType(CertificateType,
+                                                                        OnRecordableSubject);
+
+      if (updatedCertificateType.Equals(CertificateType)) {
+        return;
+      }
+
+      base.ReclassifyAs(updatedCertificateType);
+    }
     #endregion Helpers
 
   } // class Certificate
