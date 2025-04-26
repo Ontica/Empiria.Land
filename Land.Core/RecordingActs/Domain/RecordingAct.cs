@@ -339,6 +339,14 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
+    public string KindOrDisplayName {
+      get {
+        return Kind.Length != 0 ? Kind : DisplayName;
+      }
+    }
+
+
     public bool IsAmendment {
       get {
         return !this.AmendmentOf.IsEmptyInstance;

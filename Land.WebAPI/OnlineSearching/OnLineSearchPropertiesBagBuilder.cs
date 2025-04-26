@@ -221,9 +221,7 @@ namespace Empiria.Land.WebApi {
                   $"{recordingAct.OperationCurrency.Format(recordingAct.OperationAmount)}<br/>";
         }
 
-        var title = "<span class='bold-text'>" +
-                        (recordingAct.Kind.Length != 0 ? recordingAct.Kind: recordingAct.DisplayName) +
-                    "</span>";
+        var title = $"<span class='bold-text'>{recordingAct.KindOrDisplayName}</span>";
 
         propertyBag.Add(new PropertyBagItem(title, text));
 
@@ -503,10 +501,9 @@ namespace Empiria.Land.WebApi {
           var documentActsText = string.Empty;
 
           for (int i = 0; i < documentActs.Count; i++) {
-            documentActsText += "<span>" +
-                                 $"{i + 1}) " +
-                                 (documentActs[i].Kind.Length != 0 ? documentActs[i].Kind : documentActs[i].DisplayName) +
-                                "</span><br/>";
+
+            documentActsText += $"<span>{i + 1}) {documentActs[i].KindOrDisplayName}</span><br/>";
+
             if (documentActs[i].OperationAmount != 0) {
               documentActsText += $"<label class='small-text left-indented'>Monto de la operación:</label> " +
                                   $"{documentActs[i].OperationCurrency.Format(documentActs[i].OperationAmount)}<br/>";

@@ -437,19 +437,16 @@ namespace Empiria.Land.Pages {
 
       string x = String.Empty;
 
-      string recordingActName = _recordingAct.Kind.Length != 0
-                                    ? _recordingAct.Kind : _recordingAct.DisplayName;
-
       if (_recordingAct.Equals(incorporationAct)) {
         x = incorporationActText.Replace("{INDEX}", index.ToString());
 
       } else if (incorporationAct.BookEntry.IsEmptyInstance) {
         x = overAssociationWithIncorporationActInDigitalRecording.Replace("{INDEX}", index.ToString());
-        x = x.Replace("{RECORDING.ACT}", recordingActName);
+        x = x.Replace("{RECORDING.ACT}", _recordingAct.KindOrDisplayName);
 
       } else if (!incorporationAct.BookEntry.IsEmptyInstance) {
         x = overAssociationWithIncorporationActInPhysicalRecording.Replace("{INDEX}", index.ToString());
-        x = x.Replace("{RECORDING.ACT}", recordingActName);
+        x = x.Replace("{RECORDING.ACT}", _recordingAct.KindOrDisplayName);
         x = x.Replace("{ANTECEDENT}", incorporationAct.BookEntry.AsText);
 
       } else {
