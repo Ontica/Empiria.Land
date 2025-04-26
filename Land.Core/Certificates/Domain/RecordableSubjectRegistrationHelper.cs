@@ -80,6 +80,7 @@ namespace Empiria.Land.Certificates {
 
 
     private Resource CreateRecordableSubject(RecordableSubjectType subjectType) {
+
       switch (subjectType) {
         case RecordableSubjectType.Association:
           return new Association();

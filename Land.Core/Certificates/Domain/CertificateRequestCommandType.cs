@@ -7,7 +7,6 @@
 *  Summary  : Enumerates the commands used for request land certificates within a transaction context.       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Land.RecordableSubjects.Adapters;
 

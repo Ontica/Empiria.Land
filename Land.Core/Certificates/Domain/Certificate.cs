@@ -45,6 +45,7 @@ namespace Empiria.Land.Certificates {
     static internal Certificate Create(CertificateType certificateType,
                                        LRSTransaction transaction,
                                        Resource onRecordableSubject) {
+
       Assertion.Require(certificateType, nameof(certificateType));
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(onRecordableSubject, nameof(onRecordableSubject));
@@ -202,7 +203,7 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    [DataField("IssueMode", Default = CertificateIssueMode.Manual)]
+    [DataField("IssueMode", Default = CertificateIssueMode.Automatic)]
     internal CertificateIssueMode IssueMode {
       get;
       private set;
@@ -319,6 +320,7 @@ namespace Empiria.Land.Certificates {
           newStatus == CertificateStatus.Pending) {
         return true;
       }
+
       return false;
     }
 
@@ -366,22 +368,25 @@ namespace Empiria.Land.Certificates {
 
     static private CertificateType DetermineCertificateType(CertificateType requestedType,
                                                             Resource recordableSubject) {
-      if (recordableSubject is RealEstate realEstate &&
-          (requestedType.Equals(CertificateType.Gravamen) ||
-           requestedType.Equals(CertificateType.LibertadGravamen))) {
 
-        if (!realEstate.IsStillAlive) {
-          return CertificateType.Inscripcion;
-
-        } else if (realEstate.HasHardLimitationActs) {
-          return CertificateType.Gravamen;
-
-        } else {
-          return CertificateType.LibertadGravamen;
-        }
+      if (!requestedType.Equals(CertificateType.Gravamen) &&
+          !requestedType.Equals(CertificateType.LibertadGravamen)) {
+        return requestedType;
       }
 
-      return requestedType;
+      if (!(recordableSubject is RealEstate realEstate)) {
+        return requestedType;
+      }
+
+      if (!realEstate.IsStillAlive) {
+        return CertificateType.Inscripcion;
+
+      } else if (realEstate.HasHardLimitationActs) {
+        return CertificateType.Gravamen;
+
+      } else {
+        return CertificateType.LibertadGravamen;
+      }
     }
 
 
@@ -415,6 +420,7 @@ namespace Empiria.Land.Certificates {
 
       base.ReclassifyAs(updatedCertificateType);
     }
+
     #endregion Helpers
 
   } // class Certificate

@@ -22,9 +22,9 @@ namespace Empiria.Land.Certificates.Data {
                $"WHERE PropertyId = {recordableSubject.Id} AND CertificateStatus = 'C' " +
                 "ORDER BY CertificateId";
 
-      var operation = DataOperation.Parse(sql);
+      var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<Certificate>(operation);
+      return DataReader.GetFixedList<Certificate>(op);
     }
 
 
@@ -33,9 +33,9 @@ namespace Empiria.Land.Certificates.Data {
                $"WHERE TransactionId = {transaction.Id} AND CertificateStatus <> 'X' " +
                 "ORDER BY CertificateId";
 
-      var operation = DataOperation.Parse(sql);
+      var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<Certificate>(operation);
+      return DataReader.GetFixedList<Certificate>(op);
     }
 
 
@@ -43,9 +43,9 @@ namespace Empiria.Land.Certificates.Data {
       var sql = "SELECT * FROM LRSCertificates " +
                $"WHERE CertificateUID = '{certificateID}'";
 
-      var operation = DataOperation.Parse(sql);
+      var op = DataOperation.Parse(sql);
 
-      return DataReader.GetObject<Certificate>(operation, null);
+      return DataReader.GetObject<Certificate>(op, null);
     }
 
 

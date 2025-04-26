@@ -7,7 +7,7 @@
 *  Summary  : Describes the status of a land certificate.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
 
 namespace Empiria.Land.Certificates {
 

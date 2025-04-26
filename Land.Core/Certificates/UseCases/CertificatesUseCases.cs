@@ -32,9 +32,7 @@ namespace Empiria.Land.Certificates.UseCases {
     public bool ExistsCertificateID(string certificateID) {
       Assertion.Require(certificateID, nameof(certificateID));
 
-      var certificate = CertificatesData.TryGetCertificateWithID(certificateID);
-
-      return (certificate != null);
+      return CertificatesData.TryGetCertificateWithID(certificateID) != null;
     }
 
 
@@ -50,8 +48,7 @@ namespace Empiria.Land.Certificates.UseCases {
 
       var certificate = CertificatesData.TryGetCertificateWithID(certificateID);
 
-      Assertion.Require(certificate,
-                        $"A certificate with number {certificateID} was not found.");
+      Assertion.Require(certificate, $"A certificate with number {certificateID} was not found.");
 
       return CertificateMapper.Map(certificate);
     }
