@@ -639,14 +639,13 @@ namespace Empiria.Land.Transactions {
 
 
     private void UpdateFields(TransactionFields fields) {
-      this.TransactionType = PatchField(fields.TypeUID, this.TransactionType);
-      this.DocumentType = PatchField(fields.SubtypeUID, this.DocumentType);
+      this.TransactionType = Patcher.Patch(fields.TypeUID, this.TransactionType);
+      this.DocumentType = Patcher.Patch(fields.SubtypeUID, this.DocumentType);
 
-      this.Agency = PatchField(fields.AgencyUID, this.Agency);
-      this.RecorderOffice = PatchField(fields.FilingOfficeUID, this.RecorderOffice);
+      this.Agency = Patcher.Patch(fields.AgencyUID, this.Agency);
+      this.RecorderOffice = Patcher.Patch(fields.FilingOfficeUID, this.RecorderOffice);
 
-      this.RequestedBy = PatchField(fields.RequestedBy, this.RequestedBy);
-      this.RequestedBy = EmpiriaString.TrimAll(this.RequestedBy);
+      this.RequestedBy = Patcher.PatchClean(fields.RequestedBy, this.RequestedBy);
 
       Assertion.Require(RequestedBy, nameof(RequestedBy));
 
