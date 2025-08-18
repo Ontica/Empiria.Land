@@ -7,7 +7,6 @@
 *  Summary  : Web Api used for transaction payments.                                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -63,11 +62,11 @@ namespace Empiria.Land.Transactions.Payments.WebApi {
 
     [HttpPost]
     [Route("v5/land/transactions/{transactionUID:length(19)}/set-payment")]
-    public SingleObjectModel SetPayment([FromUri] string transactionUID,
+    public async Task<SingleObjectModel> SetPayment([FromUri] string transactionUID,
                                         [FromBody] PaymentDto fields) {
 
       using (var usecases = TransactionPaymentUseCases.UseCaseInteractor()) {
-        TransactionDto transactionDto = usecases.SetPayment(transactionUID, fields);
+        TransactionDto transactionDto = await usecases.SetPayment(transactionUID, fields);
 
         return new SingleObjectModel(this.Request, transactionDto);
       }

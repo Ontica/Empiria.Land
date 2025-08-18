@@ -7,7 +7,6 @@
 *  Summary  : Use cases for transaction payments.                                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 using System.Threading.Tasks;
 
 using Empiria.Services;
@@ -80,8 +79,8 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
     }
 
 
-    public TransactionDto SetPayment(string transactionUID,
-                                     PaymentDto paymentFields) {
+    public async Task<TransactionDto> SetPayment(string transactionUID,
+                                                 PaymentDto paymentFields) {
       Assertion.Require(paymentFields, nameof(paymentFields));
 
       paymentFields.AssertValid();
@@ -90,6 +89,15 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
 
       Assertion.Require(transaction.ControlData.CanEditPayment,
                        $"Can not set payment for transaction '{transactionUID}'.");
+
+      var connector = new PaymentServicesConnector();
+
+      string status = await connector.GetPaymentStatus(transaction.PaymentData.PaymentOrder);
+
+      if (status != "ok") {
+        Assertion.RequireFail($"No existe el pago registrado en la Secretaría " +
+                              $"de Finanzas para el trámite: '{transactionUID}'.");
+      }
 
       transaction.PaymentData.SetPayment(paymentFields);
 

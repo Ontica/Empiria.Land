@@ -40,7 +40,7 @@ namespace Empiria.Land.Tests.Transactions.Payments {
     }
 
     ~TransactionPaymentUseCasesTests() {
-       _usecases.Dispose();
+      _usecases.Dispose();
     }
 
     #endregion Initialization
@@ -73,13 +73,13 @@ namespace Empiria.Land.Tests.Transactions.Payments {
 
 
     [Fact]
-    public void Should_Set_And_Cancel_A_Transaction_Payment() {
+    public async void Should_Set_And_Cancel_A_Transaction_Payment() {
       TransactionDto transaction = TransactionRandomizer.TryGetAReadyForPaymentTransaction();
 
       PaymentDto paymentFields =
             TransactionRandomizer.GetRandomPaymentFields(transaction.PaymentOrder.Total);
 
-      TransactionDto withPayment = _usecases.SetPayment(transaction.UID, paymentFields);
+      TransactionDto withPayment = await _usecases.SetPayment(transaction.UID, paymentFields);
 
       Assert.Equal(transaction.UID, withPayment.UID);
       Assert.False(withPayment.Actions.Can.GeneratePaymentOrder);

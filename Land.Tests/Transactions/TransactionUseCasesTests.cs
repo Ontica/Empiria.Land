@@ -43,7 +43,7 @@ namespace Empiria.Land.Tests.Transactions {
     }
 
     ~TransactionUseCasesTests() {
-       _usecases.Dispose();
+      _usecases.Dispose();
     }
 
     #endregion Initialization
@@ -56,7 +56,7 @@ namespace Empiria.Land.Tests.Transactions {
 
       var clone = _usecases.CloneTransaction(baseTransaction.UID);
 
-     // Assert.Equal(TransactionStatus.Payment, clone.Status);
+      // Assert.Equal(TransactionStatus.Payment, clone.Status);
       Assert.NotEmpty(clone.TransactionID);
       Assert.NotEqual(baseTransaction.TransactionID, clone.TransactionID);
       Assert.Equal(ExecutionServer.DateMaxValue, clone.PresentationTime);
@@ -244,7 +244,7 @@ namespace Empiria.Land.Tests.Transactions {
               TransactionRandomizer.GetRandomPaymentFields(transaction.PaymentOrder.Total);
 
 
-        transaction = paymentUseCases.SetPayment(transaction.UID, paymentFields);
+        transaction = await paymentUseCases.SetPayment(transaction.UID, paymentFields);
       }
 
       Assert.False(transaction.Actions.Can.GeneratePaymentOrder);
