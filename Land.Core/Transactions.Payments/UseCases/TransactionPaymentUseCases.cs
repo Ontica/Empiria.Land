@@ -124,7 +124,7 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
                               $"de Finanzas para el trámite: '{transaction.UID}'.");
 
       } else {
-        throw Assertion.EnsureNoReachThisCode($"Estado de pago no reconocido {status}");
+        throw Assertion.EnsureNoReachThisCode($"Estado de pago no reconocido '{status}'.");
       }
     }
 

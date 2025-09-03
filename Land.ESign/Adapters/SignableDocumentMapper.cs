@@ -1,14 +1,12 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Electronic Sign                            Component : Adpaters Layer                          *
+*  Module   : Electronic Sign                            Component : Adapters Layer                          *
 *  Assembly : Empiria.Land.ESign.dll                     Pattern   : Mapper                                  *
 *  Type     : SignableDocumentMapper                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Maps electronic signable documents to their data transfer objects.                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
-using Empiria.Land.Transactions.Adapters;
 
 namespace Empiria.Land.ESign.Adapters {
 

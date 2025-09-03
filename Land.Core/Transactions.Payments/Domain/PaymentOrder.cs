@@ -156,14 +156,15 @@ namespace Empiria.Land.Transactions.Payments {
         return JsonObject.Empty;
       }
 
-      var json = new JsonObject();
+      var json = new JsonObject {
+        { "uid", this.UID },
+        { "issuer", this.Issuer },
+        { "version", this.Version },
+        { "issueTime", this.IssueTime },
+        { "dueDate", this.DueDate },
+        { "total", this.Total }
+      };
 
-      json.Add("uid", this.UID);
-      json.Add("issuer", this.Issuer);
-      json.Add("version", this.Version);
-      json.Add("issueTime", this.IssueTime);
-      json.Add("dueDate", this.DueDate);
-      json.Add("total", this.Total);
       json.AddIfValue("status", this.Status);
 
       if (this.Attributes.Count == 0) {

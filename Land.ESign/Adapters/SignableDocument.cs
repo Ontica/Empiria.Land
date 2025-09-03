@@ -1,6 +1,6 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Electronic Sign                            Component : Adpaters Layer                          *
+*  Module   : Electronic Sign                            Component : Adapters Layer                          *
 *  Assembly : Empiria.Land.ESign.dll                     Pattern   : Information holder                      *
 *  Type     : SignableDocument                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
