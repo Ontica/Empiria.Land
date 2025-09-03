@@ -112,9 +112,19 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
 
       string status = await connector.GetPaymentStatus(transaction.PaymentData.PaymentOrder);
 
-      if (status != "ok") {
+      if (status == "PAGADO") {
+        return;
+
+      } else if (status == "PENDIENTE DE PAGO") {
+        Assertion.RequireFail($"Este trámite no ha sido pagado, o el pago aún está marcado como " +
+                              $"pendiente en la Secretaría de Finanzas: '{transaction.UID}'.");
+
+      } else if (string.IsNullOrWhiteSpace(status)) {
         Assertion.RequireFail($"No existe el pago registrado en la Secretaría " +
                               $"de Finanzas para el trámite: '{transaction.UID}'.");
+
+      } else {
+        throw Assertion.EnsureNoReachThisCode($"Estado de pago no reconocido {status}");
       }
     }
 
