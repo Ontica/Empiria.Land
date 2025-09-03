@@ -8,12 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System.Threading.Tasks;
-
-using Empiria.Services;
-
 using Empiria.Land.Transactions.Adapters;
-
 using Empiria.Land.Transactions.Payments.Adapters;
+using Empiria.Services;
 
 namespace Empiria.Land.Transactions.Payments.UseCases {
 
@@ -90,14 +87,7 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
       Assertion.Require(transaction.ControlData.CanEditPayment,
                        $"Can not set payment for transaction '{transactionUID}'.");
 
-      var connector = new PaymentServicesConnector();
-
-      string status = await connector.GetPaymentStatus(transaction.PaymentData.PaymentOrder);
-
-      if (status != "ok") {
-        Assertion.RequireFail($"No existe el pago registrado en la Secretaría " +
-                              $"de Finanzas para el trámite: '{transactionUID}'.");
-      }
+      await EnsureIsPayed(transaction, paymentFields);
 
       transaction.PaymentData.SetPayment(paymentFields);
 
@@ -107,6 +97,27 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
     #endregion Use cases
 
     #region Helper methods
+
+    private async Task EnsureIsPayed(LRSTransaction transaction, PaymentDto paymentFields) {
+
+      if (!transaction.PaymentData.HasPaymentOrder) {
+        return;
+      }
+
+      if (!EmpiriaString.IsInteger(transaction.PaymentData.PaymentOrder.UID)) {
+        transaction.PaymentData.PaymentOrder.UID = paymentFields.ReceiptNo;
+      }
+
+      var connector = new PaymentServicesConnector();
+
+      string status = await connector.GetPaymentStatus(transaction.PaymentData.PaymentOrder);
+
+      if (status != "ok") {
+        Assertion.RequireFail($"No existe el pago registrado en la Secretaría " +
+                              $"de Finanzas para el trámite: '{transaction.UID}'.");
+      }
+    }
+
 
     private LRSTransaction ParseTransaction(string transactionUID) {
       Assertion.Require(transactionUID, nameof(transactionUID));
