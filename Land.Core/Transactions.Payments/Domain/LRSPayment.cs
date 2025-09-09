@@ -45,6 +45,7 @@ namespace Empiria.Land.Transactions.Payments {
       return BaseObject.ParseId<LRSPayment>(id);
     }
 
+
     static public LRSPayment Empty {
       get {
         return BaseObject.ParseEmpty<LRSPayment>();
@@ -66,7 +67,9 @@ namespace Empiria.Land.Transactions.Payments {
 
 
     public LRSTransaction Transaction {
-      get { return _transaction.Value; }
+      get {
+        return _transaction.Value;
+      }
       private set {
         _transaction = LazyInstance<LRSTransaction>.Parse(value);
       }
@@ -76,8 +79,12 @@ namespace Empiria.Land.Transactions.Payments {
     [DataField("PaymentOfficeId")]
     LazyInstance<Organization> _paymentOffice = LazyInstance<Organization>.Empty;
     public Organization PaymentOffice {
-      get { return _paymentOffice.Value; }
-      private set { _paymentOffice = LazyInstance<Organization>.Parse(value); }
+      get {
+        return _paymentOffice.Value;
+      }
+      private set {
+        _paymentOffice = LazyInstance<Organization>.Parse(value);
+      }
     }
 
     [DataField("ReceiptNo", Default = "No asignado")]

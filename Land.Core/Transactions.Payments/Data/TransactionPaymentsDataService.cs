@@ -33,6 +33,27 @@ namespace Empiria.Land.Transactions.Payments.Data {
     }
 
 
+    static internal LRSPayment TryGetPayment(string receiptNo) {
+      Assertion.Require(receiptNo, nameof(receiptNo));
+
+
+      var sql = "SELECT * FROM LRSPayments " +
+               $"WHERE ReceiptNo = '{receiptNo}' AND PaymentStatus <> 'X' " +
+               $"ORDER BY ReceiptIssuedTime DESC";
+
+      var op = DataOperation.Parse(sql);
+
+      var list = DataReader.GetFixedList<LRSPayment>(op)
+                           .FindAll(x => x.Transaction.InternalControlNumber.Length != 0);
+
+      if (list.Count != 0) {
+        return list[0];
+      }
+
+      return null;
+    }
+
+
     static internal void WritePayment(LRSPayment o) {
       var op = DataOperation.Parse("writeLRSPayment", o.Id, o.Transaction.Id,
                                    o.PaymentOffice.Id, o.ReceiptNo, o.ReceiptTotal, o.ReceiptIssuedTime,

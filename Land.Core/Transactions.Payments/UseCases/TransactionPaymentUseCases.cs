@@ -7,10 +7,15 @@
 *  Summary  : Use cases for transaction payments.                                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System.Threading.Tasks;
+
+using Empiria.Services;
+
 using Empiria.Land.Transactions.Adapters;
 using Empiria.Land.Transactions.Payments.Adapters;
-using Empiria.Services;
+
+using Empiria.Land.Transactions.Payments.Data;
 
 namespace Empiria.Land.Transactions.Payments.UseCases {
 
@@ -89,6 +94,8 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
 
       await EnsureIsPayed(transaction, paymentFields);
 
+      EnsureReceiptNumberIsNotReused(paymentFields);
+
       transaction.PaymentData.SetPayment(paymentFields);
 
       return TransactionMapper.Map(transaction);
@@ -125,6 +132,16 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
 
       } else {
         throw Assertion.EnsureNoReachThisCode($"Estado de pago no reconocido '{status}'.");
+      }
+    }
+
+
+    private void EnsureReceiptNumberIsNotReused(PaymentDto paymentFields) {
+      var payment = TransactionPaymentsDataService.TryGetPayment(paymentFields.ReceiptNo);
+
+      if (payment != null) {
+        Assertion.RequireFail($"El recibo {paymentFields.ReceiptNo} ya fue " +
+                              $"utilizado en el trámite {payment.Transaction.UID}.");
       }
     }
 
