@@ -18,6 +18,8 @@ namespace Empiria.Land.Integration.PaymentServices {
 
     Task<decimal> CalculateVariableFee(string serviceUID, decimal taxableBase);
 
+    Task EnsureIsPayed(string paymentOrderUID, decimal amount);
+
     Task<IPaymentOrder> GeneratePaymentOrderFor(PaymentOrderRequestDto paymentOrderRequest);
 
     Task<string> GetPaymentStatus(string paymentOrderUID);

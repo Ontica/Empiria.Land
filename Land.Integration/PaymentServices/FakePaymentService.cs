@@ -7,6 +7,7 @@
 *  Summary  : Fake service used to test the integration with a IPaymentService provider.                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Threading.Tasks;
 
@@ -26,12 +27,19 @@ namespace Empiria.Land.Integration.PaymentServices {
     }
 
 
-    public async Task<IPaymentOrder> GeneratePaymentOrderFor(PaymentOrderRequestDto paymentOrderRequest) {
-      var o = new PaymentOrderDto();
+    public Task EnsureIsPayed(string paymentOrderUID, decimal amount) {
+      return Task.CompletedTask;
+    }
 
-      o.UID = Guid.NewGuid().ToString().ToLower();
-      o.IssueTime = DateTime.Now;
-      o.DueDate = o.IssueTime.Date.AddDays(30);
+
+    public async Task<IPaymentOrder> GeneratePaymentOrderFor(PaymentOrderRequestDto paymentOrderRequest) {
+      var o = new PaymentOrderDto {
+        UID = Guid.NewGuid().ToString().ToLower(),
+        IssueTime = DateTime.Now,
+        DueDate = DateTime.Now.Date.AddDays(30),
+        Status = "Pendiente.FakeService",
+        Issuer = "Empiria.Land.FakeService"
+      };
 
       foreach (var concept in paymentOrderRequest.Concepts) {
         if (concept.TaxableBase != 0) {
@@ -41,14 +49,9 @@ namespace Empiria.Land.Integration.PaymentServices {
         }
       }
 
-      o.Attributes.Add("controlTag", Guid.NewGuid().ToString().Substring(0, 8));
-      //o.Attributes.Add("url", $"https://registropublico.tlaxcala.gob.mx/intranet/land.registration.system.transactions/bank.payment.order.aspx?uid=TR-42NF7-9WD83-0&externalUID=f60d9364-313e-46b9-99f9-8b0089ba07b1");
-      o.Attributes.Add("url",
-        $"https://registropublico.tlaxcala.gob.mx/intranet/land.registration.system.transactions/orden.de.pago.fake.pdf");
-      o.Attributes.Add("mediaType", "application/pdf");
-
       return o;
     }
+
 
     public Task<string> GetPaymentStatus(string paymentOrderUID) {
       return Task.FromResult("Pendiente.FakeService");

@@ -51,6 +51,20 @@ namespace Empiria.Land.Transactions.Payments {
     }
 
 
+    internal Task EnsureIsPayed(string paymentOrderUID, decimal amount) {
+      if (!ConnectedToPaymentOrderServices) {
+        return Task.CompletedTask;
+      }
+
+      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
+      Assertion.Require(amount >= 0, "El importe debe ser mayor o igual a cero.");
+
+      IPaymentService externalService = GetPaymentOrderService();
+
+      return externalService.EnsureIsPayed(paymentOrderUID, amount);
+    }
+
+
     internal Task<IPaymentOrder> GeneratePaymentOrder(LRSTransaction transaction) {
       Assertion.Require(transaction, "transaction");
 
