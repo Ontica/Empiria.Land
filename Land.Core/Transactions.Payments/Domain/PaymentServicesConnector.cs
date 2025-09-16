@@ -72,16 +72,16 @@ namespace Empiria.Land.Transactions.Payments {
     }
 
 
-    internal Task<string> GetPaymentStatus(PaymentOrder paymentOrder) {
+    internal Task<string> GetPaymentStatus(string paymentOrderUID) {
       if (!ConnectedToPaymentOrderServices) {
         return Task.FromResult("Desconocido");
       }
 
-      Assertion.Require(paymentOrder, "paymentOrder");
+      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 
       IPaymentService externalService = GetPaymentOrderService();
 
-      return externalService.GetPaymentStatus(paymentOrder);
+      return externalService.GetPaymentStatus(paymentOrderUID);
     }
 
 

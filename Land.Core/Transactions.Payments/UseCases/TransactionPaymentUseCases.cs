@@ -111,13 +111,14 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
         return;
       }
 
-      if (!EmpiriaString.IsInteger(transaction.PaymentData.PaymentOrder.UID)) {
-        transaction.PaymentData.PaymentOrder.UID = paymentFields.ReceiptNo;
+      string paymentOrderUID = transaction.PaymentData.PaymentOrder.UID;
+      if (!EmpiriaString.IsInteger(paymentOrderUID)) {
+        paymentOrderUID = paymentFields.ReceiptNo;
       }
 
       var connector = new PaymentServicesConnector();
 
-      string status = await connector.GetPaymentStatus(transaction.PaymentData.PaymentOrder);
+      string status = await connector.GetPaymentStatus(paymentOrderUID);
 
       if (status == "PAGADO") {
         return;
