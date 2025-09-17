@@ -9,8 +9,6 @@
 *              Secondary roles are of the form: 'X plays the role R with respect of Y'.                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-
 namespace Empiria.Land.Registration {
 
   /// <summary>Describes the role that plays a party with respect to another party.
@@ -37,10 +35,10 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField(GeneralObject.ExtensionDataFieldName + ".InverseRoleName", IsOptional = true)]
     public string InverseRoleName {
-      get;
-      private set;
+      get {
+        return base.ExtendedDataField.Get<string>("InverseRoleName", string.Empty);
+      }
     }
 
     #endregion Public properties

@@ -140,7 +140,7 @@ namespace Empiria.Land.Transactions {
 
     #region Properties
 
-    [DataField("TransactionUID", IsOptional = false)]
+    [DataField("TransactionUID")]
     private string _transactionUID = "Nuevo trámite";
 
     public override string UID {

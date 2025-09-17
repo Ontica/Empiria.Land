@@ -68,14 +68,14 @@ namespace Empiria.Land.Registration {
 
     #region Public properties
 
-    [DataField("PropertyGUID", IsOptional = false)]
+    [DataField("PropertyGUID")]
     public string GUID {
       get;
       private set;
     }
 
 
-    [DataField("PropertyUID", IsOptional = false)]
+    [DataField("PropertyUID")]
     private string _propertyUID = String.Empty;
 
     public override string UID {
@@ -275,7 +275,7 @@ namespace Empiria.Land.Registration {
           if (recordingAct.Resource is RealEstate &&
               ((RealEstate) recordingAct.Resource).IsPartitionOf.Equals(this) &&
               recordingAct.RecordingActType.RecordingRule.ChainedRecordingActType.Equals(chainedRecordingActType)) {
-              recordingAct.Validator.AssertChainedRecordingAct();
+            recordingAct.Validator.AssertChainedRecordingAct();
             return;
           }
         }

@@ -104,7 +104,7 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    [DataField("CertificateUID", IsOptional = false)]
+    [DataField("CertificateUID")]
     public string CertificateID {
       get;
       private set;
@@ -118,7 +118,7 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    [DataField("TransactionId", IsOptional = false)]
+    [DataField("TransactionId")]
     public LRSTransaction Transaction {
       get;
       private set;

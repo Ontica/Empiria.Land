@@ -77,7 +77,9 @@ namespace Empiria.Land.Registration {
 
 
     static public LandRecord Empty {
-      get { return BaseObject.ParseEmpty<LandRecord>(); }
+      get {
+        return BaseObject.ParseEmpty<LandRecord>();
+      }
     }
 
 
@@ -99,7 +101,7 @@ namespace Empiria.Land.Registration {
     }
 
 
-    [DataField("LandRecordUID", IsOptional = false)]
+    [DataField("LandRecordUID")]
     private string _documentUID = String.Empty;
 
     public override string UID {
