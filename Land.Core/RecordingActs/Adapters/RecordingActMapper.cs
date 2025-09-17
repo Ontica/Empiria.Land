@@ -27,7 +27,9 @@ namespace Empiria.Land.Registration.Adapters {
         OperationAmount = recordingAct.OperationAmount,
         CurrencyUID = recordingAct.OperationCurrency.UID,
         RecordableSubject = new NamedEntityDto(recordingAct.Resource.UID,
-                                               recordingAct.Resource.Description),
+                                               recordingAct.Resource.Description.Length == 0 ?
+                                                              recordingAct.Resource.UID :
+                                                              recordingAct.Resource.Description),
         Parties = PartyMapper.Map(recordingAct.Parties.List),
         Status = recordingAct.Status,
         Actions = MapControlData(recordingAct)
@@ -43,19 +45,13 @@ namespace Empiria.Land.Registration.Adapters {
     #region Private methods
 
     static private RecordingActControlDataDto MapControlData(RecordingAct recordingAct) {
-      var dto = new RecordingActControlDataDto();
+      var editableFields = MapEditableFields(recordingAct);
 
-      dto.IsEditable = recordingAct.IsEditable;
-
-      dto.EditableFields = MapEditableFields(recordingAct);
-
-      if (!recordingAct.IsEditable) {
-        return dto;
-      }
-
-      dto.EditionValues = MapEditionValues(recordingAct, dto.EditableFields);
-
-      return dto;
+      return new RecordingActControlDataDto {
+        IsEditable = recordingAct.IsEditable,
+        EditableFields = editableFields,
+        EditionValues = MapEditionValues(recordingAct, editableFields)
+      };
     }
 
 
