@@ -112,9 +112,18 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
       }
 
       string paymentOrderUID = transaction.PaymentData.PaymentOrder.UID;
-      if (!EmpiriaString.IsInteger(paymentOrderUID)) {
+
+      if (EmpiriaString.IsInteger(paymentOrderUID)) {
+        Assertion.Require(paymentOrderUID == paymentFields.ReceiptNo,
+              "El número de recibo proporcionado no coincide con el número del recibo " +
+              "asociado a la orden de pago generada para este trámite.");
+
+      } else {
         paymentOrderUID = paymentFields.ReceiptNo;
       }
+
+      Assertion.Require(EmpiriaString.IsInteger(paymentOrderUID),
+                        "El identificador del recibo de pago debe ser numérico.");
 
       var connector = new PaymentServicesConnector();
 
