@@ -7,7 +7,6 @@
 *  Summary  : Provides database read and write methods for land records.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 using System.Collections.Generic;
 
 using Empiria.Data;
@@ -58,9 +57,9 @@ namespace Empiria.Land.Data {
                 $"FROM LRSLandRecords " +
                 $"WHERE ImagingControlID LIKE '{prefix}-%'";
 
-      var imagingControlID = DataReader.GetScalar<String>(DataOperation.Parse(sql), String.Empty);
+      var imagingControlID = DataReader.GetScalar(DataOperation.Parse(sql), string.Empty);
 
-      if (imagingControlID != String.Empty) {
+      if (imagingControlID != string.Empty) {
         var counter = int.Parse(imagingControlID.Split('-')[2]);
         counter++;
         return prefix + "-" + counter.ToString("00000");
@@ -83,7 +82,9 @@ namespace Empiria.Land.Data {
                $"SET LandRecordDIF = '{landRecord.Security.Integrity.GetUpdatedHashCode()}' " +
                $"WHERE LandRecordId = {landRecord.Id}";
 
-      DataWriter.Execute(DataOperation.Parse(sql));
+      var op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
     }
 
 

@@ -47,6 +47,7 @@ namespace Empiria.Land.Transactions.Payments.WebApi {
       }
     }
 
+
     [HttpPost]
     [Route("v5/land/transactions/{transactionUID:length(19)}/generate-payment-order")]
     public async Task<SingleObjectModel> GeneratePaymentOrder([FromUri] string transactionUID) {

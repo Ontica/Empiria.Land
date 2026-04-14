@@ -17,8 +17,6 @@ using Empiria.Measurement;
 
 using Empiria.Land.Data;
 using Empiria.Land.Providers;
-using System.Collections.Generic;
-using System.Collections;
 
 namespace Empiria.Land.Registration {
 
@@ -186,7 +184,9 @@ namespace Empiria.Land.Registration {
     [DataField("PartitionOfId")]
     private LazyInstance<RealEstate> _isPartitionOf = LazyInstance<RealEstate>.Empty;
     public RealEstate IsPartitionOf {
-      get { return _isPartitionOf.Value; }
+      get {
+        return _isPartitionOf.Value;
+      }
       private set {
         _isPartitionOf = LazyInstance<RealEstate>.Parse(value);
       }
@@ -201,7 +201,9 @@ namespace Empiria.Land.Registration {
     [DataField("MergedIntoId")]
     private LazyInstance<RealEstate> _mergedInto = LazyInstance<RealEstate>.Empty;
     public RealEstate MergedInto {
-      get { return _mergedInto.Value; }
+      get {
+        return _mergedInto.Value;
+      }
       private set {
         _mergedInto = LazyInstance<RealEstate>.Parse(value);
       }
@@ -236,7 +238,7 @@ namespace Empiria.Land.Registration {
                       "Predio " + this.UID +
                       ":\nSe requiere proporcionar el municipio donde se ubica el predio.");
       Assertion.Require(this.LotSize != Quantity.Zero,
-                      "Predio " + this.UID  +
+                      "Predio " + this.UID +
                       ":\nSe requiere proporcionar la superficie del predio.");
     }
 

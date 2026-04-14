@@ -21,7 +21,6 @@ namespace Empiria.Land.Registration.WebApi {
 
     #region Web Apis
 
-
     [HttpGet]
     [Route("v5/land/registration/{landRecordUID:guid}")]
     public SingleObjectModel GetLandRecord([FromUri] string landRecordUID) {
