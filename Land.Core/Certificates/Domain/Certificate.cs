@@ -230,6 +230,13 @@ namespace Empiria.Land.Certificates {
       private set;
     }
 
+    public CertificateSecurity Security {
+      get {
+        return new CertificateSecurity(this);
+      }
+    }
+
+
     [DataObject]
     public CertificateSecurityData SecurityData {
       get;
@@ -305,28 +312,8 @@ namespace Empiria.Land.Certificates {
 
     #region Methods
 
-    internal bool CanChangeStatusTo(CertificateStatus newStatus) {
-      CertificateStatus currentStatus = this.Status;
-
-      if (currentStatus == CertificateStatus.Pending &&
-         newStatus == CertificateStatus.Deleted) {
-        return true;
-      }
-      if (currentStatus == CertificateStatus.Pending &&
-          newStatus == CertificateStatus.Closed) {
-        return true;
-      }
-      if (currentStatus == CertificateStatus.Closed &&
-          newStatus == CertificateStatus.Pending) {
-        return true;
-      }
-
-      return false;
-    }
-
-
     internal void Close() {
-      EnsureCanChangeStatusTo(CertificateStatus.Closed);
+      Security.EnsureCanChangeStatusTo(CertificateStatus.Closed);
 
       this.IssueTime = DateTime.Now;
       this.Status = CertificateStatus.Closed;
@@ -334,7 +321,7 @@ namespace Empiria.Land.Certificates {
 
 
     internal void Delete() {
-      EnsureCanChangeStatusTo(CertificateStatus.Deleted);
+      Security.EnsureCanChangeStatusTo(CertificateStatus.Deleted);
 
       this.Status = CertificateStatus.Deleted;
     }
@@ -356,7 +343,7 @@ namespace Empiria.Land.Certificates {
 
 
     internal void Open() {
-      EnsureCanChangeStatusTo(CertificateStatus.Pending);
+      Security.EnsureCanChangeStatusTo(CertificateStatus.Pending);
 
       this.IssueTime = ExecutionServer.DateMaxValue;
       this.Status = CertificateStatus.Pending;
@@ -387,15 +374,6 @@ namespace Empiria.Land.Certificates {
       } else {
         return CertificateType.LibertadGravamen;
       }
-    }
-
-
-    private void EnsureCanChangeStatusTo(CertificateStatus newStatus) {
-      if (CanChangeStatusTo(newStatus)) {
-        return;
-      }
-      Assertion.RequireFail($"The status of the certificate with ID '{this.CertificateID}' " +
-                            $"cannot be changed to {newStatus}.");
     }
 
 

@@ -48,15 +48,15 @@ namespace Empiria.Land.Certificates.Adapters {
     #region Helpers
 
     static private MediaData GetCertificateMediaLink(Certificate certificate) {
-      return new MediaData("text/html", "http://10.113.5.57/pages/recording-stamps/recording.stamp.aspx?uid=RP-ZS-38UB-92AP54-RH74XA");
+      return new MediaData("text/html", $"http://10.113.5.57/pages/certificates/certificate.aspx?uid={certificate.UID}&landRecordUID=RP-ZS-25WU-74CA39-HY87LF");
     }
 
 
     static private CertificateActions MapActions(Certificate certificate) {
       return new CertificateActions {
-        CanClose = certificate.CanChangeStatusTo(CertificateStatus.Closed),
-        CanDelete = certificate.CanChangeStatusTo(CertificateStatus.Deleted),
-        CanOpen = certificate.CanChangeStatusTo(CertificateStatus.Pending)
+        CanClose = certificate.Security.CanChangeStatusTo(CertificateStatus.Closed),
+        CanDelete = certificate.Security.CanChangeStatusTo(CertificateStatus.Deleted),
+        CanOpen = certificate.Security.CanChangeStatusTo(CertificateStatus.Pending)
       };
     }
 
