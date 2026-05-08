@@ -39,6 +39,20 @@ namespace Empiria.Land.Certificates.Data {
     }
 
 
+    static internal void SaveSecurityData(Certificate o) {
+
+      var op = DataOperation.Parse("setLRSCertificateSecurityData",
+        o.Id, o.UID, (char) o.SecurityData.SignStatus,
+        (char) o.SecurityData.SignType,
+        o.SecurityData.SignedBy.Id, o.SecurityData.SignedTime,
+        Security.Cryptographer.Encrypt(Security.EncryptionMode.Standard,
+                                       o.SecurityData.ExtData.ToString()),
+        o.Security.Integrity.GetUpdatedHashCode());
+
+      DataWriter.Execute(op);
+    }
+
+
     static internal Certificate TryGetCertificateWithID(string certificateID) {
       var sql = "SELECT * FROM LRSCertificates " +
                $"WHERE CertificateUID = '{certificateID}'";
