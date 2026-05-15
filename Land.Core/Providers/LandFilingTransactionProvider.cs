@@ -24,7 +24,7 @@ using Empiria.Land.Transactions.Workflow;
 namespace Empiria.Land.Providers {
 
   /// <summary>Provides land transaction services through external electronic filing requests.</summary>
-  public class LandFilingTransactionProvider: IFilingTransactionProvider {
+  public class LandFilingTransactionProvider : IFilingTransactionProvider {
 
     #region Fields
 
@@ -108,7 +108,9 @@ namespace Empiria.Land.Providers {
       var certificates = transaction.GetIssuedCertificates();
 
       foreach (var certificate in certificates) {
-          list.Add(MapToEFilingDocumentDTO(certificate));
+        var certificateDto = CertificateMapper.Map(certificate);
+
+        list.Add(MapToEFilingDocumentDTO(certificateDto));
       }
 
       return list.ToFixedList();

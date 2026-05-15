@@ -104,14 +104,12 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    static internal FixedList<CertificateDto> GetTransactionCertificates(LRSTransaction transaction) {
+    static internal FixedList<Certificate> GetTransactionCertificates(LRSTransaction transaction) {
       if (transaction.IsEmptyInstance) {
-        return new FixedList<CertificateDto>();
+        return new FixedList<Certificate>();
       }
 
-      var certificates = CertificatesData.GetTransactionCertificates(transaction);
-
-      return CertificateMapper.Map(certificates);
+      return CertificatesData.GetTransactionCertificates(transaction);
     }
 
 

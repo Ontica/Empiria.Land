@@ -234,7 +234,7 @@ namespace Empiria.Land.WebApi {
       var securityData = landRecord.SecurityData;
 
       propertyBag.Add(new PropertyBagItem("Verificación de elementos de seguridad", String.Empty,
-                                          securityData.IsSigned ? "section": "section-error"));
+                                          securityData.IsSigned ? "section" : "section-error"));
 
       if (securityData.IsUnsigned && securityData.UsesESign) {
         propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada",
@@ -550,7 +550,7 @@ namespace Empiria.Land.WebApi {
       }
 
       foreach (var certificate in transaction.GetIssuedCertificates()) {
-        propertyBag.Add(new PropertyBagItem("Certificado", certificate.Type + "<br/>" +
+        propertyBag.Add(new PropertyBagItem("Certificado", certificate.CertificateType.DisplayName + "<br/>" +
                                                            GetCertificateUIDAsLink(certificate.UID) +
                                                            GetPrintableCertificateLink(certificate.UID, transaction.Workflow.CurrentStatus, messageUID)));
       }

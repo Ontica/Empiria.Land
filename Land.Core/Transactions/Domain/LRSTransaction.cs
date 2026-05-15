@@ -16,8 +16,6 @@ using Empiria.Land.Providers;
 
 using Empiria.Land.Certificates;
 
-using Empiria.Land.Certificates.Adapters;
-
 using Empiria.Land.Registration;
 
 using Empiria.Land.Transactions.Payments;
@@ -76,6 +74,7 @@ namespace Empiria.Land.Transactions {
       return BaseObject.ParseKey<LRSTransaction>(uid);
     }
 
+    static public LRSTransaction Empty => ParseEmpty<LRSTransaction>();
 
     static public LRSTransaction TryParse(string transactionUID) {
       return BaseObject.TryParse<LRSTransaction>($"TransactionUID = '{transactionUID}'");
@@ -101,13 +100,6 @@ namespace Empiria.Land.Transactions {
 
     static public FixedList<LRSTransaction> GetList(string filter, string orderBy, int pageSize) {
       return TransactionsDataService.GetTransactionsList(filter, orderBy, pageSize);
-    }
-
-
-    static public LRSTransaction Empty {
-      get {
-        return BaseObject.ParseEmpty<LRSTransaction>();
-      }
     }
 
 
@@ -489,7 +481,7 @@ namespace Empiria.Land.Transactions {
     }
 
 
-    public FixedList<CertificateDto> GetIssuedCertificates() {
+    public FixedList<Certificate> GetIssuedCertificates() {
       return CertificateIssuingService.GetTransactionCertificates(this);
     }
 
