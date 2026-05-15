@@ -88,7 +88,7 @@ namespace Empiria.Land.Certificates {
     }
 
 
-    [DataField("SignType", Default = SignType.Undeterminated)]
+    [DataField("SignType", Default = SignType.Electronic)]
     public SignType SignType {
       get;
       private set;
@@ -159,7 +159,7 @@ namespace Empiria.Land.Certificates {
 
     public bool UsesESign {
       get {
-        return SignType == SignType.Electronic;
+        return true;
       }
     }
 
@@ -246,12 +246,12 @@ namespace Empiria.Land.Certificates {
                                               certificate.Transaction.PresentationTime.ToString("yyyyMMddTHH:mm:ss") +
                                               SignGuid + DigitalSeal,
                                               certificate.UID);
-       return (hc.Substring(0, 5) + "-" + hc.Substring(5, 5)).ToUpperInvariant();
+
+        return (hc.Substring(0, 5) + "-" + hc.Substring(5, 5)).ToUpperInvariant();
       }
 
       throw Assertion.EnsureNoReachThisCode($"Unrecognized digital seal version '{DigitalSealVersion}'.");
     }
-
 
     #endregion Helpers
 

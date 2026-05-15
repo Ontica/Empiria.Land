@@ -68,6 +68,53 @@ namespace Empiria.Land.Certificates {
     }
 
 
+    public void EnsureCanBeElectronicallySigned() {
+      Assertion.Require(LandRecordSecurityData.ESIGN_ENABLED,
+          "No es posible firmar electrónicamente este certificado debido a que el servicio " +
+          "de firma electrónica no está habilitado." + CertificateDescriptionMessage());
+
+      Assertion.Require(Certificate.IsClosed,
+          "No se puede firmar un certificado que no ha sido cerrado." + CertificateDescriptionMessage());
+
+      Assertion.Require(Certificate.SecurityData.IsUnsigned,
+          "No se puede firmar un certificado que ya está firmado." + CertificateDescriptionMessage());
+
+      Assertion.Require(Certificate.SecurityData.UsesESign,
+          "No se puede firmar un certificado que no está marcado para firma electrónica." + CertificateDescriptionMessage());
+
+      Assertion.Require(Certificate.SecurityData.SignedBy.Equals(ExecutionServer.CurrentContact) ||
+                        Certificate.RecorderOffice.IsAttendantSigner(ExecutionServer.CurrentContact as Person),
+          "El certificado está asignado para ser firmado " +
+          $"por una persona distinta ({Certificate.SecurityData.SignedBy.FullName}) " +
+          $"a la que está intentando firmarlo, y dicha persona tampoco se encuentra en " +
+          $"la lista de firmantes auxiliares de la oficialía." + CertificateDescriptionMessage());
+    }
+
+
+    public void EnsureCanRevokeSign() {
+      Assertion.Require(LandRecordSecurityData.ESIGN_ENABLED,
+                        "No se puede revocar la firma de este certificado debido a que el servicio " +
+                        "de firma electrónica no está habilitado." + CertificateDescriptionMessage());
+
+      Assertion.Require(Certificate.SecurityData.UsesESign,
+                       "Sólo se puede revocar la firma de un certificado " +
+                       "marcado para firma electrónica." + CertificateDescriptionMessage());
+
+      Assertion.Require(Certificate.IsClosed,
+                        "No se puede revocar la firma de un certificado " +
+                        "que no está cerrado." + CertificateDescriptionMessage());
+
+      Assertion.Require(Certificate.SecurityData.IsSigned,
+                        "No se puede revocar la firma de un certificado " +
+                        "que no ha sido firmado." + CertificateDescriptionMessage());
+
+
+      Assertion.Require(Certificate.SecurityData.SignedBy.Equals(ExecutionServer.CurrentContact),
+                       "Únicamente la misma persona que firmó el certificado puede " +
+                       "revocar la firma electrónica." + CertificateDescriptionMessage());
+    }
+
+
     public void ElectronicSign(LandESignData signData) {
       Assertion.Require(signData, nameof(signData));
 
@@ -191,53 +238,6 @@ namespace Empiria.Land.Certificates {
       Assertion.Require(Certificate.SecurityData.IsUnsigned,
                 "No se puede enviar a firma un certificado que ya está firmado." + CertificateDescriptionMessage());
 
-    }
-
-
-    private void EnsureCanRevokeSign() {
-      Assertion.Require(LandRecordSecurityData.ESIGN_ENABLED,
-                        "No se puede revocar la firma de este certificado debido a que el servicio " +
-                        "de firma electrónica no está habilitado." + CertificateDescriptionMessage());
-
-      Assertion.Require(Certificate.SecurityData.UsesESign,
-                       "Sólo se puede revocar la firma de un certificado " +
-                       "marcado para firma electrónica." + CertificateDescriptionMessage());
-
-      Assertion.Require(Certificate.IsClosed,
-                        "No se puede revocar la firma de un certificado " +
-                        "que no está cerrado." + CertificateDescriptionMessage());
-
-      Assertion.Require(Certificate.SecurityData.IsSigned,
-                        "No se puede revocar la firma de un certificado " +
-                        "que no ha sido firmado." + CertificateDescriptionMessage());
-
-
-      Assertion.Require(Certificate.SecurityData.SignedBy.Equals(ExecutionServer.CurrentContact),
-                       "Únicamente la misma persona que firmó el certificado puede " +
-                       "revocar la firma electrónica." + CertificateDescriptionMessage());
-    }
-
-
-    private void EnsureCanBeElectronicallySigned() {
-      Assertion.Require(LandRecordSecurityData.ESIGN_ENABLED,
-          "No es posible firmar electrónicamente este certificado debido a que el servicio " +
-          "de firma electrónica no está habilitado." + CertificateDescriptionMessage());
-
-      Assertion.Require(Certificate.IsClosed,
-          "No se puede firmar un certificado que no ha sido cerrado." + CertificateDescriptionMessage());
-
-      Assertion.Require(Certificate.SecurityData.IsUnsigned,
-          "No se puede firmar un certificado que ya está firmado." + CertificateDescriptionMessage());
-
-      Assertion.Require(Certificate.SecurityData.UsesESign,
-          "No se puede firmar un certificado que no está marcado para firma electrónica." + CertificateDescriptionMessage());
-
-      Assertion.Require(Certificate.SecurityData.SignedBy.Equals(ExecutionServer.CurrentContact) ||
-                        Certificate.RecorderOffice.IsAttendantSigner(ExecutionServer.CurrentContact as Person),
-          "El certificado está asignado para ser firmado " +
-          $"por una persona distinta ({Certificate.SecurityData.SignedBy.FullName}) " +
-          $"a la que está intentando firmarlo, y dicha persona tampoco se encuentra en " +
-          $"la lista de firmantes auxiliares de la oficialía." + CertificateDescriptionMessage());
     }
 
 
