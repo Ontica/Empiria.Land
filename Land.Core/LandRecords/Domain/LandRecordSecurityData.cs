@@ -19,7 +19,7 @@ namespace Empiria.Land.Registration {
   /// <summary>Holds security data for land instrument records.</summary>
   public class LandRecordSecurityData {
 
-    public static readonly bool ESIGN_ENABLED = true;  // ConfigurationData.Get<bool>("ElectronicSignatureEnabled", false);
+    public static readonly bool ESIGN_ENABLED = true;
 
     #region Properties
 
@@ -283,7 +283,7 @@ namespace Empiria.Land.Registration {
                                               landRecord.AuthorizationTime.ToString("yyyyMMddTHH:mm:ss") +
                                               SignGuid + DigitalSeal,
                                               landRecord.UID);
-       return (hc.Substring(0, 5) + "-" + hc.Substring(5, 5)).ToUpperInvariant();
+        return (hc.Substring(0, 5) + "-" + hc.Substring(5, 5)).ToUpperInvariant();
       }
 
       return Cryptographer.CreateHashCode(landRecord.Id.ToString("00000000") +
@@ -312,6 +312,7 @@ namespace Empiria.Land.Registration {
 
       return Cryptographer.SignTextWithSystemCredentials(s);
     }
+
 
     static private string GenerateDigitalSealV51(LandRecord landRecord) {
       var transaction = landRecord.Transaction;

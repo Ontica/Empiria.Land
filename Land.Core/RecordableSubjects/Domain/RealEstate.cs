@@ -74,12 +74,7 @@ namespace Empiria.Land.Registration {
       return kindsList.GetItems<string>();
     }
 
-
-    static public new RealEstate Empty {
-      get {
-        return BaseObject.ParseEmpty<RealEstate>();
-      }
-    }
+    static public new RealEstate Empty => ParseEmpty<RealEstate>();
 
     #endregion Constructors and parsers
 
