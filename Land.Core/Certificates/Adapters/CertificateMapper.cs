@@ -48,7 +48,8 @@ namespace Empiria.Land.Certificates.Adapters {
     #region Helpers
 
     static private MediaData GetCertificateMediaLink(Certificate certificate) {
-      return new MediaData("text/html", $"http://10.113.5.57/pages/certificates/certificate.aspx?uid={certificate.UID}&landRecordUID=RP-ZS-25WU-74CA39-HY87LF");
+      return new MediaData("text/html",
+                           $"http://10.113.5.57/pages/certificates/certificate.aspx?uid={certificate.UID}");
     }
 
 

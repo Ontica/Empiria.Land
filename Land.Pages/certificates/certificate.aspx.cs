@@ -10,7 +10,6 @@
 using System;
 
 using Empiria.Land.Certificates;
-using Empiria.Land.Instruments;
 using Empiria.Land.Registration;
 using Empiria.Land.Transactions;
 
@@ -27,13 +26,9 @@ namespace Empiria.Land.Pages {
     private static readonly bool DISPLAY_VEDA_ELECTORAL_UI =
                                           ConfigurationData.Get<bool>("DisplayVedaElectoralUI", false);
 
-    RecordingStampBuilder builder;
-
     protected Certificate certificate;
-    protected LandRecord landRecord = null;
-    protected LRSTransaction transaction = null;
 
-    private Instrument instrument;
+    protected LRSTransaction transaction = null;
 
     #endregion Fields
 
@@ -44,17 +39,7 @@ namespace Empiria.Land.Pages {
 
       certificate = Certificate.Parse(certificateUID);
 
-      string landRecordUID = Request.QueryString["landRecordUID"];
-
-      landRecord = LandRecord.TryParse(landRecordUID);
-
       transaction = certificate.Transaction;
-
-      landRecord.RefreshRecordingActs();
-
-      this.instrument = landRecord.Instrument;
-
-      builder = new RecordingStampBuilder(landRecord);
     }
 
     #endregion Constructors and parsers
@@ -67,33 +52,33 @@ namespace Empiria.Land.Pages {
         return CommonMethods.AsWarning("El certificado está ABIERTO por lo que no tiene sello digital.");
 
       } else {
-        return landRecord.SecurityData.DigitalSeal.Substring(0, 64);
+        return certificate.SecurityData.DigitalSeal.Substring(0, 64);
       }
     }
 
 
     protected string GetDigest() {
-      if (!landRecord.SecurityData.UsesESign ||
-           landRecord.SecurityData.IsUnsigned ||
-           landRecord.SecurityData.Digest.Length == 0) {
+      if (!certificate.SecurityData.UsesESign ||
+           certificate.SecurityData.IsUnsigned ||
+           certificate.SecurityData.Digest.Length == 0) {
         return string.Empty;
       }
 
       return $"<b>Cadena de digestión (datos estampillados):</b><br />" +
-             $"{landRecord.SecurityData.Digest}" +
+             $"{certificate.SecurityData.Digest}" +
              $"<br />";
     }
 
 
     protected string GetSignatureGuid() {
-      if (!landRecord.SecurityData.UsesESign ||
-           landRecord.SecurityData.IsUnsigned ||
-           landRecord.SecurityData.SignGuid.Length == 0) {
+      if (!certificate.SecurityData.UsesESign ||
+           certificate.SecurityData.IsUnsigned ||
+           certificate.SecurityData.SignGuid.Length == 0) {
         return string.Empty;
       }
 
       return $"<b>Identificador de la firma electrónica:</b><br />" +
-             $"{landRecord.SecurityData.SignGuid}" +
+             $"{certificate.SecurityData.SignGuid}" +
              $"<br />";
     }
 
@@ -102,11 +87,11 @@ namespace Empiria.Land.Pages {
       if (!certificate.IsClosed) {
         return CommonMethods.AsWarning("El certificado no ha sido cerrado. No tiene validez.");
 
-      } else if (landRecord.SecurityData.IsUnsigned) {
+      } else if (certificate.SecurityData.IsUnsigned) {
         return CommonMethods.AsWarning("Este documento NO HA SIDO FIRMADO digitalmente. No tiene validez oficial.");
 
-      } else if (landRecord.SecurityData.IsSigned) {
-        return EmpiriaString.DivideLongString(landRecord.SecurityData.DigitalSignature, 96, "<br />");
+      } else if (certificate.SecurityData.IsSigned) {
+        return EmpiriaString.DivideLongString(certificate.SecurityData.DigitalSignature, 96, "<br />");
 
       } else {
         throw Assertion.EnsureNoReachThisCode();
@@ -118,7 +103,7 @@ namespace Empiria.Land.Pages {
       if (!certificate.IsClosed) {
         return false;
       }
-      if (landRecord.SecurityData.IsUnsigned) {
+      if (certificate.SecurityData.IsUnsigned) {
         return false;
       }
       return true;
@@ -199,9 +184,9 @@ namespace Empiria.Land.Pages {
 
       x = x.Replace("{CITY}", certificate.RecorderOffice.Place);
 
-      x = x.Replace("{LA.EL}", landRecord.SecurityData.SignedBy.IsFemale ? "LA" : "EL");
-      x = x.Replace("{SIGNER.NAME}", landRecord.SecurityData.SignedBy.FullName);
-      x = x.Replace("{JOB.TITLE}", landRecord.SecurityData.SignedByJobTitle);
+      x = x.Replace("{LA.EL}", certificate.SecurityData.SignedBy.IsFemale ? "LA" : "EL");
+      x = x.Replace("{SIGNER.NAME}", certificate.SecurityData.SignedBy.FullName);
+      x = x.Replace("{JOB.TITLE}", certificate.SecurityData.SignedByJobTitle);
 
       return x.ToUpperInvariant();
     }
@@ -210,13 +195,13 @@ namespace Empiria.Land.Pages {
       if (!CanBePrinted()) {
         return CommonMethods.AsWarning("ESTE CERTIFICADO NO ES VÁLIDO EN EL ESTADO ACTUAL.");
       } else {
-        return landRecord.SecurityData.SignedBy.FullName;
+        return certificate.SecurityData.SignedBy.FullName;
       }
     }
 
 
     protected string GetCertificateSignerJobTitle() {
-      return landRecord.SecurityData.SignedByJobTitle;
+      return certificate.SecurityData.SignedByJobTitle;
     }
 
 

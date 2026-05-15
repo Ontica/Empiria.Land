@@ -19,7 +19,7 @@
           <h4><%=Empiria.Land.Pages.CommonMethods.GovernmentName%></h4>
           <% if (!certificate.IsClosed) { %>
           <h2 class="warning" style="padding-top:0">EL CERTIFICADO NO HA SIDO CERRADO</h2>
-          <% } else if (landRecord.SecurityData.IsUnsigned) { %>
+          <% } else if (certificate.SecurityData.IsUnsigned) { %>
           <h2 class="warning" style="padding-top:0">EL CERTIFICADO NO HA SIDO FIRMADO DIGITALMENTE</h2>
           <% } else if (!base.CanBePrinted()) { %>
           <h2 class="warning" style="padding-top:0">
@@ -80,7 +80,7 @@
             <br />&#160;
           </td>
         </tr>
-        <% } else if (landRecord.SecurityData.IsSigned) { %>
+        <% } else if (certificate.SecurityData.IsSigned) { %>
          <tr>
           <td colspan="3" style="text-align:center;font-size:11pt" >
             <span style="font-size:8.5pt">
@@ -116,20 +116,20 @@
           <td style="vertical-align:top;padding-right:12pt;width:100px">
             <% if (this.CanBePrinted()) { %>
             <img style="margin-left:-12pt;margin-top:-12pt" alt="" title=""
-                 src="../user.controls/qrcode.aspx?size=120&#38;data=<%=SEARCH_SERVICES_SERVER_BASE_ADDRESS%>/?type=certificate%26uid=<%=certificate.CertificateID%>%26hash=<%=landRecord.SecurityData.SecurityHash%>" />
+                 src="../user.controls/qrcode.aspx?size=120&#38;data=<%=SEARCH_SERVICES_SERVER_BASE_ADDRESS%>/?type=certificate%26uid=<%=certificate.CertificateID%>%26hash=<%=certificate.SecurityData.SecurityHash%>" />
             <% } %>
             <div style="margin-top:-12pt;font-size:7pt;white-space:nowrap">
               Valide este certificado<br />
               <b><%=certificate.CertificateID%></b>
               <br />
-              <%=landRecord.SecurityData.SignDocumentID%>
+              <%=certificate.SecurityData.SignDocumentID%>
             </div>
           </td>
           <td style="vertical-align:top;width:90%;white-space:nowrap">
             <b>Código de verificación:</b>
             <br />
               <% if (this.CanBePrinted()) { %>
-              <%=base.landRecord.SecurityData.SecurityHash%>
+              <%=base.certificate.SecurityData.SecurityHash%>
 
               <% } else { %>
               <span class="warning">** SIN VALIDEZ **</span>
