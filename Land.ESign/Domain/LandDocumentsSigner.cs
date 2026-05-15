@@ -7,10 +7,12 @@
 *  Summary  : Provides electrnic sign services for Empiria Land documents.                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
 using System.Collections.Generic;
 
 using Empiria.Json;
+
+using Empiria.Land.Certificates;
 
 using Empiria.Land.Registration;
 using Empiria.Land.Transactions;
@@ -20,6 +22,7 @@ using SeguriSign.Connector.Adapters;
 
 using Empiria.Land.ESign.Adapters;
 
+
 namespace Empiria.Land.ESign {
 
   internal class LandDocumentsSigner {
@@ -27,7 +30,7 @@ namespace Empiria.Land.ESign {
     #region Fields
 
     private readonly string ESIGN_SERVICE_PROVIDER_URL =
-                                     ConfigurationData.GetString("ElectronicSignature.ServiceProvider.URL");
+                                     ConfigurationData.GetString("Former.ElectronicSignature.ServiceProvider.URL");
 
     private readonly ESignService _signServiceProvider;
 
@@ -72,6 +75,24 @@ namespace Empiria.Land.ESign {
     }
 
 
+    private void SignCertificate(Certificate certificate) {
+
+      certificate.Security.EnsureCanBeElectronicallySigned();
+
+      certificate.Security.PrepareForElectronicSign();
+
+      var contentToSign = GetContentToSign(certificate);
+
+      var documentUID = $"CAT_certificado_{certificate.UID}_{certificate.SecurityData.SecurityHash}";
+
+      ESignDataDto signData = _signServiceProvider.Sign(contentToSign, documentUID);
+
+      LandESignData landSignData = MapToLandESignData(signData);
+
+      certificate.Security.ElectronicSign(landSignData);
+    }
+
+
     internal void SignLandRecord(LandRecord record) {
       var validator = new LandRecordValidator(record);
 
@@ -96,14 +117,34 @@ namespace Empiria.Land.ESign {
 
       FixedList<LandRecord> landRecords = GetTransactionDocumentsFor(transactions, ESignCommandType.Sign);
 
+      FixedList<Certificate> certificates = GetTransactionCertificatesFor(transactions, ESignCommandType.Sign);
+
       foreach (var record in landRecords) {
         SignLandRecord(record);
+      }
+
+      foreach (var certificate in certificates) {
+        SignCertificate(certificate);
       }
     }
 
     #endregion Methods
 
     #region Helpers
+
+    private string GetContentToSign(Certificate certificate) {
+      return new JsonObject {
+        { "Documento", certificate.UID },
+        { "Tipo de documento", certificate.CertificateType.DisplayName },
+        { "Identificador de firmado", certificate.SecurityData.SignGuid },
+        { "Código de verificación", certificate.SecurityData.SecurityHash },
+        { "Sello digital", certificate.SecurityData.DigitalSeal },
+        { "Trámite", certificate.Transaction.UID },
+        { "Fecha de presentación", certificate.Transaction.PresentationTime },
+        { "Fecha de registro", certificate.IssueTime }
+      }.ToString(true);
+    }
+
 
     private string GetContentToSign(LandRecord record) {
       return new JsonObject {
@@ -116,6 +157,35 @@ namespace Empiria.Land.ESign {
         { "Fecha de presentación", record.Transaction.PresentationTime },
         { "Fecha de registro", record.AuthorizationTime }
       }.ToString(true);
+    }
+
+
+    private FixedList<Certificate> GetTransactionCertificatesFor(FixedList<LRSTransaction> transactions,
+                                                                 ESignCommandType commandType) {
+      var list = new List<Certificate>(transactions.Count);
+
+      foreach (var transaction in transactions) {
+
+        var certificates = transaction.GetIssuedCertificates();
+
+        foreach (var certificate in certificates) {
+
+          if (commandType == ESignCommandType.Sign) {
+
+            certificate.Security.EnsureCanBeElectronicallySigned();
+
+            list.Add(certificate);
+
+          } else if (commandType == ESignCommandType.Revoke) {
+
+            certificate.Security.EnsureCanRevokeSign();
+
+            list.Add(certificate);
+          }
+        }
+      }
+
+      return list.ToFixedList();
     }
 
 
