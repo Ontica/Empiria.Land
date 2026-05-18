@@ -267,16 +267,44 @@ namespace Empiria.Land.Certificates {
 
     private string GenerateRealEstateText(RealEstate realEstate) {
       const string t = "<div style='text-align:center;font-size:12pt'><strong>{{ON.RESOURCE.CODE}}</strong></div><br/>" +
-                       "{{ON.RESOURCE.TEXT}}" +
+                       "{{ON.RESOURCE.FIELDS}} " +
+                       "<br/><br/><strong>DESCRIPCIÓN</strong>:<br/>{{ON.RESOURCE.TEXT}}" +
                        "{{REAL.ESTATE.METES.AND.BOUNDS}}";
 
       string x = t.Replace("{{ON.RESOURCE.CODE}}", realEstate.UID);
 
       x = x.Replace("{{ON.RESOURCE.TEXT}}", realEstate.AsText);
+      x = x.Replace("{{ON.RESOURCE.FIELDS}}", GenerateRealEstateFieldsText(realEstate));
 
       return x.Replace("{{REAL.ESTATE.METES.AND.BOUNDS}}", GenerateRealEstateMetesAndBounds(realEstate));
     }
 
+    private string GenerateRealEstateFieldsText(RealEstate realEstate) {
+      const string t = "Clave catastral: <strong>{{CADASTRAL.KEY}}</strong>, " +
+                       "Municipio: <strong>{{MUNICIPALITY}}</strong>, " +
+                       "Tipo de predio: <strong>{{REAL.ESTATE.KIND}}</strong>, " +
+                       "Superficie de terreno: <strong>{{LOT.SIZE}}</strong>, " +
+                       "Superficie de construcción: <strong>{{BUILDING_AREA}} M2</strong>, " +
+                       "Indiviso: <strong>{{UNDIVIDED_PCT}}</strong>, " +
+                       "Lote: <strong>{{LOT}}</strong>, " +
+                       "Manzana: <strong>{{BLOCK}}</strong>, " +
+                       "Sección: <strong>{{SECTION}}</strong>, " +
+                       "Fracción: <strong>{{PARTITION_NO}}</strong>";
+
+      string x = t.Replace("{{CADASTRAL.KEY}}", realEstate.CadastralKey.Length != 0 ? realEstate.CadastralKey : "no registrada");
+
+      x = x.Replace("{{MUNICIPALITY}}", realEstate.Municipality.Name);
+      x = x.Replace("{{REAL.ESTATE.KIND}}", realEstate.Kind);
+      x = x.Replace("{{LOT.SIZE}}", realEstate.LotSize.ToString());
+      x = x.Replace("{{BUILDING_AREA}}", realEstate.BuildingArea.ToString());
+      x = x.Replace("{{UNDIVIDED_PCT}}", realEstate.UndividedPct != 0 ? $"{realEstate.UndividedPct} por ciento" : "sin indiviso");
+      x = x.Replace("{{LOT}}", realEstate.Lot.Length != 0 ? realEstate.Lot : "No registrado");
+      x = x.Replace("{{BLOCK}}", realEstate.Block.Length != 0 ? realEstate.Block : "No registrado");
+      x = x.Replace("{{SECTION}}", realEstate.Section.Length != 0 ? realEstate.Section : "No registrada");
+      x = x.Replace("{{PARTITION_NO}}", realEstate.PartitionNo.Length != 0 ? realEstate.PartitionNo : "No registrada");
+
+      return x;
+    }
 
     private string GenerateRecordingActsText(RealEstate realEstate) {
 
