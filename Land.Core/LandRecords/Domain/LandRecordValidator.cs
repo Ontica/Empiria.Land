@@ -34,9 +34,9 @@ namespace Empiria.Land.Registration {
 
 
     public void AssertCanBeClosed() {
-        Assertion.Require(_landRecord.Security.IsReadyToClose(),
-                  "La persona usuaria no tiene permisos para cerrar la inscripción " +
-                  "o ésta no tiene un estado válido.");
+      Assertion.Require(_landRecord.Security.IsReadyToClose(),
+                "La persona usuaria no tiene permisos para cerrar la inscripción " +
+                "o ésta no tiene un estado válido.");
 
       Assertion.Require(_landRecord.RecordingActs.Count > 0,
                   "La inscripción no tiene actos jurídicos.");
@@ -205,6 +205,29 @@ namespace Empiria.Land.Registration {
       }
     }
 
+
+    public bool CanBeElectronicallySigned() {
+      try {
+        AssertCanBeElectronicallySigned();
+        return true;
+
+      } catch {
+        return false;
+      }
+    }
+
+
+    public bool CanRevokeSign() {
+      try {
+        AssertCanRevokeSign();
+        return true;
+
+      } catch {
+        return false;
+      }
+    }
+
+
     #endregion Methods
 
     #region Helpers
@@ -212,7 +235,6 @@ namespace Empiria.Land.Registration {
     private string LandRecordDescriptionMessage() {
       return $" Trámite {_landRecord.Transaction.UID}. Inscripción: {_landRecord.UID}.";
     }
-
 
     #endregion Helpers
 

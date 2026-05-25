@@ -58,6 +58,27 @@ namespace Empiria.Land.Certificates {
     }
 
 
+    public bool CanBeElectronicallySigned() {
+      try {
+        EnsureCanBeElectronicallySigned();
+
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+
+    public bool CanRevokeSign() {
+      try {
+        EnsureCanRevokeSign();
+
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
     internal void EnsureCanChangeStatusTo(CertificateStatus newStatus) {
       if (CanChangeStatusTo(newStatus)) {
         return;
@@ -220,7 +241,7 @@ namespace Empiria.Land.Certificates {
 
     #region Helpers
 
-    internal void EnsureCanRemoveElectronicSign() {
+    private void EnsureCanRemoveElectronicSign() {
       Assertion.Require(Certificate.SecurityData.IsUnsigned,
           "Este certificado ya fue firmado electrónicamente. " +
           "Para poder abrirlo se necesita solicitar que se revoque la firma electrónica.");
@@ -244,6 +265,7 @@ namespace Empiria.Land.Certificates {
     private string CertificateDescriptionMessage() {
       return $" Trámite {Certificate.Transaction.UID}. Certificado: {Certificate.CertificateID}.";
     }
+
 
     #endregion Helpers
 

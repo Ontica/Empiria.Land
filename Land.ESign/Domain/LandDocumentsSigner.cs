@@ -53,25 +53,59 @@ namespace Empiria.Land.ESign {
 
     #endregion Constructors and parsers
 
-    #region Methods
-
-    internal void RevokeLandRecordSign(LandRecord record) {
-      var validator = new LandRecordValidator(record);
-
-      validator.AssertCanRevokeSign();
-
-      record.Security.RevokeSign();
-    }
-
+    #region Public methods
 
     internal void RevokeTransactionDocumentsSigns(FixedList<LRSTransaction> transactions) {
       Assertion.Require(transactions, nameof(transactions));
 
       FixedList<LandRecord> landRecords = GetTransactionDocumentsFor(transactions, ESignCommandType.Revoke);
 
+      FixedList<Certificate> certificates = GetTransactionCertificatesFor(transactions, ESignCommandType.Revoke);
+
       foreach (var record in landRecords) {
         RevokeLandRecordSign(record);
       }
+
+      foreach (var certificate in certificates) {
+        RevokeCertificateSign(certificate);
+      }
+    }
+
+
+    internal void SignTransactionDocuments(FixedList<LRSTransaction> transactions) {
+      Assertion.Require(transactions, nameof(transactions));
+
+      FixedList<LandRecord> landRecords = GetTransactionDocumentsFor(transactions, ESignCommandType.Sign);
+
+      FixedList<Certificate> certificates = GetTransactionCertificatesFor(transactions, ESignCommandType.Sign);
+
+      foreach (var record in landRecords) {
+        SignLandRecord(record);
+      }
+
+      foreach (var certificate in certificates) {
+        SignCertificate(certificate);
+      }
+    }
+
+    #endregion Public methods
+
+    #region Sign private methods
+
+    private void RevokeCertificateSign(Certificate certificate) {
+
+      certificate.Security.EnsureCanRevokeSign();
+
+      certificate.Security.RevokeSign();
+    }
+
+
+    private void RevokeLandRecordSign(LandRecord record) {
+      var validator = new LandRecordValidator(record);
+
+      validator.AssertCanRevokeSign();
+
+      record.Security.RevokeSign();
     }
 
 
@@ -93,7 +127,7 @@ namespace Empiria.Land.ESign {
     }
 
 
-    internal void SignLandRecord(LandRecord record) {
+    private void SignLandRecord(LandRecord record) {
       var validator = new LandRecordValidator(record);
 
       validator.AssertCanBeElectronicallySigned();
@@ -111,24 +145,7 @@ namespace Empiria.Land.ESign {
       record.Security.ElectronicSign(landSignData);
     }
 
-
-    internal void SignTransactionDocuments(FixedList<LRSTransaction> transactions) {
-      Assertion.Require(transactions, nameof(transactions));
-
-      FixedList<LandRecord> landRecords = GetTransactionDocumentsFor(transactions, ESignCommandType.Sign);
-
-      FixedList<Certificate> certificates = GetTransactionCertificatesFor(transactions, ESignCommandType.Sign);
-
-      foreach (var record in landRecords) {
-        SignLandRecord(record);
-      }
-
-      foreach (var certificate in certificates) {
-        SignCertificate(certificate);
-      }
-    }
-
-    #endregion Methods
+    #endregion Sign private methods
 
     #region Helpers
 
@@ -170,15 +187,11 @@ namespace Empiria.Land.ESign {
 
         foreach (var certificate in certificates) {
 
-          if (commandType == ESignCommandType.Sign) {
-
-            certificate.Security.EnsureCanBeElectronicallySigned();
+          if (commandType == ESignCommandType.Sign && certificate.Security.CanBeElectronicallySigned()) {
 
             list.Add(certificate);
 
-          } else if (commandType == ESignCommandType.Revoke) {
-
-            certificate.Security.EnsureCanRevokeSign();
+          } else if (commandType == ESignCommandType.Revoke && certificate.Security.CanRevokeSign()) {
 
             list.Add(certificate);
           }
@@ -198,14 +211,12 @@ namespace Empiria.Land.ESign {
 
         var validator = new LandRecordValidator(landRecord);
 
-        if (commandType == ESignCommandType.Sign) {
+        if (commandType == ESignCommandType.Sign && validator.CanBeElectronicallySigned()) {
 
-          validator.AssertCanBeElectronicallySigned();
           list.Add(transaction.LandRecord);
 
-        } else if (commandType == ESignCommandType.Revoke) {
+        } else if (commandType == ESignCommandType.Revoke && validator.CanRevokeSign()) {
 
-          validator.AssertCanRevokeSign();
           list.Add(transaction.LandRecord);
 
         }
