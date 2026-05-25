@@ -62,10 +62,10 @@ namespace Empiria.Land.Certificates {
     #region Builders
 
     private string BuildGravamenCertificateText() {
-      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
-                       "SOBRE EL BIEN INMUEBLE CON EL SIGUIENTE <strong>FOLIO REAL ELECTRÓNICO</strong>, " +
-                       "PARA DETERMINAR SI TIENE O NO GRAVÁMENES, RESULTÓ QUE <b>SÍ SE ENCUENTRA GRAVADO</b>:" +
+      const string t = "QUE, HABIÉNDOSE REALIZADO UNA EXHAUSTIVA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
+                       "CORRESPONDIENTE AL BIEN INMUEBLE SE ENCUENTRA:<br/><br/>" +
+                       "<div style='text-align:center;font-size:12pt'><strong>GRAVADO</strong></div>" +
                        "{{REAL.ESTATE.TEXT}}" +
                        "{{CURRENT.OWNERSHIP}}" +
                        "{{RECORDING.ACTS}}" +
@@ -73,7 +73,9 @@ namespace Empiria.Land.Certificates {
 
       RealEstate realEstate = (RealEstate) _certificate.OnRecordableSubject;
 
-      var x = t.Replace("{{REAL.ESTATE.TEXT}}", GenerateRealEstateText(realEstate));
+      var x = t.Replace("{{REAL.ESTATE.UID}}", realEstate.UID);
+
+      x = x.Replace("{{REAL.ESTATE.TEXT}}", GenerateRealEstateText(realEstate));
 
       x = x.Replace("{{CURRENT.OWNERSHIP}}", GenerateCurrentOwnershipText(realEstate));
       x = x.Replace("{{RECORDING.ACTS}}", GenerateRecordingActsText(realEstate));
@@ -83,17 +85,18 @@ namespace Empiria.Land.Certificates {
 
 
     private string BuildInscripcionCertificateText() {
-      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
-                       "SE DETERMINA QUE EL BIEN INMUEBLE REFERIDO <strong>SÍ ESTÁ INSCRITO</strong>, " +
-                       "Y QUE TIENE ASIGNADO EL SIGUIENTE <strong>FOLIO REAL ELECTRÓNICO</strong>:" +
+      const string t = "QUE, HABIÉNDOSE REALIZADO UNA EXHAUSTIVA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
+                       "CORRESPONDIENTE AL BIEN INMUEBLE SE ENCUENTRA:<br/><br/>" +
+                       "<div style='text-align:center;font-size:12pt'><strong>INSCRITO</strong></div>" +
                        "{{REAL.ESTATE.TEXT}}" +
                        "{{RECORDING.ACTS}}" +
                        "<br/><br/>";
 
       RealEstate realEstate = (RealEstate) _certificate.OnRecordableSubject;
 
-      var x = t.Replace("{{REAL.ESTATE.TEXT}}", GenerateRealEstateText(realEstate));
+      var x = t.Replace("{{REAL.ESTATE.UID}}", realEstate.UID);
+      x = x.Replace("{{REAL.ESTATE.TEXT}}", GenerateRealEstateText(realEstate));
 
       x = x.Replace("{{CURRENT.OWNERSHIP}}", GenerateCurrentOwnershipText(realEstate));
       x = x.Replace("{{RECORDING.ACTS}}", GenerateRecordingActsText(realEstate));
@@ -103,10 +106,10 @@ namespace Empiria.Land.Certificates {
 
 
     private string BuildLibertadGravamenCertificateText() {
-      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
-                       "SOBRE EL BIEN INMUEBLE CON EL SIGUIENTE <strong>FOLIO REAL ELECTRÓNICO</strong>, " +
-                       "PARA DETERMINAR SI TIENE O NO GRAVÁMENES, RESULTÓ QUE <b>ESTÁ LIBRE DE GRAVÁMENES</b>:" +
+      const string t = "QUE, HABIÉNDOSE REALIZADO UNA EXHAUSTIVA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
+                       "CORRESPONDIENTE AL BIEN INMUEBLE SE ENCUENTRA:<br/><br/>" +
+                       "<div style='text-align:center;font-size:12pt'><strong>LIBRE DE GRAVAMEN</strong></div>" +
                        "{{REAL.ESTATE.TEXT}}" +
                        "{{CURRENT.OWNERSHIP}}" +
                        "{{RECORDING.ACTS}}" +
@@ -114,7 +117,8 @@ namespace Empiria.Land.Certificates {
 
       RealEstate realEstate = (RealEstate) _certificate.OnRecordableSubject;
 
-      var x = t.Replace("{{REAL.ESTATE.TEXT}}", GenerateRealEstateText(realEstate));
+      var x = t.Replace("{{REAL.ESTATE.UID}}", realEstate.UID);
+      x = x.Replace("{{REAL.ESTATE.TEXT}}", GenerateRealEstateText(realEstate));
 
       x = x.Replace("{{CURRENT.OWNERSHIP}}", GenerateCurrentOwnershipText(realEstate));
       x = x.Replace("{{RECORDING.ACTS}}", GenerateRecordingActsText(realEstate));
@@ -129,9 +133,9 @@ namespace Empiria.Land.Certificates {
 
 
     private string BuildNoInscripcionCertificateText() {
-      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
-                       "<b>NO SE ENCONTRÓ INSCRITO</b> EL BIEN INMUEBLE:" +
+      const string t = "QUE, HABIÉNDOSE REALIZADO UNA EXHAUSTIVA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS, EL SIGUIENTE BIEN INMUEBLE SE ENCUENTRA:<br/><br/>" +
+                       "<div style='text-align:center;font-size:12pt'><strong>NO INSCRITO</strong></div>" +
                        "<div style='font-size:12pt'><strong>{{ON.REAL.STATE.DESCRIPTION}}</strong></div>";
 
       string x = t.Replace("{{ON.REAL.STATE.DESCRIPTION}}", _certificate.OnRealEstateDescription);
@@ -141,9 +145,10 @@ namespace Empiria.Land.Certificates {
 
 
     private string BuildNoPropertyCertificateText() {
-      const string t = "QUE HABIENDO INVESTIGADO EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE DE LOS ÚLTIMOS <b>20 AÑOS</b> A LA FECHA, " +
-                       "<b>NO SE ENCONTRÓ REGISTRADO</b> NINGÚN BIEN INMUEBLE A NOMBRE DE:" +
+      const string t = "QUE, HABIÉNDOSE REALIZADO UNA EXHAUSTIVA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS, NO SE ENCONTRÓ REGISTRADO NINGÚN BIEN INMUEBLE A " +
+                       "NOMBRE DE LA SIGUIENTE PERSONA:<br/><br/>" +
+                       "<div style='text-align:center;font-size:12pt'><strong>NO PROPIEDAD</strong></div>" +
                        "<div style='text-align:center;font-size:12pt'><strong>{{ON.PERSON.NAME}}</strong></div>";
 
       string x = t.Replace("{{ON.PERSON.NAME}}", _certificate.OnPersonName);

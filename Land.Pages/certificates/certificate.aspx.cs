@@ -176,7 +176,8 @@ namespace Empiria.Land.Pages {
 
     protected string GetCertificatePlaceAndDate() {
       const string t = "EN LA CIUDAD DE <b>{CITY}</b>, A LAS <b>{TIME}</b> HORAS DEL DÍA <b>{DATE}</b>; " +
-                       "{LA.EL} <b>{SIGNER.NAME}</b>, {JOB.TITLE}:";
+                       "{LA.EL} <b>{SIGNER.NAME}</b>, {JOB.TITLE}, CON FUNDAMENTO EN EL ARTÍCULO 104 DEL " +
+                       "REGLAMENTO DEL REGISTRO PÚBLICO DE LA PROPIEDAD Y DEL COMERCIO:";
 
       string x = t.Replace("{DATE}", CommonMethods.GetDateAsText(certificate.IssueTime));
 
@@ -191,6 +192,7 @@ namespace Empiria.Land.Pages {
       return x.ToUpperInvariant();
     }
 
+
     protected string GetCertificateSignerName() {
       if (!CanBePrinted()) {
         return CommonMethods.AsWarning("ESTE CERTIFICADO NO ES VÁLIDO EN EL ESTADO ACTUAL.");
@@ -204,6 +206,15 @@ namespace Empiria.Land.Pages {
       return certificate.SecurityData.SignedByJobTitle;
     }
 
+
+    protected string GetCertificateValidityText() {
+      var text = "DE CONFORMIDAD CON LA NATURALEZA DE PUBLICIDAD Y CERTEZA JURÍDICA QUE RIGE ESTA INSTITUCIÓN, <br/>" +
+                 "Y EN CONCORDANCIA CON LOS TÉRMINOS DE VIGENCIA ESTABLECIDOS EN EL MARCO REGLAMENTARIO VIGENTE <br/>" +
+                 "APLICABLE A LAS CERTIFICACIONES REGISTRALES, EL PRESENTE DOCUMENTO TENDRÁ UNA VIGENCIA DE <br/>" +
+                 "30 DÍAS NATURALES CONTADOS A PARTIR DE LA FECHA DE SU EXPEDICIÓN.";
+
+      return text;
+    }
 
     protected Resource UniqueInvolvedResource {
       get {

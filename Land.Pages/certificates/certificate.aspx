@@ -156,6 +156,9 @@
               Verifique la <u>autenticidad</u> de este documento y el estado de su predio. Para ello lea los códigos QR con su<br />
               celular o dispositivo móvil, o visite nuestro sitio <b><%=Empiria.Land.Pages.CommonMethods.GovernmentWebPage%></b>.
             </div>
+            <div style="font-size:7pt;margin-top:4pt;text-align:left;">
+               <%=GetCertificateValidityText()%>
+            </div>
           </td>
           <td style="vertical-align:top">
             <% if (!base.UniqueInvolvedResource.IsEmptyInstance && certificate.IsClosed) { %>
