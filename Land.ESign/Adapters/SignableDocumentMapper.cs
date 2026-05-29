@@ -23,7 +23,7 @@ namespace Empiria.Land.ESign.Adapters {
       var currentTask = transaction.Workflow.GetCurrentTask();
 
       return new SignableDocumentDescriptor {
-        UID = document.Guid,
+        UID = $"{document.DocumentType}|{document.Guid}",
         DocumentID = document.UID,
         TransactionID = transaction.UID,
         Type = document.DocumentType,

@@ -7,10 +7,10 @@
 *  Summary  : Command payload used for sign documents.                                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-
 using Empiria.Security;
 
+using Empiria.Land.Certificates;
+using Empiria.Land.Registration;
 using Empiria.Land.Transactions;
 
 namespace Empiria.Land.ESign.Adapters {
@@ -53,7 +53,6 @@ namespace Empiria.Land.ESign.Adapters {
     public FixedList<string> TransactionUIDs {
       get; set;
     }
-
 
   }  // class ESignTaskFields
 
@@ -105,6 +104,20 @@ namespace Empiria.Land.ESign.Adapters {
         Assertion.Require(command.DocumentUIDs, nameof(command.DocumentUIDs));
         Assertion.Require(command.DocumentUIDs.Count > 0, "documentUIDs can't be an empty list.");
       }
+    }
+
+
+    static internal FixedList<Certificate> GetCertificates(this ESignCommand command) {
+      return command.DocumentUIDs.FindAll(x => x.Contains("Certificado"))
+                                 .Select(uid => Certificate.Parse(uid.Split('|')[1]))
+                                 .ToFixedList();
+    }
+
+
+    static internal FixedList<LandRecord> GetLandRecords(this ESignCommand command) {
+      return command.DocumentUIDs.FindAll(x => !x.Contains("Certificado"))
+                                 .Select(uid => LandRecord.ParseGuid(uid.Split('|')[1]))
+                                 .ToFixedList();
     }
 
 
