@@ -7,11 +7,14 @@
 *  Summary  : Use cases that performs electronic sign of documents.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 
 using Empiria.Security;
 using Empiria.Services;
 
+using Empiria.Land.Certificates;
+using Empiria.Land.Registration;
 using Empiria.Land.Transactions;
 
 using Empiria.Land.ESign.Adapters;
@@ -45,7 +48,7 @@ namespace Empiria.Land.ESign.UseCases {
     public void RefuseMyTransactionDocuments(ESignCommand command) {
       Assertion.Require(command, nameof(command));
 
-      command.EnsureIsValid(ESignCommandType.Refuse, true);
+      command.EnsureIsValid(ESignCommandType.Refuse, false);
 
       PrepareCredentials(command);
 
@@ -56,17 +59,28 @@ namespace Empiria.Land.ESign.UseCases {
     public void RevokeMyTransactionDocuments(ESignCommand command) {
       Assertion.Require(command, nameof(command));
 
-      command.EnsureIsValid(ESignCommandType.Revoke, true);
+      command.EnsureIsValid(ESignCommandType.Revoke, false);
 
       PrepareCredentials(command);
 
-      FixedList<LRSTransaction> transactions = command.GetTransactions();
+      FixedList<Certificate> certificates = command.GetCertificates();
+      FixedList<LandRecord> landRecords = command.GetLandRecords();
+
+
+      var transactions = FixedList<LRSTransaction>.MergeDistinct(certificates.SelectDistinct(x => x.Transaction),
+                                                                 landRecords.SelectDistinct(x => x.Transaction));
 
       AssertWorkflowRulesToBeRevoked(transactions);
 
       var signer = new LandDocumentsSigner(command.Credentials);
 
-      signer.RevokeTransactionDocumentsSigns(transactions);
+      foreach (var record in landRecords) {
+        signer.RevokeLandRecordSign(record);
+      }
+
+      foreach (var cert in certificates) {
+        signer.RevokeCertificateSign(cert);
+      }
 
       UpdateWorkflowAfterRevoke(transactions);
     }
@@ -75,17 +89,27 @@ namespace Empiria.Land.ESign.UseCases {
     public void SignMyTransactionDocuments(ESignCommand command) {
       Assertion.Require(command, nameof(command));
 
-      command.EnsureIsValid(ESignCommandType.Sign, true);
+      command.EnsureIsValid(ESignCommandType.Sign, false);
 
       PrepareCredentials(command);
 
-      FixedList<LRSTransaction> transactions = command.GetTransactions();
+      FixedList<Certificate> certificates = command.GetCertificates();
+      FixedList<LandRecord> landRecords = command.GetLandRecords();
+
+      var transactions = FixedList<LRSTransaction>.MergeDistinct(certificates.SelectDistinct(x => x.Transaction),
+                                                                 landRecords.SelectDistinct(x => x.Transaction));
 
       AssertWorkflowRulesToBeSigned(transactions);
 
       var signer = new LandDocumentsSigner(command.Credentials);
 
-      signer.SignTransactionDocuments(transactions);
+      foreach (var record in landRecords) {
+        signer.SignLandRecord(record);
+      }
+
+      foreach (var cert in certificates) {
+        signer.SignCertificate(cert);
+      }
 
       UpdateWorkflowAfterSign(transactions);
     }
@@ -94,7 +118,7 @@ namespace Empiria.Land.ESign.UseCases {
     public void UnrefuseMyTransactionDocuments(ESignCommand command) {
       Assertion.Require(command, nameof(command));
 
-      command.EnsureIsValid(ESignCommandType.Unrefuse, true);
+      command.EnsureIsValid(ESignCommandType.Unrefuse, false);
 
       PrepareCredentials(command);
 

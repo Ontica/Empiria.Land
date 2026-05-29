@@ -55,6 +55,23 @@ namespace Empiria.Land.ESign {
 
     #region Public methods
 
+    internal void RevokeCertificateSign(Certificate certificate) {
+
+      certificate.Security.EnsureCanRevokeSign();
+
+      certificate.Security.RevokeSign();
+    }
+
+
+    internal void RevokeLandRecordSign(LandRecord record) {
+      var validator = new LandRecordValidator(record);
+
+      validator.AssertCanRevokeSign();
+
+      record.Security.RevokeSign();
+    }
+
+
     internal void RevokeTransactionDocumentsSigns(FixedList<LRSTransaction> transactions) {
       Assertion.Require(transactions, nameof(transactions));
 
@@ -69,6 +86,43 @@ namespace Empiria.Land.ESign {
       foreach (var certificate in certificates) {
         RevokeCertificateSign(certificate);
       }
+    }
+
+
+    internal void SignCertificate(Certificate certificate) {
+
+      certificate.Security.EnsureCanBeElectronicallySigned();
+
+      certificate.Security.PrepareForElectronicSign();
+
+      var contentToSign = GetContentToSign(certificate);
+
+      var documentUID = $"CAT_certificado_{certificate.UID}_{certificate.SecurityData.SecurityHash}";
+
+      ESignDataDto signData = _signServiceProvider.Sign(contentToSign, documentUID);
+
+      LandESignData landSignData = MapToLandESignData(signData);
+
+      certificate.Security.ElectronicSign(landSignData);
+    }
+
+
+    internal void SignLandRecord(LandRecord record) {
+      var validator = new LandRecordValidator(record);
+
+      validator.AssertCanBeElectronicallySigned();
+
+      record.Security.PrepareForElectronicSign();
+
+      var contentToSign = GetContentToSign(record);
+
+      var documentUID = $"CAT_sello_registral_{record.UID}_{record.SecurityData.SecurityHash}";
+
+      ESignDataDto signData = _signServiceProvider.Sign(contentToSign, documentUID);
+
+      LandESignData landSignData = MapToLandESignData(signData);
+
+      record.Security.ElectronicSign(landSignData);
     }
 
 
@@ -89,63 +143,6 @@ namespace Empiria.Land.ESign {
     }
 
     #endregion Public methods
-
-    #region Sign private methods
-
-    private void RevokeCertificateSign(Certificate certificate) {
-
-      certificate.Security.EnsureCanRevokeSign();
-
-      certificate.Security.RevokeSign();
-    }
-
-
-    private void RevokeLandRecordSign(LandRecord record) {
-      var validator = new LandRecordValidator(record);
-
-      validator.AssertCanRevokeSign();
-
-      record.Security.RevokeSign();
-    }
-
-
-    private void SignCertificate(Certificate certificate) {
-
-      certificate.Security.EnsureCanBeElectronicallySigned();
-
-      certificate.Security.PrepareForElectronicSign();
-
-      var contentToSign = GetContentToSign(certificate);
-
-      var documentUID = $"CAT_certificado_{certificate.UID}_{certificate.SecurityData.SecurityHash}";
-
-      ESignDataDto signData = _signServiceProvider.Sign(contentToSign, documentUID);
-
-      LandESignData landSignData = MapToLandESignData(signData);
-
-      certificate.Security.ElectronicSign(landSignData);
-    }
-
-
-    private void SignLandRecord(LandRecord record) {
-      var validator = new LandRecordValidator(record);
-
-      validator.AssertCanBeElectronicallySigned();
-
-      record.Security.PrepareForElectronicSign();
-
-      var contentToSign = GetContentToSign(record);
-
-      var documentUID = $"CAT_sello_registral_{record.UID}_{record.SecurityData.SecurityHash}";
-
-      ESignDataDto signData = _signServiceProvider.Sign(contentToSign, documentUID);
-
-      LandESignData landSignData = MapToLandESignData(signData);
-
-      record.Security.ElectronicSign(landSignData);
-    }
-
-    #endregion Sign private methods
 
     #region Helpers
 
