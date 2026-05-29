@@ -62,10 +62,10 @@ namespace Empiria.Land.Certificates {
     #region Builders
 
     private string BuildGravamenCertificateText() {
-      const string t = "QUE, HABIÉNDOSE REALIZADO UNA EXHAUSTIVA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+      const string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
                        "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
-                       "CORRESPONDIENTE AL BIEN INMUEBLE SE ENCUENTRA:<br/><br/>" +
-                       "<div style='text-align:center;font-size:12pt'><strong>GRAVADO</strong></div>" +
+                       "SE ENCONTRÓ QUE EL BIEN INMUEBLE ESTÁ :<br/>" +
+                       "<div style='text-align:center;font-size:16pt'><strong>G R A V A D O</strong></div>" +
                        "{{REAL.ESTATE.TEXT}}" +
                        "{{CURRENT.OWNERSHIP}}" +
                        "{{RECORDING.ACTS}}" +
@@ -85,10 +85,10 @@ namespace Empiria.Land.Certificates {
 
 
     private string BuildInscripcionCertificateText() {
-      const string t = "QUE, HABIÉNDOSE REALIZADO UNA EXHAUSTIVA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+      const string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
                        "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
-                       "CORRESPONDIENTE AL BIEN INMUEBLE SE ENCUENTRA:<br/><br/>" +
-                       "<div style='text-align:center;font-size:12pt'><strong>INSCRITO</strong></div>" +
+                       "SE ENCONTRÓ QUE EL BIEN INMUEBLE ESTÁ:<br/>" +
+                       "<div style='text-align:center;font-size:16pt'><strong>I N S C R I T O</strong></div>" +
                        "{{REAL.ESTATE.TEXT}}" +
                        "{{RECORDING.ACTS}}" +
                        "<br/><br/>";
@@ -106,10 +106,10 @@ namespace Empiria.Land.Certificates {
 
 
     private string BuildLibertadGravamenCertificateText() {
-      const string t = "QUE, HABIÉNDOSE REALIZADO UNA EXHAUSTIVA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+      const string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
                        "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
-                       "CORRESPONDIENTE AL BIEN INMUEBLE SE ENCUENTRA:<br/><br/>" +
-                       "<div style='text-align:center;font-size:12pt'><strong>LIBRE DE GRAVAMEN</strong></div>" +
+                       "SE ENCONTRÓ QUE EL BIEN INMUEBLE ESTÁ:<br/>" +
+                       "<div style='text-align:center;font-size:16pt'><strong>L I B R E &#160; &#160; D E  &#160; &#160; G R A V A M E N</strong></div>" +
                        "{{REAL.ESTATE.TEXT}}" +
                        "{{CURRENT.OWNERSHIP}}" +
                        "{{RECORDING.ACTS}}" +
@@ -133,10 +133,11 @@ namespace Empiria.Land.Certificates {
 
 
     private string BuildNoInscripcionCertificateText() {
-      const string t = "QUE, HABIÉNDOSE REALIZADO UNA EXHAUSTIVA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS, EL SIGUIENTE BIEN INMUEBLE SE ENCUENTRA:<br/><br/>" +
-                       "<div style='text-align:center;font-size:12pt'><strong>NO INSCRITO</strong></div>" +
-                       "<div style='font-size:12pt'><strong>{{ON.REAL.STATE.DESCRIPTION}}</strong></div>";
+      const string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS, RESPECTO AL SIGUIENTE BIEN INMUEBLE, SE ENCONTRÓ:<br/>" +
+                       "<div style='text-align:center;font-size:16pt'><strong>N O &#160; &#160; I N S C R I T O</strong></div><br/>" +
+                       "<div><strong>DATOS MANIFESTADOS EN LA CONSTANCIA DE INSCRIPCIÓN EXPEDIDA POR EL AYUNTAMIENTO:</strong></div>" +
+                       "{{ON.REAL.STATE.DESCRIPTION}}";
 
       string x = t.Replace("{{ON.REAL.STATE.DESCRIPTION}}", _certificate.OnRealEstateDescription);
 
@@ -145,10 +146,10 @@ namespace Empiria.Land.Certificates {
 
 
     private string BuildNoPropertyCertificateText() {
-      const string t = "QUE, HABIÉNDOSE REALIZADO UNA EXHAUSTIVA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+      const string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
                        "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS, NO SE ENCONTRÓ REGISTRADO NINGÚN BIEN INMUEBLE A " +
-                       "NOMBRE DE LA SIGUIENTE PERSONA:<br/><br/>" +
-                       "<div style='text-align:center;font-size:12pt'><strong>NO PROPIEDAD</strong></div>" +
+                       "NOMBRE DE LA SIGUIENTE PERSONA:<br/>" +
+                       "<div style='text-align:center;font-size:16pt'><strong>N O &#160; &#160; P R O P I E D A D</strong></div>" +
                        "<div style='text-align:center;font-size:12pt'><strong>{{ON.PERSON.NAME}}</strong></div>";
 
       string x = t.Replace("{{ON.PERSON.NAME}}", _certificate.OnPersonName);

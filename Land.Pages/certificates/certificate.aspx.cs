@@ -179,9 +179,9 @@ namespace Empiria.Land.Pages {
                        "{LA.EL} <b>{SIGNER.NAME}</b>, {JOB.TITLE}, CON FUNDAMENTO EN EL ARTÍCULO 104 DEL " +
                        "REGLAMENTO DEL REGISTRO PÚBLICO DE LA PROPIEDAD Y DEL COMERCIO:";
 
-      string x = t.Replace("{DATE}", CommonMethods.GetDateAsText(certificate.IssueTime));
+      string x = t.Replace("{DATE}", CommonMethods.GetDateAsText(certificate.SecurityData.SignedTime));
 
-      x = x.Replace("{TIME}", certificate.IssueTime.ToString(@"HH:mm"));
+      x = x.Replace("{TIME}", certificate.SecurityData.SignedTime.ToString(@"HH:mm"));
 
       x = x.Replace("{CITY}", certificate.RecorderOffice.Place);
 
@@ -208,7 +208,7 @@ namespace Empiria.Land.Pages {
 
 
     protected string GetCertificateValidityText() {
-      var text = "DE CONFORMIDAD CON LA NATURALEZA DE PUBLICIDAD Y CERTEZA JURÍDICA QUE RIGE ESTA INSTITUCIÓN, <br/>" +
+      var text = "DE CONFORMIDAD CON LA NATURALEZA DE PUBLICIDAD Y CERTEZA JURÍDICA QUE RIGE A ESTA INSTITUCIÓN, <br/>" +
                  "Y EN CONCORDANCIA CON LOS TÉRMINOS DE VIGENCIA ESTABLECIDOS EN EL MARCO REGLAMENTARIO VIGENTE <br/>" +
                  "APLICABLE A LAS CERTIFICACIONES REGISTRALES, EL PRESENTE DOCUMENTO TENDRÁ UNA VIGENCIA DE <br/>" +
                  "30 DÍAS NATURALES CONTADOS A PARTIR DE LA FECHA DE SU EXPEDICIÓN.";
