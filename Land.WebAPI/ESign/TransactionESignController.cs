@@ -38,21 +38,6 @@ namespace Empiria.Land.ESign.WebApi {
 
 
     [HttpPost]
-    [Route("v5/land/electronic-sign/execute-task/transactions/mine/refuse")]
-    public NoDataModel RefuseMyTransactionDocuments([FromBody] ESignCommand command) {
-
-      EnsureValidESignCommand(command);
-
-      using (var usecases = ESignerUseCases.UseCaseInteractor()) {
-
-        usecases.RefuseMyTransactionDocuments(command);
-
-        return new NoDataModel(this.Request);
-      }
-    }
-
-
-    [HttpPost]
     [Route("v5/land/electronic-sign/execute-task/transactions/mine/revoke")]
     public NoDataModel RevokeMyTransactionDocuments([FromBody] ESignCommand command) {
 
@@ -60,7 +45,7 @@ namespace Empiria.Land.ESign.WebApi {
 
       using (var usecases = ESignerUseCases.UseCaseInteractor()) {
 
-        usecases.RevokeMyTransactionDocuments(command);
+        usecases.RevokeByTransaction(command);
 
         return new NoDataModel(this.Request);
       }
@@ -75,22 +60,7 @@ namespace Empiria.Land.ESign.WebApi {
 
       using (var usecases = ESignerUseCases.UseCaseInteractor()) {
 
-        usecases.SignMyTransactionDocuments(command);
-
-        return new NoDataModel(this.Request);
-      }
-    }
-
-
-    [HttpPost]
-    [Route("v5/land/electronic-sign/execute-task/transactions/mine/unrefuse")]
-    public NoDataModel UnrefuseMyTransactionDocuments([FromBody] ESignCommand command) {
-
-      EnsureValidESignCommand(command);
-
-      using (var usecases = ESignerUseCases.UseCaseInteractor()) {
-
-        usecases.UnrefuseMyTransactionDocuments(command);
+        usecases.SignByTransaction(command);
 
         return new NoDataModel(this.Request);
       }

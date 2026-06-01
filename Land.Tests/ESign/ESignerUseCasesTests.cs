@@ -7,8 +7,6 @@
 *  Summary  : Test cases for electronic sign of documents.                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-
 using Xunit;
 
 using Empiria.Security;
@@ -49,20 +47,10 @@ namespace Empiria.Land.Tests.ESign {
 
 
     [Fact]
-    public void Should_Refuse_My_Transaction_Documents() {
-      ESignCommand command = CreateESignCommand(ESignCommandType.Refuse);
-
-      _usecases.RefuseMyTransactionDocuments(command);
-
-      Assert.True(true);
-    }
-
-
-    [Fact]
     public void Should_Revoke_My_Transaction_Documents() {
       ESignCommand command = CreateESignCommand(ESignCommandType.Revoke);
 
-      _usecases.RevokeMyTransactionDocuments(command);
+      _usecases.RevokeByDocument(command);
 
       Assert.True(true);
     }
@@ -72,17 +60,7 @@ namespace Empiria.Land.Tests.ESign {
     public void Should_Sign_My_Transaction_Documents() {
       ESignCommand command = CreateESignCommand(ESignCommandType.Sign);
 
-      _usecases.SignMyTransactionDocuments(command);
-
-      Assert.True(true);
-    }
-
-
-    [Fact]
-    public void Should_Unrefuse_My_Transaction_Documents() {
-      ESignCommand command = CreateESignCommand(ESignCommandType.Unrefuse);
-
-      _usecases.UnrefuseMyTransactionDocuments(command);
+      _usecases.SignByDocument(command);
 
       Assert.True(true);
     }
@@ -99,10 +77,10 @@ namespace Empiria.Land.Tests.ESign {
       return new ESignCommand {
         CommandType = commandType,
         Credentials = new SignCredentialsDto {
-           AppKey = ExecutionServer.CurrentPrincipal.ClientApp.Key,
-           UserID = TestingConstants.ESIGN_USERID,
-           Password = password,
-           UserHostAddress = ExecutionServer.CurrentPrincipal.Session.UserHostAddress,
+          AppKey = ExecutionServer.CurrentPrincipal.ClientApp.Key,
+          UserID = TestingConstants.ESIGN_USERID,
+          Password = password,
+          UserHostAddress = ExecutionServer.CurrentPrincipal.Session.UserHostAddress,
         },
         TransactionUIDs = new FixedList<string>(new[] { "TR-ZS-37XE8-9YJ23-0", "TR-ZS-92WB8-5FS47-7" })
       };

@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Security;
 using Empiria.Services;
 
@@ -45,18 +43,7 @@ namespace Empiria.Land.ESign.UseCases {
     }
 
 
-    public void RefuseMyTransactionDocuments(ESignCommand command) {
-      Assertion.Require(command, nameof(command));
-
-      command.EnsureIsValid(ESignCommandType.Refuse, false);
-
-      PrepareCredentials(command);
-
-      throw new NotImplementedException();
-    }
-
-
-    public void RevokeMyTransactionDocuments(ESignCommand command) {
+    public void RevokeByDocument(ESignCommand command) {
       Assertion.Require(command, nameof(command));
 
       command.EnsureIsValid(ESignCommandType.Revoke, false);
@@ -86,7 +73,26 @@ namespace Empiria.Land.ESign.UseCases {
     }
 
 
-    public void SignMyTransactionDocuments(ESignCommand command) {
+    public void RevokeByTransaction(ESignCommand command) {
+      Assertion.Require(command, nameof(command));
+
+      command.EnsureIsValid(ESignCommandType.Revoke, true);
+
+      PrepareCredentials(command);
+
+      FixedList<LRSTransaction> transactions = command.GetTransactions();
+
+      AssertWorkflowRulesToBeRevoked(transactions);
+
+      var signer = new LandDocumentsSigner(command.Credentials);
+
+      signer.RevokeTransactionDocumentsSigns(transactions);
+
+      UpdateWorkflowAfterRevoke(transactions);
+    }
+
+
+    public void SignByDocument(ESignCommand command) {
       Assertion.Require(command, nameof(command));
 
       command.EnsureIsValid(ESignCommandType.Sign, false);
@@ -115,14 +121,22 @@ namespace Empiria.Land.ESign.UseCases {
     }
 
 
-    public void UnrefuseMyTransactionDocuments(ESignCommand command) {
+    public void SignByTransaction(ESignCommand command) {
       Assertion.Require(command, nameof(command));
 
-      command.EnsureIsValid(ESignCommandType.Unrefuse, false);
+      command.EnsureIsValid(ESignCommandType.Sign, true);
 
       PrepareCredentials(command);
 
-      throw new NotImplementedException();
+      FixedList<LRSTransaction> transactions = command.GetTransactions();
+
+      AssertWorkflowRulesToBeSigned(transactions);
+
+      var signer = new LandDocumentsSigner(command.Credentials);
+
+      signer.SignTransactionDocuments(transactions);
+
+      UpdateWorkflowAfterSign(transactions);
     }
 
     #endregion Use cases
