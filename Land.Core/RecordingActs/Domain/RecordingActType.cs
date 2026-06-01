@@ -60,6 +60,12 @@ namespace Empiria.Land.Registration {
       }
     }
 
+    public bool IsCertificateActType {
+      get {
+        return base.ClassName == "Empiria.Land.Registration.RecordingCertificate";
+      }
+    }
+
     public bool IsDomainActType {
       get {
         return base.Name.StartsWith("ObjectType.RecordingAct.DomainAct") ||
@@ -88,12 +94,14 @@ namespace Empiria.Land.Registration {
     public bool IsStructureActType {
       get {
         return base.Name.StartsWith("ObjectType.RecordingAct.StructureAct") ||
-                                    EmpiriaMath.IsMemberOf(this.Id, new int[] { 2335, 2784 , 2786, 2787, 2788 });
+                                    EmpiriaMath.IsMemberOf(this.Id, new int[] { 2335, 2784, 2786, 2787, 2788 });
       }
     }
 
     public RecordingRule RecordingRule {
-      get { return RecordingRule.Parse(this); }
+      get {
+        return RecordingRule.Parse(this);
+      }
     }
 
     public ResourceRole ResourceRole {

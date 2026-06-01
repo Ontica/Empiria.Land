@@ -7,7 +7,9 @@
 *  Summary  : Use cases used to request land certificates within a transaction context.                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
+using System.Linq;
 
 using Empiria.Services;
 
@@ -103,8 +105,6 @@ namespace Empiria.Land.Certificates.UseCases {
 
       var transaction = LRSTransaction.Parse(transactionID);
 
-      // ToDo: control transaction / certificate edition
-
       EnsureTransactionHasCertificate(transaction, certificateGuid);
 
       CertificateDto certificate = CertificateIssuingService.OpenCertificate(certificateGuid);
@@ -122,7 +122,7 @@ namespace Empiria.Land.Certificates.UseCases {
 
       var transaction = LRSTransaction.Parse(transactionID);
 
-      // ToDo: control transaction / certificate edition
+      EnsureCanGenerateMoreCertificates(transaction);
 
       CertificateType certificateType = command.GetCertificateType();
 
@@ -150,10 +150,22 @@ namespace Empiria.Land.Certificates.UseCases {
       return CertificateRequestMapper.Map(transaction, certificate);
     }
 
-
     #endregion Command use cases
 
     #region Helpers
+
+
+    private void EnsureCanGenerateMoreCertificates(LRSTransaction transaction) {
+
+      int issued = transaction.GetIssuedCertificates().Count;
+
+      int payed = transaction.Services.FindAll(x => x.ServiceType.IsCertificateActType)
+                                      .Sum(x => Convert.ToInt32(x.Quantity.Amount));
+
+      Assertion.Require(issued < payed, "El número de certificados emitidos " +
+                                        "excede el número de certificados pagados.");
+    }
+
 
     static internal void EnsureTransactionHasCertificate(LRSTransaction transaction,
                                                          Guid certificateGuid) {
