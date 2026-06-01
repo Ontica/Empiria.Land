@@ -70,8 +70,6 @@ namespace Empiria.Land.Certificates.Data {
                   o.Transaction.Id, o.RecorderOffice.Id,
                   o.OnRecordableSubject.Id, o.OnLandRecord.Id,
                   o.Notes, o.ExtensionData.ToString(), o.AsText,
-                  (char) o.SecurityData.SignStatus, (char) o.SecurityData.SignType,
-                  o.SecurityData.SignedBy.Id, o.SecurityData.SignedTime, o.SecurityData.ExtData.ToString(),
                   o.Keywords, o.IssueTime, o.IssuedBy.Id, (char) o.IssueMode,
                   o.PostedBy.Id, o.PostingTime, (char) o.Status,
                   o.Integrity.GetUpdatedHashCode());
