@@ -39,6 +39,11 @@ namespace Empiria.Land.Certificates {
     #region Public methods
 
     internal bool CanChangeStatusTo(CertificateStatus newStatus) {
+
+      if (!Certificate.Transaction.ControlData.CanEditCertificates) {
+        return false;
+      }
+
       CertificateStatus currentStatus = Certificate.Status;
 
       if (currentStatus == CertificateStatus.Pending &&
