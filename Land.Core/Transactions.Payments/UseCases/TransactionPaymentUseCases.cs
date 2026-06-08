@@ -111,9 +111,16 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
         return;
       }
 
-      string paymentOrderUID = transaction.PaymentData.PaymentOrder.UID;
+      // string paymentOrderUID = transaction.PaymentData.PaymentOrder.UID;
 
-      if (!EmpiriaString.IsInteger(paymentOrderUID)) {
+      string paymentOrderUID = paymentFields.ReceiptNo;
+
+      if (EmpiriaString.IsInteger(paymentOrderUID)) {
+        Assertion.Require(paymentOrderUID == paymentFields.ReceiptNo,
+              "El número de recibo proporcionado no coincide con el número del recibo " +
+              "asociado a la orden de pago generada para este trámite.");
+
+      } else {
         paymentOrderUID = paymentFields.ReceiptNo;
       }
 
@@ -122,22 +129,7 @@ namespace Empiria.Land.Transactions.Payments.UseCases {
 
       var connector = new PaymentServicesConnector();
 
-      try {
-        _ = await connector.GetPaymentStatus(paymentOrderUID);
-
-        return;
-
-      } catch {
-        paymentOrderUID = paymentFields.ReceiptNo;
-      }
-
-      try {
-        await connector.EnsureIsPayed(paymentOrderUID, paymentFields.Total);
-
-      } catch {
-        await connector.EnsureIsPayed(paymentFields.ReceiptNo, paymentFields.Total);
-
-      }
+      await connector.EnsureIsPayed(paymentOrderUID, paymentFields.Total);
     }
 
 
