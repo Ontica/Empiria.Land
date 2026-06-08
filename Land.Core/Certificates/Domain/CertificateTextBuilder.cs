@@ -136,10 +136,13 @@ namespace Empiria.Land.Certificates {
       string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
                        $"POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS {YearsAsText()} RESPECTO AL SIGUIENTE BIEN INMUEBLE, SE ENCONTRÓ:<br/>" +
                        "<div style='text-align:center;font-size:16pt'><strong>N O &#160; &#160; I N S C R I T O</strong></div><br/>" +
-                       "<div><strong>DATOS MANIFESTADOS EN LA CONSTANCIA DE INSCRIPCIÓN EXPEDIDA POR EL AYUNTAMIENTO:</strong></div>" +
-                       "{{ON.REAL.STATE.DESCRIPTION}}";
+                       "<div><strong>DATOS DEL PREDIO:</strong></div>" +
+                       "{{ON.REAL.STATE.DESCRIPTION}}<div><br/>" +
+                        "<strong>DATOS MANIFESTADOS EN LA CONSTANCIA DE INSCRIPCIÓN EXPEDIDA POR EL AYUNTAMIENTO:</strong></div>" +
+                       "{{ON.REAL.STATE.CADASTRAL.NOTES}}";
 
       string x = t.Replace("{{ON.REAL.STATE.DESCRIPTION}}", _certificate.OnRealEstateDescription);
+      x = x.Replace("{{ON.REAL.STATE.CADASTRAL.NOTES}}", _certificate.OnRealEstateCadastralNotes);
 
       return x.ToUpperInvariant();
     }
@@ -147,10 +150,10 @@ namespace Empiria.Land.Certificates {
 
     private string BuildNoPropertyCertificateText() {
       string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                $"POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS {YearsAsText()}, NO SE ENCONTRÓ REGISTRADO NINGÚN BIEN INMUEBLE A " +
-                "NOMBRE DE LA SIGUIENTE PERSONA:<br/>" +
+                $"POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS {YearsAsText()}, NO SE ENCONTRÓ REGISTRO DE BIEN INMUEBLE A " +
+                "NOMBRE DE LA PERSONA QUE SE INDICA, HACIÉNDOSE CONSTAR LA SIGUIENTE SITUACIÓN REGISTRAL:<br/>" +
                 "<div style='text-align:center;font-size:16pt'><strong>N O &#160; &#160; P R O P I E D A D</strong></div>" +
-                "<div style='text-align:center;font-size:12pt'><strong>{{ON.PERSON.NAME}}</strong></div>";
+                "<div style='text-align:center;font-size:12pt'>RESPECTO DE: <strong>{{ON.PERSON.NAME}}</strong></div>";
 
       string x = t.Replace("{{ON.PERSON.NAME}}", _certificate.OnPersonName);
 
@@ -250,7 +253,7 @@ namespace Empiria.Land.Certificates {
                "Por lo tanto no se pueden determinar sus propietarios o posesionarios.</strong><br/>";
       }
 
-      var temp = "<strong>ÚLTIMO ACTO DE DOMINIO:</strong><br/>" +
+      var temp = "<strong>ÚLTIMO ACTO DE TRASLATIVO DE DOMINIO:</strong><br/>" +
                  "<strong>{{RECORDING.ACT.NAME}}</strong>, CON FECHA DE REGISTRO EL DÍA {{RECORDING.ACT.DATE}}, {{RECORDING.TEXT}}.<br/>";
 
       temp = temp.Replace("{{RECORDING.ACT.NAME}}", ownershipAct.KindOrDisplayName);
