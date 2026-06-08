@@ -62,8 +62,8 @@ namespace Empiria.Land.Certificates {
     #region Builders
 
     private string BuildGravamenCertificateText() {
-      const string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
+      string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       $"POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS {YearsAsText()} RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
                        "SE ENCONTRÓ QUE EL BIEN INMUEBLE ESTÁ :<br/>" +
                        "<div style='text-align:center;font-size:16pt'><strong>G R A V A D O</strong></div>" +
                        "{{REAL.ESTATE.TEXT}}" +
@@ -85,8 +85,8 @@ namespace Empiria.Land.Certificates {
 
 
     private string BuildInscripcionCertificateText() {
-      const string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
+      string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       $"POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS {YearsAsText()} RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
                        "SE ENCONTRÓ QUE EL BIEN INMUEBLE ESTÁ:<br/>" +
                        "<div style='text-align:center;font-size:16pt'><strong>I N S C R I T O</strong></div>" +
                        "{{REAL.ESTATE.TEXT}}" +
@@ -106,8 +106,8 @@ namespace Empiria.Land.Certificates {
 
 
     private string BuildLibertadGravamenCertificateText() {
-      const string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
+      string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       $"POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS {YearsAsText()} RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
                        "SE ENCONTRÓ QUE EL BIEN INMUEBLE ESTÁ:<br/>" +
                        "<div style='text-align:center;font-size:16pt'><strong>L I B R E &#160; &#160; D E  &#160; &#160; G R A V A M E N</strong></div>" +
                        "{{REAL.ESTATE.TEXT}}" +
@@ -133,8 +133,8 @@ namespace Empiria.Land.Certificates {
 
 
     private string BuildNoInscripcionCertificateText() {
-      const string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS, RESPECTO AL SIGUIENTE BIEN INMUEBLE, SE ENCONTRÓ:<br/>" +
+      string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                       $"POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS {YearsAsText()} RESPECTO AL SIGUIENTE BIEN INMUEBLE, SE ENCONTRÓ:<br/>" +
                        "<div style='text-align:center;font-size:16pt'><strong>N O &#160; &#160; I N S C R I T O</strong></div><br/>" +
                        "<div><strong>DATOS MANIFESTADOS EN LA CONSTANCIA DE INSCRIPCIÓN EXPEDIDA POR EL AYUNTAMIENTO:</strong></div>" +
                        "{{ON.REAL.STATE.DESCRIPTION}}";
@@ -146,11 +146,11 @@ namespace Empiria.Land.Certificates {
 
 
     private string BuildNoPropertyCertificateText() {
-      const string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       "POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS VEINTE AÑOS, NO SE ENCONTRÓ REGISTRADO NINGÚN BIEN INMUEBLE A " +
-                       "NOMBRE DE LA SIGUIENTE PERSONA:<br/>" +
-                       "<div style='text-align:center;font-size:16pt'><strong>N O &#160; &#160; P R O P I E D A D</strong></div>" +
-                       "<div style='text-align:center;font-size:12pt'><strong>{{ON.PERSON.NAME}}</strong></div>";
+      string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
+                $"POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS {YearsAsText()}, NO SE ENCONTRÓ REGISTRADO NINGÚN BIEN INMUEBLE A " +
+                "NOMBRE DE LA SIGUIENTE PERSONA:<br/>" +
+                "<div style='text-align:center;font-size:16pt'><strong>N O &#160; &#160; P R O P I E D A D</strong></div>" +
+                "<div style='text-align:center;font-size:12pt'><strong>{{ON.PERSON.NAME}}</strong></div>";
 
       string x = t.Replace("{{ON.PERSON.NAME}}", _certificate.OnPersonName);
 
@@ -454,6 +454,22 @@ namespace Empiria.Land.Certificates {
       recordingActs = FixedList<RecordingAct>.Merge(recordingActs, realEstate.GetDomainActs());
 
       return recordingActs.Sort((x, y) => x.CompareToString.CompareTo(y.CompareToString));
+    }
+
+
+    private string YearsAsText() {
+      if (_certificate.RecorderOffice.Id == 112) {
+
+        int miguelAuzaYears = DateTime.Today.Year - 11;
+
+        if (miguelAuzaYears < 20) {
+          return $"{EmpiriaSpeech.SpeechInteger(miguelAuzaYears)} AÑOS"
+                 .ToUpper();
+        }
+      }
+
+      return $"{EmpiriaSpeech.SpeechInteger(20)} AÑOS"
+            .ToUpper();
     }
 
     #endregion Helpers
