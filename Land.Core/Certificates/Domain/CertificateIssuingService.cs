@@ -69,14 +69,17 @@ namespace Empiria.Land.Certificates {
 
     static internal CertificateDto CreateOnRealEstateDescription(CertificateType certificateType,
                                                                  LRSTransaction transaction,
-                                                                 string realEstateDescription) {
+                                                                 string realEstateDescription,
+                                                                 string realEstateCadastralNotes) {
 
       Assertion.Require(certificateType, nameof(certificateType));
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(realEstateDescription, nameof(realEstateDescription));
+      Assertion.Require(realEstateCadastralNotes, nameof(realEstateCadastralNotes));
 
       var certificate = Certificate.CreateOnRealEstateDescription(certificateType, transaction,
-                                                                  realEstateDescription);
+                                                                  realEstateDescription,
+                                                                  realEstateCadastralNotes);
 
       certificate.Save();
 

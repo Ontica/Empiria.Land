@@ -64,6 +64,11 @@ namespace Empiria.Land.Certificates.Adapters {
     } = string.Empty;
 
 
+    public string RealEstateCadastralNotes {
+      get; set;
+    } = string.Empty;
+
+
     public string RecordingBookUID {
       get; set;
     } = string.Empty;

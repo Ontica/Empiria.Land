@@ -216,6 +216,7 @@ namespace Empiria.Land.Certificates {
           "OnLandRecord", cer.OnLandRecord.Id,
           "OnPersonName", cer.OnPersonName,
           "OnRealEstateDescription", cer.OnRealEstateDescription,
+          "OnRealEstateCadastralNotes", cer.OnRealEstateCadastralNotes,
           "OnRecordableSubject", cer.OnRecordableSubject.Id,
           "CertificateText", cer.AsText,
           "SignedBy", cer.SecurityData.SignedBy.Id,

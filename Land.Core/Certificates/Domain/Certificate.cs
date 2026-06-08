@@ -62,15 +62,18 @@ namespace Empiria.Land.Certificates {
 
     static internal Certificate CreateOnRealEstateDescription(CertificateType certificateType,
                                                               LRSTransaction transaction,
-                                                              string realEstateDescription) {
+                                                              string realEstateDescription,
+                                                              string realEstateCadastralNotes) {
       Assertion.Require(certificateType, nameof(certificateType));
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(realEstateDescription, nameof(realEstateDescription));
+      Assertion.Require(realEstateCadastralNotes, nameof(realEstateCadastralNotes));
 
       var certificate = new Certificate(certificateType) {
         CertificateID = certificateType.CreateCertificateID(),
         Transaction = transaction,
-        OnRealEstateDescription = realEstateDescription
+        OnRealEstateDescription = realEstateDescription,
+        OnRealEstateCadastralNotes = realEstateCadastralNotes
       };
 
       return certificate;
@@ -155,6 +158,17 @@ namespace Empiria.Land.Certificates {
       }
       private set {
         ExtensionData.SetIfValue("onRealEstateDescription", value);
+      }
+    }
+
+
+    public string OnRealEstateCadastralNotes {
+      get {
+        return ExtensionData.Get("onRealEstateCadastralNotes", string.Empty);
+      }
+      private set {
+        ExtensionData.SetIfValue("onRealEstateCadastralNotes", value);
+        ExtensionData.SetIfValue("onRealEstateCadastralNotes", value);
       }
     }
 
@@ -284,7 +298,8 @@ namespace Empiria.Land.Certificates {
           "RecorderOffice", this.RecorderOffice.Id,
           "OnRecordableSubjectId", this.OnRecordableSubject.Id,
           "OnLandRecordId", this.OnLandRecord.Id, "OnPersonName", this.OnPersonName,
-          "OnRealEstateDesscripton", this.OnRealEstateDescription,
+          "OnRealEstateDescription", this.OnRealEstateDescription,
+          "OnRealEstateCadastralNotes", this.OnRealEstateCadastralNotes,
           "ExtensionData", this.ExtensionData.ToString(), "AsText", this.AsText,
           "IssueTime", this.IssueTime, "IssuedById", this.IssuedBy.Id,
           "IssueMode", (char) this.IssueMode, "PostedBy", this.PostedBy.Id,

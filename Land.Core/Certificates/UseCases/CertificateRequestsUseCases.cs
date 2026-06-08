@@ -138,7 +138,8 @@ namespace Empiria.Land.Certificates.UseCases {
 
         certificate = CertificateIssuingService.CreateOnRealEstateDescription(certificateType,
                                                                               transaction,
-                                                                              command.Payload.RealEstateDescription);
+                                                                              command.Payload.RealEstateDescription,
+                                                                              command.Payload.RealEstateCadastralNotes);
       } else {
         Resource recordableSubject = command.GetRecordableSubject();
 
