@@ -10,6 +10,9 @@
 
 using Empiria.Storage;
 
+using Empiria.Land.Media;
+using Empiria.Land.Media.Adapters;
+
 using Empiria.Land.Registration;
 
 using Empiria.Land.RecordableSubjects.Adapters;
@@ -48,8 +51,9 @@ namespace Empiria.Land.Certificates.Adapters {
     #region Helpers
 
     static private MediaData GetCertificateMediaLink(Certificate certificate) {
-      return new MediaData("text/html",
-                           $"http://10.113.5.57/pages/certificates/certificate.aspx?uid={certificate.UID}");
+      var mediaBuilder = new LandMediaBuilder();
+
+      return mediaBuilder.GetMediaDto(LandMediaContent.Certificate, certificate.UID);
     }
 
 

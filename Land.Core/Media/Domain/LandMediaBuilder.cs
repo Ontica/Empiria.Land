@@ -27,6 +27,10 @@ namespace Empiria.Land.Media {
     public MediaData GetMediaDto(LandMediaContent mediaContent, params string[] parameters) {
       switch (mediaContent) {
 
+        case LandMediaContent.Certificate:
+          return new MediaData("text/html",
+                                $"{MEDIA_URL}/certificates/certificate.aspx?uid={parameters[0]}");
+
         case LandMediaContent.TransactionControlVoucher:
           return new MediaData("text/html",
                                 $"{MEDIA_URL}/receipts/control.voucher.aspx?uid={parameters[0]}");
