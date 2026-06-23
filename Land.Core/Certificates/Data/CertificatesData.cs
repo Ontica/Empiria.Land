@@ -19,7 +19,7 @@ namespace Empiria.Land.Certificates.Data {
 
     static internal FixedList<Certificate> GetRecordableSubjectIssuedCertificates(Resource recordableSubject) {
       var sql = "SELECT * FROM LRSCertificates " +
-               $"WHERE PropertyId = {recordableSubject.Id} AND CertificateStatus = 'C' " +
+               $"WHERE OnRecordableSubjectId = {recordableSubject.Id} AND CertificateStatus = 'C' " +
                 "ORDER BY CertificateId";
 
       var op = DataOperation.Parse(sql);
