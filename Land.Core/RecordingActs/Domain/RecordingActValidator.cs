@@ -27,7 +27,7 @@ namespace Empiria.Land.Registration {
     internal RecordingActValidator(RecordingAct recordingAct) {
       Assertion.Require(recordingAct, nameof(recordingAct));
 
-      _recordingAct= recordingAct;
+      _recordingAct = recordingAct;
     }
 
     #endregion Constructors and parsers
@@ -243,8 +243,13 @@ namespace Empiria.Land.Registration {
 
 
     internal bool WasCanceledOn(DateTime onDate) {
-      if (!_recordingAct.AmendedBy.IsEmptyInstance && _recordingAct.AmendedBy.RecordingActType.IsCancelationActType &&
-           _recordingAct.AmendedBy.LandRecord.PresentationTime > onDate) {
+      if (_recordingAct.AmendedBy.IsEmptyInstance) {
+        return false;
+      }
+      if (!_recordingAct.AmendedBy.RecordingActType.IsCancelationActType) {
+        return false;
+      }
+      if (_recordingAct.AmendedBy.LandRecord.PresentationTime <= onDate) {
         return true;
       }
       return false;
