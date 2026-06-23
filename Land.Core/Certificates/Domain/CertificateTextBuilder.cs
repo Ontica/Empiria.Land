@@ -63,7 +63,7 @@ namespace Empiria.Land.Certificates {
 
     private string BuildGravamenCertificateText() {
       string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       $"POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS {YearsAsText()} RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
+                       $"POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS {YearsAsText()}, " +
                        "SE ENCONTRÓ QUE EL BIEN INMUEBLE ESTÁ :<br/>" +
                        "<div style='text-align:center;font-size:16pt'><strong>G R A V A D O</strong></div>" +
                        "{{REAL.ESTATE.TEXT}}" +
@@ -86,7 +86,7 @@ namespace Empiria.Land.Certificates {
 
     private string BuildInscripcionCertificateText() {
       string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       $"POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS {YearsAsText()} RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
+                       $"POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS {YearsAsText()}, " +
                        "SE ENCONTRÓ QUE EL BIEN INMUEBLE ESTÁ:<br/>" +
                        "<div style='text-align:center;font-size:16pt'><strong>I N S C R I T O</strong></div>" +
                        "{{REAL.ESTATE.TEXT}}" +
@@ -107,7 +107,7 @@ namespace Empiria.Land.Certificates {
 
     private string BuildLibertadGravamenCertificateText() {
       string t = "QUE, HABIÉNDOSE REALIZADO UNA MINUCIOSA BÚSQUEDA EN LOS ARCHIVOS QUE OBRAN EN ESTA OFICIALÍA A MI CARGO, " +
-                       $"POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS {YearsAsText()} RESPECTO AL FOLIO ELECTRÓNICO: {{REAL.ESTATE.UID}}, " +
+                       $"POR UN LAPSO CORRESPONDIENTE A LOS ÚLTIMOS {YearsAsText()}, " +
                        "SE ENCONTRÓ QUE EL BIEN INMUEBLE ESTÁ:<br/>" +
                        "<div style='text-align:center;font-size:16pt'><strong>L I B R E &#160; &#160; D E  &#160; &#160; G R A V A M E N</strong></div>" +
                        "{{REAL.ESTATE.TEXT}}" +
@@ -249,15 +249,14 @@ namespace Empiria.Land.Certificates {
       var ownershipAct = realEstate.TryGetLastDomainAct();
 
       if (ownershipAct == null) {
-        return "<strong>El predio no tiene registrado ningún acto de dominio. " +
-               "Por lo tanto no se pueden determinar sus propietarios o posesionarios.</strong><br/>";
+        return string.Empty;
       }
 
-      var temp = "<strong>ÚLTIMO ACTO DE TRASLATIVO DE DOMINIO:</strong><br/>" +
+      var temp = "<strong>ÚLTIMO ACTO TRASLATIVO DE DOMINIO:</strong><br/>" +
                  "<strong>{{RECORDING.ACT.NAME}}</strong>, CON FECHA DE REGISTRO EL DÍA {{RECORDING.ACT.DATE}}, {{RECORDING.TEXT}}.<br/>";
 
       temp = temp.Replace("{{RECORDING.ACT.NAME}}", ownershipAct.KindOrDisplayName);
-      temp = temp.Replace("{{RECORDING.ACT.DATE}}", FormatDate(ownershipAct.RegistrationTime));
+      temp = temp.Replace("{{RECORDING.ACT.DATE}}", FormatDate(ownershipAct.LandRecord.AuthorizationTime));
 
       if (ownershipAct.HasBookEntry) {
         temp = temp.Replace("{{RECORDING.TEXT}}", $"INSCRITO EN {ownershipAct.BookEntry.AsText}");
@@ -357,7 +356,7 @@ namespace Empiria.Land.Certificates {
     private string GeneratePreemptiveActText(RecordingAct recordingAct) {
 
       return $"<strong>{recordingAct.KindOrDisplayName}</strong> " +
-             $"REGISTRADO EL DÍA {FormatDate(recordingAct.RegistrationTime)}, " +
+             $"REGISTRADO EL DÍA {FormatDate(recordingAct.LandRecord.AuthorizationTime)}, " +
              $"{GenerateRecordingActAmountsText(recordingAct)} " +
              $"BAJO EL SELLO REGISTRAL <b>{recordingAct.LandRecord.UID}</b>.<br/>" +
              $"{recordingAct.Summary}";
@@ -375,7 +374,7 @@ namespace Empiria.Land.Certificates {
         temp = temp.Replace("{{RECORDING.SEAL}}", $"Sello registral <strong>{recordingAct.LandRecord.UID}</strong>");
       }
 
-      temp = temp.Replace("{{RECORDING.DATE}}", FormatDate(recordingAct.RegistrationTime));
+      temp = temp.Replace("{{RECORDING.DATE}}", FormatDate(recordingAct.LandRecord.AuthorizationTime));
 
       FixedList<RecordingActParty> primaryParties = recordingAct.Parties.PrimaryParties;
 
@@ -395,8 +394,8 @@ namespace Empiria.Land.Certificates {
     static private string GenerateHardLimitationActText(RecordingAct recordingAct) {
 
       return $"<strong>{recordingAct.KindOrDisplayName}</strong> " +
-            $"REGISTRADO EL DÍA {FormatDate(recordingAct.RegistrationTime)}," +
-            $"{GenerateRecordingActAmountsText(recordingAct)}" +
+            $"REGISTRADO EL DÍA {FormatDate(recordingAct.LandRecord.AuthorizationTime)}," +
+            $"{GenerateRecordingActAmountsText(recordingAct)} " +
             $"BAJO EL SELLO REGISTRAL <strong>{recordingAct.LandRecord.UID}</strong>.<br/>" +
             $"{GeneratePartiesText(recordingAct)}";
     }
@@ -407,6 +406,8 @@ namespace Empiria.Land.Certificates {
       var temp = $"<strong>{recordingAct.KindOrDisplayName}</strong>.";
 
       var partition = (RealEstate) recordingAct.Resource;
+
+      temp += $" CON FOLIO REAL {partition.UID}. ";
 
       if (partition.LotSize.Amount != 0) {
         temp += $"Superficie: {partition.LotSize.ToString()}. ";
@@ -443,7 +444,7 @@ namespace Empiria.Land.Certificates {
         temp = $"Sello registral <strong>{recordingAct.LandRecord.UID}</strong>";
       }
 
-      return $"{temp} de fecha {FormatDate(recordingAct.RegistrationTime)}.";
+      return $"{temp} de fecha {FormatDate(recordingAct.LandRecord.AuthorizationTime)}.";
     }
 
 
