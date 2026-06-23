@@ -666,6 +666,11 @@ namespace Empiria.Land.Registration {
         this.OperationAmount = fields.OperationAmount;
         this.OperationCurrency = Currency.Parse(fields.CurrencyUID);
       }
+
+      if (this.LandRecord.IsHistoricRecord &&
+          fields.Status == RecordableObjectStatus.Registered) {
+        this.Status = RecordableObjectStatus.Closed;
+      }
     }
 
 

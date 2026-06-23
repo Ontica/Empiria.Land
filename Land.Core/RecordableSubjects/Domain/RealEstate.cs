@@ -276,8 +276,7 @@ namespace Empiria.Land.Registration {
 
       tract = tract.FindAll((x) => (x.Validator.WasAliveOn(DateTime.Now) &&
                                     x.RecordingActType.RecordingRule.IsHardLimitation &&
-                                    x.LandRecord.IsClosed
-                            ));
+                                    x.IsCompleted));
       return tract;
     }
 
