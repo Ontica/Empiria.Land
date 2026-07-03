@@ -152,10 +152,7 @@ namespace Empiria.Land.Transactions.Workflow {
 
 
     static public bool IsArchivable(LRSTransaction transaction) {
-      if (transaction.DocumentType.Id == 761) {
-        return true;
-      }
-      return false;
+      return transaction.DocumentType.IsArchivable;
     }
 
 
@@ -251,7 +248,7 @@ namespace Empiria.Land.Transactions.Workflow {
 
 
     static public bool IsRecordingDocumentCase(LRSTransaction transaction) {
-      if (EmpiriaMath.IsMemberOf(transaction.TransactionType.Id, new[] { 700, 704 , 705})) {
+      if (EmpiriaMath.IsMemberOf(transaction.TransactionType.Id, new[] { 700, 704, 705 })) {
         return true;
       }
 

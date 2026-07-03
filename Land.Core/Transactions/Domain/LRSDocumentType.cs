@@ -7,8 +7,6 @@
 *  Summary  : Describes a Recorder Office document type.                                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-
 using Empiria.Land.Registration;
 
 namespace Empiria.Land.Transactions {
@@ -23,11 +21,15 @@ namespace Empiria.Land.Transactions {
     }
 
     static public LRSDocumentType Empty {
-      get { return BaseObject.ParseEmpty<LRSDocumentType>(); }
+      get {
+        return BaseObject.ParseEmpty<LRSDocumentType>();
+      }
     }
 
     static public LRSDocumentType Unknown {
-      get { return BaseObject.ParseUnknown<LRSDocumentType>(); }
+      get {
+        return BaseObject.ParseUnknown<LRSDocumentType>();
+      }
     }
 
     static public LRSDocumentType Parse(int id) {
@@ -56,6 +58,13 @@ namespace Empiria.Land.Transactions {
           _defaultRecordingActs = list.ToFixedList();
         }
         return _defaultRecordingActs;
+      }
+    }
+
+
+    public bool IsArchivable {
+      get {
+        return base.ExtendedDataField.Get("IsArchivable", false);
       }
     }
 
