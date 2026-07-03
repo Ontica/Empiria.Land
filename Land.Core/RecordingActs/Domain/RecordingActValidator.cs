@@ -235,9 +235,11 @@ namespace Empiria.Land.Registration {
       }
 
       var autoCancelDays = _recordingAct.RecordingActType.RecordingRule.AutoCancel;
+
       if (autoCancelDays == 0) {
         return true;
       }
+
       return _recordingAct.LandRecord.PresentationTime.Date.AddDays(autoCancelDays) >= onDate.Date;
     }
 

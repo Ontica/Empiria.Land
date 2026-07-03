@@ -244,13 +244,13 @@ namespace Empiria.Land.Registration {
       if (lastDomainAct == null) {
         return this.Tract.GetRecordingActs()
                          .FindAll(x => x.Validator.WasAliveOn(DateTime.Now) &&
-                                      (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
+                                      (x.LandRecord.IsClosed || x.HasBookEntry));
       }
 
       FixedList<RecordingAct> acts = this.Tract.GetRecordingActs()
                                                .Sublist(this.Tract.GetRecordingActs().IndexOf(lastDomainAct))
                                                .FindAll(x => x.Validator.WasAliveOn(DateTime.Now) &&
-                                                             (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
+                                                             (x.LandRecord.IsClosed || x.HasBookEntry));
 
       if (!includeLastDomainAct) {
         acts.Remove(lastDomainAct);
@@ -274,9 +274,10 @@ namespace Empiria.Land.Registration {
     public FixedList<RecordingAct> GetHardLimitationActs() {
       var tract = base.Tract.GetRecordingActs();
 
-      tract = tract.FindAll((x) => (x.Validator.WasAliveOn(DateTime.Now) &&
-                                    x.RecordingActType.RecordingRule.IsHardLimitation &&
-                                    x.IsCompleted));
+      tract = tract.FindAll(x => x.Validator.WasAliveOn(DateTime.Now) &&
+                                 x.RecordingActType.RecordingRule.IsHardLimitation &&
+                                 (x.LandRecord.IsClosed || x.HasBookEntry));
+
       return tract;
     }
 
@@ -286,7 +287,7 @@ namespace Empiria.Land.Registration {
 
       return tract.FindAll(x => x.Validator.WasAliveOn(DateTime.Now) &&
                                 x.RecordingActType.RecordingRule.IsSoftLimitation &&
-                                x.LandRecord.IsClosed);
+                                (x.LandRecord.IsClosed || x.HasBookEntry));
     }
 
 
@@ -339,7 +340,7 @@ namespace Empiria.Land.Registration {
 
     internal FixedList<RecordingAct> GetDomainActs() {
       return base.Tract.GetRecordingActs().FindAll(x => x.RecordingActType.IsDomainActType &&
-                                                       (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
+                                                       (x.LandRecord.IsClosed || x.HasBookEntry));
     }
 
 
@@ -421,7 +422,7 @@ namespace Empiria.Land.Registration {
 
       return tract.FindLast(x => x.Validator.WasAliveOn(DateTime.Now) &&
                                  x.RecordingActType.IsDomainActType &&
-                                 (x.LandRecord.IsClosed || !x.BookEntry.IsEmptyInstance));
+                                 (x.LandRecord.IsClosed || x.HasBookEntry));
     }
 
     #endregion Methods
