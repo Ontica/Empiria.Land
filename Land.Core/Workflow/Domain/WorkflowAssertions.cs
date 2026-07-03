@@ -7,7 +7,8 @@
 *  Summary  : Workflow's assertion check methods.                                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
+using System.Linq;
 
 using Empiria.Contacts;
 
@@ -45,23 +46,46 @@ namespace Empiria.Land.Transactions.Workflow {
 
       if (nextStatus == TransactionStatus.OnSign || nextStatus == TransactionStatus.Revision ||
           nextStatus == TransactionStatus.Archived || nextStatus == TransactionStatus.ToDeliver) {
+
         if (!transaction.LandRecord.IsEmptyInstance && !transaction.LandRecord.IsClosed) {
           Assertion.RequireFail($"La inscripción del trámite {transaction.UID} no ha sido cerrada. " +
                                 $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
+
+          if (transaction.GetIssuedCertificates().Any(x => !x.IsClosed)) {
+            Assertion.RequireFail($"El trámite {transaction.UID} tiene certificados que no han sido cerrados. " +
+                                  $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
+          }
         }
       }
 
       if (nextStatus == TransactionStatus.ToDeliver) {
+
         if (!transaction.LandRecord.IsEmptyInstance && transaction.LandRecord.SecurityData.IsUnsigned) {
           Assertion.RequireFail($"La inscripción del trámite {transaction.UID} no ha sido firmada. " +
                                 $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
         }
+
+        if (transaction.GetIssuedCertificates().Any(x => x.SecurityData.IsUnsigned)) {
+          Assertion.RequireFail($"El trámite {transaction.UID} tiene certificados que no han sido firmados. " +
+                                $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
+        }
+
+        if (transaction.LandRecord.IsEmptyInstance && transaction.GetIssuedCertificates().Count == 0) {
+          Assertion.RequireFail($"El trámite {transaction.UID} no tiene una inscripción ni certificados emitidos. " +
+                                $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
+        }
       }
+
       if (nextStatus == TransactionStatus.ToReturn && !transaction.LandRecord.IsEmptyInstance) {
         if (transaction.LandRecord.IsClosed || transaction.LandRecord.RecordingActs.Count > 0) {
           Assertion.RequireFail($"El trámite {transaction.UID} tiene registrada una inscripción con uno o más actos jurídicos. " +
                                 $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
         }
+      }
+
+      if (nextStatus == TransactionStatus.ToReturn && transaction.GetIssuedCertificates().Count != 0) {
+        Assertion.RequireFail($"El trámite {transaction.UID} tiene registrados uno o más certificados. " +
+                              $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
       }
 
       if ((nextStatus == TransactionStatus.ToDeliver || nextStatus == TransactionStatus.Delivered) &&
