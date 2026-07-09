@@ -8,8 +8,6 @@
 *  Summary   : Certificate emission and information search acts.                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-
 namespace Empiria.Land.Registration {
 
   /// <summary>Certificate emission and information search acts.</summary>
@@ -17,7 +15,7 @@ namespace Empiria.Land.Registration {
 
     #region Constructors and parsers
 
-    private RecordingCertificate(RecordingActType powertype) : base(powertype) {
+    protected RecordingCertificate(RecordingActType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 

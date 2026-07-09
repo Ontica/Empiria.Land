@@ -34,6 +34,7 @@ namespace Empiria.Land.Transactions.Workflow {
       var assertions = new WorkflowAssertions(_rules);
 
       foreach (var transactionUID in command.Payload.TransactionUID) {
+
         var transaction = LRSTransaction.Parse(transactionUID);
 
         assertions.AssertExecution(transaction, command, user);

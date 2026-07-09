@@ -252,9 +252,9 @@ namespace Empiria.Land.Transactions.Workflow {
           nextStatus == TransactionStatus.Delivered ||
           nextStatus == TransactionStatus.Archived) {
 
-          this.Close(nextStatus, notes);
+        this.Close(nextStatus, notes);
 
-          return;
+        return;
       }
 
       LRSWorkflowTask currentTask = this.GetCurrentTask();

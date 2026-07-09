@@ -297,10 +297,6 @@ namespace Empiria.Land.Transactions {
           return true;
         }
 
-        if (_transaction.Services.Contains(x => x.ServiceType.Name.Contains("Certificate"))) {
-          return true;
-        }
-
         return LRSWorkflowRules.IsCertificateIssueCase(_transaction);
       }
     }
