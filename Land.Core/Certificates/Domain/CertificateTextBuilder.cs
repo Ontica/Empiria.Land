@@ -318,38 +318,42 @@ namespace Empiria.Land.Certificates {
 
       FixedList<RecordingAct> recordingActs = GetRecordingActs(realEstate);
 
-      string x;
+      recordingActs = recordingActs.FindAll(x => !x.RecordingActType.IsCancelationActType);
+
+      recordingActs = recordingActs.Sort((x, y) => x.RegistrationTime.CompareTo(y.RegistrationTime));
+
+      string text;
 
       if (_certificate.CertificateType == CertificateType.Inscripcion) {
-        x = "<br/><strong>CONTIENE LAS SIGUIENTES ANOTACIONES:</strong><br/>";
+        text = "<br/><strong>CONTIENE LAS SIGUIENTES ANOTACIONES:</strong><br/>";
       } else {
 
-        x = "<br/><strong>ANOTACIONES VIGENTES:</strong><br/>";
+        text = "<br/><strong>ANOTACIONES VIGENTES:</strong><br/>";
       }
 
       if (recordingActs.Count == 0) {
-        return x + "NO PRESENTA.";
+        return text + "NO PRESENTA.";
       }
 
       for (int i = 0; i < recordingActs.Count; i++) {
         RecordingAct recordingAct = recordingActs[i];
 
         if (recordingAct.IsHardLimitation) {
-          x += $"{i + 1}.- {GenerateHardLimitationActText(recordingAct)}<br/>";
+          text += $"{i + 1}.- {GenerateHardLimitationActText(recordingAct)}<br/>";
 
         } else if (recordingAct.IsPreemptiveAct) {
-          x += $"{i + 1}.- {GeneratePreemptiveActText(recordingAct)}<br/>";
+          text += $"{i + 1}.- {GeneratePreemptiveActText(recordingAct)}<br/>";
 
         } else if (recordingAct.IsAppliedOverNewPartition) {
-          x += $"{i + 1}.- {GeneratePartitionActText(recordingAct)}<br/>";
+          text += $"{i + 1}.- {GeneratePartitionActText(recordingAct)}<br/>";
 
         } else {
-          x += $"{i + 1}.- {GenerateRecordingActText(recordingAct)}<br/>";
+          text += $"{i + 1}.- {GenerateRecordingActText(recordingAct)}<br/>";
         }
 
       }  // for
 
-      return x;
+      return text;
     }
 
 
