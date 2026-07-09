@@ -12,6 +12,7 @@ using System;
 using Empiria.Land.Certificates;
 using Empiria.Land.Registration;
 using Empiria.Land.Transactions;
+using Empiria.Land.Transactions.Payments;
 
 namespace Empiria.Land.Pages {
 
@@ -133,6 +134,25 @@ namespace Empiria.Land.Pages {
 
     protected string GetElaboratedByInitials() {
       return certificate.PostedBy.Initials;
+    }
+
+
+    protected string GetPaymentText() {
+      var transaction = certificate.Transaction;
+
+      var payment = LRSPayment.Empty;
+
+      if (transaction.PaymentData.Payments.Count > 0) {
+        payment = transaction.PaymentData.Payments[0];
+      }
+
+      string template = "Derechos por <b>{AMOUNT}</b> según recibo <b>{RECEIPT}</b> expedido por " +
+                        "la Secretaría de Finanzas del Estado, que se archiva.";
+
+      template = template.Replace("{AMOUNT}", payment.ReceiptTotal.ToString("C2"));
+      template = template.Replace("{RECEIPT}", payment.ReceiptNo);
+
+      return template;
     }
 
 
