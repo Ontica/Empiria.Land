@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
+using System.Linq;
 using Empiria.Contacts;
 
 using Empiria.Land.Registration;
@@ -89,22 +89,35 @@ namespace Empiria.Land.Transactions.Workflow {
                              $"Trámite: {transaction.UID} ({transaction.InternalControlNumber}");
       }
 
-      // ToDo: Remove IsCertificateIssueCase condition when certificates have been implemented
-      if (!IsRecordingDocumentCase(transaction) || IsCertificateIssueCase(transaction)) {
+      if (IsEmptyServicesTransaction(transaction)) {
         return;
       }
 
-      if (transaction.TransactionType.Id == 704) {
-        return;
-      }
 
       if (nextStatus == TransactionStatus.Revision || nextStatus == TransactionStatus.OnSign ||
           nextStatus == TransactionStatus.Archived || nextStatus == TransactionStatus.ToDeliver) {
-        if (transaction.LandRecord.IsEmptyInstance || !transaction.LandRecord.IsClosed) {
+
+        if (!transaction.LandRecord.IsEmptyInstance && !transaction.LandRecord.IsClosed) {
           Assertion.RequireFail("Necesito se ingrese la información del documento a inscribir y " +
                                 $"que éste se encuentre cerrado. " +
                                 $"Trámite: {transaction.UID} ({transaction.InternalControlNumber}).");
         }
+
+        //if (IsCertificateIssueCase(transaction) && (transaction.GetIssuedCertificates().Count == 0)) {
+        //  Assertion.RequireFail($"El trámite {transaction.UID} es un trámite de emisión de certificados, " +
+        //                        $"pero no tiene ningún certificado emitido.");
+        //}
+
+        if (transaction.GetIssuedCertificates().Any(x => !x.IsClosed)) {
+          Assertion.RequireFail($"El trámite {transaction.UID} tiene certificados que no han sido cerrados.");
+        }
+
+        //if (!IsInactiveCertificateIssueCase(transaction) &&
+        //    transaction.LandRecord.IsEmptyInstance && transaction.GetIssuedCertificates().Count == 0) {
+        //  Assertion.RequireFail($"El trámite {transaction.UID} no tiene una inscripción ni certificados emitidos. " +
+        //                        $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
+        //}
+
       }
 
       if (nextStatus == TransactionStatus.ToReturn && !transaction.LandRecord.IsEmptyInstance &&
@@ -116,6 +129,12 @@ namespace Empiria.Land.Transactions.Workflow {
                               "más actos jurídicos registrados. " +
                              $"Trámite: {transaction.UID} ({transaction.InternalControlNumber}).");
       }
+
+      if (nextStatus == TransactionStatus.ToReturn && transaction.GetIssuedCertificates().Count != 0) {
+        Assertion.RequireFail("No se puede devolver al interesado un trámite que tiene uno o más certificados registrados. " +
+                              $"Trámite: {transaction.UID} ({transaction.InternalControlNumber}).");
+      }
+
     }
 
 
@@ -157,7 +176,14 @@ namespace Empiria.Land.Transactions.Workflow {
 
 
     static public bool IsCertificateIssueCase(LRSTransaction transaction) {
-      return transaction.TransactionType.Id == 701 || transaction.TransactionType.Id == 704;
+      return transaction.Services.Any(x => x.ServiceType.ClassName.Contains("RecordingCertificate") &&
+                                           x.ServiceType.RecordingRule.IsActive);
+    }
+
+
+    static public bool IsInactiveCertificateIssueCase(LRSTransaction transaction) {
+      return transaction.Services.Any(x => x.ServiceType.ClassName.Contains("RecordingCertificate") &&
+                                          !x.ServiceType.RecordingRule.IsActive);
     }
 
 
@@ -183,15 +209,8 @@ namespace Empiria.Land.Transactions.Workflow {
 
 
     static public bool IsForElaborationOnly(LRSTransaction transaction) {
-      return transaction.TransactionType.Id == 701 || transaction.DocumentType.Id == 734;
-    }
-
-
-    static private bool IsJuridicCase(LRSTransaction transaction) {
-      if (transaction.TransactionType.Id == 706 && transaction.DocumentType.Id == 734) {
-        return true;
-      }
-      return false;
+      return transaction.Services.All(x => x.ServiceType.ClassName.Contains("RecordingCertificate") &&
+                                           x.ServiceType.RecordingRule.IsActive);
     }
 
 
@@ -323,15 +342,6 @@ namespace Empiria.Land.Transactions.Workflow {
               transaction.Workflow.CurrentStatus == TransactionStatus.Delivered ||
               transaction.Workflow.CurrentStatus == TransactionStatus.Archived);
     }
-
-
-    static private bool IsRecorderOfficerCase(LRSTransaction transaction) {
-      if (transaction.TransactionType.Id == 706 && transaction.RecorderOffice.Id == 147) {
-        return true;
-      }
-      return false;
-    }
-
 
     #endregion Helpers
 
