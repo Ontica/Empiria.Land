@@ -7,7 +7,7 @@
 *  Summary  : Provides specific rules for Empiria Land micro workflow engine.                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
 using System.Collections.Generic;
 
 using Empiria.Contacts;
@@ -130,8 +130,13 @@ namespace Empiria.Land.Transactions.Workflow {
       if (transaction.RecorderOffice.Id == 101 || transaction.RecorderOffice.Id == 102) {
         return TransactionStatus.Control;
       }
+
       if (LRSWorkflowRules.IsCertificateIssueCase(transaction)) {
         return TransactionStatus.Elaboration;
+
+      } else if (LRSWorkflowRules.IsInactiveCertificateIssueCase(transaction)) {
+        return TransactionStatus.Elaboration;
+
       } else {
         return TransactionStatus.Recording;
       }
@@ -142,11 +147,15 @@ namespace Empiria.Land.Transactions.Workflow {
       if (transaction.RecorderOffice.Id == 101 || transaction.RecorderOffice.Id == 102) {
         return TransactionStatus.Control;
       }
+
       if (transaction.LandRecord.SecurityData.IsSigned) {
         return TransactionStatus.OnSign;
       }
-      if (LRSWorkflowRules.IsCertificateIssueCase(transaction)) {
+
+      if (LRSWorkflowRules.IsCertificateIssueCase(transaction) ||
+          LRSWorkflowRules.IsInactiveCertificateIssueCase(transaction)) {
         return TransactionStatus.Elaboration;
+
       } else {
         return TransactionStatus.Recording;
       }
@@ -182,7 +191,7 @@ namespace Empiria.Land.Transactions.Workflow {
 
       var model = WorkflowModel.Parse(transaction.RecorderOffice.WorkflowModelId);
 
-      List <TransactionStatus> list = new List<TransactionStatus>();
+      List<TransactionStatus> list = new List<TransactionStatus>();
 
       var rules = model.Rules.FindAll(x => x.From == currentStatus);
 
@@ -193,7 +202,9 @@ namespace Empiria.Land.Transactions.Workflow {
           }
           continue;
         }
-        if (rule.If == "IsCertificateIssueCase" && LRSWorkflowRules.IsCertificateIssueCase(transaction)) {
+        if (rule.If == "IsCertificateIssueCase" &&
+            (LRSWorkflowRules.IsCertificateIssueCase(transaction) ||
+             LRSWorkflowRules.IsInactiveCertificateIssueCase(transaction))) {
           foreach (TransactionStatus to in rule.To) {
             list.Add(to);
           }
