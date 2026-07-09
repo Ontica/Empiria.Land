@@ -51,10 +51,16 @@ namespace Empiria.Land.Transactions.Workflow {
           Assertion.RequireFail($"La inscripción del trámite {transaction.UID} no ha sido cerrada. " +
                                 $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
 
-          if (transaction.GetIssuedCertificates().Any(x => !x.IsClosed)) {
-            Assertion.RequireFail($"El trámite {transaction.UID} tiene certificados que no han sido cerrados. " +
-                                  $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
-          }
+        }
+
+        //if (LRSWorkflowRules.IsCertificateIssueCase(transaction) && transaction.GetIssuedCertificates().Count == 0) {
+        //  Assertion.RequireFail($"El trámite {transaction.UID} es un trámite de emisión de certificados, " +
+        //                        $"pero no tiene ningún certificado emitido.");
+        //}
+
+        if (transaction.GetIssuedCertificates().Any(x => !x.IsClosed)) {
+          Assertion.RequireFail($"El trámite {transaction.UID} tiene certificados que no han sido cerrados. " +
+                                $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
         }
       }
 
@@ -70,7 +76,13 @@ namespace Empiria.Land.Transactions.Workflow {
                                 $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
         }
 
-        if (transaction.LandRecord.IsEmptyInstance && transaction.GetIssuedCertificates().Count == 0) {
+        //if (LRSWorkflowRules.IsCertificateIssueCase(transaction) && transaction.GetIssuedCertificates().Count == 0) {
+        //  Assertion.RequireFail($"El trámite {transaction.UID} no tiene certificados emitidos. " +
+        //                        $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
+        //}
+
+        if (!LRSWorkflowRules.IsInactiveCertificateIssueCase(transaction) &&
+            transaction.LandRecord.IsEmptyInstance && transaction.GetIssuedCertificates().Count == 0) {
           Assertion.RequireFail($"El trámite {transaction.UID} no tiene una inscripción ni certificados emitidos. " +
                                 $"No es posible mover dicho trámite al estado {nextStatus.GetStatusName()}.");
         }
