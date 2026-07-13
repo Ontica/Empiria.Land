@@ -182,7 +182,8 @@ namespace Empiria.Land.Transactions.Workflow {
 
 
     static public bool IsInactiveCertificateIssueCase(LRSTransaction transaction) {
-      return transaction.Services.Any(x => x.ServiceType.ClassName.Contains("RecordingCertificate") &&
+      return transaction.Services.Count == 0 ||
+             transaction.Services.Any(x => x.ServiceType.ClassName.Contains("RecordingCertificate") &&
                                           !x.ServiceType.RecordingRule.IsActive);
     }
 
@@ -303,7 +304,9 @@ namespace Empiria.Land.Transactions.Workflow {
       if (!IsRecordingDocumentCase(transaction)) {
         return;
       }
-
+      if (IsInactiveCertificateIssueCase(transaction)) {
+        return;
+      }
       Assertion.Require(!transaction.LandRecord.IsEmptyInstance &&
                          transaction.LandRecord.IsClosed &&
                          transaction.LandRecord.SecurityData.IsSigned,
