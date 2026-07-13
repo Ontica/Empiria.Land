@@ -71,6 +71,9 @@ namespace Empiria.Land.Registration {
       try {
         var json = recordingActType.ExtensionData.Slice("RegistrationRule", false);
 
+        bool isActive = !json.HasItems ? recordingActType.ExtensionData.Get("IsActive", false)
+                                       : json.Get("IsActive", true);
+
         this.AppliesTo = json.Get("AppliesTo", RecordingRuleApplication.Undefined);
         this.AutoCancel = json.Get("AutoCancel", 0);
 
@@ -81,7 +84,7 @@ namespace Empiria.Land.Registration {
         this.ReplaceableBy = json.GetList<RecordingActType>("ReplaceableBy", false).ToFixedList();
         this.AllowPartitions = json.Get("AllowPartitions", false);
         this.IsEndingAct = json.Get("IsEndingAct", false);
-        this.IsActive = json.Get("IsActive", json.HasItems);
+        this.IsActive = isActive;
         this.AskForResourceName = json.Get("AskForResourceName", false);
         this.ResourceTypeName = json.Get("ResourceTypeName", String.Empty);
         this.DynamicActNamePattern = json.Get("DynamicActNamePattern", String.Empty);
