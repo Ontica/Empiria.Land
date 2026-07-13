@@ -7,10 +7,10 @@
 *  Summary  : Provides services for land certificates issuing.                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 
 using Empiria.Land.Registration;
-
 using Empiria.Land.Transactions;
 
 using Empiria.Land.Certificates.Adapters;
@@ -28,6 +28,8 @@ namespace Empiria.Land.Certificates {
       var certificate = Certificate.Parse(certificateGuid.ToString());
 
       certificate.Close();
+
+      certificate.Security.SetElectronicSignerData(certificate.RecorderOffice.Signer);
 
       certificate.Save();
 
