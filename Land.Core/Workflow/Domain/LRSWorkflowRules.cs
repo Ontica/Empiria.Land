@@ -182,8 +182,13 @@ namespace Empiria.Land.Transactions.Workflow {
 
 
     static public bool IsInactiveCertificateIssueCase(LRSTransaction transaction) {
+      if (IsRecordingDocumentCase(transaction)) {
+        return false;
+      }
+
+
       return transaction.Services.Count == 0 ||
-             transaction.Services.Any(x => x.ServiceType.ClassName.Contains("RecordingCertificate") &&
+             transaction.Services.All(x => x.ServiceType.ClassName.Contains("RecordingCertificate") &&
                                           !x.ServiceType.RecordingRule.IsActive);
     }
 
@@ -210,7 +215,9 @@ namespace Empiria.Land.Transactions.Workflow {
 
 
     static public bool IsForElaborationOnly(LRSTransaction transaction) {
-      return transaction.Services.All(x => x.ServiceType.ClassName.Contains("RecordingCertificate") &&
+      return !IsRecordingDocumentCase(transaction) &&
+             transaction.Services.Count > 0 &&
+             transaction.Services.All(x => x.ServiceType.ClassName.Contains("RecordingCertificate") &&
                                            x.ServiceType.RecordingRule.IsActive);
     }
 
@@ -268,7 +275,11 @@ namespace Empiria.Land.Transactions.Workflow {
 
 
     static public bool IsRecordingDocumentCase(LRSTransaction transaction) {
-      if (EmpiriaMath.IsMemberOf(transaction.TransactionType.Id, new[] { 700, 704, 705 })) {
+      if (EmpiriaMath.IsMemberOf(transaction.TransactionType.Id, new[] { 700, 705 })) {
+        return true;
+      }
+
+      if (transaction.Services.Contains(x => x.ServiceType.Id == 2306)) {
         return true;
       }
 

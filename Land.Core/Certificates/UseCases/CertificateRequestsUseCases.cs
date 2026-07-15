@@ -16,8 +16,8 @@ using Empiria.Services;
 using Empiria.Land.Registration;
 using Empiria.Land.Transactions;
 
-using Empiria.Land.Certificates.Data;
 using Empiria.Land.Certificates.Adapters;
+using Empiria.Land.Certificates.Data;
 
 namespace Empiria.Land.Certificates.UseCases {
 
@@ -71,13 +71,10 @@ namespace Empiria.Land.Certificates.UseCases {
 
       EnsureTransactionHasCertificate(transaction, certificateGuid);
 
-      // ToDo: control transaction / certificate edition
-
       CertificateDto certificate = CertificateIssuingService.CloseCertificate(certificateGuid);
 
       return CertificateRequestMapper.Map(transaction, certificate);
     }
-
 
     public void DeleteCertificateRequest(string transactionID, Guid certificateGuid) {
       Assertion.Require(transactionID, nameof(transactionID));

@@ -68,12 +68,12 @@ namespace Empiria.Land.Transactions.Payments {
 
     public bool IsFeeWaiverApplicable {
       get {
-        if (_transaction.TransactionType.Id == 705 ||
-            _transaction.TransactionType.Id == 704 ||
-            _transaction.TransactionType.Id == 707) {
+        if (_transaction.TransactionType.Id == 704 ||
+            _transaction.TransactionType.Id == 705) {
           return true;
         }
-        return (_transaction.TransactionType.Id == 700 && _transaction.DocumentType.Id == 722);
+
+        return false;
       }
     }
 
