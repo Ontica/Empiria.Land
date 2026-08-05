@@ -43,7 +43,14 @@ namespace Empiria.Land.Certificates.UseCases {
     }
 
 
-    public CertificateDto GetCertificateWithID(string certificateID) {
+        public Certificate GetCertificateByID(string certificateId)
+        {
+            var certificate = CertificatesData.TryGetCertificateWithID(certificateId);
+
+            return certificate;
+        }
+
+        public CertificateDto GetCertificateWithID(string certificateID) {
       Assertion.Require(certificateID, nameof(certificateID));
 
       var certificate = CertificatesData.TryGetCertificateWithID(certificateID);

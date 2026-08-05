@@ -324,6 +324,8 @@ namespace Empiria.Land.Certificates {
 
       string text;
 
+        //text = "<br/><strong>ANTECEDENTE REGISTRAL</strong><br/>";
+
       if (_certificate.CertificateType == CertificateType.Inscripcion) {
         text = "<br/><strong>CONTIENE LAS SIGUIENTES ANOTACIONES:</strong><br/>";
       } else {

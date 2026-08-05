@@ -9,9 +9,9 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
-
+using Empiria.Land.Certificates;
 using Empiria.Land.Certificates.Adapters;
-
+using Empiria.Land.Certificates.UseCases;
 using Empiria.Land.Registration;
 using Empiria.Land.Transactions;
 using Empiria.Land.Transactions.Workflow;
@@ -35,56 +35,76 @@ namespace Empiria.Land.WebApi {
     internal List<PropertyBagItem> BuildCertificate(string certificateUID, string hash) {
       var propertyBag = new List<PropertyBagItem>(16);
 
-      //CertificateDto certificate;
+            Certificate certificate;
 
-      //using (var usecase = CertificatesUseCases.UseCaseInteractor()) {
-      //  certificate = usecase.GetCertificateWithID(certificateUID);
-      //}
+            using (var usecase = CertificatesUseCases.UseCaseInteractor())
+            {
+                certificate = usecase.GetCertificateByID(certificateUID);
+            }
 
-      //propertyBag.Add(new PropertyBagItem("Información del certificado", String.Empty, "section"));
-      //propertyBag.Add(new PropertyBagItem("Número de certificado", certificate.UID, "enhanced-text"));
-      //propertyBag.Add(new PropertyBagItem("Tipo de certificado", certificate.Type, "enhanced-text"));
-      //propertyBag.Add(new PropertyBagItem("Fecha de expedición", GetDateTime(certificate.IssueTime), "date-time"));
-      //propertyBag.Add(new PropertyBagItem("Elaborado por", certificate.IssuedBy));
+            propertyBag.Add(new PropertyBagItem("Información del certificado", String.Empty, "section"));
+            propertyBag.Add(new PropertyBagItem("Número de certificado", certificate.CertificateID, "enhanced-text"));
+            propertyBag.Add(new PropertyBagItem("Tipo de certificado", certificate.CertificateType.DisplayName, "enhanced-text"));
+            propertyBag.Add(new PropertyBagItem("Fecha de expedición", GetDateTime(certificate.IssueTime), "date-time"));
+            if (certificate.SecurityData.SignedTime.AddDays(30) <= DateTime.Today)
+            {
+                propertyBag.Add(new PropertyBagItem("Certificado sin vigencia desde", certificate.SecurityData.SignedTime.AddDays(30).ToString("dd/MM/yyyy"), "bold-text"));
 
-      //propertyBag.Add(new PropertyBagItem("Resumen", certificate.AsText, "small-text"));
+            }
+            else
+            {
+                propertyBag.Add(new PropertyBagItem("Certificado vigente hasta", certificate.SecurityData.SignedTime.AddDays(30).ToString("dd/MM/yyyy"), "bold-text"));
+            }
+            propertyBag.Add(new PropertyBagItem("Elaborado por", certificate.PostedBy.Initials));
 
-      //if (certificate.OverRecordableSubject) {
-      //  RealEstate resource = RealEstate.TryParseWithUID(certificate.RecordableSubject.UID);
+            propertyBag.Add(new PropertyBagItem("Resumen", certificate.AsText, "small-text"));
 
-      //  propertyBag.Add(new PropertyBagItem("Certificado expedido sobre el predio", String.Empty, "section"));
-      //  propertyBag.Add(new PropertyBagItem("Folio real", GetResourceLink(resource) + "enhanced-text"));
+            if (!certificate.OnRecordableSubject.IsEmptyInstance)
+            {
+                RealEstate resource = RealEstate.TryParseWithUID(certificate.OnRecordableSubject.UID);
 
-      //  propertyBag.Add(new PropertyBagItem("Clave catastral",
-      //                                       resource.CadastralKey.Length != 0 ?
-      //                                       resource.CadastralKey : "Clave catastral no proporcionada.", "bold-text"));
-      //  propertyBag.Add(new PropertyBagItem("Descripción", resource.AsText));
-      //}
+                propertyBag.Add(new PropertyBagItem("Certificado expedido sobre el predio", String.Empty, "section"));
+                propertyBag.Add(new PropertyBagItem("Folio real", GetResourceLink(resource), "enhanced-text"));
 
-      //var unsigned = certificate.UseESign && certificate.Unsigned();
+                propertyBag.Add(new PropertyBagItem("Clave catastral",
+                                                     resource.CadastralKey.Length != 0 ?
+                                                     resource.CadastralKey : "Clave catastral no proporcionada.", "bold-text"));
+                propertyBag.Add(new PropertyBagItem("Descripción", resource.AsText));
+            }
 
-      //propertyBag.Add(new PropertyBagItem("Verificación de elementos de seguridad", String.Empty,
-      //                              unsigned ? "section-error" : "section"));
+            var unsigned = certificate.SecurityData.UsesESign && certificate.SecurityData.IsUnsigned;
 
-      //if (hash.Length != 0 && certificate.IssueTime < certificateHashCodeValidationStartDate) {
-      //  propertyBag.Add(new PropertyBagItem("Código de verificación", hash, "bold-text"));
-      //} else {
-      //  propertyBag.Add(new PropertyBagItem("Código de verificación", certificate.QRCodeSecurityHash(), "bold-text"));
-      //}
-      //propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(certificate.GetDigitalSeal()), "mono-space-text"));
+            propertyBag.Add(new PropertyBagItem("Verificación de elementos de seguridad", String.Empty,
+                                          unsigned ? "section-error" : "section"));
 
-      //if (unsigned) {
-      //  propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada",
-      //                  "MUY IMPORTANTE: El certificado NO ES VÁLIDO. NO HA SIDO FIRMADO ELECTRÓNICAMENTE.", "warning-status-text"));
-      //} else {
-      //  propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada", certificate.GetDigitalSignature()));
-      //  propertyBag.Add(new PropertyBagItem("Firmado por", certificate.SignedBy.FullName, "bold-text"));
-      //  propertyBag.Add(new PropertyBagItem("Puesto", certificate.SignedBy.JobTitle));
-      //}
+            if (hash.Length != 0 && certificate.IssueTime < certificateHashCodeValidationStartDate)
+            {
+                propertyBag.Add(new PropertyBagItem("Código de verificación", hash, "bold-text"));
+            }
+            else
+            {
+                propertyBag.Add(new PropertyBagItem("Código de verificación", certificate.SecurityData.SecurityHash, "bold-text"));
+            }
+            propertyBag.Add(new PropertyBagItem("Sello digital", GetDigitalText(certificate.SecurityData.DigitalSeal), "mono-space-text"));
 
-      //propertyBag.AddRange(TransactionSectionItems(certificate.Transaction));
+            if (unsigned)
+            {
+                propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada",
+                                "MUY IMPORTANTE: El certificado NO ES VÁLIDO. NO HA SIDO FIRMADO ELECTRÓNICAMENTE.", "warning-status-text"));
+            }
+            else
+            {
+                propertyBag.Add(new PropertyBagItem("Firma electrónica avanzada ", certificate.SecurityData.DigitalSignature));
+                propertyBag.Add(new PropertyBagItem("Firmado por", certificate.SecurityData.SignedBy.FullName, "bold-text"));
+                propertyBag.Add(new PropertyBagItem("Puesto", certificate.SecurityData.SignedBy.JobTitle, "bold-text"));
 
-      return propertyBag;
+
+             
+            }
+
+            propertyBag.AddRange(TransactionSectionItems(certificate.Transaction));
+
+            return propertyBag;
     }
 
 
@@ -551,8 +571,8 @@ namespace Empiria.Land.WebApi {
 
       foreach (var certificate in transaction.GetIssuedCertificates()) {
         propertyBag.Add(new PropertyBagItem("Certificado", certificate.CertificateType.DisplayName + "<br/>" +
-                                                           GetCertificateUIDAsLink(certificate.UID) +
-                                                           GetPrintableCertificateLink(certificate.UID, transaction.Workflow.CurrentStatus, messageUID)));
+                                                           GetCertificateUIDAsLink(certificate.CertificateID) +
+                                                           GetPrintableCertificateLink(certificate.CertificateID, transaction.Workflow.CurrentStatus, messageUID)));
       }
     }
 
