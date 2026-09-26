@@ -57,7 +57,7 @@ namespace Empiria.Land.Registration.WebApi {
     }
 
 
-    [HttpPost, AllowAnonymous]
+    [HttpPost]
     [Route("v5/land/registration/manual_close/{recordID}")]
     public SingleObjectModel ManualCloseLandRecord([FromUri] string recordID,
                                                    [FromBody] ManualCloseRecordFields fields) {
